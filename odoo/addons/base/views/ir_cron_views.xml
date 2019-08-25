@@ -27,6 +27,7 @@
                 </xpath>
             </field>
         </record>
+
         <record id="ir_cron_view_tree" model="ir.ui.view">
             <field name="model">ir.cron</field>
             <field name="arch" type="xml">
@@ -42,6 +43,7 @@
                 </tree>
             </field>
         </record>
+
         <record model="ir.ui.view" id="ir_cron_view_calendar">
             <field name="model">ir.cron</field>
             <field name="priority" eval="2"/>
@@ -51,6 +53,7 @@
                 </calendar>
             </field>
         </record>
+
         <record id="ir_cron_view_search" model="ir.ui.view">
             <field name="model">ir.cron</field>
             <field name="arch" type="xml">
@@ -61,13 +64,16 @@
                     <field name="active"/>
                     <separator/>
                     <filter string="All" name="all" domain="['|', ('active', '=', False), ('active', '=', True)]" />
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Execution" name="execution" domain="[]" context="{'group_by':'nextcall'}" />
+                        <filter string="User" name="user" domain="[]" context="{'group_by': 'user_id'}"/>
+                        <filter string="Execution" name="execution" domain="[]" context="{'group_by': 'nextcall'}" />
                     </group>
                 </search>
             </field>
         </record>
+
         <record id="ir_cron_act" model="ir.actions.act_window">
             <field name="name">Scheduled Actions</field>
             <field name="res_model">ir.cron</field>
@@ -75,6 +81,7 @@
             <field name="context">{'search_default_all': 1}</field>
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>
+
         <menuitem id="menu_ir_cron_act" action="ir_cron_act" parent="base.menu_automation"/>
 
 </odoo>

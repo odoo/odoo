@@ -45,7 +45,7 @@ class TestExpenseCommon(TestAccountNoChartCommon):
             'name': 'Purchase Journal - Test',
             'code': 'HRTPJ',
             'type': 'purchase',
-            'company_id': cls.env.user.company_id.id,
+            'company_id': cls.env.company.id,
         })
         cls.expense_sheet = cls.env['hr.expense.sheet'].create({
             'name': 'Expense for Johnny Employee',

@@ -47,6 +47,7 @@
         'report/crm_opportunity_report_views.xml',
         'views/crm_team_views.xml',
         'views/digest_views.xml',
+        'views/utm_campaign_views.xml'
     ],
     'demo': [
         'data/crm_demo.xml',

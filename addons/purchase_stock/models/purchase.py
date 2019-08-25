@@ -26,7 +26,7 @@ class PurchaseOrder(models.Model):
     picking_count = fields.Integer(compute='_compute_picking', string='Picking count', default=0, store=True)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False, store=True)
 
-    picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=Purchase.READONLY_STATES, required=True, default=_default_picking_type,
+    picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=Purchase.READONLY_STATES, required=True, default=_default_picking_type, domain="['|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]",
         help="This will determine operation type of incoming shipment")
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',
         help="Technical field used to display the Drop Ship Address", readonly=True)
@@ -52,6 +52,8 @@ class PurchaseOrder(models.Model):
         for order in self:
             if order.picking_ids and all([x.state in ['done', 'cancel'] for x in order.picking_ids]):
                 order.is_shipped = True
+            else:
+                order.is_shipped = False
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type_id(self):
@@ -117,7 +119,7 @@ class PurchaseOrder(models.Model):
         action = self.env.ref('stock.action_picking_tree_all')
         result = action.read()[0]
         # override the context to get rid of the default filtering on operation type
-        result['context'] = {}
+        result['context'] = {'default_partner_id': self.partner_id.id, 'default_origin': self.name, 'default_picking_type_id': self.picking_type_id.id}
         pick_ids = self.mapped('picking_ids')
         # choose the view_mode accordingly
         if not pick_ids or len(pick_ids) > 1:

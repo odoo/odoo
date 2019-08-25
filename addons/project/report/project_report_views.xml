@@ -62,7 +62,7 @@
                     <field name="user_id"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="stage_id"/>
-                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=',False)]"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
                     <filter string="New" name="new" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
                     <group expand="0" string="Extended Filters">
@@ -70,13 +70,11 @@
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <group expand="1" string="Group By">
-                        <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
-                        <filter string="Task" name="task" context="{'group_by':'name'}"/>
-                        <filter string="Assigned to" name="User" context="{'group_by':'user_id'}"/>
-                        <filter string="Stage" name="Stage" context="{'group_by':'stage_id'}"/>
-                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <separator/>
-                        <filter string="Assignation Date" name="assignation_month" context="{'group_by':'date_assign:month'}"/>
+                        <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                        <filter string="Assigned to" name="User" context="{'group_by': 'user_id'}"/>
+                        <filter string="Stage" name="Stage" context="{'group_by': 'stage_id'}"/>
+                        <filter string="Assignation Date" name="assignation_month" context="{'group_by': 'date_assign:month'}"/>
+                        <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>

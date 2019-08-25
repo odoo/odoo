@@ -14,12 +14,9 @@ class PaymentWizard(models.TransientModel):
     def _get_default_payment_method(self):
         return self.env.company.sale_onboarding_payment_method or 'digital_signature'
 
-    payment_method = fields.Selection([
+    payment_method = fields.Selection(selection_add=[
         ('digital_signature', 'Online signature'),
-        ('paypal', "Pay with PayPal"),
-        ('stripe', "Pay with credit card (via Stripe)"),
-        ('other', "Pay with another payment acquirer"),
-        ('manual', "Custom payment instructions"),
+        ('paypal',),
     ], default=_get_default_payment_method)
     #
 

@@ -36,7 +36,7 @@ var Followers = AbstractField.extend({
     init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
 
-        this.image = this.attrs.image || 'image_small';
+        this.image = this.attrs.image || 'image_64';
         this.comment = this.attrs.help || false;
 
         this.followers = [];
@@ -120,7 +120,7 @@ var Followers = AbstractField.extend({
             }
 
             $follower_li = $(QWeb.render('mail.Followers.partner', {
-                'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_small'}),
+                'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_64'}),
                 'widget': self})
             );
             $follower_li.appendTo($followers_list);
@@ -205,7 +205,7 @@ var Followers = AbstractField.extend({
         if (missing_ids.length) {
             def = this._rpc({
                     route: '/mail/read_followers',
-                    params: { follower_ids: missing_ids, res_model: this.model }
+                    params: { follower_ids: missing_ids, res_model: this.model, context: {} }  // empty context to be overridden in session.js with 'allowed_company_ids'
                 });
         }
         return Promise.resolve(def).then(function (results) {

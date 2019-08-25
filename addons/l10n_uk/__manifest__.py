@@ -28,7 +28,6 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
         'data/account.tax.group.csv',
         'data/account_tax_report_data.xml',
         'data/account_tax_data.xml',
-        'data/res.country.state.csv',
         'data/account_chart_template_data.xml',
     ],
     'demo' : ['demo/l10n_uk_demo.xml'],

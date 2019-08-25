@@ -47,6 +47,8 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
 
         # admin should receive emails
         self.user_admin.write({'notification_type': 'email'})
+        # Force the attachments of the template to be in the natural order.
+        self.email_template.invalidate_cache(['attachment_ids'], ids=self.email_template.ids)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_w_template(self):

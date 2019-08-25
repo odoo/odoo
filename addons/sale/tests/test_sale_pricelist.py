@@ -137,20 +137,17 @@ class TestSaleOrder(TestCommonSaleNoChart):
             line._onchange_discount()
         # Check that pricelist of the SO has been applied on the sale order lines or not
         for line in self.sale_order.order_line:
-            if self.sale_order.pricelist_id in line.product_id.item_ids.mapped('pricelist_id'):  # concerned by pricelist (all except product_deliver)
-                if line.product_id == self.product_order:
-                    self.assertEquals(line.price_unit, self.pricelist_discount_incl_item3.fixed_price, 'Price of product_order should be %s applied on the order line' % (self.pricelist_discount_incl_item3.fixed_price,))
-                else:  # only services (service_order and service_deliver)
-                    for item in self.sale_order.pricelist_id.item_ids.filtered(lambda l: l.product_tmpl_id == line.product_id.product_tmpl_id):
-                        price = item.percent_price
-                        self.assertEquals(price, (line.product_id.list_price - line.price_unit) / line.product_id.list_price * 100, 'Pricelist of the SO should be applied on an order line %s' % (line.product_id.name,))
-            else:
-                self.assertEquals(line.price_unit, line.product_id.list_price, 'Pricelist of the SO should not be applied on an order line')
+            if line.product_id == self.product_order:
+                self.assertEquals(line.price_unit, self.pricelist_discount_incl_item3.fixed_price, 'Price of product_order should be %s applied on the order line' % (self.pricelist_discount_incl_item3.fixed_price,))
+            else:  # only services (service_order and service_deliver)
+                for item in self.sale_order.pricelist_id.item_ids.filtered(lambda l: l.product_tmpl_id == line.product_id.product_tmpl_id):
+                    price = item.percent_price
+                    self.assertEquals(price, (line.product_id.list_price - line.price_unit) / line.product_id.list_price * 100, 'Pricelist of the SO should be applied on an order line %s' % (line.product_id.name,))
 
     def test_sale_with_pricelist_discount_excluded(self):
         """ Test SO with the pricelist 'discount displayed' and check discount and unit price appeared on its lines """
         # Add group 'Discount on Lines' to the user
-        self.env.user.write({'groups_id': [(4, self.env.ref('sale.group_discount_per_so_line').id)]})
+        self.env.user.write({'groups_id': [(4, self.env.ref('product.group_discount_per_so_line').id)]})
 
         # Set product category on consumable products (for the pricelist item applying on this category)
         self.product_order.write({'categ_id': self.product_category_1.id})

@@ -125,7 +125,7 @@
                         <div class="alert alert-info text-center mb-3" attrs="{'invisible': [('id', '>', 0)]}" role="alert">
                             You are inviting a new user.
                         </div>
-                        <field name="image" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image": "image_medium"}'/>
+                        <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image": "image_128"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" required="1"/></h1>
@@ -159,7 +159,6 @@
                     <header>
                     </header>
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-users">
@@ -172,6 +171,7 @@
                                 <field string="Record Rules" name="rules_count" widget="statinfo"/>
                             </button>
                         </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active_partner" required="0" readonly="1" invisible="1"/>
                         <div class="alert alert-info text-center o_form_header"
                             attrs="{'invisible': [
@@ -189,7 +189,7 @@
                             <field name="partner_id" required="0" readonly="1"/>
                           </div>
                         </div>
-                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                        <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" required="1"/></h1>
@@ -216,7 +216,7 @@
                                         <field name="active" invisible="1"/>
                                         <label for="lang" />
                                         <div class="o_row">
-                                            <field name="lang" placeholder="System (English)"/>
+                                            <field name="lang"/>
                                             <button
                                                 type="action"
                                                 name="%(base.res_lang_act_window)d"
@@ -231,7 +231,7 @@
                                         <field name="action_id"/>
                                     </group>
                                 </group>
-                                <group string="Messaging and Social" name="messaging">
+                                <group name="messaging">
                                     <field name="signature"/>
                                 </group>
                             </page>
@@ -269,7 +269,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img alt="Avatar" t-att-src="kanban_image('res.users', 'image_medium', record.id.raw_value)"/>
+                                    <img alt="Avatar" t-att-src="kanban_image('res.users', 'image_128', record.id.raw_value)"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <ul>
@@ -297,6 +297,7 @@
                     <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Users" domain="[('share','=',False)]"/>
+                    <separator/>
                     <filter name="Inactive" string="Inactive Users" domain="[('active','=',False)]"/>
                 </search>
             </field>
@@ -342,20 +343,18 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users">
-                    <field name="image" readonly="0" widget='image' class="oe_right oe_avatar" options='{"preview_image": "image_small"}'/>
+                    <field name="image_1920" readonly="0" widget='image' class="oe_right oe_avatar" options='{"preview_image": "image_64"}'/>
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>
                     </h1>
                     <group name="preferences">
                         <group>
                             <field name="email" widget="email" readonly="0"/>
-                            <field name="company_id" options="{'no_create': True}" readonly="0"
-                                groups="base.group_multi_company"/>
                         </group>
                         <group>
                             <label for="lang"/>
                             <div class="o_row">
-                                <field name="lang" placeholder="System (English)"/>
+                                <field name="lang"/>
                                 <button
                                     type="action"
                                     name="%(base.res_lang_act_window)d"
@@ -369,14 +368,18 @@
                             <field name="tz_offset" invisible="1"/>
                         </group>
                     </group>
-                    <group name="preference_contact"></group>
                     <group name="signature">
                         <field name="signature" readonly="0"/>
                     </group>
-                    <button name="preference_change_password" type="object" string="Change password" class="oe_link"/>
+                    <group name="status" string="Status" invisible="1">
+                        <field name="company_id" options="{'no_create': True}" readonly="0"
+                            groups="base.group_multi_company"/>
+                    </group>
+                    <group name="preference_contact"></group>
                     <footer>
                         <button name="preference_save" type="object" string="Save" class="btn-primary"/>
                         <button name="preference_cancel" string="Cancel" special="cancel" class="btn-secondary"/>
+                        <button name="preference_change_password" type="object" string="Change password" class="btn-secondary"/>
                     </footer>
                 </form>
             </field>

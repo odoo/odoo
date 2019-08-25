@@ -73,9 +73,11 @@
         display: table;
     }
     &.oe_import_error .oe_import_error_report,
-    &.oe_import_noheaders .oe_import_noheaders,
-    .oe_import_report_showmore .oe_import_report_more {
+    &.oe_import_noheaders .oe_import_noheaders{
         display: block;
+    }
+    .oe_import_report_showmore .oe_import_report_more {
+        display: list-item;
     }
 
     /* ------------- ERRORS AND WARNINGS REPORT ------------ */
@@ -93,6 +95,12 @@
             }
             &.text-error {
                 @extend .text-danger;
+            }
+        }
+        .oe_import_report_count, .oe_import_see_all {
+            color: white;
+            &:hover {
+                color: lightgrey;
             }
         }
     }

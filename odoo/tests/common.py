@@ -33,7 +33,7 @@ from lxml import etree, html
 
 from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain
-from odoo.tools import single_email_re
+from odoo.tools import float_compare, single_email_re
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
 
@@ -259,7 +259,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             return self._assertRaises(exception)
 
     @contextmanager
-    def assertQueryCount(self, default=0, **counters):
+    def assertQueryCount(self, default=0, flush=True, **counters):
         """ Context manager that counts queries. It may be invoked either with
             one value, or with a set of named arguments like ``login=value``::
 
@@ -276,8 +276,12 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             with self.subTest(), patch('random.random', lambda: 1):
                 login = self.env.user.login
                 expected = counters.get(login, default)
+                if flush:
+                    self.env.user.flush()
                 count0 = self.cr.sql_log_count
                 yield
+                if flush:
+                    self.env.user.flush()
                 count = self.cr.sql_log_count - count0
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count
@@ -293,6 +297,8 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                         logger.info(msg, login, count, expected, funcname, filename, linenum)
         else:
             yield
+            if flush:
+                self.env.user.flush()
 
     def assertRecordValues(self, records, expected_values):
         ''' Compare a recordset with a list of dictionaries representing the expected results.
@@ -314,7 +320,8 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             for field_name in candidate.keys():
                 record_value = record[field_name]
                 candidate_value = candidate[field_name]
-                field_type = record._fields[field_name].type
+                field = record._fields[field_name]
+                field_type = field.type
                 if field_type == 'monetary':
                     # Compare monetary field.
                     currency_field_name = record._fields[field_name].currency_field
@@ -322,6 +329,8 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                     if record_currency.compare_amounts(candidate_value, record_value)\
                             if record_currency else candidate_value != record_value:
                         return False
+                elif field_type == 'float' and field.get_digits(record.env):
+                    return not float_compare(candidate_value, record_value, precision_digits=field.get_digits(record.env)[1])
                 elif field_type in ('one2many', 'many2many'):
                     # Compare x2many relational fields.
                     # Empty comparison must be an empty list to be True.
@@ -363,8 +372,13 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             msg = 'Wrong number of records to compare: %d != %d.\n\n' % (len(records), len(expected_values))
             self.fail(msg + _format_message(records, expected_values))
 
+        candidates = list(expected_values)
         for index, record in enumerate(records):
-            if not _compare_candidate(record, expected_values[index]):
+            for candidate_index, candidate in enumerate(candidates):
+                if _compare_candidate(record, candidate):
+                    candidates.pop(candidate_index)
+                    break
+            else:
                 msg = 'Record doesn\'t match expected values at index %d.\n\n' % index
                 self.fail(msg + _format_message(records, expected_values))
 
@@ -424,6 +438,10 @@ class SingleTransactionCase(BaseCase):
         cls.registry = odoo.registry(get_db_name())
         cls.cr = cls.registry.cursor()
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+
+    def setUp(self):
+        super(SingleTransactionCase, self).setUp()
+        self.env.user.flush()
 
     @classmethod
     def tearDownClass(cls):
@@ -560,6 +578,17 @@ class ChromeBrowser():
             '--no-default-browser-check': '',
             '--no-first-run': '',
             '--disable-extensions': '',
+            '--disable-background-networking' : '',
+            '--disable-background-timer-throttling' : '',
+            '--disable-backgrounding-occluded-windows': '',
+            '--disable-renderer-backgrounding' : '',
+            '--disable-breakpad': '',
+            '--disable-client-side-phishing-detection': '',
+            '--disable-crash-reporter': '',
+            '--disable-default-apps': '',
+            '--disable-dev-shm-usage': '',
+            '--disable-device-discovery-notifications': '',
+            '--disable-namespace-sandbox': '',
             '--user-data-dir': self.user_data_dir,
             '--disable-translate': '',
             '--window-size': self.window_size,
@@ -602,22 +631,32 @@ class ChromeBrowser():
             version : get chrome and dev tools version
             protocol : get the full protocol
         """
-        self._logger.info("Issuing json command %s", command)
         command = os.path.join('json', command).strip('/')
-        while timeout > 0:
+        url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
+        self._logger.info("Issuing json command %s", url)
+        delay = 0.1
+        tries = 0
+        failure_info = None
+        while tries * delay < timeout:
+            if self.chrome_process.poll() is not None:
+                self._logger.error('Chrome crashed at startup with return code', self.chrome_process.returncode)
+                break
             try:
-                url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
-                self._logger.info('Url : %s', url)
                 r = requests.get(url, timeout=3)
                 if r.ok:
+                    self._logger.info("Json command result in %s", tries * delay)
                     return r.json()
                 return {'status_code': r.status_code}
-            except requests.ConnectionError:
-                time.sleep(0.1)
-                timeout -= 0.1
-            except requests.exceptions.ReadTimeout:
+            except requests.ConnectionError as e:
+                failure_info = str(e)
+                time.sleep(delay)
+                tries+=1
+            except requests.exceptions.ReadTimeout as e:
+                failure_info = str(e)
                 break
-        self._logger.error('Could not connect to chrome debugger')
+        self._logger.error('Could not connect to chrome debugger after %s tries, %ss' % (tries, delay))
+        if failure_info:
+            self._logger.info(failure_info)
         raise unittest.SkipTest("Cannot connect to chrome headless")
 
     def _open_websocket(self):
@@ -734,7 +773,14 @@ class ChromeBrowser():
 
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
-        self._websocket_send('Network.setCookie', params=params)
+        _id = self._websocket_send('Network.setCookie', params=params)
+        return self._websocket_wait_id(_id)
+
+    def delete_cookie(self, name, **kwargs):
+        params = {kw:kwargs[kw] for kw in kwargs if kw in ['url', 'domain', 'path']}
+        params.update({'name': name})
+        _id = self._websocket_send('Network.deleteCookies', params=params)
+        return self._websocket_wait_id(_id) 
 
     def _wait_ready(self, ready_code, timeout=60):
         self._logger.info('Evaluate ready code "%s"', ready_code)
@@ -830,8 +876,11 @@ class ChromeBrowser():
         if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
             shutil.rmtree(self.screencasts_frames_dir)
         self.screencast_frames = []
-        self._websocket_send('Page.stopLoading')
+        sl_id = self._websocket_send('Page.stopLoading')
+        self._websocket_wait_id(sl_id)
         self._logger.info('Deleting cookies and clearing local storage')
+        dc_id = self._websocket_send('Network.clearBrowserCache')
+        self._websocket_wait_id(dc_id)
         dc_id = self._websocket_send('Network.clearBrowserCookies')
         self._websocket_wait_id(dc_id)
         cl_id = self._websocket_send('Runtime.evaluate', params={'expression': 'localStorage.clear()'})
@@ -885,32 +934,33 @@ class HttpCase(TransactionCase):
         self.opener.cookies['session_id'] = self.session_id
 
     def url_open(self, url, data=None, files=None, timeout=10, headers=None):
+        self.env['base'].flush()
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, PORT, url)
         if data or files:
             return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers)
         return self.opener.get(url, timeout=timeout, headers=headers)
 
-    def _wait_remaining_requests(self):
-        t0 = int(time.time())
-        for thread in threading.enumerate():
-            if thread.name.startswith('odoo.service.http.request.'):
-                join_retry_count = 10
-                while thread.isAlive():
-                    # Need a busyloop here as thread.join() masks signals
-                    # and would prevent the forced shutdown.
-                    thread.join(0.05)
-                    join_retry_count -= 1
-                    if join_retry_count < 0:
-                        self._logger.warning("Stop waiting for thread %s handling request for url %s",
-                                        thread.name, getattr(thread, 'url', '<UNKNOWN>'))
-                        break
-                    time.sleep(0.5)
-                    t1 = int(time.time())
-                    if t0 != t1:
-                        self._logger.info('remaining requests')
-                        odoo.tools.misc.dumpstacks()
-                        t0 = t1
+    def _wait_remaining_requests(self, timeout=10):
+
+        def get_http_request_threads():
+            return [t for t in threading.enumerate() if t.name.startswith('odoo.service.http.request.')]
+
+        start_time = time.time()
+        request_threads = get_http_request_threads()
+        self._logger.info('waiting for threads: %s', request_threads)
+
+        for thread in request_threads:
+            thread.join(timeout - (time.time() - start_time))
+
+        request_threads = get_http_request_threads()
+        for thread in request_threads:
+            self._logger.info("Stop waiting for thread %s handling request for url %s",
+                                    thread.name, getattr(thread, 'url', '<UNKNOWN>'))
+
+        if request_threads:
+            self._logger.info('remaining requests')
+            odoo.tools.misc.dumpstacks()
 
     def authenticate(self, user, password):
         # stay non-authenticated
@@ -965,6 +1015,9 @@ class HttpCase(TransactionCase):
             base_url = "http://%s:%s" % (HOST, PORT)
             ICP = self.env['ir.config_parameter']
             ICP.set_param('web.base.url', base_url)
+            # flush updates to the database before launching the client side,
+            # otherwise they simply won't be visible
+            ICP.flush()
             url = "%s%s" % (base_url, url_path or '/')
             self._logger.info('Open "%s" in browser', url)
 
@@ -993,6 +1046,7 @@ class HttpCase(TransactionCase):
         finally:
             # clear browser to make it stop sending requests, in case we call
             # the method several times in a test method
+            self.browser.delete_cookie('session_id', domain=HOST)
             self.browser.clear()
             self._wait_remaining_requests()
 
@@ -1003,7 +1057,12 @@ class HttpCase(TransactionCase):
         step_delay = ', %s' % step_delay if step_delay else ''
         code = kwargs.pop('code', "odoo.startTour('%s'%s)" % (tour_name, step_delay))
         ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours.%s.ready" % tour_name)
-        return self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
+        res = self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
+        # some tests read the result after the tour, and as  the tour does not
+        # use this environment's cache, invalidate it to fetch the data from the
+        # database
+        self.env.cache.invalidate()
+        return res
 
     phantom_js = browser_js
 
@@ -1026,6 +1085,9 @@ def users(*logins):
                     # switch user and execute func
                     self.uid = user_id[login]
                     func(*args, **kwargs)
+                # Invalidate the cache between subtests, in order to not reuse
+                # the former user's cache (`test_read_mail`, `test_write_mail`)
+                self.env.cache.invalidate()
         finally:
             self.uid = old_uid
 
@@ -1040,13 +1102,16 @@ def warmup(func, *args, **kwargs):
         effects of the warmup phase are rolled back thanks to a savepoint.
     """
     self = args[0]
+    self.env['base'].flush()
+    self.env.cache.invalidate()
     # run once to warm up the caches
     self.warm = False
     self.cr.execute('SAVEPOINT test_warmup')
     func(*args, **kwargs)
+    self.env['base'].flush()
+    # run once for real
     self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
     self.env.cache.invalidate()
-    # run once for real
     self.warm = True
     func(*args, **kwargs)
 
@@ -1440,7 +1505,7 @@ class Form(object):
         fields = self._view['fields']
         for f in fields:
             v = self._values[f]
-            if self._get_modifier(f, 'required'):
+            if self._get_modifier(f, 'required') and not fields[f]['type'] == 'boolean':
                 assert v is not False, "{} is a required field".format(f)
 
             # skip unmodified fields

@@ -24,8 +24,10 @@
             <field name="model">account.payment</field>
             <field name="inherit_id" ref="account.view_account_payment_search"/>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@name='state_sent']" position="before">
-                    <filter string="Checks To Print" domain="[('payment_method_id.code', '=', 'check_printing'), ('state','=','posted')]" name="checks_to_send"/>
+                <xpath expr="//filter[@name='activities_overdue']" position="before">
+                    <separator/>
+                    <filter name="checks_to_send" string="Checks to Print" domain="[('payment_method_id.code', '=', 'check_printing'), ('state', '=', 'posted')]"/>
+                    <separator/>
                 </xpath>
             </field>
         </record>

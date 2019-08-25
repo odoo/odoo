@@ -114,194 +114,194 @@
 
         <record model="lunch.product" id="product_bacon">
             <field name="name">Bacon</field>
-            <field name="category_id" eval="str(ref('categ_burger'))"/>
+            <field name="category_id" ref="categ_burger"/>
             <field name="price">7.5</field>
             <field name="supplier_id" ref="supplier_corner"/>
             <field name="description">Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce</field>
-            <field name="image" type="base64" file="lunch/static/img/bacon_burger.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/bacon_burger.png"/>
             <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
         </record>
 
         <record model="lunch.product" id="product_cheeseburger">
             <field name="name">Cheese Burger</field>
-            <field name="category_id" eval="str(ref('categ_burger'))"/>
+            <field name="category_id" ref="categ_burger"/>
             <field name="price">7.0</field>
             <field name="supplier_id" ref="supplier_corner"/>
             <field name="description">Beef, Cheddar, Salad, Fried Onions, BBQ Sauce</field>
-            <field name="image" type="base64" file="lunch/static/img/cheeseburger.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/cheeseburger.png"/>
         </record>
 
         <record model="lunch.product" id="product_chicken_curry">
             <field name="name">Chicken Curry</field>
-            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="category_id" ref="categ_sandwich"/>
             <field name="price">3.0</field>
             <field name="supplier_id" ref="supplier_corner"/>
-            <field name="image" type="base64" file="lunch/static/img/chicken_curry.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/chicken_curry.png"/>
         </record>
 
         <record model="lunch.product" id="product_spicy_tuna">
             <field name="name">Spicy Tuna</field>
-            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="category_id" ref="categ_sandwich"/>
             <field name="price">3.0</field>
             <field name="supplier_id" ref="supplier_corner"/>
-            <field name="image" type="base64" file="lunch/static/img/chicken_curry.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/chicken_curry.png"/>
         </record>
 
         <record model="lunch.product" id="product_mozzarella">
             <field name="name">Mozzarella</field>
-            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="category_id" ref="categ_sandwich"/>
             <field name="price">3.9</field>
             <field name="supplier_id" ref="supplier_corner"/>
             <field name="description">Mozzarella, Pesto, Tomatoes</field>
-            <field name="image" type="base64" file="lunch/static/img/mozza.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/mozza.png"/>
         </record>
 
         <record model="lunch.product" id="product_club">
             <field name="name">Club</field>
-            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="category_id" ref="categ_sandwich"/>
             <field name="price">3.4</field>
             <field name="supplier_id" ref="supplier_corner"/>
             <field name="description">Ham, Cheese, Vegetables</field>
-            <field name="image" type="base64" file="lunch/static/img/club.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/club.png"/>
         </record>
 
         <record model="lunch.product" id="product_maki">
             <field name="name">Lunch Maki 18pc</field>
-            <field name="category_id" eval="str(ref('categ_sushi'))"/>
+            <field name="category_id" ref="categ_sushi"/>
             <field name="price">12.0</field>
             <field name="supplier_id" ref="supplier_sushi_shop"/>
             <field name="description">6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado</field>
-            <field name="image" type="base64" file="lunch/static/img/maki.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/maki.png"/>
             <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
         </record>
 
         <record model="lunch.product" id="product_salmon">
             <field name="name">Lunch Salmon 20pc</field>
-            <field name="category_id" eval="str(ref('categ_sushi'))"/>
+            <field name="category_id" ref="categ_sushi"/>
             <field name="price">13.80</field>
             <field name="supplier_id" ref="supplier_sushi_shop"/>
             <field name="description">4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon </field>
-            <field name="image" type="base64" file="lunch/static/img/salmon_sushi.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/salmon_sushi.png"/>
             <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
         </record>
 
         <record model="lunch.product" id="product_temaki">
             <field name="name">Lunch Temaki mix 3pc</field>
-            <field name="category_id" eval="str(ref('categ_temaki'))"/>
+            <field name="category_id" ref="categ_temaki"/>
             <field name="price">14.0</field>
             <field name="supplier_id" ref="supplier_sushi_shop"/>
             <field name="description">1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna</field>
-            <field name="image" type="base64" file="lunch/static/img/temaki.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/temaki.png"/>
             <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
         </record>
 
         <record model="lunch.product" id="product_chirashi">
             <field name="name">Salmon and Avocado</field>
-            <field name="category_id" eval="str(ref('categ_chirashi'))"/>
+            <field name="category_id" ref="categ_chirashi"/>
             <field name="price">9.25</field>
             <field name="supplier_id" ref="supplier_sushi_shop"/>
             <field name="description">2 Tempuras, Cabbages, Onions, Sesame Sauce</field>
-            <field name="image" type="base64" file="lunch/static/img/chirashi.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/chirashi.png"/>
             <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
         </record>
 
         <record model="lunch.product" id="product_cheese_ham">
             <field name="name">Cheese And Ham</field>
-            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="category_id" ref="categ_sandwich"/>
             <field name="price">3.30</field>
-            <field name="supplier_id" eval="str(ref('supplier_coin_gourmand'))"/>
+            <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="description">Cheese, Ham, Salad, Tomatoes, cucumbers, eggs</field>
-            <field name="image" type="base64" file="lunch/static/img/club.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/club.png"/>
         </record>
 
         <record model="lunch.product" id="product_country">
             <field name="name">The Country</field>
-            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="category_id" ref="categ_sandwich"/>
             <field name="price">3.30</field>
-            <field name="supplier_id" eval="str(ref('supplier_coin_gourmand'))"/>
+            <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="description">Brie, Honey, Walnut Kernels</field>
-            <field name="image" type="base64" file="lunch/static/img/brie.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/brie.png"/>
         </record>
 
         <record model="lunch.product" id="product_tuna">
             <field name="name">Tuna</field>
-            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="category_id" ref="categ_sandwich"/>
             <field name="price">2.50</field>
-            <field name="supplier_id" eval="str(ref('supplier_coin_gourmand'))"/>
+            <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="description">Tuna, Mayonnaise</field>
-            <field name="image" type="base64" file="lunch/static/img/tuna_sandwich.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/tuna_sandwich.png"/>
         </record>
 
         <record model="lunch.product" id="product_gouda">
             <field name="name">Gouda Cheese</field>
-            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="category_id" ref="categ_sandwich"/>
             <field name="price">2.50</field>
-            <field name="supplier_id" eval="str(ref('supplier_coin_gourmand'))"/>
+            <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="description"></field>
-            <field name="image" type="base64" file="lunch/static/img/gouda.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/gouda.png"/>
         </record>
 
         <record model="lunch.product" id="product_chicken_curry">
             <field name="name">Chicken Curry</field>
-            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="category_id" ref="categ_sandwich"/>
             <field name="price">2.60</field>
-            <field name="supplier_id" eval="str(ref('supplier_coin_gourmand'))"/>
+            <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="description"></field>
-            <field name="image" type="base64" file="lunch/static/img/chicken_curry.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/chicken_curry.png"/>
         </record>
 
         <record model="lunch.product" id="product_margherita">
             <field name="name">Pizza Margherita</field>
-            <field name="category_id" eval="str(ref('categ_pizza'))"/>
+            <field name="category_id" ref="categ_pizza"/>
             <field name="price">6.90</field>
-            <field name="supplier_id" eval="str(ref('supplier_pizza_inn'))"/>
+            <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Tomatoes, Mozzarella</field>
-            <field name="image" type="base64" file="lunch/static/img/pizza_margherita.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/pizza_margherita.png"/>
         </record>
 
         <record model="lunch.product" id="product_funghi">
             <field name="name">Pizza Funghi</field>
-            <field name="category_id" eval="str(ref('categ_pizza'))"/>
+            <field name="category_id" ref="categ_pizza"/>
             <field name="price">7.00</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Tomatoes, Mushrooms, Mozzarella</field>
-            <field name="image" type="base64" file="lunch/static/img/pizza_funghi.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/pizza_funghi.png"/>
         </record>
 
         <record model="lunch.product" id="product_vege">
             <field name="name">Pizza Vegetarian</field>
-            <field name="category_id" eval="str(ref('categ_pizza'))"/>
+            <field name="category_id" ref="categ_pizza"/>
             <field name="price">7.00</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Tomatoes, Mozzarella, Mushrooms, Peppers, Olives</field>
-            <field name="image" type="base64" file="lunch/static/img/pizza_veggie.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/pizza_veggie.png"/>
         </record>
 
         <record model="lunch.product" id="product_italiana">
             <field name="name">Pizza Italiana</field>
-            <field name="category_id" eval="str(ref('categ_pizza'))"/>
+            <field name="category_id" ref="categ_pizza"/>
             <field name="price">7.40</field>
-            <field name="supplier_id" eval="str(ref('supplier_pizza_inn'))"/>
+            <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Fresh Tomatoes, Basil, Mozzarella</field>
-            <field name="image" type="base64" file="lunch/static/img/italiana.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/italiana.png"/>
         </record>
 
         <record model="lunch.product" id="product_Bolognese">
             <field name="name">Bolognese Pasta</field>
-            <field name="category_id" eval="str(ref('categ_pasta'))"/>
+            <field name="category_id" ref="categ_pasta"/>
             <field name="price">7.70</field>
-            <field name="supplier_id" eval="str(ref('supplier_pizza_inn'))"/>
+            <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description"></field>
-            <field name="image" type="base64" file="lunch/static/img/pasta_bolognese.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/pasta_bolognese.png"/>
         </record>
 
          <record model="lunch.product" id="product_Napoli">
             <field name="name">Napoli Pasta</field>
-            <field name="category_id" eval="str(ref('categ_pasta'))"/>
+            <field name="category_id" ref="categ_pasta"/>
             <field name="price">7.70</field>
-            <field name="supplier_id" eval="str(ref('supplier_pizza_inn'))"/>
+            <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Tomatoes, Basil</field>
-            <field name="image" type="base64" file="lunch/static/img/napoli.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/napoli.png"/>
         </record>
 
         <record model="lunch.topping" id="product_olives">
@@ -312,11 +312,11 @@
 
          <record model="lunch.product" id="product_4formaggi">
             <field name="name">4 Formaggi</field>
-            <field name="category_id" eval="str(ref('categ_pasta'))"/>
+            <field name="category_id" ref="categ_pasta"/>
             <field name="price">5.50</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="description">Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan</field>
-            <field name="image" type="base64" file="lunch/static/img/4formaggio.png"/>
+            <field name="image_1920" type="base64" file="lunch/static/img/4formaggio.png"/>
         </record>
 
         <record model="lunch.cashmove" id="cashmove_1">

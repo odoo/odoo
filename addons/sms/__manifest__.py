@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'SMS gateway',
+    'version': '2.0',
     'category': 'Tools',
     'summary': 'SMS Text Messaging',
     'description': """

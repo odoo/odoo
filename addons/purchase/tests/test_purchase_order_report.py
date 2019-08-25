@@ -18,7 +18,7 @@ class TestPurchaseOrderReport(common.TransactionCase):
         # Create a new company and set CoA
         self.company_id = self.env['res.company'].create({'name': 'new_company'})
         self.env.user.company_id = self.company_id
-        self.env.ref('l10n_generic_coa.configurable_chart_template').load_for_current_company(False, False)
+        self.env.ref('l10n_generic_coa.configurable_chart_template').try_loading()
 
     def test_00_purchase_order_report(self):
         uom_dozen = self.env.ref('uom.product_uom_dozen')
@@ -61,6 +61,7 @@ class TestPurchaseOrderReport(common.TransactionCase):
         f.purchase_id = po
         invoice = f.save()
         invoice.post()
+        po.flush()
 
         res_product1 = self.PurchaseReport.search([
             ('order_id', '=', po.id), ('product_id', '=', self.product1.id)])

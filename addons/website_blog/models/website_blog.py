@@ -5,8 +5,6 @@ from datetime import datetime
 import random
 import json
 
-import itertools
-
 from odoo import api, models, fields, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
@@ -22,6 +20,7 @@ class Blog(models.Model):
     name = fields.Char('Blog Name', required=True, translate=True)
     subtitle = fields.Char('Blog Subtitle', translate=True)
     active = fields.Boolean('Active', default=True)
+    content = fields.Html('Content', translate=html_translate, sanitize=False)
 
     def write(self, vals):
         res = super(Blog, self).write(vals)
@@ -48,7 +47,8 @@ class Blog(models.Model):
                 subtype = 'mail.mt_note'
         return super(Blog, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
 
-    def all_tags(self, min_limit=1):
+    def all_tags(self, join=False, min_limit=1):
+        BlogTag = self.env['blog.tag']
         req = """
             SELECT
                 p.blog_id, count(*), r.blog_tag_id
@@ -65,13 +65,20 @@ class Blog(models.Model):
         """
         self._cr.execute(req, [tuple(self.ids)])
         tag_by_blog = {i.id: [] for i in self}
+        all_tags = set()
         for blog_id, freq, tag_id in self._cr.fetchall():
             if freq >= min_limit:
-                tag_by_blog[blog_id].append(tag_id)
+                if join:
+                    all_tags.add(tag_id)
+                else:
+                    tag_by_blog[blog_id].append(tag_id)
 
-        BlogTag = self.env['blog.tag']
+        if join:
+            return BlogTag.browse(all_tags)
+
         for blog_id in tag_by_blog:
             tag_by_blog[blog_id] = BlogTag.browse(tag_by_blog[blog_id])
+
         return tag_by_blog
 
 
@@ -126,24 +133,15 @@ class BlogPost(models.Model):
 
     def _default_content(self):
         return '''
-            <section class="s_text_block">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 mb16 mt16">
-                            <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
         '''
-
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id)
     active = fields.Boolean('Active', default=True)
     cover_properties = fields.Text(
         'Cover Properties',
-        default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": ""}')
+        default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": "cover_mid"}')
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
@@ -160,7 +158,7 @@ class BlogPost(models.Model):
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
     write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
-    author_avatar = fields.Binary(related='author_id.image_small', string="Avatar", readonly=False)
+    author_avatar = fields.Binary(related='author_id.image_64', string="Avatar", readonly=False)
     visits = fields.Integer('No of Views', copy=False)
     ranking = fields.Float(compute='_compute_ranking', string='Ranking')
 
@@ -173,7 +171,7 @@ class BlogPost(models.Model):
                 blog_post.teaser = blog_post.teaser_manual
             else:
                 content = html2plaintext(blog_post.content).replace('\n', ' ')
-                blog_post.teaser = content[:150] + '...'
+                blog_post.teaser = content[:200] + '...'
 
     def _set_teaser(self):
         for blog_post in self:
@@ -194,7 +192,7 @@ class BlogPost(models.Model):
                 blog_post._write(dict(post_date=blog_post.create_date)) # dont trigger inverse function
 
     def _check_for_publication(self, vals):
-        if vals.get('website_published'):
+        if vals.get('is_published'):
             for post in self:
                 post.blog_id.message_post_with_view(
                     'website_blog.blog_post_template_new_post',
@@ -214,9 +212,10 @@ class BlogPost(models.Model):
         result = True
         for post in self:
             copy_vals = dict(vals)
-            if ('website_published' in vals and 'published_date' not in vals and
+            published_in_vals = set(vals.keys()) & {'is_published', 'website_published'}
+            if (published_in_vals and 'published_date' not in vals and
                     (not post.published_date or post.published_date <= fields.Datetime.now())):
-                copy_vals['published_date'] = vals['website_published'] and fields.Datetime.now() or False
+                copy_vals['published_date'] = vals[list(published_in_vals)[0]] and fields.Datetime.now() or False
             result &= super(BlogPost, self).write(copy_vals)
         self._check_for_publication(vals)
         return result
@@ -257,6 +256,10 @@ class BlogPost(models.Model):
     def _default_website_meta(self):
         res = super(BlogPost, self)._default_website_meta()
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.subtitle
+        res['default_opengraph']['og:type'] = 'article'
+        res['default_opengraph']['article:published_time'] = self.post_date
+        res['default_opengraph']['article:modified_time'] = self.write_date
+        res['default_opengraph']['article:tag'] = self.tag_ids.mapped('name')
         blog_post_cover_properties = json.loads(self.cover_properties)
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = blog_post_cover_properties.get('background-image', 'none')[4:-1]
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name

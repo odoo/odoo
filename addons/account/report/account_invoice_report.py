@@ -37,9 +37,9 @@ class AccountInvoiceReport(models.Model):
         ('in_payment', 'In Payment'),
         ('paid', 'paid')
     ], string='Payment Status', readonly=True)
-    fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position', readonly=True)
+    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
     invoice_date = fields.Date(readonly=True, string="Invoice Date")
-    invoice_payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term', readonly=True)
+    invoice_payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True)
     invoice_partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account', readonly=True)
     nbr_lines = fields.Integer(string='Line Count', readonly=True)
     residual = fields.Float(string='Due Amount', readonly=True)
@@ -181,10 +181,9 @@ class ReportInvoiceWithPayment(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        report = self.env['ir.actions.report']._get_report_from_name('account.report_invoice_with_payments')
         return {
             'doc_ids': docids,
-            'doc_model': report.model,
-            'docs': self.env[report.model].browse(docids),
+            'doc_model': 'account.move',
+            'docs': self.env['account.move'].browse(docids),
             'report_type': data.get('report_type') if data else '',
         }

@@ -222,6 +222,9 @@ if(!the_form.length) {
                 allowInputToggle: true,
                 keyBinds: null,
             });
+            $('#' + date_field.id).on('error.datetimepicker', function () {
+                return false;
+            });
         });
         // Launch prefilling
         prefill();

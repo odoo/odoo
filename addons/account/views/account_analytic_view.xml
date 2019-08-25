@@ -30,8 +30,11 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='date']" position="after">
-                        <field name="ref" invisible="context.get('to_invoice', False)"/>
+                    <xpath expr="//field[@name='account_id']" position="after">
+                        <field name="ref" invisible="context.get('to_invoice', False)" optional="hide"/>
+                        <field name="general_account_id" optional="hide"/>
+                        <field name="move_id" optional="hide"/>
+                        <field name="product_id" optional="hide"/>
                     </xpath>
                 </data>
             </field>
@@ -68,7 +71,7 @@
 
         <menuitem
             name="Analytic Items"
-            parent="account.menu_finance_entries_accounting_miscellaneous"
+            parent="account.menu_finance_entries_management"
             action="analytic.account_analytic_line_action_entries"
             id="menu_action_analytic_lines_tree"
             sequence="35"

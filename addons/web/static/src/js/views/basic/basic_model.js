@@ -780,7 +780,7 @@ var BasicModel = AbstractModel.extend({
         var defs = [];
         var record_fields = {};
         _.each(fields, function (field) {
-            record_fields[field.name] = _.pick(field, 'type', 'relation', 'domain');
+            record_fields[field.name] = _.pick(field, 'type', 'relation', 'domain', 'selection');
         });
         fieldInfo = fieldInfo || {};
         var fieldsInfo = {};
@@ -796,6 +796,7 @@ var BasicModel = AbstractModel.extend({
         });
         _.each(fields, function (field) {
             var dataPoint;
+            record.data[field.name] = null;
             if (field.type === 'many2one') {
                 if (field.value) {
                     var id = _.isArray(field.value) ? field.value[0] : field.value;
@@ -1433,9 +1434,9 @@ var BasicModel = AbstractModel.extend({
         // apply changes to local data
         for (var fieldName in changes) {
             field = record.fields[fieldName];
-            if (field.type === 'one2many' || field.type === 'many2many') {
+            if (field && (field.type === 'one2many' || field.type === 'many2many')) {
                 defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options));
-            } else if (field.type === 'many2one' || field.type === 'reference') {
+            } else if (field && (field.type === 'many2one' || field.type === 'reference')) {
                 defs.push(this._applyX2OneChange(record, fieldName, changes[fieldName]));
             } else {
                 record._changes[fieldName] = changes[fieldName];
@@ -1450,7 +1451,7 @@ var BasicModel = AbstractModel.extend({
             var onChangeFields = []; // the fields that have changed and that have an on_change
             for (var fieldName in changes) {
                 field = record.fields[fieldName];
-                if (field.onChange) {
+                if (field && field.onChange) {
                     var isX2Many = field.type === 'one2many' || field.type === 'many2many';
                     if (!isX2Many || (self._isX2ManyValid(record._changes[fieldName] || record.data[fieldName]))) {
                         onChangeFields.push(fieldName);
@@ -1473,12 +1474,6 @@ var BasicModel = AbstractModel.extend({
                     resolve(_.keys(changes));
                 }
             }).then(function (fieldNames) {
-                _.each(fieldNames, function (name) {
-                    if (record._changes && record._changes[name] === record.data[name]) {
-                        delete record._changes[name];
-                        record._isDirty = !_.isEmpty(record._changes);
-                    }
-                });
                 return self._fetchSpecialData(record).then(function (fieldNames2) {
                     // Return the names of the fields that changed (onchange or
                     // associated special data change)
@@ -4059,11 +4054,7 @@ var BasicModel = AbstractModel.extend({
                     return;
                 }
                 if (result.warning) {
-                    self.trigger_up('warning', {
-                        message: result.warning.message,
-                        title: result.warning.title,
-                        type: 'dialog',
-                    });
+                    self.trigger_up('warning', result.warning);
                     record._warning = true;
                 }
                 if (result.domain) {

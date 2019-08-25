@@ -12,10 +12,12 @@
         </record>
 
         <record model="crm.team" id="sales_team.team_sales_department">
+            <field name="use_quotations" eval="True"/>
             <field name="invoiced_target">250000</field>
         </record>
 
         <record model="crm.team" id="sales_team.crm_team_1">
+            <field name="use_quotations" eval="True"/>
             <field name="invoiced_target">40000</field>
         </record>
 
@@ -623,25 +625,25 @@
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_17')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_18')]]"/>
 
-        <!-- Setting confirmation_date in the past for beautiful spread -->
+        <!-- Setting date_order in the past for beautiful spread -->
         <record id="sale_order_9" model="sale.order">
-            <field name="confirmation_date" eval="datetime.now() - relativedelta(days=7)"/>
+            <field name="date_order" eval="datetime.now() - relativedelta(days=7)"/>
         </record>
 
         <record id="sale_order_11" model="sale.order">
-            <field name="confirmation_date" eval="datetime.now() - relativedelta(days=21)"/>
+            <field name="date_order" eval="datetime.now() - relativedelta(days=21)"/>
         </record>
 
         <record id="sale_order_15" model="sale.order">
-            <field name="confirmation_date" eval="datetime.now() - relativedelta(days=14)"/>
+            <field name="date_order" eval="datetime.now() - relativedelta(days=14)"/>
         </record>
 
         <record id="sale_order_17" model="sale.order">
-            <field name="confirmation_date" eval="datetime.now() - relativedelta(days=28)"/>
+            <field name="date_order" eval="datetime.now() - relativedelta(days=28)"/>
         </record>
 
         <record id="sale_order_18" model="sale.order">
-            <field name="confirmation_date" eval="datetime.now() - relativedelta(days=35)"/>
+            <field name="date_order" eval="datetime.now() - relativedelta(days=35)"/>
         </record>
 
         <record id="message_sale_1" model="mail.message">
@@ -688,7 +690,7 @@ Thanks!</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="company_id" eval="[]"/>
-            <field name="image" type="base64" file="sale/static/img/advance_product_0-image.jpg"/>
+            <field name="image_1920" type="base64" file="sale/static/img/advance_product_0-image.jpg"/>
             <field name="taxes_id" eval="[]"/>
             <field name="supplier_taxes_id" eval="[]"/>
         </record>
@@ -784,7 +786,7 @@ Thanks!</field>
         <function model="sale.order" name="action_confirm" eval="[[ref('portal_sale_order_2')]]"/>
 
         <record id="portal_sale_order_2" model="sale.order">
-            <field name="confirmation_date" eval="datetime.now() - relativedelta(months=1)"/>
+            <field name="date_order" eval="datetime.now() - relativedelta(months=1)"/>
         </record>
 
         <record id="product_attribute_value_7" model="product.attribute.value">

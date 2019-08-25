@@ -122,6 +122,18 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
         # upsell and invoice
         self.sol_serv_order.write({'product_uom_qty': 10})
+        # There is a bug with `new` and `_origin`
+        # If you create a first new from a record, then change a value on the origin record, than create another new,
+        # this other new wont have the updated value of the origin record, but the one from the previous new
+        # Here the problem lies in the use of `new` in `move = self_ctx.new(new_vals)`,
+        # and the fact this method is called multiple times in the same transaction test case.
+        # Here, we update `qty_delivered` on the origin record, but the `new` records which are in cache with this order line
+        # as origin are not updated, nor the fields that depends on it.
+        self.sol_serv_order.flush()
+        for field in self.env['sale.order.line']._fields.values():
+            for res_id in list(self.env.cache._data[field]):
+                if not res_id:
+                    self.env.cache._data[field].pop(res_id)
 
         invoice3 = self.sale_order._create_invoices()
         self.assertEqual(len(invoice3.invoice_line_ids), 1, 'Sale: third invoice is missing lines')
@@ -238,6 +250,59 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEquals(self.sale_order.amount_total,
                           self.sale_order.amount_untaxed + self.sale_order.amount_tax,
                           'Taxes should be applied')
+
+    def test_so_create_multicompany(self):
+        # Preparing test Data
+        user_demo = self.env.ref('base.user_demo')
+        company_1 = self.env.ref('base.main_company')
+        company_2 = self.env['res.company'].create({
+            'name': 'company 2',
+            'parent_id': company_1.id,
+        })
+        user_demo.write({
+            'groups_id': [(4, self.env.ref('sales_team.group_sale_manager').id, False)],
+            'company_ids': [(6, False, [company_1.id])],
+            'company_id': company_1.id,
+        })
+
+        so_partner = self.env.ref('base.res_partner_2')
+        so_partner.write({
+            'property_account_position_id': False,
+        })
+
+        tax_company_1 = self.env['account.tax'].create({
+            'name': 'T1',
+            'amount': 90,
+            'company_id': company_1.id,
+        })
+
+        tax_company_2 = self.env['account.tax'].create({
+            'name': 'T2',
+            'amount': 90,
+            'company_id': company_2.id,
+        })
+
+        product_shared = self.env['product.template'].create({
+            'name': 'shared product',
+            'taxes_id': [(6, False, [tax_company_1.id, tax_company_2.id])],
+        })
+
+        # Use case
+        so_1 = self.env['sale.order'].with_user(user_demo.id).create({
+            'partner_id': so_partner.id,
+            'company_id': company_1.id,
+        })
+        so_1.invalidate_cache()
+
+        # This is what is done when importing the csv lines (on sale.order):
+        # id,order_line/product_id
+        # __export__.sale_order_37_1bb960ba,Product name
+        so_1.write({
+            'order_line': [(0, False, {'product_id': product_shared.product_variant_id.id, 'order_id': so_1.id})],
+        })
+
+        self.assertEqual(set(so_1.order_line.tax_id.ids), set([tax_company_1.id]),
+            'Only taxes from the right company are put by default')
 
     def test_reconciliation_with_so(self):
         # create SO

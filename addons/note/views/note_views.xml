@@ -92,12 +92,12 @@
           <templates>
             <t t-name="kanban-box">
 
-              <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
+              <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
 
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
 
                 <div class="o_dropdown_kanban dropdown">
-                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                         <span class="fa fa-ellipsis-v"/>
                     </a>
                     <div class="dropdown-menu" role="menu">
@@ -122,7 +122,7 @@
                 <t t-if="record.message_partner_ids.raw_value.length &gt; 1">
                     <div class="clearfix"></div>
                       <t t-foreach="record.message_partner_ids.raw_value" t-as="follower">
-                        <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar float-right" t-att-data-member_id="follower" alt="Follower"/>
+                        <img t-att-src="kanban_image('res.partner', 'image_64', follower)" width="24" height="24" class="oe_kanban_avatar float-right" t-att-data-member_id="follower" alt="Follower"/>
                       </t>
                     <div class="clearfix"></div>
                 </t>
@@ -143,6 +143,7 @@
           <field name="open"/>
           <field name="stage_id"/>
           <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+          <field name="activity_exception_decoration" widget="activity_exception"/>
         </tree>
       </field>
     </record>
@@ -179,18 +180,16 @@
           <field name="tag_ids"/>
           <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
           <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
-          <separator/>
-          <filter string="My Activities" name="activities_my"
-                  domain="[('activity_ids.user_id', '=', uid)]"/>
-          <separator/>
-          <filter string="Late Activities" name="activities_overdue"
+          <filter invisible="1" string="Late Activities" name="activities_overdue"
                   domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                   help="Show all records which has next action date is before today"/>
-          <filter string="Today Activities" name="activities_today"
+          <filter invisible="1" string="Today Activities" name="activities_today"
                   domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-          <filter string="Future Activities" name="activities_upcoming_all"
+          <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+          <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
           <group expand="0" string="Group By">
             <filter string="Stage" name="stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>

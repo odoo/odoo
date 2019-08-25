@@ -167,7 +167,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         // by default this is synchronous because the assets are already loaded in willStart
         // but it can be async in the case of options such as iframe, snippets...
         return this.wysiwyg.attachTo(this.$target).then(function () {
-            self.$content = self.wysiwyg.$editor;
+            self.$content = self.wysiwyg.$editor.closest('body, odoo-wysiwyg-container');
             self._onLoadWysiwyg();
             self.isRendered = true;
         });
@@ -179,7 +179,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @returns {Object}
      */
     _getWysiwygOptions: function () {
-        return {
+        return Object.assign({}, this.nodeOptions, {
             recordInfo: {
                 context: this.record.getContext(this.recordParams),
                 res_model: this.model,
@@ -190,25 +190,18 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             iframeCssAssets: this.nodeOptions.cssEdit,
             snippets: this.nodeOptions.snippets,
 
-            tabSize: 0,
-            keyMap: {
-                pc: {
-                    'TAB': null,
-                    'SHIFT+TAB': null,
-                },
-                mac: {
-                    'TAB': null,
-                    'SHIFT+TAB': null,
-                },
-            },
+            tabsize: 0,
+            height: 180,
             generateOptions: function (options) {
                 var para = _.find(options.toolbar, function (item) {
                     return item[0] === 'para';
                 });
-                para[1].splice(2, 0, 'checklist');
+                if (para && para[1] && para[1].indexOf('checklist') === -1) {
+                    para[1].splice(2, 0, 'checklist');
+                }
                 return options;
             },
-        };
+        });
     },
     /**
      * trigger_up 'field_changed' add record into the "ir.attachment" field found in the view.
@@ -466,10 +459,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             'font-size': '15px',
             position: 'absolute',
             right: '+5px',
+            top: '+5px',
         });
-        var $toolbar = this.$content.find('.note-toolbar');
-        $toolbar.css('position', 'relative');
-        $toolbar.append($button);
+        this.$el.append($button);
     },
     /**
      * @private

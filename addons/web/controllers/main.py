@@ -39,7 +39,7 @@ from odoo.modules import get_module_path, get_resource_path
 from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
-from odoo.tools.misc import str2bool, xlwt, file_open
+from odoo.tools.misc import str2bool, xlsxwriter, file_open
 from odoo.tools.safe_eval import safe_eval
 from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, Response
@@ -565,11 +565,11 @@ class HomeStaticTemplateHelpers(object):
             key: addon name
             value: list of files for an addon
         :returns: (concatenation_result, checksum)
-        :rtype: (str, str)
+        :rtype: (bytes, str)
         """
         checksum = hashlib.new('sha1')
         if not file_dict:
-            return '', checksum.hexdigest()
+            return b'', checksum.hexdigest()
 
         root = None
         for addon, fnames in file_dict.items():
@@ -586,7 +586,7 @@ class HomeStaticTemplateHelpers(object):
             for template in addon.values():
                 root.append(template)
 
-        return etree.tostring(root, encoding='utf-8') if root is not None else '', checksum.hexdigest()
+        return etree.tostring(root, encoding='utf-8') if root is not None else b'', checksum.hexdigest()
 
     def _get_qweb_templates(self):
         """One and only entry point that gets and evaluates static qweb templates
@@ -793,6 +793,7 @@ class WebClient(http.Controller):
         translations_per_module, lang_params = request.env["ir.translation"].get_translations_for_webclient(mods, lang)
 
         body = json.dumps({
+            'lang': lang,
             'lang_parameters': lang_params,
             'modules': translations_per_module,
             'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
@@ -1186,7 +1187,7 @@ class Binary(http.Controller):
         '/web/partner_image/<int:rec_id>',
         '/web/partner_image/<int:rec_id>/<string:field>',
         '/web/partner_image/<int:rec_id>/<string:field>/<string:model>/'], type='http', auth="public")
-    def content_image_partner(self, rec_id, field='image_small', model='res.partner', **kwargs):
+    def content_image_partner(self, rec_id, field='image_64', model='res.partner', **kwargs):
         # other kwargs are ignored on purpose
         return self._content_image(id=rec_id, model='res.partner', field=field,
             placeholder='user_placeholder.jpg')
@@ -1441,7 +1442,7 @@ class Export(http.Controller):
         :rtype: [(str, str)]
         """
         return [
-            {'tag': 'xls', 'label': 'Excel', 'error': None if xlwt else "XLWT 1.3.0 required"},
+            {'tag': 'xlsx', 'label': 'XLSX', 'error': None if xlsxwriter else "XlsxWriter 0.9.3 required"},
             {'tag': 'csv', 'label': 'CSV'},
         ]
 
@@ -1455,23 +1456,21 @@ class Export(http.Controller):
                    import_compat=True, parent_field_type=None,
                    parent_field=None, exclude=None):
 
-        if import_compat and parent_field_type in ['many2one', 'many2many']:
-            fields = self.fields_get(model)
-            fields = {k: v for k, v in fields.items() if k in ['id', 'name']}
+        fields = self.fields_get(model)
+        if import_compat:
+            if parent_field_type in ['many2one', 'many2many']:
+                fields = {'id': fields['id'], 'name': fields['name']}
         else:
-            fields = self.fields_get(model)
+            fields['.id'] = {**fields['id']}
 
-        if not import_compat:
-            fields['.id'] = fields.pop('id', {'string': 'ID'})
-        else:
-            fields['id']['string'] = _('External ID')
+        fields['id']['string'] = _('External ID')
 
         if parent_field:
             parent_field['string'] = _('External ID')
             fields['id'] = parent_field
 
         fields_sequence = sorted(fields.items(),
-            key=lambda field: (field[0] not in ['id', '.id', 'display_name', 'name'], odoo.tools.ustr(field[1].get('string', ''))))
+            key=lambda field: odoo.tools.ustr(field[1].get('string', '').lower()))
 
         records = []
         for field_name, field in fields_sequence:
@@ -1487,12 +1486,13 @@ class Export(http.Controller):
                 continue
 
             id = prefix + (prefix and '/'or '') + field_name
+            val = id
             if field_name == 'name' and import_compat and parent_field_type in ['many2one', 'many2many']:
                 # Add name field when expand m2o and m2m fields in import-compatible mode
-                id = prefix
+                val = prefix
             name = parent_name + (parent_name and '/' or '') + field['string']
             record = {'id': id, 'string': name,
-                      'value': id, 'children': False,
+                      'value': val, 'children': False,
                       'field_type': field.get('type'),
                       'required': field.get('required'),
                       'relation_field': field.get('relation_field')}
@@ -1576,7 +1576,6 @@ class Export(http.Controller):
             for k, v in self.fields_info(model, export_fields).items())
 
 class ExportFormat(object):
-    raw_data = False
 
     @property
     def content_type(self):
@@ -1612,7 +1611,7 @@ class ExportFormat(object):
             fields = [field for field in fields if field['name'] != 'id']
 
         field_names = [f['name'] for f in fields]
-        import_data = records.export_data(field_names, self.raw_data).get('datas',[])
+        import_data = records.export_data(field_names).get('datas',[])
 
         if import_compat:
             columns_headers = field_names
@@ -1658,66 +1657,62 @@ class CSVExport(ExportFormat, http.Controller):
         return fp.getvalue()
 
 class ExcelExport(ExportFormat, http.Controller):
-    # Excel needs raw data to correctly handle numbers and date values
-    raw_data = True
 
-    @http.route('/web/export/xls', type='http', auth="user")
+    @http.route('/web/export/xlsx', type='http', auth="user")
     @serialize_exception
     def index(self, data, token):
         return self.base(data, token)
 
     @property
     def content_type(self):
-        return 'application/vnd.ms-excel'
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
     def filename(self, base):
-        return base + '.xls'
+        return base + '.xlsx'
 
     def from_data(self, fields, rows):
-        if len(rows) > 65535:
-            raise UserError(_('There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 (.xls) format. Consider splitting the export.') % len(rows))
-
-        workbook = xlwt.Workbook()
-        worksheet = workbook.add_sheet('Sheet 1')
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet()
+        if len(rows) > worksheet.xls_rowmax:
+            raise UserError(_('There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.') % (len(rows), worksheet.xls_rowmax))
 
         for i, fieldname in enumerate(fields):
             worksheet.write(0, i, fieldname)
-            worksheet.col(i).width = 8000 # around 220 pixels
+        worksheet.set_column(0, len(fields)-1, 30) # around 220 pixels
 
-        base_style = xlwt.easyxf('align: wrap yes')
-        date_style = xlwt.easyxf('align: wrap yes', num_format_str='YYYY-MM-DD')
-        datetime_style = xlwt.easyxf('align: wrap yes', num_format_str='YYYY-MM-DD HH:mm:SS')
+        base_style = workbook.add_format({'text_wrap': True})
+        date_style = workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd'})
+        datetime_style = workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd hh:mm:ss'})
 
         for row_index, row in enumerate(rows):
             for cell_index, cell_value in enumerate(row):
                 cell_style = base_style
 
-                if isinstance(cell_value, bytes) and not isinstance(cell_value, str):
-                    # because xls uses raw export, we can get a bytes object
-                    # here. xlwt does not support bytes values in Python 3 ->
-                    # assume this is base64 and decode to a string, if this
-                    # fails note that you can't export
+                if isinstance(cell_value, bytes):
                     try:
+                        # because xlsx uses raw export, we can get a bytes object
+                        # here. xlsxwriter does not support bytes values in Python 3 ->
+                        # assume this is base64 and decode to a string, if this
+                        # fails note that you can't export
                         cell_value = pycompat.to_text(cell_value)
                     except UnicodeDecodeError:
                         raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.") % fields[cell_index])
 
                 if isinstance(cell_value, str):
-                    cell_value = re.sub("\r", " ", pycompat.to_text(cell_value))
-                    # Excel supports a maximum of 32767 characters in each cell:
-                    cell_value = cell_value[:32767]
+                    if len(cell_value) > worksheet.xls_strmax:
+                        cell_value = _("The content of this cell is too long for an XLSX file (more than %s characters). Please use the CSV format for this export.") % worksheet.xls_strmax
+                    else:
+                        cell_value = cell_value.replace("\r", " ")
                 elif isinstance(cell_value, datetime.datetime):
                     cell_style = datetime_style
                 elif isinstance(cell_value, datetime.date):
                     cell_style = date_style
                 worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
 
-        fp = io.BytesIO()
-        workbook.save(fp)
-        fp.seek(0)
-        data = fp.read()
-        fp.close()
-        return data
+        workbook.close()
+        with output:
+            return output.getvalue()
 
 class Apps(http.Controller):
     @http.route('/apps/<app>', auth='user')
@@ -1784,7 +1779,7 @@ class ReportController(http.Controller):
     # Misc. route utils
     #------------------------------------------------------
     @http.route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="public")
-    def report_barcode(self, type, value, width=600, height=100, humanreadable=0):
+    def report_barcode(self, type, value, width=600, height=100, humanreadable=0, quiet=1):
         """Contoller able to render barcode images thanks to reportlab.
         Samples:
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
@@ -1796,9 +1791,12 @@ class ReportController(http.Controller):
         'UPCA', 'USPS_4State'
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
+        :param quiet: Accepted values: 0 (default) or 1. 1 will display white
+        margins on left and right.
         """
         try:
-            barcode = request.env['ir.actions.report'].barcode(type, value, width=width, height=height, humanreadable=humanreadable)
+            barcode = request.env['ir.actions.report'].barcode(type, value, width=width,
+                height=height, humanreadable=humanreadable, quiet=quiet)
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 

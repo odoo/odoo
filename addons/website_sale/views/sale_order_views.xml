@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="mode">primary</field> 
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='my_sale_orders_filter']" position="replace">
-                <filter string="Confirmed Orders" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
-                <filter string="Unpaid Orders" name="order_unpaid" domain="[('state', '=', 'sent'), ('website_id', '!=', False)]"/>
-                <filter string="Abandoned Carts" name="order_abandoned" domain="[('is_abandoned_cart', '=', True)]"/>
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
+                <filter string="Confirmed" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
+                <filter string="Unpaid" name="order_unpaid" domain="[('state', '=', 'sent'), ('website_id', '!=', False)]"/>
+                <filter string="Abandoned" name="order_abandoned" domain="[('is_abandoned_cart', '=', True)]"/>
                 <separator/>
                 <filter string="Order Date" name="order_date" date="date_order"/>
                 <separator/>
@@ -28,6 +28,10 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="attributes">
                 <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
+                <filter string="Order Date" name="order_date" date="date_order"/>
+                <separator/>
             </xpath>
         </field>
     </record>
@@ -91,8 +95,13 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <search string="Search Abandoned Sales Orders">
+                <filter string="Creation Date" name="creation_date" date="create_date"/>
+                <separator/>
                 <filter string="Recovery Email to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />
                 <filter string="Recovery Email Sent" name="recovery_email_set" domain="[('cart_recovery_email_sent', '=', True)]" />
+                <group expand="0" string="Group By">
+                    <filter string="Order Date" name="order_date" domain="[]" context="{'group_by':'date_order'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -141,7 +150,7 @@
                 action = records.action_recovery_email_send()
         </field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,form</field>
     </record>
 
     <record id="action_view_unpaid_quotation_tree" model="ir.actions.act_window">
@@ -224,7 +233,7 @@
         parent="menu_catalog" groups="product.group_product_variant" sequence="2"/>
     <menuitem id="menu_catalog_pricelists" name="Pricelists"
         action="product.product_pricelist_action2"
-        parent="menu_catalog" groups="product.group_sale_pricelist" sequence="4"/>
+        parent="menu_catalog" groups="product.group_product_pricelist" sequence="4"/>
 
     <!-- Reporting sub-menus -->
     <menuitem id="menu_report_sales" name="Online Sales"
@@ -266,8 +275,30 @@
                 <attribute name="context">{'display_website': True}</attribute>
             </field>
             <field name="team_id" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" attrs="{'invisible': [('website_id', '=', False)]}" groups="website.group_multi_website"/>
             </field>
+        </field>
+    </record>
+
+    <record id="view_quotation_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.website.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field name="website_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.website.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field name="website_id" optional="show"/>
+            </xpath>
         </field>
     </record>
 </odoo>

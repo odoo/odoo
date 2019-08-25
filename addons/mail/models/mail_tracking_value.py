@@ -34,7 +34,7 @@ class MailTracking(models.Model):
 
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
-    tracking_sequence = fields.Integer('Tracking field sequence', readonly=1, default=100, oldname='track_sequence')
+    tracking_sequence = fields.Integer('Tracking field sequence', readonly=1, default=100)
 
     def _compute_field_groups(self):
         for tracking in self:

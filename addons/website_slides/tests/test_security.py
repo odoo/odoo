@@ -66,24 +66,33 @@ class TestAccess(common.SlidesCase):
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_channel_publish(self):
         """ Unpublished channels and their content are visible only to website people """
-        self.channel.write({'website_published': False, 'enroll': 'public'})
+        self.channel.write({'is_published': False, 'enroll': 'public'})
+        self.channel.flush(['is_published', 'website_published', 'enroll'])
 
         # channel available only to website
+        self.channel.invalidate_cache(['name'])
         self.channel.with_user(self.user_publisher).read(['name'])
         with self.assertRaises(AccessError):
+            self.channel.invalidate_cache(['name'])
             self.channel.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
+            self.channel.invalidate_cache(['name'])
             self.channel.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
+            self.channel.invalidate_cache(['name'])
             self.channel.with_user(self.user_public).read(['name'])
 
         # slide available only to website
+        self.channel.invalidate_cache(['name'])
         self.slide.with_user(self.user_publisher).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_public).read(['name'])
 
         # even members cannot see unpublished content
@@ -92,23 +101,31 @@ class TestAccess(common.SlidesCase):
             'partner_id': self.user_emp.partner_id.id,
         })
         with self.assertRaises(AccessError):
+            self.channel.invalidate_cache(['name'])
             self.channel.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_emp).read(['name'])
 
         # publish channel but content unpublished (even if can be previewed) still unavailable
-        self.channel.write({'website_published': True})
+        self.channel.write({'is_published': True})
         self.slide.write({
             'is_preview': True,
-            'website_published': False,
+            'is_published': False,
         })
+        self.channel.flush(['website_published'])
+        self.slide.flush(['is_preview', 'website_published'])
 
+        self.slide.invalidate_cache(['name'])
         self.slide.with_user(self.user_publisher).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
+            self.slide.invalidate_cache(['name'])
             self.slide.with_user(self.user_public).read(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
@@ -116,11 +133,46 @@ class TestAccess(common.SlidesCase):
         """ Slides with preview flag are always visible even to non members if published """
         self.channel.write({'enroll': 'invite'})
         self.slide.write({'is_preview': True})
+        self.slide.flush(['is_preview'])
 
         self.slide.with_user(self.user_publisher).read(['name'])
         self.slide.with_user(self.user_emp).read(['name'])
         self.slide.with_user(self.user_portal).read(['name'])
         self.slide.with_user(self.user_public).read(['name'])
+
+
+@tagged('functional', 'security')
+class TestRemoveMembership(common.SlidesCase):
+
+    def setUp(self):
+        super(TestRemoveMembership, self).setUp()
+        self.channel_partner = self.env['slide.channel.partner'].create({
+            'channel_id': self.channel.id,
+            'partner_id': self.customer.id,
+        })
+
+        self.slide_partner = self.env['slide.slide.partner'].create({
+            'slide_id': self.slide.id,
+            'channel_id': self.channel.id,
+            'partner_id': self.customer.id
+        })
+
+    def test_security_unlink(self):
+        # Only the publisher can unlink channel_partner (and slide_partner by extension)
+        with self.assertRaises(AccessError):
+            self.channel_partner.with_user(self.user_public).unlink()
+        with self.assertRaises(AccessError):
+            self.channel_partner.with_user(self.user_portal).unlink()
+        with self.assertRaises(AccessError):
+            self.channel_partner.with_user(self.user_emp).unlink()
+
+    def test_slide_partner_remove(self):
+        id_slide_partner = self.slide_partner.id
+        id_channel_partner = self.channel_partner.id
+        self.channel_partner.with_user(self.user_publisher).unlink()
+        self.assertFalse(self.env['slide.channel.partner'].search([('id', '=', '%d' % id_channel_partner)]))
+        # Slide(s) related to the channel and the partner is unlink too.
+        self.assertFalse(self.env['slide.slide.partner'].search([('id', '=', '%d' % id_slide_partner)]))
 
 
 @tagged('functional')
@@ -130,14 +182,13 @@ class TestAccessFeatures(common.SlidesCase):
     def test_channel_auto_subscription(self):
         user_employees = self.env['res.users'].search([('groups_id', 'in', self.ref('base.group_user'))])
 
-        with self.with_user(self.user_publisher):
-            channel = self.env['slide.channel'].create({
-                'name': 'Test',
-                'enroll': 'invite',
-                'website_published': True,
-                'enroll_group_ids': [(4, self.ref('base.group_user'))]
-            })
-
+        channel = self.env['slide.channel'].with_user(self.user_publisher).create({
+            'name': 'Test',
+            'enroll': 'invite',
+            'is_published': True,
+            'enroll_group_ids': [(4, self.ref('base.group_user'))]
+        })
+        channel.invalidate_cache(['partner_ids'])
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id'))
 
         new_user = self.env['res.users'].create({
@@ -206,5 +257,6 @@ class TestAccessFeatures(common.SlidesCase):
 
         # superuser should always be able to publish even if he's not the responsible
         channel_superuser = self.channel.sudo()
+        channel_superuser.invalidate_cache(['can_upload', 'can_publish'])
         self.assertTrue(channel_superuser.can_upload)
         self.assertTrue(channel_superuser.can_publish)

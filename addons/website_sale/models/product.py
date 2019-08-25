@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
@@ -29,7 +30,7 @@ class ProductPricelist(models.Model):
         domain = [('company_id', '=', company_id)]
         return self.env['website'].search(domain, limit=1)
 
-    website_id = fields.Many2one('website', string="Website", default=_default_website)
+    website_id = fields.Many2one('website', string="Website", ondelete='restrict', default=_default_website)
     code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
@@ -137,7 +138,7 @@ class ProductPricelist(models.Model):
 
 class ProductPublicCategory(models.Model):
     _name = "product.public.category"
-    _inherit = ["website.seo.metadata", "website.multi.mixin"]
+    _inherit = ["website.seo.metadata", "website.multi.mixin", 'image.mixin']
     _description = "Website Product Category"
     _parent_store = True
     _order = "sequence, name"
@@ -148,31 +149,8 @@ class ProductPublicCategory(models.Model):
     child_id = fields.One2many('product.public.category', 'parent_id', string='Children Categories')
     parents_and_self = fields.Many2many('product.public.category', compute='_compute_parents_and_self')
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.", index=True)
-    # NOTE: there is no 'default image', because by default we don't show
-    # thumbnails for categories. However if we have a thumbnail for at least one
-    # category, then we display a default image on the other, so that the
-    # buttons have consistent styling.
-    # In this case, the default image is set by the js code.
-    image = fields.Binary(help="This field holds the image used as image for the category, limited to 1024x1024px.")
     website_description = fields.Html('Category Description', sanitize_attributes=False, translate=html_translate)
-    image_medium = fields.Binary(string='Medium-sized image',
-                                 help="Medium-sized image of the category. It is automatically "
-                                 "resized as a 128x128px image, with aspect ratio preserved. "
-                                 "Use this field in form views or some kanban views.")
-    image_small = fields.Binary(string='Small-sized image',
-                                help="Small-sized image of the category. It is automatically "
-                                "resized as a 64x64px image, with aspect ratio preserved. "
-                                "Use this field anywhere a small image is required.")
     product_tmpl_ids = fields.Many2many('product.template', relation='product_public_category_product_template_rel')
-
-    @api.model
-    def create(self, vals):
-        tools.image_resize_images(vals)
-        return super(ProductPublicCategory, self).create(vals)
-
-    def write(self, vals):
-        tools.image_resize_images(vals)
-        return super(ProductPublicCategory, self).write(vals)
 
     @api.constrains('parent_id')
     def check_parent_id(self):
@@ -383,14 +361,14 @@ class ProductTemplate(models.Model):
         res = super(ProductTemplate, self)._default_website_meta()
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description_sale
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/product.template/%s/image" % (self.id)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self, 'image_1024')
         res['default_meta_description'] = self.description_sale
         return res
 
     def _compute_website_url(self):
         super(ProductTemplate, self)._compute_website_url()
         for product in self:
-            product.website_url = "/shop/product/%s" % (product.id,)
+            product.website_url = "/shop/product/%s" % slug(product)
 
     # ---------------------------------------------------------
     # Rating Mixin API
@@ -432,12 +410,7 @@ class Product(models.Model):
 
     def website_publish_button(self):
         self.ensure_one()
-        res = self.product_tmpl_id.website_publish_button()
-
-        # res can be the result of write() if not website_publisher
-        if type(res) == dict and res.get('type') == 'ir.actions.act_url':
-            res['url'] = self.website_url
-        return res
+        return self.product_tmpl_id.website_publish_button()
 
     def open_website_url(self):
         self.ensure_one()
@@ -457,7 +430,7 @@ class Product(models.Model):
         """
         self.ensure_one()
         variant_images = list(self.product_variant_image_ids)
-        if self.image_raw_original:
+        if self.image_variant_1920:
             # if the main variant image is set, display it first
             variant_images = [self] + variant_images
         else:

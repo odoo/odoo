@@ -17,8 +17,8 @@ class HolidaysType(models.Model):
         return company.leave_timesheet_task_id.id
 
     timesheet_generate = fields.Boolean('Generate Timesheet', default=True, help="If checked, when validating a time off, timesheet will be generated in the Vacation Project of the company.")
-    timesheet_project_id = fields.Many2one('project.project', string="Project", default=_default_project_id, help="The project will contain the timesheet generated when a time off is validated.")
-    timesheet_task_id = fields.Many2one('project.task', string="Task for timesheet", default=_default_task_id, domain="[('project_id', '=', timesheet_project_id)]")
+    timesheet_project_id = fields.Many2one('project.project', string="Project", default=_default_project_id, domain="[('company_id', '=', company_id)]", help="The project will contain the timesheet generated when a time off is validated.")
+    timesheet_task_id = fields.Many2one('project.task', string="Task for timesheet", default=_default_task_id, domain="[('project_id', '=', timesheet_project_id), ('company_id', '=', company_id)]")
 
     @api.onchange('timesheet_task_id')
     def _onchange_timesheet_generate(self):
@@ -45,9 +45,9 @@ class HolidaysType(models.Model):
         for holiday_status in self:
             if holiday_status.timesheet_generate:
                 if not holiday_status.timesheet_project_id or not holiday_status.timesheet_task_id:
-                    raise ValidationError(_('Both the internal project and task are required to\
-                    generate timesheet for the time of. If you don\'t want timesheet, you must let\
-                    empty internal project and task.'))
+                    raise ValidationError(_("Both the internal project and task are required to "
+                    "generate a timesheet for the time off. If you don't want a timesheet, you should "
+                    "leave the internal project and task empty."))
 
 
 class Holidays(models.Model):

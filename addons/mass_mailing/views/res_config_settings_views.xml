@@ -17,14 +17,7 @@
                                 <div class="o_setting_right_pane">
                                     <label for="group_mass_mailing_campaign"/>
                                     <div class="text-muted">
-                                        Manage campaigns of mass emails with process stages
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('group_mass_mailing_campaign', '=', False)]}">
-                                        <div class="mt16">
-                                            <button name="%(mass_mailing.action_view_mass_mailing_stages)d"
-                                                icon="fa-arrow-right" type="action" string="Campaign Stages"
-                                                class="btn-link"/>
-                                        </div>
+                                        Manage mass mailing campaigns
                                     </div>
                                 </div>
                             </div>
@@ -35,11 +28,14 @@
                                 <div class="o_setting_right_pane">
                                     <label for="mass_mailing_outgoing_mail_server"/>
                                     <div class="text-muted">
-                                        Use a specific mail server for mailings
+                                        Use a dedicated server for mailings
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('mass_mailing_outgoing_mail_server', '=', False)]}">
                                         <div class="mt16">
                                             <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"/>
+                                        </div>
+                                        <div class="mt8">
+                                            <button type="action" name="base.action_ir_mail_server_list" string="Configure Email Server" icon="fa-arrow-right" class="oe_link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -53,7 +49,7 @@
                                 <div class="o_setting_right_pane">
                                     <label for="show_blacklist_buttons"/>
                                     <div class="text-muted">
-                                        Allow the recipient to manage himself his state in the blacklist via the unsubscription page.
+                                        Allow recipients to blacklist themselves
                                     </div>
                                 </div>
                             </div>

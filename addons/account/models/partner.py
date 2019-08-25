@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ast import literal_eval
-from operator import itemgetter
 import time
+import psycopg2
+import logging
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import ValidationError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
+
+_logger = logging.getLogger(__name__)
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -18,7 +21,7 @@ class AccountFiscalPosition(models.Model):
     name = fields.Char(string='Fiscal Position', required=True)
     active = fields.Boolean(default=True,
         help="By unchecking the active field, you may hide a fiscal position without deleting it.")
-    company_id = fields.Many2one('res.company', string='Company')
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True)
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
     note = fields.Text('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
@@ -223,6 +226,7 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
+    @api.depends_context('force_company')
     def _credit_debit_get(self):
         tables, where_clause, where_params = self.env['account.move.line'].with_context(company_id=self.env.company.id)._query_get()
         where_params = [tuple(self.ids)] + where_params
@@ -238,12 +242,20 @@ class ResPartner(models.Model):
                       """ + where_clause + """
                       GROUP BY account_move_line.partner_id, act.type
                       """, where_params)
+        treated = self.browse()
         for pid, type, val in self._cr.fetchall():
             partner = self.browse(pid)
             if type == 'receivable':
                 partner.credit = val
+                partner.debit = False
+                treated |= partner
             elif type == 'payable':
                 partner.debit = -val
+                partner.credit = False
+                treated |= partner
+        remaining = (self - treated)
+        remaining.debit = False
+        remaining.credit = False
 
     def _asset_difference_search(self, account_type, operator, operand):
         if operator not in ('<', '=', '>', '>=', '<='):
@@ -318,11 +330,6 @@ class ResPartner(models.Model):
         for partner in self:
             partner.journal_item_count = AccountMoveLine.search_count([('partner_id', '=', partner.id)])
 
-    def _compute_contracts_count(self):
-        AccountAnalyticAccount = self.env['account.analytic.account']
-        for partner in self:
-            partner.contracts_count = AccountAnalyticAccount.search_count([('partner_id', '=', partner.id)])
-
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
         domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.company.id)]
         if only_unblocked:
@@ -342,6 +349,7 @@ class ResPartner(models.Model):
         for partner in self:
             # Avoid useless work if has_unreconciled_entries is not relevant for this partner
             if not partner.active or not partner.is_company and partner.parent_id:
+                partner.has_unreconciled_entries = False
                 continue
             self.env.cr.execute(
                 """ SELECT 1 FROM(
@@ -394,32 +402,31 @@ class ResPartner(models.Model):
         groups='account.group_account_invoice')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency", help='Utility field to express amount currency')
-    contracts_count = fields.Integer(compute='_compute_contracts_count', string="Contracts Count", type='integer')
     journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items", type="integer")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
-        string="Account Payable", oldname="property_account_payable",
+        string="Account Payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
         required=True)
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
-        string="Account Receivable", oldname="property_account_receivable",
+        string="Account Receivable",
         domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
         required=True)
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
-        help="The fiscal position determines the taxes/accounts used for this contact.", oldname="property_account_position")
+        help="The fiscal position determines the taxes/accounts used for this contact.")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
-        help="This payment term will be used instead of the default one for sales orders and customer invoices", oldname="property_payment_term")
+        help="This payment term will be used instead of the default one for sales orders and customer invoices")
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Vendor Payment Terms',
-        help="This payment term will be used instead of the default one for purchase orders and vendor bills", oldname="property_supplier_payment_term")
+        help="This payment term will be used instead of the default one for purchase orders and vendor bills")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
-        string='Companies that refers to partner', oldname="ref_companies")
+        string='Companies that refers to partner')
     has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
         help="The partner has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
-    last_time_entries_checked = fields.Datetime(oldname='last_reconciliation_date',
+    last_time_entries_checked = fields.Datetime(
         string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
         help='Last time the invoices & payments matching was performed for this partner. '
              'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit '
@@ -430,6 +437,85 @@ class ResPartner(models.Model):
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
     invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
     invoice_warn_msg = fields.Text('Message for Invoice')
+    # Computed fields to order the partners as suppliers/customers according to the
+    # amount of their generated incoming/outgoing account moves 
+    supplier_rank = fields.Integer(compute='_compute_rank', store=True)
+    customer_rank = fields.Integer(compute='_compute_rank', store=True)
+
+    def _get_name_search_order_by_fields(self):
+        res = super()._get_name_search_order_by_fields()
+        partner_search_mode = self.env.context.get('res_partner_search_mode')
+        if not partner_search_mode in ('customer', 'supplier'):
+            return res
+        order_by_field = 'COALESCE(res_partner.%s, 0) DESC,'
+        if partner_search_mode == 'customer':
+            field = 'customer_rank'
+        else:
+            field = 'supplier_rank'
+
+        order_by_field = order_by_field % field
+        return '%s, %s' % (res, order_by_field % field) if res else order_by_field
+
+    @api.depends('invoice_ids', 'invoice_ids.state')
+    def _compute_rank(self):
+        """
+        The two field values may not be exact in the database!
+        To avoid any concurrent update failure while writing on the partner,
+        the count is not updated if the lock cannot be directly acquired.
+        The count will eventually be correctly computed, at the next successfull try.
+        """
+        types_in = ('in_invoice', 'in_refund', 'in_receipt')
+        types_out = ('out_invoice', 'out_refund', 'out_receipt')
+        partner_ids = tuple(self.ids)
+        queries_params = {
+            'supplier_rank': {
+                'partner_id': partner_ids,
+                'move_types': types_in
+            },
+            'customer_rank': {
+                'partner_id': partner_ids,
+                'move_types': types_out
+            },
+        }
+
+        # Update database in case an invoice is just created
+        self.flush()
+        for field, params in queries_params.items():
+            try:
+                with self.env.cr.savepoint():
+                    # Check if rows are not locked
+                    # Take this opportunity to retrieve the current partner ranks
+                    # If a customer has been created from the "Customer" menuitem
+                    # his rank should be equal to 1, even if no invoice has been
+                    # created for him yet
+                    self.env.cr.execute("""
+                        SELECT id, COALESCE({}, 0)
+                        FROM res_partner
+                        WHERE id IN %(partner_id)s
+                        FOR UPDATE NOWAIT
+                    """.format(field), params, log_exceptions=False)
+                    current_counts = dict(self.env.cr.fetchall())
+                    # Compute the real ranks, based on the posted
+                    # account moves generated from the invoices
+                    self.env.cr.execute("""
+                        SELECT m.partner_id, COUNT(*) AS move_count
+                        FROM account_move AS m
+                        WHERE
+                            type in %(move_types)s
+                            AND state = 'posted'
+                            AND partner_id IN %(partner_id)s
+                        GROUP BY m.partner_id
+                    """, params)
+                    counts = dict(self.env.cr.fetchall())
+                    # Update all ranks
+                    for partner in self:
+                        partner[field] = max(counts.get(partner.id, 0), current_counts.get(partner.id, 0))
+            except psycopg2.DatabaseError as e:
+                if e.pgcode == '55P03':
+                    _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks now.')
+                    continue
+                else:
+                    raise e
 
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
@@ -452,7 +538,7 @@ class ResPartner(models.Model):
         action = self.env.ref('account.action_move_out_invoice_type').read()[0]
         action['domain'] = [
             ('type', 'in', ('out_invoice', 'out_refund')),
-            ('type', '=', 'posted'),
+            ('state', '=', 'posted'),
             ('partner_id', 'child_of', self.id),
         ]
         action['context'] = {'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale', 'search_default_unpaid': 1}
@@ -477,3 +563,16 @@ class ResPartner(models.Model):
             ('state', '=', 'posted')
         ], limit=1)
         return can_edit_vat and not (bool(has_invoice))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        search_partner_mode = self.env.context.get('res_partner_search_mode')
+        is_customer = search_partner_mode == 'customer'
+        is_supplier = search_partner_mode == 'supplier'
+        if search_partner_mode:
+            for vals in vals_list:
+                if is_customer and 'customer_rank' not in vals:
+                    vals['customer_rank'] = 1
+                elif is_supplier and 'supplier_rank' not in vals:
+                    vals['supplier_rank'] = 1
+        return super().create(vals_list)

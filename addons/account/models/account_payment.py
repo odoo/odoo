@@ -3,6 +3,8 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
+from collections import defaultdict
+
 MAP_INVOICE_TYPE_PARTNER_TYPE = {
     'out_invoice': 'customer',
     'out_refund': 'customer',
@@ -37,7 +39,7 @@ class account_payment(models.Model):
     # Money flows from the journal_id's default_debit_account_id or default_credit_account_id to the destination_account_id
     destination_account_id = fields.Many2one('account.account', compute='_compute_destination_account_id', readonly=True)
     # For money transfer, money goes from journal_id to a transfer account, then from the transfer account to destination_journal_id
-    destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain=[('type', 'in', ('bank', 'cash'))], readonly=True, states={'draft': [('readonly', False)]})
+    destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]", readonly=True, states={'draft': [('readonly', False)]})
 
     invoice_ids = fields.Many2many('account.move', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True,
                                    help="""Technical field containing the invoice for which the payment has been generated.
@@ -51,7 +53,7 @@ class account_payment(models.Model):
 
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money'), ('transfer', 'Internal Transfer')], string='Payment Type', required=True, readonly=True, states={'draft': [('readonly', False)]})
-    payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', required=True, readonly=True, states={'draft': [('readonly', False)]}, oldname="payment_method",
+    payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', required=True, readonly=True, states={'draft': [('readonly', False)]},
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
         "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"\
         "Check: Pay bill by check and print it from Odoo.\n"\
@@ -61,13 +63,13 @@ class account_payment(models.Model):
         help="Technical field used to adapt the interface to the payment type selected.", readonly=True)
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')], tracking=True, readonly=True, states={'draft': [('readonly', False)]})
-    partner_id = fields.Many2one('res.partner', string='Partner', tracking=True, readonly=True, states={'draft': [('readonly', False)]})
+    partner_id = fields.Many2one('res.partner', string='Partner', tracking=True, readonly=True, states={'draft': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     amount = fields.Monetary(string='Payment Amount', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, readonly=True, states={'draft': [('readonly', False)]}, copy=False, tracking=True)
     communication = fields.Char(string='Memo', readonly=True, states={'draft': [('readonly', False)]})
-    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain=[('type', 'in', ('bank', 'cash'))])
+    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
@@ -76,12 +78,12 @@ class account_payment(models.Model):
 
     payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)
     payment_difference_handling = fields.Selection([('open', 'Keep open'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference Handling", copy=False)
-    writeoff_account_id = fields.Many2one('account.account', string="Difference Account", domain=[('deprecated', '=', False)], copy=False)
+    writeoff_account_id = fields.Many2one('account.account', string="Difference Account", domain="[('deprecated', '=', False), ('company_id', '=', company_id)]", copy=False)
     writeoff_label = fields.Char(
         string='Journal Item Label',
         help='Change label of the counterpart that will hold the payment difference',
         default='Write-Off')
-    partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]})
+    partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
     require_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be required or not in the payments form views')
 
@@ -158,9 +160,11 @@ class account_payment(models.Model):
 
     @api.depends('invoice_ids', 'amount', 'payment_date', 'currency_id', 'payment_type')
     def _compute_payment_difference(self):
-        for pay in self.filtered(lambda p: p.invoice_ids and p.state == 'draft'):
+        draft_payments = self.filtered(lambda p: p.invoice_ids and p.state == 'draft')
+        for pay in draft_payments:
             payment_amount = -pay.amount if pay.payment_type == 'outbound' else pay.amount
             pay.payment_difference = pay._compute_payment_amount(pay.invoice_ids, pay.currency_id, pay.journal_id, pay.payment_date) - payment_amount
+        (self - draft_payments).payment_difference = 0
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
@@ -208,13 +212,6 @@ class account_payment(models.Model):
             else:
                 self.partner_bank_account_id = False
         return {'domain': {'partner_bank_account_id': [('partner_id', 'in', [self.partner_id.id, self.partner_id.commercial_partner_id.id])]}}
-
-    @api.onchange('partner_type')
-    def _onchange_partner_type(self):
-        self.ensure_one()
-        # Set partner_id domain
-        if self.partner_type:
-            return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
 
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
@@ -296,6 +293,10 @@ class account_payment(models.Model):
         if not invoices:
             return 0.0
 
+        self.env['account.move'].flush(['type', 'currency_id'])
+        self.env['account.move.line'].flush(['amount_residual', 'amount_residual_currency', 'move_id', 'account_id'])
+        self.env['account.account'].flush(['user_type_id'])
+        self.env['account.account.type'].flush(['type'])
         self._cr.execute('''
             SELECT
                 move.type AS type,
@@ -442,7 +443,10 @@ class account_payment(models.Model):
                     move.line_ids.remove_move_reconcile()
                 move.button_cancel()
                 move.unlink()
-            rec.state = 'cancelled'
+            rec.write({
+                'state': 'cancelled',
+                'move_name': False,
+            })
 
     def unlink(self):
         if any(bool(rec.move_line_ids) for rec in self):
@@ -716,6 +720,7 @@ class payment_register(models.TransientModel):
                                         "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
                                         "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed ")
     invoice_ids = fields.Many2many('account.move', 'account_invoice_payment_rel_transient', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
+    group_payment = fields.Boolean(help="Only one payment will be created by partner (bank)/ currency.")
 
     @api.model
     def default_get(self, fields):
@@ -731,6 +736,8 @@ class payment_register(models.TransientModel):
         first_outbound = invoices[0].is_outbound()
         if any(x != first_outbound for x in outbound_list):
             raise UserError(_("You can only register at the same time for payment that are all inbound or all outbound"))
+        if any(inv.company_id != invoices[0].company_id for inv in invoices):
+            raise UserError(_("You can only register at the same time for payment that are all from the same company"))
         if 'invoice_ids' not in rec:
             rec['invoice_ids'] = [(6, 0, invoices.ids)]
         if 'journal_id' not in rec:
@@ -749,32 +756,34 @@ class payment_register(models.TransientModel):
         invoices = self.env['account.move'].browse(active_ids)
         if self.journal_id and invoices:
             if invoices[0].is_inbound():
-                domain = [('payment_type', '=', 'inbound'), ('id', 'in', self.journal_id.inbound_payment_method_ids.ids)]
+                domain_payment = [('payment_type', '=', 'inbound'), ('id', 'in', self.journal_id.inbound_payment_method_ids.ids)]
             else:
-                domain = [('payment_type', '=', 'outbound'), ('id', 'in', self.journal_id.outbound_payment_method_ids.ids)]
-
-            return {'domain': {'payment_method_id': domain}}
+                domain_payment = [('payment_type', '=', 'outbound'), ('id', 'in', self.journal_id.outbound_payment_method_ids.ids)]
+            domain_journal = [('type', 'in', ('bank', 'cash')), ('company_id', '=', invoices[0].company_id.id)]
+            return {'domain': {'payment_method_id': domain_payment, 'journal_id': domain_journal}}
         return {}
 
-    def _prepare_payment_vals(self, invoice):
+    def _prepare_payment_vals(self, invoices):
         '''Create the payment values.
 
-        :param invoice: A single invoice/bill to pay.
+        :param invoices: The invoices/bills to pay. In case of multiple
+            documents, they need to be grouped by partner, bank, journal and
+            currency.
         :return: The payment values as a dictionary.
         '''
-        amount = self.env['account.payment']._compute_payment_amount(invoice, invoice.currency_id, self.journal_id, self.payment_date)
+        amount = self.env['account.payment']._compute_payment_amount(invoices, invoices[0].currency_id, self.journal_id, self.payment_date)
         values = {
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
             'payment_date': self.payment_date,
-            'communication': invoice.ref or invoice.name,
-            'invoice_ids': [(6, 0, invoice.ids)],
+            'communication': " ".join(i.ref or i.name for i in invoices),
+            'invoice_ids': [(6, 0, invoices.ids)],
             'payment_type': ('inbound' if amount > 0 else 'outbound'),
             'amount': abs(amount),
-            'currency_id': invoice.currency_id.id,
-            'partner_id': invoice.commercial_partner_id.id,
-            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoice.type],
-            'partner_bank_account_id': invoice.invoice_partner_bank_id.id,
+            'currency_id': invoices[0].currency_id.id,
+            'partner_id': invoices[0].commercial_partner_id.id,
+            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'partner_bank_account_id': invoices[0].invoice_partner_bank_id.id,
         }
         return values
 
@@ -783,7 +792,13 @@ class payment_register(models.TransientModel):
 
         :return: a list of payment values (dictionary).
         '''
-        return [self._prepare_payment_vals(invoice) for invoice in self.invoice_ids]
+        grouped = defaultdict(lambda: self.env["account.move"])
+        for inv in self.invoice_ids:
+            if self.group_payment:
+                grouped[(inv.commercial_partner_id, inv.currency_id, inv.invoice_partner_bank_id, MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type])] += inv
+            else:
+                grouped[inv.id] += inv
+        return [self._prepare_payment_vals(invoices) for invoices in grouped.values()]
 
     def create_payments(self):
         '''Create payments according to the invoices.

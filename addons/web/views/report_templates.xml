@@ -18,6 +18,9 @@
 
         <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
 
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fonts.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report_styles.scss"/>
+
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_standard.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_background.scss"/>
@@ -330,6 +333,8 @@
             </t>
         </t>
 
+        <t t-esc="company.update_scss()"/>
+
         <t t-if="company.external_report_layout_id" t-call="{{company.external_report_layout_id.key}}"><t t-raw="0"/></t>
         <t t-else="else" t-call="web.external_layout_standard"><t t-raw="0"/></t>
 
@@ -350,6 +355,8 @@
                 <t t-set="company" t-value="res_company"/>
             </t>
         </t>
+
+        <t t-esc="company.update_scss()"/>
 
         <div class="header">
             <div class="row">
@@ -403,6 +410,7 @@
             </t>
         </t>
     </template>
+
     <report id="action_report_internalpreview"
         model="res.company"
         name="web.preview_internalreport"

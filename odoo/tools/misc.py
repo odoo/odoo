@@ -349,6 +349,35 @@ def topological_sort(elems):
     return result
 
 
+def merge_sequences(*iterables):
+    """ Merge several iterables into a list. The result is the union of the
+        iterables, ordered following the partial order given by the iterables,
+        with a bias towards the end for the last iterable::
+
+            seq = merge_sequences(['A', 'B', 'C'])
+            assert seq == ['A', 'B', 'C']
+
+            seq = merge_sequences(
+                ['A', 'B', 'C'],
+                ['Z'],                  # 'Z' can be anywhere
+                ['Y', 'C'],             # 'Y' must precede 'C';
+                ['A', 'X', 'Y'],        # 'X' must follow 'A' and precede 'Y'
+            )
+            assert seq == ['A', 'B', 'X', 'Y', 'C', 'Z']
+    """
+    # we use an OrderedDict to keep elements in order by default
+    deps = OrderedDict()                # {item: elems_before_item}
+    for iterable in iterables:
+        prev = None
+        for index, item in enumerate(iterable):
+            if not index:
+                deps.setdefault(item, [])
+            else:
+                deps.setdefault(item, []).append(prev)
+            prev = item
+    return topological_sort(deps)
+
+
 try:
     import xlwt
 
@@ -1150,8 +1179,9 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     if isinstance(value, str) and not value:
         return ''
 
-    lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
-    lang_obj = env['res.lang']._lang_get(lang)
+    langs = [code for code, _ in env['res.lang'].get_installed()]
+    lang_code = env.context['lang'] if env.context.get('lang') in langs else (env.user.company_id.partner_id.lang or langs[0])
+    lang_obj = env['res.lang']._lang_get(lang_code)
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
@@ -1254,6 +1284,14 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=False):
         time_format = posix_to_ldml(lang.time_format, locale=locale)
 
     return babel.dates.format_time(value, format=time_format, locale=locale)
+
+
+def _format_time_ago(env, time_delta, lang_code=False):
+    if not lang_code:
+        langs = [code for code, _ in env['res.lang'].get_installed()]
+        lang_code = env.context['lang'] if env.context.get('lang') in langs else (env.user.company_id.partner_id.lang or langs[0])
+    locale = babel.Locale.parse(lang_code)
+    return babel.dates.format_timedelta(-time_delta, add_direction=True, locale=locale)
 
 
 def format_amount(env, amount, currency, lang_code=False):

@@ -58,11 +58,11 @@ odoo.define('website_slides.fullscreen', function (require) {
                 // function called when the Youtube asset is loaded
                 // see https://developers.google.com/youtube/iframe_api_reference#Requirements
                 onYouTubeIframeAPIReady = function () {
-                    def.resolve();
+                    Promise.resolve(def);
                 };
 
             } else {
-                def.resolve();
+                Promise.resolve(def);
             }
             return def;
         },
@@ -498,7 +498,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                     slideData.embedCode = $(slideData.embedCode).attr('src');  // embedCode containts an iframe tag, where src attribute is the url (youtube or embed document from odoo)
                     slideData.embedUrl =  "https://" + slideData.embedCode + "&rel=0&autoplay=1&enablejsapi=1&origin=" + window.location.origin;
                 } else if (slideData.type === 'infographic') {
-                    slideData.embedUrl = _.str.sprintf('/web/image/slide.slide/%s/image', slideData.id);
+                    slideData.embedUrl = _.str.sprintf('/web/image/slide.slide/%s/image_1024', slideData.id);
                 } else if (_.contains(['document', 'presentation'], slideData.type)) {
                     slideData.embedUrl = $(slideData.embedCode).attr('src');
                 }
@@ -600,6 +600,8 @@ odoo.define('website_slides.fullscreen', function (require) {
             var slide = this.get('slide');
             self._pushUrlState();
             return this._fetchSlideContent().then(function() { // render content
+                var websiteName = document.title.split(" | ")[1]; // get the website name from title
+                document.title =  (websiteName) ? slide.name + ' | ' + websiteName : slide.name;
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call

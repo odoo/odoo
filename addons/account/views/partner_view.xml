@@ -7,8 +7,8 @@
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
                     <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group>
                             <field name="active" invisible="1"/>
@@ -39,8 +39,8 @@
                         <group>
                             <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
                                 <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
-                                    <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]" context="{'append_type_to_tax_name': True}"/>
-                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]" context="{'append_type_to_tax_name': True}"/>
+                                    <field name="tax_src_id" domain="[('type_tax_use', '!=', None), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'append_type_to_tax_name': True}"/>
+                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'append_type_to_tax_name': True}"/>
                                 </tree>
                                 <form name="tax_map_form" string="Tax Mapping">
                                     <group>
@@ -55,12 +55,12 @@
                         <group>
                             <field name="account_ids" widget="one2many" nolabel="1">
                                 <tree string="Account Mapping" editable="bottom">
-                                    <field name="account_src_id"/>
-                                    <field name="account_dest_id"/>
+                                    <field name="account_src_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                    <field name="account_dest_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 </tree>
                                 <form string="Account Mapping">
-                                    <field name="account_src_id"/>
-                                    <field name="account_dest_id"/>
+                                    <field name="account_src_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                    <field name="account_dest_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 </form>
                             </field>
                         </group>
@@ -92,12 +92,6 @@
             </field>
         </record>
 
-        <record id="action_open_partner_analytic_accounts" model="ir.actions.act_window">
-            <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
-            <field name="name">Analytic Accounts</field>
-            <field name="res_model">account.analytic.account</field>
-        </record>
-
         <record model="ir.ui.view" id="partner_view_short_extra">
             <field name="name">partner.short.view.account</field>
             <field name="model">res.partner</field>
@@ -122,7 +116,7 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_view_partner_invoices"
-                        attrs="{'invisible': [('customer', '=', False)]}" context="{'default_partner_id': active_id}">
+                        context="{'default_partner_id': active_id}">
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_value">
                                 <field name="total_invoiced" widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -140,23 +134,6 @@
                                 attrs="{'required':[('invoice_warn', '!=', False), ('invoice_warn','!=','no-message')],'readonly':[('invoice_warn','=','no-message')]}"/>
                     </group>
                 </page>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="partner_view_button_contracts_count">
-            <field name="name">partner.view.button.contracts_count</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form" />
-            <field name="priority" eval="14"/>
-            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
-            <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button class="oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d"
-                        groups="account.group_account_invoice"
-                        icon="fa-book" title="Analytic Accounts" attrs="{'invisible': [('contracts_count', '=', 0)]}">
-                        <field string="Analytic Accounts" name="contracts_count" widget="statinfo"/>
-                    </button>
-                </div>
             </field>
         </record>
 
@@ -220,11 +197,53 @@
                     </group>
                 </xpath>
                 <group name="sale" position="inside">
-                    <field string="Payment Terms" name="property_payment_term_id" widget="selection" groups="account.group_account_invoice" attrs="{'invisible': [('customer','=', False)]}"/>
+                    <field string="Payment Terms" name="property_payment_term_id" widget="selection" groups="account.group_account_invoice"/>
                 </group>
                 <group name="purchase" position="inside">
-                    <field string="Payment Terms" name="property_supplier_payment_term_id" widget="selection" groups="account.group_account_invoice" attrs="{'invisible': [('supplier','=', False)]}"/>
+                    <field string="Payment Terms" name="property_supplier_payment_term_id" widget="selection" groups="account.group_account_invoice"/>
                 </group>
+            </field>
+        </record>
+
+        <record id="res_partner_view_search" model="ir.ui.view">
+            <field name="name">res.partner.search.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='inactive']" position="before">
+                   <filter string="Customers" name="customer" domain="[('customer_rank','>', 0)]"/>
+                   <filter string="Vendors" name="supplier" domain="[('supplier_rank','>', 0)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_partner_action_customer" model="ir.actions.act_window">
+            <field name="name">Customers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new customer in your address book
+              </p><p>
+                Odoo helps you easily track all activities related to a customer.
+              </p>
+            </field>
+        </record>
+
+        <record id="res_partner_action_supplier" model="ir.actions.act_window">
+            <field name="name">Suppliers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_is_company': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new supplier in your address book
+              </p><p>
+                Odoo helps you easily track all activities related to a supplier.
+              </p>
             </field>
         </record>
     </data>

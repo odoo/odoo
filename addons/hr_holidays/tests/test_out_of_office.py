@@ -30,7 +30,6 @@ class TestOutOfOffice(TestHrHolidaysBase):
             'holiday_status_id': self.leave_type.id,
             'date_from': (datetime.today() - relativedelta(days=1)),
             'date_to': leave_date_end,
-            'out_of_office_message': 'contact tde in case of problems',
             'number_of_days': 4,
         })
         leave.action_approve()
@@ -53,31 +52,6 @@ class TestOutOfOffice(TestHrHolidaysBase):
         })
         infos = channel.with_user(self.user_employee).channel_info()
         self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_date_end'], leave_date_end)
-        self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_message'], 'contact tde in case of problems')
-
-    def test_leave_ooo_use_default(self):
-        """ Out of office message from Preferences should be used as default value """
-        self.user_hruser.out_of_office_message = 'contact xdo in case of problems'
-
-        leave_form = Form(self.env['hr.leave'].with_user(self.user_hruser), view='hr_holidays.hr_leave_view_form')
-        leave_form.date_from = datetime.today() - relativedelta(days=1)
-        leave_form.date_to = datetime.today()
-        leave_form.holiday_status_id = self.leave_type
-        leave = leave_form.save()
-        self.assertEqual(leave.out_of_office_message, 'contact xdo in case of problems')
-
-    def test_leave_ooo_overwrite_default(self):
-        """ Out of office message default value should be overwrittable """
-        self.user_hruser.out_of_office_message = 'contact xdo in case of problems'
-
-        leave_form = Form(self.env['hr.leave'].with_user(self.user_hruser), view='hr_holidays.hr_leave_view_form')
-        leave_form.date_from = datetime.today() - relativedelta(days=1)
-        leave_form.date_to = datetime.today()
-        leave_form.holiday_status_id = self.leave_type
-        leave_form.out_of_office_message = 'contact tde in case of problems'
-        leave = leave_form.save()
-        self.assertEqual(leave.out_of_office_message, 'contact tde in case of problems')
-
 
 @tagged('out_of_office')
 class TestOutOfOfficePerformance(TestHrHolidaysBase):
@@ -97,7 +71,6 @@ class TestOutOfOfficePerformance(TestHrHolidaysBase):
             'holiday_status_id': self.leave_type.id,
             'date_from': (datetime.today() - relativedelta(days=1)),
             'date_to': (datetime.today() + relativedelta(days=3)),
-            'out_of_office_message': 'contact tde in case of problems',
             'number_of_days': 4,
         })
 

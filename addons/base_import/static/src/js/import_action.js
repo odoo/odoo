@@ -102,6 +102,10 @@ var DataImport = AbstractAction.extend({
         },
         'click .oe_import_report a.oe_import_report_count': function (e) {
             e.preventDefault();
+            $(e.target).parent().parent().toggleClass('oe_import_report_showmore');
+        },
+        'click .oe_import_report_see_possible_value': function (e) {
+            e.preventDefault();
             $(e.target).parent().toggleClass('oe_import_report_showmore');
         },
         'click .oe_import_moreinfo_action a': function (e) {
@@ -454,6 +458,7 @@ var DataImport = AbstractAction.extend({
         });
     },
     generate_fields_completion: function (root, index) {
+        var self = this;
         var basic = [];
         var regulars = [];
         var o2m = [];
@@ -625,6 +630,10 @@ var DataImport = AbstractAction.extend({
         this.trigger_up('history_back');
     },
     onresults: function (event, from, to, results) {
+        var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
+            return $(el).select2('val') || false;
+        }).get();
+
         var message = results.messages;
         var no_messages = _.isEmpty(message);
         if (no_messages) {
@@ -639,18 +648,47 @@ var DataImport = AbstractAction.extend({
         // offset more if header
         if (this.import_options().headers) { offset += 1; }
 
+        var messagesSorted = _.sortBy(_(message).groupBy('message'), function (messageGroupped) {
+            var order = 0;
+            if (messageGroupped[0].type === 'warning') {
+                order = fields.length + 1;
+            }
+            return order + _.indexOf(fields, messageGroupped[0].field);
+        });
+
         this.$form.addClass('oe_import_error');
         this.$('.oe_import_error_report').html(
             QWeb.render('ImportView.error', {
-                errors: _(message).groupBy('message'),
+                errors: messagesSorted,
                 at: function (rows) {
                     var from = rows.from + offset;
                     var to = rows.to + offset;
+                    var rowName = '';
+                    if (results.name.length > rows.from && results.name[rows.from] !== '') {
+                        rowName = _.str.sprintf(' (%s)', results.name[rows.from]);
+                    }
                     if (from === to) {
-                        return _.str.sprintf(_t("at row %d"), from);
+                        return _.str.sprintf(_t("at row %d%s"), from, rowName);
                     }
                     return _.str.sprintf(_t("between rows %d and %d"),
                                          from, to);
+                },
+                at_multi: function (rows) {
+                    var from = rows.from + offset;
+                    var to = rows.to + offset;
+                    var rowName = '';
+                    if (results.name.length > rows.from && results.name[rows.from] !== '') {
+                        rowName = _.str.sprintf(' (%s)', results.name[rows.from]);
+                    }
+                    if (from === to) {
+                        return _.str.sprintf(_t("Row %d%s"), from, rowName);
+                    }
+                    return _.str.sprintf(_t("Between rows %d and %d"),
+                                         from, to);
+                },
+                at_multi_header: function (numberLines) {
+                    return _.str.sprintf(_t("at %d different rows:"),
+                                         numberLines);
                 },
                 more: function (n) {
                     return _.str.sprintf(_t("(%d more)"), n);
@@ -663,8 +701,8 @@ var DataImport = AbstractAction.extend({
                     }
                     if (msg instanceof Array) {
                         return _.str.sprintf(
-                            '<div class="oe_import_moreinfo oe_import_moreinfo_choices">%s <ul>%s</ul></div>',
-                            _.str.escapeHTML(_t("Here are the possible values:")),
+                            '<div class="oe_import_moreinfo oe_import_moreinfo_choices"><a href="#" class="oe_import_report_see_possible_value oe_import_see_all"><i class="fa fa-arrow-right"/> %s </a><ul class="oe_import_report_more">%s</ul></div>',
+                            _.str.escapeHTML(_t("See possible values")),
                             _(msg).map(function (msg) {
                                 return '<li>'
                                     + _.str.escapeHTML(msg)
@@ -674,10 +712,10 @@ var DataImport = AbstractAction.extend({
                     // Final should be object, action descriptor
                     return [
                         '<div class="oe_import_moreinfo oe_import_moreinfo_action">',
-                            _.str.sprintf('<a href="#" data-action="%s">',
+                            _.str.sprintf('<a href="#" data-action="%s" class="oe_import_see_all"><i class="fa fa-arrow-right"/> ',
                                     _.str.escapeHTML(JSON.stringify(msg))),
                                 _.str.escapeHTML(
-                                    _t("Get all possible values")),
+                                    _t("See possible values")),
                             '</a>',
                         '</div>'
                     ].join('');

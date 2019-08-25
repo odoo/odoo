@@ -9,6 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 
 import time
 import math
+import base64
 
 class AccountCashboxLine(models.Model):
     """ Cash Box Details """
@@ -180,9 +181,9 @@ class AccountBankStatement(models.Model):
     accounting_date = fields.Date(string="Accounting Date", help="If set, the accounting entries created during the bank statement reconciliation process will be created at this date.\n"
         "This is useful if the accounting period in which the entries should normally be booked is already closed.")
     state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
-    currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency', string="Currency")
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
-    journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes", readonly=False)
+    journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes")
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.company)
 
@@ -293,11 +294,19 @@ class AccountBankStatement(models.Model):
             if moves:
                 moves.filtered(lambda m: m.state != 'posted').post()
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
+            if statement.journal_id.type == 'bank':
+                # Attach report to the Bank statement
+                content, content_type = self.env.ref('account.action_report_account_statement').render_qweb_pdf(statement.id)
+                self.env['ir.attachment'].create({
+                    'name': statement.name and _("Bank Statement %s.pdf") % statement.name or _("Bank Statement.pdf"),
+                    'type': 'binary',
+                    'datas': base64.encodestring(content),
+                    'res_model': statement._name,
+                    'res_id': statement.id
+                })
         statements.write({'state': 'confirm', 'date_done': time.strftime("%Y-%m-%d %H:%M:%S")})
 
     def button_journal_entries(self):
-        context = dict(self._context or {})
-        context['journal_id'] = self.journal_id.id
         return {
             'name': _('Journal Entries'),
             'view_mode': 'tree,form',
@@ -305,7 +314,9 @@ class AccountBankStatement(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.mapped('move_line_ids').mapped('move_id').ids)],
-            'context': context,
+            'context': {
+                'journal_id': self.journal_id.id,
+            }
         }
 
     def button_open(self):
@@ -338,7 +349,7 @@ class AccountBankStatementLine(models.Model):
 
     name = fields.Char(string='Label', required=True)
     date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
-    amount = fields.Monetary(digits=0, currency_field='journal_currency_id')
+    amount = fields.Monetary(currency_field='journal_currency_id')
     journal_currency_id = fields.Many2one('res.currency', string="Journal's Currency", related='statement_id.currency_id',
         help='Utility field to express amount currency', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner')
@@ -353,6 +364,7 @@ class AccountBankStatementLine(models.Model):
              " when the partner doesn't exist yet in the database (or cannot be found).")
     ref = fields.Char(string='Reference')
     note = fields.Text(string='Notes')
+    transaction_type = fields.Char(string='Transaction Type')
     sequence = fields.Integer(index=True, help="Gives the sequence order when displaying a list of bank statement lines.", default=1)
     company_id = fields.Many2one('res.company', related='statement_id.company_id', string='Company', store=True, readonly=True)
     journal_entry_ids = fields.One2many('account.move.line', 'statement_line_id', 'Journal Items', copy=False, readonly=True)

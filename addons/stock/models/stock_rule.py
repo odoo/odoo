@@ -57,7 +57,7 @@ class StockRule(models.Model):
     delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
     partner_address_id = fields.Many2one('res.partner', 'Partner Address', help="Address where goods should be delivered. Optional.")
     propagate_cancel = fields.Boolean(
-        'Cancel Next Move', default=False, oldname='propagate',
+        'Cancel Next Move', default=False,
         help="When ticked, if the move created by this rule is cancelled, the next move will be cancelled too.")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
     propagate_warehouse_id = fields.Many2one(
@@ -135,12 +135,14 @@ class StockRule(models.Model):
         """ Generate dynamicaly a message that describe the rule purpose to the
         end user.
         """
-        for rule in self.filtered(lambda rule: rule.action):
+        action_rules = self.filtered(lambda rule: rule.action)
+        for rule in action_rules:
             message_dict = rule._get_message_dict()
             message = message_dict.get(rule.action) and message_dict[rule.action] or ""
             if rule.action == 'pull_push':
                 message = message_dict['pull'] + "<br/><br/>" + message_dict['push']
             rule.rule_message = message
+        (self - action_rules).rule_message = None
 
     def _run_push(self, move):
         """ Apply a push rule on a move.
@@ -412,17 +414,6 @@ class ProcurementGroup(models.Model):
             result = self._search_rule(values.get('route_ids', False), product_id, values.get('warehouse_id', False), [('location_id', '=', location.id), ('action', '!=', 'push')])
             location = location.location_id
         return result
-
-    def _merge_domain(self, values, rule, group_id):
-        return [
-            ('group_id', '=', group_id), # extra logic?
-            ('location_id', '=', rule.location_src_id.id),
-            ('location_dest_id', '=', values['location_id'].id),
-            ('picking_type_id', '=', rule.picking_type_id.id),
-            ('picking_id.printed', '=', False),
-            ('picking_id.state', 'in', ['draft', 'confirmed', 'waiting', 'assigned']),
-            ('picking_id.backorder_id', '=', False),
-            ('product_id', '=', values['product_id'].id)]
 
     @api.model
     def _get_moves_to_assign_domain(self):

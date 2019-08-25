@@ -15,13 +15,13 @@
                         groups="product.group_product_variant"/>
                 </header>
                 <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_button_box" name="button_box"/>
                     <field name='product_variant_count' invisible='1'/>
                     <field name='is_product_variant' invisible='1'/>
                     <field name='attribute_line_ids' invisible='1'/>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="id" invisible="True"/>
-                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
                         <label class="oe_edit_only" for="name" string="Product Name"/>
                         <h1><field name="name" placeholder="Product Name"/></h1>
@@ -45,7 +45,21 @@
                                     <field name="categ_id" string="Product Category"/>
                                 </group>
                                 <group name="group_standard_price">
-                                    <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                    <label for="list_price"/>
+                                    <div name="pricing">
+                                      <field name="list_price" string="Sales Price" class="oe_inline" widget='monetary'
+                                        options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                      <button name="open_pricelist_rules" icon="fa-arrow-right" type="object"
+                                        groups="product.group_product_pricelist" class="oe_inline">
+                                        <field name="pricelist_item_count" attrs="{'invisible': [('pricelist_item_count', '=', 0)]}"/>
+                                        <span attrs="{'invisible': [('pricelist_item_count', '=', 1)]}">
+                                          Extra Prices
+                                        </span>
+                                        <span attrs="{'invisible': [('pricelist_item_count', '!=', 1)]}">
+                                          Extra Price
+                                        </span>
+                                      </button>
+                                    </div>
                                     <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                                     <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}" class="o_row">
                                         <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
@@ -68,71 +82,6 @@
                         </page>
                         <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales" invisible="1">
                             <group name="sale">
-                                <group groups="product.group_product_pricelist">
-                                    <div name="pricelist_item" groups="product.group_product_pricelist">
-                                        <separator string="Pricing"/>
-                                        <field name="item_ids" nolabel="1" mode="tree,kanban" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
-                                            <tree string="Pricelist Items" editable="bottom">
-                                                <field name="pricelist_id" string="Pricelist" required='1'/>
-                                                <field name="currency_id" invisible="1"/>
-                                                <field name="fixed_price" string="Price" required='1' widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                                <field name="min_quantity"/>
-                                                <field name="date_start"/>
-                                                <field name="date_end"/>
-                                                <field name="applied_on" invisible="1"/>
-                                            </tree>
-                                            <kanban string="Pricelist Items" class="o_kanban_mobile">
-                                               <field name="pricelist_id"/>
-                                               <field name="currency_id"/>
-                                               <field name="fixed_price"/>
-                                               <field name="min_quantity"/>
-                                               <field name="date_start"/>
-                                               <field name="date_end"/>
-                                               <templates>
-                                                   <t t-name="kanban-box">
-                                                       <div t-attf-class="oe_kanban_global_click">
-                                                           <div class="row">
-                                                               <div class="col-12">
-                                                                   <strong>
-                                                                       <field name='pricelist_id'/>: <field name="fixed_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                                                   </strong>
-                                                               </div>
-                                                           </div>
-                                                           <div class="row">
-                                                               <div class="col-12">
-                                                                   <span><t t-esc='record.min_quantity.string'/>: <t t-esc='record.min_quantity.value'/></span>
-                                                               </div>
-                                                           </div>
-                                                           <span t-if='record.date_start.value || record.date_end.value'>
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    Valid <span t-if='record.date_start.value'> from <t t-esc='record.date_start.value'/></span><span t-if='record.date_end.value'> until <t t-esc='record.date_end.value'/></span>
-                                                                </div>
-                                                            </div>
-                                                           </span>
-                                                       </div>
-                                                   </t>
-                                               </templates>
-                                           </kanban>
-                                           <form string="Pricelist Items">
-                                               <h1><field name="name"/></h1>
-                                               <group>
-                                                   <group>
-                                                       <field name="applied_on" invisible="1"/>
-                                                       <field name="pricelist_id" string="Pricelist" required='1'/>
-                                                       <field name="currency_id" invisible="1"/>
-                                                       <field name="fixed_price" string="Price" required='1' widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                                   </group>
-                                                   <group>
-                                                       <field name="min_quantity"/>
-                                                       <field name="date_start"/>
-                                                       <field name="date_end"/>
-                                                   </group>
-                                               </group>
-                                           </form>
-                                        </field>
-                                    </div>
-                                </group>
                                 <group name="email_template_and_project" invisible="1"/>
                             </group>
                             <group string="Sales Description" name="description">
@@ -193,16 +142,17 @@
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field string="Attributes" name="attribute_line_ids" groups="product.group_product_variant"/>
-                <field name="pricelist_id" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/>
-                <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <field name="pricelist_id" context="{'pricelist': self}" filter_domain="[]" groups="product.group_product_pricelist"/>
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                     ]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="1" string="Group By">
                     <filter string="Product Type" name="type" context="{'group_by':'type'}"/>
                     <filter string="Product Category" name="categ_id" context="{'group_by':'categ_id'}"/>
@@ -264,11 +214,11 @@
             <field name="arch" type="xml">
                 <form string="Variant Information">
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box"/>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
-                        <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
+                        <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Product Name"/>
                             <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
@@ -347,15 +297,17 @@
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Product Variants">
-                    <field name="default_code"/>
+                    <field name="default_code" optional="show"/>
+                    <field name="barcode" optional="hide"/>
                     <field name="name"/>
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
-                    <field name="lst_price"/>
-                    <field name="standard_price"/>
-                    <field name="type" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                    <field name="lst_price" optional="show" string="Sales Price"/>
+                    <field name="standard_price" optional="show"/>
+                    <field name="categ_id" optional="hide"/>
+                    <field name="type" optional="hide"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
-                    <field name="barcode"/>
+                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show"/>
                     <field name="product_tmpl_id" invisible="1"/>
                     <field name="active" invisible="1"/>
                 </tree>
@@ -380,28 +332,14 @@
                    <attribute name="name">lst_price</attribute>
                    <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
                 </field>
+                <xpath expr="//label[@for='list_price']" position="replace">
+                    <label for="lst_price"/>
+                </xpath>
                 <group name="packaging" position="attributes">
                     <attribute name="attrs">{'invisible': 0}</attribute>
                 </group>
                 <field name="name" position="after">
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>
-                </field>
-                <field name="item_ids" position="inside">
-                    <field name="pricelist_item_ids" widget="many2many">
-                        <tree string="Pricelist Items">
-                            <field name="pricelist_id"/>
-                            <field name="name" string="Applicable On"/>
-                            <field name="min_quantity"/>
-                            <field name="date_start"/>
-                            <field name="date_end"/>
-                            <field name="price" string="Price"/>
-                            <field name="base" invisible="1"/>
-                            <field name="sequence" invisible="1"/>
-                            <field name="price_discount" invisible="1"/>
-                            <field name="applied_on" invisible="1"/>
-                            <field name="compute_price" invisible="1"/>
-                        </tree>
-                    </field>
                 </field>
                 <xpath expr="//div[hasclass('oe_title')]" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags" readonly="1"
@@ -416,7 +354,6 @@
             <field name="arch" type="xml">
                 <kanban>
                     <field name="id"/>
-                    <field name="image_small"/>
                     <field name="lst_price"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -424,7 +361,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img t-att-src="kanban_image('product.product', 'image_small', record.id.raw_value)" alt="Product"/>
+                                    <img t-att-src="kanban_image('product.product', 'image_64', record.id.raw_value)" alt="Product"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <strong class="o_kanban_record_title">
@@ -455,7 +392,7 @@
                     <field name="default_code"/>
                     <templates>
                         <div t-name="activity-box">
-                            <img t-att-src="activity_image('product.product', 'image_small', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                            <img t-att-src="activity_image('product.product', 'image_64', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <div t-if="record.default_code.value" class="text-muted">
@@ -509,7 +446,7 @@
                                 name="%(product_template_action_all)d"
                                 icon="fa-th-list"
                                 type="action"
-                                context="{'search_default_categ_id': active_id}">
+                                context="{'search_default_categ_id': active_id, 'default_categ_id': active_id}">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value"><field name="product_count"/></span>
                                     <span class="o_stat_text"> Products</span>
@@ -628,7 +565,7 @@
                     <group>
                         <group name="vendor" string="Vendor">
                             <field name="product_variant_count" invisible="1"/>
-                            <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
+                            <field name="name" context="{'res_partner_search_mode': 'supplier'}"/>
                             <field name="product_name"/>
                             <field name="product_code"/>
                             <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_create_edit': True}"/>
@@ -717,15 +654,15 @@
                 <tree string="Vendor Information">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                    <field name="product_id" invisible="context.get('product_template_invisible_variant', False)" groups="product.group_product_variant"/>
+                    <field name="product_id" invisible="context.get('product_template_invisible_variant', False)" groups="product.group_product_variant" optional="hide"/>
                     <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="date_start" optional="hide"/>
+                    <field name="date_end" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="min_qty"/>
                     <field name="product_uom" groups="uom.group_uom"/>
                     <field name="price" string="Price"/>
-                    <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="date_start"/>
-                    <field name="date_end"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>

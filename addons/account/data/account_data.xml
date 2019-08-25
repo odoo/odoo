@@ -40,6 +40,12 @@
             <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
+        <record id="account_payment_term_21days" model="account.payment.term">
+            <field name="name">21 Days</field>
+            <field name="note">Payment terms: 21 Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 21, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+
         <record forcecreate="True" id="decimal_payment" model="decimal.precision">
             <field name="name">Payment Terms</field>
             <field name="digits">6</field>
@@ -184,19 +190,5 @@
             <field name="code">action = records.action_share()</field>
         </record>
 
-        <!-- Account Reconciliation Models
-        Create a default rule for the reconciliation widget matching invoices automatically.
-        -->
-        <record id="reconciliation_model_default_rule" model="account.reconcile.model">
-            <field name="name">Invoices Matching Rule</field>
-            <field name="sequence">1</field>
-            <field name="rule_type">invoice_matching</field>
-            <field name="auto_reconcile" eval="False"/>
-            <field name="match_nature">both</field>
-            <field name="match_same_currency" eval="True"/>
-            <field name="match_total_amount" eval="True"/>
-            <field name="match_total_amount_param" eval="100"/>
-            <field name="match_partner" eval="True"/>
-        </record>
     </data>
 </odoo>

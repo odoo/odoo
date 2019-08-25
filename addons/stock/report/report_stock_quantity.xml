@@ -20,10 +20,12 @@
                 <field name="product_id"/>
                 <field name="state"/>
                 <field name="product_tmpl_id"/>
+                <field name="warehouse_id"/>
                 <group expand="0" string="State">
                     <filter string="Forecasted Stock" name="filter_forecast" domain="[('state', '=', 'forecast')]"/>
                     <filter string="Forecasted Receipts" name="filter_in" domain="[('state', '=', 'in')]"/>
                     <filter string="Forecasted Deliveries" name="filter_out" domain="[('state', '=', 'out')]"/>
+                    <filter string="Date" name="filter_date" date="date"/>
                 </group>
                 <group expand="0" string="Group By">
                     <filter string="Date" name="groupby_date" domain="[]" context="{'group_by':'date:day'}"/>
@@ -38,7 +40,7 @@
         <field name="view_mode">graph</field>
         <field name="context">{
             'search_default_filter_forecast': 1,
-            'graph_groupbys': ['date:day', 'state'],
+            'graph_groupbys': ['date:day', 'state',  'product_id'],
         }</field>
     </record>
 

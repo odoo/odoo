@@ -734,7 +734,7 @@ class TestWorkOrderProcess(TestMrpCommon):
 
         mo_laptop.action_confirm()
         mo_laptop.button_plan()
-        workorders = mo_laptop.workorder_ids
+        workorders = mo_laptop.workorder_ids.sorted()
         self.assertEqual(len(workorders), 3)
 
         workorders[0].button_start()
@@ -908,6 +908,7 @@ class TestWorkOrderProcess(TestMrpCommon):
             - calendar wc1 :[mo1][mo4]
             - calendar wc2 :[mo2 ][mo5 ]
             - calendar wc3 :[mo3  ][mo6  ]"""
+        planned_date = datetime(2019, 5, 13, 9, 0)
         self.workcenter_1.alternative_workcenter_ids = self.wc_alt_1 | self.wc_alt_2
         workcenters = [self.wc_alt_2, self.wc_alt_1, self.workcenter_1]
         for i in range(3):
@@ -916,11 +917,14 @@ class TestWorkOrderProcess(TestMrpCommon):
             mo_form.product_id = self.product_4
             mo_form.bom_id = self.planning_bom
             mo_form.product_qty = 1
+            mo_form.date_start_wo = planned_date
             mo = mo_form.save()
             mo.action_confirm()
             mo.button_plan()
             # Check that workcenters change
             self.assertEqual(mo.workorder_ids.workcenter_id, workcenters[i], "wrong workcenter %d" % i)
+            self.assertAlmostEqual(mo.date_planned_start, planned_date, delta=timedelta(seconds=10))
+            self.assertAlmostEqual(mo.date_planned_start, mo.workorder_ids.date_planned_start, delta=timedelta(seconds=10))
 
         for i in range(3):
             # Planning 3 more should choose workcenters in opposite order as
@@ -931,11 +935,14 @@ class TestWorkOrderProcess(TestMrpCommon):
             mo_form.product_id = self.product_4
             mo_form.bom_id = self.planning_bom
             mo_form.product_qty = 1
+            mo_form.date_start_wo = planned_date
             mo = mo_form.save()
             mo.action_confirm()
             mo.button_plan()
             # Check that workcenters change
             self.assertEqual(mo.workorder_ids.workcenter_id, workcenters[i], "wrong workcenter %d" % i)
+            self.assertNotEqual(mo.date_planned_start, planned_date)
+            self.assertAlmostEqual(mo.date_planned_start, mo.workorder_ids.date_planned_start, delta=timedelta(seconds=10))
 
     def test_planning_2(self):
         """ Plan some manufacturing orders with 2 workorders each
@@ -1031,3 +1038,30 @@ class TestWorkOrderProcess(TestMrpCommon):
         mo.action_confirm()
         with self.assertRaises(UserError):
             mo.button_plan()
+
+    def test_plan_unplan_date(self):
+        """ Testing planning a workorder then cancel it and then plan it again.
+        The planned date must be the same the first time and the second time the
+        workorder is planned."""
+        planned_date = datetime(2019, 5, 13, 9, 0)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.planning_bom
+        mo_form.product_qty = 1
+        mo_form.date_start_wo = planned_date
+        mo = mo_form.save()
+        mo.action_confirm()
+        # Plans the MO and checks the date.
+        mo.button_plan()
+        self.assertAlmostEqual(mo.date_planned_start, planned_date, delta=timedelta(seconds=10))
+        self.assertEqual(bool(mo.workorder_ids.exists()), True)
+        leave = mo.workorder_ids.leave_id
+        self.assertEqual(bool(leave.exists()), True)
+        # Unplans the MO and checks the workorder and its leave no more exist.
+        mo.button_unplan()
+        self.assertEqual(bool(mo.workorder_ids.exists()), False)
+        self.assertEqual(bool(leave.exists()), False)
+        # Plans (again) the MO and checks the date is still the same.
+        mo.button_plan()
+        self.assertAlmostEqual(mo.date_planned_start, planned_date, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(mo.date_planned_start, mo.workorder_ids.date_planned_start, delta=timedelta(seconds=10))

@@ -137,14 +137,14 @@ QUnit.module('web_editor', {}, function () {
             assert.strictEqual(range.sc, pText,
                 "should select the text");
 
-            $field.find('.note-toolbar .note-bg-color button:first').mousedown().click();
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button:first'));
 
-            assert.ok($field.find('.note-bg-color').hasClass('show') && $field.find('.note-bg-color .dropdown-menu').hasClass('show'),
+            assert.ok($field.find('.note-back-color-preview').hasClass('show'),
                 "should display the color picker");
 
-            $field.find('.note-toolbar .note-bg-color button[data-value="#00FFFF"]').mousedown().click();
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button[data-value="#00FFFF"]'));
 
-            assert.ok(!$field.find('.note-bg-color').hasClass('show') && !$field.find('.note-bg-color .dropdown-menu').hasClass('show'),
+            assert.ok(!$field.find('.note-back-color-preview').hasClass('show'),
                 "should close the color picker");
 
             assert.strictEqual($field.find('.note-editable').html(),
@@ -167,11 +167,11 @@ QUnit.module('web_editor', {}, function () {
             Wysiwyg.setRange(fontContent, 5, pText, 2);
             // text is selected
 
-            $field.find('.note-toolbar .note-bg-color button:first').mousedown().click();
-            $field.find('.note-toolbar .note-bg-color button[data-value="bg-gamma"]').mousedown().click();
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button:first'));
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button[data-value="bg-gamma"]'));
 
             assert.strictEqual($field.find('.note-editable').html(),
-                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font class="bg-gamma">oto&nbsp;to</font>to</p><p>tata</p>',
+                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="" class="bg-gamma">oto&nbsp;</font><font class="bg-gamma" style="">to</font>to</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
 
             form.destroy();
@@ -215,7 +215,7 @@ QUnit.module('web_editor', {}, function () {
             var pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText, 1);
 
-            $field.find('.note-toolbar .note-insert button:has(.fa-file-image-o)').mousedown().click();
+            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-file-image-o)'));
 
             // load static xml file (dialog, media dialog, unsplash image widget)
             await defMediaDialog;
@@ -266,7 +266,7 @@ QUnit.module('web_editor', {}, function () {
             var pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText, 1);
 
-            $field.find('.note-toolbar .note-insert button:has(.fa-file-image-o)').mousedown().click();
+            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-file-image-o)'));
 
             // load static xml file (dialog, media dialog, unsplash image widget)
             await defMediaDialog;
@@ -315,82 +315,8 @@ QUnit.module('web_editor', {}, function () {
             Wysiwyg.setRange(pText, 1, pText, 10);
             // text is selected
 
-            await testUtils.dom.click($field.find('.note-toolbar .note-bg-color button:first').mousedown());
-            await testUtils.dom.click($field.find('.note-toolbar .note-bg-color button[data-value="bg-gamma"]').mousedown());
-
-            await testUtils.form.clickSave(form);
-
-            form.destroy();
-        });
-
-        QUnit.module('inline-style');
-
-        QUnit.test('convert style to class on edit', async function (assert) {
-            assert.expect(5);
-
-            this.data['note.note'].records[0].body = '<p class="pull-right" style="float: right;">toto ' +
-                '<img data-class="fa fa-star" data-style="color: red;" src="/web_editor/font_to_img/61445/rgb(255,0,0)/13" style="border-style:none;vertical-align:middle;height: auto; width: auto;">' +
-                'toto toto</p><p>tata</p>';
-
-            var form = await testUtils.createView({
-                View: FormView,
-                model: 'note.note',
-                data: this.data,
-                arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px" options="{\'style-inline\': true}"/>' +
-                    '</form>',
-                res_id: 1,
-                mockRPC: function (route, args) {
-                    if (args.method === "write") {
-                        assert.strictEqual(args.args[1].body,
-                            '<p class="pull-right" style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;float:right;">' +
-                            'toto ' +
-                            '<img ' +
-                            'data-class="fa fa-star" ' +
-                            'data-style="color: red;" ' +
-                            'style="border-style:none;vertical-align:middle;color: red; height: auto; width: auto;" ' +
-                            'data-src="/web_editor/font_to_img/61445/rgb(255,0,0)/13"' +
-                            '>' +
-                            'toto toto' +
-                            '</p>' +
-                            '<p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">' +
-                            'tata' +
-                            '</p>',
-                            "should save the content");
-                    }
-                    if (route.indexOf("/web_editor/font_to_img/61445/rgb(") !== -1) {
-                        assert.strictEqual(route,
-                            '/web_editor/font_to_img/61445/rgb(255,0,0)/13',
-                            "should use the image in function of the font and the color");
-                        return Promise.resolve('#');
-                    }
-                    return this._super.apply(this, arguments);
-                },
-            });
-            var $field = form.$('.oe_form_field[name="body"]');
-
-            assert.strictEqual($field.children('.o_readonly').html(),
-                '<p class="pull-right" style="float: right;">' +
-                'toto ' +
-                '<img data-class="fa fa-star" data-style="color: red;" ' +
-                'style="border-style:none;vertical-align:middle;height: auto; width: auto;" ' +
-                'data-src="/web_editor/font_to_img/61445/rgb(255,0,0)/13">' +
-                'toto toto' +
-                '</p>' +
-                '<p>tata</p>',
-                "should have rendered a div with correct content in readonly");
-
-            await testUtils.form.clickEdit(form);
-
-            $field = form.$('.oe_form_field[name="body"]');
-            assert.strictEqual($field.find('.note-editable').html(),
-                '<p class="pull-right">' +
-                'toto ' +
-                '<span class="fa fa-star o_fake_not_editable" style="color: red;" contenteditable="false"></span>' +
-                'toto toto' +
-                '</p>' +
-                '<p>tata</p>',
-                "should have rendered the field correctly in edit (remove inline style that used class)");
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button:first'));
+            await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview button[data-value="bg-gamma"]'));
 
             await testUtils.form.clickSave(form);
 
@@ -433,73 +359,7 @@ QUnit.module('web_editor', {}, function () {
             form.destroy();
         });
 
-        QUnit.module('cssEdit');
-
-        QUnit.test('rendering with iframe for edit mode', async function (assert) {
-            assert.expect(4);
-
-            var form = await testUtils.createView({
-                View: FormView,
-                model: 'note.note',
-                data: this.data,
-                arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px" options="{\'cssEdit\': \'template.assets\'}"/>' +
-                    '</form>',
-                res_id: 1,
-            });
-            var $field = form.$('.oe_form_field[name="body"]');
-            assert.strictEqual($field.children('.o_readonly').html(),
-                '<p>toto toto toto</p><p>tata</p>',
-                "should have rendered a div with correct content in readonly");
-
-            await testUtils.form.clickEdit(form);
-
-            $field = form.$('.oe_form_field[name="body"]');
-            var $iframe = $field.find('iframe');
-            await $iframe.data('loadDef');
-            var doc = $iframe.contents()[0];
-            var $content = $('#iframe_target', doc);
-
-            await testUtils.nextTick();
-
-            assert.strictEqual($content.find('.note-editable').html(),
-                '<p>toto toto toto</p><p>tata</p>',
-                "should have rendered a div with correct content in edit mode");
-
-            assert.strictEqual(doc.defaultView.getComputedStyle(doc.body).backgroundColor,
-                'rgb(255, 0, 0)',
-                "should load the asset css");
-
-            $content.find('.note-toolbar .note-bg-color button:first').mousedown().click();
-            await testUtils.nextTick();
-
-            assert.ok($content.find('.note-bg-color').hasClass('show') && $content.find('.note-bg-color .dropdown-menu').hasClass('show'),
-                "should display toolbar dropdown menu in iframe");
-
-            form.destroy();
-        });
-
-QUnit.test('save immediately before iframe is rendered in edit mode', async function (assert) {
-    assert.expect(1);
-
-    var form = await testUtils.createAsyncView({
-        View: FormView,
-        model: 'note.note',
-        data: this.data,
-        arch: '<form>' +
-            '<field name="body" widget="html" style="height: 100px" options="{\'cssEdit\': \'template.assets\'}"/>' +
-            '</form>',
-        res_id: 1,
-    });
-    testUtils.form.clickEdit(form);
-    await testUtils.nextTick();
-    testUtils.form.clickSave(form);
-    await testUtils.nextTick();
-    assert.ok(true, "No traceback encountered. The wysiwyg was cut while not loaded.");
-    form.destroy();
-});
-
-        QUnit.test('save immediately before iframe is rendered in edit mode with style-inline', async function (assert) {
+        QUnit.test('save immediately before iframe is rendered in edit mode', async function (assert) {
             assert.expect(1);
 
             var form = await testUtils.createAsyncView({
@@ -507,289 +367,16 @@ QUnit.test('save immediately before iframe is rendered in edit mode', async func
                 model: 'note.note',
                 data: this.data,
                 arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px" options="{\'cssEdit\': \'template.assets\', \'style-inline\': true}"/>' +
-                    '</form>',
-                res_id: 1,
-            });
-            testUtils.form.clickEdit(form);
-            await testUtils.nextTick();
-            testUtils.form.clickSave(form);
-            await testUtils.nextTick();
-            assert.ok(true, "No traceback encountered. The wysiwyg was cut while not loaded.");
-            form.destroy();
-        });
-
-        QUnit.test('use colorpicker and save', async function (assert) {
-            assert.expect(1);
-
-            var form = await testUtils.createView({
-                View: FormView,
-                model: 'note.note',
-                data: this.data,
-                arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px" options="{\'cssEdit\': \'template.assets\'}"/>' +
                     '</form>',
                 res_id: 1,
-                mockRPC: function (route, args) {
-                    if (args.method === "write") {
-                        assert.strictEqual(args.args[1].body,
-                            '<p>t<font class="bg-gamma">oto toto&nbsp;</font>toto</p><p>tata</p>',
-                            "should save the content");
-                    }
-                    return this._super.apply(this, arguments);
-                },
             });
             await testUtils.form.clickEdit(form);
-            var $field = form.$('.oe_form_field[name="body"]');
-            var $iframe = $field.find('iframe');
-
-            await $iframe.data('loadDef');
             await testUtils.nextTick();
-
-            var doc = $iframe.contents()[0];
-            var $content = $('#iframe_target', doc);
-            var $editable = $content.find('.note-editable');
-
-            // select the text
-            var pText = $editable.find('p').first().contents()[0];
-            Wysiwyg.setRange(pText, 1, pText, 10);
-            // text is selected
-
-            await testUtils.dom.click($content.find('.note-toolbar .note-bg-color button:first').mousedown());
-            await testUtils.dom.click($content.find('.note-toolbar .note-bg-color button[data-value="bg-gamma"]').mousedown());
-
             await testUtils.form.clickSave(form);
+            await testUtils.nextTick();
+            assert.ok(true, "No traceback encountered. The wysiwyg was cut while not loaded.");
             form.destroy();
-        });
-
-        QUnit.module('wrapper');
-
-        // todo add test wrapper
-
-        QUnit.module('snippet (without iframe)');
-
-        QUnit.test('rendering with snippet panel', async function (assert) {
-            var done = assert.async();
-            assert.expect(1);
-
-            var form = await testUtils.createView({
-                View: FormView,
-                model: 'note.note',
-                data: this.data,
-                arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px" options="{\'snippets\': \'web_editor.snippets\'}"/>' +
-                    '</form>',
-                res_id: 1,
-            });
-            testUtils.mock.intercept(form, "snippets_loaded", function () {
-                assert.strictEqual(form.$('.oe_form_field #oe_snippets').length, 1,
-                    "should display the snippet panel");
-                form.destroy();
-                done();
-            });
-            await testUtils.form.clickEdit(form);
-        });
-
-        QUnit.test('drag&drop snippet', async function (assert) {
-            assert.expect(1);
-
-            var form = await testUtils.createView({
-                View: FormView,
-                model: 'note.note',
-                data: this.data,
-                arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px" options="{\'snippets\': \'web_editor.snippets\'}"/>' +
-                    '</form>',
-                res_id: 1,
-            });
-            var defSnippets = testUtils.makeTestPromise();
-            testUtils.mock.intercept(form, "snippets_loaded", function () {
-                defSnippets.resolve();
-            });
-
-            await testUtils.form.clickEdit(form);
-            var $field = form.$('.oe_form_field[name="body"]');
-            var $editable = $field.find('.note-editable');
-
-            await defSnippets;
-            var $hr = $field.find('.oe_snippet_thumbnail:first');
-            testUtils.dom.dragAndDrop($hr, $editable.find('p'));
-
-            assert.strictEqual($editable.data('wysiwyg').getValue().replace(/\s+/g, ' '),
-                '<div class=\"s_hr pt32 pb32\"> <hr class=\"s_hr_1px s_hr_solid w-100 mx-auto\"> </div><p>toto toto toto</p><p>tata</p>',
-                "should drop the snippet");
-
-            form.destroy();
-        });
-
-        // todo add test snippet + customize snippet
-
-        QUnit.module('snippet & cssEdit');
-
-        QUnit.test('rendering with snippet panel', async function (assert) {
-            var done = assert.async();
-            assert.expect(1);
-
-            var form = await testUtils.createView({
-                View: FormView,
-                model: 'note.note',
-                data: this.data,
-                arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px" options="{\'snippets\': \'web_editor.snippets\', \'cssEdit\': \'template.assets\'}"/>' +
-                    '</form>',
-                res_id: 1,
-            });
-            testUtils.mock.intercept(form, "snippets_loaded", function () {
-                var doc = form.$('iframe').contents()[0];
-                var $content = $('#iframe_target', doc);
-                assert.strictEqual($content.find('#oe_snippets').length, 1,
-                    "should display the snippet panel");
-                form.destroy();
-                done();
-            });
-            await testUtils.form.clickEdit(form);
-        });
-
-        QUnit.test('drag&drop snippet', async function (assert) {
-            assert.expect(1);
-
-            var form = await testUtils.createView({
-                View: FormView,
-                model: 'note.note',
-                data: this.data,
-                arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px" options="{\'snippets\': \'web_editor.snippets\', \'cssEdit\': \'template.assets_all_style\'}"/>' +
-                    '</form>',
-                res_id: 1,
-            });
-            var defSnippets = testUtils.makeTestPromise();
-            testUtils.mock.intercept(form, "snippets_loaded", function () {
-                defSnippets.resolve();
-            });
-            await testUtils.form.clickEdit(form);
-
-            await defSnippets;
-            var doc = form.$('iframe').contents()[0];
-            var $content = $('#iframe_target', doc);
-            var $editable = $content.find('.note-editable');
-
-            var $hr = $content.find('.oe_snippet_thumbnail:first');
-            var from = $hr.offset();
-            var to = $editable.find('p').offset();
-
-            $hr.trigger($.Event("mousedown", {
-                which: 1,
-                pageX: from.left + 1,
-                pageY: from.top + 1
-            }));
-            $hr.trigger($.Event("mousemove", {
-                which: 1,
-                pageX: to.left,
-                pageY: to.top
-            }));
-            $hr.trigger($.Event("mouseup", {
-                which: 1,
-                pageX: to.left,
-                pageY: to.top
-            }));
-
-            assert.strictEqual($editable.data('wysiwyg').getValue().replace(/\s+/g, ' '),
-                '<div class=\"s_hr pt32 pb32\"> <hr class=\"s_hr_1px s_hr_solid w-100 mx-auto\"> </div><p>toto toto toto</p><p>tata</p>',
-                "should drop the snippet");
-
-            form.destroy();
-        });
-
-        QUnit.test('drag&drop snippet options', async function (assert) {
-            var done = assert.async();
-            assert.expect(6);
-
-            var form = await testUtils.createView({
-                View: FormView,
-                model: 'note.note',
-                data: this.data,
-                arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px" options="{\'snippets\': \'web_editor.snippets\', \'cssEdit\': \'template.assets_all_style\'}"/>' +
-                    '</form>',
-                res_id: 1,
-            });
-            var defSnippets = testUtils.makeTestPromise();
-            testUtils.mock.intercept(form, "snippets_loaded", function () {
-                defSnippets.resolve();
-            });
-
-            var defActivateSnippet;
-            testUtils.mock.intercept(form, "snippet_focused", function (e) {
-                defActivateSnippet.resolve(e.target);
-            });
-
-            await testUtils.form.clickEdit(form);
-
-            defSnippets.then(function () {
-                var doc = form.$('iframe').contents()[0];
-                var $content = $('#iframe_target', doc);
-                var $editable = $content.find('.note-editable');
-
-                function dropSnippet() {
-                    defActivateSnippet = testUtils.makeTestPromise();
-
-                    var $hr = $content.find('.oe_snippet_thumbnail:first');
-                    var from = $hr.offset();
-                    var to = $editable.find('p').offset();
-
-                    $hr.trigger($.Event("mousedown", {
-                        which: 1,
-                        pageX: from.left + 1,
-                        pageY: from.top + 1
-                    }));
-                    $hr.trigger($.Event("mousemove", {
-                        which: 1,
-                        pageX: to.left,
-                        pageY: to.top
-                    }));
-                    $hr.trigger($.Event("mouseup", {
-                        which: 1,
-                        pageX: to.left,
-                        pageY: to.top
-                    }));
-                }
-
-                dropSnippet();
-                defActivateSnippet.then(function (snippet) {
-                    assert.strictEqual($editable.data('wysiwyg').getValue().replace(/\s+/g, ' '),
-                        '<div class=\"s_hr pt32 pb32 built focus\"> <hr class=\"s_hr_1px s_hr_solid w-100 mx-auto\"> </div><p>toto toto toto</p><p>tata</p>',
-                        "should drop the snippet");
-
-                    assert.strictEqual(snippet.$target.index(), 0,
-                        'should show the snippet editor for the first dropped block');
-
-                    dropSnippet();
-                    defActivateSnippet.then(function (snippet) {
-                        assert.strictEqual($editable.data('wysiwyg').getValue().replace(/\s+/g, ' '),
-                            '<div class=\"s_hr pt32 pb32 built\"> <hr class=\"s_hr_1px s_hr_solid w-100 mx-auto\"> ' +
-                            '</div><div class=\"s_hr pt32 pb32 built focus\"> <hr class=\"s_hr_1px s_hr_solid w-100 mx-auto\"> ' +
-                            '</div><p>toto toto toto</p><p>tata</p>',
-                            "should drop the snippet");
-
-                        assert.strictEqual(snippet.$target.index(), 1,
-                            'should show the snippet editor for the second dropped block');
-
-                        assert.strictEqual($('.oe_active .oe_overlay_options .btn:visible', doc).length, 4,
-                            'should show the snippet editor buttons');
-
-                        defActivateSnippet = testUtils.makeTestPromise();
-                        $editable.find('hr:first').trigger('click');
-                        defActivateSnippet.then(function (snippet) {
-
-                            assert.strictEqual(snippet.$target.index(), 0,
-                                'should show the snippet editor for the first dropped block');
-
-                            form.destroy();
-                            done();
-                        });
-                    });
-                });
-            });
         });
 
         QUnit.module('translation');
@@ -822,49 +409,7 @@ QUnit.test('save immediately before iframe is rendered in edit mode', async func
                 "should not have a translate button in readonly mode");
 
             await testUtils.form.clickEdit(form);
-            var $button = form.$('.oe_form_field_html .note-toolbar .o_field_translate');
-            assert.strictEqual($button.length, 1, "should have a translate button");
-            $button.click();
-
-            form.destroy();
-            _t.database.multi_lang = multiLang;
-        });
-
-        QUnit.test('field html translatable in iframe', async function (assert) {
-            assert.expect(2);
-
-            var multiLang = _t.database.multi_lang;
-            _t.database.multi_lang = true;
-
-            this.data['note.note'].fields.body.translate = true;
-
-            var form = await testUtils.createView({
-                View: FormView,
-                model: 'note.note',
-                data: this.data,
-                arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px" options="{\'cssEdit\': \'template.assets\'}"/>' +
-                    '</form>',
-                res_id: 1,
-                mockRPC: function (route, args) {
-                    if (route === '/web/dataset/call_button' && args.method === 'translate_fields') {
-                        assert.deepEqual(args.args, ['note.note', 1, 'body'], "should call 'call_button' route");
-                        return Promise.resolve();
-                    }
-                    return this._super.apply(this, arguments);
-                },
-            });
-            var $field = form.$('.oe_form_field[name="body"]');
-            await testUtils.form.clickEdit(form);
-            $field = form.$('.oe_form_field[name="body"]');
-            var $iframe = $field.find('iframe');
-
-            await $iframe.data('loadDef');
-            await testUtils.nextTick();
-            var doc = $iframe.contents()[0];
-            var $content = $('#iframe_target', doc);
-
-            var $button = $content.find('.note-toolbar .o_field_translate');
+            var $button = form.$('.oe_form_field_html .o_field_translate');
             assert.strictEqual($button.length, 1, "should have a translate button");
             await testUtils.dom.click($button);
 

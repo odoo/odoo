@@ -6,17 +6,17 @@
         <field name="arch" type="xml">
             <form string="Pos Product Categories">
                 <sheet>
-                    <field name="image" widget='image' class="oe_avatar"/>
+                    <field name="image_128" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" placeholder="POS Category Name" required="True"/>
+                            <field name="name" placeholder="e.g. Soft Drinks" required="True"/>
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="parent_id"/>
-                            <field name="sequence"/>
+                            <field name="sequence" groups="base.group_no_one" />
                         </group>
                     </group>
                 </sheet>
@@ -41,14 +41,13 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <field name="name"/>
-                <field name="image_medium"/>
                 <field name="id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
                             <div class="row">
                                 <div class="col-4">
-                                    <img height="100" width="100" t-att-src="kanban_image('pos.category', 'image_medium', record.id.raw_value)" alt="Category"/>
+                                    <img height="100" width="100" t-att-src="kanban_image('pos.category', 'image_128', record.id.raw_value)" alt="Category"/>
                                 </div>
                                 <div class="col-8">
                                     <strong class="o_kanban_record_title"><field name="name"/></strong>

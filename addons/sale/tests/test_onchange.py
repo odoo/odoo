@@ -119,7 +119,7 @@ class TestOnchangeProductId(TransactionCase):
         computer_case.list_price = 100
         partner = self.res_partner_model.create(dict(name="George"))
         categ_unit_id = self.ref('uom.product_uom_categ_unit')
-        goup_discount_id = self.ref('sale.group_discount_per_so_line')
+        goup_discount_id = self.ref('product.group_discount_per_so_line')
         self.env.user.write({'groups_id': [(4, goup_discount_id, 0)]})
         new_uom = self.env['uom.uom'].create({
             'name': '10 units',
@@ -170,7 +170,7 @@ class TestOnchangeProductId(TransactionCase):
         computer_case = self.env.ref('product.product_product_16')
         computer_case.list_price = 100
         partner = self.res_partner_model.create(dict(name="George"))
-        goup_discount_id = self.ref('sale.group_discount_per_so_line')
+        goup_discount_id = self.ref('product.group_discount_per_so_line')
         self.env.user.write({'groups_id': [(4, goup_discount_id, 0)]})
 
         first_pricelist = self.env['product.pricelist'].create({

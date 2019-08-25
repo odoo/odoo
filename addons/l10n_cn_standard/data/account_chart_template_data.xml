@@ -9,9 +9,10 @@
             <field name="property_account_income_categ_id" ref="account_6001" />
             <field name="income_currency_exchange_account_id" ref="account_6061" />
             <field name="expense_currency_exchange_account_id" ref="account_6061" />
+            <field name="default_pos_receivable_account_id" ref="account_1124" />
         </record>
 
-        <function model="account.chart.template" name="try_loading_for_current_company">
+        <function model="account.chart.template" name="try_loading">
             <value eval="[ref('l10n_cn_standard.l10n_chart_china_standard_business')]"/>
         </function>
     </data>

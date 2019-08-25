@@ -8,6 +8,7 @@ odoo.define('web.PivotView', function (require) {
  */
 
 var AbstractView = require('web.AbstractView');
+var config = require('web.config');
 var core = require('web.core');
 var PivotModel = require('web.PivotModel');
 var PivotController = require('web.PivotController');
@@ -65,12 +66,9 @@ var PivotView = AbstractView.extend({
             if (field.attrs.interval) {
                 name += ':' + field.attrs.interval;
             }
-
             if (field.attrs.widget) {
                 widgets[name] = field.attrs.widget;
             }
-
-
             if (field.attrs.invisible && py.eval(field.attrs.invisible)) {
                 delete measures[name];
                 return;
@@ -82,15 +80,12 @@ var PivotView = AbstractView.extend({
             // the measure should be allowed.  However, be careful if you define
             // a measure in your pivot view: non stored functional fields will
             // probably not work (their aggregate will always be 0).
-
-            if (field.attrs.type === 'measure' && !(field.attrs.name in measures)) {
-                measures[field.attrs.name] = self.fields[field.attrs.name];
+            if (field.attrs.type === 'measure' && !(name in measures)) {
+                measures[name] = self.fields[name];
             }
-
             if (field.attrs.string) {
               measures[name].string = field.attrs.string;
             }
-
             if (field.attrs.type === 'measure' || 'operator' in field.attrs) {
                 activeMeasures.push(name);
                 measures[name] = self.fields[name];
@@ -111,11 +106,16 @@ var PivotView = AbstractView.extend({
         this.loadParams.rowGroupBys = rowGroupBys;
         this.loadParams.fields = this.fields;
         this.loadParams.default_order = params.default_order || this.arch.attrs.default_order;
+        if (config.device.isMobile) {
+            this.loadParams.colGroupBys = [];
+            this.loadParams.context.pivot_column_groupby = [];
+        }
+
 
         this.rendererParams.widgets = widgets;
+        this.rendererParams.enableLinking = !this.arch.attrs.disable_linking;
 
         this.controllerParams.title = params.title || this.arch.attrs.string || _t("Untitled");
-        this.controllerParams.enableLinking = !this.arch.attrs.disable_linking;
         this.controllerParams.measures = measures;
         this.controllerParams.groupableFields = groupableFields;
         // retrieve form and list view ids from the action to open those views

@@ -7,19 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='consumable']" position="after">
                 <separator/>
-                <filter string="Published" name="published" domain="[('website_published', '=', True)]"/>
+                <filter string="Published" name="published" domain="[('is_published', '=', True)]"/>
             </xpath>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="product_pricelist_view">
-        <field name="name">product.pricelist.website.form</field>
-        <field name="model">product.pricelist</field>
-        <field name="inherit_id" ref="product.product_pricelist_view"/>
-        <field name="arch" type="xml">
-            <field name="currency_id" position="before">
-                <field name="code"/>
-            </field>
         </field>
     </record>
 
@@ -29,7 +18,7 @@
         <field name="inherit_id" ref="product.product_product_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" groups="website.group_multi_website" optional="show"/>
             </field>
         </field>
     </record>
@@ -41,7 +30,7 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" groups="website.group_multi_website" optional="show"/>
             </field>
         </field>
     </record>
@@ -99,10 +88,7 @@
                 <attribute name="invisible">0</attribute>
             </xpath>
             <div name="button_box" position="inside">
-                <button class="oe_stat_button" name="website_publish_button"
-                    type="object" icon="fa-globe" attrs="{'invisible': [('sale_ok','=',False)]}">
-                    <field name="is_published" widget="website_button"/>
-                </button>
+                <field name="is_published" widget="website_redirect_button" attrs="{'invisible': [('sale_ok','=',False)]}"/>
             </div>
             <xpath expr="//page[@name='sales']" position="after">
                 <page name="shop" string="eCommerce" attrs="{'invisible': [('sale_ok','=',False)]}">
@@ -145,7 +131,7 @@
         <field name="arch" type="xml">
             <form string="Website Public Categories">
                 <sheet>
-                    <field name="image_medium" widget='image' class="oe_avatar"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_left">
                         <group>
                             <field name="name"/>
@@ -191,11 +177,14 @@
         <field name="inherit_id" ref="product.product_pricelist_view" />
         <field name="model">product.pricelist</field>
         <field name="arch" type="xml">
-            <field name='currency_id' position='after'>
-                <field name="selectable"/>
-                <field name="website_id" options="{'no_create': True}" />
-            </field>
-        </field>
+            <xpath expr="//group[@name='pricelist_availability']" position="after">
+                <group name="pricelist_website" string="Website">
+                    <field name="website_id" options="{'no_create': True}"/>
+                    <field name="selectable"/>
+                    <field name="code"/>
+                </group>
+            </xpath>
+          </field>
     </record>
 
     <record id="website_sale_pricelist_tree_view" model="ir.ui.view">
@@ -227,7 +216,7 @@
                     <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
                         <div class="row">
                             <div class="col">
-                                <field name="image_original" widget="image"/>
+                                <field name="image_1920" widget="image"/>
                             </div>
                             <div class="col" attrs="{'invisible': [('video_url', 'in', ['', False])]}">
                                 <div class="o_video_container p-2">
@@ -251,13 +240,13 @@
             <kanban string="Product Images" default_order="sequence">
                 <field name="id"/>
                 <field name="name"/>
-                <field name="image_original"/>
+                <field name="image_1920"/>
                 <field name="sequence" widget="handle"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="card oe_kanban_global_click p-0">
                             <div class="o_squared_image">
-                                <img class="card-img-top" t-att-src="kanban_image('product.image', 'image_original', record.id.value)" t-att-alt="record.name.value"/>
+                                <img class="card-img-top" t-att-src="kanban_image('product.image', 'image_1920', record.id.value)" t-att-alt="record.name.value"/>
                             </div>
                             <div class="card-body p-0">
                                 <h4 class="card-title p-2 m-0 bg-200">
@@ -265,12 +254,12 @@
                                 </h4>
                             </div>
                             <!-- below 100 Kb: good -->
-                            <t t-if="record.image_original.raw_value.length &lt; 100*1000">
+                            <t t-if="record.image_1920.raw_value.length &lt; 100*1000">
                                 <t t-set="size_status" t-value="'badge-success'"/>
                                 <t t-set="message">Acceptable file size</t>
                             </t>
                             <!-- below 1000 Kb: decent -->
-                            <t t-elif="record.image_original.raw_value.length &lt; 1000*1000">
+                            <t t-elif="record.image_1920.raw_value.length &lt; 1000*1000">
                                 <t t-set="size_status" t-value="'badge-warning'" />
                                 <t t-set="message">Huge file size. The image should be optimized/reduced.</t>
                             </t>
@@ -279,7 +268,7 @@
                                 <t t-set="size_status" t-value="'badge-danger'"/>
                                 <t t-set="message">Optimization required! Reduce the image size or increase your compression settings.</t>
                             </t>
-                            <span t-attf-class="badge #{size_status} o_product_image_size" t-esc="record.image_original.value" t-att-title="message"/>
+                            <span t-attf-class="badge #{size_status} o_product_image_size" t-esc="record.image_1920.value" t-att-title="message"/>
                         </div>
                     </t>
                 </templates>

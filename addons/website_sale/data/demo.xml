@@ -6,56 +6,56 @@
         </record>
 
         <record id="product.product_product_24" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_product_5" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_product_12" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_product_10" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_product_13" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_product_25" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.consu_delivery_02" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_delivery_01" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_product_3" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_product_22" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.consu_delivery_03" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_product_27" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_delivery_02" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_product_16" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.consu_delivery_01" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
         <record id="product.product_order_01" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
 
         <record id="product.product_product_4" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
             <field name="website_size_x">2</field>
             <field name="website_size_y">2</field>
             <field name="website_sequence">9950</field>
@@ -63,25 +63,25 @@
         </record>
 
         <record id="product.product_product_6" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
             <field name="website_sequence">10010</field>
             <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_full')])]"/>
         </record>
 
         <record id="product.product_product_7" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
 
         <record id="product.product_product_8" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
 
         <record id="product.product_product_9" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
         </record>
 
         <record id="product.product_product_11" model="product.product">
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
             <field name="accessory_product_ids" eval="[(6, 0, [ref('product.product_product_7')])]"/>
         </record>
 
@@ -287,7 +287,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -309,7 +308,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -331,7 +329,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -353,7 +350,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -375,7 +371,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -397,7 +392,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -419,7 +413,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
         </record>
 
@@ -440,7 +433,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()"/>
-            <field name="confirmation_date" eval="datetime.now()"/>
             <field name="state">sale</field>
         </record>
 
@@ -571,7 +563,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=1)"/>
-            <field name="confirmation_date" eval="datetime.now()-relativedelta(months=1)"/>
             <field name="state">sale</field>
         </record>
 
@@ -593,7 +584,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=1, days=2)"/>
-            <field name="confirmation_date" eval="datetime.now()-relativedelta(months=1, days=2)"/>
         </record>
 
         <record id="website_sale_order_line_17" model="sale.order.line">
@@ -615,7 +605,6 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=2)"/>
-            <field name="confirmation_date" eval="datetime.now()-relativedelta(months=2)"/>
         </record>
 
         <record id="website_sale_order_line_18" model="sale.order.line">
@@ -636,7 +625,7 @@
             <field name="name">Warranty</field>
             <field name="list_price">20.0</field>
             <field name="website_sequence">9980</field>
-            <field name="website_published" eval="True"/>
+            <field name="is_published" eval="True"/>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>

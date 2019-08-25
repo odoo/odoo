@@ -223,19 +223,14 @@ class IrHttp(models.AbstractModel):
         )
 
     @classmethod
-    def _get_languages(cls):
-        return request.env['res.lang'].search([])
-
-    @classmethod
     def _get_language_codes(cls):
-        languages = cls._get_languages()
-        return [(lang.code, lang.name) for lang in languages]
+        return request.env['res.lang'].get_installed()
 
     @classmethod
     def _get_default_lang(cls):
         lang_code = request.env['ir.default'].sudo().get('res.partner', 'lang')
         if lang_code:
-            return request.env['res.lang'].search([('code', '=', lang_code)], limit=1)
+            return request.env['res.lang']._lang_get(lang_code)
         return request.env['res.lang'].search([], limit=1)
 
     @api.model
@@ -251,6 +246,7 @@ class IrHttp(models.AbstractModel):
             'lang_parameters': lang_params,
             'modules': translations,
             'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
+            'lang': lang,
         }
 
         session_info.update({
@@ -325,7 +321,7 @@ class IrHttp(models.AbstractModel):
         if request.routing_iteration == 1:
             context = dict(request.context)
             path = request.httprequest.path.split('/')
-            langs = [lg.code for lg in cls._get_languages()]
+            langs = [code for code, _ in request.env['res.lang'].get_installed()]
             is_a_bot = cls.is_a_bot()
             cook_lang = request.httprequest.cookies.get('frontend_lang')
             nearest_lang = not func and cls.get_nearest_lang(path[1])

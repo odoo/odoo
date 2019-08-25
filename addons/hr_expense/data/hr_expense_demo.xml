@@ -17,7 +17,6 @@
         <record id="res_partner_address_fp" model="res.partner">
             <field name="name">Pieter Parter's Farm</field>
             <field name="parent_id" eval="ref('base.partner_root')"/>
-            <field name="supplier">1</field>
             <field name="street">Chaussée de Namur, 40</field>
             <field name="zip">1367</field>
             <field name="city">Grand-Rosière-Hottomont</field>
@@ -51,7 +50,7 @@
             <field name="uom_po_id" ref="uom.product_uom_km"/>
             <field name="categ_id" ref="product.cat_expense"/>
             <field name="can_be_expensed" eval="True" />
-            <field name="image" type="base64" file="hr_expense/static/img/car_travel-image.jpg"/>
+            <field name="image_1920" type="base64" file="hr_expense/static/img/car_travel-image.jpg"/>
         </record>
 
         <record id="air_ticket" model="product.product">
@@ -62,7 +61,7 @@
             <field name="default_code">EXP_AF</field>
             <field name="categ_id" ref="product.cat_expense"/>
             <field name="can_be_expensed" eval="True" />
-            <field name="image" type="base64" file="hr_expense/static/img/air_ticket-image.jpg"/>
+            <field name="image_1920" type="base64" file="hr_expense/static/img/air_ticket-image.jpg"/>
         </record>
 
         <record id="product.expense_hotel" model="product.product">
@@ -97,7 +96,7 @@
             <field eval="289.0" name="unit_amount"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field eval="1.0" name="quantity"/>
-            <field name="date" eval="time.strftime('%Y')+'-4-3'"/>
+            <field name="date" eval="time.strftime('%Y')+'-04-03'"/>
         </record>
 
         <record id="laptop_expense" model="hr.expense">
@@ -108,7 +107,7 @@
             <field eval="889.0" name="unit_amount"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field eval="1.0" name="quantity"/>
-            <field name="date" eval="time.strftime('%Y')+'-4-3'"/>
+            <field name="date" eval="time.strftime('%Y')+'-04-03'"/>
         </record>
 
         <record id="travel_ny_sheet" model="hr.expense.sheet">
@@ -177,7 +176,7 @@
             <field name="product_id" ref="car_travel"/>
             <field eval="0.52" name="unit_amount"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="date" eval="time.strftime('%Y')+'-1-15'"/>
+            <field name="date" eval="time.strftime('%Y')+'-01-15'"/>
             <field eval="152.0" name="quantity"/>
             <field name="sheet_id" ref="customer_meeting_sheet"/>
         </record>
@@ -187,7 +186,7 @@
             <field name="employee_id" ref="hr.employee_qdp"/>
             <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
             <field name="product_id" ref="product_product_fixed_cost"/>
-            <field name="date" eval="time.strftime('%Y')+'-1-15'"/>
+            <field name="date" eval="time.strftime('%Y')+'-01-15'"/>
             <field eval="152.8" name="unit_amount"/>
             <field eval="1.0" name="quantity"/>
             <field name="sheet_id" ref="customer_meeting_sheet"/>
@@ -205,7 +204,7 @@
             <field name="employee_id" ref="hr.employee_fme"/>
             <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
             <field name="product_id" ref="product_product_fixed_cost"/>
-            <field name="date" eval="time.strftime('%Y-%m')+'-5'"/>
+            <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
             <field eval="12.5" name="unit_amount"/>
             <field eval="12.0" name="quantity"/>
             <field name="sheet_id" ref="team_building_sheet"/>
@@ -216,7 +215,7 @@
             <field name="employee_id" ref="hr.employee_fme"/>
             <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
             <field name="product_id" ref="product_product_fixed_cost"/>
-            <field name="date" eval="time.strftime('%Y-%m')+'-5'"/>
+            <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
             <field eval="2.5" name="unit_amount"/>
             <field eval="17.0" name="quantity"/>
             <field name="sheet_id" ref="team_building_sheet"/>
@@ -227,7 +226,7 @@
             <field name="employee_id" ref="hr.employee_fme"/>
             <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
             <field name="product_id" ref="product_product_fixed_cost"/>
-            <field name="date" eval="time.strftime('%Y-%m')+'-5'"/>
+            <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
             <field eval="25" name="unit_amount"/>
             <field eval="12.0" name="quantity"/>
             <field name="sheet_id" ref="team_building_sheet"/>
@@ -245,7 +244,7 @@
             <field name="employee_id" ref="hr.employee_al"/>
             <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
             <field name="product_id" ref="product.product_delivery_01"/>
-            <field name="date" eval="time.strftime('%Y')+'-6-2'"/>
+            <field name="date" eval="time.strftime('%Y')+'-06-02'"/>
             <field eval="55.75" name="unit_amount"/>
             <field eval="6.0" name="quantity"/>
             <field name="sheet_id" ref="office_furniture_sheet"/>
@@ -256,7 +255,7 @@
             <field name="employee_id" ref="hr.employee_al"/>
             <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
             <field name="product_id" ref="product.product_delivery_02"/>
-            <field name="date" eval="time.strftime('%Y')+'-6-2'"/>
+            <field name="date" eval="time.strftime('%Y')+'-06-02'"/>
             <field eval="28.99" name="unit_amount"/>
             <field eval="1.0" name="quantity"/>
             <field name="sheet_id" ref="office_furniture_sheet"/>
@@ -268,7 +267,7 @@
             <field name="employee_id" ref="hr.employee_stw"/>
             <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
             <field name="product_id" ref="product_product_fixed_cost"/>
-            <field name="date" eval="time.strftime('%Y-')+'-3-15'"/>
+            <field name="date" eval="time.strftime('%Y')+'-03-15'"/>
             <field eval="112.58" name="unit_amount"/>
             <field eval="4.0" name="quantity"/>
         </record>

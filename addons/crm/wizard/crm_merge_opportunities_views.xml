@@ -8,7 +8,7 @@
                 <form string="Merge Leads/Opportunities">
                     <group string="Assign opportunities to">
                         <field name="user_id" class="oe_inline"/>
-                        <field name="team_id" class="oe_inline"/>
+                        <field name="team_id" class="oe_inline" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                     </group>
                     <group string="Select Leads/Opportunities">
                         <field name="opportunity_ids" nolabel="1">
@@ -31,15 +31,6 @@
                     </footer>
                 </form>
             </field>
-        </record>
-
-        <!--  Merge leads/opportunities action -->
-        <record id="merge_opportunity_act" model="ir.actions.act_window">
-            <field name="name">Merge leads/opportunities</field>
-            <field name="res_model">crm.merge.opportunity</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="merge_opportunity_form"/>
-            <field name="target">new</field>
         </record>
 
         <act_window

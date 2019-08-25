@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="content-group">
                                     <div class="mt16">
-                                        <field name="timesheet_encode_uom_id" options="{'no_create': True}" required="1" class="col-lg-5"/>
+                                        <field name="timesheet_encode_uom_id" options="{'no_create': True, 'no_open': True}" required="1" class="col-lg-5"/>
                                     </div>
                                 </div>
                             </div>
@@ -81,7 +81,7 @@
                                 <div class="o_setting_right_pane">
                                     <label for="module_project_timesheet_holidays"/>
                                     <div class="text-muted">
-                                        Validated time off create timesheets automatically.
+                                        Create timesheets upon time off validation
                                     </div>
                                     <div class="content-group">
                                         <div id="module_project_timesheet_holidays"/>
@@ -105,5 +105,5 @@
     </record>
 
     <menuitem id="hr_timesheet_config_settings_menu_action" name="Settings" parent="hr_timesheet_menu_configuration"
-        action="hr_timesheet_config_settings_action" sequence="0"/>
+        action="hr_timesheet_config_settings_action" sequence="0" groups="base.group_system"/>
 </odoo>

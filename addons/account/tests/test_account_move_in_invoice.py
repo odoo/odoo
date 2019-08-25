@@ -11,7 +11,7 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
     @classmethod
     def setUpClass(cls):
         super(TestAccountMoveInInvoiceOnchanges, cls).setUpClass()
-        
+
         cls.invoice = cls.init_invoice('in_invoice')
 
         cls.product_line_vals_1 = {
@@ -892,13 +892,13 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
             **self.move_vals,
             'date': move_reversal.date,
             'state': 'draft',
-            'invoice_payment_ref': move_reversal.reason,
+            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
             'invoice_payment_state': 'not_paid',
         })
 
         move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2019-02-01'),
-            'reason': 'no reason',
+            'reason': 'because',
             'refund_method': 'cancel',
         })
         reversal = move_reversal.reverse_moves()
@@ -934,7 +934,7 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
             **self.move_vals,
             'date': move_reversal.date,
             'state': 'posted',
-            'invoice_payment_ref': move_reversal.reason,
+            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
             'invoice_payment_state': 'paid',
         })
 
@@ -1040,4 +1040,156 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
         ], {
             **self.move_vals,
             'currency_id': self.currency_data['currency'].id,
+        })
+
+    def test_in_invoice_switch_in_refund_1(self):
+        # Test creating an account_move with an in_invoice_type and switch it in an in_refund.
+        move = self.env['account.move'].create({
+            'type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, None, self.product_line_vals_1),
+                (0, None, self.product_line_vals_2),
+            ]
+        })
+        move.action_switch_invoice_into_refund_credit_note()
+
+        self.assertRecordValues(move, [{'type': 'in_refund'}])
+        self.assertInvoiceValues(move, [
+            {
+                **self.product_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 800.0,
+                'credit': 400.0,
+            },
+            {
+                **self.product_line_vals_2,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 160.0,
+                'credit': 80.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 144.0,
+                'credit': 72.0,
+            },
+            {
+                **self.tax_line_vals_2,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 24.0,
+                'credit': 12.0,
+            },
+            {
+                **self.term_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -1128.0,
+                'debit': 564.0,
+            },
+        ], {
+            **self.move_vals,
+            'currency_id': self.currency_data['currency'].id,
+        })
+
+    def test_in_invoice_switch_in_refund_2(self):
+        # Test creating an account_move with an in_invoice_type and switch it in an in_refund and a negative quantity.
+        modified_product_line_vals_1 = self.product_line_vals_1.copy()
+        modified_product_line_vals_1.update({'quantity': -modified_product_line_vals_1['quantity']})
+        modified_product_line_vals_2 = self.product_line_vals_2.copy()
+        modified_product_line_vals_2.update({'quantity': -modified_product_line_vals_2['quantity']})
+        move = self.env['account.move'].create({
+            'type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, None, modified_product_line_vals_1),
+                (0, None, modified_product_line_vals_2),
+            ]
+        })
+
+        self.assertInvoiceValues(move, [
+            {
+                **self.product_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -800.0,
+                'credit': 400.0,
+                'quantity': -1.0,
+            },
+            {
+                **self.product_line_vals_2,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -160.0,
+                'credit': 80.0,
+                'quantity': -1.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -144.0,
+                'credit': 72.0,
+            },
+            {
+                **self.tax_line_vals_2,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -24.0,
+                'credit': 12.0,
+            },
+            {
+                **self.term_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 1128.0,
+                'debit': 564.0,
+            },
+        ], {
+            **self.move_vals,
+            'currency_id': self.currency_data['currency'].id,
+            'amount_tax' : -self.move_vals['amount_tax'],
+            'amount_total' : -self.move_vals['amount_total'],
+            'amount_untaxed' : -self.move_vals['amount_untaxed'],
+        })
+        move.action_switch_invoice_into_refund_credit_note()
+
+        self.assertRecordValues(move, [{'type': 'in_refund'}])
+        self.assertInvoiceValues(move, [
+            {
+                **self.product_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 800.0,
+                'credit': 400.0,
+            },
+            {
+                **self.product_line_vals_2,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 160.0,
+                'credit': 80.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -144.0,
+                'credit': 72.0,
+            },
+            {
+                **self.tax_line_vals_2,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -24.0,
+                'credit': 12.0,
+            },
+            {
+                **self.term_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -1128.0,
+                'debit': 564.0,
+            },
+        ], {
+            **self.move_vals,
+            'currency_id': self.currency_data['currency'].id,
+            'amount_tax' : self.move_vals['amount_tax'],
+            'amount_total' : self.move_vals['amount_total'],
+            'amount_untaxed' : self.move_vals['amount_untaxed'],
         })

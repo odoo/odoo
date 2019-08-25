@@ -13,9 +13,6 @@
                 You can create channels for each website on which you want
                 to integrate the website live chat widget, allowing your website
                 visitors to talk in real time with your operators.
-              </p><p>
-                Each channel has it's own URL that you can send by email to
-                your customers in order to start chatting with you.
               </p>
             </field>
         </record>
@@ -36,7 +33,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img t-att-src="kanban_image('im_livechat.channel', 'image_medium', record.id.raw_value)" class="img-fluid" alt="Channel"/>
+                                    <img t-att-src="kanban_image('im_livechat.channel', 'image_128', record.id.raw_value)" class="img-fluid" alt="Channel"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <div class="float-right">
@@ -90,7 +87,7 @@
                             <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
                         </button>
                     </div>
-                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                    <field name="image_128" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -108,7 +105,7 @@
                                             <t t-name="kanban-box">
                                                 <div class="oe_kanban_global_click">
                                                     <div class="o_kanban_image">
-                                                        <img t-att-src="kanban_image('res.users', 'image', record.id.raw_value)" alt="User"/>
+                                                        <img t-att-src="kanban_image('res.users', 'image_1024', record.id.raw_value)" alt="User"/>
                                                     </div>
                                                     <div class="o_kanban_details">
                                                         <h4 class="o_kanban_record_title"><field name="name"/></h4>
@@ -118,7 +115,7 @@
                                         </templates>
                                     </kanban>
                                 </field>
-                                <p class="text-muted">
+                                <p class="text-muted" style="padding-left: 8px">
                                     Operators that do not show any activity In Odoo for more than 30 minutes will be considered as disconnected.
                                 </p>
                             </group>
@@ -130,7 +127,18 @@
                                 <field name="input_placeholder"/>
                             </group>
                         </page>
+                        <page string="Channel Rules">
+                            <span class="text-muted">Define rules for your live support channel. You can apply an action for the given URL, and per country.<br />To identify the country, GeoIP must be installed on your server, otherwise, the countries of the rule will not be taken into account.</span>
+                            <group>
+                                <field name="rule_ids" nolabel="1"/>
+                            </group>
+                        </page>
                         <page string="Widget">
+                            <group attrs='{"invisible": [["web_page", "!=", False]]}'>
+                                <div class="alert alert-warning mt4 mb16" role="alert">
+                                Save your Channel to get your configuration widget.
+                                </div>
+                            </group>
                             <group>
                                 <div attrs='{"invisible": [["web_page", "=", False]]}'>
                                     <separator string="How to use the Website Live Chat widget?"/>
@@ -142,15 +150,9 @@
                                         or copy this url and send it by email to your customers or suppliers:
                                     </p>
                                     <field name="web_page" readonly="1" widget="CopyClipboardChar"/>
-                                    <p>For websites built with the Odoo CMS, please install the website_livechat module. Then go to Website > Configuration > Settings and select the Website Live Chat Channel you want to add on your website.</p>
+                                    <p>For websites built with the Odoo CMS, go to Website > Configuration > Settings and select the Website Live Chat Channel you want to add on your website.</p>
                                 </div>
                             </group>
-                        </page>
-                        <page string="Channel Rules">
-                            <group>
-                                <field name="rule_ids" nolabel="1"/>
-                            </group>
-                            <span>Define rules for your live support channel. You can apply an action (disable the support, automatically open your support, or just make the button available) for the given URL, and per country.<br />To identify the country, GeoIP must be installed on your server, otherwise, the countries of the rule will not be taken into account.</span>
                         </page>
                     </notebook>
                 </sheet>
@@ -158,7 +160,15 @@
             </field>
         </record>
 
-
+        <record id="im_livechat_channel_view_search" model="ir.ui.view">
+            <field name="name">im.livechat.channel.view.search</field>
+            <field name="model">im_livechat.channel</field>
+            <field name="arch" type="xml">
+                <search string="LiveChat Channel Search">
+                    <field name="name" string="Channel"/>
+                </search>
+            </field>
+        </record>
 
         <!-- im_livechat.channel.rule -->
         <record id="im_livechat_channel_rule_view_tree" model="ir.ui.view">
@@ -200,11 +210,11 @@
             <field name="model">im_livechat.channel.rule</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Channel Rule">
+                <form string="Channel Rule" class="o_livechat_rules_form">
                     <sheet>
                         <group>
-                            <field name="action"/>
-                            <field name="regex_url"/>
+                            <field name="action" widget="radio"/>
+                            <field name="regex_url" placeholder="e.g. /page/contactus"/>
                             <label for="auto_popup_timer" class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}"/>
                             <div class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}">
                                 <field name="auto_popup_timer" class="oe_inline"/> seconds

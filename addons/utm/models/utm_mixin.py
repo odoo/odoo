@@ -15,13 +15,13 @@ class UtmMixin(models.AbstractModel):
     source_id = fields.Many2one('utm.source', 'Source',
                                 help="This is the source of the link, e.g. Search Engine, another domain, or name of email list")
     medium_id = fields.Many2one('utm.medium', 'Medium',
-                                help="This is the method of delivery, e.g. Postcard, Email, or Banner Ad", oldname='channel_id')
+                                help="This is the method of delivery, e.g. Postcard, Email, or Banner Ad")
 
     @api.model
     def default_get(self, fields):
         values = super(UtmMixin, self).default_get(fields)
 
-        # We ignore UTM for salemen, except some requests that could be done as superuser_id to bypass access rights.
+        # We ignore UTM for salesmen, except some requests that could be done as superuser_id to bypass access rights.
         if not self.env.is_superuser() and self.env.user.has_group('sales_team.group_sale_salesman'):
             return values
 
@@ -37,7 +37,7 @@ class UtmMixin(models.AbstractModel):
                     Model = self.env[field.comodel_name]
                     records = Model.search([('name', '=', value)], limit=1)
                     if not records:
-                        records = Model.create({'name': value})
+                        records = Model.create({'name': value, 'is_website': True})
                     value = records.id
                 if value:
                     values[field_name] = value

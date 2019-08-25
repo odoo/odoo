@@ -161,7 +161,7 @@ function addMockEnvironment(widget, params) {
     var initialSession, initialConfig, initialParameters, initialDebounce, initialThrottle;
     initialSession = _.extend({}, session);
     session.getTZOffset = function () {
-        return 0; // by default, but may be overriden in specific tests
+        return 0; // by default, but may be overridden in specific tests
     };
     if ('session' in params) {
         _.extend(session, params.session);
@@ -446,7 +446,13 @@ function patchDate(year, month, day, hours, minutes, seconds) {
         }
 
         // Copy "native" methods explicitly; they may be non-enumerable
-        Date.now = NativeDate.now;
+        // exception: 'now' uses fake date as reference
+        Date.now = function () {
+            var date = new NativeDate();
+            var time = date.getTime();
+            time -= timeInterval;
+            return time;
+        };
         Date.UTC = NativeDate.UTC;
         Date.prototype = NativeDate.prototype;
         Date.prototype.constructor = Date;

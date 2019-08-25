@@ -27,13 +27,16 @@ class MaintenanceEquipmentCategory(models.Model):
 
     @api.depends('equipment_ids')
     def _compute_fold(self):
+        # fix mutual dependency: 'fold' depends on 'equipment_count', which is
+        # computed with a read_group(), which retrieves 'fold'!
+        self.fold = False
         for category in self:
             category.fold = False if category.equipment_count else True
 
     name = fields.Char('Category Name', required=True, translate=True)
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.company)
-    technician_user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.uid, oldname='user_id')
+    technician_user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.uid)
     color = fields.Integer('Color Index')
     note = fields.Text('Comments', translate=True)
     equipment_ids = fields.One2many('maintenance.equipment', 'category_id', string='Equipments', copy=False)
@@ -43,7 +46,7 @@ class MaintenanceEquipmentCategory(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete='restrict', required=True,
         help="Email alias for this equipment category. New emails will automatically "
-        "create new maintenance request for this equipment category.")
+        "create a new equipment under this category.")
     fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
 
     def _compute_equipment_count(self):
@@ -120,11 +123,11 @@ class MaintenanceEquipment(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.company)
     active = fields.Boolean(default=True)
-    technician_user_id = fields.Many2one('res.users', string='Technician', tracking=True, oldname='user_id')
+    technician_user_id = fields.Many2one('res.users', string='Technician', tracking=True)
     owner_user_id = fields.Many2one('res.users', string='Owner', tracking=True)
     category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category',
                                   tracking=True, group_expand='_read_group_category_ids')
-    partner_id = fields.Many2one('res.partner', string='Vendor', domain="[('supplier', '=', 1)]")
+    partner_id = fields.Many2one('res.partner', string='Vendor')
     partner_ref = fields.Char('Vendor Reference')
     location = fields.Char('Location')
     model = fields.Char('Model')
@@ -133,7 +136,7 @@ class MaintenanceEquipment(models.Model):
     effective_date = fields.Date('Effective Date', default=fields.Date.context_today, required=True, help="Date at which the equipment became effective. This date will be used to compute the Mean Time Between Failure.")
     cost = fields.Float('Cost')
     note = fields.Text('Note')
-    warranty_date = fields.Date('Warranty Expiration Date', oldname='warranty')
+    warranty_date = fields.Date('Warranty Expiration Date')
     color = fields.Integer('Color Index')
     scrap_date = fields.Date('Scrap Date')
     maintenance_ids = fields.One2many('maintenance.request', 'equipment_id')
@@ -147,7 +150,8 @@ class MaintenanceEquipment(models.Model):
     @api.depends('effective_date', 'period', 'maintenance_ids.request_date', 'maintenance_ids.close_date')
     def _compute_next_maintenance(self):
         date_now = fields.Date.context_today(self)
-        for equipment in self.filtered(lambda x: x.period > 0):
+        equipments = self.filtered(lambda x: x.period > 0)
+        for equipment in equipments:
             next_maintenance_todo = self.env['maintenance.request'].search([
                 ('equipment_id', '=', equipment.id),
                 ('maintenance_type', '=', 'preventive'),
@@ -184,6 +188,7 @@ class MaintenanceEquipment(models.Model):
             else:
                 next_date = self.effective_date + timedelta(days=equipment.period)
             equipment.next_action_date = next_date
+        (self - equipments).next_action_date = False
 
     @api.depends('maintenance_ids.stage_id.done')
     def _compute_maintenance_count(self):
@@ -284,7 +289,7 @@ class MaintenanceRequest(models.Model):
     category_id = fields.Many2one('maintenance.equipment.category', related='equipment_id.category_id', string='Category', store=True, readonly=True)
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment',
                                    ondelete='restrict', index=True)
-    user_id = fields.Many2one('res.users', string='Technician', tracking=True, oldname='technician_user_id')
+    user_id = fields.Many2one('res.users', string='Technician', tracking=True)
     stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', tracking=True,
                                group_expand='_read_group_stage_ids', default=_default_stage)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
@@ -298,6 +303,7 @@ class MaintenanceRequest(models.Model):
     schedule_date = fields.Datetime('Scheduled Date', help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ")
     maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, default=_get_default_team_id)
     duration = fields.Float(help="Duration in hours.")
+    done = fields.Boolean(related='stage_id.done')
 
     def archive_equipment_request(self):
         self.write({'archive': True})

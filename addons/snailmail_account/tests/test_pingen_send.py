@@ -33,34 +33,15 @@ class TestPingenSend(AccountingTestCase):
 
     def create_invoice(self):
         """ Create a sample invoice """
-        currency = self.env.ref('base.EUR')
-        partner_agrolait = self.env.ref("base.res_partner_2")
-        product = self.env.ref("product.product_product_4")
-
-        account_receivable = self.env['account.account'].create({
-            'code': 'TESTPINGEN1',
-            'name': 'Test Receivable Account',
-            'user_type_id': self.env.ref('account.data_account_type_receivable').id,
-            'reconcile': True
-        })
-        account_income = self.env['account.account'].create({
-            'code': 'TESTPINGEN2',
-            'name': 'Test Account',
-            'user_type_id': self.env.ref('account.data_account_type_direct_costs').id
-        })
-
         invoice = self.env['account.move'].with_context(default_type='out_invoice').create({
             'type': 'out_invoice',
-            'partner_id': partner_agrolait.id,
-            'currency_id': currency.id,
-            'name': 'invoice to client',
-            'account_id': account_receivable.id,
+            'partner_id': self.env.ref("base.res_partner_2").id,
+            'currency_id': self.env.ref('base.EUR').id,
             'invoice_date': '2018-12-11',
             'invoice_line_ids': [(0, 0, {
-                'product_id': product.id,
+                'product_id': self.env.ref("product.product_product_4").id,
                 'quantity': 1,
                 'price_unit': 42,
-                'account_id': account_income.id,
             })],
         })
 

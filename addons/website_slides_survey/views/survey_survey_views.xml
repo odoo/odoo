@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="survey_survey_action_slides" model="ir.actions.act_window">
+        <field name="name">Certifications</field>
+        <field name="res_model">survey.survey</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('certificate', '=', True)]</field>
+        <field name="context">{'default_certificate': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new certification
+            </p>
+        </field>
+    </record>
+
+    <record id="survey_survey_action_slides_report" model="ir.actions.act_window">
+        <field name="name">Certifications</field>
+        <field name="res_model">survey.survey</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="domain">[('certificate', '=', True)]</field>
+        <field name="context">{'default_certificate': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new certification
+            </p>
+        </field>
+    </record>
+</odoo>

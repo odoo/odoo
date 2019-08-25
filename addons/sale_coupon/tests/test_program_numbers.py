@@ -12,14 +12,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
     def setUp(self):
         super(TestSaleCouponProgramNumbers, self).setUp()
 
-        self.iPadMini = self.env.ref('product.product_product_6')
-        self.iPod = self.env.ref('product.product_product_11')
-        self.wirelessKeyboard = self.env.ref('product.product_product_9')
-        self.computerCase = self.env.ref('product.product_product_16')
-        self.littleServer = self.env.ref('product.consu_delivery_02')
+        self.largeCabinet = self.env.ref('product.product_product_6')
+        self.conferenceChair = self.env.ref('product.product_product_11')
+        self.pedalBin = self.env.ref('product.product_product_9')
+        self.drawerBlack = self.env.ref('product.product_product_16')
+        self.largeMeetingTable = self.env.ref('product.consu_delivery_02')
         self.steve = self.env['res.partner'].create({
             'name': 'Steve Bucknor',
-            'customer': True,
             'email': 'steve.bucknor@example.com',
         })
         self.empty_order = self.env['sale.order'].create({
@@ -39,7 +38,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
-            'reward_product_id': self.iPadMini.id,
+            'reward_product_id': self.largeCabinet.id,
             'rule_min_quantity': 3,
             'rule_products_domain': '[["name","ilike","large cabinet"]]',
         })
@@ -48,7 +47,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
-            'reward_product_id': self.littleServer.id,
+            'reward_product_id': self.largeMeetingTable.id,
             'rule_products_domain': '[["name","ilike","drawer black"]]',
         })
 
@@ -56,7 +55,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # These tests will focus on numbers (free product qty, SO total, reduction total..)
         order = self.empty_order
         sol1 = self.env['sale.order.line'].create({
-            'product_id': self.iPadMini.id,
+            'product_id': self.largeCabinet.id,
             'name': 'Large Cabinet',
             'product_uom_qty': 4.0,
             'order_id': order.id,
@@ -78,7 +77,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 1, "Free Large Cabinet should have been removed")
 
         # Free product in cart will be considered as paid product when changing quantity of paid product, so the free product quantity computation will be wrong.
-        # 100 iPad in cart, 25 free, set quantity to 10 ipad, you should have 2 free ipad but you get 8 because it add the 25 initial free ipad to the total paid ipad when computing (25+10 > 35 > /4 = 8 free ipad)
+        # 100 Large Cabinet in cart, 25 free, set quantity to 10 Large Cabinet, you should have 2 free Large Cabinet but you get 8 because it add the 25 initial free Large Cabinet to the total paid Large Cabinet when computing (25+10 > 35 > /4 = 8 free Large Cabinet)
         sol1.product_uom_qty = 100
         order.recompute_coupon_lines()
         self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).product_uom_qty, 25, "We should have 25 Free Large Cabinet")
@@ -93,13 +92,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # Buy A, get free b. (remember we need a paid B in cart to receive free b). If your cart is 4A 1B then you should receive 1b (you are eligible to receive 4 because you have 4A but since you dont have enought B in your cart, you are limited to the B quantity)
         order = self.empty_order
         sol1 = self.env['sale.order.line'].create({
-            'product_id': self.computerCase.id,
+            'product_id': self.drawerBlack.id,
             'name': 'drawer black',
             'product_uom_qty': 4.0,
             'order_id': order.id,
         })
         sol2 = self.env['sale.order.line'].create({
-            'product_id': self.littleServer.id,
+            'product_id': self.largeMeetingTable.id,
             'name': 'Large Meeting Table',
             'product_uom_qty': 1.0,
             'order_id': order.id,
@@ -120,7 +119,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
         # Check you can still have auto applied promotion if you have a promo code set to the order
         self.env['sale.order.line'].create({
-            'product_id': self.iPadMini.id,
+            'product_id': self.largeCabinet.id,
             'name': 'Large Cabinet',
             'product_uom_qty': 4.0,
             'order_id': order.id,
@@ -143,13 +142,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'discount_type': 'percentage',
             'discount_percentage': 20.0,
             'rule_minimum_amount': 320.00,
-            'discount_apply_on': 'specific_product',
-            'discount_specific_product_id': self.iPadMini.id,
+            'discount_apply_on': 'specific_products',
+            'discount_specific_product_ids': [(6, 0, [self.largeCabinet.id])],
         })
         order = self.empty_order
-        self.iPadMini.taxes_id = percent_tax
+        self.largeCabinet.taxes_id = percent_tax
         sol1 = self.env['sale.order.line'].create({
-            'product_id': self.iPadMini.id,
+            'product_id': self.largeCabinet.id,
             'name': 'Large Cabinet',
             'product_uom_qty': 1.0,
             'order_id': order.id,
@@ -163,11 +162,12 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 2, "We should now get the reduction line since we have 320$ tax included (cabinet is 320$ tax included)")
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
-        # iPod                 |  1  |    320.00  | 15% excl |  320.00 |  368.00 |   48.00
-        # 20% discount on ipad |  1  |    -64.00  | 15% excl |  -64.00 |  -73.60 |   -9.60
+        # Conference Chair     |  1  |    320.00  | 15% excl |  320.00 |  368.00 |   48.00
+        # 20% discount on      |  1  |    -64.00  | 15% excl |  -64.00 |  -73.60 |   -9.60
+        #        large cabinet |
         # --------------------------------------------------------------------------------
         # TOTAL                                              |  256.00 |  294.40 |   38.40
-        self.assertEqual(order.amount_total, 294.4, "Check discount has been applied correctly (eg: on taxes aswell)")
+        self.assertAlmostEqual(order.amount_total, 294.4, 2, "Check discount has been applied correctly (eg: on taxes aswell)")
 
         # test coupon with code works the same as auto applied_programs
         p_specific_product.write({'promo_code_usage': 'code_needed', 'promo_code': '20pc'})
@@ -179,43 +179,46 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "We should now get the reduction line since we have 320$ tax included (cabinet is 320$ tax included)")
 
-        # check discount applied only on ipad
+        # check discount applied only on Large Cabinet
         self.env['sale.order.line'].create({
-            'product_id': self.computerCase.id,
-            'name': 'Computer Case',
+            'product_id': self.drawerBlack.id,
+            'name': 'Drawer Black',
             'product_uom_qty': 10.0,
             'order_id': order.id,
         })
         order.recompute_coupon_lines()
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
-        # Computer Case        | 10  |     25.00  |        / |  250.00 |  250.00 |       /
-        # iPad                 |  1  |    320.00  | 15% excl |  320.00 |  368.00 |   48.00
-        # 20% discount on ipad |  1  |    -64.00  | 15% excl |  -64.00 |  -73.60 |   -9.60
+        # Drawer Black         | 10  |     25.00  |        / |  250.00 |  250.00 |       /
+        # Large Cabinet        |  1  |    320.00  | 15% excl |  320.00 |  368.00 |   48.00
+        # 20% discount on      |  1  |    -64.00  | 15% excl |  -64.00 |  -73.60 |   -9.60
+        #        large cabinet |
         # --------------------------------------------------------------------------------
         # TOTAL                                              |  506.00 |  544.40 |   38.40
         self.assertEqual(order.amount_total, 544.4, "We should only get reduction on cabinet")
         sol1.product_uom_qty = 10
         order.recompute_coupon_lines()
-        # Note: Since we now have 2 free ipads, we should discount only 8 of the 10 ipads in carts since we don't want to discount free ipads
+        # Note: Since we now have 2 free Large Cabinet, we should discount only 8 of the 10 Large Cabinet in carts since we don't want to discount free Large Cabinet
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
-        # Computer Case        | 10  |     25.00  |        / |  250.00 |  250.00 |       /
-        # iPad                 | 10  |    320.00  | 15% excl | 3200.00 | 3680.00 |  480.00
-        # Free iPad            |  2  |   -320.00  | 15% excl | -640.00 | -736.00 |  -96.00
-        # 20% discount on ipad |  1  |   -512.00  | 15% excl | -512.00 | -588.80 |  -78.80
+        # Drawer Black         | 10  |     25.00  |        / |  250.00 |  250.00 |       /
+        # Large Cabinet        | 10  |    320.00  | 15% excl | 3200.00 | 3680.00 |  480.00
+        # Free Large Cabinet   |  2  |   -320.00  | 15% excl | -640.00 | -736.00 |  -96.00
+        # 20% discount on      |  1  |   -512.00  | 15% excl | -512.00 | -588.80 |  -78.80
+        #        large cabinet |
         # --------------------------------------------------------------------------------
         # TOTAL                                              | 2298.00 | 2605.20 |  305.20
-        self.assertEqual(order.amount_total, 2605.20, "Changing cabinet quantity should change discount amount correctly")
+        self.assertAlmostEqual(order.amount_total, 2605.20, 2, "Changing cabinet quantity should change discount amount correctly")
 
         p_specific_product.discount_max_amount = 200
         order.recompute_coupon_lines()
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
-        # Computer Case        | 10  |     25.00  |        / |  250.00 |  250.00 |       /
-        # iPad                 | 10  |    320.00  | 15% excl | 3200.00 | 3680.00 |  480.00
-        # Free iPad            |  2  |   -320.00  | 15% excl | -640.00 | -736.00 |  -96.00
-        # 20% discount on ipad |  1  |   -200.00  | 15% excl | -200.00 | -230.00 |  -30.00
+        # Drawer Black         | 10  |     25.00  |        / |  250.00 |  250.00 |       /
+        # Large Cabinet        | 10  |    320.00  | 15% excl | 3200.00 | 3680.00 |  480.00
+        # Free Large Cabinet   |  2  |   -320.00  | 15% excl | -640.00 | -736.00 |  -96.00
+        # 20% discount on      |  1  |   -200.00  | 15% excl | -200.00 | -230.00 |  -30.00
+        #        large cabinet |
         #  limited to 200 HTVA
         # --------------------------------------------------------------------------------
         # TOTAL                                              | 2610.00 | 2964.00 |  354.00
@@ -243,28 +246,28 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         })
 
         # Set tax and prices on products as neeed for the test
-        (self.product_A + self.iPadMini + self.iPod + self.wirelessKeyboard + self.computerCase).write({'list_price': 100})
-        (self.iPadMini + self.computerCase).write({'taxes_id': [(4, self.tax_15pc_excl.id, False)]})
-        self.iPod.taxes_id = self.tax_10pc_incl
-        self.wirelessKeyboard.taxes_id = None
+        (self.product_A + self.largeCabinet + self.conferenceChair + self.pedalBin + self.drawerBlack).write({'list_price': 100})
+        (self.largeCabinet + self.drawerBlack).write({'taxes_id': [(4, self.tax_15pc_excl.id, False)]})
+        self.conferenceChair.taxes_id = self.tax_10pc_incl
+        self.pedalBin.taxes_id = None
         self.product_A.taxes_id = (self.tax_35pc_incl + self.tax_50pc_excl)
 
         # Add products in order
         self.env['sale.order.line'].create({
-            'product_id': self.iPadMini.id,
-            'name': 'iPad',
+            'product_id': self.largeCabinet.id,
+            'name': 'Large Cabinet',
             'product_uom_qty': 7.0,
             'order_id': order.id,
         })
         sol2 = self.env['sale.order.line'].create({
-            'product_id': self.iPod.id,
-            'name': 'iPod',
+            'product_id': self.conferenceChair.id,
+            'name': 'Conference Chair',
             'product_uom_qty': 5.0,
             'order_id': order.id,
         })
         self.env['sale.order.line'].create({
-            'product_id': self.wirelessKeyboard.id,
-            'name': 'Wireless Keyboard',
+            'product_id': self.pedalBin.id,
+            'name': 'Pedal Bin',
             'product_uom_qty': 10.0,
             'order_id': order.id,
         })
@@ -275,45 +278,45 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'order_id': order.id,
         })
         self.env['sale.order.line'].create({
-            'product_id': self.computerCase.id,
-            'name': 'Computer Case',
+            'product_id': self.drawerBlack.id,
+            'name': 'Drawer Black',
             'product_uom_qty': 2.0,
             'order_id': order.id,
         })
 
         # Create needed programs
         self.p2.active = False
-        self.p_ipad = self.env['sale.coupon.program'].create({
+        self.p_large_cabinet = self.env['sale.coupon.program'].create({
             'name': 'Buy 1 large cabinet, get one for free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
-            'reward_product_id': self.iPadMini.id,
+            'reward_product_id': self.largeCabinet.id,
             'rule_products_domain': '[["name","ilike","large cabinet"]]',
         })
-        self.p_ipod = self.env['sale.coupon.program'].create({
+        self.p_conference_chair = self.env['sale.coupon.program'].create({
             'name': 'Buy 1 chair, get one for free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
-            'reward_product_id': self.iPod.id,
+            'reward_product_id': self.conferenceChair.id,
             'rule_products_domain': '[["name","ilike","conference chair"]]',
         })
-        self.p_keyboard = self.env['sale.coupon.program'].create({
+        self.p_pedal_bin = self.env['sale.coupon.program'].create({
             'name': 'Buy 1 bin, get one for free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
-            'reward_product_id': self.wirelessKeyboard.id,
+            'reward_product_id': self.pedalBin.id,
             'rule_products_domain': '[["name","ilike","pedal bin"]]',
         })
 
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
-        # iPod                 |  5  |    100.00  | 10% incl |  454.55 |  500.00 |   45.45
-        # Keyboards            |  10 |    100.00  | /        | 1000.00 | 1000.00 |       /
-        # iPad                 |  7  |    100.00  | 15% excl |  700.00 |  805.00 |  105.00
-        # Computer Case        |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
+        # Conference Chair     |  5  |    100.00  | 10% incl |  454.55 |  500.00 |   45.45
+        # Pedal bin            |  10 |    100.00  | /        | 1000.00 | 1000.00 |       /
+        # Large Cabinet        |  7  |    100.00  | 15% excl |  700.00 |  805.00 |  105.00
+        # Drawer Black         |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
         # Product A            |  3  |    100.00  | 35% incl |  222.22 |  411.11 |  188.89
         #                                           50% excl
         # --------------------------------------------------------------------------------
@@ -328,13 +331,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
-        # Free iPod            |  2  |   -100.00  | 10% incl | -181.82 | -200.00 |  -18.18
-        # Free Keyboard        |  5  |   -100.00  | /        | -500.00 | -500.00 |       /
-        # Free iPad            |  3  |   -100.00  | 15% excl | -300.00 | -345.00 |  -45.00
+        # Free ConferenceChair |  2  |   -100.00  | 10% incl | -181.82 | -200.00 |  -18.18
+        # Free Pedal Bin       |  5  |   -100.00  | /        | -500.00 | -500.00 |       /
+        # Free Large Cabinet   |  3  |   -100.00  | 15% excl | -300.00 | -345.00 |  -45.00
         # --------------------------------------------------------------------------------
         # TOTAL AFTER APPLYING FREE PRODUCT PROGRAMS         | 1594.95 | 1901.11 |  306.16
 
-        self.assertEqual(order.amount_total, 1901.11, "The order total with programs should be 1901.11")
+        self.assertAlmostEqual(order.amount_total, 1901.11, 2, "The order total with programs should be 1901.11")
         self.assertEqual(order.amount_untaxed, 1594.95, "The order untaxed total with programs should be 1594.95")
         self.assertEqual(len(order.order_line.ids), 8, "Order should contains 5 regular product lines and 3 free product lines")
 
@@ -366,34 +369,34 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 12, "Recomputing tax on sale order lines should not change number of order line")
         # -- End test inside the test
 
-        # Now we want to apply a 20% discount only on iPad
+        # Now we want to apply a 20% discount only on Large Cabinet
         self.env['sale.coupon.program'].create({
-            'name': '20% reduction on ipad in cart',
+            'name': '20% reduction on Large Cabinet in cart',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'discount',
             'program_type': 'promotion_program',
             'discount_type': 'percentage',
             'discount_percentage': 20.0,
-            'discount_apply_on': 'specific_product',
-            'discount_specific_product_id': self.iPadMini.id,
+            'discount_apply_on': 'specific_products',
+            'discount_specific_product_ids': [(6, 0, [self.largeCabinet.id])],
         })
         order.recompute_coupon_lines()
-        # Note: we have 7 regular ipads and 3 free ipads. We should then discount only 4 really paid iPads
+        # Note: we have 7 regular Large Cabinets and 3 free Large Cabinets. We should then discount only 4 really paid Large Cabinets
 
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
-        # 20% on iPad          |  1  |    -80.00  | 15% excl | -80.00  | -92.00  |  -12.00
+        # 20% on Large Cabinet |  1  |    -80.00  | 15% excl | -80.00  | -92.00  |  -12.00
         # --------------------------------------------------------------------------------
-        # TOTAL AFTER APPLYING 20% ON IPAD                   | 1355.45 | 1619.00 | 263.54
+        # TOTAL AFTER APPLYING 20% ON LARGE CABINET          | 1355.45 | 1619.00 | 263.54
 
         self.assertEqual(order.amount_total, 1619, "The order total with programs should be 1619")
         self.assertEqual(order.amount_untaxed, 1355.46, "The order untaxed total with programs should be 1435.45")
-        self.assertEqual(len(order.order_line.ids), 13, "Order should have a new discount line for 20% on iPad")
+        self.assertEqual(len(order.order_line.ids), 13, "Order should have a new discount line for 20% on Large Cabinet")
 
         # Check that if you delete one of the discount tax line, the others tax lines from the same promotion got deleted as well.
         order.order_line.filtered(lambda l: '10%' in l.name)[0].unlink()
         self.assertEqual(len(order.order_line.ids), 9, "All of the 10% discount line per tax should be removed")
-        # At this point, removing the iPod's discount line (split per tax) removed also the others discount lines
+        # At this point, removing the Conference Chair's discount line (split per tax) removed also the others discount lines
         # linked to the same program (eg: other taxes lines). So the coupon got removed from the SO since there were no discount lines left
 
         # Add back the coupon to continue the test flow
@@ -404,37 +407,38 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # Check that if you change a product qty, his discount tax line got updated
         sol2.product_uom_qty = 7
         order.recompute_coupon_lines()
-        # iPod                 |  5  |    100.00  | 10% incl |  454.55 |  500.00 |   45.45
-        # Free iPod            |  2  |   -100.00  | 10% incl | -181.82 | -200.00 |  -18.18
+        # Conference Chair     |  5  |    100.00  | 10% incl |  454.55 |  500.00 |   45.45
+        # Free ConferenceChair |  2  |   -100.00  | 10% incl | -181.82 | -200.00 |  -18.18
         # 10% on tax 10% incl  |  1  |    -30.00  | 10% incl | -27.27  | -30.00  |   -2.73
         # --------------------------------------------------------------------------------
-        # TOTAL OF IPOD LINES                                |  245.46 |  270.00 |   24.54
+        # TOTAL OF Conference Chair LINES                                |  245.46 |  270.00 |   24.54
         # ==> Should become:
-        # iPod                 |  7  |    100.00  | 10% incl |  636.36 |  700.00 |   63.64
-        # Free iPod            |  3  |   -100.00  | 10% incl | -272.73 | -300.00 |  -27.27
+        # Conference Chair     |  7  |    100.00  | 10% incl |  636.36 |  700.00 |   63.64
+        # Free ConferenceChair |  3  |   -100.00  | 10% incl | -272.73 | -300.00 |  -27.27
         # 10% on tax 10% incl  |  1  |    -40.00  | 10% incl |  -36.36 |  -40.00 |   -3.64
         # --------------------------------------------------------------------------------
-        # TOTAL OF IPOD LINES AFTER ADDING 2 IPODS           |  327.27 |  360.00 |   32.73
+        # TOTAL OF Conference Chair LINES                    |  327.27 |  360.00 |   32.73
+        # AFTER ADDING 2 Conference Chair                    |
         # --------------------------------------------------------------------------------
         # => DIFFERENCES BEFORE/AFTER                        |   81.81 |   90.00 |    8.19
-        self.assertEqual(order.amount_untaxed, 1355.46 + 81.81, "The order should have one more paid ipod with 10% incl tax and discounted by 10%")
+        self.assertEqual(order.amount_untaxed, 1355.46 + 81.81, "The order should have one more paid Conference Chair with 10% incl tax and discounted by 10%")
 
         # Check that if you remove a product, his reward lines got removed, especially the discount per tax one
         sol2.unlink()
         order.recompute_coupon_lines()
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
-        # Keyboards            |  10 |    100.00  | /        | 1000.00 | 1000.00 |       /
-        # iPad                 |  7  |    100.00  | 15% excl |  700.00 |  805.00 |  105.00
-        # Computer Case        |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
+        # Pedal Bins           |  10 |    100.00  | /        | 1000.00 | 1000.00 |       /
+        # Large Cabinet        |  7  |    100.00  | 15% excl |  700.00 |  805.00 |  105.00
+        # Drawer Black         |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
         # Product A            |  3  |    100.00  | 35% incl |  222.22 |  411.11 |  188.89
         #                                           50% excl
-        # Free Keyboard        |  5  |   -100.00  | /        | -500.00 | -500.00 |       /
-        # Free iPad            |  3  |   -100.00  | 15% excl | -300.00 | -345.00 |  -45.00
-        # 20% on iPad          |  1  |    -80.00  | 15% excl | -80.00  | -92.00  |  -12.00
+        # Free Pedal Bin       |  5  |   -100.00  | /        | -500.00 | -500.00 |       /
+        # Free Large Cabinet   |  3  |   -100.00  | 15% excl | -300.00 | -345.00 |  -45.00
+        # 20% on Large Cabinet |  1  |    -80.00  | 15% excl | -80.00  | -92.00  |  -12.00
         # --------------------------------------------------------------------------------
         # TOTAL                                              | 1242.22 | 1509.11 |  266.89
-        self.assertEqual(order.amount_total, 1509.11, "The order total with programs should be 1509.11")
+        self.assertAlmostEqual(order.amount_total, 1509.11, 2, "The order total with programs should be 1509.11")
         self.assertEqual(order.amount_untaxed, 1242.22, "The order untaxed total with programs should be 1242.22")
         self.assertEqual(len(order.order_line.ids), 7, "Order should contains 7 lines: 4 products lines, 2 free products lines and a 20% discount line")
 
@@ -443,13 +447,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.p1.copy({'promo_code_usage': 'no_code_needed', 'name': 'Auto applied 10% global discount'})
         order = self.empty_order
         self.env['sale.order.line'].create({
-            'product_id': self.iPadMini.id,
-            'name': 'iPad',
+            'product_id': self.largeCabinet.id,
+            'name': 'Large Cabinet',
             'product_uom_qty': 1.0,
             'order_id': order.id,
         })
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 2, "We should get 1 iPad line and 1 10% auto applied global discount line")
+        self.assertEqual(len(order.order_line.ids), 2, "We should get 1 Large Cabinet line and 1 10% auto applied global discount line")
         self.assertEqual(order.amount_total, 288, "320$ - 10%")
         with self.assertRaises(UserError):
             # Can't apply a second global discount
@@ -474,8 +478,8 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         })
         fixed_amount_program.discount_line_product_id.write({'taxes_id': [(4, self.tax_0pc_excl.id, False)]})
         sol1 = self.env['sale.order.line'].create({
-            'product_id': self.computerCase.id,
-            'name': 'Computer Case',
+            'product_id': self.drawerBlack.id,
+            'name': 'Drawer Black',
             'product_uom_qty': 1.0,
             'order_id': order.id,
         })
@@ -496,17 +500,17 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
     def test_program_next_order(self):
         order = self.empty_order
         self.env['sale.coupon.program'].create({
-            'name': 'Free Keyboard if at least 1 article',
+            'name': 'Free Pedal Bin if at least 1 article',
             'promo_code_usage': 'no_code_needed',
             'promo_applicability': 'on_next_order',
             'program_type': 'promotion_program',
             'reward_type': 'product',
-            'reward_product_id': self.wirelessKeyboard.id,
+            'reward_product_id': self.pedalBin.id,
             'rule_min_quantity': 2,
         })
         sol1 = self.env['sale.order.line'].create({
-            'product_id': self.iPadMini.id,
-            'name': 'iPad Mini',
+            'product_id': self.largeCabinet.id,
+            'name': 'Large Cabinet',
             'product_uom_qty': 1.0,
             'order_id': order.id,
         })
@@ -533,3 +537,83 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         generated_coupon = order.generated_coupon_ids
         self.assertEqual(len(generated_coupon), 1, "We should still have only 1 coupon as we now benefit again from the program but no need to create a new one (see next assert)")
         self.assertEqual(generated_coupon.state, 'reserved', "The coupon should be set back to reserved as we had already an expired one, no need to create a new one")
+
+    def test_program_discount_on_multiple_specific_products(self):
+        """ Ensure a discount on multiple specific products is correctly computed.
+            - Simple: Discount must be applied on all the products set on the promotion
+            - Advanced: This discount must be split by different taxes
+        """
+        order = self.empty_order
+        p_specific_products = self.env['sale.coupon.program'].create({
+            'name': '20% reduction on Conference Chair and Drawer Black in cart',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'program_type': 'promotion_program',
+            'discount_type': 'percentage',
+            'discount_percentage': 25.0,
+            'discount_apply_on': 'specific_products',
+            'discount_specific_product_ids': [(6, 0, [self.conferenceChair.id, self.drawerBlack.id])],
+        })
+
+        self.env['sale.order.line'].create({
+            'product_id': self.conferenceChair.id,
+            'name': 'Conference Chair',
+            'product_uom_qty': 4.0,
+            'order_id': order.id,
+        })
+        sol2 = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'name': 'Drawer Black',
+            'product_uom_qty': 2.0,
+            'order_id': order.id,
+        })
+
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 3, "Conference Chair + Drawer Black + 20% discount line")
+        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
+        # --------------------------------------------------------------------------------
+        # Conference Chair     |  4  |     16.50  |       /  |   66.00 |   66.00 |   0.00
+        # Drawer Black         |  2  |     25.00  |       /  |   50.00 |   50.00 |   0.00
+        # 25% discount         |  1  |    -29.00  |       /  |  -29.00 |  -29.00 |   0.00
+        # --------------------------------------------------------------------------------
+        # TOTAL                                              |   87.00 |   87.00 |   0.00
+        self.assertEqual(order.amount_total, 87.00, "Total should be 87.00, see above comment")
+
+        # remove Drawer Black case from promotion
+        p_specific_products.discount_specific_product_ids = [(6, 0, [self.conferenceChair.id])]
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 3, "Should still be Conference Chair + Drawer Black + 20% discount line")
+        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
+        # --------------------------------------------------------------------------------
+        # Conference Chair     |  4  |     16.50  |       /  |   66.00 |   66.00 |   0.00
+        # Drawer Black         |  2  |     25.00  |       /  |   50.00 |   50.00 |   0.00
+        # 25% discount         |  1  |    -16.50  |       /  |  -16.50 |  -16.50 |   0.00
+        # --------------------------------------------------------------------------------
+        # TOTAL                                              |   99.50 |   99.50 |   0.00
+        self.assertEqual(order.amount_total, 99.50, "The 12.50 discount from the drawer black should be gone")
+
+        # =========================================================================
+        # PART 2: Same flow but with different taxes on products to ensure discount is split per VAT
+        # Add back Drawer Black in promotion
+        p_specific_products.discount_specific_product_ids = [(6, 0, [self.conferenceChair.id, self.drawerBlack.id])]
+
+        percent_tax = self.env['account.tax'].create({
+            'name': "30% Tax",
+            'amount_type': 'percent',
+            'amount': 30,
+            'price_include': True,
+        })
+        sol2.tax_id = percent_tax
+
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 4, "Conference Chair + Drawer Black + 20% on no TVA product (Conference Chair) + 20% on 15% tva product (Drawer Black)")
+        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
+        # --------------------------------------------------------------------------------
+        # Conference Chair     |  4  |     16.50  |       /  |   66.00 |   66.00 |   0.00
+        # Drawer Black         |  2  |     25.00  | 30% incl |   38.46 |   50.00 |  11.54
+        # 25% discount         |  1  |    -16.50  |       /  |  -16.50 |  -16.50 |   0.00
+        # 25% discount         |  1  |    -12.50  | 30% incl |   -9.62 |  -12.50 |  -2.88
+        # --------------------------------------------------------------------------------
+        # TOTAL                                              |   78.34 |   87.00 |   8.66
+        self.assertEqual(order.amount_total, 87.00, "Total untaxed should be as per above comment")
+        self.assertEqual(order.amount_untaxed, 78.34, "Total with taxes should be as per above comment")

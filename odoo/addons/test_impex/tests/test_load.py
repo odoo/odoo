@@ -18,8 +18,10 @@ def moreaction(**kwargs):
     return dict(kwargs,
         type='ir.actions.act_window',
         target='new',
+        context={'create': False},
+        name='Possible Values',
         view_mode='tree,form',
-        views=[(False, 'tree'), (False, 'form')],
+        views=[(False, 'list'), (False, 'form')],
         help=u"See all possible values")
 
 def values(seq, field='value'):
@@ -441,7 +443,7 @@ class test_selection(ImporterCase):
 
     def test_imported_translated(self):
         self.add_translations(
-            'export.selection,value', 'selection', 'fr_FR', *self.translations_fr)
+            'ir.model.fields.selection,name', 'model', 'fr_FR', *self.translations_fr)
 
         result = self.import_(['value'], [
             ['toto'],
@@ -524,7 +526,7 @@ class test_selection_function(ImporterCase):
         """ Expects output of selection function returns translated labels
         """
         self.add_translations(
-            'export.selection,value', 'selection', 'fr_FR', *self.translations_fr)
+            'ir.model.fields.selection,name', 'model', 'fr_FR', *self.translations_fr)
 
         result = self.import_(['value'], [
             ['titi'],
@@ -743,8 +745,8 @@ class test_m2m(ImporterCase):
         self.assertEqual(len(result['ids']), 3)
 
         b = self.browse()
-        self.assertEqual(values(b[0].value), [3, 44])
-        self.assertEqual(values(b[2].value), [44, 84])
+        self.assertCountEqual(values(b[0].value), [3, 44])
+        self.assertCountEqual(values(b[2].value), [44, 84])
 
     def test_noxids(self):
         result = self.import_(['value/id'], [['noxidforthat']])
@@ -852,7 +854,7 @@ class test_o2m(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
 
         (b,) = self.browse()
-        self.assertEqual(values(b.value), [63, 64, 65, 66])
+        self.assertEqual(set(values(b.value)), set([63, 64, 65, 66]))
 
     def test_multi_subfields(self):
         result = self.import_(['value/str', 'const', 'value/value'], [
@@ -865,9 +867,9 @@ class test_o2m(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
 
         (b,) = self.browse()
-        self.assertEqual(values(b.value), [63, 64, 65, 66])
+        self.assertEqual(set(values(b.value.sorted())), set([63, 64, 65, 66]))
         self.assertEqual(
-            values(b.value, 'str'),
+            values(b.value.sorted(), 'str'),
             'this is the rhythm'.split())
 
     def test_link_inline(self):
@@ -885,7 +887,7 @@ class test_o2m(ImporterCase):
         [b] = self.browse()
         self.assertEqual(b.const, 42)
         # automatically forces link between core record and o2ms
-        self.assertEqual(values(b.value), [109, 262])
+        self.assertEqual(set(values(b.value)), set([109, 262]))
         self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
     def test_link(self):
@@ -904,7 +906,7 @@ class test_o2m(ImporterCase):
         [b] = self.browse()
         self.assertEqual(b.const, 42)
         # automatically forces link between core record and o2ms
-        self.assertEqual(values(b.value), [109, 262])
+        self.assertCountEqual(values(b.value), [109, 262])
         self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
     def test_link_2(self):
@@ -920,7 +922,7 @@ class test_o2m(ImporterCase):
 
         [b] = self.browse()
         self.assertEqual(b.const, 42)
-        self.assertEqual(values(b.value), [1, 2])
+        self.assertEqual(set(values(b.value)), set([1, 2]))
         self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
 
@@ -938,8 +940,8 @@ class test_o2m_multiple(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
 
         [b] = self.browse()
-        self.assertEqual(values(b.child1), [11, 12, 13, 14])
-        self.assertEqual(values(b.child2), [21, 22, 23])
+        self.assertEqual(set(values(b.child1)), set([11, 12, 13, 14]))
+        self.assertEqual(set(values(b.child2)), set([21, 22, 23]))
 
     def test_multi(self):
         result = self.import_(['const', 'child1/value', 'child2/value'], [
@@ -954,8 +956,8 @@ class test_o2m_multiple(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
 
         [b] = self.browse()
-        self.assertEqual(values(b.child1), [11, 12, 13, 14])
-        self.assertEqual(values(b.child2), [21, 22, 23])
+        self.assertEqual(set(values(b.child1)), set([11, 12, 13, 14]))
+        self.assertEqual(set(values(b.child2)), set([21, 22, 23]))
 
     def test_multi_fullsplit(self):
         result = self.import_(['const', 'child1/value', 'child2/value'], [
@@ -972,20 +974,20 @@ class test_o2m_multiple(ImporterCase):
 
         [b] = self.browse()
         self.assertEqual(b.const, 5)
-        self.assertEqual(values(b.child1), [11, 12, 13, 14])
-        self.assertEqual(values(b.child2), [21, 22, 23])
+        self.assertEqual(set(values(b.child1)), set([11, 12, 13, 14]))
+        self.assertEqual(set(values(b.child2)), set([21, 22, 23]))
 
 
 class test_realworld(common.TransactionCase):
     def test_bigfile(self):
         data = json.loads(pkgutil.get_data(self.__module__, 'contacts_big.json').decode('utf-8'))
-        result = self.env['res.partner'].load(['name', 'mobile', 'email', 'image'], data)
+        result = self.env['res.partner'].load(['name', 'mobile', 'email', 'image_1920'], data)
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), len(data))
 
     def test_backlink(self):
         fnames = ["name", "type", "street", "city", "country_id", "category_id",
-                  "supplier", "customer", "is_company", "parent_id"]
+                  "is_company", "parent_id"]
         data = json.loads(pkgutil.get_data(self.__module__, 'contacts.json').decode('utf-8'))
         result = self.env['res.partner'].load(fnames, data)
         self.assertFalse(result['messages'])
@@ -1015,10 +1017,10 @@ class test_realworld(common.TransactionCase):
         b = Model.browse(result['ids'])
         self.assertEqual((b[0].value, b[1].value), (4, 5))
 
-        self.assertEqual([child.str for child in b[0].child[1].child1],
+        self.assertEqual([child.str for child in b[0].child.sorted()[1].child1],
                          ['bar', 'baz'])
-        self.assertFalse(len(b[1].child[1].child1))
-        self.assertEqual([child.value for child in b[1].child[1].child2],
+        self.assertFalse(len(b[1].child.sorted()[1].child1))
+        self.assertEqual([child.value for child in b[1].child.sorted()[1].child2],
                          [12])
 
 

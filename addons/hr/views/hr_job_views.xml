@@ -22,6 +22,8 @@
                             <group name="recruitment">
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="department_id"/>
+                            </group>
+                            <group>
                                 <field name="no_of_recruitment"/>
                             </group>
                         </group>
@@ -69,7 +71,7 @@
                                 <div>
                                     <span><field name="department_id"/>&amp;nbsp;</span>
                                 </div>
-                                <div>
+                                <div t-if="!selection_mode">
                                     <span>Vacancies : <field name="expected_employees"/></span>
                                     <span t-att-class="record.state.raw_value == 'recruit'  and 'float-right badge badge-success' or 'float-right badge badge-danger'">
                                         <field name="state"/>
@@ -87,16 +89,16 @@
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
-                    <field name="name" string="Job"/>
-                    <filter domain="[('state','=','open')]" name="in_position" string="In Position"/>
-                    <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
+                    <field name="name" string="Job Position"/>
                     <field name="department_id" operator="child_of"/>
+                    <filter name="in_position" string="In Position" domain="[('state', '=', 'open')]"/>
+                    <filter name="in_recruitment" string="In Recruitment" domain="[('state', '=', 'recruit')]"/>
                     <separator/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter name="message_needaction" string="Unread Messages" domain="[('message_needaction', '=', True)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Department" name="department" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>

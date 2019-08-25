@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <!--page history-->
+    <record id="website_visitor_page_action" model="ir.actions.act_window">
+        <field name="name">Page Views History</field>
+        <field name="res_model">website.visitor.page</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('visitor_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+              No page views yet for this visitor
+            </p>
+        </field>
+    </record>
+
+    <record id="website_visitor_page_view_tree" model="ir.ui.view">
+        <field name="name">website.visitor.page.view.tree</field>
+        <field name="model">website.visitor.page</field>
+        <field name="arch" type="xml">
+            <tree string="Visitor Page Views History" create="0">
+                <field name="page_id"/>
+                <field name="visit_datetime"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="website_visitor_page_view_search" model="ir.ui.view">
+        <field name="name">website.visitor.page.view.search</field>
+        <field name="model">website.visitor.page</field>
+        <field name="arch" type="xml">
+            <search string="Search Visitor">
+                <field name="page_id"/>
+                <field name="visit_datetime"/>
+
+                <group string="Group By">
+                    <filter string="Page" name="group_by_page" domain="[]" context="{'group_by': 'page_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!--Website visitor actions-->
+    <record id="website.visitor_partner_action" model="ir.actions.act_window">
+        <field name="name">Partners</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('visitor_ids', 'in', [active_id])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+              No partner linked for this visitor
+            </p>
+        </field>
+    </record>
+
+    <!-- website visitor views -->
+    <record id="website_visitor_view_kanban" model="ir.ui.view">
+        <field name="name">website.visitor.view.kanban</field>
+        <field name="model">website.visitor</field>
+        <field name="arch" type="xml">
+            <kanban class="o_website_visitor_kanban">
+                <field name="id"/>
+                <field name="country_id"/>
+                <field name="is_connected"/>
+                <field name="display_name"/>
+                <field name="page_ids"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <div class="float-right">
+                                    <span class="fa fa-circle text-success" t-if="record.is_connected.raw_value" aria-label="Online" title="Online"/>
+                                    <span class="fa fa-circle text-danger" t-else="" aria-label="Offline" title="Offline"/>
+                                </div>
+                                <strong>
+                                    <img t-if="record.country_id.raw_value" t-att-src="kanban_image('res.country', 'image', record.country_id.raw_value)" class="o_country_flag" alt="Country"/>
+                                    <field name="display_name"/>
+                                </strong>
+                                <div class="mb-2">Active <field name="time_since_last_action"/></div>
+                                <div>Visits<span class="float-right font-weight-bold"><field name="visit_count"/></span></div>
+                                <div>Visited Pages<span class="float-right font-weight-bold"><field name="page_count"/></span></div>
+                                <div id="w_visitor_kanban_actions"></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_form" model="ir.ui.view">
+        <field name="name">website.visitor.view.form</field>
+        <field name="model">website.visitor</field>
+        <field name="arch" type="xml">
+            <form string="Website Visitor" create="0">
+                <header></header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button o_stat_button_info" attrs="{'invisible': [('is_connected', '=', False)]}">
+                            <i class="fa fa-fw o_button_icon fa-circle text-success"/>
+                            <span>Connected</span>
+                        </button>
+                        <button class="oe_stat_button o_stat_button_info" attrs="{'invisible': [('is_connected', '=', True)]}">
+                            <i class="fa fa-fw o_button_icon fa-circle text-danger"/>
+                            <span>Offline</span>
+                        </button>
+                        <button id="w_visitor_visit_counter" class="oe_stat_button o_stat_button_info" icon="fa-globe">
+                            <field name="visit_count" widget="statinfo" string="Visits"/>
+                        </button>
+                        <button name="%(website.website_visitor_page_action)d" type="action"
+                                class="oe_stat_button"
+                                icon="fa-tags">
+                            <field name="visitor_page_count" widget="statinfo" string="Page views"/>
+                        </button>
+                    </div>
+                    <div class="float-right" attrs="{'invisible': [('country_id', '=', False)]}"><field name="country_flag" widget="image" options='{"size": [32, 32]}'/></div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Visitor"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group id="general_info">
+                        <group string="Visitor Informations">
+                            <field name="is_connected" invisible="1"/>
+                            <field name="user_partner_id" attrs="{'invisible': [('user_partner_id', '=', False)]}"/>
+                            <field name="country_id" attrs="{'invisible': [('country_id', '=', False)]}"/>
+                            <field name="lang_id"/>
+
+                        </group>
+                        <group string="Visits">
+                            <field name="create_date"/>
+                            <field name="last_connection_datetime"/>
+                            <field name="page_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_tree" model="ir.ui.view">
+        <field name="name">website.visitor.view.tree</field>
+        <field name="model">website.visitor</field>
+        <field name="arch" type="xml">
+            <tree string="Web Visitors" create="0">
+                <!--TODO DBE : Handle no_label in treeview-->
+                <field name="country_flag" widget="image" options='{"size": [20, 20]}' string=" "/>
+                <field name="name"/>
+                <field name="time_since_last_action"/>
+                <field name="lang_id"/>
+                <field name="visit_count"/>
+                <field name="page_ids" widget="many2many_tags"/>
+                <field name="is_connected" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_search" model="ir.ui.view">
+        <field name="name">website.visitor.view.search</field>
+        <field name="model">website.visitor</field>
+        <field name="arch" type="xml">
+            <search string="Search Visitor">
+                <field name="name"/>
+                <field name="lang_id"/>
+                <field name="country_id"/>
+                <field name="visit_count"/>
+                <field name="page_ids"/>
+                <filter string="Visitors" name="type_visitor" domain="[('user_partner_id', '=', False)]"/>
+                <filter string="Customers" name="type_customer" domain="[('user_partner_id', '!=', False)]"/>
+                <separator/>
+                <filter string="Archived" name="is_archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Is Connected" name="is_connected" domain="[('last_connection_datetime', '&gt;', datetime.datetime.now() - datetime.timedelta(minutes=5))]"/>
+
+                <group string="Group By">
+                    <filter string="Country" name="group_by_country" context="{'group_by': 'country_id'}"/>
+                    <filter string="Language" name="group_by_lang" context="{'group_by': 'lang_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="website_visitors_action" model="ir.actions.act_window">
+        <field name="name">Visitors</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">website.visitor</field>
+        <field name="context">{'search_default_is_connected':1}</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Wait for visitors to come to your website to see their history.
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="website_visitor_menu"
+        name="Visitors"
+        sequence="80"
+        parent="website.menu_website_configuration"
+        action="website.website_visitors_action"/>
+</data></odoo>

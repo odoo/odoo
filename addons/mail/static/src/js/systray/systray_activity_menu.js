@@ -70,7 +70,7 @@ var ActivityMenu = Widget.extend({
         var self = this;
         self._getActivityData().then(function (){
             self._$activitiesPreview.html(QWeb.render('mail.systray.ActivityMenu.Previews', {
-                activities : self._activities
+                widget: self
             }));
         });
     },
@@ -108,6 +108,7 @@ var ActivityMenu = Widget.extend({
      */
     _onActivityActionClick: function (ev) {
         ev.stopPropagation();
+        this.$('.dropdown-toggle').dropdown('toggle');
         var targetAction = $(ev.currentTarget);
         var actionXmlid = targetAction.data('action_xmlid');
         if (actionXmlid) {
@@ -119,7 +120,7 @@ var ActivityMenu = Widget.extend({
                 views: [[false, 'activity'], [false, 'kanban'], [false, 'list']],
                 view_mode: 'activity',
                 res_model: targetAction.data('res_model'),
-                context: { search_default_activities_my: true },
+                domain: [['activity_ids.user_id', '=', session.uid]],
             });
         }
     },

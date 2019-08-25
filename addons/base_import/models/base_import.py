@@ -442,6 +442,9 @@ class Import(models.TransientModel):
         # Or a date/datetime if it matches the pattern
         date_patterns = [options['date_format']] if options.get(
             'date_format') else []
+        user_date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+        if user_date_format:
+            date_patterns.append(user_date_format)
         date_patterns.extend(DATE_PATTERNS)
         match = check_patterns(date_patterns, preview_values)
         if match:
@@ -915,6 +918,11 @@ class Import(models.TransientModel):
                             'column_name': column_name,
                             'field_name': fields[index]
                         })
+        if 'name' in import_fields:
+            index_of_name = import_fields.index('name')
+            import_result['name'] = [x[index_of_name] for x in data]
+        else:
+            import_result['name'] = []
 
         return import_result
 

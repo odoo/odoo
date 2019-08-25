@@ -66,7 +66,7 @@
                                         <field name="channel_ids" widget="many2many_tags"/>
                                     </group>
                                     <group>
-                                        <field name="needaction_partner_ids" widget="many2many_tags"/>
+                                        <field name="notified_partner_ids" widget="many2many_tags"/>
                                         <field name="starred_partner_ids" widget="many2many_tags"/>
                                     </group>
                                 </group>
@@ -113,9 +113,6 @@
                             name="message_needaction" help="Unread messages"
                             domain="[('needaction', '=', True)]"/>
                     <separator/>
-                    <filter string="Has attachments"
-                            name="attachments"
-                            domain="[('attachment_ids', '!=', False)]"/>
                 </search>
             </field>
         </record>
@@ -134,7 +131,7 @@
             <field name="name">ir.attachment kanban</field>
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban edit="false" import="false">
                     <field name="id"/>
                     <field name="mimetype"/>
                     <field name="type"/>
@@ -143,10 +140,21 @@
                     <field name="type"/>
                     <field name="create_date"/>
                     <field name="name"/>
-                    <field name="res_name"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_area o_kanban_attachment oe_kanban_global_click">
+                            <div class="oe_kanban_global_area oe_kanban_global_click o_kanban_attachment">
+                                <div class="row">
+                                    <div class="offset-10">
+                                        <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                            <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                                <span class="fa fa-ellipsis-v"/>
+                                            </a>
+                                            <div class="dropdown-menu" role="menu">
+                                                <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="o_kanban_image">
                                     <div class="o_kanban_image_wrapper">
                                         <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
@@ -171,7 +179,7 @@
                                                 <field name="create_date" widget="date"/>
                                             </time>
                                             <div class="oe_kanban_bottom_right">
-                                                <img t-att-src="kanban_image('res.users', 'image_small', record.create_uid.raw_value)" t-att-data-member_id="record.create_uid.raw_value" t-att-alt="record.create_uid.raw_value" width="32" height="32" class="oe_kanban_avatar"/>
+                                                <img t-att-src="kanban_image('res.users', 'image_64', record.create_uid.raw_value)" t-att-data-member_id="record.create_uid.raw_value" t-att-alt="record.create_uid.raw_value" width="32" height="32" class="oe_kanban_avatar"/>
                                             </div>
                                         </div>
                                     </div>

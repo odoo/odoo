@@ -7,8 +7,8 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="action_get_account_moves" icon="fa-usd" class="oe_stat_button" string="Accounting Entries" type="object"/>
+                <xpath expr="//div[@name='button_box']" position="inside" >
+                    <button name="action_get_account_moves" icon="fa-usd" class="oe_stat_button" string="Accounting Entries" type="object" groups="account.group_account_user"/>
                 </xpath>
             </field>
         </record>
@@ -30,12 +30,23 @@
             </field>
         </record>
 
+        <record id="view_inventory_tree" model="ir.ui.view">
+            <field name="name">stock.inventory.tree.inherit.stock.account</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref="stock.view_inventory_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="accounting_date" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_location_form_inherit" model="ir.ui.view">
             <field name="name">stock.location.form.inherit</field>
             <field name="model">stock.location</field>
             <field name="inherit_id" ref="stock.view_location_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='localization']" position="after">
+                <xpath expr="//group[@name='additional_info']" position="after">
                     <group string="Accounting Information" attrs="{'invisible':[('usage','not in',('inventory','production'))]}">
                         <field name="valuation_in_account_id" options="{'no_create': True}"/>
                         <field name="valuation_out_account_id" options="{'no_create': True}"/>

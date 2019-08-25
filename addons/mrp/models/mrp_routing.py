@@ -19,7 +19,7 @@ class MrpRouting(models.Model):
     note = fields.Text('Description')
     operation_ids = fields.One2many(
         'mrp.routing.workcenter', 'routing_id', 'Operations',
-        copy=True, oldname='workcenter_lines')
+        copy=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company)
@@ -50,7 +50,13 @@ class MrpRoutingWorkcenter(models.Model):
     company_id = fields.Many2one(
         'res.company', 'Company',
         readonly=True, related='routing_id.company_id', store=True)
-    worksheet = fields.Binary('worksheet')
+    worksheet = fields.Binary('PDF', help="Upload your PDF file.")
+    worksheet_type = fields.Selection([
+        ('pdf', 'PDF'), ('google_slide', 'Google Slide')],
+        string="Work Sheet", default="pdf",
+        help="Defines if you want to use a PDF or a Google Slide as work sheet."
+    )
+    worksheet_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.")
     time_mode = fields.Selection([
         ('auto', 'Compute based on real time'),
         ('manual', 'Set duration manually')], string='Duration Computation',
@@ -63,8 +69,7 @@ class MrpRoutingWorkcenter(models.Model):
     workorder_count = fields.Integer("# Work Orders", compute="_compute_workorder_count")
     batch = fields.Selection([
         ('no',  'Once all products are processed'),
-        ('yes', 'Once a minimum number of products is processed')], string='Next Operation',
-        help="Set 'no' to schedule the next work order after the previous one. Set 'yes' to produce after the quantity set in 'Quantity To Process' has been produced.",
+        ('yes', 'Once some products are processed')], string='Start Next Operation',
         default='no', required=True)
     batch_size = fields.Float('Quantity to Process', default=1.0)
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")

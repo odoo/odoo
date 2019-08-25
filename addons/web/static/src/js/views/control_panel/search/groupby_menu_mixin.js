@@ -36,28 +36,32 @@ var GroupByMenuMixin = {
      * private
      * @param {jQuery} $node
      * @param {Object} groupableFields
+     * @param {Promise}
      */
     _addGroupByMenu: function ($node, groupableFields) {
-        this.sortedFieldNames = _.sortBy(Object.keys(groupableFields), function (fieldName) {
-            return groupableFields[fieldName].string;
-        });
+        this.sortedFieldNames = Object.keys(groupableFields).sort();
         this.groupableFields = groupableFields;
-        var groupBys = this._getGroupBys(this.model.get().groupBy);
-        this.groupByMenu = new GroupByMenu(this, groupBys, this.groupableFields);
-        this.groupByMenu.insertAfter($node.find('div:first'));
+        const groupBys = this._getGroupBys(this.model.get().groupBy);
+        this.groupByMenu = new GroupByMenu(this, groupBys, this.groupableFields, {noSymbol: true});
+        return this.groupByMenu.insertAfter($node.find('div:first'));
     },
     /**
      * This method puts the active groupBys in a convenient form.
      *
      * @private
      * @param {string[]} activeGroupBys
-     * returns {string[]} groupBysNormalized
+     * returns {Object[]} groupBysNormalized
      */
     _normalizeActiveGroupBys: function (activeGroupBys) {
-        var groupBysNormalized = activeGroupBys.map(function (groupBy) {
-            return {fieldName: groupBy.split(':')[0], interval: groupBy.split(':')[1] || false};
+        return activeGroupBys.map(gb => {
+            const fieldName = gb.split(':')[0];
+            const field = this.groupableFields[fieldName];
+            const ngb = {fieldName: fieldName};
+            if (_.contains(['date', 'datetime'], field.type)) {
+                ngb.interval = gb.split(':')[1] || controlPanelViewParameters.DEFAULT_INTERVAL;
+            }
+            return ngb;
         });
-        return groupBysNormalized;
     },
     /**
      * This method has to be implemented by the view controller that needs to
@@ -76,27 +80,24 @@ var GroupByMenuMixin = {
      * returns {Object[]} groupBys
      */
     _getGroupBys: function (activeGroupBys) {
-        var self = this;
-        var groupBys = [];
-        var groupBysNormalized = this._normalizeActiveGroupBys(activeGroupBys);
-        this.sortedFieldNames.forEach(function (fieldName) {
-            var field = self.groupableFields[fieldName];
-            var groupByActivity = _.findWhere(groupBysNormalized, {fieldName: fieldName});
-            var groupBy = {
+        const groupBysNormalized = this._normalizeActiveGroupBys(activeGroupBys);
+        return this.sortedFieldNames.map(fieldName => {
+            const field = this.groupableFields[fieldName];
+            const groupByActivity = groupBysNormalized.filter(gb => (gb.fieldName === fieldName));
+            const groupBy = {
                 id: fieldName,
-                isActive: groupByActivity ? true : false,
+                isActive: groupByActivity.length ? true : false,
                 description: field.string,
             };
             if (_.contains(['date', 'datetime'], field.type)) {
                 groupBy.hasOptions = true;
                 groupBy.options = controlPanelViewParameters.INTERVAL_OPTIONS;
-                groupBy.currentOptionId = groupByActivity && groupByActivity.interval ?
-                                            groupByActivity.interval :
-                                            false;
+                groupBy.currentOptionIds = groupByActivity.length ?
+                                            new Set(groupByActivity.map(gb => gb.interval)) :
+                                            new Set([]);
             }
-            groupBys.push(groupBy);
+            return groupBy;
         });
-        return groupBys;
     },
 
     //--------------------------------------------------------------------------
@@ -108,28 +109,16 @@ var GroupByMenuMixin = {
      * @param {OdooEvent} ev
      */
     _onItemOptionClicked: function (ev) {
-        var fieldName = ev.data.id;
-        var optionId = ev.data.optionId;
-        var activeGroupBys = this.model.get().groupBy;
-        var currentOptionId = activeGroupBys.reduce(
-            function (optionId, groupby) {
-                if (groupby.split(':')[0] === fieldName){
-                    optionId = groupby.split(':')[1] || controlPanelViewParameters.DEFAULT_INTERVAL;
-                }
-                return optionId;
-            },
-            false
-        );
-        var groupByFieldNames = _.map(activeGroupBys, function (groupby) {
-            return groupby.split(':')[0];
-        });
-        var indexOfGroupby = groupByFieldNames.indexOf(fieldName);
-        if (indexOfGroupby === -1) {
+        const fieldName = ev.data.id;
+        const optionId = ev.data.optionId;
+        const activeGroupBys = this.model.get().groupBy;
+        const groupBysNormalized = this._normalizeActiveGroupBys(activeGroupBys);
+        const index = groupBysNormalized.findIndex(ngb =>
+            ngb.fieldName === fieldName && ngb.interval === optionId);
+        if (index === -1) {
             activeGroupBys.push(fieldName + ':' + optionId);
-        } else if (currentOptionId === optionId) {
-            activeGroupBys.splice(indexOfGroupby, 1);
         } else {
-            activeGroupBys.splice(indexOfGroupby, 1, fieldName + ':' + optionId);
+            activeGroupBys.splice(index, 1);
         }
         this._setGroupby(activeGroupBys);
         this.groupByMenu.update(this._getGroupBys(activeGroupBys));
@@ -139,12 +128,10 @@ var GroupByMenuMixin = {
      * @param {OdooEvent} ev
      */
     _onMenuItemClicked: function (ev) {
-        var fieldName = ev.data.id;
-        var activeGroupBys = this.model.get().groupBy;
-        var groupByFieldNames = _.map(activeGroupBys, function (groupby) {
-            return groupby.split(':')[0];
-        });
-        var indexOfGroupby = groupByFieldNames.indexOf(fieldName);
+        const fieldName = ev.data.id;
+        const activeGroupBys = this.model.get().groupBy;
+        const groupByFieldNames = activeGroupBys.map(gb => gb.split(':')[0]);
+        const indexOfGroupby = groupByFieldNames.indexOf(fieldName);
         if (indexOfGroupby === -1) {
             activeGroupBys.push(fieldName);
         } else {

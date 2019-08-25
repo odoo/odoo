@@ -106,9 +106,13 @@ class ProductProduct(models.Model):
                 company_id = self.env.company.id
 
             #Cost price is calculated afterwards as it is a property
+            self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
+            self.env['account.move'].flush(['state', 'invoice_payment_state', 'type', 'invoice_date', 'company_id'])
+            self.env['product.template'].flush(['list_price'])
             sqlstr = """
+                WITH currency_rate AS ({})
                 SELECT
-                    SUM(l.price_unit * l.quantity)/NULLIF(SUM(l.quantity),0) AS avg_unit_price,
+                    SUM(l.price_unit / (CASE COALESCE(cr.rate, 0) WHEN 0 THEN 1.0 ELSE cr.rate END) * l.quantity) / NULLIF(SUM(l.quantity),0) AS avg_unit_price,
                     SUM(l.quantity) AS num_qty,
                     SUM(l.balance) AS total,
                     SUM(l.quantity * pt.list_price) AS sale_expected
@@ -116,6 +120,11 @@ class ProductProduct(models.Model):
                 LEFT JOIN account_move i ON (l.move_id = i.id)
                 LEFT JOIN product_product product ON (product.id=l.product_id)
                 LEFT JOIN product_template pt ON (pt.id = product.product_tmpl_id)
+                left join currency_rate cr on
+                (cr.currency_id = i.currency_id and
+                 cr.company_id = i.company_id and
+                 cr.date_start <= COALESCE(i.invoice_date, NOW()) and
+                 (cr.date_end IS NULL OR cr.date_end > COALESCE(i.invoice_date, NOW())))
                 WHERE l.product_id = %s
                 AND i.state IN %s
                 AND i.invoice_payment_state IN %s
@@ -123,7 +132,7 @@ class ProductProduct(models.Model):
                 AND i.invoice_date BETWEEN %s AND  %s
                 AND i.company_id = %s
                 AND l.display_type IS NULL
-                """
+                """.format(self.env['res.currency']._select_companies_rates())
             invoice_types = ('out_invoice', 'in_refund')
             self.env.cr.execute(sqlstr, (val.id, states, invoice_payment_states, invoice_types, date_from, date_to, company_id))
             result = self.env.cr.fetchall()[0]

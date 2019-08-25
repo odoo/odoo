@@ -48,7 +48,7 @@
                             <div t-if="pms or acquirers" id="payment_method" class="text-left col-md-13">
                                 <t t-call="payment.payment_tokens_list">
                                     <t t-set="mode" t-value="'payment'"/>
-                                    <t t-set="partner_id" t-value="request.env.user.partner_id.id"/>
+                                    <t t-set="partner_id" t-value="invoice.partner_id.id if request.env.user._is_public() else request.env.user.partner_id.id"/>
                                     <t t-set="success_url" t-value="invoice.get_portal_url()"/>
                                     <t t-set="error_url" t-value="invoice.get_portal_url()"/>
                                     <t t-set="access_token" t-value="access_token or ''"/>
@@ -132,8 +132,7 @@
             <t t-if="success == 'pay_invoice'">
                 <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
                 <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
-                <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
-                <div t-if="payment_tx_id.acquirer_id.post_msg and payment_tx_id.acquirer_id.provider == 'transfer' and invoice.ref">
+                <div t-if="payment_tx_id.acquirer_id.pending_msg and payment_tx_id.acquirer_id.provider == 'transfer' and invoice.ref">
                     <b>Communication: </b><span t-esc='invoice.ref'/>
                 </div>
             </t>

@@ -47,7 +47,7 @@
                 <thead>
                     <tr class="active">
                         <th>Quotation #</th>
-                        <th class="text-right">Order Date</th>
+                        <th class="text-right">Quotation Date</th>
                         <th class="text-right">Valid Until</th>
                         <th class="text-center"/>
                         <th class="text-right">Total</th>
@@ -156,7 +156,7 @@
                                 <li t-if="sale_order.remaining_validity_days &gt; 0" class="list-group-item">
                                     <small><b class="text-muted">This offer expires in</b></small>
                                     <div class="day_counter">
-                                        <i class="fa fa-clock-o" aria-title="Dates" title="Dates"></i>
+                                        <i class="fa fa-clock-o" aria-label="Dates" title="Dates"></i>
                                         <t t-esc="sale_order.remaining_validity_days"/>
                                         <t t-if="sale_order.remaining_validity_days &gt; 1">days</t><t t-else="">day</t>
                                     </div>
@@ -184,8 +184,8 @@
                                 <div class="small mb-1"><strong class="text-muted">Salesperson</strong></div>
                                 <div class="row flex-nowrap">
                                     <div class="col flex-grow-0 pr-2">
-                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="sale_order.user_id.image" t-att-src="image_data_uri(sale_order.user_id.image)" alt="Contact"/>
-                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not sale_order.user_id.image" src="/web/static/src/img/placeholder.png" alt="Contact"/>
+                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="sale_order.user_id.image_1024" t-att-src="image_data_uri(sale_order.user_id.image_1024)" alt="Contact"/>
+                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not sale_order.user_id.image_1024" src="/web/static/src/img/placeholder.png" alt="Contact"/>
                                     </div>
                                     <div class="col pl-0" style="min-width: 150px">
                                         <span t-field="sale_order.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
@@ -376,7 +376,13 @@
                 </div>
                 <div class="row" id="so_date">
                     <div class="mb-3 col-6">
-                      <strong>Date:</strong> <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
+                      <t t-if="sale_order.state == 'draft'">
+                        <strong>Quotation Date:</strong> 
+                      </t>
+                      <t t-if="sale_order.state in ['sale', 'done', 'cancel']">
+                        <strong>Order Date:</strong> 
+                      </t>
+                      <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
                     </div>
                     <div class="mb-3 col-6" t-if="sale_order.validity_date">
                         <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
@@ -406,7 +412,7 @@
                                 <div class="d-flex flex-wrap align-items-center justify-content-between">
                                     <div>
                                         <a t-att-href="report_url">
-                                            <span t-esc="i.number"/>
+                                            <span t-esc="i.name"/>
                                         </a>
                                         <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                     </div>
@@ -464,12 +470,11 @@
                                         <div
                                             t-if="line.discount &gt;= 0"
                                             t-field="line.price_unit"
-                                            t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                                             t-att-style="line.discount and 'text-decoration: line-through' or None"
                                             t-att-class="(line.discount and 'text-danger' or '') + ' text-right'"
                                         />
                                         <div t-if="line.discount">
-                                            <t t-esc="(1-line.discount / 100.0) * line.price_unit" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                                            <t t-esc="(1-line.discount / 100.0) * line.price_unit" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
                                         </div>
                                     </td>
                                     <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">

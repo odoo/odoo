@@ -166,7 +166,7 @@
         <record id="act_event_registration_from_event" model="ir.actions.act_window">
             <field name="res_model">event.registration</field>
             <field name="name">Attendees</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'search_default_expected': True}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -196,7 +196,6 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
                             <button name="%(event.act_event_registration_from_event)d"
                                     type="action"
@@ -206,6 +205,7 @@
                                 <field name="seats_expected" widget="statinfo" string="Attendees"/>
                             </button>
                         </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="Event Name"/></h1>
@@ -294,6 +294,7 @@
                     <field name="state"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
         </record>
@@ -314,10 +315,10 @@
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <div class="dropdown-menu" role="menu">
@@ -365,9 +366,13 @@
             <field name="model">event.event</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date_begin" date_stop="date_end" string="Event Organization" color="event_type_id">
-                    <field name="name"/>
-                    <field name="event_type_id"/>
+                <calendar date_start="date_begin" date_stop="date_end" string="Event Organization" mode="month" color="event_type_id" event_limit="5">
+                    <field name="user_id" avatar_field="image_small"/>
+                    <field name="state"/>
+                    <field name="seats_expected"/>
+                    <field name="seats_reserved"/>
+                    <field name="seats_used"/>
+                    <field name="seats_unconfirmed"/>
                 </calendar>
             </field>
         </record>
@@ -377,33 +382,37 @@
             <field name="model">event.event</field>
             <field name="arch" type="xml">
                 <search string="Events">
-                    <field name="name" string="Events"/>
+                    <field name="name" string="Event"/>
+                    <field name="event_type_id"/>
+                    <field name="user_id"/>
                     <filter string="My Events" name="myevents" help="My Events" domain="[('user_id', '=', uid)]"/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
-                    <filter name="confirm" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
+                    <filter string="Confirmed" name="confirm" domain="[('state', '=', 'confirm')]" help="Confirmed events"/>
                     <filter string="Unconfirmed" name="draft" domain="[('state', '=', 'draft')]" help="Events in New state"/>
                     <separator/>
                     <filter string="Upcoming/Running" name="upcoming"
-                        domain="['&amp;', ('state', '!=', 'cancel'), ('date_end','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
+                        domain="['&amp;', ('state', '!=', 'cancel'), ('date_end', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
                     <filter string="Online Events" name="online_events" help="Online Events" domain="[('is_online', '=', True)]"/>
-                    <field name="event_type_id"/>
-                    <field name="user_id"/>
                     <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <filter string="Start Date" name="start_date" date="date_begin"/>
                     <separator/>
-                    <filter string="Late Activities" name="activities_overdue"
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter string="Today Activities" name="activities_today"
+                    <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities" name="activities_upcoming_all"
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
-                        <filter string="Event Category" name="event_type_id" context="{'group_by':'event_type_id'}"/>
-                        <filter string="Status" name="status" context="{'group_by':'state'}"/>
-                        <filter string="Start Date" name="date_begin" domain="[]" context="{'group_by':'date_begin'}"/>
+                        <filter string="Event Category" name="event_type_id" context="{'group_by': 'event_type_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                        <filter string="Start Date" name="date_begin" domain="[]" context="{'group_by': 'date_begin'}"/>
                     </group>
                 </search>
             </field>
@@ -462,6 +471,7 @@
                     <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="fa-check text-success"/>
                     <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="fa-level-down text-success"/>
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="fa-times-circle text-danger"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
         </record>
@@ -504,12 +514,56 @@
             </field>
         </record>
 
+        <record id="event_registration_view_kanban" model="ir.ui.view">
+            <field name="name">event.registration.kanban</field>
+            <field name="model">event.registration</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <kanban class="o_event_attendee_kanban">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="state"/>
+                    <field name="email"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title">
+                                                <field name="name"/>
+                                            </strong>
+                                        </div>
+                                        <div class="float-right">
+                                            <a class="btn btn-sm btn-success" string="Confirm Registration" name="confirm_registration" type="object" states="draft" role="button">
+                                                <i class="fa fa-check" role="img" aria-label="Confirm button" title="Confirm Registration"/>
+                                            </a>
+                                            <a class="btn btn-sm btn-success" string="Attended the Event" name="button_reg_close" type="object" states="open" role="button">
+                                                <i class="fa fa-level-down" role="img" aria-label="Attended button" title="Attended the Event"/>
+                                            </a>
+                                            <a class="btn btn-sm btn-danger" string="Cancel Registration" name="button_reg_cancel" type="object" states="draft,open" role="button">
+                                                <i class="fa fa-times" role="img" aria-label="Cancel button" title="Cancel Registration"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <ul>
+                                        <li><field name="partner_id"/></li>
+                                        <li><field name="email"/></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_event_registration_calendar" model="ir.ui.view">
             <field name="name">event.registration.calendar</field>
             <field name="model">event.registration</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="event_begin_date" date_stop="event_end_date" string="Event Registration" color="event_id">
+                <calendar date_start="event_begin_date" date_stop="event_end_date" string="Event Registration" color="event_id" event_limit="5">
                     <field name="event_id"/>
                     <field name="name"/>
                 </calendar>
@@ -555,14 +609,16 @@
                     <filter string="Attended Date" name="filter_date_closed" date="date_closed"/>
                     <field name="event_id"/>
                     <field name="partner_id"/>
-                    <separator/>
-                    <filter string="Late Activities" name="activities_overdue"
+                    <field name="company_id"/>
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter string="Today Activities" name="activities_today"
+                    <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities" name="activities_upcoming_all"
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>

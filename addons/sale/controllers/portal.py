@@ -175,8 +175,8 @@ class CustomerPortal(CustomerPortal):
 
         if order_sudo.has_to_be_paid():
             domain = expression.AND([
-                ['&', ('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)],
-                ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]
+                ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', order_sudo.company_id.id)],
+                ['|', ('country_ids', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]
             ])
             acquirers = request.env['payment.acquirer'].sudo().search(domain)
 

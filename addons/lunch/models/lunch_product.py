@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 
 from odoo.tools import formatLang
 
@@ -85,6 +85,7 @@ class LunchProduct(models.Model):
     """ Products available to order. A product is linked to a specific vendor. """
     _name = 'lunch.product'
     _description = 'Lunch Product'
+    _inherit = 'image.mixin'
     _order = 'name'
 
     name = fields.Char('Product Name', required=True)
@@ -97,30 +98,5 @@ class LunchProduct(models.Model):
     company_id = fields.Many2one('res.company', related='supplier_id.company_id', store=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
-    # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary(
-        "Image",
-        help="This field holds the image used as image for the product, limited to 1024x1024px.")
-    image_medium = fields.Binary(
-        "Medium-sized image",
-        help="Medium-sized image of the product. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved, "
-             "only when the image exceeds one of those sizes. Use this field in form views or some kanban views.")
-    image_small = fields.Binary(
-        "Small-sized image",
-        help="Small-sized image of the product. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
-
     new_until = fields.Date('New Until')
     favorite_user_ids = fields.Many2many('res.users', 'lunch_product_favorite_user_rel', 'product_id', 'user_id')
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for values in vals_list:
-            tools.image_resize_images(values)
-        return super(LunchProduct, self).create(vals_list)
-
-    def write(self, values):
-        tools.image_resize_images(values)
-        return super(LunchProduct, self).write(values)

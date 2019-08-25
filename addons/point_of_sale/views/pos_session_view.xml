@@ -13,13 +13,13 @@
                         attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}" class="oe_highlight"/>
                     <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
                         class="oe_highlight"/>
-                    <button name="action_pos_session_closing_control" type="object" string="End of Session"
+                    <button id="end_session_opened" name="action_pos_session_closing_control" type="object" string="End of Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
-                    <button name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries"
+                    <button id="validate_opened" name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries"
                         attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
-                    <button name="action_pos_session_validate" type="object" string="Validate Closing &amp; Post Entries" states="closing_control"
+                    <button id="validate_closing_control" name="action_pos_session_validate" type="object" string="Validate Closing &amp; Post Entries" states="closing_control"
                         class="oe_highlight"/>
 
                     <field name="state" widget="statusbar" statusbar_visible="new_session,opening_control,opened,closing_control,closed" nolabel="1" />
@@ -27,12 +27,35 @@
                 <sheet>
                     <field name="cash_register_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_view_order"
+                            class="oe_stat_button"
+                            icon="fa-shopping-basket"
+                            type="object">
+                            <field name="order_count" widget="statinfo" string="Orders"/>
+                        </button>
                         <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-arrows-v" attrs="{'invisible':[('picking_count', '=', 0)]}">
                             <field name="picking_count" widget="statinfo" string="Picking Errors"/>
                         </button>
+                        <button
+                            name="action_show_payments_list"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-dollar"
+                            >
+                            <field name="total_payments_amount" widget="statinfo" string="Payments"/>
+                        </button>
+                        <button
+                            name="show_journal_items"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-bars"
+                            string="Journal Items"
+                            attrs="{'invisible':[('move_id', '=', False)]}"
+                            groups="account.group_account_user"
+                            >
+                        </button>
                     </div>
                     <h1 class="oe_title">
-                        Session:
                         <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/>
                     </h1>
                     <group>
@@ -40,6 +63,7 @@
                         <field name="user_id"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="config_id"/>
+                        <field name="move_id" readonly="1" groups="account.group_account_user" />
                         <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
                         <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                     </group>
@@ -83,24 +107,12 @@
                                 </group>
                             </div>
                         </page>
-                        <page string="Payments" attrs="{'invisible' : [('state', 'in', ('new_session', 'opening_control'))]}">
-                            <field name="statement_ids">
-                                <tree string="Statements">
-                                    <field name="name" />
-                                    <field name="journal_id" />
-                                    <field name="balance_start" />
-                                    <field name="total_entry_encoding" />
-                                    <field name="balance_end_real" />
-                                    <field name="difference" />
-                                    <field name="currency_id" groups="base.group_multi_currency" />
-                                    <field name="state" />
-                                </tree>
-                            </field>
-                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
         </field>
@@ -149,7 +161,7 @@
                                     <span><field name="start_at" /></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                 </div>
                             </div>
                         </div>
@@ -164,15 +176,20 @@
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
             <search string="Point of Sale Session">
-                <field name="name" />
-                <filter name="open_sessions" string="Open" domain="[('state', '=', 'opened')]" />
-                <separator/>
-                <filter string="Start Date" name="start_at_filter" date="start_at" default_period="today"/>
+                <field name="name"/>
                 <field name="config_id" />
                 <field name="user_id" />
+                <filter name="my_sessions" string="My Sessions" domain="[('user_id', '=', uid)]"/>
+                <separator/>    
+                <filter name="open_sessions" string="In Progress" domain="[('state', '=', 'opened')]"/>
+                <separator/>
+                <filter string="Start Today" name="start_at_filter" domain="[
+                    ('start_at', '>=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                    ('start_at', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                 <group expand="0" string="Group By">
-                    <filter string="User" name="user" domain="[]" context="{'group_by' : 'user_id'}" />
-                    <filter string="Point of Sale" name="point_of_sale" domain="[]" context="{'group_by': 'config_id'}" />
+                    <filter string="Responsible" name="user" domain="[]" context="{'group_by' : 'user_id'}"/>
+                    <filter string="Point of Sale" name="point_of_sale" domain="[]" context="{'group_by': 'config_id'}"/>
+                    <filter string="Opening Date" name="start_date" domain="[]" context="{'group_by': 'start_at'}"/>
                 </group>
             </search>
         </field>

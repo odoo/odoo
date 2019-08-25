@@ -7,7 +7,7 @@
          <field name="arch" type="xml">
              <pivot string="Sales Analysis" disable_linking="True">
                  <field name="team_id" type="col"/>
-                 <field name="confirmation_date" interval="month" type="row"/>
+                 <field name="date" interval="month" type="row"/>
                  <field name="price_subtotal" type="measure"/>
              </pivot>
          </field>
@@ -18,7 +18,7 @@
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
              <graph string="Sales Analysis" type="line">
-                 <field name="confirmation_date" type="row" interval="day"/>
+                 <field name="date" type="row" interval="day"/>
                  <field name="price_subtotal" type="measure"/>
              </graph>
          </field>
@@ -57,7 +57,6 @@
                     <filter string="Company" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator/>
                     <filter string="Order Date" name="date" context="{'group_by':'date'}"/>
-                    <filter string="Confirmation Date" name="confirm_month" context="{'group_by':'confirmation_date:month'}"/>
                 </group>
             </search>
         </field>

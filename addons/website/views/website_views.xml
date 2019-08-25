@@ -70,7 +70,8 @@
                 <search string="Search Redirect">
                     <field name="url_from"/>
                     <field name="url_to"/>
-
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group string="Group By">
                         <filter string="Redirection Type" name="group_by_type" domain="[]" context="{'group_by': 'redirect_type'}"/>
                     </group>
@@ -145,12 +146,12 @@
                                 <field name="name"/>
                                 <field name="url"/>
                                 <field name="view_id" context="{'display_website': True}"/>
-                                <field name="is_published" groups="base.group_no_one"/>
                                 <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                                <field name="is_tracked"/>
                             </group>
                             <group>
                                 <field name="website_indexed"/>
-                                <field name="website_published"/>
+                                <field name="is_published"/>
                                 <field name="date_publish"/>
                             </group>
                         </group>
@@ -170,11 +171,26 @@
                     <field name="url"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="website_indexed"/>
-                    <field name="website_published" string="Page Published"/>
+                    <field name="is_published" string="Page Published"/>
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>
+                    <field name="is_tracked"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="website_pages_view_search" model="ir.ui.view">
+            <field name="name">website.page.view.search</field>
+            <field name="model">website.page</field>
+            <field name="arch" type="xml">
+                <search string="Website Pages" >
+                    <filter string="Published" name="published" domain="[('website_published', '=', True)]"/>
+                    <filter string="Not published" name="not_published" domain="[('website_published', '=', False)]"/>
+                    <separator/>
+                    <filter string="Tracked" name="tracked" domain="[('is_tracked', '=', True)]"/>
+                    <filter string="Not tracked" name="not_tracked" domain="[('is_tracked', '=', False)]"/>
+                </search>
             </field>
         </record>
 

@@ -50,7 +50,7 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        with self.assertQueryCount(__system__=2477, marketing=3128):
+        with self.assertQueryCount(__system__=2478, marketing=3128):
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
@@ -74,6 +74,7 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
             self.env['mail.blacklist'].create({
                 'email': 'rec.%s@example.com' % (x * 5)
             })
+        self.env['mass.mail.test.bl'].flush()
 
     @users('__system__', 'marketing')
     @warmup
@@ -88,7 +89,7 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        with self.assertQueryCount(__system__=2864, marketing=3611):
+        with self.assertQueryCount(__system__=2865, marketing=3611):
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)

@@ -7,27 +7,20 @@
             <field name="model">account.financial.year.op</field>
             <field name="arch" type="xml">
                 <form>
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="opening_date"/>
-                        </div>
-                        <div class="col-3">
-                            <field name="opening_move_posted" invisible="1"/>
-                            <field name="opening_date" attrs="{'readonly': [('opening_move_posted', '=', True)]}"/>
-                        </div>
-                    </div>
+                    <sheet>
+                        <group>
+                            <group string="Fiscal Years">
+                                <field name="opening_move_posted" invisible="1"/>
+                                <field name="opening_date" attrs="{'readonly': [('opening_move_posted', '=', True)]}"/>
 
-                    <div class="row">
-                        <div class="col-2">
-                            <strong>Fiscal Year End</strong>
-                        </div>
-                        <div class="col-1">
-                            <field name="fiscalyear_last_day"/>
-                        </div>
-                        <div class="col-2">
-                            <field name="fiscalyear_last_month"/>
-                        </div>
-                    </div>
+                                <label for="fiscalyear_last_month" string="Fiscal Year End"/>
+                                <div>
+                                    <field name="fiscalyear_last_day"/>
+                                    <field name="fiscalyear_last_month"/>
+                                </div>
+                            </group>
+                        </group>
+                    </sheet>
                     <footer>
                         <button name="action_save_onboarding_fiscal_year" string="Apply"
                                class="oe_highlight" type="object" />
@@ -84,8 +77,10 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type_id"/>
+                    <field name="reconcile" widget="boolean_toggle"/>
                     <field name="opening_debit"/>
                     <field name="opening_credit"/>
+                    <button name="action_read_account" type="object" icon="fa-expand" title="Open" aria-label="Open" class="float-right"/>
                 </tree>
             </field>
         </record>

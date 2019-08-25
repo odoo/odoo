@@ -28,7 +28,7 @@ class Warehouse(models.Model):
         'res.company', 'Company', default=lambda self: self.env.company,
         index=True, readonly=True, required=True,
         help='The company is automatically set from your user preferences.')
-    partner_id = fields.Many2one('res.partner', 'Address')
+    partner_id = fields.Many2one('res.partner', 'Address', default=lambda self: self.env.company.partner_id)
     view_location_id = fields.Many2one('stock.location', 'View Location', domain=[('usage', '=', 'view')], required=True)
     lot_stock_id = fields.Many2one('stock.location', 'Location Stock', domain=[('usage', '=', 'internal')], required=True)
     code = fields.Char('Short Name', required=True, size=5, help="Short name used to identify your warehouse")
@@ -823,6 +823,8 @@ class Warehouse(models.Model):
                 'default_location_src_id': False,
                 'sequence': max_sequence + 1,
                 'barcode': self.code.replace(" ", "").upper() + "-RECEIPTS",
+                'show_reserved': False,
+                'sequence_code': 'IN',
             }, 'out_type_id': {
                 'name': _('Delivery Orders'),
                 'code': 'outgoing',
@@ -831,6 +833,7 @@ class Warehouse(models.Model):
                 'default_location_dest_id': False,
                 'sequence': max_sequence + 5,
                 'barcode': self.code.replace(" ", "").upper() + "-DELIVERY",
+                'sequence_code': 'OUT',
             }, 'pack_type_id': {
                 'name': _('Pack'),
                 'code': 'internal',
@@ -840,6 +843,7 @@ class Warehouse(models.Model):
                 'default_location_dest_id': output_loc.id,
                 'sequence': max_sequence + 4,
                 'barcode': self.code.replace(" ", "").upper() + "-PACK",
+                'sequence_code': 'PACK',
             }, 'pick_type_id': {
                 'name': _('Pick'),
                 'code': 'internal',
@@ -848,6 +852,7 @@ class Warehouse(models.Model):
                 'default_location_src_id': self.lot_stock_id.id,
                 'sequence': max_sequence + 3,
                 'barcode': self.code.replace(" ", "").upper() + "-PICK",
+                'sequence_code': 'PICK',
             }, 'int_type_id': {
                 'name': _('Internal Transfers'),
                 'code': 'internal',
@@ -858,6 +863,7 @@ class Warehouse(models.Model):
                 'active': self.reception_steps != 'one_step' or self.delivery_steps != 'ship_only' or self.user_has_groups('stock.group_stock_multi_locations'),
                 'sequence': max_sequence + 2,
                 'barcode': self.code.replace(" ", "").upper() + "-INTERNAL",
+                'sequence_code': 'INT',
             },
         }, max_sequence + 6
 
@@ -922,7 +928,8 @@ class Warehouse(models.Model):
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'tree,form',
-            'limit': 20
+            'limit': 20,
+            'context': dict(self._context, default_warehouse_selectable=True, default_warehouse_ids=self.ids)
         }
 
 
@@ -958,9 +965,10 @@ class Orderpoint(models.Model):
         'product.product', 'Product',
         domain=[('type', '=', 'product')], ondelete='cascade', required=True)
     product_uom = fields.Many2one(
-        'uom.uom', 'Product Unit of Measure', related='product_id.uom_id',
+        'uom.uom', 'Unit of Measure', related='product_id.uom_id',
         readonly=True, required=True,
         default=lambda self: self._context.get('product_uom', False))
+    product_uom_name = fields.Char(string='Product unit of measure label', related='product_uom.display_name', readonly=True)
     product_min_qty = fields.Float(
         'Minimum Quantity', digits='Product Unit of Measure', required=True,
         help="When the virtual stock equals to or goes below the Min Quantity specified for this field, Odoo generates "

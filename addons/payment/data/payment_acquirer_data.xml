@@ -14,7 +14,8 @@
 
     <record id="payment_acquirer_buckaroo" model="payment.acquirer">
         <field name="name">Buckaroo</field>
-        <field name="image" type="base64" file="payment_buckaroo/static/src/img/buckaroo_icon.png"/>
+        <field name="display_as">Credit Card (powered by Buckaroo)</field>
+        <field name="image_128" type="base64" file="payment_buckaroo/static/src/img/buckaroo_icon.png"/>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="module_id" ref="base.module_payment_buckaroo"/>
         <field name="description" type="html">
@@ -34,25 +35,28 @@
                                                         ref("payment.payment_icon_cc_american_express")])]'/>
     </record>
 
-    <record id="payment_acquirer_ogone" model="payment.acquirer">
+    <record id="payment_acquirer_ingenico" model="payment.acquirer">
         <field name="name">Ingenico</field>
+        <field name="display_as">Credit Card (powered by Ingenico)</field>
         <field name="sequence">2</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
-        <field name="image" type="base64" file="payment_ogone/static/src/img/ogone_icon.png"/>
-        <field name="module_id" ref="base.module_payment_ogone"/>
+        <field name="image_128" type="base64" file="payment_ingenico/static/src/img/ingenico_icon.png"/>
+        <field name="module_id" ref="base.module_payment_ingenico"/>
         <field name="description" type="html">
             <p>
-                Ingenico Payment Services (formerly Ogone) supports credit cards, debit cards and bank transfers.
+                Ingenico Payment Services (formerly Ogone) supports a wide range of payment methods: credit cards, debit cards, bank transfers, Bancontact, iDeal, Giropay.
             </p>
             <ul class="list-inline">
                 <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
                 <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
                 <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
                 <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Embedded Credit Card Form</li>
             </ul>
         </field>
         <!-- https://payment-services.ingenico.com/~/media/files/130806_product_sheet_ingenico_collect_en.ashx?la=en -->
-        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_bancontact"),
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_ideal"),
+                                                        ref("payment.payment_icon_cc_bancontact"),
                                                         ref("payment.payment_icon_cc_maestro"),
                                                         ref("payment.payment_icon_cc_mastercard"),
                                                         ref("payment.payment_icon_cc_visa")])]'/>
@@ -60,8 +64,9 @@
 
     <record id="payment_acquirer_adyen" model="payment.acquirer">
         <field name="name">Adyen</field>
+        <field name="display_as">Credit Card (powered by Adyen)</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
-        <field name="image" type="base64" file="payment_adyen/static/src/img/adyen_icon.png"/>
+        <field name="image_128" type="base64" file="payment_adyen/static/src/img/adyen_icon.png"/>
         <field name="module_id" ref="base.module_payment_adyen"/>
         <field name="description" type="html">
             <p>
@@ -85,9 +90,10 @@
 
     <record id="payment_acquirer_authorize" model="payment.acquirer">
         <field name="name">Authorize.net</field>
+        <field name="display_as">Credit Card (powered by Authorize)</field>
         <field name="sequence">3</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
-        <field name="image" type="base64" file="payment_authorize/static/src/img/authorize_icon.png"/>
+        <field name="image_128" type="base64" file="payment_authorize/static/src/img/authorize_icon.png"/>
         <field name="module_id" ref="base.module_payment_authorize"/>
         <field name="description" type="html">
             <p>
@@ -99,6 +105,7 @@
                 <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
                 <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
                 <li class="list-inline-item"><i class="fa fa-check"/>Manual Capture</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Embedded Credit Card Form</li>
             </ul>
         </field>
         <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
@@ -114,7 +121,7 @@
         <field name="name">Wire Transfer</field>
         <field name="sequence">2</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
-        <field name="image" type="base64" file="payment_transfer/static/src/img/transfer_icon.png"/>
+        <field name="image_128" type="base64" file="payment_transfer/static/src/img/transfer_icon.png"/>
         <field name="module_id" ref="base.module_payment_transfer"/>
         <field name="pending_msg">&lt;i&gt;Pending&lt;/i&gt;... The order will be validated after the payment.</field>
         <field name="description" type="html">
@@ -126,8 +133,9 @@
 
     <record id="payment_acquirer_sips" model="payment.acquirer">
         <field name="name">Sips</field>
+        <field name="display_as">Credit Card (powered by Sips)</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
-        <field name="image" type="base64" file="payment_sips/static/src/img/sips_icon.png"/>
+        <field name="image_128" type="base64" file="payment_sips/static/src/img/sips_icon.png"/>
         <field name="module_id" ref="base.module_payment_sips"/>
         <field name="description" type="html">
             <p>
@@ -154,7 +162,7 @@
         <field name="name">Paypal</field>
         <field name="sequence">1</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
-        <field name="image" type="base64" file="payment_paypal/static/src/img/paypal_icon.png"/>
+        <field name="image_128" type="base64" file="payment_paypal/static/src/img/paypal_icon.png"/>
         <field name="module_id" ref="base.module_payment_paypal"/>
         <field name="description" type="html">
             <p>
@@ -178,8 +186,9 @@
 
     <record id="payment_acquirer_stripe" model="payment.acquirer">
         <field name="name">Stripe</field>
+        <field name="display_as">Credit Card (powered by Stripe)</field>
         <field name="view_template_id" ref="default_acquirer_button"/>
-        <field name="image" type="base64" file="payment_stripe/static/src/img/stripe_icon.png"/>
+        <field name="image_128" type="base64" file="payment_stripe/static/src/img/stripe_icon.png"/>
         <field name="module_id" ref="base.module_payment_stripe"/>
         <field name="description" type="html">
             <p>
@@ -205,24 +214,10 @@
                                                         ref("payment.payment_icon_cc_visa")])]'/>
     </record>
 
-    <record id="payment_acquirer_custom" model="payment.acquirer">
-        <field name="name">Custom</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="view_template_id" ref="default_acquirer_button"/>
-        <field name="module_id" ref="base.module_payment_transfer"/>
-        <field name="description" type="html">
-            <p>
-                A generic payment acquirer to send payment instructions to any payment acquirer.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-            </ul>
-        </field>
-    </record>
-
     <record id="payment_acquirer_payu" model="payment.acquirer">
         <field name="name">PayUmoney</field>
-        <field name="image" type="base64" file="payment_payumoney/static/src/img/payumoney_icon.png"/>
+        <field name="display_as">Credit Card (powered by PayUmoney)</field>
+        <field name="image_128" type="base64" file="payment_payumoney/static/src/img/payumoney_icon.png"/>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="module_id" ref="base.module_payment_payumoney"/>
         <field name="description" type="html">
@@ -245,7 +240,8 @@
 
     <record id="payment_acquirer_payulatam" model="payment.acquirer">
         <field name="name">PayU Latam</field>
-        <field name="image" type="base64" file="payment_payulatam/static/src/img/payulatam_icon.png"/>
+        <field name="display_as">Credit Card (powered by PayU Latam)</field>
+        <field name="image_128" type="base64" file="payment_payulatam/static/src/img/payulatam_icon.png"/>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="module_id" ref="base.module_payment_payulatam"/>
         <field name="description" type="html">
@@ -267,7 +263,8 @@
 
     <record id="payment_acquirer_alipay" model="payment.acquirer">
         <field name="name">Alipay</field>
-        <field name="image" type="base64" file="payment_alipay/static/description/icon.png"/>
+        <field name="display_as">Credit Card (powered by Alipay)</field>
+        <field name="image_128" type="base64" file="payment_alipay/static/description/icon.png"/>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="module_id" ref="base.module_payment_alipay"/>
         <field name="description" type="html">
@@ -282,4 +279,17 @@
         <!-- https://intl.alipay.com/ihome/home/about/buy.htm?topic=paymentMethods -->
         <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_jcb"),ref("payment.payment_icon_cc_mastercard"),ref("payment.payment_icon_cc_western_union"),ref("payment.payment_icon_cc_webmoney"),ref("payment.payment_icon_cc_visa")])]'/>
     </record>
+
+    <record id="payment.payment_acquirer_sepa_direct_debit" model="payment.acquirer">
+        <field name="name">SEPA Direct Debit</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image_128" type="base64" file="base/static/img/icons/payment_sepa_direct_debit.png"/>
+        <field name="module_id" ref="base.module_payment_sepa_direct_debit"/>
+        <field name="description" type="html">
+            <p>
+                SEPA Direct Debit is a Europe-wide Direct Debit system that allows merchants to collect Euro-denominated payments from accounts in the 34 SEPA countries and associated territories.
+            </p>
+        </field>
+    </record>
+
 </odoo>

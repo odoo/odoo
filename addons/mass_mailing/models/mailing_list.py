@@ -45,6 +45,13 @@ class MassMailingList(models.Model):
     def name_get(self):
         return [(list.id, "%s (%s)" % (list.name, list.contact_nbr)) for list in self]
 
+    def action_view_contacts(self):
+        action = self.env.ref('mass_mailing.action_view_mass_mailing_contacts').read()[0]
+        action['domain'] = [('list_ids', 'in', self.ids)]
+        context = dict(self.env.context, search_default_filter_valid_email_recipient=1, default_list_ids=self.ids)
+        action['context'] = context
+        return action
+
     def action_merge(self, src_lists, archive):
         """
             Insert all the contact from the mailing lists 'src_lists' to the
@@ -72,6 +79,8 @@ class MassMailingList(models.Model):
         self.ensure_one()
         # Put destination is sources lists if not already the case
         src_lists |= self
+        self.env['mailing.contact'].flush(['email', 'email_normalized'])
+        self.env['mailing.contact.subscription'].flush(['contact_id', 'opt_out', 'list_id'])
         self.env.cr.execute("""
             INSERT INTO mailing_contact_list_rel (contact_id, list_id)
             SELECT st.contact_id AS contact_id, %s AS list_id
@@ -103,6 +112,7 @@ class MassMailingList(models.Model):
                     )
                 ) st
             WHERE st.rn = 1;""", (self.id, tuple(src_lists.ids), self.id))
+        self.flush()
         self.invalidate_cache()
         if archive:
             (src_lists - self).write({'active': False})

@@ -28,7 +28,7 @@ class Currency(models.Model):
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
     name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)")
     symbol = fields.Char(help="Currency sign, to be used when printing amounts.", required=True)
-    rate = fields.Float(compute='_compute_current_rate', string='Current Rate', digits=(12, 6),
+    rate = fields.Float(compute='_compute_current_rate', string='Current Rate', digits=0,
                         help='The rate of the currency to the currency of rate 1.')
     rate_ids = fields.One2many('res.currency.rate', 'currency_id', string='Rates')
     rounding = fields.Float(string='Rounding Factor', digits=(12, 6), default=0.01)
@@ -46,6 +46,7 @@ class Currency(models.Model):
     ]
 
     def _get_rates(self, company, date):
+        self.env['res.currency.rate'].flush(['rate', 'currency_id', 'company_id', 'name'])
         query = """SELECT c.id,
                           COALESCE((SELECT r.rate FROM res_currency_rate r
                                   WHERE r.currency_id = c.id AND r.name <= %s
@@ -235,7 +236,7 @@ class CurrencyRate(models.Model):
 
     name = fields.Date(string='Date', required=True, index=True,
                            default=lambda self: fields.Date.today())
-    rate = fields.Float(digits=(12, 6), default=1.0, help='The rate of the currency to the currency of rate 1')
+    rate = fields.Float(digits=0, default=1.0, help='The rate of the currency to the currency of rate 1')
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.company)

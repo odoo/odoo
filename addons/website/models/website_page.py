@@ -20,6 +20,7 @@ class Page(models.Model):
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
     is_homepage = fields.Boolean(compute='_compute_homepage', inverse='_set_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
+    is_tracked = fields.Boolean(string='Is Tracked', default=False, help="A tracked page will be included in visitors browsing history.")
 
     # Page options
     header_overlay = fields.Boolean()
@@ -27,6 +28,7 @@ class Page(models.Model):
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False)
+    arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
 
     def _compute_homepage(self):
         for page in self:

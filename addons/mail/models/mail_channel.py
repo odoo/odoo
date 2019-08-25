@@ -12,7 +12,6 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import ormcache
-from odoo.tools.safe_eval import safe_eval
 
 MODERATION_FIELDS = ['moderation', 'moderator_ids', 'moderation_ids', 'moderation_notify', 'moderation_notify_msg', 'moderation_guidelines', 'moderation_guidelines_msg']
 _logger = logging.getLogger(__name__)
@@ -64,7 +63,7 @@ class Channel(models.Model):
 
     def _get_default_image(self):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
-        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=tools.IMAGE_BIG_SIZE)
+        return base64.b64encode(open(image_path, 'rb').read())
 
     @api.model
     def default_get(self, fields):
@@ -83,8 +82,9 @@ class Channel(models.Model):
     uuid = fields.Char('UUID', size=50, index=True, default=lambda self: str(uuid4()), copy=False)
     email_send = fields.Boolean('Send messages by email', default=False)
     # multi users channel
-    channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen')
-    channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners')
+    # depends=['...'] is for `test_mail/tests/common.py`, class Moderation, `setUpClass`
+    channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen', depends=['channel_partner_ids'])
+    channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners', depends=['channel_last_seen_partner_ids'])
     channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel')
     is_member = fields.Boolean('Is a member', compute='_compute_is_member')
     # access
@@ -101,17 +101,7 @@ class Channel(models.Model):
         help="Members of those groups will automatically added as followers. "
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
-    # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary("Photo", default=_get_default_image,
-        help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium-sized photo',
-        help="Medium-sized photo of the group. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved. "
-             "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Small-sized photo',
-        help="Small-sized photo of the group. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
+    image_128 = fields.Image("Image", max_width=128, max_height=128, default=_get_default_image)
     is_subscribed = fields.Boolean(
         'Is Subscribed', compute='_compute_is_subscribed')
     # moderation
@@ -149,23 +139,23 @@ class Channel(models.Model):
     @api.constrains('moderator_ids')
     def _check_moderator_email(self):
         if any(not moderator.email for channel in self for moderator in channel.moderator_ids):
-            raise ValidationError("Moderators must have an email address.")
+            raise ValidationError(_("Moderators must have an email address."))
 
     @api.constrains('moderator_ids', 'channel_partner_ids', 'channel_last_seen_partner_ids')
     def _check_moderator_is_member(self):
         for channel in self:
             if not (channel.mapped('moderator_ids.partner_id') <= channel.sudo().channel_partner_ids):
-                raise ValidationError("Moderators should be members of the channel they moderate.")
+                raise ValidationError(_("Moderators should be members of the channel they moderate."))
 
     @api.constrains('moderation', 'email_send')
     def _check_moderation_parameters(self):
         if any(not channel.email_send and channel.moderation for channel in self):
-            raise ValidationError('Only mailing lists can be moderated.')
+            raise ValidationError(_('Only mailing lists can be moderated.'))
 
     @api.constrains('moderator_ids')
     def _check_moderator_existence(self):
         if any(not channel.moderator_ids for channel in self if channel.moderation):
-            raise ValidationError('Moderated channels must have moderators.')
+            raise ValidationError(_('Moderated channels must have moderators.'))
 
     def _compute_is_member(self):
         memberships = self.env['mail.channel.partner'].sudo().search([
@@ -180,6 +170,8 @@ class Channel(models.Model):
         for record in self:
             if record.channel_type == 'chat':
                 record.is_chat = True
+            else:
+                record.is_chat = False
 
     @api.onchange('public')
     def _onchange_public(self):
@@ -209,11 +201,10 @@ class Channel(models.Model):
     @api.model
     def create(self, vals):
         # ensure image at quick create
-        if not vals.get('image'):
-            defaults = self.default_get(['image'])
-            vals['image'] = defaults['image']
+        if not vals.get('image_128'):
+            defaults = self.default_get(['image_128'])
+            vals['image_128'] = defaults['image_128']
 
-        tools.image_resize_images(vals)
         # Create channel and alias
         channel = super(Channel, self.with_context(
             alias_model_name=self._name, alias_parent_model_name=self._name, mail_create_nolog=True, mail_create_nosubscribe=True)
@@ -248,9 +239,8 @@ class Channel(models.Model):
         # First checks if user tries to modify moderation fields and has not the right to do it.
         if any(key for key in MODERATION_FIELDS if vals.get(key)) and any(self.env.user not in channel.moderator_ids for channel in self if channel.moderation):
             if not self.env.user.has_group('base.group_system'):
-                raise UserError("You do not possess the rights to modify fields related to moderation on one of the channels you are modifying.")
+                raise UserError(_("You do not have the rights to modify fields related to moderation on one of the channels you are modifying."))
 
-        tools.image_resize_images(vals)
         result = super(Channel, self).write(vals)
 
         if vals.get('group_ids'):
@@ -319,12 +309,12 @@ class Channel(models.Model):
             headers['X-Forge-To'] = list_to
         return headers
 
-    def _message_receive_bounce(self, email, partner, mail_id=None):
+    def _message_receive_bounce(self, email, partner):
         """ Override bounce management to unsubscribe bouncing addresses """
         for p in partner:
             if p.message_bounce >= self.MAX_BOUNCE_LIMIT:
                 self._action_unfollow(p)
-        return super(Channel, self)._message_receive_bounce(email, partner, mail_id=mail_id)
+        return super(Channel, self)._message_receive_bounce(email, partner)
 
     def _notify_email_recipient_values(self, recipient_ids):
         # Excluded Blacklisted
@@ -410,9 +400,9 @@ class Channel(models.Model):
         if self.env.user in self.moderator_ids or self.env.user.has_group('base.group_system'):
             success = self._send_guidelines(self.channel_partner_ids)
             if not success:
-                raise UserError('View "mail.mail_channel_send_guidelines" was not found. No email has been sent. Please contact an administrator to fix this issue.')
+                raise UserError(_('View "mail.mail_channel_send_guidelines" was not found. No email has been sent. Please contact an administrator to fix this issue.'))
         else:
-            raise UserError("Only an administrator or a moderator can send guidelines to channel members!")
+            raise UserError(_("Only an administrator or a moderator can send guidelines to channel members!"))
 
     def _send_guidelines(self, partners):
         """ Send guidelines of a given channel. Returns False if template used for guidelines
@@ -709,9 +699,15 @@ class Channel(models.Model):
     def channel_pin(self, uuid, pinned=False):
         # add the person in the channel, and pin it (or unpin it)
         channel = self.search([('uuid', '=', uuid)])
-        channel_partners = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)])
+        channel._execute_channel_pin(pinned)
+
+    def _execute_channel_pin(self, pinned=False):
+        """ Hook for website_livechat channel unpin and cleaning """
+        self.ensure_one()
+        channel_partners = self.env['mail.channel.partner'].search(
+            [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
         if not pinned:
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel.channel_info('unsubscribe')[0])
+            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info('unsubscribe')[0])
         if channel_partners:
             channel_partners.write({'is_pinned': pinned})
 

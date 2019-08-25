@@ -18,7 +18,7 @@
                 <div t-attf-class="col-sm-6 col-lg-#{(len(event.sponsor_ids) > 6) and 2 or (12 // len(event.sponsor_ids))} text-center mb16 oe_sponsor" t-foreach="event.sponsor_ids" t-as="sponsor">
                     <t t-if="sponsor.url">
                         <a t-att-href="sponsor.url" style="position: relative; display: inline-block;" class="bg-white">
-                            <span t-field="sponsor.image_medium"
+                            <span t-field="sponsor.image_128"
                                 t-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
                                 <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
@@ -27,7 +27,7 @@
                     </t>
                     <t t-if="not sponsor.url">
                         <span style="position: relative; display: inline-block;" class="bg-white">
-                            <span t-field="sponsor.image_medium"
+                            <span t-field="sponsor.image_128"
                                 t-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
                                 <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
@@ -146,7 +146,7 @@
                         </li>
                     </ul>
                     <ul class="list-inline">
-                        <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item fa fa-tags">
+                        <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item fa fa-tags" t-if="tag_id.color != 0">
                             <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                                 <i class="fa fa-tags"/>
                                 <span t-field="tag_id.name"/>
@@ -209,7 +209,7 @@
             <h2 t-field="track.name" class="text-center"/>
             <h3 t-field="event.name" class="text-center text-muted"/>
             <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
-                <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item">
+                <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item" t-if="tag_id.color != 0">
                     <span class="fa fa-tags"></span>
                     <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                         <span t-field="tag_id.name"/>
@@ -233,7 +233,7 @@
                                     <div t-field="track.description"/>
                                 </div>
                                 <div class="col-lg-12">
-                                    <h3>About The Author</h3>
+                                    <h3>About The Speaker</h3>
                                     <div t-field="track.partner_biography"/>
                                 </div>
                             </div>
@@ -242,7 +242,7 @@
                     <div t-if="track.partner_id" class="mt32">
                         <div class="row">
                             <div class="col-md-2">
-                                <span t-field="track.partner_id.sudo().image_medium"
+                                <span t-field="track.partner_id.sudo().image_128"
                                     t-options='{"widget": "image", "class": "rounded-circle"}'/>
                             </div><div class="col-md-10">
                                <h4 t-field="track.partner_id.name" class="mb4"/>
@@ -339,29 +339,26 @@
                             <h3 class="o_page_header">Application</h3>
                             <p>
                                 Fill this form to propose your talk.
-
                             </p>
+                            <div class="alert alert-info" role="alert">
+                                <i class="fa fa-info-circle"/>
+                                You can add multiple speakers by separating names, emails and phones with commas.
+                            </div>
                         </section>
                     </div>
                     <section id="forms" t-if="event.website_track_proposal">
                         <form class="mt32 js_website_submit_form" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="partner_name">Your Name</label>
+                                <label class="col-lg-3 col-md-4 col-form-label" for="track_name">Talk Title</label>
                                 <div class="col-lg-7 col-md-8">
-                                    <input type="text" class="form-control" name="partner_name" required="True" />
+                                    <input type="text" class="form-control" name="track_name" required="True"/>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="email_from">Your Email</label>
+                                <label class="col-lg-3 col-md-4 col-form-label" for="description">Talk Introduction</label>
                                 <div class="col-lg-7 col-md-8">
-                                    <input type="email" class="form-control" name="email_from" required="True" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="phone">Your Phone</label>
-                                <div class="col-lg-7 col-md-8">
-                                    <input type="text" class="form-control" name="phone" required="True" />
+                                    <textarea  class="form-control" name="description" style="min-height: 120px"/>
                                 </div>
                             </div>
                             <div class="form-group row" t-if="len(event.allowed_track_tag_ids)">
@@ -376,24 +373,30 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="track_name">Talk Title</label>
+                                <label class="col-lg-3 col-md-4 col-form-label" for="partner_name">Speaker(s) Name</label>
                                 <div class="col-lg-7 col-md-8">
-                                    <input type="text" class="form-control" name="track_name" required="True"/>
+                                    <input type="text" class="form-control" name="partner_name" required="True"/>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="phone">Speaker Biography</label>
+                                <label class="col-lg-3 col-md-4 col-form-label" for="email_from">Speaker(s) Email</label>
                                 <div class="col-lg-7 col-md-8">
-                                    <textarea  class="form-control" name="biography" style="min-height: 120px"/>
+                                    <input type="email" class="form-control" name="email_from" required="True" multiple="multiple"/>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-lg-3 col-md-4 col-form-label" for="description">Talk Introduction</label>
+                                <label class="col-lg-3 col-md-4 col-form-label" for="phone">Speaker(s) Phone</label>
                                 <div class="col-lg-7 col-md-8">
-                                    <textarea  class="form-control" name="description" style="min-height: 120px"/>
+                                    <input type="text" class="form-control" name="phone" required="True"/>
                                 </div>
                             </div>
                             <div class="form-group row">
+                                <label class="col-lg-3 col-md-4 col-form-label" for="biography">Speaker(s) Biography</label>
+                                <div class="col-lg-7 col-md-8">
+                                    <textarea  class="form-control" name="biography" rows="5"/>
+                                </div>
+                            </div>
+                            <div class="form-group row o_form_buttons">
                                 <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
                                     <button type="submit" class="btn btn-primary">Submit Proposal</button>
                                 </div>

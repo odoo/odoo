@@ -34,14 +34,14 @@ class MassMailing(models.Model):
     def action_redirect_to_leads(self):
         action = self.env.ref('crm.crm_lead_all_leads').read()[0]
         action['domain'] = self._get_crm_utm_domain()
-        action['context'] = {'default_type': 'lead', 'active_test': False}
+        action['context'] = {'default_type': 'lead', 'active_test': False, 'create': False}
         return action
 
     def action_redirect_to_opportunities(self):
         action = self.env.ref('crm.crm_lead_opportunities').read()[0]
         action['view_mode'] = 'tree,kanban,graph,pivot,form,calendar'
         action['domain'] = self._get_crm_utm_domain()
-        action['context'] = {'active_test': False}
+        action['context'] = {'active_test': False, 'create': False}
         return action
 
     def _get_crm_utm_domain(self):

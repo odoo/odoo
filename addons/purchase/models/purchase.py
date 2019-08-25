@@ -31,18 +31,6 @@ class PurchaseOrder(models.Model):
                 'amount_total': amount_untaxed + amount_tax,
             })
 
-    @api.depends('order_line.date_planned', 'date_order')
-    def _compute_date_planned(self):
-        for order in self:
-            min_date = False
-            for line in order.order_line:
-                if not min_date or line.date_planned and line.date_planned < min_date:
-                    min_date = line.date_planned
-            if min_date:
-                order.date_planned = min_date
-            else:
-                order.date_planned = order.date_order
-
     @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty')
     def _get_invoiced(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -83,8 +71,8 @@ class PurchaseOrder(models.Model):
     date_order = fields.Datetime('Order Date', required=True, states=READONLY_STATES, index=True, copy=False, default=fields.Datetime.now,\
         help="Depicts the date where the Quotation should be validated and converted into a purchase order.")
     date_approve = fields.Datetime('Confirmation Date', readonly=1, index=True, copy=False)
-    partner_id = fields.Many2one('res.partner', string='Vendor', required=True, states=READONLY_STATES, change_default=True, tracking=True, help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
-    dest_address_id = fields.Many2one('res.partner', string='Drop Ship Address', states=READONLY_STATES,
+    partner_id = fields.Many2one('res.partner', string='Vendor', required=True, states=READONLY_STATES, change_default=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
+    dest_address_id = fields.Many2one('res.partner', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Drop Ship Address', states=READONLY_STATES,
         help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company.")
     currency_id = fields.Many2one('res.currency', 'Currency', required=True, states=READONLY_STATES,
@@ -109,14 +97,14 @@ class PurchaseOrder(models.Model):
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
 
     # There is no inverse function on purpose since the date may be different on each line
-    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True)
+    date_planned = fields.Datetime(string='Receipt Date', index=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
 
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position')
-    payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms')
+    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product', readonly=False)
@@ -169,6 +157,12 @@ class PurchaseOrder(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order') or '/'
         return super(PurchaseOrder, self).create(vals)
 
+    def write(self, vals):
+        res = super(PurchaseOrder, self).write(vals)
+        if vals.get('date_planned'):
+            self.order_line.write({'date_planned': vals['date_planned']})
+        return res
+
     def unlink(self):
         for order in self:
             if not order.state == 'cancel':
@@ -178,10 +172,13 @@ class PurchaseOrder(models.Model):
     def copy(self, default=None):
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
-            seller = line.product_id._select_seller(
-                partner_id=line.partner_id, quantity=line.product_qty,
-                date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
-            line.date_planned = line._get_date_planned(seller)
+            if new_po.date_planned:
+                line.date_planned = new_po.date_planned
+            else:
+                seller = line.product_id._select_seller(
+                    partner_id=line.partner_id, quantity=line.product_qty,
+                    date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
+                line.date_planned = line._get_date_planned(seller)
         return new_po
 
     def _track_subtype(self, init_values):
@@ -216,7 +213,7 @@ class PurchaseOrder(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id_warning(self):
-        if not self.partner_id:
+        if not self.partner_id or not self.env.user.has_group('purchase.group_warning_purchase'):
             return
         warning = {}
         title = False
@@ -396,6 +393,8 @@ class PurchaseOrder(models.Model):
             'default_type': 'in_invoice',
             'default_purchase_id': self.id,
         }
+        if self.user_id:
+            result['context']['default_user_id'] = self.user_id.id
         # choose the view_mode accordingly
         if len(self.invoice_ids) > 1 and not create_bill:
             result['domain'] = "[('id', 'in', " + str(self.invoice_ids.ids) + ")]"
@@ -408,10 +407,6 @@ class PurchaseOrder(models.Model):
         result['context']['default_origin'] = self.name
         result['context']['default_reference'] = self.partner_ref
         return result
-
-    def action_set_date_planned(self):
-        for order in self:
-            order.order_line.update({'date_planned': order.date_planned})
 
 
 class PurchaseOrderLine(models.Model):
@@ -525,12 +520,16 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.product_id.type in ['consu', 'service']:
                 line.qty_received_method = 'manual'
+            else:
+                line.qty_received_method = False
 
     @api.depends('qty_received_method', 'qty_received_manual')
     def _compute_qty_received(self):
         for line in self:
             if line.qty_received_method == 'manual':
                 line.qty_received = line.qty_received_manual or 0.0
+            else:
+                line.qty_received = 0.0
 
     @api.onchange('qty_received')
     def _inverse_qty_received(self):
@@ -549,6 +548,11 @@ class PurchaseOrderLine(models.Model):
         if values.get('display_type', self.default_get(['display_type'])['display_type']):
             values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom=False, date_planned=False)
 
+        order_id = values.get('order_id')
+        if 'date_planned' not in values:
+            order = self.env['purchase.order'].browse(order_id)
+            if order.date_planned:
+                values['date_planned'] = order.date_planned
         line = super(PurchaseOrderLine, self).create(values)
         if line.order_id.state == 'purchase':
             msg = _("Extra line with %s ") % (line.product_id.display_name,)
@@ -600,25 +604,29 @@ class PurchaseOrderLine(models.Model):
         # Reset date, price and quantity since _onchange_quantity will provide default values
         self.date_planned = datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self.price_unit = self.product_qty = 0.0
-        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
 
+        self._product_id_change()
+
+        self._suggest_quantity()
+        self._onchange_quantity()
+
+    def _product_id_change(self):
+        if not self.product_id:
+            return
+
+        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         product_lang = self.product_id.with_context(
             lang=self.partner_id.lang,
             partner_id=self.partner_id.id,
             company_id=self.company_id.id,
         )
-        self.name = product_lang.display_name
-        if product_lang.description_purchase:
-            self.name += '\n' + product_lang.description_purchase
+        self.name = self._get_product_purchase_description(product_lang)
 
         self._compute_tax_id()
 
-        self._suggest_quantity()
-        self._onchange_quantity()
-
     @api.onchange('product_id')
     def onchange_product_id_warning(self):
-        if not self.product_id:
+        if not self.product_id or not self.env.user.has_group('purchase.group_warning_purchase'):
             return
         warning = {}
         title = False
@@ -688,6 +696,14 @@ class PurchaseOrderLine(models.Model):
             self.product_uom = seller_min_qty[0].product_uom
         else:
             self.product_qty = 1.0
+
+    def _get_product_purchase_description(self, product_lang):
+        self.ensure_one()
+        name = product_lang.display_name
+        if product_lang.description_purchase:
+            name += '\n' + product_lang.description_purchase
+
+        return name
 
     def _prepare_account_move_line(self, move):
         self.ensure_one()

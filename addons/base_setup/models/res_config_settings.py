@@ -12,12 +12,10 @@ class ResConfigSettings(models.TransientModel):
         default=lambda self: self.env.company)
     user_default_rights = fields.Boolean(
         "Default Access Rights",
-        config_parameter='base_setup.default_user_rights',
-        oldname='default_user_rights')
+        config_parameter='base_setup.default_user_rights')
     external_email_server_default = fields.Boolean(
         "External Email Servers",
-        config_parameter='base_setup.default_external_email_server',
-        oldname='default_external_email_server')
+        config_parameter='base_setup.default_external_email_server')
     module_base_import = fields.Boolean("Allow users to import data from CSV/XLS/XLSX/ODS files")
     module_google_calendar = fields.Boolean(
         string='Allow the users to synchronize their calendar  with Google Calendar')
@@ -33,10 +31,6 @@ class ResConfigSettings(models.TransientModel):
     module_partner_autocomplete = fields.Boolean("Partner Autocomplete")
     module_sms = fields.Boolean("Send SMS")
     module_base_geolocalize = fields.Boolean("GeoLocalize")
-    company_share_partner = fields.Boolean(string='Share partners to all companies',
-        help="Share your partners to all companies defined in your instance.\n"
-             " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
-             " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies.")
     report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.", readonly=False)
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
@@ -44,20 +38,11 @@ class ResConfigSettings(models.TransientModel):
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format', readonly=False)
     external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id", readonly=False)
     show_effect = fields.Boolean(string="Show Effect", config_parameter='base_setup.show_effect')
-    company_count = fields.Integer('Number of Companies', readonly=True, compute="_compute_company_count")
+    company_count = fields.Integer('Number of Companies', compute="_compute_company_count")
+    active_user_count = fields.Integer('Number of Active Users', compute="_compute_active_user_count")
     language_count = fields.Integer('Number of Languages', compute="_compute_language_count")
-
-    @api.model
-    def get_values(self):
-        res = super(ResConfigSettings, self).get_values()
-        res.update({
-            'company_share_partner': not self.env.ref('base.res_partner_rule').active,
-        })
-        return res
-
-    def set_values(self):
-        super(ResConfigSettings, self).set_values()
-        self.env.ref('base.res_partner_rule').write({'active': not self.company_share_partner})
+    company_name = fields.Char(related="company_id.display_name", string="Company Name")
+    company_informations = fields.Text(compute="_compute_company_informations")
 
     def open_company(self):
         return {
@@ -67,7 +52,11 @@ class ResConfigSettings(models.TransientModel):
             'res_model': 'res.company',
             'res_id': self.env.company.id,
             'target': 'current',
+            'context': {
+                'form_view_initial_mode': 'edit',
+            },
         }
+
     def open_default_user(self):
         action = self.env.ref('base.action_res_users').read()[0]
         action['res_id'] = self.env.ref('base.default_user').id
@@ -89,20 +78,6 @@ class ResConfigSettings(models.TransientModel):
             return False
         return self._prepare_report_view_action(self.external_report_layout_id.key)
 
-    def change_report_template(self):
-        self.ensure_one()
-        template = self.env.ref('base.view_company_document_template_form')
-        return {
-            'name': _('Choose Your Document Layout'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_id': self.env.company.id,
-            'res_model': 'res.company',
-            'views': [(template.id, 'form')],
-            'view_id': template.id,
-            'target': 'new',
-        }
-
     # NOTE: These fields depend on the context, if we want them to be computed
     # we have to make them depend on a field. This is because we are on a TransientModel.
     @api.depends('company_id')
@@ -112,9 +87,28 @@ class ResConfigSettings(models.TransientModel):
             record.company_count = company_count
 
     @api.depends('company_id')
+    def _compute_active_user_count(self):
+        active_user_count = self.env['res.users'].sudo().search_count([('share', '=', False)])
+        for record in self:
+            record.active_user_count = active_user_count
+
+    @api.depends('company_id')
     def _compute_language_count(self):
-        language_count = self.env['res.lang'].search_count([
-            ('active', '=', True),
-        ])
+        language_count = len(self.env['res.lang'].get_installed())
         for record in self:
             record.language_count = language_count
+
+    @api.depends('company_id')
+    def _compute_company_informations(self):
+        informations = '%s\n' % self.company_id.street if self.company_id.street else ''
+        informations += '%s\n' % self.company_id.street2 if self.company_id.street2 else ''
+        informations += '%s' % self.company_id.zip if self.company_id.zip else ''
+        informations += '\n' if self.company_id.zip and not self.company_id.city else ''
+        informations += ' - ' if self.company_id.zip and self.company_id.city else ''
+        informations += '%s\n' % self.company_id.city if self.company_id.city else ''
+        informations += '%s\n' % self.company_id.state_id.display_name if self.company_id.state_id else ''
+        informations += '%s' % self.company_id.country_id.display_name if self.company_id.country_id else ''
+        informations += '\nVAT: %s' % self.company_id.vat if self.company_id.vat else ''
+
+        for record in self:
+            record.company_informations = informations

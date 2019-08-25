@@ -39,6 +39,7 @@
         'report/picking_templates.xml',
         'report/product_templates.xml',
         'report/product_packaging.xml',
+        'data/mail_template_data.xml',
 
         'wizard/stock_assign_serial_views.xml',
         'wizard/stock_change_product_qty_views.xml',
@@ -86,4 +87,5 @@
     'application': True,
     'auto_install': False,
     'pre_init_hook': 'pre_init_hook',
+    'post_init_hook': '_assign_default_mail_template_picking_id',
 }

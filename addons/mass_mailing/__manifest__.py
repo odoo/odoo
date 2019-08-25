@@ -34,6 +34,7 @@
         'views/mailing_list_views.xml',
         'views/mailing_mailing_views.xml',
         'views/res_config_settings_views.xml',
+        'views/utm_campaign_views.xml',
         'report/mailing_trace_report_views.xml',
         'views/assets.xml',
         'views/mass_mailing_templates_portal.xml',

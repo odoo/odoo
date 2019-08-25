@@ -29,7 +29,7 @@ class ReportProjectTaskUser(models.Model):
         ('0', 'Low'),
         ('1', 'Normal'),
         ('2', 'High')
-        ], size=1, readonly=True, string="Priority")
+        ], readonly=True, string="Priority")
     state = fields.Selection([
             ('normal', 'In Progress'),
             ('blocked', 'Blocked'),
@@ -66,19 +66,19 @@ class ReportProjectTaskUser(models.Model):
         group_by_str = """
                 GROUP BY
                     t.id,
-                    create_date,
-                    write_date,
-                    date_assign,
-                    date_end,
-                    date_deadline,
-                    date_last_stage_update,
+                    t.create_date,
+                    t.write_date,
+                    t.date_assign,
+                    t.date_end,
+                    t.date_deadline,
+                    t.date_last_stage_update,
                     t.user_id,
                     t.project_id,
                     t.priority,
-                    name,
+                    t.name,
                     t.company_id,
                     t.partner_id,
-                    stage_id
+                    t.stage_id
         """
         return group_by_str
 

@@ -501,7 +501,7 @@ class TestVariantsImages(common.TestProductCommon):
             self.images.update({color: base64.b64encode(f.read())})
 
             self.env['product.product'].create({
-                'image_raw_original': self.images[color],
+                'image_variant_1920': self.images[color],
                 'attribute_value_ids': [(6, 0, [color_value.id])],
                 'product_tmpl_id': self.template.id,
             })
@@ -511,7 +511,7 @@ class TestVariantsImages(common.TestProductCommon):
         return res
 
     def test_variant_images(self):
-        """Check that on variant, the image used is the image_raw_original if set,
+        """Check that on variant, the image used is the image_variant_1920 if set,
         and defaults to the template image otherwise.
         """
         f = io.BytesIO()
@@ -519,26 +519,309 @@ class TestVariantsImages(common.TestProductCommon):
         f.seek(0)
         image_black = base64.b64encode(f.read())
 
-        images = self.variants.mapped('image_original')
+        images = self.variants.mapped('image_1920')
         self.assertEqual(len(set(images)), 4)
 
         variant_no_image = self.variants[0]
-        self.assertFalse(variant_no_image.image)
-        self.template.image = image_black
+        self.assertFalse(variant_no_image.image_1920)
+        self.template.image_1920 = image_black
 
         # the first has no image variant, all the others do
-        self.assertFalse(variant_no_image.image_raw_original)
+        self.assertFalse(variant_no_image.image_variant_1920)
         self.assertTrue(all(images[1:]))
 
         # template image is the same as this one, since it has no image variant
-        self.assertEqual(variant_no_image.image, self.template.image)
+        self.assertEqual(variant_no_image.image_1920, self.template.image_1920)
         # having changed the template image should not have changed these
-        self.assertEqual(images[1:], self.variants.mapped('image')[1:])
+        self.assertEqual(images[1:], self.variants.mapped('image_1920')[1:])
 
     def test_update_images_with_archived_variants(self):
         """Update images after variants have been archived"""
         self.variants[1:].write({'active': False})
-        self.variants[0].image = self.images['red']
-        self.assertEqual(self.template.image, self.images['red'])
-        self.assertEqual(self.variants[0].image_raw_original, False)
-        self.assertEqual(self.variants[0].image, self.images['red'])
+        self.variants[0].image_1920 = self.images['red']
+        self.assertEqual(self.template.image_1920, self.images['red'])
+        self.assertEqual(self.variants[0].image_variant_1920, False)
+        self.assertEqual(self.variants[0].image_1920, self.images['red'])
+
+
+class TestVariantsArchive(common.TestProductCommon):
+    """Once a variant is used on orders/invoices, etc, they can't be unlinked.
+       As a result, updating attributes on a product template would simply archive the variants instead.
+       We make sure that at each update, we have the correct number of active and inactive records.
+
+       In these tests, we use the commands sent by the JS framework to the ORM when using the interface
+       (even though using 3 commands would simplify the code compared to 2 commands).
+
+       Note that: we don't overly test the ids of archived / modified variants.
+       In some cases _create_product_variants reuse existing variants and in other create new ones,
+       in a way that is not very predictable (without reading the code).
+       We do not enshrine the current behaviour in the tests (yet) as it could change with only moderate functional impact.
+       Consequently, if it is intentional the number of archived variants could change,
+       in that case update the test; it is there to make sure that a fix is not going to break anything silently.
+       The most important is to keep correct numbers of active variants.
+    """
+    def setUp(self):
+        res = super(TestVariantsArchive, self).setUp()
+
+        attribute_values = {
+            'color': ['white', 'black'],
+            'size': ['s', 'm'],
+        }
+
+        self.attributes = {}
+        for attr, attr_values in attribute_values.items():
+            attribute = self.env['product.attribute'].create({'name': attr})
+            values = [self.env['product.attribute.value'].create({'name': name, 'attribute_id': attribute.id})
+                      for name in attr_values]
+            self.attributes.update({attr: {'a': attribute, 'v': values}})
+
+        attribute_line_ids = [(0, 0, {
+                'attribute_id': attr['a'].id,
+                'value_ids': [(6, 0, [v.id for v in attr['v']])],
+            }) for attr in self.attributes.values()]
+
+        self.template = self.env['product.template'].create({
+            'name': 'consume product',
+            'attribute_line_ids': attribute_line_ids,
+        })
+
+        return res
+
+    def test_update_variant_unlink(self):
+        """Variants are not used anywhere, so removing an attribute line would
+           unlink the variants and create new ones. Nothing too fancy here.
+        """
+        lines = self.template.attribute_line_ids
+        self.assertEqual(len(self.template.product_variant_ids), 4)
+        # we keep lines[0], remove and copy lines[1]
+        line_copy_command = {'attribute_id': lines[1].attribute_id.id, 'value_ids': [(6, False, lines[1].value_ids.mapped('id'))]}
+        self.template.write({'attribute_line_ids': [(4, lines[0].id), (2, lines[1].id)]})
+        self.assertEqual(len(self.template.product_variant_ids), len(lines[0].value_ids),
+            "Since we only kept line[0], we should have as many variants as it has values")
+        archived_products = self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', self.template.id)])
+        self.assertFalse(archived_products,
+            "Since they are used nowhere, there should not be any archived variant.")
+        # we re-add the line we just removed, so we should get new variants
+        self.template.write({
+            'attribute_line_ids': [
+                (4, lines[0].id),
+                (0, 'virtual', line_copy_command),
+        ]})
+        self.assertEqual(len(self.template.product_variant_ids), 4)
+
+    def test_update_variant_archive_1_value(self):
+        """We do the same operations on the template as in test_update_variant_unlink,
+           except we simulate that the variants can't be unlinked.
+           It follows that variants should be archived instead, so the results should all be different from previous test.
+           In this test we have a line that have only one possible value:
+           this is handled differently than the case where we have more than one,
+           since in principle it does not add new variants.
+        """
+        # we create a new template with a line with only one attribute.
+        # Since this does not create any additional variants, the behaviour is a little bit different:
+        # it tries to add the new attribute to existing variants if possible
+        attribute_line_ids = [(0, 0, {
+            'attribute_id': attr['a'].id,
+            'value_ids': [(6, 0, [v.id for v in (attr['v'] if attr['a'].display_name == 'color' else attr['v'][:1])])],
+        }) for attr in self.attributes.values()]
+
+        template = self.env['product.template'].create({
+            'name': 'consume product',
+            'attribute_line_ids': attribute_line_ids,
+        })
+
+        # create a patch to make as if one variant was undeletable
+        # (e.g. present in a field with ondelete=restrict)
+        Product = self.env['product.product']
+        no_remove = template.product_variant_ids[0].id
+        def unlink(self):
+            if self.id == no_remove:
+                raise Exception('just')
+            else:
+                return super(Product.__class__, self).unlink()
+        Product._patch_method('unlink', unlink)
+
+        variants_ids_history = []
+
+        self.assertEqual(len(template.product_variant_ids), 2)
+        variants_ids_history.append(template.product_variant_ids.ids)
+
+        lines = template.attribute_line_ids
+        # we keep lines[0], remove and copy lines[1], which is the one with only one possible value
+        line_copy_command = {'attribute_id': lines[1].attribute_id.id,
+                             'value_ids': [(6, False, lines[1].value_ids.mapped('id'))]}
+        template.write({'attribute_line_ids': [(4, lines[0].id), (2, lines[1].id)]})
+        self.assertEqual(len(lines[0].value_ids), 2)
+        self.assertEqual(len(template.product_variant_ids), len(lines[0].value_ids),
+                         "Since we only kept line[0], we should have as many variants as it has values")
+        variants_ids_history.append(template.product_variant_ids.ids)
+
+        archived_products_1 = self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', template.id)])
+        self.assertEqual(len(archived_products_1), 1,
+                         "One variant should have been unlinked, not the other.")
+        # we re-add the line we just removed, so we should get new variants
+        template.write({
+            'attribute_line_ids': [
+                (4, lines[0].id),
+                (0, 'virtual', line_copy_command),
+            ]})
+        self.assertEqual(len(template.product_variant_ids), 2)
+        variants_ids_history.append(template.product_variant_ids.ids)
+
+        archived_products_2 = self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', template.id)])
+        self.assertEqual(len(archived_products_2), 1,
+                         "We did not reactivate this variant.")
+
+        # tests on ids, see the doc_string
+        self.assertEqual(archived_products_1, archived_products_2)
+        self.assertEqual(len(set(variants_ids_history[0] + variants_ids_history[1])), 4,
+                         "After the first update, we have new active variants.")
+        self.assertEqual(len(set(variants_ids_history[1] + variants_ids_history[2])), 2,
+                         "After the second update, we kept the same active variants.")
+
+        Product._revert_method('unlink')
+
+    def test_update_variant_archive_2_value(self):
+        """We do the same operations on the template as in test_update_variant_unlink,
+           except we simulate that the variants can't be unlinked.
+           It follows that variants should be archived instead, so the results should all be different from previous test.
+        """
+        Product = self.env['product.product']
+        def unlink(slef):
+            raise Exception('just')
+        Product._patch_method('unlink', unlink)
+        variants_ids_history = []
+
+        self.assertEqual(len(self.template.product_variant_ids), 4)
+        variants_ids_history.append(self.template.product_variant_ids.ids)
+
+        lines = self.template.attribute_line_ids
+        # we keep lines[0], remove and copy lines[1]
+        line_copy_command = {'attribute_id': lines[1].attribute_id.id,
+                             'value_ids': [(6, False, lines[1].value_ids.mapped('id'))]}
+        line_second_copy_command = {'attribute_id': lines[1].attribute_id.id,
+                             'value_ids': [(6, False, lines[1].value_ids[:1].mapped('id'))]}
+        self.template.write({'attribute_line_ids': [(4, lines[0].id), (2, lines[1].id)]})
+        self.assertEqual(len(self.template.product_variant_ids), len(lines[0].value_ids),
+                         "Since we only kept line[0], we should have as many variants as it has values")
+        variants_ids_history.append(self.template.product_variant_ids.ids)
+
+        archived_products = []
+        archived_products.append(self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', self.template.id)]))
+        self.assertEqual(len(archived_products[0]), 4,
+                         "Since they can't be unlinked, all variants should be archived.")
+        # we re-add the line we just removed, so we should get new variants
+        self.template.write({
+            'attribute_line_ids': [
+                (4, lines[0].id),
+                (0, 'virtual', line_copy_command),
+            ]})
+        self.assertEqual(len(self.template.product_variant_ids), 4)
+        variants_ids_history.append(self.template.product_variant_ids.ids)
+
+        archived_products.append(self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', self.template.id)]))
+        self.assertEqual(len(archived_products[1]), 2,
+                         "Since they can't be unlinked, all previous variants should be archived.")
+
+        # we redo the whole remove/readd to check
+        lines = self.template.attribute_line_ids
+        self.template.write({'attribute_line_ids': [(4, lines[0].id), (2, lines[1].id)]})
+        self.assertEqual(len(self.template.product_variant_ids), 2)
+        variants_ids_history.append(self.template.product_variant_ids.ids)
+        archived_products.append(self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', self.template.id)]))
+        self.template.write({
+            'attribute_line_ids': [
+                (4, lines[0].id),
+                (0, 'virtual', line_copy_command),
+            ]})
+        self.assertEqual(len(self.template.product_variant_ids), 4)
+        variants_ids_history.append(self.template.product_variant_ids.ids)
+        archived_products.append(self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', self.template.id)]))
+        self.assertEqual(len(archived_products[3]), 2)
+
+        # now we test when we try to add the value back on existing products
+        lines = self.template.attribute_line_ids
+        self.template.write({'attribute_line_ids': [(4, lines[0].id), (2, lines[1].id)]})
+        self.assertEqual(len(self.template.product_variant_ids), 2)
+        variants_ids_history.append(self.template.product_variant_ids.ids)
+        archived_products.append(self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', self.template.id)]))
+        self.assertEqual(len(archived_products[4]), 4)
+        # this time we only add one of the two attributes we've been removing
+        self.template.write({
+            'attribute_line_ids': [
+                (4, lines[0].id),
+                (0, 'virtual', line_second_copy_command),
+            ]})
+        self.assertEqual(len(self.template.product_variant_ids), 2)
+        variants_ids_history.append(self.template.product_variant_ids.ids)
+        archived_products.append(self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', self.template.id)]))
+        self.assertEqual(len(archived_products[5]), 4)
+
+        Product._revert_method('unlink')
+
+    def test_update_variant_archive_3_value(self):
+        """In this one, we have unique values for one lines, and one line with two values.
+           We first remove the unique line to populate archived variants, then remove the two values line.
+           Finally, we re-add athe two lines, bringing us back to the first situation:
+           we should not have any more than two variants (rest should be archived)
+        """
+        attribute_line_ids = [(0, 0, {
+            'attribute_id': attr['a'].id,
+            'value_ids': [(6, 0, [v.id for v in (attr['v'] if attr['a'].display_name == 'color' else attr['v'][:1])])],
+        }) for attr in self.attributes.values()]
+
+        template = self.env['product.template'].create({
+            'name': 'consume product',
+            'attribute_line_ids': attribute_line_ids,
+        })
+
+        Product = self.env['product.product']
+        def unlink(slef):
+            raise Exception('just')
+        Product._patch_method('unlink', unlink)
+
+        variants_ids_history = []
+        self.assertEqual(len(template.product_variant_ids), 2)
+        variants_ids_history.append(template.product_variant_ids.ids)
+
+        lines = template.attribute_line_ids
+
+        template.write({'attribute_line_ids': [(4, lines[0].id), (2, lines[1].id)]})
+        self.assertEqual(len(template.product_variant_ids), len(lines[0].value_ids),
+                         "Since we only kept line[0], we should have as many variants as it has values")
+        variants_ids_history.append(template.product_variant_ids.ids)
+
+        archived_products = []
+        archived_products.append(self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', template.id)]))
+        self.assertEqual(len(archived_products[0]), 2,
+                         "Since they can't be unlinked, all variants should be archived.")
+
+        template.write({'attribute_line_ids': [(2, lines[0].id)]})
+        self.assertEqual(len(template.product_variant_ids), 1)
+        variants_ids_history.append(template.product_variant_ids.ids)
+
+        archived_products.append(self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', template.id)]))
+        self.assertEqual(len(archived_products[1]), 4,
+                         "Since they can't be unlinked, all previous variants should be archived.")
+
+        # we re-add everything:
+        template.write({'attribute_line_ids': attribute_line_ids})
+
+        archived_products.append(self.env['product.product'].search(
+            [('active', '=', False), ('product_tmpl_id', '=', template.id)]))
+        self.assertEqual(len(template.product_variant_ids), 2)
+        self.assertEqual(len(archived_products[2]), 3,
+                         "We should have re-activated one variant only.")
+
+        Product._revert_method('unlink')

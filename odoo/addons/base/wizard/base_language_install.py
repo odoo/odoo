@@ -25,6 +25,7 @@ class BaseLanguageInstall(models.TransientModel):
     lang = fields.Selection(_get_languages, string='Language', required=True,
                             default=_default_language)
     overwrite = fields.Boolean('Overwrite Existing Terms',
+                               default=True,
                                help="If you check this box, your customized translations will be overwritten and replaced by the official ones.")
     state = fields.Selection([('init', 'init'), ('done', 'done')],
                              string='Status', readonly=True, default='init')

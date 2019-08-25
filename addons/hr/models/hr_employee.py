@@ -8,7 +8,7 @@ import itertools
 from werkzeug import url_encode
 import pytz
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
 from odoo.addons.resource.models.resource_mixin import timezone_datetime
@@ -25,26 +25,27 @@ class HrEmployeePrivate(models.Model):
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name'
-    _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin']
+    _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin', 'image.mixin']
     _mail_post_access = 'read'
 
     @api.model
     def _default_image(self):
         image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
-        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=tools.IMAGE_BIG_SIZE)
+        return base64.b64encode(open(image_path, 'rb').read())
 
     # resource and user
     # required on the resource, make sure required="True" set in the view
-    name = fields.Char(related='resource_id.name', store=True, oldname='name_related', readonly=False, tracking=True)
+    name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True)
     user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False)
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     # private partner
     address_home_id = fields.Many2one(
         'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
-        groups="hr.group_hr_user", tracking=True)
+        groups="hr.group_hr_user", tracking=True,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     is_address_home_a_company = fields.Boolean(
-        'The employee adress has a company linked',
+        'The employee address has a company linked',
         compute='_compute_is_address_home_a_company',
     )
     private_email = fields.Char(related='address_home_id.email', string="Private Email", readonly=False, groups="hr.group_hr_user")
@@ -74,7 +75,7 @@ class HrEmployeePrivate(models.Model):
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account Number',
-        domain="[('partner_id', '=', address_home_id)]",
+        domain="[('partner_id', '=', address_home_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         groups="hr.group_hr_user",
         tracking=True,
         help='Employee bank salary account')
@@ -87,27 +88,21 @@ class HrEmployeePrivate(models.Model):
         ('master', 'Master'),
         ('other', 'Other'),
     ], 'Certificate Level', default='other', groups="hr.group_hr_user", tracking=True)
-    study_field = fields.Char("Field of Study", placeholder='Computer Science', groups="hr.group_hr_user", tracking=True)
+    study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char("Emergency Contact", groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user", tracking=True)
     km_home_work = fields.Integer(string="Km Home-Work", groups="hr.group_hr_user", tracking=True)
 
-    # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary(
-        "Photo", default=_default_image)
-    image_medium = fields.Binary(
-        "Medium-sized photo")
-    image_small = fields.Binary(
-        "Small-sized photo")
+    image_1920 = fields.Image(default=_default_image)
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
-    parent_id = fields.Many2one('hr.employee', 'Manager')
+    parent_id = fields.Many2one('hr.employee', 'Manager', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
-    coach_id = fields.Many2one('hr.employee', 'Coach')
+    coach_id = fields.Many2one('hr.employee', 'Coach', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
-        'emp_id', 'category_id', groups="hr.group_hr_user",
+        'emp_id', 'category_id', groups="hr.group_hr_manager",
         string='Tags')
     # misc
     notes = fields.Text('Notes', groups="hr.group_hr_user")
@@ -132,6 +127,15 @@ class HrEmployeePrivate(models.Model):
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self).name_get()
         return self.env['hr.employee.public'].browse(self.ids).name_get()
+
+    def _read(self, fields):
+        if self.check_access_rights('read', raise_exception=False):
+            return super(HrEmployeePrivate, self)._read(fields)
+
+        res = self.env['hr.employee.public'].browse(self.ids).read(fields)
+        for r in res:
+            record = self.browse(r['id'])
+            record._update_cache({k:v for k,v in r.items() if k in fields}, validate=False)
 
     def read(self, fields, load='_classic_read'):
         if self.check_access_rights('read', raise_exception=False):
@@ -232,7 +236,7 @@ class HrEmployeePrivate(models.Model):
 
     def _sync_user(self, user):
         vals = dict(
-            image=user.image,
+            image_1920=user.image_1920,
             work_email=user.email,
         )
         if user.tz:
@@ -245,7 +249,6 @@ class HrEmployeePrivate(models.Model):
             user = self.env['res.users'].browse(vals['user_id'])
             vals.update(self._sync_user(user))
             vals['name'] = vals.get('name', user.name)
-        tools.image_resize_images(vals)
         employee = super(HrEmployeePrivate, self).create(vals)
         url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
         employee._message_log(body=_('<b>Congratulations !</b> May I recommand you to setup an <a href="%s">onboarding plan ?</a>') % (url))
@@ -262,7 +265,6 @@ class HrEmployeePrivate(models.Model):
                 self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
         if vals.get('user_id'):
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
-        tools.image_resize_images(vals)
         res = super(HrEmployeePrivate, self).write(vals)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
@@ -301,7 +303,7 @@ class HrEmployeePrivate(models.Model):
 
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):
-        """Checks that choosen address (res.partner) is not linked to a company.
+        """Checks that chosen address (res.partner) is not linked to a company.
         """
         for employee in self:
             try:
@@ -389,8 +391,8 @@ class HrEmployeePrivate(models.Model):
     def message_post(self, *args, **kwargs):
         return super(HrEmployeePrivate, self._post_author()).message_post(*args, **kwargs)
 
-    def _sms_get_default_partners(self):
-        return self.mapped('user_partner_id')
+    def _sms_get_partner_fields(self):
+        return ['user_partner_id']
 
     def _sms_get_number_fields(self):
         return ['mobile_phone']

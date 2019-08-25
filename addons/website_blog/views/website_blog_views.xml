@@ -59,13 +59,10 @@
             <field name="arch" type="xml">
                 <form string="Blog Post">
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" name="website_publish_button"
-                                type="object" icon="fa-globe">
-                                <field name="is_published" widget="website_button"/>
-                            </button>
+                            <field name="is_published" widget="website_redirect_button"/>
                         </div>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group name="blog_details">
                             <field name="blog_id"/>
                             <field name="active" invisible="1"/>
@@ -143,7 +140,7 @@
                                         <i class="fa fa-clock-o" role="img" aria-label="Post date" title="Post date"/><span t-esc="record.post_date.value"/>
                                     </div>
                                     <div class="col-4 text-right">
-                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.author_id.raw_value)" t-att-title="record.author_id.value" t-att-alt="record.author_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.partner', 'image_64', record.author_id.raw_value)" t-att-title="record.author_id.value" t-att-alt="record.author_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                     </div>
                                 </div>
                             </div>
@@ -260,7 +257,7 @@
         <menuitem name="Blogs"
             id="menu_website_blog_root_global"
             sequence="100"
-            parent="website.menu_website_global_configuration" 
+            parent="website.menu_website_global_configuration"
             groups="website.group_website_designer"/>
 
         <menuitem id="menu_website_blog_tag_category_global" parent="menu_website_blog_root_global"

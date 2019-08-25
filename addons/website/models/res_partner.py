@@ -3,7 +3,7 @@
 
 import werkzeug
 
-from odoo import api, models
+from odoo import models, fields
 
 
 def urlplus(url, params):
@@ -13,6 +13,8 @@ def urlplus(url, params):
 class Partner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'website.published.multi.mixin']
+
+    visitor_ids = fields.Many2many('website.visitor', 'website_visitor_partner_rel', 'partner_id', 'visitor_id', string='Visitors')
 
     def google_map_img(self, zoom=8, width=298, height=298):
         google_maps_api_key = self.env['website'].get_current_website().google_maps_api_key
@@ -45,6 +47,3 @@ class Partner(models.Model):
         self2 = self.with_context(display_website=False)
         super(Partner, self2)._compute_display_name()
 
-        # onchange uses the cache to retrieve value, we need to copy computed_value into the initial env
-        for record, record2 in zip(self, self2):
-            record.display_name = record2.display_name

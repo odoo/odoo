@@ -41,13 +41,6 @@
             <field name="act_window_id" ref="relate_partner_opportunities"/>
         </record>
 
-        <record id="relate_partner_opportunities_form" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="crm_case_form_view_oppor"/>
-            <field name="act_window_id" ref="relate_partner_opportunities"/>
-        </record>
-
         <!-- Partner kanban view inherte -->
         <record id="crm_lead_partner_kanban_view" model="ir.ui.view">
             <field name="name">res.partner.kanban.inherit</field>
@@ -91,7 +84,6 @@
                 <data>
                     <div name="button_box" position="inside">
                         <button class="oe_stat_button o_res_partner_tip_opp" type="action"
-                            attrs="{'invisible': [('customer', '=', False)]}"
                             name="%(crm.crm_lead_opportunities)d"
                             icon="fa-star"
                             groups="sales_team.group_sale_salesman"

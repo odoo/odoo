@@ -44,7 +44,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         # Check publish message has been sent to blog followers
         publish_message = next((m for m in test_blog_post.blog_id.message_ids if m.subtype_id.id == self.ref('website_blog.mt_blog_blog_published')), None)
         self.assertEqual(
-            publish_message.needaction_partner_ids,
+            publish_message.notified_partner_ids,
             self.user_employee.partner_id | self.user_public.partner_id,
             'website_blog: peuple following a blog should be notified of a published post')
 

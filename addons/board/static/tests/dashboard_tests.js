@@ -25,7 +25,7 @@ QUnit.module('Dashboard', {
                     display_name: {string: "Displayed name", type: "char", searchable: true},
                     foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true},
                     bar: {string: "Bar", type: "boolean"},
-                    int_field: {string: "Integer field", type: "integer"},
+                    int_field: {string: "Integer field", type: "integer", group_operator: 'sum'},
                 },
                 records: [{
                     id: 1,

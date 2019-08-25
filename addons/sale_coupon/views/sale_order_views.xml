@@ -4,12 +4,16 @@
          <field name="name">sale.order.form.inherit.coupon</field>
          <field name="model">sale.order</field>
          <field name="inherit_id" ref="sale.view_order_form" />
+         <field name="priority">10</field>
          <field name="arch" type="xml">
-            <xpath expr="//header/button[@name='action_cancel']" position="before">
-                <button name="%(sale_coupon.sale_coupon_apply_code_action)d" string="Apply Coupon" type="action" groups="base.group_user" states="draft"/>
-            </xpath>
-            <xpath expr="//header/button[@name='action_cancel']" position="before">
-                <button name="recompute_coupon_lines" string="Update Promotions" type="object" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+            <xpath expr="//group[@name='note_group']" position="before">
+                <div class="oe_right">
+                    <button name="%(sale_coupon.sale_coupon_apply_code_action)d" class="btn btn-secondary"
+                            string="Coupon" type="action" groups="base.group_user" states="draft"/>
+                    <button name="recompute_coupon_lines" class="btn btn-secondary" string="Promotions"
+                            help="When clicked, the content of the order will be checked to detect (and apply) possible promotion programs."
+                            type="object" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+                </div>
             </xpath>
          </field>
     </record>

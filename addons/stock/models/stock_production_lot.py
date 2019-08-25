@@ -53,7 +53,7 @@ class ProductionLot(models.Model):
 
     def write(self, vals):
         if 'product_id' in vals and any([vals['product_id'] != lot.product_id.id for lot in self]):
-            move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids)])
+            move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('product_id', '!=', vals['product_id'])])
             if move_lines:
                 raise UserError(_(
                     'You are not allowed to change the product linked to a serial or lot number ' +
@@ -69,7 +69,7 @@ class ProductionLot(models.Model):
             lot.product_qty = sum(quants.mapped('quantity'))
 
     def action_lot_open_quants(self):
-        self = self.with_context(search_default_lot_id=self.id)
+        self = self.with_context(search_default_lot_id=self.id, create=False)
         if self.user_has_groups('stock.group_stock_manager'):
             self = self.with_context(inventory_mode=True)
         return self.env['stock.quant']._get_quants_action()

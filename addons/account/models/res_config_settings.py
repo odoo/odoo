@@ -48,8 +48,6 @@ class ResConfigSettings(models.TransientModel):
         ('tax_included', 'Tax-Included')], string="Line Subtotals Tax Display",
         required=True, default='tax_excluded',
         config_parameter='account.show_line_subtotals_tax_selection')
-    module_account_asset = fields.Boolean(string='Assets Management')
-    module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition")
     module_account_budget = fields.Boolean(string='Budget Management')
     module_account_payment = fields.Boolean(string='Invoice Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
@@ -88,7 +86,6 @@ class ResConfigSettings(models.TransientModel):
     invoice_terms = fields.Text(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
     use_invoice_terms = fields.Boolean(
         string='Default Terms & Conditions',
-        oldname='default_use_sale_note',
         config_parameter='account.use_invoice_terms')
 
     def set_values(self):
@@ -97,7 +94,7 @@ class ResConfigSettings(models.TransientModel):
             self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
         """ install a chart of accounts for the given company (if required) """
         if self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
-            self.chart_template_id.load_for_current_company(15.0, 15.0)
+            self.chart_template_id._load(15.0, 15.0, self.env.company)
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):

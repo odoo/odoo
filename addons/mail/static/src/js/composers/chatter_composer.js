@@ -224,6 +224,9 @@ var ChatterComposer = BasicComposer.extend({
                         message.context = _.defaults({}, message.context, {
                             mail_post_autofollow: true,
                         });
+                        if (partnerIDs.length) {
+                            self.trigger_up('reset_suggested_partners');
+                        }
                         resolve(message);
                     });
                 } else {

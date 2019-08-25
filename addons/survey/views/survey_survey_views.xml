@@ -19,21 +19,20 @@
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_survey_user_input_invite"
+                        <button name="action_survey_user_input"
                             type="object"
                             class="oe_stat_button"
                             attrs="{'invisible': [('access_mode', '=', 'public')]}"
                             icon="fa-envelope-o">
-                            <field string="Invitations" name="invite_count" widget="statinfo"/>
+                            <field string="Registered" name="answer_count" widget="statinfo"/>
                         </button>
                         <button name="action_survey_user_input_certified"
                             type="object"
                             class="oe_stat_button"
                             attrs="{'invisible': [('certificate', '=', False)]}"
                             icon="fa-trophy">
-                            <field string="Certified" name="certified_count" widget="statinfo"/>
+                            <field string="Certified" name="success_count" widget="statinfo"/>
                         </button>
                         <button name="action_survey_user_input_completed"
                             type="object"
@@ -42,6 +41,7 @@
                             <field string="Answers" name="answer_done_count" widget="statinfo"/>
                         </button>
                     </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title" style="width: 100%;">
                         <label for="title" class="oe_edit_only"/>
                         <h1><field name="title" placeholder="Survey Title"/></h1>
@@ -54,18 +54,18 @@
                     </group>
                     <notebook>
                         <page string="Questions">
-                            <field name="question_and_page_ids" mode="tree" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}" class="o_survey_questions_and_pages">
-                                <tree decoration-bf="is_page==True">
-                                    <control>
-                                        <create string="Add a section" context="{'default_is_page': True, 'default_questions_selection': questions_selection}"/>
-                                        <create string="Add a question" context="{'default_is_page': False}"/>
-                                    </control>
+                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}">
+                                <tree decoration-bf="is_page" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title"/>
                                     <field name="question_type" attrs="{'invisible': [('is_page', '=', True)]}"/>
                                     <field name="is_page" invisible="1"/>
                                     <field name="questions_selection" invisible="1"/>
                                     <field name="random_questions_count" attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}" />
+                                    <control>
+                                        <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
+                                        <create name="add_question_control" string="Add a question"/>
+                                    </control>
                                 </tree>
                             </field>
                         </page>
@@ -132,9 +132,11 @@
                 <field name="certificate" invisible="1"/>
                 <field name="title"/>
                 <field name="state"/>
-                <field name="invite_count"/>
                 <field name="answer_count"/>
                 <field name="answer_done_count"/>
+                <field name="success_count"/>
+                <field name="success_ratio"/>
+                <field name="answer_score_avg"/>
                 <button name="certificate" icon="fa-trophy" title="Certificate" aria-label="Certificate" attrs="{'invisible': [('certificate', '=', False)]}"/>
                 <!-- Tweak as icons aren't directly supported in xml -->
             </tree>
@@ -144,24 +146,30 @@
         <field name="name">Kanban view for survey</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="state">
+            <kanban>
                 <field name="state" />
                 <field name="title" />
                 <field name="answer_done_count" />
                 <field name="certificate" />
+                <field name="scoring_type" />
                 <field name="color" />
                 <field name="access_mode"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
+                <field name="success_count"/>
+                <field name="success_ratio"/>
                 <templates>
-                    <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click o_kanban_card_survey">
+                    <div t-name="kanban-box" 
+                        t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click o_kanban_card_survey 
+                            #{record.certificate.raw_value ? 'o_kanban_card_survey_successed' : ''}">
                         <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
 
-                            <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                            <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                 <span class="fa fa-ellipsis-v"/>
                             </a>
                             <div class="dropdown-menu" role="menu">
                                 <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
+                                <a t-if="record.state.raw_value != 'closed'" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
                                 <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                 <div role="separator" class="dropdown-divider"/>
                                 <div role="separator" class="dropdown-item-text">Color</div>
@@ -169,29 +177,41 @@
                             </div>
                         </div>
                         <div class="o_kanban_record_top">
-                            <div class="col-10 p-0">
-                                <h4 class="o_kanban_record_title mb4"><field name="title" /></h4>
+                                <h4 class="o_kanban_record_title p-0 mb4"><field name="title" /></h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-10 p-0 pb-1">
+                                <div class="container o_kanban_card_content" t-if="record.answer_done_count.raw_value != 0 or record.state.raw_value != 'draft'">
+                                    <div class="row mt-4 ml-5">
+                                        <div class="col-4 p-0">
+                                            <a name="action_result_survey" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"><field name="answer_done_count"/></span>
+                                                <span class="text-muted">Answers</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-4 p-0 border-left" t-if="record.scoring_type.raw_value != 'no_scoring'" >
+                                            <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"><field name="success_count"/></span>
+                                                <span class="text-muted" t-if="!record.certificate.raw_value">Passed</span>
+                                                <span class="text-muted" t-else="">Certified</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-4 p-0 border-left" t-if="record.scoring_type.raw_value != 'no_scoring'" >
+                                            <a name="action_survey_user_input_completed" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
+                                                <span class="text-muted" >Success</span>
+                                            </a> 
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-2"><i t-if="record.certificate.raw_value === true" title="Certification" class="certification_icon fa fa-trophy"></i></div>
-                        </div>
-                        <div class="o_kanban_record_bottom">
-                            <ul class="list-unstyled">
-                                <li>
-                                    <a type="object" name="action_test_survey">Test</a>
-                                </li>
-                                <li>
-                                    <a type="object" name="action_send_survey">Share &amp;amp; Invite</a>
-                                </li>
-                                <li>
-                                    <t t-if="record.answer_done_count.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.answer_done_count.raw_value &gt; 0">(<field name="answer_done_count" />)</span></t>
-                                    <t t-if="record.answer_done_count.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyze Answers</a></t>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="o_kanban_record_bottom">
-                            <div class="oe_kanban_bottom_left"/>
-                            <div class="oe_kanban_bottom_right">
-                                <field name="activity_ids" widget="kanban_activity" />
+                            <div class="col-2 align-self-end">
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left"/>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -204,23 +224,25 @@
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
             <search string="Survey">
-                <field string="Title" name="title"/>
-                <filter string="Is a certification?" name="certificate" domain="[('certificate','=',True)]"/>
-                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <field string="Survey" name="title"/>
+                <filter string="Certification" name="certificate" domain="[('certificate', '=', True)]"/>
                 <separator/>
-                <filter string="My Activities" name="activities_my"
-                    domain="[('activity_ids.user_id', '=', uid)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
+                <separator/>
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Upcoming Activities" name="activities_upcoming_all"
-                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                    ]"/>
+                <filter invisible="1" string="Upcoming Activities" name="activities_upcoming_all"
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                    domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Category" name="groupby_category" context="{'group_by': 'category'}"/>
+                    <filter string="State" name="groupby_state" context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>
@@ -230,6 +252,7 @@
         <field name="name">Surveys</field>
         <field name="res_model">survey.survey</field>
         <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_groupby_state': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a new survey

@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 TAX_SYSTEM = [
@@ -53,7 +53,7 @@ class ResCompany(models.Model):
     l10n_it_eco_index_number = fields.Char(string="Number in register of companies", size=20,
         help="This field must contain the number under which the\
         seller/provider is listed on the register of companies.")
-    l10n_it_eco_index_share_capital = fields.Float(default="0.0", size=15, string="Share capital actually paid up",
+    l10n_it_eco_index_share_capital = fields.Float(default=0.0, string="Share capital actually paid up",
         help="Mandatory if the seller/provider is a company with share\
         capital (SpA, SApA, Srl), this field must contain the amount\
         of share capital actually paid up as resulting from the last\
@@ -94,7 +94,7 @@ class ResCompany(models.Model):
                or not record.l10n_it_eco_index_share_capital\
                or not record.l10n_it_eco_index_sole_shareholder\
                or not record.l10n_it_eco_index_liquidation_state:
-                raise ValidationError("All fields about the Economic and Administrative Index must be completed.")
+                raise ValidationError(_("All fields about the Economic and Administrative Index must be completed."))
 
     @api.constrains('l10n_it_has_tax_representative',
                     'l10n_it_tax_representative_partner_id')
@@ -103,8 +103,8 @@ class ResCompany(models.Model):
             if not record.l10n_it_has_tax_representative:
                 continue
             if not record.l10n_it_tax_representative_partner_id:
-                raise ValidationError("You must select a tax representative.")
+                raise ValidationError(_("You must select a tax representative."))
             if not record.l10n_it_tax_representative_partner_id.vat:
-                raise ValidationError("Your tax representative partner must have a tax number.")
+                raise ValidationError(_("Your tax representative partner must have a tax number."))
             if not record.l10n_it_tax_representative_partner_id.country_id:
-                raise ValidationError("Your tax representative partner must have a country.")
+                raise ValidationError(_("Your tax representative partner must have a country."))

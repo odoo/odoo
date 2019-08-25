@@ -29,7 +29,7 @@
             </t>
             <t t-if="widget.options['display_composer']">
                 <div class="media">
-                    <img alt="Avatar" class="o_portal_chatter_avatar" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/image_small/50x50"/>
+                    <img alt="Avatar" class="o_portal_chatter_avatar" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/image_64/50x50"/>
                     <div class="media-body">
                         <form class="o_portal_chatter_composer_form" t-attf-action="/mail/chatter_post" method="POST">
                             <input type="hidden" name="csrf_token" t-att-value="widget.options['csrf_token']"/>
@@ -73,7 +73,7 @@
                     <button t-if="showDelete" class="o_portal_chatter_attachment_delete btn btn-sm btn-outline-danger" title="Delete">
                         <i class="fa fa-times"/>
                     </button>
-                    <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
+                    <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank">
                         <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"/>
                         <div class='o_portal_chatter_attachment_name'><t t-esc='attachment.name'/></div>
                     </a>

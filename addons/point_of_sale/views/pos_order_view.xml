@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Point of Sale Orders" create="0">
                 <header>
-                    <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
+                    <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" />
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
                             attrs="{'invisible': ['|', ('invoice_group', '=', False), ('state','!=','paid')]}"/>
                     <button name="refund" string="Return Products" type="object"
@@ -28,7 +28,7 @@
                     <field name="date_order"/>
                     <field name="session_id" />
                     <field string="User" name="user_id"/>
-                    <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
+                    <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" attrs="{'readonly': [('state','=','invoiced')]}"/>
                     <field name="fiscal_position_id" options="{'no_create': True}"/>
                     <field name="invoice_group" invisible="1"/>
                 </group>
@@ -56,6 +56,7 @@
                                     <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
                                     <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                     <field name="tax_ids" widget="many2many_tags" invisible="1"/>
+                                    <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                     <field name="notice"/>
                                 </group>
                             </form>
@@ -78,27 +79,32 @@
                         <div class="oe_clear"/>
                     </page>
                     <page string="Payments">
-                        <field name="statement_ids" colspan="4" nolabel="1">
-                            <tree editable="bottom" string="Statement lines">
-                                <field name="journal_id"/>
-                                <field name="statement_id"/>
+                        <field name="payment_ids" colspan="4" nolabel="1">
+                            <tree string="Payments">
+                                <field name="currency_id" invisible="1" />
+                                <field name="payment_date"/>
+                                <field name="payment_method_id"/>
                                 <field name="amount"/>
                             </tree>
                         </field>
                     </page>
                     <page name="extra" string="Extra Info">
-                        <group string="General Information">
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="location_id" widget="selection" groups="stock.group_stock_multi_locations"/>
-                            <field name="pricelist_id" groups="product.group_sale_pricelist"/>
-                            <field name="picking_id" readonly="1"/>
-                            <field name="pos_reference"/>
-                        </group>
-                        <group string="Accounting Information" groups="account.group_account_manager">
-                            <group>
-                                <field name="sale_journal" domain="[('type','=','sale')]"/>
-                                <field name="account_move" readonly="1"
-                                        attrs="{'invisible':[('state','!=','done')]}"/>
+                        <group >
+                            <group string="Inventory">
+                                <field name="location_id" widget="selection" groups="stock.group_stock_multi_locations"/>
+                                <field name="picking_id" readonly="1"/>
+                            </group>
+                            <group
+                                string="Accounting"
+                                groups="account.group_account_manager"
+                                attrs="{'invisible':['|', ('session_move_id','=', False), ('state', '=', 'invoiced')]}"
+                            >
+                                <field name="session_move_id" readonly="1" />
+                            </group>
+                            <group string="Other Information">
+                                <field name="pos_reference"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="pricelist_id" groups="product.group_product_pricelist"/>
                             </group>
                         </group>
                     </page>
@@ -174,6 +180,7 @@
             </p>
         </field>
     </record>
+
     <record id="action_pos_sale_graph" model="ir.actions.act_window">
         <field name="name">Orders</field>
         <field name="type">ir.actions.act_window</field>
@@ -181,22 +188,32 @@
         <field name="view_mode">graph,tree,kanban,form</field>
         <field name="domain">[('state', 'not in', ['draft', 'cancel', 'invoiced'])]</field>
     </record>
+
     <record id="view_pos_order_tree" model="ir.ui.view">
         <field name="name">pos.order.tree</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
             <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')" create="0">
                 <field name="currency_id" invisible="1"/>
+                <field name="state" invisible="1"/>
                 <field name="name"/>
+                <field name="session_id" />
+                <field name="date_order"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
-                <field name="date_order"/>
-                <field name="user_id"/>
+                <field string="Cashier" name="user_id"/>
                 <field name="amount_total" sum="Amount total" widget="monetary"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="state"/>
-                <field name="session_id" />
             </tree>
+        </field>
+    </record>
+    <record id="view_pos_order_tree_no_session_id" model="ir.ui.view">
+        <field name="name">pos.order.tree_no_session_id</field>
+        <field name="model">pos.order</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='session_id']" position="replace"></xpath>
         </field>
     </record>
 
@@ -296,21 +313,21 @@
         <field name="arch" type="xml">
             <search string="Search Sales Order">
                 <field name="name"/>
+                <field name="pos_reference"/>
                 <field name="date_order"/>
-                <filter string="New" name="new" domain="[('state','=','draft')]"/>
-                <filter string="Done" name="done" domain="[('state','in',('paid','invoiced','done'))]"/>
-                <filter string="Invoiced" name="invoiced" domain="[('state','=','invoiced')]"/>
-                <filter string="Posted" name="posted" domain="[('state','=','done')]"/>
                 <field name="user_id"/>
                 <field name="partner_id"/>
                 <field name="session_id"/>
-                <field name="config_id"/>
+                <filter string="Invoiced" name="invoiced" domain="[('state', '=', 'invoiced')]"/>
+                <filter string="Posted" name="posted" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="Order Date" name="order_date" date="date_order"/>
                 <group expand="0" string="Group By">
-                    <filter string="Customer" name="customer" domain="[]" context="{'group_by':'partner_id'}"/>
-                    <filter string="User" name="user_id" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Session" name="session" domain="[]" context="{'group_by':'session_id'}"/>
-                    <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Order Date" name="order_month" domain="[]" context="{'group_by':'date_order'}"/>
+                    <filter string="Session" name="session" domain="[]" context="{'group_by': 'session_id'}"/>
+                    <filter string="User" name="user_id" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Customer" name="customer" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Order Date" name="order_month" domain="[]" context="{'group_by': 'date_order'}"/>
                 </group>
             </search>
         </field>

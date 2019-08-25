@@ -75,10 +75,6 @@
                                                     <field name="translate"
                                                         attrs="{'readonly': [('ttype','not in',['char','text','html'])],
                                                                 'invisible': [('ttype','not in',['char','text','html'])]}"/>
-                                                    <field name="selection" placeholder="[('blue', 'Blue'),('yellow', 'Yellow')]"
-                                                        attrs="{'required': [('ttype','in',['selection','reference'])],
-                                                                'readonly': [('ttype','not in',['selection','reference'])],
-                                                                'invisible': [('ttype','not in',['selection','reference'])]}"/>
                                                     <field name="size" groups="base.group_no_one"
                                                         attrs="{'readonly': [('ttype','not in',['char','reference'])],
                                                                 'invisible': [('ttype','not in',['char','reference'])]}"/>
@@ -106,6 +102,16 @@
                                                         attrs="{'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                                 'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
                                                 </group>
+                                            </group>
+                                            <group attrs="{'readonly': [('ttype','not in',['selection','reference'])],
+                                                           'invisible': [('ttype','not in',['selection','reference'])]}">
+                                                <field name="selection_ids">
+                                                    <tree editable="bottom">
+                                                        <field name="sequence" widget="handle"/>
+                                                        <field name="value"/>
+                                                        <field name="name"/>
+                                                    </tree>
+                                                </field>
                                             </group>
                                             <group string="Advanced Properties" groups="base.group_no_one">
                                                 <field name="related"/>
@@ -260,10 +266,6 @@
                                         <field name="translate"
                                             attrs="{'readonly': [('ttype','not in',['char','text','html'])],
                                                     'invisible': [('ttype','not in',['char','text','html'])]}"/>
-                                        <field name="selection" placeholder="[('blue', 'Blue'),('yellow', 'Yellow')]"
-                                            attrs="{'required': [('ttype','in',['selection','reference'])],
-                                                    'readonly': [('ttype','not in',['selection','reference'])],
-                                                    'invisible': [('ttype','not in',['selection','reference'])]}"/>
                                         <field name="size" groups="base.group_no_one"
                                             attrs="{'readonly': [('ttype','not in',['char','reference'])],
                                                     'invisible': [('ttype','not in',['char','reference'])]}"/>
@@ -291,6 +293,16 @@
                                             attrs="{'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                     'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
                                     </group>
+                                </group>
+                                <group attrs="{'readonly': [('ttype','not in',['selection','reference'])],
+                                               'invisible': [('ttype','not in',['selection','reference'])]}">
+                                    <field name="selection_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="value"/>
+                                            <field name="name"/>
+                                        </tree>
+                                    </field>
                                 </group>
                                 <group string="Advanced Properties" groups="base.group_no_one">
                                     <field name="related"/>
@@ -386,6 +398,54 @@
             <field name="view_id" ref="view_model_fields_tree"/>
         </record>
         <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>
+
+        <!-- ir model fields selection -->
+        <record id="view_model_fields_selection_form" model="ir.ui.view">
+            <field name="model">ir.model.fields.selection</field>
+            <field name="arch" type="xml">
+                <form string="Fields" duplicate="false">
+                    <sheet>
+                        <group>
+                            <field name="field_id"/>
+                            <field name="value" groups="base.group_no_one"/>
+                            <field name="name"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_model_fields_selection_tree" model="ir.ui.view">
+            <field name="model">ir.model.fields.selection</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sequence" widget="handle"/>
+                    <field name="field_id"/>
+                    <field name="value"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_model_fields_selection_search" model="ir.ui.view">
+            <field name="model">ir.model.fields.selection</field>
+            <field name="arch" type="xml">
+                <search string="Fields">
+                    <field name="field_id" string="Field"/>
+                    <field name="name"
+                           filter_domain="['|', ('name','ilike',self), ('value','ilike',self)]"
+                           string="Selection" />
+                    <filter name="group_by_field"
+                            context="{'group_by':'field_id'}"
+                            string="Field"/>
+                </search>
+            </field>
+        </record>
+        <record id="action_model_fields_selection" model="ir.actions.act_window">
+            <field name="name">Fields Selection</field>
+            <field name="res_model">ir.model.fields.selection</field>
+            <field name="view_id" ref="view_model_fields_selection_tree"/>
+        </record>
+        <menuitem action="action_model_fields_selection" id="ir_model_model_fields_selection" parent="base.next_id_9"/>
 
         <!-- ir model data -->
         <record model="ir.ui.view" id="view_model_data_form">
@@ -590,16 +650,18 @@
             <field name="arch" type="xml">
                 <search string="Access Rights">
                     <field name="name" string="Access Rights"/>
-                    <filter string="Global" name="global" domain="[('group_id','=',False)]"/>
+                    <filter string="Global" name="global" domain="[('group_id', '=', False)]"/>
                     <separator/>
-                    <filter string="Full Access" name="full_access" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
-                    <filter string="Read Access" name="read_access" domain="[('perm_read','=',True)]"/>
-                    <filter string="Write Access" name="write_access" domain="[('perm_write','=',True)]"/>
+                    <filter string="Full Access" name="full_access" domain="[('perm_read', '=', True), ('perm_write', '=', True), ('perm_create', '=', True), ('perm_unlink', '=', True)]"/>
+                    <filter string="Read Access" name="read_access" domain="[('perm_read', '=', True)]"/>
+                    <filter string="Write Access" name="write_access" domain="[('perm_write', '=', True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <field name="model_id"/>
                     <field name="group_id"/>
                     <group expand="0" string="Group By" colspan="11" col="11" groups="base.group_no_one">
-                        <filter string="Group" name="group" domain="[]" context="{'group_by':'group_id'}"/>
-                        <filter string="Object" name="group_by_object" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="Group" name="group" domain="[]" context="{'group_by': 'group_id'}"/>
+                        <filter string="Object" name="group_by_object" domain="[]" context="{'group_by': 'model_id'}"/>
                     </group>
                 </search>
             </field>

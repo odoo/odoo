@@ -97,7 +97,6 @@ var DocumentThread = Thread.extend({
     fetchMessages: function (options) {
         var self = this;
         return this._fetchMessages(options).then(function () {
-            self.call('mail_service', 'markMessagesAsRead', self._messageIDs);
             return self._messages;
         });
     },
@@ -329,7 +328,9 @@ var DocumentThread = Thread.extend({
                             .then(function (messages) {
                                 messages[0].model = resModel;
                                 messages[0].res_id = resID;
-                                self.call('mail_service', 'addMessage', messages[0]);
+                                self.call('mail_service', 'addMessage', messages[0], {
+                                    postedFromDocumentThread: true,
+                                });
                                 return messages[0];
                             });
                     });

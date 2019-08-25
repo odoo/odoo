@@ -13,18 +13,22 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Select this menu item to create a new blog post."),
         position: "bottom",
     }, {
-        trigger: "h1[data-oe-expression=\"blog_post.name\"]",
-        extra_trigger: ".o_snippets_loaded",
+        trigger: "button.btn-continue",
+        extra_trigger: "form[id=\"editor_new_blog\"]",
+        content: _t("Select the blog you want to add the post to."),
+    }, {
+        trigger: "div[data-oe-expression=\"blog_post.name\"]",
+        extra_trigger: "#oe_snippets.o_loaded",
         content: _t("Write a title, the subtitle is optional."),
         position: "top",
         run: "text",
     }, {
         trigger: "#oe_manipulators .oe_overlay.oe_active a.btn.btn-primary",
-        extra_trigger: "#wrap h1[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
+        extra_trigger: "#wrap div[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: _t("Set a blog post <b>cover</b>."),
         position: "bottom",
     }, {
-        trigger: "a:containsExact(" + _t("Change Cover")+ "):visible",
+        trigger: "a:containsExact(" + _t("Change Cover") + "):visible",
         content: _t("Click here to change your post cover."),
         position: "right",
     }, {
@@ -38,7 +42,7 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Click on <b>Save</b> to set the picture as cover."),
         position: "top",
     }, {
-        trigger: ".blog_content .s_text_block",
+        trigger: "#o_wblog_post_content",
         content: _t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs."),
         position: "top",
         run: function (actions) {
@@ -47,7 +51,7 @@ odoo.define("website_blog.tour", function (require) {
         },
     }, {
         trigger: "button[data-action=save]",
-        extra_trigger: "#blog_content section:first p:first:not(:containsExact(" + _t("Start writing here...") + "))",
+        extra_trigger: "#o_wblog_post_content .o_wblog_post_content_field p:first:not(:containsExact(" + _t("Start writing here...") + "))",
         content: _t("<b>Click on Save</b> to record your changes."),
         position: "bottom",
     }, {

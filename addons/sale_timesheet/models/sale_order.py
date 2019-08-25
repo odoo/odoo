@@ -19,10 +19,11 @@ class SaleOrder(models.Model):
 
     visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True)
     project_id = fields.Many2one(
-        'project.project', 'Project', domain=[('billable_type', 'in', ('no', 'task_rate')), ('analytic_account_id', '!=', False)],
+        'project.project', 'Project', domain="[('billable_type', 'in', ('no', 'task_rate')), ('analytic_account_id', '!=', False), ('company_id', '=', company_id)]",
         readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help='Select a non billable project on which tasks can be created.')
     project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
 
     @api.depends('analytic_account_id.line_ids')
     def _compute_timesheet_ids(self):
@@ -84,7 +85,8 @@ class SaleOrder(models.Model):
 
         task_projects = self.tasks_ids.mapped('project_id')
         if len(task_projects) == 1 and len(self.tasks_ids) > 1:  # redirect to task of the project (with kanban stage, ...)
-            action = self.env.ref('project.act_project_project_2_project_task_all').read()[0]
+            action = self.with_context(active_id=task_projects.id).env.ref(
+                'project.act_project_project_2_project_task_all').read()[0]
             if action.get('context'):
                 eval_context = self.env['ir.actions.actions']._get_eval_context()
                 eval_context.update({'active_id': task_projects.id})
@@ -269,7 +271,7 @@ class SaleOrderLine(models.Model):
             'description': description,
             'project_id': project.id,
             'sale_line_id': self.id,
-            'company_id': self.company_id.id,
+            'company_id': project.company_id.id,
             'user_id': False,  # force non assigned task, as created as sudo()
         }
 

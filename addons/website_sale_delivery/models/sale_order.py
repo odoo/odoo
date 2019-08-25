@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     amount_delivery = fields.Monetary(
-        compute='_compute_amount_delivery', digits=0,
+        compute='_compute_amount_delivery',
         string='Delivery Amount',
         help="The amount without tax.", store=True, tracking=True)
 

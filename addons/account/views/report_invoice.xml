@@ -6,7 +6,9 @@
                 <t t-set="o" t-value="o.with_context(lang=lang)" />
                 <t t-set="address">
                     <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-                    <div t-if="o.partner_id.vat" class="mt16"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.partner_id.vat"/></div>
+                    <div t-if="o.partner_id.vat" class="mt16">
+                        <t t-if="o.company_id.country_id.vat_label" t-esc="o.company_id.country_id.vat_label" id="inv_tax_id_label"/>
+                        <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/></div>
                 </t>
                 <div class="page">
                     <h2>
@@ -39,6 +41,10 @@
                         <div class="col-auto mw-100 mb-2" t-if="o.partner_id.ref" name="customer_code">
                             <strong>Customer Code:</strong>
                             <p class="m-0" t-field="o.partner_id.ref"/>
+                        </div>
+                        <div class="col-auto mw-100 mb-2" t-if="o.ref" name="reference">
+                            <strong>Reference:</strong>
+                            <p class="m-0" t-field="o.ref"/>
                         </div>
                     </div>
 
@@ -87,7 +93,7 @@
                                             <span t-field="line.discount"/>
                                         </td>
                                         <td t-attf-class="text-left {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                            <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))"/>
+                                            <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))" id="line_tax_ids"/>
                                         </td>
                                         <td class="text-right o_price_total">
                                             <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
@@ -164,7 +170,7 @@
                             </div>
                         </div>
                     </div>
-                    <p>
+                    <p t-if="o.type in ('out_invoice', 'in_refund')">
                         Please use the following communication for your payment : <b><span t-field="o.invoice_payment_ref"/></b>
                     </p>
                     <p t-if="o.narration" name="comment">

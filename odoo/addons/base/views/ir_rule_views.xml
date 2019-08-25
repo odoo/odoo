@@ -47,6 +47,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_rule_tree" model="ir.ui.view">
             <field name="model">ir.rule</field>
             <field name="arch" type="xml">
@@ -62,22 +63,23 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_rule_search" model="ir.ui.view">
             <field name="model">ir.rule</field>
             <field name="arch" type="xml">
                 <search string="Record Rules">
                     <field name="name" string="Record Rule"/>
-                    <filter string="Global" name="global" domain="[('global','=',True)]"/>
-                    <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <separator/>
-                    <filter string="Full Access Right" name="full_access_right" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
-                    <filter string="Read Access Right" name="read_access_right" domain="[('perm_read','=',True)]"/>
-                    <filter string="Write Access Right" name="write_access_right" domain="[('perm_write','=',True)]"/>
-                    <filter string="Create Access Right" name="create_access_right" domain="[('perm_create','=',True)]"/>
-                    <filter string="Delete Access Right" name="delete_access_right" domain="[('perm_unlink','=',True)]"/>
                     <field name="model_id"/>
                     <field name="groups"/>
+                    <filter string="Global" name="global" domain="[('global', '=', True)]"/>
+                    <separator/>
+                    <filter string="Full Access Right" name="full_access_right" domain="[('perm_read', '=', True), ('perm_write', '=', True), ('perm_create', '=', True), ('perm_unlink', '=', True)]"/>
+                    <filter string="Read Access Right" name="read_access_right" domain="[('perm_read', '=', True)]"/>
+                    <filter string="Write Access Right" name="write_access_right" domain="[('perm_write', '=', True)]"/>
+                    <filter string="Create Access Right" name="create_access_right" domain="[('perm_create', '=' ,True)]"/>
+                    <filter string="Delete Access Right" name="delete_access_right" domain="[('perm_unlink', '=', True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>
@@ -88,6 +90,7 @@
             <field name="view_id" ref="view_rule_tree"/>
             <field name="search_view_id" ref="view_rule_search"/>
         </record>
+
         <menuitem action="action_rule" id="menu_action_rule" parent="base.menu_security" sequence="3"/>
 
 

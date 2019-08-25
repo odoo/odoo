@@ -96,7 +96,11 @@ class StockMove(models.Model):
                     move.order_finished_lot_ids = finished_lots_ids
                     move.finished_lots_exist = True
                 else:
+                    move.order_finished_lot_ids = False
                     move.finished_lots_exist = False
+            else:
+                move.order_finished_lot_ids = False
+                move.finished_lots_exist = False
 
     @api.depends('product_id.tracking')
     def _compute_needs_lots(self):
@@ -133,12 +137,6 @@ class StockMove(models.Model):
                 move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
                                                'workorder_id': move.workorder_id.id,})
         return res
-
-    def _action_cancel(self):
-        if any(move.quantity_done and (move.raw_material_production_id or move.production_id) for move in self):
-            raise exceptions.UserError(_('You cannot cancel a manufacturing order if you have already consumed material.\
-             If you want to cancel this MO, please change the consumed quantities to 0.'))
-        return super(StockMove, self)._action_cancel()
 
     def _action_confirm(self, merge=True, merge_into=False):
         moves = self.env['stock.move']
@@ -222,8 +220,8 @@ class StockMove(models.Model):
         return self.env['stock.move']
 
     def _get_upstream_documents_and_responsibles(self, visited):
-            if self.created_production_id and self.created_production_id.state not in ('done', 'cancel'):
-                return [(self.created_production_id, self.created_production_id.user_id, visited)]
+            if self.production_id and self.production_id.state not in ('done', 'cancel'):
+                return [(self.production_id, self.production_id.user_id, visited)]
             else:
                 return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 

@@ -2,8 +2,12 @@
 <odoo>
 
 <template id="wysiwyg_iframe_css_assets" name="CSS assets for wysiwyg iframe content">
-    <t t-call-assets="web.assets_common" t-js="false"/>
-    <t t-call-assets="web.assets_backend" t-js="false"/>
+</template>
+
+<template id="wysiwyg_iframe_editor_assets" name="Editor assets for wysiwyg iframe content">
+    <t t-call-assets="web.assets_common"/>
+    <t t-call-assets="web.assets_frontend" t-js="false"/>
+    <t t-call-assets="web_editor.assets_wysiwyg"/>
 </template>
 
 <template id="compiled_assets_wysiwyg" name="Wysiwyg Editor">
@@ -13,10 +17,9 @@
 <template id="assets_wysiwyg" name="Wysiwyg Editor Assets">
     <!-- lib -->
 
-    <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/summernote/summernote.css"/>
-    <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/cropper/css/cropper.css"/>
+    <t t-call-assets="web_editor.summernote"/>
 
-    <script type="text/javascript" src="/web_editor/static/lib/summernote/summernote.js"/>
+    <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/cropper/css/cropper.css"/>
     <script type="text/javascript" src="/web_editor/static/lib/cropper/js/cropper.js"/>
     <script type="text/javascript" src="/web_editor/static/lib/jQuery.transfo.js"/>
 
@@ -24,6 +27,7 @@
 
     <t t-call="web._assets_helpers">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_variables.scss"/>
     </t>
 
     <!-- integration -->
@@ -31,12 +35,13 @@
     <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg.scss"/>
     <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_iframe.scss"/>
 
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin_registry.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/options.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/translation.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/fonts.js"/>
+    <script type="text/javascript" src="/web_editor/static/lib/nearest/jquery.nearest.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/base.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.summernote.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/tours/rte.js"/>
 
     <!-- widgets & plugins -->
 
@@ -44,46 +49,77 @@
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/media.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/dialog.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/colorpicker_dialog.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/media_dialog.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/widgets.js"/>
 
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/abstract.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/plugins.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/helper.js"/>
+    <!-- Launcher -->
 
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/toolbar.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/dropzone.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/history.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/table.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/text.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/editor.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/media.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/buttons.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/link.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/font.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/font_buttons.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/keyboard.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/unbreakable.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/transform.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/hint.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/bullet.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/codeview.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/help_dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_snippets.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js"/>
+</template>
+
+<template id="summernote" name="Summernote">
+    <script type="text/javascript">
+        (function () {
+            "use strict";
+            odoo.define('jquery', function () {return $;});
+
+            var uniqId = 0;
+            odoo.__define__ = window.define;
+            window.define = function (id) {
+                var args = Array.prototype.slice.call(arguments);
+                var factorie = args.pop();
+                var id = args[0];
+
+                if (id instanceof Array) {
+                    var name = "summernote_factorie_" + (++uniqId);
+                    odoo[name] = factorie;
+
+                    var head = '';
+                    var fn = 'var fn = odoo.'+name+';\ndelete odoo.'+name+';\n';
+                    fn += 'return fn(';
+                    for (var k=0; k&lt;id.length; k++) {
+                        head += 'var a'+(++uniqId)+' = require("'+id[k]+'");\n';
+                        fn += 'a'+uniqId+', ';
+                    }
+                    fn += 'null);';
+
+                    odoo.define(odoo.website_next_define, new Function('require', head + fn));
+                } else {
+                    odoo.define(id, factorie);
+                }
+            };
+        })();
+    </script>
+    <t t-set="summer_js_files" t-value="['core/async', 'core/func', 'core/agent', 'core/list',
+        'core/dom', 'core/key', 'core/range', 'editing/Bullet', 'editing/History', 'editing/Style',
+        'editing/Table', 'editing/Typing', 'module/Editor', 'module/Button', 'module/Clipboard',
+        'module/Codeview', 'module/DragAndDrop', 'module/Fullscreen', 'module/Handle',
+        'module/HelpDialog', 'module/ImageDialog', 'module/LinkDialog', 'module/Popover',
+        'module/Statusbar', 'module/Toolbar', 'Renderer', 'EventHandler', 'defaults', 'summernote']" />
+    <t t-foreach="summer_js_files" t-as="file">
+        <script>odoo.website_next_define = 'summernote/<t t-esc="file" />';</script>
+        <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/{{ file }}.js"></script>
+    </t>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/summernote.js" />
+    <script type="text/javascript">
+        window.define = odoo.__define__;
+        delete odoo.__define__;
+        delete odoo.website_next_define;
+    </script>
+    <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/summernote/src/css/summernote.css"/>
 </template>
 
 <template id="wysiwyg_snippets" inherit_id="web_editor.assets_wysiwyg" name="Wysiwyg Editor additional snippets">
-    <xpath expr="." position="inside">
-        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_variables.scss"/>
+    <xpath expr="script[@src='/web_editor/static/src/js/editor/rte.summernote.js']" position="after">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_snippets.scss"/>
 
         <script type="text/javascript" src="/web_editor/static/lib/nearest/jquery.nearest.js"/>
-
-        <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg_snippets/wysiwyg_snippets.js"/>
-        <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg_snippets/snippets.editor.js"/>
-        <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg_snippets/snippets.options.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.editor.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.options.js"/>
     </xpath>
 </template>
 
@@ -122,7 +158,7 @@
     </xpath>
     <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/web_editor/static/src/js/backend/field_html.js" />
-        <script type="text/javascript" src="/web_editor/static/src/js/backend/convert_inline.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/backend/convert_inline.js" />
     </xpath>
 </template>
 
@@ -154,9 +190,6 @@
 
         <script type="text/javascript" src="/web_editor/static/tests/test_utils.js"/>
         <script type="text/javascript" src="/web_editor/static/tests/field_html_tests.js"/>
-        <script type="text/javascript" src="/web_editor/static/tests/wysiwyg_tests.js"/>
-        <script type="text/javascript" src="/web_editor/static/tests/wysiwyg_keyboard_tests.js"/>
-        <script type="text/javascript" src="/web_editor/static/tests/wysiwyg_snippets_tests.js"/>
     </xpath>
 </template>
 

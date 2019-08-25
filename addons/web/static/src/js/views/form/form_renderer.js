@@ -195,8 +195,11 @@ var FormRenderer = BasicRenderer.extend({
      * field.
      */
     focusLastActivatedWidget: function () {
-        this._activateNextFieldWidget(this.state, this.lastActivatedFieldIndex - 1,
-            { noAutomaticCreate: true });
+        if (this.lastActivatedFieldIndex !== -1) {
+            return this._activateNextFieldWidget(this.state, this.lastActivatedFieldIndex - 1,
+                { noAutomaticCreate: true });
+        }
+        return false;
     },
     /**
      * returns the active tab pages for each notebook
@@ -920,7 +923,7 @@ var FormRenderer = BasicRenderer.extend({
      */
     _renderTagSheet: function (node) {
         this.has_sheet = true;
-        var $sheet = $('<div>', {class: 'clearfix o_form_sheet'});
+        var $sheet = $('<div>', {class: 'clearfix position-relative o_form_sheet'});
         $sheet.append(node.children.map(this._renderNode.bind(this)));
         return $sheet;
     },

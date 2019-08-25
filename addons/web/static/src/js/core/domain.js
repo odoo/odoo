@@ -238,14 +238,12 @@ var Domain = collections.Tree.extend({
      * @param {string} fieldName
      * @param {string} period
      * @param {string} type ('date' or 'datetime')
-     * @param {boolean} forTooltip indicates if domain is used to print a tooltip
      * @param {string} comparisonPeriod
      * @returns {string} a domain in string form
      */
-    constructDomain: function (fieldName, period, type, forTooltip, comparisonPeriod) {
+    constructDomain: function (fieldName, period, type, comparisonPeriod) {
         var leftBoundaryParams, rightBoundaryParams;
         var offsetPeriodParams;
-        var t = forTooltip || false;
         function makeInterval () {
             switch (comparisonPeriod) {
                 case 'previous_period':
@@ -292,76 +290,72 @@ var Domain = collections.Tree.extend({
         switch (period) {
             case 'today':
                 leftBoundaryParams = {};
-                rightBoundaryParams = t ? {} : {days: 1};
+                rightBoundaryParams = {days: 1};
                 offsetPeriodParams = {days: -1};
                 return makeInterval();
             case 'this_week':
                 leftBoundaryParams = {weeks: -1, days: 1, weekday: 0};
-                rightBoundaryParams = t ? {weekday: 6} : {days: 1, weekday: 0};
+                rightBoundaryParams = {days: 1, weekday: 0};
                 offsetPeriodParams = {weeks: -1};
                 return makeInterval();
             case 'this_month':
                 leftBoundaryParams = {day: 1};
-                rightBoundaryParams = _.extend(t ? {days: -1} : {},
-                    {day: 1, months: 1});
+                rightBoundaryParams = {day: 1, months: 1};
                 offsetPeriodParams = {months: -1};
                 return makeInterval();
             case 'this_quarter':
                 leftBoundaryParams = {months: '- (context_today().month - 1) % 3', day: 1};
-                rightBoundaryParams = _.extend(t ? {days: -1} : {},
-                    {months: '3 - (context_today().month - 1) % 3', day: 1});
+                rightBoundaryParams = {months: '3 - (context_today().month - 1) % 3', day: 1};
                 offsetPeriodParams = {months: -3};
                 return makeInterval();
             case 'this_year':
                 leftBoundaryParams = {month: 1, day: 1};
-                rightBoundaryParams = _.extend(t ? {days: -1} : {},
-                    {month: 1, day: 1, years: 1});
+                rightBoundaryParams = {month: 1, day: 1, years: 1};
                 offsetPeriodParams = {years: -1};
                 return makeInterval();
             case 'yesterday':
                 leftBoundaryParams = {days: -1};
-                rightBoundaryParams = (t ? {days: -1} : {});
+                rightBoundaryParams = {};
                 offsetPeriodParams = {days: -1};
                 return makeInterval();
             case 'last_week':
                 leftBoundaryParams = {weeks: -2, days: 1, weekday: 0};
-                rightBoundaryParams = t ? {weeks: -1, weekday: 6} : {weeks: -1, days: 1, weekday: 0};
+                rightBoundaryParams = {weeks: -1, days: 1, weekday: 0};
                 offsetPeriodParams = {weeks: -1};
                 return makeInterval();
             case 'last_month':
                 leftBoundaryParams = {months: -1, day: 1};
-                rightBoundaryParams = _.extend(t ? {days: -1} : {}, {day: 1});
+                rightBoundaryParams = {day: 1};
                 offsetPeriodParams = {months: -1};
                 return makeInterval();
             case 'last_quarter':
                 leftBoundaryParams = {months: '- 3 - (context_today().month - 1) % 3', day: 1};
-                rightBoundaryParams = _.extend(t ? {days: -1} : {},
-                    {months: '- (context_today().month - 1) % 3', day: 1});
+                rightBoundaryParams = {months: '- (context_today().month - 1) % 3', day: 1};
                 offsetPeriodParams = {months: -3};
                 return makeInterval();
             case 'last_year':
                 leftBoundaryParams = {month: 1, day: 1, years: -1};
-                rightBoundaryParams = _.extend(t ? {days: -1} : {}, {month: 1, day: 1});
+                rightBoundaryParams = {month: 1, day: 1};
                 offsetPeriodParams = {years: -1};
                 return makeInterval();
             case 'last_7_days':
                 leftBoundaryParams = {days: -7};
-                rightBoundaryParams = t ? {days: -1} : {};
+                rightBoundaryParams = {};
                 offsetPeriodParams = {days: -7};
                 return makeInterval();
             case 'last_30_days':
                 leftBoundaryParams = {days: -30};
-                rightBoundaryParams = t ? {days: -1} : {};
+                rightBoundaryParams = {};
                 offsetPeriodParams = {days: -30};
                 return makeInterval();
             case 'last_365_days':
                 leftBoundaryParams = {days: -365};
-                rightBoundaryParams = t ? {days: -1} : {};
+                rightBoundaryParams = {};
                 offsetPeriodParams = {days: -365};
                 return makeInterval();
             case 'last_5_years':
                 leftBoundaryParams = {years: -5};
-                rightBoundaryParams = t ? {days: -1} : {};
+                rightBoundaryParams = {};
                 offsetPeriodParams = {years: -5};
                 return makeInterval();
         }

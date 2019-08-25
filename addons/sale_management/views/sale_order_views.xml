@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//page/field[@name='order_line']/.." position="after">
-                <page string="Optional Products" name="optional_products">
+                <page string="Optional Products" name="optional_products" attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}">
                     <field name="sale_order_option_ids" mode="tree,form,kanban">
                         <form string="Optional Products">
                             <group>
@@ -17,7 +17,7 @@
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="uom_id" groups="uom.group_uom"/>
                                 <field name="price_unit"/>
-                                <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                <field name="discount" groups="product.group_discount_per_so_line"/>
                                 <field name="is_present" />
                             </group>
                         </form>
@@ -74,7 +74,7 @@
                             <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
                             <field name="product_uom_category_id" invisible="1"/>
                             <field name="price_unit"/>
-                            <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show"/>
+                            <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show"/>
                             <field name="is_present" invisible="1" />
                             <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" title="Add to order lines" type="object" attrs="{'invisible': [('is_present', '=', True)]}"/>
                         </tree>
@@ -103,12 +103,13 @@
         </field>
     </record>
 
+    <!-- TODO remove me after saas-12.4 to be replaced by sale.prod_config_main -->
     <menuitem id="menu_product_settings" name="Products" sequence="80"
         parent="sale.menu_sale_config"/>
     <menuitem id="menu_product_attribute_action"
         action="product.attribute_action"
-        parent="menu_product_settings"  groups="product.group_product_variant" sequence="1"/>
+        parent="sale.prod_config_main"  groups="product.group_product_variant" sequence="1"/>
     <menuitem id="menu_catalog_variants_action"
         action="product.variants_action"
-        parent="menu_product_settings" groups="product.group_product_variant" sequence="2"/>
+        parent="sale.prod_config_main" groups="product.group_product_variant" sequence="2"/>
 </odoo>

@@ -6,14 +6,6 @@ from collections import defaultdict
 from odoo import api, fields, models
 
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
-
-    @api.model
-    def _get_exceptions_domain(self):
-        return super(ProcurementGroup, self)._get_exceptions_domain() + [('requistion_line_ids', '=', False)]
-
-
 class StockRule(models.Model):
     _inherit = 'stock.rule'
 

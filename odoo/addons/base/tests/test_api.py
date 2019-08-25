@@ -205,21 +205,6 @@ class TestAPI(common.TransactionCase):
             demo_partners[0].company_id.name
 
     @mute_logger('odoo.models')
-    def test_55_draft(self):
-        """ Test draft mode nesting. """
-        env = self.env
-        self.assertFalse(env.in_draft)
-        with env.do_in_draft():
-            self.assertTrue(env.in_draft)
-            with env.do_in_draft():
-                self.assertTrue(env.in_draft)
-                with env.do_in_draft():
-                    self.assertTrue(env.in_draft)
-                self.assertTrue(env.in_draft)
-            self.assertTrue(env.in_draft)
-        self.assertFalse(env.in_draft)
-
-    @mute_logger('odoo.models')
     def test_60_cache(self):
         """ Check the record cache behavior """
         Partners = self.env['res.partner']
@@ -299,7 +284,11 @@ class TestAPI(common.TransactionCase):
         self.assertItemsEqual(partner_ids_with_field, partners.ids)
 
         # partners' states are ready for prefetching
-        state_ids = {sid for partner in partners for sid in partner._cache['state_id']}
+        state_ids = {
+            partner._cache['state_id']
+            for partner in partners
+            if partner._cache['state_id'] is not None
+        }
         self.assertTrue(len(state_ids) > 1)
         self.assertItemsEqual(state_ids, state._prefetch_ids)
 
@@ -465,16 +454,16 @@ class TestAPI(common.TransactionCase):
     def test_80_filter(self):
         """ Check filter on recordsets. """
         ps = self.env['res.partner'].search([])
-        customers = ps.browse([p.id for p in ps if p.customer])
+        customers = ps.browse([p.id for p in ps if p.employee])
 
         # filter on a single field
-        self.assertEqual(ps.filtered(lambda p: p.customer), customers)
-        self.assertEqual(ps.filtered('customer'), customers)
+        self.assertEqual(ps.filtered(lambda p: p.employee), customers)
+        self.assertEqual(ps.filtered('employee'), customers)
 
         # filter on a sequence of fields
         self.assertEqual(
-            ps.filtered(lambda p: p.parent_id.customer),
-            ps.filtered('parent_id.customer')
+            ps.filtered(lambda p: p.parent_id.employee),
+            ps.filtered('parent_id.employee')
         )
 
     @mute_logger('odoo.models')

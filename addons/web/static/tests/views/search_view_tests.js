@@ -8,9 +8,11 @@ var createActionManager = testUtils.createActionManager;
 var createControlPanel = testUtils.createControlPanel;
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
+var session = require('web.session');
 
 var controlPanelViewParameters = require('web.controlPanelViewParameters');
-var PERIOD_OPTIONS_IDS = controlPanelViewParameters.PERIOD_OPTIONS.map(function (option) {return option.optionId;});
+const PERIOD_OPTIONS_IDS = controlPanelViewParameters.PERIOD_OPTIONS.map(o => o.optionId);
+const OPTION_GENERATOR_IDS = controlPanelViewParameters.OPTION_GENERATORS.map(o => o.optionId);
 
 QUnit.module('Search View', {
     beforeEach: function () {
@@ -21,7 +23,7 @@ QUnit.module('Search View', {
                     birthday: {string: "Birthday", type: "date", store: true, sortable: true},
                     foo: {string: "Foo", type: "char", store: true, sortable: true},
                     bar: {string: "Bar", type: "many2one", relation: 'partner'},
-                    float_field: {string: "Float", type: "float"},
+                    float_field: {string: "Float", type: "float", group_operator: 'sum'},
                 },
                 records: [
                     {id: 1, display_name: "First record", foo: "yop", bar: 2, date_field: "2017-01-25", birthday: "1983-07-15", float_field: 1},
@@ -119,6 +121,13 @@ QUnit.module('Search View', {
             type: 'ir.actions.act_window',
             views: [[2, 'list']],
             search_view_id: [8, 'search'],
+        }, {
+            id: 12,
+            name: 'Partners Action 12',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[2, 'list']],
+            search_view_id: [9, 'search'],
         }
         ];
 
@@ -198,6 +207,14 @@ QUnit.module('Search View', {
                     '<filter string="Date Field Filter" name="positive" date="date_field"/>' +
                     '<filter string="Date Field Groupby" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
                 '</search>',
+            'partner,9,search': '<search>'+
+                '<filter string="float" name="positive" domain="[(\'date_field\', \'>=\', (context_today() + relativedelta()).strftime(\'%Y-%m-%d\'))]"/>' +
+            '</search>',
+            'partner,10,search': '<search>'+
+                    '<field string="Foo" name="foo"/>' +
+                    '<filter string="Date Field Filter" name="positive" date="date_field"/>' +
+                    '<filter string="Date Field Groupby" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
+                '</search>',
         };
 
 
@@ -231,6 +248,39 @@ QUnit.module('Search View', {
             ['&', ["date_field", ">=", "2016-10-01"],["date_field", "<", "2017-01-01"]],
             // last year
             ['&', ["date_field", ">=", "2016-01-01"],["date_field", "<", "2017-01-01"]],
+        ];
+
+        this.basicDomains = [
+            ["&",["date_field",">=","2017-03-01"],["date_field","<=","2017-03-31"]],
+            ["&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"]],
+            ["&",["date_field",">=","2017-02-01"],["date_field","<=","2017-02-28"]],
+            ["&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"]],
+            ["&",["date_field",">=","2017-01-01"],["date_field","<=","2017-01-31"]],
+            ["|",
+                "&",["date_field",">=","2017-01-01"],["date_field","<=","2017-01-31"],
+                "&",["date_field",">=","2017-10-01"],["date_field","<=","2017-12-31"]
+            ],
+            ["&",["date_field",">=","2017-10-01"],["date_field","<=","2017-12-31"]],
+  	        ["&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"]],
+            ["&",["date_field",">=","2017-01-01"],["date_field","<=","2017-03-31"]],
+            ["&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"]],
+            ["&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"]],
+            ["|",
+                "&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"],
+                "&",["date_field",">=","2016-01-01"],["date_field","<=","2016-12-31"]
+            ],
+            ["|",
+                "|",
+                    "&",["date_field",">=","2017-01-01"],["date_field","<=","2017-12-31"],
+                    "&",["date_field",">=","2016-01-01"],["date_field","<=","2016-12-31"],
+                "&",["date_field",">=","2015-01-01"],["date_field","<=","2015-12-31"]
+            ],
+            ["|",
+                "|",
+                    "&", ["date_field",">=","2017-03-01"],["date_field","<=","2017-03-31"],
+                    "&",["date_field",">=","2016-03-01"],["date_field","<=","2016-03-31"],
+                "&",["date_field",">=","2015-03-01"],["date_field","<=","2015-03-31"]
+            ]
         ];
 
         // assuming that the current time is: 2017-03-22:01:00:00
@@ -318,6 +368,59 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('default groupbys can be ordered', async function (assert) {
+        assert.expect(7);
+
+        const unpatchDate = patchDate(2019,6,31,13,43,0);
+        
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        this.archs['partner,5,search'] =
+            '<search>'+
+                '<field name="bar"/>' +
+                '<filter string="Foo" name="foo" domain="[]" />' +
+                '<filter string="Foo 2" name="foo_2" domain="[]" />' +
+                '<filter string="Filter Date Field" name="date" date="date_field"/>' +
+                '<filter string="Groupby Date Field Day" name="gb_day" context="{\'group_by\': \'date_field:day\'}"/>' +
+                '<filter string="Groupby Foo" name="gb_foo" context="{\'group_by\': \'foo\'}"/>' +
+                '<filter string="Groupby Bar" name="gb_bar" context="{\'group_by\': \'bar\'}"/>' +
+            '</search>';
+        this.actions[0].views = [[false, 'graph']],
+        this.actions[0].search_view_id = [5, 'search'];
+        this.actions[0].context = {
+            search_default_foo: true,
+            search_default_date: true,
+            search_default_bar: 3,
+            search_default_gb_foo: 1,
+            search_default_gb_day: 5,
+            search_default_gb_bar: true,
+            time_ranges: {field: 'date_field', range: 'this_week'},
+        };
+        await actionManager.doAction(1);
+
+        const $facetValues = $('.o_searchview .o_searchview_facet .o_facet_values span:not(.o_facet_values_sep)');
+        const expectedLabels = [
+            "Third record",
+            "Foo",
+            "Filter Date Field: July 2019",
+            "Groupby Foo",
+            "Groupby Date Field Day: Day",
+            "Groupby Bar",
+            "Date: This Week"
+        ];
+
+        for (let i = 0; i < expectedLabels.length; i++) {
+            assert.strictEqual($facetValues.eq(i).text(), expectedLabels[i],
+            `first facet value should be ${expectedLabels[i]}`);
+        }
+        actionManager.destroy();
+        unpatchDate();
+    });
+
     QUnit.module('GroupByMenu');
 
     QUnit.test('click on groupby filter adds a facet', async function (assert) {
@@ -373,10 +476,11 @@ QUnit.module('Search View', {
         // Don't forget there is a hidden li.divider element at first place among children
         await testUtils.dom.click($('.o_item_option:nth-child(2)'));
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').length, 1,
-            'should have a facet');
+        'should have a facet');
         await testUtils.dom.click($('.o_item_option:nth-child(3)'));
-        assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').length, 1,
-            'should have a facet');
+        assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').length, 3,
+            'should have three facet spans (two options and a separator between them)');
+        await testUtils.dom.click($('.o_item_option:nth-child(2)'));
         await testUtils.dom.click($('.o_item_option:nth-child(3)'));
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').length, 0,
             'should have no facet');
@@ -414,11 +518,13 @@ QUnit.module('Search View', {
         await actionManager.doAction(4);
         await testUtils.dom.click($('.o_graph_controller .o_control_panel .o_cp_buttons button').eq(1));
         await testUtils.dom.click($('.o_graph_controller .o_group_by_menu .o_menu_item').eq(1));
-        await testUtils.dom.click($('.o_graph_controller .o_group_by_menu .o_menu_item .o_item_option > .dropdown-item').first());
+        await testUtils.dom.click($('.o_graph_controller .o_group_by_menu .o_menu_item .o_item_option > .dropdown-item').eq(4));
         assert.doesNotHaveClass($('.o_graph_controller .o_group_by_menu .o_menu_item > .dropdown-item').eq(1), 'selected',
             'groupby should be unselected');
         await testUtils.dom.click($('.o_search_options button span.fa-filter'));
         await testUtils.dom.click($('.o_filters_menu .o_menu_item a').first());
+        await testUtils.dom.click($('.o_graph_controller .o_control_panel .o_cp_buttons button').eq(1));
+        await testUtils.dom.click($('.o_graph_controller .o_group_by_menu .o_menu_item').eq(1));   
         assert.doesNotHaveClass($('.o_graph_controller .o_group_by_menu .o_menu_item > .dropdown-item').eq(1), 'selected',
             'groupby should be still unselected');
         actionManager.destroy();
@@ -450,33 +556,38 @@ QUnit.module('Search View', {
         await actionManager.doAction(5);
         // open menu 'Group By'
         await testUtils.dom.click($('.o_search_options .fa-bars'));
-        // Activate the groupby 'Date'
+        // Open the groupby 'Date'
         await testUtils.dom.click($('.o_group_by_menu .o_menu_item'));
-        // // select option 'day'
+        // select option 'day'
         await testUtils.dom.click($('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="day"]'));
         assert.strictEqual($('div.o_facet_values span').text().trim(),'Date: Day');
         assert.strictEqual($('.o_content tr.o_group_header').length, 5);
-        // // select option 'month'
+        // select option 'month'
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="day"]'));
         await testUtils.dom.click($('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="month"]'));
-        // // data should be grouped by the field 'Date' using the interval 'month'
+        // data should be grouped by the field 'Date' using the interval 'month'
         assert.strictEqual($('div.o_facet_values span').text().trim(),'Date: Month');
         assert.strictEqual($('.o_content tr.o_group_header').length, 3);
-        // // deactivate option 'month'
+        // deactivate option 'month'
         await testUtils.dom.click($('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="month"]'));
-        // // no groupby is applied
+        // no groupby is applied
         assert.strictEqual($('div.o_facet_values span').length, 0);
-        // // open 'Add custom Groupby' menu
+        // open 'Add custom Groupby' menu
         await testUtils.dom.click($('.o_group_by_menu .o_add_custom_group'));
-        // // click on 'Apply' button
+        // click on 'Apply' button
         await testUtils.dom.click($('.o_group_by_menu .o_generator_menu button'));
-        // // data should be grouped by the field 'Birthday' using the interval 'month'
+        // data should be grouped by the field 'Birthday' using the interval 'month'
         assert.strictEqual($('div.o_facet_values span').text().trim(),'Birthday: Month');
         assert.strictEqual($('.o_content tr.o_group_header').length, 5);
-        // // open submenu with interval options
+        // close first submenu
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item .o_submenu_switcher').eq(0));
+        // open submenu with interval options
         await testUtils.dom.click($('.o_group_by_menu .o_menu_item .o_submenu_switcher').eq(1));
-        // // select option 'year'
-        await testUtils.dom.click($('.o_group_by_menu .o_menu_item .o_item_option').eq(9));
-        // // data should be grouped by the field 'Birthday' using the interval 'year'
+        // deselect option 'month'
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="month"]'));
+        // select option 'year'
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item .o_item_option').eq(0));
+        // data should be grouped by the field 'Birthday' using the interval 'year'
         assert.strictEqual($('div.o_facet_values span').text().trim(),'Birthday: Year');
         assert.strictEqual($('.o_content tr.o_group_header').length, 4);
         actionManager.destroy();
@@ -644,23 +755,15 @@ QUnit.module('Search View', {
             '<filter string="AAA" name="some_filter" date="date_field" default_period="this_week"></filter>' +
         '</search>';
 
-        var RealDate = window.Date;
-
-        window.Date = function TestDate() {
-            // month are indexed from 0!
-            return new RealDate(2017,2,22);
-        };
-        window.Date.now = function Test() {
-            return new Date(2017,2,22);
-        };
+        var unpatchDate = patchDate(2017,2,22,1,0,0);
 
         var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            mockRPC: function (route, args) {
+            mockRPC: function(route, args) {
                 if (route === '/web/dataset/search_read' && args.domain.length) {
-                    assert.deepEqual(args.domain, self.periodDomains.shift());
+                    assert.deepEqual(args.domain, self.basicDomains.shift());
                 }
                 return this._super.apply(this, arguments);
             },
@@ -673,30 +776,30 @@ QUnit.module('Search View', {
         // open menu options
         await testUtils.dom.click($('.o_menu_item'));
 
-        var periodOptions = $('.o_menu_item .o_item_option').map(function () {
-            return $(this).data('option_id');
-        }).toArray();
+        var generatorIds = $('.o_menu_item .o_item_option')
+                                .map(function() {return $(this).data('option_id');})
+                                .toArray();
 
-        assert.deepEqual(periodOptions, PERIOD_OPTIONS_IDS,
-            "13 period options should be available:");
+        assert.deepEqual(generatorIds, OPTION_GENERATOR_IDS,
+            "10 basic period options should be available:");
 
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_7_days"]'));
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_30_days"]'));
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_365_days"]'));
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_5_years"]'));
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="today"]'));
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_week"]'));
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_month"]'));
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_quarter"]'));
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_year"]'));
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="yesterday"]'));
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_week"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_month"]'));
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_month"]'));
-        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_quarter"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_month"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="antepenultimate_month"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="fourth_quarter"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="antepenultimate_month"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="fourth_quarter"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="first_quarter"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="first_quarter"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_year"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_year"]'));
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_year"]'));
-
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="antepenultimate_year"]'));
+        await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_month"]'));
         actionManager.destroy();
-        window.Date = RealDate;
+        unpatchDate();
     });
 
     QUnit.test('`context` key in <filter> is used', async function (assert) {
@@ -763,6 +866,34 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('filter with date attribute set as search_default', async function (assert) {
+        assert.expect(1);
+
+        const unpatchDate = patchDate(2019,6,31,13,43,0);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        this.archs['partner,5,search'] =
+            '<search>'+
+                '<filter string="Date" name="date_field" date="date_field" />' +
+            '</search>';
+        this.actions[0].search_view_id = [5, 'search'];
+        this.actions[0].context = {search_default_date_field: true};
+
+        await actionManager.doAction(1);
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
+            "Date: July 2019",
+            "There should be a filter facet with label 'Date: July 2019'");
+
+        actionManager.destroy();
+        unpatchDate();
+    });
+
     QUnit.module('Favorites Menu');
 
     QUnit.test('dynamic filters are saved dynamic', async function (assert) {
@@ -776,18 +907,14 @@ QUnit.module('Search View', {
                 create_filter: function (ev) {
                     assert.equal(
                         ev.data.filter.domain,
-                        `["&", ` +
-                        `("date_field", ">=", (context_today() + relativedelta()).strftime("%Y-%m-%d")), ` +
-                        `("date_field", "<", (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d"))`+
-                        `]`);
+                        `[("date_field", ">=", (context_today() + relativedelta()).strftime("%Y-%m-%d"))]`);
                 },
             },
         });
 
-        await actionManager.doAction(6);
+        await actionManager.doAction(12);
         await testUtils.dom.click($('span.fa-filter'));
         await testUtils.dom.click($('.o_filters_menu .o_menu_item a'));
-        await testUtils.dom.click($('.o_item_option[data-option_id="today"]'));
         await testUtils.dom.click($('span.fa-star'));
         await testUtils.dom.click($('.o_favorites_menu .o_add_favorite'));
         await testUtils.fields.editInput($('div.o_favorite_name input'), 'name for favorite');
@@ -959,6 +1086,163 @@ QUnit.module('Search View', {
         controlPanel.destroy();
     });
 
+    QUnit.test('toggle favorite correctly clears filter, groupbys and field "options"', async function (assert) {
+        assert.expect(8);
+
+        const unpatchDate = patchDate(2019,6,31,13,43,0);
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                load_filters: function (event) {
+                    return Promise.resolve([{
+                        context: "{}",
+                        domain: "[]",
+                        id: 7,
+                        is_default: false,
+                        name: "My favorite",
+                        sort: "[]",
+                        user_id: [2, "Mitchell Admin"],
+                    }]).then(event.data.on_success);
+                },
+            },
+        });
+
+        this.actions[11].search_view_id = [10, 'search'];
+        await actionManager.doAction(12);
+
+        // activate Foo a
+        await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 97);
+        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
+        
+        // activate Date Filter with This Month
+        await testUtils.dom.click($('button .fa-filter'));
+        await testUtils.dom.click($('.o_filters_menu .o_menu_item a'));
+        await testUtils.dom.click($('.o_item_option[data-option_id="this_month"]'));
+
+        // activate Date Groupby with Year
+        await testUtils.dom.click($('button .fa-bars'));
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item a'));
+        await testUtils.dom.click($('.o_item_option[data-option_id="year"]'));
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
+            "a",
+            "There should be a filter Foo a");
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
+            "Date Field Filter: July 2019",
+            "There should be a filter facet with label 'Date Field Filter: July 2019'");
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(2).text().trim(),
+            "Date Field Groupby: Year",
+            "There should be a groupby facet with label 'Date Field Groupby: Year'");
+
+        // activate the favorite
+        await testUtils.dom.click($('button .fa-star'));
+        await testUtils.dom.click($('.o_favorites_menu .o_menu_item a'));
+
+        assert.containsOnce(actionManager, '.o_searchview_input_container .o_facet_values',
+            "There should be a unique facet in the search bar");
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
+            "My favorite",
+            "There should be a facet with label 'My favorite''");
+
+        await testUtils.dom.click($('button .fa-filter'));
+        await testUtils.dom.click($('.o_filters_menu .o_menu_item a'));
+        assert.doesNotHaveClass($('.o_item_option[data-option_id="this_month"]'), 'selected',
+            "The Date Filter option 'This Month' should be deactivated");
+
+        await testUtils.dom.click($('button .fa-bars'));
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item a'));
+        assert.doesNotHaveClass($('.o_item_option[data-option_id="year"]'), 'selected',
+        "The Date Groupby option 'Year' should be deactivated");
+
+        await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 98);
+        await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
+            "b",
+            "There should be a filter Foo b");
+
+        actionManager.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('favorites have unique descriptions (the submenus of the favorite menu are correctly updated)', async function (assert) {
+        assert.expect(7);
+
+        const UID = session.uid;
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                load_filters: function (event) {
+                    return Promise.resolve([{
+                        context: "{}",
+                        domain: "[]",
+                        id: 7,
+                        is_default: false,
+                        name: "My favorite",
+                        sort: "[]",
+                        user_id: [2, "Mitchell Admin"],
+                    }]).then(event.data.on_success);
+                },
+                create_filter: function (event) {
+                    assert.step('create_filter');
+                    assert.deepEqual(event.data.filter, {
+                        "action_id": 1,
+                        "context": {},
+                        "domain": "[]",
+                        "is_default": false,
+                        "model_id": "partner",
+                        "name": "My favorite 2",
+                        "sort": "[]",
+                        "user_id": UID,
+                      });
+                    return Promise.resolve(1).then(event.data.on_success);
+                }
+            },
+        });
+        testUtils.mock.intercept(actionManager, 'call_service', function (ev) {
+            if (ev.data.service === 'notification') {
+                // A notification alerting that another favorite with same name exists
+                // should be triggered
+                assert.step('notification');
+                assert.deepEqual(ev.data.args[0], {
+                    "className": undefined,
+                    "message": "Filter with same name already exists.",
+                    "sticky": undefined,
+                    "title": "Error",
+                    "type": "danger"
+                  });
+            }
+        }, true);
+
+        await actionManager.doAction(1);
+        await testUtils.dom.click($('button .fa-star'));
+        await testUtils.dom.click($('.o_favorites_menu .o_add_favorite'));
+        await testUtils.fields.editInput($('div.o_favorite_name input'), 'My favorite');
+        await testUtils.dom.click($('.o_favorites_menu div.o_save_favorite button'));
+
+        await testUtils.fields.editInput($('div.o_favorite_name input'), 'My favorite 2');
+        await testUtils.dom.click($('.o_favorites_menu div.o_save_favorite button'));
+
+        await testUtils.dom.click($('.o_favorites_menu .o_add_favorite'));
+        await testUtils.fields.editInput($('div.o_favorite_name input'), 'My favorite 2');
+        await testUtils.dom.click($('.o_favorites_menu div.o_save_favorite button'));
+
+        assert.verifySteps([
+            'notification',
+            'create_filter',
+            'notification'
+        ])
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Search Arch');
 
     QUnit.test('arch order of groups of filters preserved', async function (assert) {
@@ -981,14 +1265,16 @@ QUnit.module('Search View', {
 
     QUnit.module('Autocompletion');
 
-    QUnit.test('selection via autocompletion modifies appropriately submenus', async function (assert) {
-        assert.expect(4);
+    QUnit.test('selection via autocompletion and deletion modifies appropriately submenus', async function (assert) {
+        assert.expect(6);
 
         var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
         });
+
+        const unpatchDate = patchDate(2019,6,31,13,43,0);
 
         await actionManager.doAction(9);
 
@@ -998,23 +1284,37 @@ QUnit.module('Search View', {
         await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
 
         assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
-            "Date Field Filter: This Month",
-            "There should be a filter facet with label 'Date Field Filter: This Month'");
+            "Date Field Filter: July 2019",
+            "There should be a filter facet with label 'Date Field Filter: July 2019'");
         assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
             "Date Field Groupby: Day",
             "There should be a filter facet with label 'Date Field Groupby: Day'");
 
         await testUtils.dom.click($('button .fa-filter'));
         await testUtils.dom.click($('.o_filters_menu .o_menu_item').eq(0));
-        assert.strictEqual($('.o_filters_menu .o_item_option a.selected').text().trim(), "This Month",
-            "The item 'This Month' should be selected in the filters menu");
+        assert.strictEqual($('.o_filters_menu .o_item_option a.selected').text().trim(), "July2019",
+            "The item 'July 2019' should be selected in the filters menu");
 
         await testUtils.dom.click($('button .fa-bars'));
         await testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
         assert.strictEqual($('.o_group_by_menu .o_item_option a.selected').text().trim(), "Day",
             "The item 'Day' should be selected in the groupby menu");
 
+        await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
+        await testUtils.dom.click($('div .o_searchview_facet .o_facet_remove').eq(0));
+
+        await testUtils.dom.click($('button .fa-filter'));
+        await testUtils.dom.click($('.o_filters_menu .o_menu_item').eq(0));
+        assert.containsNone($('.o_filters_menu .o_item_option a.selected'),
+            "The item 'This Month' should have unselected in the filters menu");
+
+        await testUtils.dom.click($('button .fa-bars'));
+        await testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
+        assert.containsNone($('.o_group_by_menu .o_item_option a.selected'),
+            "The item 'Day' should have been unselected in the groupby menu");
+
         actionManager.destroy();
+        unpatchDate();
     });
 
     QUnit.test('select an autocomplete field with `context` key', async function (assert) {
@@ -1254,14 +1554,15 @@ QUnit.module('Search View', {
     });
 
     QUnit.test('a default time range only in context is taken into account', async function (assert) {
-        assert.expect(2);
+        assert.expect(1);
 
         var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
             mockRPC: function (route, args) {
-                // there are two read_group calls (for the groupby lists [] and ["date_field:day"])
+                // there are only one read_group call (for the groupby lists [])
+                // the read group for the list ["date_field:day"] is not done since no data is available for today)
                 if (route === '/web/dataset/call_kw/partner/read_group') {
                     var timeRangeMenuData = args.kwargs.context.timeRangeMenuData;
                     assert.ok(timeRangeMenuData.timeRange.length > 0, "time range should be non empty");

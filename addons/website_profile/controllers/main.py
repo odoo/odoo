@@ -16,7 +16,7 @@ from odoo.osv import expression
 class WebsiteProfile(http.Controller):
     _users_per_page = 30
     _pager_max_pages = 5
-    
+
     # Profile
     # ---------------------------------------------------
 
@@ -72,8 +72,8 @@ class WebsiteProfile(http.Controller):
     @http.route([
         '/profile/avatar/<int:user_id>',
     ], type='http', auth="public", website=True, sitemap=False)
-    def get_user_profile_avatar(self, user_id, field='image_large', width=0, height=0, crop=False, **post):
-        if field not in ('image_small', 'image_medium', 'image_large'):
+    def get_user_profile_avatar(self, user_id, field='image_256', width=0, height=0, crop=False, **post):
+        if field not in ('image_64', 'image_128', 'image_256'):
             return werkzeug.exceptions.Forbidden()
 
         can_sudo = self._check_avatar_access(user_id, **post)
@@ -189,16 +189,19 @@ class WebsiteProfile(http.Controller):
 
     # All Users Page
     # ---------------------------------------------------
-    def _prepare_all_users_values(self, user):
-        return {
-            'id': user.id,
-            'name': user.name,
-            'company_name': user.partner_id.company_name,
-            'rank': user.rank_id.name,
-            'karma': user.karma,
-            'badge_count': len(user.badge_ids),
-            'website_published': user.website_published
-        }
+    def _prepare_all_users_values(self, users):
+        user_values = []
+        for user in users:
+            user_values.append({
+                'id': user.id,
+                'name': user.name,
+                'company_name': user.company_id.name,
+                'rank': user.rank_id.name,
+                'karma': user.karma,
+                'badge_count': len(user.badge_ids),
+                'website_published': user.website_published
+            })
+        return user_values
 
     @http.route(['/profile/users',
                  '/profile/users/page/<int:page>'], type='http', auth="public", website=True)
@@ -219,7 +222,7 @@ class WebsiteProfile(http.Controller):
                                           scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
             users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
-            user_values = [self._prepare_all_users_values(user) for user in users]
+            user_values = self._prepare_all_users_values(users)
 
             # Get karma position for users (only website_published)
             position_domain = [('karma', '>', 1), ('website_published', '=', True)]
@@ -233,7 +236,7 @@ class WebsiteProfile(http.Controller):
                 'pager': pager
             }
         else:
-            values = {'top3_users': [], 'users': [], 'pager': dict(page_count=0)}
+            values = {'top3_users': [], 'users': [], 'search': search_term, 'pager': dict(page_count=0)}
 
         return request.render("website_profile.users_page_main", values)
 
@@ -243,7 +246,6 @@ class WebsiteProfile(http.Controller):
 
         Users = request.env['res.users']
         where_query = Users._where_calc(domain)
-        Users._apply_ir_rules(where_query, 'read')
         from_clause, where_clause, where_clause_params = where_query.get_sql()
 
         # we search on every user in the DB to get the real positioning (not the one inside the subset)

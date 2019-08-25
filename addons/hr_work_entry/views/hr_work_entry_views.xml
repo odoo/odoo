@@ -27,28 +27,9 @@
                 quick_add="False"
                 color="color"
                 event_limit="5">
-                <field name="state" invisible="1"/>
                 <!-- Sidebar favorites filters -->
-                <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" avatar_field="image_small"/>
-                <templates>
-                    <t t-name="calendar-box">
-                        <t t-set="color" t-value="widget.getColor(event.color_index)"/>
-                        <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
-                            <div class="fc-time"/>
-                            <div class="o_fields">
-                                <t t-if="record.state == 'conflict'">
-                                    <span class="fa fa-exclamation-triangle mr-2" aria-label="Conflict" title="error"/>
-                                </t>
-                                <t t-if="record.state == 'validated'">
-                                    <span class="fa fa-check-circle-o mr-2" aria-label="Validated" title="validated"/>
-                                </t>
-                                <t t-foreach="widget.displayFields" t-as="name">
-                                    <t t-esc="format(record, name)"/>
-                                </t>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
+                <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" avatar_field="image_64"/>
+                <field name="state"/>
             </calendar>
         </field>
     </record>
@@ -79,6 +60,7 @@
                             <div>
                                 <field name="duration" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}" /><span class="ml8">Hours</span>
                             </div>
+                            <field name="company_id" invisible="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -107,21 +89,36 @@
             <search string="Search Work Entry">
                 <field name="employee_id"/>
                 <field name="name"/>
-                <filter string="My Work Entries" domain="[('employee_id.user_id','=',uid)]" name="my_work_entries"/>
-                <filter string="With error" domain="[('state','=', 'conflict')]" name="work_entries_error"/>
+                <filter name="my_work_entries" string="My Entries" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter name="work_entries_error" string="Conflicting" domain="[('state', '=', 'conflict')]"/>
                 <filter name="date_filter" string="Date" date="date_start"/>
-                <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                <filter name="group_work_entry_type" string="Type" context="{'group_by':'work_entry_type_id'}"/>
+                <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                <filter name="group_work_entry_type" string="Type" context="{'group_by': 'work_entry_type_id'}"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
             </search>
         </field>
     </record>
 
     <!-- HR WORK ENTRY TYPE -->
 
+    <record id="hr_work_entry_type_view_search" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.view.search</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Work Entry Type">
+                <field name="name"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
     <record id="hr_work_entry_type_action" model="ir.actions.act_window">
         <field name="name">Work Entry Types</field>
         <field name="res_model">hr.work.entry.type</field>
         <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="hr_work_entry_type_view_search"/>
     </record>
 
     <record id="hr_work_entry_type_view_tree" model="ir.ui.view">
@@ -167,8 +164,8 @@
                 <field name="color"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
-                            <div class="o_dropdown_kanban dropdown">
+                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
                                 <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-bars fa-lg"/>
                                 </a>

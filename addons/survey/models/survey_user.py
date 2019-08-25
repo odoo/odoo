@@ -39,8 +39,7 @@ class SurveyUserInput(models.Model):
     is_time_limit_reached = fields.Boolean("Is time limit reached?", compute='_compute_is_time_limit_reached')
     input_type = fields.Selection([
         ('manually', 'Manual'), ('link', 'Invitation')],
-        string='Answer Type', default='manually', required=True, readonly=True,
-        oldname="type")
+        string='Answer Type', default='manually', required=True, readonly=True)
     state = fields.Selection([
         ('new', 'Not started yet'),
         ('skip', 'Partially completed'),
@@ -61,9 +60,8 @@ class SurveyUserInput(models.Model):
     # Pre-defined questions
     question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
     deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
-
-    quizz_score = fields.Float("Score (%)", compute="_compute_quizz_score")
     # Stored for performance reasons while displaying results page
+    quizz_score = fields.Float("Score (%)", compute="_compute_quizz_score", store=True, compute_sudo=True)
     quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True, compute_sudo=True)
 
     @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id')
@@ -407,7 +405,7 @@ class SurveyUserInputLine(models.Model):
         old_uil.sudo().unlink()
 
         if answer_tag in post and post[answer_tag].strip():
-            vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
+            vals.update({'answer_type': 'suggestion', 'value_suggested': int(post[answer_tag])})
         else:
             vals.update({'answer_type': None, 'skipped': True})
 
@@ -443,7 +441,8 @@ class SurveyUserInputLine(models.Model):
             for key in ca_dict:
                 # '-1' indicates 'comment count as an answer' so do not need to record it
                 if key != ('%s_%s' % (answer_tag, '-1')):
-                    vals.update({'answer_type': 'suggestion', 'value_suggested': ca_dict[key]})
+                    val = ca_dict[key]
+                    vals.update({'answer_type': 'suggestion', 'value_suggested': bool(val) and int(val)})
                     self.create(vals)
         if comment_answer:
             vals.update({'answer_type': 'text', 'value_text': comment_answer, 'value_suggested': False})

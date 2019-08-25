@@ -490,7 +490,7 @@ class Alarm(models.Model):
     _interval_selection = {'minutes': 'Minutes', 'hours': 'Hours', 'days': 'Days'}
 
     name = fields.Char('Name', translate=True, required=True)
-    alarm_type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], string='Type', required=True, default='email', oldname='type')
+    alarm_type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], string='Type', required=True, default='email')
     duration = fields.Integer('Remind Before', required=True, default=1)
     interval = fields.Selection(list(_interval_selection.items()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
@@ -545,13 +545,13 @@ class Meeting(models.Model):
     """
 
     _name = 'calendar.event'
-    _description = "Event"
+    _description = "Calendar Event"
     _order = "id desc"
     _inherit = ["mail.thread"]
 
     @api.model
     def default_get(self, fields):
-        # super default_model='crm.lead' for easier use in adddons
+        # super default_model='crm.lead' for easier use in addons
         if self.env.context.get('default_res_model') and not self.env.context.get('default_res_model_id'):
             self = self.with_context(
                 default_res_model_id=self.env['ir.model'].sudo().search([
@@ -686,7 +686,7 @@ class Meeting(models.Model):
         lang = self._context.get("lang")
         lang_params = {}
         if lang:
-            record_lang = self.env['res.lang'].search([("code", "=", lang)], limit=1)
+            record_lang = self.env['res.lang']._lang_get(lang)
             lang_params = {
                 'date_format': record_lang.date_format,
                 'time_format': record_lang.time_format
@@ -761,6 +761,8 @@ class Meeting(models.Model):
             for event in self:
                 if event.partner_ids.filtered(lambda s: s.id == partner_id):
                     event.is_highlighted = True
+                else:
+                    event.is_highlighted = False
 
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, tracking=True, default='draft')
@@ -780,7 +782,7 @@ class Meeting(models.Model):
     event_tz = fields.Selection('_event_tz_get', string='Timezone', default=lambda self: self.env.context.get('tz') or self.user_id.tz)
     duration = fields.Float('Duration', states={'done': [('readonly', True)]})
     description = fields.Text('Description', states={'done': [('readonly', True)]})
-    privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]}, oldname="class")
+    privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]})
     location = fields.Char('Location', states={'done': [('readonly', True)]}, tracking=True, help="Location of Event")
     show_as = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}, default='busy')
 
@@ -820,7 +822,7 @@ class Meeting(models.Model):
     month_by = fields.Selection([
         ('date', 'Date of month'),
         ('day', 'Day of month')
-    ], string='Option', default='date', oldname='select1')
+    ], string='Option', default='date')
     day = fields.Integer('Date of month', default=1)
     week_list = fields.Selection([
         ('MO', 'Monday'),
@@ -1604,10 +1606,31 @@ class Meeting(models.Model):
                 self.env['calendar.alarm_manager']._notify_next_alarm(meeting.partner_ids.ids)
         return meeting
 
-    def export_data(self, fields_to_export, raw_data=False):
+    def export_data(self, fields_to_export):
         """ Override to convert virtual ids to ids """
         records = self.browse(set(get_real_ids(self.ids)))
-        return super(Meeting, records).export_data(fields_to_export, raw_data)
+        return super(Meeting, records).export_data(fields_to_export)
+
+    def _read(self, fields):
+        select = [(x, calendar_id2real_id(x)) for x in self.ids]
+        result = super(Meeting, self.browse(real_id for calendar_id, real_id in select))._read(fields)
+        for calendar_id, real_id in select:
+            if real_id != calendar_id:
+                calendar = self.browse(calendar_id)
+                real = self.browse(real_id)
+                ls = calendar_id2real_id(calendar_id, with_date=True)
+                for field in fields:
+                    f = self._fields[field]
+                    if field in ('start', 'start_date', 'start_datetime'):
+                        value = ls[1]
+                    elif field in ('stop', 'stop_date', 'stop_datetime'):
+                        value = ls[2]
+                    elif field == 'display_time':
+                        value = self._get_display_time(ls[1], ls[2], real.duration, real.allday)
+                    else:
+                        value = self.env.cache.get(real, f)
+                    self.env.cache.set(calendar, f, value)
+        return result
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -1781,3 +1804,12 @@ class Meeting(models.Model):
             if 'UNTIL' not in rule_str and 'COUNT' not in rule_str:
                 rule_str += ';COUNT=100'
         return rule_str
+
+    def change_attendee_status(self, status):
+        attendee = self.attendee_ids.filtered(lambda x: x.partner_id == self.env.user.partner_id)
+        if status == 'accepted':
+            return attendee.do_accept()
+        elif status == 'declined':
+            return attendee.do_decline()
+        else:
+            return attendee.do_tentative()

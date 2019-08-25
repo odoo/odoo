@@ -4,6 +4,7 @@
 from odoo import api, fields, models
 from odoo.tools.translate import _, html_translate
 from odoo.addons.http_routing.models.ir_http import slug
+from datetime import timedelta
 
 
 class TrackTag(models.Model):
@@ -13,7 +14,7 @@ class TrackTag(models.Model):
 
     name = fields.Char('Tag Name', required=True)
     track_ids = fields.Many2many('event.track', string='Tracks')
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', help="Note that colorless tags won't be available on the website.")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -58,11 +59,12 @@ class Track(models.Model):
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
-    partner_id = fields.Many2one('res.partner', 'Speaker')
-    partner_name = fields.Char('Speaker Name')
-    partner_email = fields.Char('Speaker Email')
-    partner_phone = fields.Char('Speaker Phone')
-    partner_biography = fields.Html('Speaker Biography')
+    company_id = fields.Many2one('res.company', related='event_id.company_id')
+    partner_id = fields.Many2one('res.partner', 'Partner')
+    partner_name = fields.Char('Name')
+    partner_email = fields.Char('Email')
+    partner_phone = fields.Char('Phone')
+    partner_biography = fields.Html('Biography')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     stage_id = fields.Many2one(
         'event.track.stage', string='Stage', ondelete='restrict',
@@ -78,9 +80,10 @@ class Track(models.Model):
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"
              " * Green indicates the track is ready to be pulled to the next stage")
-    description = fields.Html('Track Description', translate=html_translate, sanitize_attributes=False)
+    description = fields.Html(translate=html_translate, sanitize_attributes=False)
     date = fields.Datetime('Track Date')
-    duration = fields.Float('Duration', default=1.5)
+    date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
+    duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
     location_id = fields.Many2one('event.track.location', 'Room')
     event_id = fields.Many2one('event.event', 'Event', required=True)
     color = fields.Integer('Color Index')
@@ -88,7 +91,7 @@ class Track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Binary('Image', related='partner_id.image_medium', store=True, readonly=False)
+    image = fields.Image("Image", related='partner_id.image_128', store=True, readonly=False)
 
     @api.depends('name')
     def _compute_website_url(self):
@@ -104,6 +107,12 @@ class Track(models.Model):
             self.partner_email = self.partner_id.email
             self.partner_phone = self.partner_id.phone
             self.partner_biography = self.partner_id.website_description
+
+    @api.depends('date', 'duration')
+    def _compute_end_date(self):
+        for track in self:
+            delta = timedelta(minutes=60 * track.duration)
+            track.date_end = track.date + delta
 
     @api.model
     def create(self, vals):
@@ -202,4 +211,4 @@ class Sponsor(models.Model):
     partner_id = fields.Many2one('res.partner', 'Sponsor/Customer', required=True)
     url = fields.Char('Sponsor Website')
     sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence', readonly=False)
-    image_medium = fields.Binary(string='Logo', related='partner_id.image_medium', store=True, readonly=False)
+    image_128 = fields.Image(string="Logo", related='partner_id.image_128', store=True, readonly=False)

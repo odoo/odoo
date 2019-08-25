@@ -36,6 +36,7 @@ var FIELD_CLASSES = {
 var ListRenderer = BasicRenderer.extend({
     className: 'o_list_view',
     events: {
+        "mousedown": "_onMouseDown",
         "click .o_optional_columns_dropdown .dropdown-item": "_onToggleOptionalColumn",
         "click .o_optional_columns_dropdown_toggle": "_onToggleOptionalColumnDropdown",
         'click tbody tr': '_onRowClicked',
@@ -66,10 +67,18 @@ var ListRenderer = BasicRenderer.extend({
         this.hasSelectors = params.hasSelectors;
         this.selection = params.selectedRecords || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
-        this.editable = params.editable;
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
+    },
+    /**
+     * Compute columns visilibity. This can't be done earlier as we need the
+     * controller to respond to the load_optional_fields call of processColumns.
+     *
+     * @override
+     */
+    willStart: function () {
         this._processColumns(this.columnInvisibleFields || {});
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -148,7 +157,12 @@ var ListRenderer = BasicRenderer.extend({
             (attrs.max && 'max') || (attrs.min && 'min');
         if (func) {
             var count = 0;
-            var aggregateValue = (func === 'max') ? -Infinity : (func === 'min') ? Infinity : 0;
+            var aggregateValue = 0;
+            if (func === 'max') {
+                aggregateValue = -Infinity;
+            } else if (func === 'min') {
+                aggregateValue = Infinity;
+            }
             _.each(data, function (d) {
                 count += 1;
                 var value = (d.type === 'record') ? d.data[attrs.name] : d.aggregateValues[attrs.name];
@@ -240,14 +254,13 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      * @returns {string}
      */
-    _getOptionalColumnsStorageKey: function () {
+    _getOptionalColumnsStorageKeyParts: function () {
         var self = this;
-        var fields = [];
-        _.each(this.state.fieldsInfo[this.viewType], function (field, name) {
-            fields.push(name + ":" + self.state.fields[name].type);
-        });
-        fields.sort();
-        return "list_optional_fields," + this.state.model + "," + this.viewType + "," + fields.join(',');
+        return {
+            fields: _.map(this.state.fieldsInfo[this.viewType], function (_, fieldName) {
+                return {name: fieldName, type: self.state.fields[fieldName].type};
+            }),
+        };
     },
     /**
      * Removes the columns which should be invisible.
@@ -260,8 +273,13 @@ var ListRenderer = BasicRenderer.extend({
         this.columns = [];
         this.optionalColumns = [];
         this.optionalColumnsEnabled = [];
-        var localStorageKey = this._getOptionalColumnsStorageKey();
-        var storedOptionalColumns = this.call('local_storage', 'getItem', localStorageKey);
+        var storedOptionalColumns;
+        this.trigger_up('load_optional_fields', {
+            keyParts: this._getOptionalColumnsStorageKeyParts(),
+            callback: function (res) {
+                storedOptionalColumns = res;
+            },
+        });
         _.each(this.arch.children, function (c) {
             if (c.tag !== 'control' && c.tag !== 'groupby') {
                 var reject = c.attrs.modifiers.column_invisible;
@@ -282,7 +300,7 @@ var ListRenderer = BasicRenderer.extend({
                     self.optionalColumns.push(c);
                     var enabled;
                     if (storedOptionalColumns === undefined) {
-                        enabled = c.attrs.optional === 'show'
+                        enabled = c.attrs.optional === 'show';
                     } else {
                         enabled = _.contains(storedOptionalColumns, c.attrs.name);
                     }
@@ -404,6 +422,7 @@ var ListRenderer = BasicRenderer.extend({
             data: record.data,
             escape: true,
             isPassword: 'password' in node.attrs,
+            digits: node.attrs.digits && JSON.parse(node.attrs.digits),
         });
         this._handleAttributes($td, node);
         var title = field.type !== 'boolean' ? formattedValue : '';
@@ -576,7 +595,7 @@ var ListRenderer = BasicRenderer.extend({
         var $th = $('<th>')
             .addClass('o_group_name')
             .attr('tabindex', -1)
-            .text(name + ' (' + group.count + ')')
+            .text(name + ' (' + group.count + ')');
         var $arrow = $('<span>')
             .css('padding-left', (groupLevel * 20) + 'px')
             .css('padding-right', '5px')
@@ -599,16 +618,22 @@ var ListRenderer = BasicRenderer.extend({
         var colspanBeforeAggregate;
         if (firstAggregateIndex !== -1) {
             // if there are aggregates, the first $th goes until the first
-            // aggregate then all cells between aggregates are rendered, then
-            // there is a last $th for the pager
+            // aggregate then all cells between aggregates are rendered
             colspanBeforeAggregate = firstAggregateIndex;
             var lastAggregateIndex = _.findLastIndex(this.columns, function (column) {
                 return column.tag === 'field' && _.contains(aggregateKeys, column.attrs.name);
             });
             cells = cells.concat(aggregateCells.slice(firstAggregateIndex, lastAggregateIndex + 1));
-            cells.push($('<th>').attr('colspan', this.columns.length - 1 - lastAggregateIndex));
+            var colSpan = this.columns.length - 1 - lastAggregateIndex;
+            if (colSpan > 0) {
+                cells.push($('<th>').attr('colspan', colSpan));
+            }
         } else {
-            colspanBeforeAggregate = this.columns.length;
+            var colN = this.columns.length;
+            colspanBeforeAggregate = colN > 1 ? colN - 1 : 1;
+            if (colN > 1) {
+                cells.push($('<th>'));
+            }
         }
         if (this.hasSelectors) {
             colspanBeforeAggregate += 1;
@@ -616,11 +641,11 @@ var ListRenderer = BasicRenderer.extend({
         $th.attr('colspan', colspanBeforeAggregate);
 
         if (group.isOpen && !group.groupedBy.length && (group.count > group.data.length)) {
-            var $lastCell = cells[cells.length - 1];
             var $pager = this._renderGroupPager(group);
-            $lastCell.addClass('o_group_pager').append($pager);
+            var $lastCell = cells[cells.length - 1];
+            $lastCell.append($pager);
         }
-        if (groupLevel === 0 && group.isOpen && this.groupbys[groupBy]) {
+        if (group.isOpen && this.groupbys[groupBy]) {
             var $buttons = this._renderGroupButtons(group, this.groupbys[groupBy]);
             if ($buttons.length) {
                 var $buttonSection = $('<div>', {
@@ -742,10 +767,10 @@ var ListRenderer = BasicRenderer.extend({
         }
 
         if (field.type === 'float' || field.type === 'integer' || field.type === 'monetary') {
-            $th.css({ textAlign: 'right' });
+            $th.addClass('o_list_number_th');
         }
 
-        if (config.isDebug() || node.attrs.help || field.help) {
+        if (config.isDebug()) {
             var fieldDescr = {
                 field: field,
                 name: name,
@@ -792,20 +817,20 @@ var ListRenderer = BasicRenderer.extend({
         return this.state.data.map(this._renderRow.bind(this));
     },
     /**
-    * Render a single <th> with dropdown menu to display optional columns of view.
-    *
-    * @private
-    * @returns {jQueryElement} a <th> element
-    */
+     * Render a single <th> with dropdown menu to display optional columns of view.
+     *
+     * @private
+     * @returns {jQueryElement} a <th> element
+     */
     _renderOptionalColumnsDropdown: function () {
         var self = this;
         var $optionalColumnsDropdown = $('<div>', {
             class: 'o_optional_columns text-center dropdown',
         });
         var $a = $("<a>", {
-            class: "dropdown-toggle text-dark o-no-caret",
-            href: "#",
-            role: "button",
+            'class': "dropdown-toggle text-dark o-no-caret",
+            'href': "#",
+            'role': "button",
             'data-toggle': "dropdown",
             'aria-expanded': false,
         });
@@ -823,7 +848,7 @@ var ListRenderer = BasicRenderer.extend({
                     name: col.attrs.name,
                     checked: _.contains(self.optionalColumnsEnabled, col.attrs.name),
                 }
-            })
+            });
             $dropdown.append($("<div>", {
                 class: "dropdown-item",
             }).append($checkbox));
@@ -909,7 +934,7 @@ var ListRenderer = BasicRenderer.extend({
             }));
 
             if (self.optionalColumns.length) {
-                self.$el.addClass('o_list_optional_columns')
+                self.$el.addClass('o_list_optional_columns');
                 self.$('table').append($('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>'));
                 self.$el.append(self._renderOptionalColumnsDropdown());
             }
@@ -1024,11 +1049,14 @@ var ListRenderer = BasicRenderer.extend({
         } else {
             this.optionalColumnsEnabled.push(input.name);
         }
-        this.call('local_storage', 'setItem', this._getOptionalColumnsStorageKey(), this.optionalColumnsEnabled);
-        this._processColumns(this.columnInvisibleFields || {});
-        this._renderView().then(function() {
+        this.trigger_up('save_optional_fields', {
+            keyParts: this._getOptionalColumnsStorageKeyParts(),
+            optionalColumnsEnabled: this.optionalColumnsEnabled,
+        });
+        this._processColumns(this.columnInvisibleFields || {});
+        this._renderView().then(function () {
             self._onToggleOptionalColumnDropdown(ev);
-        })
+        });
     },
     /**
      * When the user clicks on the three dots (ellipsis), toggle the optional
@@ -1062,6 +1090,7 @@ var ListRenderer = BasicRenderer.extend({
             case $.ui.keyCode.LEFT:
                 ev.preventDefault();
                 $tr = $cell.closest('tr');
+                $tr.closest('tbody').addClass('o_keyboard_navigation');
                 if ($tr.hasClass('o_group_header') && $tr.hasClass('o_group_open')) {
                     this._onToggleGroup(ev);
                 } else {
@@ -1071,6 +1100,7 @@ var ListRenderer = BasicRenderer.extend({
             case $.ui.keyCode.RIGHT:
                 ev.preventDefault();
                 $tr = $cell.closest('tr');
+                $tr.closest('tbody').addClass('o_keyboard_navigation');
                 if ($tr.hasClass('o_group_header') && !$tr.hasClass('o_group_open')) {
                     this._onToggleGroup(ev);
                 } else {
@@ -1079,11 +1109,16 @@ var ListRenderer = BasicRenderer.extend({
                 break;
             case $.ui.keyCode.UP:
                 ev.preventDefault();
+                $cell.closest('tbody').addClass('o_keyboard_navigation');
                 colIndex = this.currentColIndex || $cell.index();
                 $futureCell = this._findConnectedCell($cell, 'prev', colIndex);
+                if (!$futureCell) {
+                    this.trigger_up('navigation_move', { direction: 'up' });
+                }
                 break;
             case $.ui.keyCode.DOWN:
                 ev.preventDefault();
+                $cell.closest('tbody').addClass('o_keyboard_navigation');
                 colIndex = this.currentColIndex || $cell.index();
                 $futureCell = this._findConnectedCell($cell, 'next', colIndex);
                 break;
@@ -1112,6 +1147,12 @@ var ListRenderer = BasicRenderer.extend({
                 $futureCell.focus();
             }
         }
+    },
+    /**
+     * @private
+     */
+    _onMouseDown: function () {
+        $('.o_keyboard_navigation').removeClass('o_keyboard_navigation');
     },
     /**
      * @private
@@ -1157,7 +1198,7 @@ var ListRenderer = BasicRenderer.extend({
         if (group.count) {
             this.trigger_up('toggle_group', {
                 group: group,
-                onSuccess: function() {
+                onSuccess: function () {
                     // Refocus the header after re-render unless the user
                     // already focused something else by now
                     if (document.activeElement.tagName === 'BODY') {

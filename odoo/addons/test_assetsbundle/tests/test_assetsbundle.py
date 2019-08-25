@@ -44,7 +44,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
     def _any_ira_for_bundle(self, type, lang=None):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
         """
-        user_direction = self.env['res.lang'].search([('code', '=', (lang or self.env.user.lang))]).direction
+        user_direction = self.env['res.lang']._lang_get(lang or self.env.user.lang).direction
         bundle = self.jsbundle_xmlid if type == 'js' else self.cssbundle_xmlid
         url = '/web/content/%-%/{0}{1}.{2}'.format(('rtl/' if type == 'css' and user_direction == 'rtl' else ''), bundle, type)
         domain = [('url', '=like', url)]
@@ -540,6 +540,7 @@ class TestAssetsBundleInBrowser(HttpCase):
             'arch': view_arch,
             'inherit_id': self.browse_ref('test_assetsbundle.bundle1').id,
         })
+        self.env.user.flush()
 
         self.phantom_js(
             "/test_assetsbundle/js",
@@ -602,6 +603,7 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
             # has really been modified. If we do not update the write_date to a posterior date, we are
             # not able to reproduce the case where we compile this bundle again without changing
             # anything.
+            self.env['ir.attachment'].flush(['checksum'])
             self.cr.execute("update ir_attachment set write_date=clock_timestamp() + interval '10 seconds' where id = (select max(id) from ir_attachment)")
 
             # Compile a fourth time, without changes

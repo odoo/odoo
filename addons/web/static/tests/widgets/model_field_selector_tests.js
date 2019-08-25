@@ -248,6 +248,46 @@ QUnit.module('ModelFieldSelector', {
 
         fieldSelector.destroy();
     });
+
+    QUnit.test("create a field chain with value 1 i.e. TRUE_LEAF", async function (assert) {
+        assert.expect(1);
+
+        var $target = $("#qunit-fixture");
+
+        //create the field selector with domain value ["1"]
+        var fieldSelector = new ModelFieldSelector(null, "partner", ["1"], {
+            readonly: false,
+            showSearchInput: false,
+        });
+        testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
+        await fieldSelector.appendTo($target);
+
+        var $fieldName = fieldSelector.$('.o_field_selector_chain_part');
+        assert.strictEqual($fieldName.text().trim(), "1",
+            "field name value should be 1.");
+
+        fieldSelector.destroy();
+    });
+
+    QUnit.test("create a field chain with value 0 i.e. FALSE_LEAF", async function (assert) {
+        assert.expect(1);
+
+        var $target = $("#qunit-fixture");
+
+        //create the field selector with domain value ["0"]
+        var fieldSelector = new ModelFieldSelector(null, "partner", ["0"], {
+            readonly: false,
+            showSearchInput: false,
+        });
+        testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
+        await fieldSelector.appendTo($target);
+
+        var $fieldName = fieldSelector.$('.o_field_selector_chain_part');
+        assert.strictEqual($fieldName.text().trim(), "0",
+            "field name value should be 0.");
+
+        fieldSelector.destroy();
+    });
 });
 });
 });

@@ -71,7 +71,7 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div>
                                 <span>
-                                    <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="40" height="40" class="oe_kanban_avatar float-left mr4"/>
+                                    <img t-att-src="kanban_image('hr.employee', 'image_64', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="40" height="40" class="oe_kanban_avatar float-left mr4"/>
                                 </span>
                                 <span>
                                     <div>
@@ -111,11 +111,11 @@
     </record>
 
     <record id="act_hr_employee_holiday_request" model="ir.actions.act_window">
-        <field name="name">Time off</field>
+        <field name="name">Time off Analysis</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.leave.report</field>
         <field name="binding_model_id" ref="hr.model_hr_employee"/>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,pivot</field>
         <field name="context">{
             'search_default_group_type': 1,
             'search_default_year': 1}</field>

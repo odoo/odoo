@@ -12,7 +12,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="partner_id" required="1" context="{'default_is_company': True, 'default_supplier': True}"/>
+                                <field name="partner_id" required="1" context="{'default_is_company': True}"/>
                                 <field name="journal_id" widget="selection"/>
                                 <field name="hide_payment_method" invisible="1"/>
                                 <field name="payment_method_id" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
@@ -28,6 +28,7 @@
                             <group>
                                 <field name="payment_date"/>
                                 <field name="communication"/>
+                                <field name="company_id" invisible="1"/>
                             </group>
                         </group>
                     </sheet>

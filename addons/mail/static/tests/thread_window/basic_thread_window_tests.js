@@ -16,6 +16,29 @@ QUnit.module('Basic', {
 
         // define channel to link to chat window
         this.data = {
+            'mail.channel': {
+                fields: {
+                    name: {
+                        string: "Name",
+                        type: "char",
+                        required: true,
+                    },
+                    channel_type: {
+                        string: "Channel Type",
+                        type: "selection",
+                    },
+                    channel_message_ids: {
+                        string: "Messages",
+                        type: "many2many",
+                        relation: 'mail.message'
+                    },
+                    message_unread_counter: {
+                        string: "Amount of Unread Messages",
+                        type: "integer"
+                    },
+                },
+                records: [],
+            },
             'mail.message': {
                 fields: {},
                 records: [],
@@ -292,34 +315,12 @@ QUnit.test('do not increment unread counter with focus on thread window', async 
 QUnit.test('do not mark as read the newly open thread window from received message', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.channel'] = {
-        fields: {
-            name: {
-                string: "Name",
-                type: "char",
-                required: true,
-            },
-            channel_type: {
-                string: "Channel Type",
-                type: "selection",
-            },
-            channel_message_ids: {
-                string: "Messages",
-                type: "many2many",
-                relation: 'mail.message'
-            },
-            message_unread_counter: {
-                string: "Amount of Unread Messages",
-                type: "integer"
-            },
-        },
-        records: [{
-            id: 2,
-            name: "DM",
-            channel_type: "chat",
-            message_unread_counter: 0,
-        }],
-    };
+    this.data['mail.channel'].records = [{
+        id: 2,
+        name: "DM",
+        channel_type: "chat",
+        message_unread_counter: 0,
+    }];
 
     var parent = this.createParent({
         data: this.data,
@@ -371,33 +372,11 @@ QUnit.test('do not mark as read the newly open thread window from received messa
 QUnit.test('show document link of message linked to a document', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.channel'] = {
-        fields: {
-            name: {
-                string: "Name",
-                type: "char",
-                required: true,
-            },
-            channel_type: {
-                string: "Channel Type",
-                type: "selection",
-            },
-            channel_message_ids: {
-                string: "Messages",
-                type: "many2many",
-                relation: 'mail.message'
-            },
-            message_unread_counter: {
-                string: "Amount of Unread Messages",
-                type: "integer"
-            },
-        },
-        records: [{
-            id: 2,
-            name: "R&D Tasks",
-            channel_type: "channel",
-        }],
-    };
+    this.data['mail.channel'].records = [{
+        id: 2,
+        name: "R&D Tasks",
+        channel_type: "channel",
+    }];
     this.data['mail.message'].records.push({
         author_id: [5, "Someone else"],
         body: "<p>Test message</p>",
@@ -460,35 +439,13 @@ QUnit.test('do not autofocus chat window on receiving new direct message', async
         }],
     };
 
-    this.data['mail.channel'] = {
-        fields: {
-            name: {
-                string: "Name",
-                type: "char",
-                required: true,
-            },
-            channel_type: {
-                string: "Channel Type",
-                type: "selection",
-            },
-            channel_message_ids: {
-                string: "Messages",
-                type: "many2many",
-                relation: 'mail.message'
-            },
-            message_unread_counter: {
-                string: "Amount of Unread Messages",
-                type: "integer"
-            },
-        },
-        records: [{
-            id: 2,
-            name: "DM",
-            channel_type: "chat",
-            message_unread_counter: 0,
-            direct_partner: [{ id: 666, name: 'DemoUser1', im_status: '' }],
-        }],
-    };
+    this.data['mail.channel'].records = [{
+        id: 2,
+        name: "DM",
+        channel_type: "chat",
+        message_unread_counter: 0,
+        direct_partner: [{ id: 666, name: 'DemoUser1', im_status: '' }],
+    }];
 
     var form = await testUtils.createView({
         View: FormView,
@@ -543,37 +500,15 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
     assert.expect(10);
 
     var self = this;
-    this.data['mail.channel'] = {
-        fields: {
-            name: {
-                string: "Name",
-                type: "char",
-                required: true,
-            },
-            channel_type: {
-                string: "Channel Type",
-                type: "selection",
-            },
-            channel_message_ids: {
-                string: "Messages",
-                type: "many2many",
-                relation: 'mail.message'
-            },
-            message_unread_counter: {
-                string: "Amount of Unread Messages",
-                type: "integer"
-            },
-        },
-        records: [{
-            id: 2,
-            name: "DM",
-            channel_type: "chat",
-            message_unread_counter: 1,
-            direct_partner: [{ id: 666, name: 'DemoUser1', im_status: '' }],
-            is_minimized: false,
-            state: 'open',
-        }],
-    };
+    this.data['mail.channel'].records = [{
+        id: 2,
+        name: "DM",
+        channel_type: "chat",
+        message_unread_counter: 1,
+        direct_partner: [{ id: 666, name: 'DemoUser1', im_status: '' }],
+        is_minimized: false,
+        state: 'open',
+    }];
 
     var parent = this.createParent({
         data: this.data,
@@ -654,21 +589,15 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
 
 QUnit.test('out-of-office status in thread window', async function (assert) {
     assert.expect(1);
-    this.data = {
-        'mail.message': {
-            fields: {},
-            records: [],
-        },
-        initMessaging: {
-            channel_slots: {
-                channel_channel: [{
-                    id: 1,
-                    name: "DM",
-                    channel_type: "chat",
-                    message_unread_counter: 0,
-                    direct_partner: [{ id: 666, name: 'DemoUser1', im_status: 'online', out_of_office_message: 'Please don\'t disturb'}],
-                }],
-            },
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                name: "DM",
+                channel_type: "chat",
+                message_unread_counter: 0,
+                direct_partner: [{ id: 666, name: 'DemoUser1', im_status: 'online', out_of_office_message: 'Please don\'t disturb'}],
+            }],
         },
     };
     var parent = this.createParent({
@@ -691,21 +620,15 @@ QUnit.test('out-of-office status in thread window', async function (assert) {
 
 QUnit.test('no out-of-office status in thread window', async function (assert) {
     assert.expect(1);
-    this.data = {
-        'mail.message': {
-            fields: {},
-            records: [],
-        },
-        initMessaging: {
-            channel_slots: {
-                channel_channel: [{
-                    id: 1,
-                    name: "DM",
-                    channel_type: "chat",
-                    message_unread_counter: 0,
-                    direct_partner: [{ id: 666, name: 'DemoUser1', im_status: 'online'}],
-                }],
-            },
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                name: "DM",
+                channel_type: "chat",
+                message_unread_counter: 0,
+                direct_partner: [{ id: 666, name: 'DemoUser1', im_status: 'online'}],
+            }],
         },
     };
     var parent = this.createParent({
@@ -722,6 +645,207 @@ QUnit.test('no out-of-office status in thread window', async function (assert) {
 
     var $threadWindow = $('.o_thread_window');
     assert.containsNone($threadWindow, '.o_out_of_office_text');
+
+    parent.destroy();
+});
+
+QUnit.test('auto-update out-of-office info on im_status change', async function (assert) {
+    assert.expect(5);
+
+    var imStatusDefs = [testUtils.makeTestPromise(), testUtils.makeTestPromise()];
+    var channelInfoDefs = [testUtils.makeTestPromise(), testUtils.makeTestPromise()];
+    var timeoutMock = mailTestUtils.patchMailTimeouts();
+    var step = 0;
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                name: "DM",
+                channel_type: "chat",
+                message_unread_counter: 0,
+                direct_partner: [{
+                    id: 666,
+                    name: 'DemoUser1',
+                    im_status: 'online',
+                }],
+            }],
+        },
+    };
+
+    var parent = this.createParent({
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (route === '/longpolling/im_status') {
+                step++;
+                if (step === 1) {
+                    imStatusDefs[0].resolve();
+                    return Promise.resolve([
+                        {
+                            id: 666,
+                            im_status: 'leave',
+                        },
+                    ]);
+                } else if (step === 2) {
+                    imStatusDefs[1].resolve();
+                    return Promise.resolve([
+                        {
+                            id: 666,
+                            im_status: 'online',
+                        },
+                    ]);
+                }
+            }
+            if (args.method === 'channel_info') {
+                if (step === 1) {
+                    channelInfoDefs[0].resolve();
+                    return Promise.resolve([{
+                        id: 1,
+                        direct_partner: [{
+                            out_of_office_message: "Leave me alone",
+                            out_of_office_date_end: false,
+                        }],
+                    }]);
+                }
+                else if (step === 2) {
+                    channelInfoDefs[1].resolve();
+                    return Promise.resolve([{
+                        id: 1,
+                        direct_partner: [{
+                            out_of_office_message: false,
+                            out_of_office_date_end: false,
+                        }],
+                    }]);
+                }
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+    await testUtils.nextTick();
+
+    // detach channel 1, so that it opens corresponding thread window.
+    parent.call('mail_service', 'getChannel', 1).detach();
+    await testUtils.nextTick();
+
+    assert.containsNone($, '.o_out_of_office',
+        "should contain no out of office section on chat window initially");
+
+    timeoutMock.addTime(51*1000); // wait for next im status fetch
+
+    await Promise.all([imStatusDefs[0], channelInfoDefs[0]]);
+    await testUtils.nextTick();
+    assert.containsOnce($, '.o_out_of_office',
+        "should contain out of office section on chat window");
+    assert.containsOnce($, '.o_out_of_office > .o_out_of_office_text',
+        "should contain out of office text on chat window");
+    assert.ok(
+        $('.o_out_of_office > .o_out_of_office_text')
+            .text()
+            .replace(/\s/g, "")
+            .indexOf("Leavemealone") !== -1,
+        "should contain out of office text on chat window");
+    timeoutMock.addTime(51*1000); // wait for next im status fetch
+
+    await Promise.all([imStatusDefs[1], channelInfoDefs[1]]);
+    await testUtils.nextTick();
+    assert.containsNone($, '.o_out_of_office',
+        "should no longer contain out of office section on chat window");
+
+    timeoutMock.runPendingTimeouts();
+    parent.destroy();
+});
+
+QUnit.test('receive 2 new DM messages in quick succession (no chat window initially)', async function (assert) {
+    assert.expect(3);
+
+    const self = this;
+    this.data['mail.channel'].records = [{
+        channel_type: "chat",
+        direct_partner: [{
+            id: 5,
+            name: 'Someone else',
+            im_status: 'online',
+        }],
+        id: 10,
+        is_minimized: false,
+        message_unread_counter: 1,
+        name: "DM",
+        state: 'open',
+    }];
+
+    this.data.initMessaging.channel_slots = {
+        channel_direct_message: [{
+            channel_type: 'chat',
+            direct_partner: [{
+                id: 5,
+                name: 'Someone else',
+                im_status: 'online',
+            }],
+            id: 10,
+            message_unread_counter: 0,
+            name: "DM",
+        }],
+    };
+
+    const parent = this.createParent({
+        data: this.data,
+        mockRPC(route, args) {
+            if (args.method === 'channel_minimize') {
+                Object.assign(self.data['mail.channel'].records[0], {
+                    is_minimized: true,
+                    state: 'open',
+                });
+            }
+            return this._super(...arguments);
+        },
+        services: this.services,
+        session: {
+            partner_id: 3,
+        },
+    });
+
+    await testUtils.nextTick();
+    assert.containsNone(
+        $,
+        '.o_thread_window',
+        "should not have any DM window open");
+
+    // simulate receiving 2 new messages from someone else in quick succession
+    const messageData1 = {
+        author_id: [5, "Someone else"],
+        body: "<p>Test message1</p>",
+        channel_ids: [10],
+        id: 2,
+        model: 'mail.channel',
+        res_id: 10,
+    };
+    this.data['mail.message'].records.push(messageData1);
+    const notification1 = [[false, 'mail.channel', 2], messageData1];
+    parent.call('bus_service', 'trigger', 'notification', [notification1]);
+    // simulate short delay for receiving new message
+    await testUtils.nextMicrotaskTick();
+    const messageData2 = {
+        author_id: [5, "Someone else"],
+        body: "<p>Test message2</p>",
+        channel_ids: [10],
+        id: 3,
+        model: 'mail.channel',
+        res_id: 10,
+    };
+    this.data['mail.message'].records.push(messageData2);
+    const notification2 = [[false, 'mail.channel', 2], messageData2];
+    parent.call('bus_service', 'trigger', 'notification', [notification2]);
+    await testUtils.nextTick();
+    assert.containsOnce(
+        $,
+        '.o_thread_window',
+        "should have DM window open");
+    assert.containsN(
+        $('.o_thread_window'),
+        '.o_thread_message',
+        2,
+        "should have 2 messages in chat window");
 
     parent.destroy();
 });

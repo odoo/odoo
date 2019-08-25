@@ -25,42 +25,47 @@ class AccountBankStatementImport(models.TransientModel):
     _name = 'account.bank.statement.import'
     _description = 'Import Bank Statement'
 
-    data_file = fields.Binary(string='Bank Statement File', attachment=False, required=True, help='Get you bank statements in electronic format from your bank and select them here.')
+    attachment_ids = fields.Many2many('ir.attachment', string='Files', required=True, help='Get you bank statements in electronic format from your bank and select them here.')
     filename = fields.Char()
 
     def import_file(self):
         """ Process the file chosen in the wizard, create bank statement(s) and go to reconciliation. """
         self.ensure_one()
+        statement_line_ids_all = []
+        notifications_all = []
         # Let the appropriate implementation module parse the file and return the required data
         # The active_id is passed in context in case an implementation module requires information about the wizard state (see QIF)
-        currency_code, account_number, stmts_vals = self.with_context(active_id=self.ids[0])._parse_file(base64.b64decode(self.data_file))
-        # Check raw data
-        self._check_parsed_data(stmts_vals)
-        # Try to find the currency and journal in odoo
-        currency, journal = self._find_additional_data(currency_code, account_number)
-        # If no journal found, ask the user about creating one
-        if not journal:
-            # The active_id is passed in context so the wizard can call import_file again once the journal is created
-            return self.with_context(active_id=self.ids[0])._journal_creation_wizard(currency, account_number)
-        if not journal.default_debit_account_id or not journal.default_credit_account_id:
-            raise UserError(_('You have to set a Default Debit Account and a Default Credit Account for the journal: %s') % (journal.name,))
-        # Prepare statement data to be used for bank statements creation
-        stmts_vals = self._complete_stmts_vals(stmts_vals, journal, account_number)
-        # Create the bank statements
-        statement_line_ids, notifications = self._create_bank_statements(stmts_vals)
-        # Now that the import worked out, set it as the bank_statements_source of the journal
-        if journal.bank_statements_source != 'file_import':
-            # Use sudo() because only 'account.group_account_manager'
-            # has write access on 'account.journal', but 'account.group_account_user'
-            # must be able to import bank statement files
-            journal.sudo().bank_statements_source = 'file_import'
+        for data_file in self.attachment_ids:
+            currency_code, account_number, stmts_vals = self.with_context(active_id=self.ids[0])._parse_file(base64.b64decode(data_file.datas))
+            # Check raw data
+            self._check_parsed_data(stmts_vals)
+            # Try to find the currency and journal in odoo
+            currency, journal = self._find_additional_data(currency_code, account_number)
+            # If no journal found, ask the user about creating one
+            if not journal:
+                # The active_id is passed in context so the wizard can call import_file again once the journal is created
+                return self.with_context(active_id=self.ids[0])._journal_creation_wizard(currency, account_number)
+            if not journal.default_debit_account_id or not journal.default_credit_account_id:
+                raise UserError(_('You have to set a Default Debit Account and a Default Credit Account for the journal: %s') % (journal.name,))
+            # Prepare statement data to be used for bank statements creation
+            stmts_vals = self._complete_stmts_vals(stmts_vals, journal, account_number)
+            # Create the bank statements
+            statement_line_ids, notifications = self._create_bank_statements(stmts_vals)
+            statement_line_ids_all.extend(statement_line_ids)
+            notifications_all.extend(notifications)
+            # Now that the import worked out, set it as the bank_statements_source of the journal
+            if journal.bank_statements_source != 'file_import':
+                # Use sudo() because only 'account.group_account_manager'
+                # has write access on 'account.journal', but 'account.group_account_user'
+                # must be able to import bank statement files
+                journal.sudo().bank_statements_source = 'file_import'
         # Finally dispatch to reconciliation interface
         return {
             'type': 'ir.actions.client',
             'tag': 'bank_statement_reconciliation_view',
-            'context': {'statement_line_ids': statement_line_ids,
+            'context': {'statement_line_ids': statement_line_ids_all,
                         'company_ids': self.env.user.company_ids.ids,
-                        'notifications': notifications,
+                        'notifications': notifications_all,
             },
         }
 

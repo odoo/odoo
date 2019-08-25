@@ -73,6 +73,9 @@ QUnit.module('ActivityMenu', {
                     }],
                 },
             };
+            this.session = {
+                uid: 10,
+            };
         }
     });
 
@@ -153,11 +156,12 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
 });
 
 QUnit.test('activity menu widget: activity view icon', async function (assert) {
-    assert.expect(10);
+    assert.expect(12);
     var self = this;
     var activityMenu = new ActivityMenu();
     testUtils.mock.addMockEnvironment(activityMenu, {
         services: this.services,
+        session: this.session,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
                 return Promise.resolve(self.data['mail.activity.menu'].records);
@@ -182,9 +186,9 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
 
     testUtils.mock.intercept(activityMenu, 'do_action', function (ev) {
         if (ev.data.action.name) {
-            assert.ok(ev.data.action.context, "should define a context on the action");
-            assert.ok(ev.data.action.context.search_default_activities_my,
-                "should auto-set search to 'My Activities' in the context of the action");
+            assert.ok(ev.data.action.domain, "should define a domain on the action");
+            assert.deepEqual(ev.data.action.domain, [["activity_ids.user_id", "=", 10]],
+                "should set domain to user's activity only")
             assert.step('do_action:' + ev.data.action.name);
         } else {
             assert.step('do_action:' + ev.data.action);
@@ -193,9 +197,15 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
 
     // click on the "Issue" activity icon
     await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
+    assert.hasClass(activityMenu.$('.dropdown-menu'), 'show',
+        "dropdown should be expanded");
+
     await testUtils.dom.click(activityMenu.$(".o_mail_activity_action[data-model_name='Issue']"));
+    assert.doesNotHaveClass(activityMenu.$('.dropdown-menu'), 'show',
+        "dropdown should be collapsed");
 
     // click on the "Note" activity icon
+    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
     await testUtils.dom.click(activityMenu.$(".o_mail_activity_action[data-model_name='Note']"));
 
     assert.verifySteps([

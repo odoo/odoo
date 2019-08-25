@@ -25,7 +25,7 @@ class FleetVehicle(models.Model):
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
     driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver of the vehicle', copy=False)
-    future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver of the vehicle', copy=False)
+    future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver of the vehicle', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
         tracking=True, required=True, help='Model of the vehicle')
     manager_id = fields.Many2one('res.users', related='model_id.manager_id')
@@ -72,9 +72,7 @@ class FleetVehicle(models.Model):
     horsepower_tax = fields.Float('Horsepower Taxation')
     power = fields.Integer('Power', help='Power in kW of the vehicle')
     co2 = fields.Float('CO2 Emissions', help='CO2 emissions of the vehicle')
-    image = fields.Binary(related='model_id.image', string="Logo", readonly=False)
-    image_medium = fields.Binary(related='model_id.image_medium', string="Logo (medium)", readonly=False)
-    image_small = fields.Binary(related='model_id.image_small', string="Logo (small)", readonly=False)
+    image_128 = fields.Image(related='model_id.image_128', readonly=False)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
         string='Has Contracts to renew', multi='contract_info')
     contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', search='_search_get_overdue_contract_reminder',
@@ -202,13 +200,6 @@ class FleetVehicle(models.Model):
         res_ids = [x[0] for x in self.env.cr.fetchall()]
         res.append(('id', search_operator, res_ids))
         return res
-
-    @api.onchange('model_id')
-    def _onchange_model(self):
-        if self.model_id:
-            self.image_medium = self.model_id.image
-        else:
-            self.image_medium = False
 
     @api.model
     def create(self, vals):

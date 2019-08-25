@@ -16,23 +16,19 @@
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="product_id"/>
-                    <field name="state"/>
                     <field name="mo_id"/>
                     <group expand="0" string="Filters">
                         <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                         <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
-                        <separator/>
-                        <filter string="My Activities" name="activities_my"
-                            domain="[('activity_ids.user_id', '=', uid)]"/>
-                        <separator/>
-                        <filter string="Late Activities" name="activities_overdue"
+                        <filter invisible="1" string="Late Activities" name="activities_overdue"
                             domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all records which has next action date is before today"/>
-                        <filter string="Today Activities" name="activities_today"
+                        <filter invisible="1" string="Today Activities" name="activities_today"
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                        <filter string="Future Activitie" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                        <filter invisible="1" string="Future Activitie" name="activities_upcoming_all"
+                            domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        <filter string="Exception Activities" name="activities_exception"
+                            domain="[('activity_exception_decoration', '!=', False)]"/>
                     </group>
                     <group expand='0' string='Group by...'>
                         <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
@@ -49,9 +45,12 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
             <field name="help" type="html">
-              <p class="o_view_nocontent_empty_folder">
-                There's no product move yet
-              </p>
+                <p class="o_view_nocontent_empty_folder">
+                    There's no product move yet
+                </p><p>
+                    This menu gives you the full traceability of inventory operations on a specific product.
+                    You can filter on the product to see all the past movements for the product.
+                </p>
             </field>
         </record>
 
@@ -127,7 +126,7 @@
                                 </div>
                             </group>
                             <group>
-                                <field name="mo_id" domain="[('state','=','done')]"/>
+                                <field name="mo_id"/>
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('usage','=','internal')]"/>
                                 <field name="has_tracking" invisible="1"/>
@@ -152,11 +151,13 @@
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="bom_id"/>
+                    <field name="mo_id"/>
                     <field name="lot_id" groups="stock.group_production_lot"/>
                     <field name="product_qty"/>
                     <field name="product_uom_id" groups="uom.group_uom"/>
                     <field name="state"/>
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
         </record>

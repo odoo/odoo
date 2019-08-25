@@ -31,7 +31,7 @@
                     <field name="date"/>
                     <field name="author_id"/>
                     <field name="mail_activity_type_id"/>
-                    <field name="body" string="Activity Description"/>
+                    <field name="body"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -47,28 +47,30 @@
                     <field name="user_id" string="Salesperson"/>
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="author_id" string="Assigned To"/>
-                    <filter string="My Activities" name="activities_my" domain="[('user_id', '=', uid)]"/>
                     <separator groups="crm.group_use_lead"/>
-                    <filter name="lead" string="Leads" domain="[('lead_type','=', 'lead')]" help="Show only lead" groups="crm.group_use_lead"/>
-                    <filter name="opportunity" string="Opportunities" domain="[('lead_type','=','opportunity')]" help="Show only opportunity" groups="crm.group_use_lead"/>
+                    <filter string="Leads" name="lead" domain="[('lead_type', '=', 'lead')]" help="Show only lead" groups="crm.group_use_lead"/>
+                    <filter string="Opportunities" name="opportunity" domain="[('lead_type', '=', 'opportunity')]" help="Show only opportunity" groups="crm.group_use_lead"/>
                     <separator/>
-                    <filter string="Won" name="won"
-                            domain="[('stage_id.is_won', '=', True)]"/>
+                    <filter string="Won" name="won" domain="[('stage_id.is_won', '=', True)]"/>
                     <separator/>
-                    <filter string="Completion Date" name="completion_date" date="date" default_period="last_365_days"/>
+                    <filter string="Completed Last 365 Days" name="completion_date" domain="[
+                        ('date', '>=', (datetime.datetime.combine(context_today() + relativedelta(days=-365), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                        ('date', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="1" string="Group By">
-                        <filter string="Subtype" name="group_by_subtype" context="{'group_by':'subtype_id'}"/>
-                        <filter string="Activity Type" name="group_by_activity_type" context="{'group_by':'mail_activity_type_id'}"/>
-                        <filter string="Assigned To" name="group_by_author_id" context="{'group_by':'author_id'}"/>
-                        <filter string="Completion Date" name="group_by_completion_date" context="{'group_by':'date:month'}"/>
+                        <filter string="Activity" name="group_by_activity_type" context="{'group_by': 'mail_activity_type_id'}"/>
+                        <filter string="Type" name="group_by_subtype" context="{'group_by': 'subtype_id'}"/>
+                        <filter string="Assigned To" name="group_by_author_id" context="{'group_by': 'author_id'}"/>
+                        <filter string="Completion Date" name="group_by_completion_date" context="{'group_by': 'date:month'}"/>
                         <separator/>
-                        <filter string="Salesperson" name="group_by_user_id" context="{'group_by':'user_id'}"/>
-                        <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
-                        <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
-                        <filter string="Creation Date" name="group_by_lead_date_creation" context="{'group_by':'lead_create_date'}"/>
-                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Expected Closing" name="group_by_date_deadline" context="{'group_by':'date_deadline'}"/>
-                        <filter string="Closed Date" name="group_by_date_closed" context="{'group_by':'date_closed'}"/>
+                        <filter string="Salesperson" name="group_by_user_id" context="{'group_by': 'user_id'}"/>
+                        <filter string="Sales Team" name="saleschannel" context="{'group_by': 'team_id'}"/>
+                        <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
+                        <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Creation Date" name="group_by_lead_date_creation" context="{'group_by': 'lead_create_date'}"/>
+                        <filter string="Expected Closing" name="group_by_date_deadline" context="{'group_by': 'date_deadline'}"/>
+                        <filter string="Closed Date" name="group_by_date_closed" context="{'group_by': 'date_closed'}"/>
                     </group>
                 </search>
             </field>
@@ -79,14 +81,13 @@
            <field name="res_model">crm.activity.report</field>
            <field name="view_mode">graph,pivot,tree</field>
            <field name="context">{
-                'search_default_activities_my': 1,
                 'search_default_completion_date': 1,
                 'pivot_column_groupby': ['subtype_id', 'mail_activity_type_id'],
                 'pivot_row_groupby': ['date:month'],
                 'graph_mode': 'bar',
                 'graph_groupbys': ['date:month', 'subtype_id'],
             }</field>
-           <field name="domain">[]</field>
+           <field name="domain">[('user_id', '=', uid)]</field>
        </record>
 
        <menuitem

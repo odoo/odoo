@@ -4,7 +4,7 @@ import base64
 import random
 import re
 
-from odoo import api, fields, models, modules, tools
+from odoo import api, fields, models, modules
 
 
 class ImLivechatChannel(models.Model):
@@ -21,7 +21,7 @@ class ImLivechatChannel(models.Model):
 
     def _default_image(self):
         image_path = modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
-        return tools.image_process(base64.b64encode(open(image_path, 'rb').read()), size=tools.IMAGE_BIG_SIZE)
+        return base64.b64encode(open(image_path, 'rb').read())
 
     def _default_user_ids(self):
         return [(6, 0, [self._uid])]
@@ -42,17 +42,7 @@ class ImLivechatChannel(models.Model):
     script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
 
-    # images fields
-    image = fields.Binary('Image', default=_default_image,
-        help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium',
-        help="Medium-sized photo of the group. It is automatically "\
-             "resized as a 128x128px image, with aspect ratio preserved. "\
-             "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Thumbnail',
-        help="Small-sized photo of the group. It is automatically "\
-             "resized as a 64x64px image, with aspect ratio preserved. "\
-             "Use this field anywhere a small image is required.")
+    image_128 = fields.Image("Image", max_width=128, max_height=128, default=_default_image)
 
     # relationnal fields
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Operators', default=_default_user_ids)
@@ -82,15 +72,6 @@ class ImLivechatChannel(models.Model):
     def _compute_nbr_channel(self):
         for record in self:
             record.nbr_channel = len(record.channel_ids)
-
-    @api.model
-    def create(self, vals):
-        tools.image_resize_images(vals)
-        return super(ImLivechatChannel, self).create(vals)
-
-    def write(self, vals):
-        tools.image_resize_images(vals)
-        return super(ImLivechatChannel, self).write(vals)
 
     # --------------------------
     # Action Methods
@@ -123,7 +104,28 @@ class ImLivechatChannel(models.Model):
         self.ensure_one()
         return self.user_ids.filtered(lambda user: user.im_status == 'online')
 
-    def _get_mail_channel(self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None):
+    def _get_livechat_mail_channel_vals(self, anonymous_name, operator, user_id=None, country_id=None):
+        # partner to add to the mail.channel
+        operator_partner_id = operator.partner_id.id
+        channel_partner_to_add = [(4, operator_partner_id)]
+        visitor_user = False
+        if user_id:
+            visitor_user = self.env['res.users'].browse(user_id)
+            if visitor_user and visitor_user.active:  # valid session user (not public)
+                channel_partner_to_add.append((4, visitor_user.partner_id.id))
+        return {
+            'channel_partner_ids': channel_partner_to_add,
+            'livechat_operator_id': operator_partner_id,
+            'livechat_channel_id': self.id,
+            'anonymous_name': False if user_id else anonymous_name,
+            'country_id': country_id,
+            'channel_type': 'livechat',
+            'name': ', '.join([visitor_user.name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
+            'public': 'private',
+            'email_send': False,
+        }
+
+    def _open_livechat_mail_channel(self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None):
         """ Return a mail.channel given a livechat channel. It creates one with a connected operator, or return false otherwise
             :param anonymous_name : the name of the anonymous person of the channel
             :param previous_operator_id : partner_id.id of the previous operator that this visitor had in the past
@@ -137,7 +139,6 @@ class ImLivechatChannel(models.Model):
             the system will first try to assign that operator if he's available (to improve user experience).
         """
         self.ensure_one()
-
         operator = False
         if previous_operator_id:
             available_users = self._get_available_users()
@@ -150,27 +151,10 @@ class ImLivechatChannel(models.Model):
             # no one available
             return False
 
-        operator_partner_id = operator.partner_id.id
-        # partner to add to the mail.channel
-        channel_partner_to_add = [(4, operator_partner_id)]
-        visitor_user = False
-        if user_id:
-            visitor_user = self.env['res.users'].browse(user_id)
-            if visitor_user and visitor_user.active:  # valid session user (not public)
-                channel_partner_to_add.append((4, visitor_user.partner_id.id))
         # create the session, and add the link with the given channel
-        mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create({
-            'channel_partner_ids': channel_partner_to_add,
-            'livechat_operator_id': operator_partner_id,
-            'livechat_channel_id': self.id,
-            'anonymous_name': False if user_id else anonymous_name,
-            'country_id': country_id,
-            'channel_type': 'livechat',
-            'name': ', '.join([visitor_user.name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
-            'public': 'private',
-            'email_send': False,
-        })
-        mail_channel._broadcast([operator_partner_id])
+        mail_channel_vals = self._get_livechat_mail_channel_vals(anonymous_name, operator, user_id=user_id, country_id=country_id)
+        mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create(mail_channel_vals)
+        mail_channel._broadcast([operator.partner_id.id])
         return mail_channel.sudo().channel_info()[0]
 
     def _get_random_operator(self):

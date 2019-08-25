@@ -216,7 +216,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             res_model: 'account.bank.statement',
             views: [[false, 'list'], [false, 'form']],
             type: 'ir.actions.act_window',
-            context: {search_default_journal_id: journalId},
+            context: {search_default_journal_id: journalId, 'journal_type':'bank'},
             view_mode: 'form',
         });
     },
@@ -525,7 +525,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         }
         return this.model.makeRecord('account.bank.statement.line', [field], {
             partner_id: {
-                domain: ["|", ["is_company", "=", true], ["parent_id", "=", false], "|", ["customer", "=", true], ["supplier", "=", true]],
+                domain: ["|", ["is_company", "=", true], ["parent_id", "=", false]],
                 options: {
                     no_open: true
                 }
@@ -791,6 +791,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onSelectMoveLine: function (event) {
         var $el = $(event.target);
+        $el.prop('disabled', true);
         this._destroyPopover($el);
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('add_proposition', {'data': moveLineId});

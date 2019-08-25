@@ -44,7 +44,7 @@
                                 <div class="o_setting_right_pane">
                                     <label for="module_stock_picking_batch"/>
                                     <div class="text-muted">
-                                        Process picking in batch per worker
+                                        Process transfers in batch per worker
                                     </div>
                                 </div>
                             </div>
@@ -60,8 +60,50 @@
                                 </div>
                             </div>
                         </div>
-                        <h2>Shipping Connectors</h2>
-                        <div class="row mt16 o_settings_container" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer. Apply shipping connector from delivery methods.">
+                        <h2>Shipping</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="stock_move_email_validation"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="stock_move_email_validation" string="Email Confirmation"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Send an automatic confirmation email when Delivery Orders are done
+                                    </div>
+                                    <div class="row mt16" attrs="{'invisible': [('stock_move_email_validation', '=', False)]}">
+                                        <label for="stock_mail_confirmation_template_id" string="Email Template" class="col-lg-4 o_light_label"/>
+                                        <field name="stock_mail_confirmation_template_id" class="oe_inline" attrs="{'required': [('stock_move_email_validation', '=', True)]}" context="{'default_model': 'stock.picking'}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_stock_sms"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_stock_sms"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Send an automatic confirmation SMS Text Message when Delivery Orders are done
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_confirmation_sms"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="delivery" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer. Apply shipping connector from delivery methods.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery"/>
+                                    <div class="text-muted" id="delivery_carrier">
+                                        Compute shipping costs
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_ups" widget="upgrade_boolean"/>
@@ -160,7 +202,7 @@
                                         Set product attributes (e.g. color, size) to manage variants
                                     </div>
                                     <div class="content-group">
-                                        <div class="mt16" attrs="{'invisible': [('group_product_variant', '=', False)]}">
+                                        <div class="mt8" attrs="{'invisible': [('group_product_variant', '=', False)]}">
                                             <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
                                         </div>
                                     </div>
@@ -176,7 +218,7 @@
                                         Sell and purchase products in different units of measure
                                     </div>
                                     <div class="content-group">
-                                        <div class="mt16" attrs="{'invisible': [('group_uom', '=', False)]}">
+                                        <div class="mt8" attrs="{'invisible': [('group_uom', '=', False)]}">
                                             <button name="%(uom.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
                                         </div>
                                     </div>
@@ -192,7 +234,7 @@
                                         Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)
                                     </div>
                                     <div class="content-group">
-                                        <div class="mt16" attrs="{'invisible': [('group_stock_packaging', '=', False)]}">
+                                        <div class="mt8" attrs="{'invisible': [('group_stock_packaging', '=', False)]}">
                                             <button name="%(product.action_packaging_view)d" icon="fa-arrow-right" type="action" string="Product Packagings" class="btn-link"/>
                                         </div>
                                     </div>
@@ -258,7 +300,7 @@
                                         Track product location in your warehouse
                                     </div>
                                     <div class="content-group">
-                                        <div class="mt16" attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
+                                        <div class="mt8" attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
                                             <button name="%(stock.action_location_form)d" icon="fa-arrow-right" type="action" string="Locations" class="btn-link"/><br/>
                                             <button name="stock.action_putaway_tree" icon="fa-arrow-right" type="action" string="Putaway Rules" class="btn-link"/>
                                         </div>
@@ -275,7 +317,7 @@
                                         Manage several warehouses
                                     </div>
                                     <div class="content-group">
-                                        <div class="mt16" attrs="{'invisible': [('group_stock_multi_warehouses', '=', False)]}">
+                                        <div class="mt8" attrs="{'invisible': [('group_stock_multi_warehouses', '=', False)]}">
                                             <button name="%(stock.action_warehouse_form)d" icon="fa-arrow-right" type="action" string="Warehouses" class="btn-link"/>
                                         </div>
                                     </div>
@@ -291,7 +333,7 @@
                                         Use your own routes
                                     </div>
                                     <div class="content-group">
-                                        <div class="mt16" attrs="{'invisible': [('group_stock_adv_location', '=', False)]}">
+                                        <div class="mt8" attrs="{'invisible': [('group_stock_adv_location', '=', False)]}">
                                             <button name="%(stock.action_warehouse_form)d" icon="fa-arrow-right" type="action" string="Set Warehouse Routes" class="btn-link"/>
                                         </div>
                                     </div>

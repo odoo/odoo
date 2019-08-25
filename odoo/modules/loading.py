@@ -268,6 +268,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             for kind in ('init', 'demo', 'update'):
                 if hasattr(package, kind):
                     delattr(package, kind)
+            module.flush()
 
         if package.name is not None:
             registry._init_modules.add(package.name)
@@ -377,22 +378,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
 
-            # auto-install module second pass: recursive bit in db.py handles
-            # auto_install modules with no dependencies or where all
-            # dependencies are auto_install, couldn't get it to work with
-            # non-required auto_install deps so here
-            cr.execute("""
-            SELECT m.name FROM ir_module_module m
-            WHERE m.auto_install
-            AND m.state != 'installed'
-            AND NOT EXISTS (
-                SELECT 1 FROM ir_module_module_dependency d
-                JOIN ir_module_module mdep ON (d.name = mdep.name)
-                WHERE d.module_id = m.id
-                  AND d.auto_install_required
-                  AND mdep.state NOT IN ('installed', 'to install')
-            )""")
-            module_names = [k for k, v in tools.config['init'].items() if v] + [x[0] for x in cr.fetchall()]
+            module_names = [k for k, v in tools.config['init'].items() if v]
             if module_names:
                 modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', module_names)])
                 if modules:
@@ -406,7 +392,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
             Module.invalidate_cache(['state'])
-
+            Module.flush()
 
         # STEP 3: Load marked modules (skipping base which was done in STEP 1)
         # IMPORTANT: this is done in two parts, first loading all installed or
@@ -466,6 +452,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             # Cleanup orphan records
             env['ir.model.data']._process_end(processed_modules)
+            env['base'].flush()
 
         for kind in ('init', 'demo', 'update'):
             tools.config[kind] = {}
@@ -528,6 +515,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         env = api.Environment(cr, SUPERUSER_ID, {})
         for model in env.values():
             model._register_hook()
+        env['base'].flush()
 
         # STEP 9: save installed/updated modules for post-install tests
         registry.updated_modules += processed_modules

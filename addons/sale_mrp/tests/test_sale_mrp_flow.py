@@ -5,7 +5,7 @@ from datetime import datetime
 
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, float_compare
 
 
 class TestSaleMrpFlow(common.SavepointCase):
@@ -540,7 +540,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertEqual(del_qty, 0.0, 'Sale MRP: delivered quantity should be zero after partial delivery of a kit')
         # deliver remaining products, check the so's invoice_status and delivered quantities
         self.assertEqual(len(so.picking_ids), 2, 'Sale MRP: number of pickings should be 2')
-        pick_2 = so.picking_ids[0]
+        pick_2 = so.picking_ids.filtered('backorder_id')
         for move in pick_2.move_lines:
             if move.product_id.id == self.env.ref('mrp.product_product_computer_desk_bolt').id:
                 move.write({'quantity_done': 19})
@@ -729,7 +729,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self._assert_quantities(move_lines, expected_quantities)
 
         # Process only x1 of the first component then create a backorder for the missing components
-        picking_original.move_lines[0].write({'quantity_done': 1})
+        picking_original.move_lines.sorted()[0].write({'quantity_done': 1})
         backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, so.picking_ids[0].id)]})
         backorder_wizard.process()
 
@@ -1052,9 +1052,8 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertEquals(kit_parent_wh_order.virtual_available, 0)
         self.assertEquals(kit_parent_wh1.virtual_available, 1)
 
-        # A warning message should be returned as there arn't enough quantities available for the sale order
-        warning = order_line._onchange_product_id_check_availability()
-        self.assertTrue(warning)
+        # Check there arn't enough quantities available for the sale order
+        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
 
         # We receive enoug of each component in Warehouse 2 to make 3 kit_parent
         qty_to_process = {
@@ -1075,9 +1074,8 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertEquals(kit_parent_wh_order.virtual_available, 3)
         self.assertEquals(kit_parent_wh1.virtual_available, 1)
 
-        # A warning message should be returned as there arn't enough quantities available for the sale order
-        warning = order_line._onchange_product_id_check_availability()
-        self.assertTrue(warning)
+        # Check there arn't enough quantities available for the sale order
+        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
 
         # We receive enough of each component in Warehouse 2 to make 7 kit_parent
         qty_to_process = {
@@ -1094,10 +1092,6 @@ class TestSaleMrpFlow(common.SavepointCase):
         # Enough quantities should be available, no warning message should be displayed
         kit_parent_wh_order = self.kit_parent.with_context(warehouse=so.warehouse_id.id)
         self.assertEquals(kit_parent_wh_order.virtual_available, 7)
-
-        # Some cache issue prevents the following to work in a test
-        #warning = order_line._onchange_product_id_check_availability()
-        #self.assertFalse(warning)
 
     def test_06_kit_qty_delivered_mixed_uom(self):
         """
@@ -1294,9 +1288,8 @@ class TestSaleMrpFlow(common.SavepointCase):
         virtual_available_wh_order = kit_uom_in_kit.virtual_available
         self.assertEquals(virtual_available_wh_order, 1)
 
-        # A warning message should be returned as there arn't enough quantities available for the sale order
-        warning = order_line._onchange_product_id_check_availability()
-        self.assertTrue(warning)
+        # Check there arn't enough quantities available for the sale order
+        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
 
         # We receive enough of each component in Warehouse 1 to make 3 kit_uom_in_kit.
         # Moves are created instead of only updating the quant quantities in order to trigger every compute fields.
@@ -1308,9 +1301,8 @@ class TestSaleMrpFlow(common.SavepointCase):
         }
         self._create_move_quantities(qty_to_process, components, warehouse_1)
 
-        # Enough quantities should be available to make 3 kit_uom_in_kit and a warning message should be displayed
-        warning = order_line._onchange_product_id_check_availability()
-        self.assertTrue(warning)
+        # Check there arn't enough quantities available for the sale order
+        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
         kit_uom_in_kit.with_context(warehouse=warehouse_1.id)._compute_quantities()
         virtual_available_wh_order = kit_uom_in_kit.virtual_available
         self.assertEquals(virtual_available_wh_order, 3)
@@ -1321,12 +1313,6 @@ class TestSaleMrpFlow(common.SavepointCase):
         # We check that enough quantities were processed to sell 5 kit_uom_in_kit
         kit_uom_in_kit.with_context(warehouse=warehouse_1.id)._compute_quantities()
         self.assertEquals(kit_uom_in_kit.virtual_available, 5)
-
-        # Some cache issue prevents the following to work in a test
-
-        # No warning should be raised
-        # warning = order_line._onchange_product_id_check_availability()
-        # self.assertFalse(warning)
 
     def test_10_sale_mrp_kits_routes(self):
 

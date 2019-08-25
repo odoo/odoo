@@ -882,8 +882,8 @@ td {
     border: 1px solid #cecbcb;
     padding: 10px 20px;
     padding-left: 38px;
+    padding-right: 33px;
     margin: 6px;
-    background: url("../img/search.png") no-repeat 15px;
     background-color: white;
     border-radius: 20px;
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
@@ -894,12 +894,25 @@ td {
     box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
     color: rgb(153, 153, 255);
 }
+
 .pos .search-clear {
     position: absolute;
+    top: 9px;
     width: 30px;
     height: 30px;
-    top: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-clear.left {
     left: 11px;
+    color: #808080;
+}
+
+.search-clear.right {
+    left: 145px;
+    color: #808080;
     cursor: pointer;
 }
 
@@ -1437,35 +1450,18 @@ td {
     direction: ltr;
 }
 
-.pos .pos-sale-ticket {
+.pos .pos-receipt-container > div {
     text-align: left;
     width: 300px;
     background-color: white;
     margin: 20px;
     padding: 15px;
-    font-size: 14px;
+    font-size: 16px;
     padding-bottom:30px;
     display: inline-block;
-    font-family: "Inconsolata";
     border: solid 1px rgb(220,220,220);
     border-radius: 3px;
     overflow: hidden;
-}
-.pos .pos-sale-ticket pre{
-    font-family: "Inconsolata";
-}
-.pos .pos-sale-ticket .emph{
-    font-size: 20px;
-    margin:5px;
-}
-.pos .pos-sale-ticket table {
-    width: 100%;
-    border: 0;
-    table-layout: fixed;
-}
-.pos .pos-sale-ticket table td {
-    border: 0;
-    word-wrap: break-word;
 }
 
 @page {
@@ -1531,13 +1527,16 @@ td {
         box-shadow: none !important;
         background: transparent !important;
     }
-    .pos .pos-sale-ticket{
+    .pos .pos-receipt{
         margin: 0;
         margin-left: auto !important;
         margin-right: auto !important;
         border: none !important;
         font-size: 13px !important;
         width: 266px !important;
+    }
+    .pos .pos-receipts{
+        display: none !important;
     }
     .o_debug_manager {
         display: none !important;
@@ -2444,83 +2443,4 @@ td {
 }
 .pos .not-supported-browser img{
     border-collapse: separate;
-}
-
-/*  ********* Login Screen ********* */
-
-.pos .login-overlay{
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height:100%;
-    z-index:1000;
-    background: linear-gradient(to right bottom, #77717e, #c9a8a9);
-}
-.pos .login-overlay:before {
-    content: '';
-    background-image: url(../../img/login-bg-overlay.svg);
-    background-color: rgba(0, 0, 0, 0.3);
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height:100%;
-}
-.pos .screen-login{
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    margin: auto;
-    width:550px;
-    height:300px;
-    text-align:center;
-    font-size:20px;
-    font-weight:bold;
-    background-color: #F0EEEE;
-    border-radius: 3px;
-    z-index:1200;
-    font-family: 'Lato';
-}
-.pos .login-title{
-    height: 55%;
-    vertical-align: middle;
-    line-height: 5;
-    font-size: larger;
-}
-.pos .login-body{
-    height:33%;
-}
-.pos .login-element{
-    float: left;
-    width: 45%;
-    height: 60%;
-}
-.pos .login-barcode-img{
-    width: 80px;
-    height: 55px;
-    background: white;
-    border: 0px;
-}
-.pos .login-barcode-text{
-    color: #999999;
-    font-size: 13px;
-    padding-top: 0.2em;
-}
-.pos .login-or{
-    font-size: 15px;
-    font-style: italic;
-    float: left;
-    width: 10%;
-    height: 100%;
-    line-height: 5;
-}
-.pos .login-button{
-    font-size: initial;
-    height: 100%;
-    color: #555555;
-    border-radius: 5px;
 }

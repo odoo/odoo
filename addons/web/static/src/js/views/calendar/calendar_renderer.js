@@ -2,15 +2,14 @@ odoo.define('web.CalendarRenderer', function (require) {
 "use strict";
 
 var AbstractRenderer = require('web.AbstractRenderer');
+var CalendarPopover = require('web.CalendarPopover');
 var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
 var FieldManagerMixin = require('web.FieldManagerMixin');
-var QWeb = require('web.QWeb');
 var relational_fields = require('web.relational_fields');
 var session = require('web.session');
-var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -78,7 +77,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
                     {
                         mode: 'edit',
                         attrs: {
-                            placeholder: _.str.sprintf(_t("Add %s"), self.title),
+                            placeholder: "+ " + _.str.sprintf(_t("Add %s"), self.title),
                             can_create: false
                         },
                     });
@@ -98,7 +97,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
             this.many2one.filter_ids = _.without(_.pluck(this.filters, 'value'), 'all');
         }
         this.$el.on('click', '.o_remove', this._onFilterRemove.bind(this));
-        this.$el.on('click', '.custom-checkbox input', this._onFilterActive.bind(this));
+        this.$el.on('click', '.o_calendar_filter_items input', this._onFilterActive.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -169,8 +168,12 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
 
 return AbstractRenderer.extend({
     template: "CalendarView",
-    events: _.extend({}, AbstractRenderer.prototype.events, {
-        'click .o_calendar_sidebar_toggler': '_onToggleSidebar',
+    config: {
+        CalendarPopover: CalendarPopover,
+    },
+    custom_events: _.extend({}, AbstractRenderer.prototype.custom_events || {}, {
+        edit_event: '_onEditEvent',
+        delete_event: '_onDeleteEvent',
     }),
 
     /**
@@ -185,11 +188,8 @@ return AbstractRenderer.extend({
         this.model = params.model;
         this.filters = [];
         this.color_map = {};
-
-        if (params.eventTemplate) {
-            this.qweb = new QWeb(config.isDebug(), {_s: session.origin});
-            this.qweb.add_template(utils.json_node_to_xml(params.eventTemplate));
-        }
+        this.hideDate = params.hideDate;
+        this.hideTime = params.hideTime;
     },
     /**
      * @override
@@ -202,6 +202,20 @@ return AbstractRenderer.extend({
             this._bindSwipe();
         }
         return this._super();
+    },
+    /**
+     * @override
+     */
+    on_attach_callback: function () {
+        if (config.device.isMobile) {
+            this.$el.height($(window).height() - this.$el.offset().top);
+        }
+        var scrollTop = this.$calendar.find('.fc-scroller').scrollTop();
+        if (scrollTop) {
+            this.$calendar.fullCalendar('reinitView');
+        } else {
+            this.$calendar.fullCalendar('render');
+        }
     },
     /**
      * @override
@@ -325,19 +339,14 @@ return AbstractRenderer.extend({
     _eventRender: function (event) {
         var qweb_context = {
             event: event,
-            fields: this.state.fields,
-            format: this._format.bind(this),
-            isMobile: config.device.isMobile,
-            read_only_mode: this.read_only_mode,
             record: event.record,
-            user_context: session.user_context,
-            widget: this,
+            color: this.getColor(event.color_index),
         };
         this.qweb_context = qweb_context;
         if (_.isEmpty(qweb_context.record)) {
             return '';
         } else {
-            return (this.qweb || qweb).render("calendar-box", qweb_context);
+            return qweb.render("calendar-box", qweb_context);
         }
     },
     /**
@@ -375,40 +384,54 @@ return AbstractRenderer.extend({
                 self.trigger_up('dropRecord', event);
             },
             eventResize: function (event) {
+                self._unselectEvent();
                 self.trigger_up('updateRecord', event);
             },
-            eventClick: function (event) {
-                self.trigger_up('openEvent', event);
-                self.$calendar.fullCalendar('unselect');
+            eventClick: function (eventData, ev) {
+                self._unselectEvent();
+                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_highlight');
+                self._renderEventPopover(eventData, $(ev.currentTarget));
             },
-            select: function (target_date, end_date, event, _js_event, _view) {
-                var data = {'start': target_date, 'end': end_date};
-                if (self.state.context.default_name) {
-                    data.title = self.state.context.default_name;
+            select: function (startDate, endDate) {
+                // Clicking on the view, dispose any visible popover. Otherwise create a new event.
+                if (self.$('.o_cw_popover').length) {
+                    self._unselectEvent();
+                } else {
+                    var data = {start: startDate, end: endDate};
+                    if (self.state.context.default_name) {
+                        data.title = self.state.context.default_name;
+                    }
+                    self.trigger_up('openCreate', data);
                 }
-                self.trigger_up('openCreate', data);
                 self.$calendar.fullCalendar('unselect');
             },
-            eventRender: function (event, element) {
+            eventRender: function (event, element, view) {
                 var $render = $(self._eventRender(event));
-                event.title = $render.find('.o_field_type_char:first').text();
                 element.find('.fc-content').html($render.html());
                 element.addClass($render.attr('class'));
-                var display_hour = '';
-                if (!event.allDay) {
+                element.attr('data-event-id', event.id);
+
+                // Add background if doesn't exist
+                if (!element.find('.fc-bg').length) {
+                    element.find('.fc-content').after($('<div/>', {class: 'fc-bg'}));
+                }
+
+                // For month view: Show background for all-day/multidate events only
+                if (view.name === 'month' && event.record) {
                     var start = event.r_start || event.start;
                     var end = event.r_end || event.end;
-                    var timeFormat = _t.database.parameters.time_format.search("%H") != -1 ? 'HH:mm': 'h:mma';
-                    display_hour = start.format(timeFormat) + ' - ' + end.format(timeFormat);
-                    if (display_hour === '00:00 - 00:00') {
-                        display_hour = _t('All day');
+                    // Detect if the event occurs in just one day
+                    // note: add & remove 1 min to avoid issues with 00:00
+                    var isSameDayEvent = start.clone().add(1, 'minute').isSame(end.clone().subtract(1, 'minute'), 'day');
+                    if (!event.record.allday && isSameDayEvent) {
+                        element.addClass('o_cw_nobg');
                     }
                 }
-                element.find('.fc-content .fc-time').text(display_hour);
-            },
-            // Dirty hack to ensure a correct first render
-            eventAfterAllRender: function () {
-                $(window).trigger('resize');
+
+                // On double click, edit the event
+                element.on('dblclick', function () {
+                    self.trigger_up('edit_event', {id: event.id});
+                });
             },
             viewRender: function (view) {
                 // compute mode from view.name which is either 'month', 'agendaWeek' or 'agendaDay'
@@ -417,6 +440,39 @@ return AbstractRenderer.extend({
                     mode: mode,
                     title: view.title,
                 });
+            },
+            // Add/Remove a class on hover to style multiple days events.
+            // The css ":hover" selector can't be used because these events
+            // are rendered using multiple elements.
+            eventMouseover: function (eventData) {
+                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_hover');
+            },
+            eventMouseout: function (eventData) {
+                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).removeClass('o_cw_custom_hover');
+            },
+            eventDragStart: function () {
+                self._unselectEvent();
+            },
+            eventResizeStart: function () {
+                self._unselectEvent();
+            },
+            eventLimitClick: function () {
+                self._unselectEvent();
+                return 'popover';
+            },
+            windowResize: function () {
+                self._render();
+            },
+            views: {
+                day: {
+                    columnFormat: 'LL'
+                },
+                week: {
+                    columnFormat: 'ddd D'
+                },
+                month: {
+                    columnFormat: config.device.isMobile ? 'ddd' : 'dddd'
+                }
             },
             height: 'parent',
             unselectAuto: false,
@@ -440,6 +496,7 @@ return AbstractRenderer.extend({
                     date: moment(new Date(+obj.currentYear , +obj.currentMonth, +obj.currentDay))
                 });
             },
+            'showOtherMonths': true,
             'dayNamesMin' : this.state.fc_options.dayNamesShort,
             'monthNames': this.state.fc_options.monthNamesShort,
             'firstDay': this.state.fc_options.firstDay,
@@ -456,6 +513,18 @@ return AbstractRenderer.extend({
         this._initCalendarMini();
     },
     /**
+     * Finalise the popover
+     *
+     * @param {jQueryElement} $popoverElement
+     * @param {web.CalendarPopover} calendarPopover
+     * @private
+     */
+    _onPopoverShown: function ($popoverElement, calendarPopover) {
+        var $popover = $($popoverElement.data('bs.popover').tip);
+        $popover.find('.o_cw_popover_close').on('click', this._unselectEvent.bind(this));
+        $popover.find('.o_cw_body').replaceWith(calendarPopover.$el);
+    },
+    /**
      * Render the calendar view, this is the main entry point.
      *
      * @override method from AbstractRenderer
@@ -466,7 +535,6 @@ return AbstractRenderer.extend({
         var $calendar = this.$calendar;
         var $fc_view = $calendar.find('.fc-view');
         var scrollPosition = $fc_view.scrollLeft();
-        var scrollTop = this.$calendar.find('.fc-scroller').scrollTop();
 
         $fc_view.scrollLeft(0);
         $calendar.fullCalendar('unselect');
@@ -485,8 +553,8 @@ return AbstractRenderer.extend({
                             .removeClass('o_color o_selected_range');
         var $a;
         switch (this.state.scale) {
-            case 'month': $a = this.$small_calendar.find('td a'); break;
-            case 'week': $a = this.$small_calendar.find('tr:has(.ui-state-active) a'); break;
+            case 'month': $a = this.$small_calendar.find('td'); break;
+            case 'week': $a = this.$small_calendar.find('tr:has(.ui-state-active)'); break;
             case 'day': $a = this.$small_calendar.find('a.ui-state-active'); break;
         }
         $a.addClass('o_selected_range');
@@ -496,21 +564,8 @@ return AbstractRenderer.extend({
 
         $fc_view.scrollLeft(scrollPosition);
 
-        var fullWidth = this.state.fullWidth;
-        this.$('.o_calendar_sidebar_toggler')
-            .toggleClass('fa-close', !fullWidth)
-            .toggleClass('fa-chevron-left', fullWidth)
-            .attr('title', !fullWidth ? _('Close Sidebar') : _('Open Sidebar'));
-        this.$sidebar_container.toggleClass('o_sidebar_hidden', fullWidth);
-        this.$sidebar.toggleClass('o_hidden', fullWidth);
-
+        this._unselectEvent();
         var filterProm = this._renderFilters();
-        this.$calendar.appendTo('body');
-        if (scrollTop) {
-            this.$calendar.fullCalendar('reinitView');
-        } else {
-            this.$calendar.fullCalendar('render');
-        }
         this._renderEvents();
         this.$calendar.prependTo(this.$('.o_calendar_view'));
 
@@ -532,6 +587,8 @@ return AbstractRenderer.extend({
      * @returns {Promise} resolved when all filters have been rendered
      */
     _renderFilters: function () {
+        // Dispose of filter popover
+        this.$('.o_calendar_filter_item').popover('dispose');
         _.each(this.filters || (this.filters = []), function (filter) {
             filter.destroy();
         });
@@ -565,11 +622,135 @@ return AbstractRenderer.extend({
             options.fields = this.state.fields;
             var filter = new SidebarFilter(self, options);
             prom = filter.appendTo(this.$sidebar).then(function () {
+                // Show filter popover
+                if (options.avatar_field) {
+                    _.each(options.filters, function (filter) {
+                        if (filter.value !== 'all') {
+                            var selector = _.str.sprintf('.o_calendar_filter_item[data-value=%s]', filter.value);
+                            self.$sidebar.find(selector).popover({
+                                animation: false,
+                                trigger: 'hover',
+                                html: true,
+                                placement: 'top',
+                                title: filter.label,
+                                delay: {show: 300, hide: 0},
+                                content: function () {
+                                    return $('<img>', {
+                                        src: _.str.sprintf('/web/image/%s/%s/%s', options.avatar_model, filter.value, options.avatar_field),
+                                        class: 'mx-auto',
+                                    });
+                                },
+                            });
+                        }
+                    });
+                }
                 return self._renderFiltersOneByOne(filterIndex + 1);
             });
             this.filters.push(filter);
         }
         return Promise.resolve(prom);
+    },
+    /**
+     * Prepare context to display in the popover.
+     *
+     * @private
+     * @param {Object} eventData
+     * @returns {Object} context
+     */
+    _getPopoverContext: function (eventData) {
+        var context = {
+            hideDate: this.hideDate,
+            hideTime: this.hideTime,
+            eventTime: {},
+            eventDate: {},
+            fields: this.state.fields,
+            displayFields: this.displayFields,
+            event: eventData,
+            modelName: this.model,
+        };
+
+        var start = moment(eventData.r_start || eventData.start);
+        var end = moment(eventData.r_end || eventData.end);
+        var isSameDayEvent = start.clone().add(1, 'minute').isSame(end.clone().subtract(1, 'minute'), 'day');
+
+        // Do not display timing if the event occur across multiple days. Otherwise use user's timing preferences
+        if (!this.hideTime && !eventData.record.allday && isSameDayEvent) {
+            // Fetch user's preferences
+            var dbTimeFormat = _t.database.parameters.time_format.search('%H') != -1 ? 'HH:mm': 'hh:mm a';
+
+            context.eventTime.time = start.clone().format(dbTimeFormat) + ' - ' + end.clone().format(dbTimeFormat);
+
+            // Calculate duration and format text
+            var durationHours = moment.duration(end.diff(start)).hours();
+            var durationHoursKey = (durationHours === 1) ? 'h' : 'hh';
+            var durationMinutes = moment.duration(end.diff(start)).minutes();
+            var durationMinutesKey = (durationMinutes === 1) ? 'm' : 'mm';
+
+            var localeData = moment.localeData(); // i18n for 'hours' and "minutes" strings
+            context.eventTime.duration = (durationHours > 0 ? localeData.relativeTime(durationHours, true, durationHoursKey) : '')
+                    + (durationHours > 0 && durationMinutes > 0 ? ', ' : '')
+                    + (durationMinutes > 0 ? localeData.relativeTime(durationMinutes, true, durationMinutesKey) : '');
+        }
+
+        if (!this.hideDate) {
+            if (!isSameDayEvent && start.isSame(end, 'month')) {
+                // Simplify date-range if an event occurs into the same month (eg. '4-5 August 2019')
+                context.eventDate.date = start.clone().format('MMMM D') + '-' + end.clone().format('D, YYYY');
+            } else {
+                context.eventDate.date = isSameDayEvent ? start.clone().format('dddd, LL') : start.clone().format('LL') + ' - ' + end.clone().format('LL');
+            }
+    
+            if (eventData.record.allday && isSameDayEvent) {
+                context.eventDate.duration = _t("All day");
+            } else if (eventData.record.allday && !isSameDayEvent) {
+                var daysLocaleData = moment.localeData();
+                var days = moment.duration(end.diff(start)).days();
+                context.eventDate.duration = daysLocaleData.relativeTime(days, true, 'dd');
+            }
+        }
+
+        return context;
+    },
+    /**
+     * Prepare the parameters for the popover.
+     * This allow the parameters to be extensible.
+     *
+     * @private
+     * @param {Object} eventData
+     */
+    _getPopoverParams: function (eventData) {
+        return {
+            animation: false,
+            delay: {
+                show: 50,
+                hide: 100
+            },
+            trigger: 'manual',
+            html: true,
+            title: eventData.record.display_name,
+            template: qweb.render('CalendarView.event.popover.placeholder', {color: this.getColor(eventData.color_index)}),
+            container: eventData.allDay ? '.fc-view' : '.fc-scroller',
+        }
+    },
+    /**
+     * Render event popover
+     *
+     * @private
+     * @param {Object} eventData
+     * @param {jQueryElement} $eventElement
+     */
+    _renderEventPopover: function (eventData, $eventElement) {
+        var self = this;
+
+        // Initialize popover widget
+        var calendarPopover = new self.config.CalendarPopover(self, self._getPopoverContext(eventData));
+        calendarPopover.appendTo($('<div>')).then(() => {
+            $eventElement.popover(
+                self._getPopoverParams(eventData)
+            ).on('shown.bs.popover', function () {
+                self._onPopoverShown($(this), calendarPopover);
+            }).popover('show');
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -577,12 +758,29 @@ return AbstractRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Toggle the sidebar
+     * Remove highlight classes and dispose of popovers
      *
      * @private
      */
-    _onToggleSidebar: function () {
-        this.trigger_up('toggleFullWidth');
+    _unselectEvent: function () {
+        this.$('.fc-event').removeClass('o_cw_custom_highlight');
+        this.$('.o_cw_popover').popover('dispose');
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onEditEvent: function (event) {
+        this._unselectEvent();
+        this.trigger_up('openEvent', {_id: event.data.id});
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onDeleteEvent: function (event) {
+        this._unselectEvent();
+        this.trigger_up('deleteRecord', {id: event.data.id});
     },
 });
 

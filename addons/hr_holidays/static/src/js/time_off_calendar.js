@@ -72,7 +72,9 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             this.do_action({
                 type: 'ir.actions.act_window',
                 res_model: 'hr.leave.allocation',
+                name: 'New Allocation Request',
                 views: [[false,'form']],
+                context: {'form_view_ref': 'hr_holidays.hr_leave_allocation_view_form_dashboard'},
                 target: 'new',
             }, {
                 on_close: function () {

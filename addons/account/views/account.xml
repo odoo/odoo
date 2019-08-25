@@ -10,6 +10,7 @@
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/account/static/src/css/account_bank_and_cash.css"/>
             <link rel="stylesheet" href="/account/static/src/css/account.css"/>
+            <link rel="stylesheet" href="/account/static/src/css/tax_group.css"/>
             <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/account_reconciliation.scss"/>
             <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/account_journal_dashboard.scss"/>
             <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/account_dashboard.scss"/>
@@ -23,11 +24,11 @@
 
             <script type="text/javascript" src="/account/static/src/js/account_payment_field.js"></script>
             <script type="text/javascript" src="/account/static/src/js/mail_activity.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/tax_group.js"></script>
 
             <script type="text/javascript" src="/account/static/src/js/bank_statement.js"></script>
             <script type="text/javascript" src="/account/static/src/js/section_and_note_fields_backend.js"></script>
             <script type="text/javascript" src="/account/static/src/js/tours/account.js"></script>
-
             <script type="text/javascript" src="/account/static/src/js/bills_tree_upload.js"/>
         </xpath>
     </template>
@@ -41,6 +42,8 @@
     <template id="assets_tests" name="Account Assets Tests" inherit_id="web.assets_tests">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/account/static/tests/tours/reconciliation.js"></script>
+            <script type="text/javascript" src="/account/static/tests/tours/account_dashboard_setup_bar_tests.js"></script>
+            <script type="text/javascript" src="/account/static/tests/tours/tax_group_tests.js"></script>
         </xpath>
     </template>
 

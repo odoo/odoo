@@ -22,17 +22,7 @@ var GroupByMenu = DropdownMenu.extend({
     /**
      * @override
      * @param {Widget} parent
-     * @param {Object[]} groupBys list of groupBys (type IGroupBy below)
-     *   interface IGroupBy {
-     *      itemId: string; unique id associated with the groupby
-     *      fieldName: string; field name without interval!
-     *      description: string; label printed on screen
-     *      groupId: string;
-     *      isActive: boolean; determines if the groupby is considered active
-     *      hasOptions: boolean; true when the groupBy has fieldType 'date' or 'datetime' (optional)
-     *      options: array of objects with 'optionId' and 'description' keys; (optional)
-     *      defaultOptionId: string refers to an optionId that should be activated by default
-     *      currentOptionId: string refers to an optionId that is activated if item is active (optional)
+     * @param {Object[]} groupBys list of groupBys
      *   }
      * @param {Object} fields 'field_get' of a model: mapping from field name
      *   to an object with its properties
@@ -41,6 +31,7 @@ var GroupByMenu = DropdownMenu.extend({
      */
     init: function (parent, groupBys, fields, options) {
         var self = this;
+        options = options || {};
         this._super(parent, groupBys);
         this.fields = fields;
         // determines when the 'Add custom groupby' submenu is open
@@ -65,9 +56,9 @@ var GroupByMenu = DropdownMenu.extend({
         this.dropdownCategory = 'groupby';
         this.dropdownTitle = _t('Group By');
         this.dropdownIcon = 'fa fa-bars';
-        this.dropdownSymbol = this.isMobile ? 'fa fa-chevron-right float-right mt4' : false;
+        this.dropdownSymbol = this.isMobile && !options.noSymbol ? 'fa fa-chevron-right float-right mt4' : false;
         // the default style of the groupby menu can be changed here using the options key 'headerStyle'
-        if (options && options.headerStyle === 'primary') {
+        if (options.headerStyle === 'primary') {
             this.dropdownStyle = {
                 el: {class: 'btn-group o_group_by_menu o_dropdown', attrs: {'role': 'group'}},
                 mainButton: {class: 'btn btn-primary dropdown-toggle'},
@@ -131,7 +122,7 @@ var GroupByMenu = DropdownMenu.extend({
             groupBy.hasOptions = true;
             groupBy.options = INTERVAL_OPTIONS;
             groupBy.defaultOptionId = DEFAULT_INTERVAL;
-            groupBy.currentOptionId = false;
+            groupBy.currentOptionIds = new Set([]);
         }
         this.trigger_up('new_groupBy', groupBy);
     },

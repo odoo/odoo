@@ -95,10 +95,9 @@ class ProductProduct(models.Model):
         'product.template', 'Product Template',
         auto_join=True, index=True, ondelete="cascade", required=True)
     barcode = fields.Char(
-        'Barcode', copy=False, oldname='ean13',
+        'Barcode', copy=False,
         help="International Article Number used for product identification.")
-    attribute_value_ids = fields.Many2many(
-        'product.attribute.value', string='Attribute Values', ondelete='restrict')
+    attribute_value_ids = fields.Many2many('product.attribute.value', string='Attribute Values')
     product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value', string='Template Attribute Values', compute="_compute_product_template_attribute_value_ids")
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant')
@@ -107,14 +106,14 @@ class ProductProduct(models.Model):
         'Cost', company_dependent=True,
         digits='Product Price',
         groups="base.group_user",
-        help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
-               "Also used as a base price for pricelists. "
-               "Expressed in the default unit of measure of the product.")
+        help="""In Standard Price & AVCO: value of the product (automatically computed in AVCO).
+        In FIFO: value of the last unit that left the stock (automatically computed).
+        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
+        Used to compute margins on sale orders.""")
     volume = fields.Float('Volume')
     weight = fields.Float('Weight', digits='Stock Weight')
 
-    pricelist_item_ids = fields.Many2many(
-        'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
+    pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_variant_item_count")
 
     packaging_ids = fields.One2many(
         'product.packaging', 'product_id', 'Product Packages',
@@ -122,103 +121,86 @@ class ProductProduct(models.Model):
 
     # all image fields are base64 encoded and PIL-supported
 
-    # all image_raw fields are technical and should not be displayed to the user
-    image_raw_original = fields.Binary("Raw Original Image")
+    # all image_variant fields are technical and should not be displayed to the user
+    image_variant_1920 = fields.Image("Variant Image", max_width=1920, max_height=1920)
 
     # resized fields stored (as attachment) for performance
-    image_raw_big = fields.Binary("Raw Big-sized Image", compute='_compute_images', store=True)
-    image_raw_large = fields.Binary("Raw Large-sized Image", compute='_compute_images', store=True)
-    image_raw_medium = fields.Binary("Raw Medium-sized Image", compute='_compute_images', store=True)
-    image_raw_small = fields.Binary("Raw Small-sized Image", compute='_compute_images', store=True)
-
-    can_image_raw_be_zoomed = fields.Boolean("Can image raw be zoomed", compute='_compute_images', store=True)
+    image_variant_1024 = fields.Image("Variant Image 1204", related="image_variant_1920", max_width=1024, max_height=1024, store=True)
+    image_variant_512 = fields.Image("Variant Image 512", related="image_variant_1920", max_width=512, max_height=512, store=True)
+    image_variant_256 = fields.Image("Variant Image 256", related="image_variant_1920", max_width=256, max_height=256, store=True)
+    image_variant_128 = fields.Image("Variant Image 128", related="image_variant_1920", max_width=128, max_height=128, store=True)
+    image_variant_64 = fields.Image("Variant Image 64", related="image_variant_1920", max_width=64, max_height=64, store=True)
+    can_image_variant_1024_be_zoomed = fields.Boolean("Can Variant Image 1024 be zoomed", compute='_compute_can_image_variant_1024_be_zoomed', store=True)
 
     # Computed fields that are used to create a fallback to the template if
     # necessary, it's recommended to display those fields to the user.
-    image_original = fields.Binary("Original Image", compute='_compute_image_original', inverse='_set_image_original', help="Image in its original size, as it was uploaded.")
-    image_big = fields.Binary("Big-sized Image", compute='_compute_image_big', help="1024px * 1024px")
-    image_large = fields.Binary("Large-sized Image", compute='_compute_image_large', help="256px * 256px")
-    image_medium = fields.Binary("Medium-sized Image", compute='_compute_image_medium', help="128px * 128px")
-    image_small = fields.Binary("Small-sized Image", compute='_compute_image_small', help="64px * 64px")
-    can_image_be_zoomed = fields.Boolean("Can image be zoomed", compute='_compute_can_image_be_zoomed')
+    image_1920 = fields.Image("Image", compute='_compute_image_1920', inverse='_set_image_1920')
+    image_1024 = fields.Image("Image 1024", compute='_compute_image_1024')
+    image_512 = fields.Image("Image 512", compute='_compute_image_512')
+    image_256 = fields.Image("Image 256", compute='_compute_image_256')
+    image_128 = fields.Image("Image 128", compute='_compute_image_128')
+    image_64 = fields.Image("Image 64", compute='_compute_image_64')
+    can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed')
 
-    image = fields.Binary("Image", compute='_compute_image', inverse='_set_image')
-
-    @api.depends('image_raw_original')
-    def _compute_images(self):
+    @api.depends('image_variant_1920', 'image_variant_1024')
+    def _compute_can_image_variant_1024_be_zoomed(self):
         for record in self:
-            image = record.image_raw_original
-            # for performance: avoid calling unnecessary methods when falsy
-            images = image and tools.image_get_resized_images(image, big_name=False)
-            record.image_raw_big = image and tools.image_get_resized_images(image,
-                large_name=False, medium_name=False, small_name=False)['image']
-            record.image_raw_large = image and images['image_large']
-            record.image_raw_medium = image and images['image_medium']
-            record.image_raw_small = image and images['image_small']
-            record.can_image_raw_be_zoomed = image and tools.is_image_size_above(image)
+            record.can_image_variant_1024_be_zoomed = record.image_variant_1920 and tools.is_image_size_above(record.image_variant_1920, record.image_variant_1024)
 
-    def _compute_image_original(self):
+    def _compute_image_1920(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
-            record.image_original = record.image_raw_original or record.product_tmpl_id.image_original
+            record.image_1920 = record.image_variant_1920 or record.product_tmpl_id.image_1920
 
-    def _set_image_original(self):
+    def _set_image_1920(self):
         for record in self:
             if (
                 # We are trying to remove an image even though it is already
                 # not set, remove it from the template instead.
-                not record.image_original and not record.image_raw_original or
+                not record.image_1920 and not record.image_variant_1920 or
                 # We are trying to add an image, but the template image is
                 # not set, write on the template instead.
-                record.image_original and not record.product_tmpl_id.image_original or
+                record.image_1920 and not record.product_tmpl_id.image_1920 or
                 # There is only one variant, always write on the template.
                 self.search_count([
                     ('product_tmpl_id', '=', record.product_tmpl_id.id),
                     ('active', '=', True),
                 ]) <= 1
             ):
-                record.image_raw_original = False
-                record.product_tmpl_id.image_original = record.image_original
+                record.image_variant_1920 = False
+                record.product_tmpl_id.image_1920 = record.image_1920
             else:
-                record.image_raw_original = record.image_original
+                record.image_variant_1920 = record.image_1920
 
-    def _compute_image_big(self):
+    def _compute_image_1024(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
-            record.image_big = record.image_raw_big or record.product_tmpl_id.image_big
+            record.image_1024 = record.image_variant_1024 or record.product_tmpl_id.image_1024
 
-    def _compute_image_large(self):
+    def _compute_image_512(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
-            record.image_large = record.image_raw_large or record.product_tmpl_id.image_large
+            record.image_512 = record.image_variant_512 or record.product_tmpl_id.image_512
 
-    def _compute_image_medium(self):
+    def _compute_image_256(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
-            record.image_medium = record.image_raw_medium or record.product_tmpl_id.image_medium
+            record.image_256 = record.image_variant_256 or record.product_tmpl_id.image_256
 
-    def _compute_image_small(self):
+    def _compute_image_128(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
-            record.image_small = record.image_raw_small or record.product_tmpl_id.image_small
+            record.image_128 = record.image_variant_128 or record.product_tmpl_id.image_128
 
-    def _compute_can_image_be_zoomed(self):
+    def _compute_image_64(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
-            record.can_image_be_zoomed = record.can_image_raw_be_zoomed if record.image_raw_original else record.product_tmpl_id.can_image_be_zoomed
+            record.image_64 = record.image_variant_64 or record.product_tmpl_id.image_64
 
-    @api.depends('image_big')
-    def _compute_image(self):
+    def _compute_can_image_1024_be_zoomed(self):
+        """Get the image from the template if no image is set on the variant."""
         for record in self:
-            record.image = record.image_big
-
-    def _set_image(self):
-        for record in self:
-            record.image_original = record.image
-        # We want the image field to be recomputed to have a correct size.
-        # Without this `invalidate_cache`, the image field will keep holding the
-        # image_original instead of the big-sized image.
-        self.invalidate_cache()
+            record.can_image_1024_be_zoomed = record.can_image_variant_1024_be_zoomed if record.image_variant_1920 else record.product_tmpl_id.can_image_1024_be_zoomed
 
     _sql_constraints = [
         ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
@@ -231,6 +213,7 @@ class ProductProduct(models.Model):
         for product in self:
             product.is_product_variant = True
 
+    @api.depends_context('pricelist', 'partner', 'quantity', 'uom', 'date', 'no_variant_attributes_price_extra')
     def _compute_product_price(self):
         prices = {}
         pricelist_id_or_name = self._context.get('pricelist')
@@ -273,12 +256,12 @@ class ProductProduct(models.Model):
             value -= product.price_extra
             product.write({'list_price': value})
 
-    @api.depends('product_template_attribute_value_ids.price_extra')
     def _compute_product_price_extra(self):
         for product in self:
             product.price_extra = sum(product.mapped('product_template_attribute_value_ids.price_extra'))
 
     @api.depends('list_price', 'price_extra')
+    @api.depends_context('uom')
     def _compute_product_lst_price(self):
         to_uom = None
         if 'uom' in self._context:
@@ -291,6 +274,7 @@ class ProductProduct(models.Model):
                 list_price = product.list_price
             product.lst_price = list_price + product.price_extra
 
+    @api.depends_context('partner_id')
     def _compute_product_code(self):
         for product in self:
             for supplier_info in product.seller_ids:
@@ -300,6 +284,7 @@ class ProductProduct(models.Model):
             else:
                 product.code = product.default_code
 
+    @api.depends_context('partner_id')
     def _compute_partner_ref(self):
         for product in self:
             for supplier_info in product.seller_ids:
@@ -334,12 +319,12 @@ class ProductProduct(models.Model):
                 else:
                     product.product_template_attribute_value_ids += values_per_template[product.product_tmpl_id.id][pav.id]
 
-    def _get_pricelist_items(self):
+    def _compute_variant_item_count(self):
         for product in self:
-            product.pricelist_item_ids = self.env['product.pricelist.item'].search([
-                '|',
-                ('product_id', '=', product.id),
-                ('product_tmpl_id', '=', product.product_tmpl_id.id)]).ids
+            domain = ['|',
+                '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
+                '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant')]
+            product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
 
     @api.constrains('attribute_value_ids')
     def _check_attribute_value_ids(self):
@@ -391,8 +376,8 @@ class ProductProduct(models.Model):
         for product in self:
             # If there is an image set on the variant and no image set on the
             # template, move the image to the template.
-            if product.image_raw_original and not product.product_tmpl_id.image_original:
-                product.product_tmpl_id.image_original = product.image_raw_original
+            if product.image_variant_1920 and not product.product_tmpl_id.image_1920:
+                product.product_tmpl_id.image_1920 = product.image_variant_1920
             # Check if product still exists, in case it has been unlinked by unlinking its template
             if not product.exists():
                 continue
@@ -598,6 +583,25 @@ class ProductProduct(models.Model):
             return _('Products: ') + self.env['product.category'].browse(self._context['categ_id']).name
         return res
 
+    def open_pricelist_rules(self):
+        self.ensure_one()
+        domain = ['|',
+            '&', ('product_tmpl_id', '=', self.product_tmpl_id.id), ('applied_on', '=', '1_product'),
+            '&', ('product_id', '=', self.id), ('applied_on', '=', '0_product_variant')]
+        return {
+            'name': _('Price Rules'),
+            'view_mode': 'tree,form',
+            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree'), (False, 'form')],
+            'res_model': 'product.pricelist.item',
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+            'domain': domain,
+            'context': {
+                'default_product_id': self.id,
+                'default_applied_on': '0_product_variant',
+            }
+        }
+
     def open_product_template(self):
         """ Utility method used to add an "Open Template" button in product views """
         self.ensure_one()
@@ -756,7 +760,7 @@ class ProductPackaging(models.Model):
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
     product_id = fields.Many2one('product.product', string='Product')
     qty = fields.Float('Contained Quantity', help="Quantity of products contained in the packaging.")
-    barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification.")
+    barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification. Scan this packaging barcode from a transfer in the Barcode app to move all the contained units")
     product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', readonly=True)
 
 
@@ -767,7 +771,7 @@ class SupplierInfo(models.Model):
 
     name = fields.Many2one(
         'res.partner', 'Vendor',
-        domain=[('supplier', '=', True)], ondelete='cascade', required=True,
+        ondelete='cascade', required=True,
         help="Vendor of this product")
     product_name = fields.Char(
         'Vendor Product Name',
@@ -801,7 +805,7 @@ class SupplierInfo(models.Model):
         help="If not set, the vendor price will apply to all variants of this product.")
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
-        index=True, ondelete='cascade', oldname='product_id')
+        index=True, ondelete='cascade')
     product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count', readonly=False)
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,

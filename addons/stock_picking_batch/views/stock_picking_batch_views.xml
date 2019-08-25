@@ -5,7 +5,7 @@
         <field name="name">stock.picking.batch.form</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <form string="Stock Batch Picking">
+            <form string="Stock Batch Transfer">
                 <header>
                     <button name="confirm_picking" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="print_picking" string="Print" type="object" class="oe_highlight"/>
@@ -22,14 +22,14 @@
                             <field name="user_id"/>
                         </group>
                     </group>
-                    <separator string="Pickings"/>
+                    <separator string="Transfers"/>
                     <field name="picking_ids" widget="many2many" domain="[('state', 'not in', ('done', 'cancel'))]" options="{'not_delete': True}">
                         <tree>
                             <field name="name"/>
+                            <field name="scheduled_date"/>
+                            <field name="location_id"/>
                             <field name="backorder_id"/>
                             <field name="origin"/>
-                            <field name="date"/>
-                            <field name="scheduled_date"/>
                             <field name="state"/>
                             <button name="action_assign" string="Confirm picking" type="object" icon="fa-check text-success" attrs="{'invisible': [('state', 'in', ('done', 'cancel', 'confirmed', 'assigned'))]}"/>
                             <button name="action_cancel" string="Cancel picking" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
@@ -48,10 +48,11 @@
         <field name="name">stock.picking.batch.tree</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <tree string="Stock Batch Picking" decoration-muted="state=='cancel'">
+            <tree string="Stock Batch Transfer" decoration-muted="state=='cancel'">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="state"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
     </record>
@@ -75,7 +76,7 @@
                             <div class="o_kanban_record_bottom">
                                 <div class="oe_kanban_bottom_left"/>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                             </div>
                         </div>
@@ -88,27 +89,31 @@
         <field name="name">stock.picking.batch.filter</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <search string="Search Batch Picking">
-                <field name="name" string="Batch Picking"/>
-                <filter name="in_progress" string="Running" domain="[('state', '=', 'in_progress')]" help="Batch Pickings not finished"/>
+            <search string="Search Batch Transfer">
+                <field name="name" string="Batch Transfer"/>
                 <field name="user_id"/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="in_progress" string="Running" domain="[('state', '=', 'in_progress')]" help="Batch Transfers not finished"/>
+                <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
                 <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                    domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="user" domain="[]" context="{'group_by': 'user_id'}"/>
-                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
                 </group>
            </search>
         </field>
     </record>
     <record id="stock_picking_batch_action" model="ir.actions.act_window">
-        <field name="name">Batch Pickings</field>
+        <field name="name">Batch Transfers</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.picking.batch</field>
         <field name="view_mode">tree,kanban,form</field>
@@ -116,9 +121,9 @@
         <field name="search_view_id" ref="stock_picking_batch_filter"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Create a new batch picking
+            Create a new batch transfer
           </p><p>
-            The goal of the batch picking is to group operations that may
+            The goal of the batch transfer is to group operations that may
             (needs to) be done together in order to increase their efficiency.
             It may also be useful to assign jobs (one person = one batch) or
             help the timing management of operations (tasks to be done at 1pm).
@@ -132,8 +137,8 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.vpicktree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='picking_type_id']" position="after">
-                <field name="batch_id"/>
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="batch_id" optional="show"/>
             </xpath>
         </field>
     </record>
@@ -142,7 +147,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_internal_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='picking_type_id']" position="after">
+            <xpath expr="//field[@name='product_id']" position="after">
                 <field name="batch_id"/>
             </xpath>
         </field>

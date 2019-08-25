@@ -81,7 +81,7 @@
 
                         <div id="voucher-bank" t-if="not print_bank or not invoice.company_id.l10n_ch_isr_preprinted_account">
                             <!--Konto/Compte/Conto-->
-                            <p id="voucher-bank_ref" t-field="invoice.l10n_ch_isr_postal_formatted"/>
+                            <p id="voucher-bank_ref" t-field="invoice.l10n_ch_isr_subscription_formatted"/>
                         </div>
 
                         <p id="voucher-amount_units" t-esc="split_total_amount[0]"/>
@@ -123,7 +123,8 @@
 
                         <div id="slip-bank" t-if="not print_bank or not invoice.company_id.l10n_ch_isr_preprinted_account">
                             <!--Konto/Compte/Conto-->
-                            <p id="slip-bank_ref" t-field="invoice.l10n_ch_isr_postal_formatted"/>
+                            <!--aka ISR Subscriber number provided by the financial institution-->
+                            <p id="slip-bank_ref" t-field="invoice.l10n_ch_isr_subscription_formatted"/>
                         </div>
 
                         <p id="slip-amount_units" t-esc="split_total_amount[0]"/>

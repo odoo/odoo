@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <template id="assets_backend" inherit_id="website.assets_backend" name="website_livechat assets backend">
+            <xpath expr="." position="inside">
+                <!-- Visitor Chat Request -->
+                <script type="text/javascript" src="/website_livechat/static/src/js/thread_window.js"></script>
+                <script type="text/javascript" src="/website_livechat/static/src/js/channel.js"></script>
+                <link rel="stylesheet" type="text/scss" href="/website_livechat/static/src/scss/mail_thread_visitor_info.scss"/>
+            </xpath>
+        </template>
 
         <!--
             Integrate Livechat in Common Frontend for Website
@@ -32,6 +40,9 @@
                     <script type="text/javascript" src="/mail/static/src/js/models/utils/timer.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/models/utils/timers.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/models/utils/cc_throttle_function.js"></script>
+                <!--Chat Request-->
+                <script type="text/javascript" src="/website_livechat/static/src/js/im_livechat.js"></script>
+                <!--Stylesheets-->
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"></link>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"></link>
                 <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat.scss"/>
@@ -146,13 +157,13 @@
                             <h3>The Team</h3>
                             <t t-foreach="team" t-as="user">
                                 <div class="media mt-3">
-                                    <t t-if="user.image_small">
+                                    <t t-if="user.image_64">
                                         <t t-if="user.livechat_username">
-                                            <img t-att-src="user.image_small and image_data_uri(user.image_small) or '/web/static/src/img/placeholder.png'"
+                                            <img t-att-src="user.image_64 and image_data_uri(user.image_64) or '/web/static/src/img/placeholder.png'"
                                             class="rounded o_livechat_operator_avatar" t-att-alt="user.livechat_username"/>
                                         </t>
                                         <t t-else="">
-                                            <img t-att-src="user.image_small and image_data_uri(user.image_small) or '/web/static/src/img/placeholder.png'"
+                                            <img t-att-src="user.image_64 and image_data_uri(user.image_64) or '/web/static/src/img/placeholder.png'"
                                             class="rounded o_livechat_operator_avatar" t-att-alt="user.name"/>
                                         </t>
                                     </t>
@@ -214,7 +225,7 @@
                                     <t t-foreach="channels" t-as="channel">
                                         <div t-attf-class="media#{' mt-3' if channel_index else ''}">
                                             <a t-attf-href="/livechat/channel/#{ slug(channel)}">
-                                                <img t-att-src="channel.image_small and image_data_uri(channel.image_small) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
+                                                <img t-att-src="channel.image_64 and image_data_uri(channel.image_64) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
                                             </a>
                                             <div class="media-body">
                                                 <h4><t t-esc="channel.name"/></h4>

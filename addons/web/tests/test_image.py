@@ -20,17 +20,17 @@ class TestImage(HttpCase):
         self.assertEqual(image.size, (150, 150))
 
         # CASE: resize placeholder to small
-        response = self.url_open('/web/image/fake/0/image_small')
+        response = self.url_open('/web/image/fake/0/image_64')
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (64, 64))
 
         # CASE: resize placeholder to medium
-        response = self.url_open('/web/image/fake/0/image_medium')
+        response = self.url_open('/web/image/fake/0/image_128')
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (128, 128))
 
         # CASE: resize placeholder to large
-        response = self.url_open('/web/image/fake/0/image_large')
+        response = self.url_open('/web/image/fake/0/image_256')
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (256, 256))
 
@@ -53,7 +53,7 @@ class TestImage(HttpCase):
             'public': True,
             'mimetype': 'image/gif',
         })
-        response = self.url_open('/web/image/%s' % attachment.id)
+        response = self.url_open('/web/image/%s' % attachment.id, timeout=None)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(base64.b64encode(response.content), attachment.datas)
 

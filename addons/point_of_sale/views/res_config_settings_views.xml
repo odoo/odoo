@@ -21,7 +21,7 @@
                                         <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
                                     </div>
                                 </div>
-                                <div>
+                                <div class="mt8">
                                     <button name="%(account.action_tax_form)d" icon="fa-arrow-right" type="action" string="Taxes" class="btn-link"/>
                                 </div>
                             </div>
@@ -29,24 +29,23 @@
                     </div>
                     <h2>Pricing</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box" title="There are two ways to manage pricelists: 1) Multiple prices per product (e.g. quantity, shop-specific) : must be set in the Sales tab of the product detail form. 2) Price computed from formulas (discounts, margins, rounding) : must be set in the pricelist form.">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
-                                <field name="pos_sales_price"/>
+                                <field name="group_product_pricelist"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="pos_sales_price"/>
+                                <label for="group_product_pricelist"/>
                                 <div class="text-muted">
                                     Set multiple prices per product, automated discounts, etc.
                                 </div>
-                                <div class="content-group" attrs="{'invisible': [('pos_sales_price' ,'=', False)]}">
+                                <div class="content-group" attrs="{'invisible': [('group_product_pricelist' ,'=', False)]}">
                                     <div class="mt16">
-                                        <field name="group_product_pricelist" invisible="1"/>
                                         <field name="group_sale_pricelist" invisible="1"/>
-                                        <field name="group_pricelist_item" invisible="1"/>
-                                        <field name="pos_pricelist_setting" widget="radio" class="o_light_label"/>
+                                        <field name="product_pricelist_setting" widget="radio" class="o_light_label"/>
                                     </div>
-                                    <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists"
-                                      attrs="{'invisible': [('pos_pricelist_setting', '=', False)]}" class="btn-link"/>
+                                    <div class="mt8">
+                                        <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -60,7 +59,7 @@
                                     Record transactions in foreign currencies
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
-                                    <div class="mt16">
+                                    <div class="mt8">
                                         <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
                                     </div>
                                 </div>

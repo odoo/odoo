@@ -187,7 +187,7 @@
                             <field name="active" invisible="1"/>
                             <field name="ins_ref"/>
                             <field name="cost_subtype_id" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
-                            <field name="insurer_id" context="{'default_supplier': True}"/>
+                            <field name="insurer_id"/>
                             <field name="user_id"/>
                         </group>
                         <group string="Vehicle Informations">
@@ -212,7 +212,7 @@
                         <group>
                             <field name="date" string="Invoice Date"/>
                             <field name="start_date"/>
-                            <field name="expiration_date"/>
+                            <field name="expiration_date" attrs="{'required': [('cost_frequency', '!=', 'no')]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -280,6 +280,7 @@
                 <field name="cost_generated"/>
                 <field name="cost_frequency"/>
                 <field name="state" />
+                <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
     </record>
@@ -333,25 +334,27 @@
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
             <search string="Vehicles Contracts">
-                <field name="vehicle_id" string="Vehicle" filter_domain="[('vehicle_id.name','ilike', self)]"/>
-                <field name="purchaser_id" string="Driver" filter_domain="[('purchaser_id','child_of', self)]"/>
-                <field name="insurer_id" string="Vendor" filter_domain="[('insurer_id','child_of', self)]"/>
+                <field name="vehicle_id" string="Vehicle" filter_domain="[('vehicle_id.name', 'ilike', self)]"/>
+                <field name="purchaser_id" string="Driver" filter_domain="[('purchaser_id', 'child_of', self)]"/>
+                <field name="insurer_id" string="Vendor" filter_domain="[('insurer_id', 'child_of', self)]"/>
                 <field name="cost_subtype_id" string="Service Type" filter_domain="[('cost_ids.cost_subtype_id', 'ilike', self)]"/>
-                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                <filter string="In Progress" name="open" domain="[('state', 'in', ['open','diesoon'])]"/>
+                <filter string="In Progress" name="open" domain="[('state', 'in', ['open', 'diesoon'])]"/>
                 <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
                 <filter string="Expiring Soon" name="expire_soon" domain="[('state', '=', 'diesoon')]"/>
                 <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                    domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Vehicle" name="vehicle" context="{'group_by':'vehicle_id'}"/>
+                    <filter string="Vehicle" name="vehicle" context="{'group_by': 'vehicle_id'}"/>
                 </group>
             </search>
         </field>
@@ -365,7 +368,7 @@
                 <field name="purchaser_id"/>
                 <templates>
                     <div t-name="activity-box">
-                        <img t-att-src="activity_image('res.partner', 'image_small', record.purchaser_id.raw_value)" t-att-title="record.purchaser_id.value" t-att-alt="record.purchaser_id.value"/>
+                        <img t-att-src="activity_image('res.partner', 'image_64', record.purchaser_id.raw_value)" t-att-title="record.purchaser_id.value" t-att-alt="record.purchaser_id.value"/>
                         <div>
                             <field name="vehicle_id" display="full"/>
                             <field name="cost_subtype_id" muted="1" display="full"/>
@@ -425,7 +428,7 @@
                             <field name="date" />
                             <field name="purchaser_id" />
                             <field name="inv_ref" />
-                            <field name="vendor_id" context="{'default_supplier': True}"/>
+                            <field name="vendor_id"/>
                         </group>
                     </group>
                     <field name="notes" placeholder="Write here any other information"/>
@@ -549,7 +552,7 @@
                         <group string="Additional Details">
                             <field name="date" />
                             <field name="purchaser_id" />
-                            <field name="vendor_id" context="{'default_supplier': True}"/>
+                            <field name="vendor_id"/>
                             <field name="inv_ref" />
                         </group>
                     </group>

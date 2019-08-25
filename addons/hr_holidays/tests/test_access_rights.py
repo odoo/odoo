@@ -175,6 +175,35 @@ class TestAcessRightsStates(TestLeavesRights):
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
             leave.with_user(self.user_employee.id).action_draft()
 
+    def test_base_user_draft_refused_leave(self):
+        """
+            Should not be able to draft a refused leave
+        """
+        for i, status in enumerate(self.draft_status):
+            values = {
+                'name': 'Random Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': status.id,
+                'state': 'refuse',
+            }
+            leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_employee.id).action_draft()
+
+    def test_base_user_draft_current_leave(self):
+        """
+            Should not be able to draft a passed leave
+        """
+        for i, status in enumerate(self.draft_status):
+            values = {
+                'name': 'Random Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': status.id,
+            }
+            leave = self.request_leave(1, datetime.today() + relativedelta(days=-20 + i), 1, values)
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_employee.id).action_draft()
+
     def test_holiday_user_draft_his_leave(self):
         """
             Should be able to draft his own leave
@@ -237,6 +266,35 @@ class TestAcessRightsStates(TestLeavesRights):
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
             leave.with_user(self.user_hruser.id).action_draft()
 
+    def test_holiday_user_draft_refused_leave(self):
+        """
+            Should not be able to draft a refused leave
+        """
+        for i, status in enumerate(self.draft_status):
+            values = {
+                'name': 'Random Leave',
+                'employee_id': self.employee_hruser.id,
+                'holiday_status_id': status.id,
+                'state': 'refuse',
+            }
+            leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_hruser.id).action_draft()
+
+    def test_holiday_user_draft_current_leave(self):
+        """
+            Should not be able to draft a passed leave
+        """
+        for i, status in enumerate(self.draft_status):
+            values = {
+                'name': 'Random Leave',
+                'employee_id': self.employee_hruser.id,
+                'holiday_status_id': status.id,
+            }
+            leave = self.request_leave(1, datetime.today() + relativedelta(days=-20 + i), 1, values)
+            with self.assertRaises(UserError):
+                leave.with_user(self.user_hruser.id).action_draft()
+
     def test_holiday_manager_draft_his_leave(self):
         """
             The holiday manager should be able to do everything
@@ -289,6 +347,33 @@ class TestAcessRightsStates(TestLeavesRights):
                 'holiday_status_id': status.id,
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
+            leave.with_user(self.user_hrmanager.id).action_draft()
+
+    def test_holiday_manager_draft_refused_leave(self):
+        """
+            The holiday manager should be able to do everything
+        """
+        for i, status in enumerate(self.draft_status):
+            values = {
+                'name': 'Random Leave',
+                'employee_id': self.employee_hruser.id,
+                'holiday_status_id': status.id,
+                'state': 'refuse',
+            }
+            leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
+            leave.with_user(self.user_hrmanager.id).action_draft()
+
+    def test_holiday_manager_draft_current_leave(self):
+        """
+            The holiday manager should be able to do everything
+        """
+        for i, status in enumerate(self.draft_status):
+            values = {
+                'name': 'Random Leave',
+                'employee_id': self.employee_hruser.id,
+                'holiday_status_id': status.id,
+            }
+            leave = self.request_leave(1, datetime.today() + relativedelta(days=-20 + i), 1, values)
             leave.with_user(self.user_hrmanager.id).action_draft()
 
 @tests.tagged('access_rights', 'access_rights_create')
@@ -467,6 +552,7 @@ class TestAccessRightsRead(TestLeavesRights):
             'date_to': datetime.now() + relativedelta(days=1),
             'number_of_days': 1,
         })
+        other_leave.invalidate_cache(['name'])
         self.assertEqual(
             other_leave.with_user(self.user_employee_id).name, '*****',
             'Private information should have been stripped, received %s instead' % other_leave.with_user(self.user_employee_id).name
@@ -715,7 +801,7 @@ class TestMultiCompany(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_other_company_user(self):
         employee_leave = self.employee_leave.with_user(self.user_employee)
-
+        employee_leave.invalidate_cache(['name'])
         with self.assertRaises(AccessError):
             employee_leave.name
 
@@ -725,7 +811,7 @@ class TestMultiCompany(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_other_company_officer(self):
         employee_leave_hruser = self.employee_leave.with_user(self.user_hruser)
-
+        employee_leave_hruser.invalidate_cache(['name'])
         with self.assertRaises(AccessError):
             employee_leave_hruser.name
 
@@ -735,7 +821,7 @@ class TestMultiCompany(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_other_company_manager(self):
         employee_leave_hrmanager = self.employee_leave.with_user(self.user_hrmanager)
-
+        employee_leave_hrmanager.invalidate_cache(['name'])
         with self.assertRaises(AccessError):
             employee_leave_hrmanager.name
 

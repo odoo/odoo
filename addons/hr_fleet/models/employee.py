@@ -19,6 +19,7 @@ class Employee(models.Model):
             "res_model": "fleet.vehicle",
             "views": [[False, "kanban"], [False, "form"], [False, "tree"]],
             "domain": [("id", "in", cars.ids)],
+            "context": dict(self._context, create=False),
             "name": "History Employee Cars",
         }
 

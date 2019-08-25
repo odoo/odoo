@@ -152,40 +152,6 @@ var WysiwygTest = Wysiwyg.extend({
         this.$target.remove();
         this._parentToDestroyForTest.destroy();
     },
-    /**
-     * @override
-     */
-    isUnbreakableNode: function (node) {
-        var Node = (node.tagName ? node : node.parentNode);
-        return (!this.options.useOnlyTestUnbreakable && this._super(node)) ||
-            !this.isEditableNode(node) ||
-            Node.tagName === "UNBREAKABLE" ||
-            (Node.className + '').indexOf('unbreakable') !== -1;
-    },
-    /**
-     * @override
-     */
-    isEditableNode: function (node) {
-        if (!$(node).closest(this.$el).length) {
-            return false;
-        }
-        while (node) {
-            if (node.tagName === "EDITABLE") {
-                return true;
-            }
-            if (node.tagName === "NOTEDITABLE") {
-                return false;
-            }
-            if ((node.className + '').indexOf('editable') !== -1) {
-                return true;
-            }
-            if (this.$el[0] === node) {
-                return true;
-            }
-            node = node.parentNode;
-        }
-        return false;
-    },
 });
 
 
@@ -508,9 +474,10 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
         keypress.keyCode = keypress.keyCode;
         var event = $.Event("keydown", keypress);
         $target.trigger(event);
+
         if (!event.isDefaultPrevented()) {
             if (keypress.key.length === 1) {
-                document.execCommand("insertText", 0, keypress.key);
+                textInput($target[0], keypress.key);
             } else {
                 console.warn('Native "' + keypress.key + '" is not supported in test');
             }
@@ -773,7 +740,39 @@ var keydown = function (key, $editable, options) {
     var $target = $(target.tagName ? target : target.parentNode);
     var event = $.Event("keydown", keyPress);
     $target.trigger(event);
+
+    if (!event.isDefaultPrevented()) {
+        if (keyPress.key.length === 1) {
+            textInput($target[0], keyPress.key);
+        } else {
+            console.warn('Native "' + keyPress.key + '" is not supported in test');
+        }
+    }
 };
+
+var textInput = function (target, char) {
+    var ev = new CustomEvent('textInput', {
+        bubbles: true,
+        cancelBubble: false,
+        cancelable: true,
+        composed: true,
+        data: char,
+        defaultPrevented: false,
+        detail: 0,
+        eventPhase: 3,
+        isTrusted: true,
+        returnValue: true,
+        sourceCapabilities: null,
+        type: "textInput",
+        which: 0,
+    });
+    ev.data = char;
+    target.dispatchEvent(ev);
+
+    if (!ev.defaultPrevented) {
+        document.execCommand("insertText", 0, ev.data);
+    }
+}
 
 return {
     wysiwygData: wysiwygData,

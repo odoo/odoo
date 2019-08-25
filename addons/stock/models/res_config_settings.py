@@ -26,8 +26,12 @@ class ResConfigSettings(models.TransientModel):
         implied_group='stock.group_adv_location',
         help="Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).")
     group_warning_stock = fields.Boolean("Warnings for Stock", implied_group='stock.group_warning_stock')
-    module_stock_picking_batch = fields.Boolean("Batch Pickings", oldname="module_stock_picking_wave")
+    module_stock_picking_batch = fields.Boolean("Batch Pickings")
     module_stock_barcode = fields.Boolean("Barcode Scanner")
+    stock_move_email_validation = fields.Boolean(related='company_id.stock_move_email_validation', readonly=False)
+    stock_mail_confirmation_template_id = fields.Many2one(related='company_id.stock_mail_confirmation_template_id', readonly=False)
+    module_stock_sms = fields.Boolean("SMS Confirmation")
+    module_delivery = fields.Boolean("Delivery Methods")
     module_delivery_dhl = fields.Boolean("DHL USA")
     module_delivery_fedex = fields.Boolean("FedEx")
     module_delivery_ups = fields.Boolean("UPS")

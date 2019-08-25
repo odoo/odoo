@@ -25,22 +25,23 @@
             <field name="arch" type="xml">
                 <search string="Membership Partners">
                     <field name="name"
-                       filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"/>
+                       filter_domain="['|', '|', ('name', 'ilike', self), ('parent_id', 'ilike', self), ('ref' , '=', self)]"/>
                     <field name="category_id"/>
                     <field name="membership_start" invisible="1"/>
                     <field name="membership_stop" string="End Membership Date"/>
-                    <filter string="Customers" name="customer" domain="[('customer','=',True)]"/>
+                    <filter name="customer" string="Customers" domain="[('customer' ,'=', True)]"/>
+                    <filter name="supplier" string="Vendors" domain="[('supplier', '=', True)]"/>
                     <separator/>
-                    <filter string="Vendors" name="supplier" domain="[('supplier','=',True)]"/>
+                    <filter name="all_members" string="Members" domain="[('membership_state', 'in', ['invoiced', 'paid', 'free'])]" help="Invoiced/Paid/Free"/>
                     <separator/>
-                    <filter name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
-                    <filter name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
+                    <filter string="Start Date" name="start_date" date="membership_start"/>
+                    <filter string="End Date" name="end_date" date="membership_stop"/>
                     <group expand="0" string="Group By" colspan="10" col="8">
                         <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by' : 'user_id'}"/>
-                        <filter string="Associate Member" name = "associate" domain="[]" context="{'group_by':'associate_member'}"/>
-                        <filter string=" Membership State" name="membership_state" domain="[]" context="{'group_by':'membership_state'}"/>
-                        <filter string="Start Date" name="start_month" help="Starting Date Of Membership" domain="[]" context="{'group_by':'membership_start'}"/>
-                        <filter string="End Date" name="end_month" help="Ending Date Of Membership" domain="[]" context="{'group_by':'membership_stop'}"/>
+                        <filter string="Associate Member" name = "associate" domain="[]" context="{'group_by': 'associate_member'}"/>
+                        <filter string="Membership State" name="membership_state" domain="[]" context="{'group_by': 'membership_state'}"/>
+                        <filter string="Start Date" name="start_month" help="Starting Date Of Membership" domain="[]" context="{'group_by': 'membership_start'}"/>
+                        <filter string="End Date" name="end_month" help="Ending Date Of Membership" domain="[]" context="{'group_by': 'membership_stop'}"/>
                     </group>
                 </search>
             </field>
@@ -91,8 +92,8 @@
             <field name="inherit_id" ref="base.view_partner_tree"/>
             <field name="arch" type="xml">
                 <tree string="Contacts">
-                    <field name="category_id" position="after"/>
-                    <field name="membership_state"/>
+                    <field name="category_id" position="after" optional="hide"/>
+                    <field name="membership_state" optional="hide"/>
                 </tree>
             </field>
         </record>

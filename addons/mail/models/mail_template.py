@@ -113,7 +113,7 @@ class MailTemplate(models.Model):
              "- partner (using id on a partner or the partner_id field) OR\n"
              "- email (using email_from or email field)")
     email_to = fields.Char('To (Emails)', help="Comma-separated recipient addresses (placeholders may be used here)")
-    partner_to = fields.Char('To (Partners)', oldname='email_recipients',
+    partner_to = fields.Char('To (Partners)',
                              help="Comma-separated ids of recipient partners (placeholders may be used here)")
     email_cc = fields.Char('Cc', help="Carbon copy recipients (placeholders may be used here)")
     reply_to = fields.Char('Reply-To', help="Preferred response address (placeholders may be used here)")

@@ -156,6 +156,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         self.assertEqual(hol2.state, 'refuse',
                          'hr_holidays: refuse should lead to refuse state')
         # Check left days: 2 days left again
+
+        hol_status_2_employee_group.invalidate_cache(['max_leaves'])
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
 
         self.assertEqual(hol2.state, 'refuse',
@@ -195,18 +197,6 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         _check_holidays_status(hol3_status, 20.0, 1.0, 19.0, 19.0)
 
     def test_10_leave_summary_reports(self):
-        # Print the HR Holidays(Summary Department) Report through the wizard
-        ctx = {
-            'model': 'hr.department',
-            'active_ids': [self.ref('hr.employee_admin'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
-        }
-        data_dict = {
-            'date_from': datetime.today().strftime('%Y-%m-01'),
-            'depts': [(6, 0, [self.ref('hr.dep_sales')])],
-            'holiday_type': 'Approved'
-        }
-        test_reports.try_report_action(self.env.cr, self.env.uid, 'action_hr_holidays_summary_dept', wiz_data=data_dict, context=ctx, our_module='hr_holidays')
-
         # Print the HR Holidays(Summary Employee) Report through the wizard
         ctx = {
             'model': 'hr.employee',

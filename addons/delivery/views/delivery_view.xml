@@ -34,7 +34,8 @@
                 <search string="Delivery Carrier">
                     <field name="name" string="Carrier" />
                     <field name="delivery_type"/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="1" string="Group By">
                         <filter string="Provider" name="provider" context="{'group_by':'delivery_type', 'residual_visible':True}"/>
                     </group>
@@ -258,9 +259,6 @@
                 <xpath expr="/form/header/button[last()]" position="after">
                     <button name="print_return_label" string="Print Return Label" type="object" attrs="{'invisible':['|', ('is_return_picking', '=', False),('state', '=', 'done')]}"/>
                 </xpath>
-                <xpath expr="//button[@name='do_print_picking']" position="after">
-                    <button name="action_send_confirmation_email" string="Send Confirmation Email" type="object" attrs="{'invisible':['|', ('state', '!=', 'done'), ('carrier_id', '=', False)]}"/>
-                 </xpath>
               </data>
               <xpath expr="//field[@name='partner_id']" position="attributes">
                   <attribute name="attrs">{'required': ['&amp;', ('delivery_type', '!=', False), ('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}</attribute>
@@ -286,15 +284,11 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
                     <field name="packaging_id" domain="[('product_id', '=', False)]"/>
-                    <label for="weight" string="Weight"/>
-                    <div>
-                        <field name="weight" class="oe_inline"/>
-                        <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
-                    </div>
                     <label for="shipping_weight"/>
                     <div class="o_row" name="Shipping Weight">
                         <field name="shipping_weight"/>
                         <span><field name="weight_uom_name"/></span>
+                        <span class="text-muted">(computed: <field name="weight" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1"/>)</span>
                     </div>
                 </field>
             </field>
@@ -323,23 +317,25 @@
                         <field name="recompute_delivery_price" invisible="1"/>
                     </xpath>
                     <xpath expr="//group[@name='note_group']" position="before">
-                        <div class="oe_left" style="margin-left: 10px">
+                        <div class="oe_right">
                             <button
-                                string="Add a shipping method"
+                                string="Add shipping"
                                 name="action_open_delivery_wizard"
                                 type="object"
                                 attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('order_line', '=', []), ('delivery_set', '=', True)]}"
                             />
                             <button
-                                string="Recompute shipping cost"
-                                name="recompute_delivery_cost"
+                                string="Update shipping cost"
+                                name="action_open_delivery_wizard"
+                                context="{'carrier_recompute':True}"
                                 type="object"
                                 class="text-warning btn-secondary"
                                 attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}"
                             />
                             <button
-                                string="Recompute shipping cost"
-                                name="recompute_delivery_cost"
+                                string="Update shipping cost"
+                                name="action_open_delivery_wizard"
+                                context="{'carrier_recompute':True}"
                                 type="object"
                                 attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}"
                             />
@@ -384,5 +380,19 @@
             <field name="view_id" ref="delivery.delivery_tracking_url_warning_form"/>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+        </record>
+
+        <record id="vpicktree_view_tree" model="ir.ui.view">
+            <field name="name">stock.picking.delivery.tree.inherit.delivery</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='backorder_id']" position="after">
+                    <field name="carrier_tracking_ref" optional="hide"/>
+                    <field name="carrier_id" optional="hide"/>
+                    <field name="weight" optional="hide"/>
+                    <field name="shipping_weight" optional="hide"/>
+                </xpath>
+            </field>
         </record>
 </odoo>

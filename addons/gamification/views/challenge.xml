@@ -158,7 +158,7 @@
                                    </div>
                                </strong>
                                 <t t-foreach="record.user_ids.raw_value.slice(0,11)" t-as="member">
-                                    <img class="o_kanban_badge_avatars" t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member" alt="Member"/>
+                                    <img class="o_kanban_badge_avatars" t-att-src="kanban_image('res.users', 'image_64', member)" t-att-data-member_id="member" alt="Member"/>
                                 </t>
                             </div>
                         </div>

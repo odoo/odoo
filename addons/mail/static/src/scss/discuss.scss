@@ -110,6 +110,7 @@
         }
 
         .o_mail_thread {
+            position: relative;
             flex: 1 0 0;
             overflow: auto;
             -webkit-overflow-scrolling: touch; // smooth scrolling in iOS app (Safari)
@@ -287,14 +288,13 @@
         }
 
         .o_mail_discuss_content {
-            flex: 1 0 0;
-            margin-left: 10px;
-            margin-right: 10px;
+            flex: 1 1 auto;
+            min-height: 0;
+            margin-left: 0;
             background-color: transparent;
         }
 
         .o_mail_discuss_tab_pane {
-            overflow-x: scroll;
             .o_mail_add_thread {
                 display: none;
                 position: relative;

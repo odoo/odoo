@@ -8,6 +8,7 @@
         <field name="property_account_expense_categ_id" ref="pcg_1486"/>
         <field name="income_currency_exchange_account_id" ref="pcg_733"/>
         <field name="expense_currency_exchange_account_id" ref="pcg_633"/>
+        <field name="default_pos_receivable_account_id" ref="pcg_3489" />
     </record>
 
     <!-- Account Tax Template -->
@@ -334,7 +335,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_achats_interieur_ht_10')],
+                'plus_report_line_ids': [ref('tax_report_achats_importation_ht_10')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -347,7 +348,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_achats_interieur_ht_10')],
+                'minus_report_line_ids': [ref('tax_report_achats_importation_ht_10')],
             }),
             (0,0, {
                 'factor_percent': 100,

@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* crm_iap_lead
+# 	* crm_iap_lead
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 14:18+0000\n"
-"PO-Revision-Date: 2019-03-20 14:18+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-12 11:32+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,37 +16,14 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: crm_iap_lead
-#: model:mail.template,body_html:crm_iap_lead.lead_generation_no_credits
-msgid "\n"
-"                \n"
-"                    <p>Dear,</p>\n"
-"                    <p>There is no more credits on your IAP Lead Generation account.<br/>\n"
-"                    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/>\n"
-"\n"
-"                    <p>Best regards,</p>\n"
-"                    <p>Odoo S.A.</p>\n"
-"                \n"
-"            "
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:75
+#, python-format
+msgid "%d credits will be consumed to find %d companies."
 msgstr ""
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "(Time Now)"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_1
-msgid "1&1 Hosting"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_1
-msgid "3D Printing"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_2
-msgid "3d Cart"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -65,9 +42,22 @@ msgid "<b>Timezone : </b>"
 msgstr ""
 
 #. module: crm_iap_lead
+#: model:mail.template,body_html:crm_iap_lead.lead_generation_no_credits
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Dear,</p>\n"
+"    <p>There is no more credits on your IAP Lead Generation account.<br/>\n"
+"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
+"    <p>Best regards,</p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
+msgstr ""
+
+#. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:216
 #, python-format
-msgid "<p class=\"o_view_nocontent_empty_folder\">\n"
+msgid ""
+"<p class=\"o_view_nocontent_empty_folder\">\n"
 "            No leads found\n"
 "        </p><p>\n"
 "            No leads could be generated according to your search criteria\n"
@@ -77,7 +67,8 @@ msgstr ""
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:228
 #, python-format
-msgid "<p class=\"o_view_nocontent_empty_folder\">\n"
+msgid ""
+"<p class=\"o_view_nocontent_empty_folder\">\n"
 "            No opportunities found\n"
 "        </p><p>\n"
 "            No opportunities could be generated according to your search criteria\n"
@@ -95,288 +86,8 @@ msgid "<span class=\"o_stat_text\">Opportunities</span>"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_35
-msgid "ASP.Net"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_2
-msgid "Accounting"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_3
-msgid "Acquia"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_4
-msgid "Acquisio"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_5
-msgid "Act On"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_6
-msgid "Action Network"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_7
-msgid "Active Demand"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_8
-msgid "Activecampaign"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_15
-msgid "AdRoll"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_9
-msgid "Add To Any"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_10
-msgid "Adform Advertiser"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_11
-msgid "Adobe Business Catalyst"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_12
-msgid "Adobe Connect"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_13
-msgid "Adobe Dynamic Tag Management"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_14
-msgid "Adobe Experience Manager"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_205
-msgid "Advertising"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_3
-msgid "Aerospace & Defense"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_210
-msgid "Agricultural Products"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_4
-msgid "Agriculture"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_187
-msgid "Air Freight & Logistics"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_16
-msgid "Airbrake"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_5
-msgid "Airlines"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_17
-msgid "Akamai"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_18
-msgid "Akamai DNS"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_19
-msgid "Alexa"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_6
-msgid "Alternative Medicine"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_20
-msgid "Altocloud"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_21
-msgid "Amazon Associates"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_22
-msgid "Amazon Payments"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_23
-msgid "Amazon S3"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_24
-msgid "Amazon Simple Email Service"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_25
-msgid "Amazon Web Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_27
-msgid "Amplitude"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_28
-msgid "Android"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_7
-msgid "Animation"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_29
-msgid "Apache"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_30
-msgid "App Nexus"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_33
-msgid "AppDynamics"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_8
-msgid "Apparel & Footwear"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_31
-msgid "Appboy"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_32
-msgid "Appcues"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_34
-msgid "Apteligent"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_9
-msgid "Architecture"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_10
-msgid "Arts"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_11
-msgid "Arts & Crafts"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_12
-msgid "Asset Management"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_212
-msgid "Asset Management & Custody Banks"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_36
-msgid "Attribution"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_13
-msgid "Audio"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_37
-msgid "Authorizenet"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_14
-msgid "Automation"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_15
-msgid "Automotive"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_38
-msgid "Autopilot"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_39
-msgid "Aweber"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_230
-msgid "B2B"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_231
-msgid "B2C"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_16
-msgid "Banking & Mortgages"
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_238
+msgid "Automobiles & Components"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -385,123 +96,8 @@ msgid "Banks"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_40
-msgid "Bazaarvoice"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_41
-msgid "Benchmarkemail"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_17
-msgid "Beverages"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_42
-msgid "Big Cartel"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_43
-msgid "Bigcommerce"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_44
-msgid "Bing Ads"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_45
-msgid "Bing Advertiser"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_46
-msgid "Bing Maps"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_18
-msgid "Biotechnology"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_47
-msgid "Bloomreach"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_48
-msgid "Bluehost Hosting"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_49
-msgid "Braintree"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_50
-msgid "Branch"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_51
-msgid "Brightcove"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_19
-msgid "Broadcasting"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_52
-msgid "Bronto"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_53
-msgid "Bug Herd"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_54
-msgid "Bugsnag"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_20
-msgid "Building Materials"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_21
-msgid "Business Supplies"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_55
-msgid "C3 Metrics"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_mining_request
 msgid "CRM Lead Mining Request"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_56
-msgid "Calq"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_57
-msgid "Campaignmonitor"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -515,129 +111,14 @@ msgid "Capital Goods"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_177
-msgid "Capital Markets"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_203
-msgid "Casinos & Gaming"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_58
-msgid "Castle"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_59
-msgid "CentOS"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_60
-msgid "Chargify"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_61
-msgid "Chart Beat"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_62
-msgid "Chartio"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_63
-msgid "Chatlio"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_22
-msgid "Chemicals"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_64
-msgid "Chownow"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_23
-msgid "Civil Engineering"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_65
-msgid "ClickFunnels"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_66
-msgid "Clicktale"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_67
-msgid "Clicky"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_68
-msgid "Cloud Flare"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_24
-msgid "Cloud Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_69
-msgid "Cloudinary"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__color
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__color
 msgid "Color Index"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_70
-msgid "Commerce Sciences"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_163
 msgid "Commercial & Professional Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_216
-msgid "Commercial Printing"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_181
-msgid "Commercial Services & Supplies"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_225
-msgid "Commodity Chemicals"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_25
-msgid "Communications"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_193
-msgid "Communications Equipment"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -657,48 +138,8 @@ msgid "Company Size Max"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_26
-msgid "Computer Hardware"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_224
-msgid "Computer Networking"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_71
-msgid "Constant Contact"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_27
-msgid "Construction"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_182
-msgid "Construction & Engineering"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_28
-msgid "Construction Contractors & Services"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_167
 msgid "Construction Materials"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_218
-msgid "Consulting"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_29
-msgid "Consulting & Professional Services"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -707,13 +148,8 @@ msgid "Consumer Discretionary"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_31
-msgid "Consumer Electronics"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_32
-msgid "Consumer Goods"
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_239
+msgid "Consumer Durables & Apparel"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -727,48 +163,8 @@ msgid "Consumer Staples"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_credit_per_company
-msgid "Contact Credit Per Company"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_total_credit
-msgid "Contact Total Credit"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "Contacts"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_196
-msgid "Containers & Packaging"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_72
-msgid "Contently"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_73
-msgid "Convert Kit"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_74
-msgid "Convertro"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_34
-msgid "Corporate & Business"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_35
-msgid "Cosmetics"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -777,8 +173,9 @@ msgid "Countries"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_75
-msgid "Crazy Egg"
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:187
+#, python-format
+msgid "Create a Lead Mining Request"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -787,7 +184,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__create_uid
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__create_uid
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__create_uid
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -797,63 +193,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__create_date
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__create_date
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__create_date
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__create_date
 msgid "Created on"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_76
-msgid "Criteo"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_77
-msgid "Crowdskout"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_78
-msgid "Customer.io"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_86
-msgid "DNS Made Easy"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_79
-msgid "Dailymotion"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_222
-msgid "Data Processing & Outsourced Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_80
-msgid "Debian"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_81
-msgid "Demandbase"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_82
-msgid "Demandware"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_36
-msgid "Design"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_83
-msgid "Digital Ocean"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -862,23 +202,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__display_name
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_84
-msgid "Disqus"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_172
-msgid "Distributors"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_213
-msgid "Diversified Capital Markets"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -897,29 +221,9 @@ msgid "Diversified Financials"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_199
-msgid "Diversified Telecommunication Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_85
-msgid "Django"
-msgstr ""
-
-#. module: crm_iap_lead
 #: selection:crm.iap.lead.mining.request,state:0
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Done"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_87
-msgid "DoubleClick Ads"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_88
-msgid "DoubleClick Advertiser"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -929,123 +233,8 @@ msgid "Draft"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_89
-msgid "DreamHost Hosting"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_90
-msgid "Drift"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_91
-msgid "Drip"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_92
-msgid "Drupal"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_93
-msgid "Dwolla"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_94
-msgid "Dyn DNS"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_95
-msgid "Dynamic Yield"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_232
-msgid "E-Commerce"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_37
-msgid "E-Commerce & Marketplaces"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_38
-msgid "E-Learning"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_96
-msgid "Ecwid"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_39
-msgid "Education"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_170
-msgid "Education Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_97
-msgid "ElasticEmail"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_202
-msgid "Electric Utilities"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_40
-msgid "Electrical"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_183
-msgid "Electrical Equipment"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_194
-msgid "Electronic Equipment, Instruments & Components"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_98
-msgid "Elevio"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_99
-msgid "Eloqua"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "Email"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_100
-msgid "Emma"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_41
-msgid "Energy"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_42
-msgid "Energy & Utilities"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1054,90 +243,10 @@ msgid "Energy Equipment & Services"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_101
-msgid "Engagio"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_233
-msgid "Enterprise"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_43
-msgid "Entertainment & Recreation"
-msgstr ""
-
-#. module: crm_iap_lead
 #: selection:crm.iap.lead.mining.request,state:0
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__error
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Error"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_102
-msgid "Errorception"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_44
-msgid "Events"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_103
-msgid "Express"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_45
-msgid "Eyewear"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_104
-msgid "Facebook Advertiser"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_105
-msgid "Facebook Beacon"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_106
-msgid "Facebook Comments"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_107
-msgid "Facebook Connect"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_108
-msgid "Facebook Like Button"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_109
-msgid "Facebook Social Plugins"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_46
-msgid "Facilities"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_47
-msgid "Family Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_110
-msgid "Fedora"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1151,63 +260,8 @@ msgid "Filter on Size"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_48
-msgid "Finance"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_49
-msgid "Financial Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_145
-msgid "Financials"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_50
-msgid "Fine Art"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_51
-msgid "Firearms"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_52
-msgid "Fishery"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_111
-msgid "Flowplayer"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_53
-msgid "Food"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_153
 msgid "Food & Staples Retailing"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_54
-msgid "Food Production"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_174
-msgid "Food Products"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_209
-msgid "Food Retail"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1216,63 +270,8 @@ msgid "Food, Beverage & Tobacco"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_112
-msgid "Formstack"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_55
-msgid "Forums"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_113
-msgid "FreeBSD"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_114
-msgid "Freshdesk"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "From"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_115
-msgid "Fullcontact"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_116
-msgid "Fullstory"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_56
-msgid "Fundraising"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_117
-msgid "FusionCharts"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_57
-msgid "Gambling & Casinos"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_176
-msgid "Gas Utilities"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_118
-msgid "Gauges"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1283,133 +282,14 @@ msgid "Generate Leads"
 msgstr ""
 
 #. module: crm_iap_lead
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:188
+#, python-format
+msgid "Generate new leads based on their country, industry, size, etc."
+msgstr ""
+
+#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_ids
 msgid "Generated Lead / Opportunity"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_119
-msgid "Get Response"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_120
-msgid "Get Satisfaction"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_121
-msgid "Go Squared"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_123
-msgid "GoDaddy Hosting"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_122
-msgid "Gocardless"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_124
-msgid "Godaddy Nameserver"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_226
-msgid "Gold"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_125
-msgid "Google Adsense"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_126
-msgid "Google Adwords"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_127
-msgid "Google Affiliate Network"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_128
-msgid "Google Analytics"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_129
-msgid "Google Apps"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_130
-msgid "Google Charts"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_131
-msgid "Google Cloud"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_132
-msgid "Google Forms"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_133
-msgid "Google Maps"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_134
-msgid "Google Tag Manager"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_135
-msgid "Google Website Optimizer"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_136
-msgid "Google Widgets"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_58
-msgid "Government"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_137
-msgid "GraphIQ"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_223
-msgid "Graphic Design"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_138
-msgid "Gravity Forms"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_139
-msgid "Greenhouse"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_59
-msgid "Ground Transportation"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1418,48 +298,8 @@ msgid "Group By"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_60
-msgid "Health & Wellness"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_61
-msgid "Health Care"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_160
 msgid "Health Care Equipment & Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_178
-msgid "Health Care Equipment & Supplies"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_179
-msgid "Health Care Providers & Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_215
-msgid "Health Care Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_140
-msgid "Heap"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_141
-msgid "Hello Bar"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_142
-msgid "Help Scout"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1468,73 +308,8 @@ msgid "Helper methods for crm_iap_lead modules"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_143
-msgid "Heroku"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_144
-msgid "Highcharts"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_62
-msgid "Higher Education"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_63
-msgid "Home & Furniture"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_64
-msgid "Home Improvement"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_207
-msgid "Home Improvement Retail"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_208
-msgid "Homefurnishing Retail"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_169
-msgid "Hotels, Restaurants & Leisure"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_145
-msgid "Hotjar"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_155
 msgid "Household & Personal Products"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_146
-msgid "Hoverowl"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_147
-msgid "HubSpot"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_219
-msgid "Human Resource & Employment Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_65
-msgid "Human Resources"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1548,28 +323,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__id
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__id
 msgid "ID"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_234
-msgid "ISP"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_191
-msgid "IT Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_148
-msgid "Icims"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_66
-msgid "Import & Export"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1578,28 +332,8 @@ msgid "Independent Power and Renewable Electricity Producers"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_149
-msgid "Indicative"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_184
-msgid "Industrial Conglomerates"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_217
-msgid "Industrial Machinery"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_146
 msgid "Industrials"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_67
-msgid "Industrials & Manufacturing"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1613,173 +347,8 @@ msgid "Industry Tag"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_147
-msgid "Information Technology"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_68
-msgid "Information Technology & Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_150
-msgid "Infusionsoft"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_151
-msgid "Inside Sales"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_152
-msgid "Inspectlet"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_153
-msgid "Instagram"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_154
-msgid "Instagram Links"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_155
-msgid "Instart Logic"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_69
 msgid "Insurance"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_228
-msgid "Integrated Telecommunication Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_156
-msgid "Intense Debate"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_157
-msgid "Intercom"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_70
-msgid "International Relations"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_71
-msgid "International Trade"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_72
-msgid "Internet"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_190
-msgid "Internet Software & Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_73
-msgid "Investment"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_74
-msgid "Investment Banking"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_214
-msgid "Investment Banking & Brokerage"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_75
-msgid "Investment Management"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_159
-msgid "Iterable"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_160
-msgid "Java"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_76
-msgid "Jewelry, Watches & Luxury Goods"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_161
-msgid "Jobvite"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_162
-msgid "Joomla"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_77
-msgid "Judiciary"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_163
-msgid "Jw Player"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_164
-msgid "Kaltura"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_165
-msgid "Kapost"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_166
-msgid "Keen IO"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_167
-msgid "Kissmetrics"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_168
-msgid "Klaviyo"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_169
-msgid "Knowtify"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_179
-msgid "LKQD"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1788,7 +357,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority____last_update
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -1798,7 +366,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__write_uid
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__write_uid
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__write_uid
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -1808,13 +375,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__write_date
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__write_date
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__write_date
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__write_date
 msgid "Last Updated on"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_78
-msgid "Law Enforcement"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1823,8 +384,13 @@ msgid "Lead"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_170
-msgid "Lead Dyno"
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_contacts_credits
+msgid "Lead Contacts Credits"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_credits
+msgid "Lead Credits"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1838,11 +404,6 @@ msgid "Lead Information"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:ir.ui.menu,name:crm_iap_lead.crm_iap_lead_mining_request_menu_action
-msgid "Lead Mining"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__lead_mining_request_id
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Lead Mining Request"
@@ -1850,12 +411,8 @@ msgstr ""
 
 #. module: crm_iap_lead
 #: model:ir.actions.act_window,name:crm_iap_lead.crm_iap_lead_mining_request_action
+#: model:ir.ui.menu,name:crm_iap_lead.crm_iap_lead_mining_request_menu_action
 msgid "Lead Mining Requests"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_total_credit
-msgid "Lead Total Credit"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -1869,168 +426,10 @@ msgid "Leads"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_79
-msgid "Legal Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_204
-msgid "Leisure Facilities"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_171
-msgid "Lever"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_80
-msgid "Libraries"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_180
-msgid "Life Sciences Tools & Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_172
-msgid "Lightspeed"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_173
-msgid "LinkedIn Advertiser"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_174
-msgid "Linkwithin"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_175
-msgid "Linode Hosting"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_176
-msgid "Live Chat"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_177
-msgid "Livefyre"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_178
-msgid "Liveramp"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_180
-msgid "Localytics"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_181
-msgid "Looker"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_182
-msgid "Lucky Orange"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_81
-msgid "Machinery"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_183
-msgid "Mad Kudu"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_184
-msgid "Magento"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_185
-msgid "Magento Enterprise"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_186
-msgid "Magento V1"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_187
-msgid "Magento V2"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_188
-msgid "Mailchimp"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_189
-msgid "Mailgun"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_190
-msgid "Mailjet"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Make sure you know if you have to be GDPR compliant for storing personal data."
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_191
-msgid "Mandrill"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_192
-msgid "Marin"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_188
-msgid "Marine"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_82
-msgid "Maritime"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_83
-msgid "Market Research"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_84
-msgid "Marketing & Advertising"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_193
-msgid "Marketo"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_235
-msgid "Marketplace"
+msgid ""
+"Make sure you know if you have to be GDPR compliant for storing personal "
+"data."
 msgstr ""
 
 #. module: crm_iap_lead
@@ -2039,113 +438,12 @@ msgid "Materials"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_194
-msgid "Maxmind"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_85
-msgid "Mechanical Engineering"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_86
 msgid "Media"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_87
-msgid "Medicine"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_197
-msgid "Metals & Mining"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_195
-msgid "Microsoft Azure"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_196
-msgid "Microsoft Exchange Online"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_197
-msgid "Microsoft Office 365"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_88
-msgid "Military"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_198
-msgid "Mindbody"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_89
-msgid "Mining & Metals"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_199
-msgid "Mixpanel"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_236
-msgid "Mobile"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_200
-msgid "Mode"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_201
-msgid "Mouseflow"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_202
-msgid "Mousestats"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_206
-msgid "Movies & Entertainment"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_90
-msgid "Movies & TV"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_91
-msgid "Museums"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_92
-msgid "Music"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_203
-msgid "My Site Auditor"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__name
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__name
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "Name"
 msgstr ""
@@ -2156,67 +454,12 @@ msgid "Name already exists!"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_204
-msgid "Namecheap Dns"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_93
-msgid "Nanotechnology"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_205
-msgid "NationBuilder"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_94
-msgid "Networking"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_206
-msgid "Neustar Ad Advisor"
-msgstr ""
-
-#. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:31
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:194
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:200
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:201
 #, python-format
 msgid "New"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_207
-msgid "New Relic"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_208
-msgid "Nextable"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_209
-msgid "Nginx"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_95
-msgid "Non-Profit & Philanthropy"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_210
-msgid "Nosto"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_211
-msgid "Ns1"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -2235,41 +478,6 @@ msgid "Number of Leads"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_number_info
-msgid "Number of Leads "
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_96
-msgid "Oil & Gas"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_212
-msgid "Olark"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_213
-msgid "Omniconvert"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_214
-msgid "Omniture (Adobe Analytics)"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_215
-msgid "Ooyala"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_216
-msgid "Open Table"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Opportunities"
 msgstr ""
@@ -2285,88 +493,8 @@ msgid "Opportunity created by Odoo Lead Generation"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_217
-msgid "Optimizely"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_218
-msgid "Optimonk"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_219
-msgid "Oscommerce"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__role_ids
 msgid "Other Roles"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_220
-msgid "Outbound"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_221
-msgid "Outbrain Ads"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_222
-msgid "Outlook"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_97
-msgid "Outsourcing"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_211
-msgid "Packaged Foods & Meats"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_98
-msgid "Packaging & Containers"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_198
-msgid "Paper & Forest Products"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_99
-msgid "Paper Goods"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_227
-msgid "Paper Products"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_224
-msgid "Pardot"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_225
-msgid "PayPal"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_100
-msgid "Payments"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_226
-msgid "Payza"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -2380,43 +508,8 @@ msgid "People Seniority"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_227
-msgid "Percolate"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_228
-msgid "Perfect Audience"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_101
-msgid "Performing Arts"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_229
-msgid "Periscope Data"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_175
-msgid "Personal Products"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_102
-msgid "Pharmaceuticals"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_161
 msgid "Pharmaceuticals, Biotechnology & Life Sciences"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_103
-msgid "Pharmacy"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -2425,198 +518,13 @@ msgid "Phone"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_104
-msgid "Photography"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_230
-msgid "Picreel"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_231
-msgid "Pingdom"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_232
-msgid "Pinterest"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_233
-msgid "Pipedrive"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_234
-msgid "Piwik"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_105
-msgid "Plastics"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_235
-msgid "Playwire"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_106
-msgid "Plumbing"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_107
-msgid "Political Organization"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_108
-msgid "Pornography"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_236
-msgid "Postmark"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_237
-msgid "PowerReviews"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__preferred_role_id
 msgid "Preferred Role"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_238
-msgid "Presta Shop"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_109
-msgid "Primary & Secondary Education"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_110
-msgid "Printing"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_239
-msgid "Privy"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_186
-msgid "Professional Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_111
-msgid "Public Relations"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_112
-msgid "Publishing"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_240
-msgid "Qbrick"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_241
-msgid "Qualaroo"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_242
-msgid "Qualtrics"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_243
-msgid "Quantcast"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_244
-msgid "Qubit"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_245
-msgid "Rackspace"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_246
-msgid "Rackspace Email"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_113
-msgid "Ranching"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_251
-msgid "ReSRCit"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_114
 msgid "Real Estate"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_247
-msgid "Recaptcha"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_248
-msgid "Recruiterbox"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_249
-msgid "Recurly"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_250
-msgid "Red Hat"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_115
-msgid "Religion"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_201
-msgid "Renewable Electricity"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_229
-msgid "Renewable Energy"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_116
-msgid "Renewables & Environment"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -2627,31 +535,6 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__name
 msgid "Request Number"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_220
-msgid "Research & Consulting Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_117
-msgid "Restaurants"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_252
-msgid "Resumator"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_118
-msgid "Retail"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_253
-msgid "RetailRocket"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -2677,26 +560,6 @@ msgid "Reveal ID"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_254
-msgid "Rezdy"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_255
-msgid "Rezgo"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_189
-msgid "Road & Rail"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_256
-msgid "Robly"
-msgstr ""
-
-#. module: crm_iap_lead
 #: selection:crm.iap.lead.mining.request,contact_filter_type:0
 msgid "Role"
 msgstr ""
@@ -2712,39 +575,9 @@ msgid "Role name already exists!"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_257
-msgid "Rollbar"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_258
-msgid "Route 53"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_259
-msgid "Ruby On Rails"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_237
-msgid "SAAS"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__team_id
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Sales Team"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_260
-msgid "Salesforce"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_261
-msgid "Salesmachine"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -2754,48 +587,8 @@ msgid "Salesperson"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_262
-msgid "Salsa"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_119
-msgid "Sanitization Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_263
-msgid "Satismeter"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_120
-msgid "Scientific & Academic Research"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_121
-msgid "Security"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_264
-msgid "Segment"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_221
-msgid "Semiconductors"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_164
 msgid "Semiconductors & Semiconductor Equipment"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_265
-msgid "Sendgrid"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -2805,143 +598,13 @@ msgid "Seniority"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_266
-msgid "Sentry"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_122
-msgid "Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_267
-msgid "Sessioncam"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_268
-msgid "Sharepoint"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_269
-msgid "Sharp Spring"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_123
-msgid "Shipbuilding"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_124
-msgid "Shipping & Logistics"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_270
-msgid "Shopify"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_271
-msgid "Shopify Plus"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_272
-msgid "Shopware"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_273
-msgid "Sidecar"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_274
-msgid "Silkroad"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_275
-msgid "Simplicant"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__company_size_min
 msgid "Size"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_276
-msgid "Slack"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_277
-msgid "Smartlook"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_278
-msgid "Snowplow Analytics"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_125
-msgid "Society"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_279
-msgid "Sociomantic"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_280
-msgid "Socket.io"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_281
-msgid "Softlayer Hosting"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_192
-msgid "Software"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_165
 msgid "Software & Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_171
-msgid "Specialized Consumer Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_173
-msgid "Specialty Retail"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_126
-msgid "Sporting Goods"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_127
-msgid "Sports & Fitness"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_282
-msgid "Squarespace"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -2955,48 +618,8 @@ msgid "Status"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_283
-msgid "SteelHouse"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_128
-msgid "Stores"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_284
-msgid "Stripe"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "Submit"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_285
-msgid "Success Factors"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_286
-msgid "Sumo"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_287
-msgid "Survey Monkey"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_288
-msgid "Tableau"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_289
-msgid "Taboola Ads"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -3015,48 +638,8 @@ msgid "Tags"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_129
-msgid "Talent Agencies"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_290
-msgid "Taleo"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_291
-msgid "Talkable"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__search_type
 msgid "Target"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_292
-msgid "Tawk"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_293
-msgid "Tealium"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_technology__tech_tag
-msgid "Tech Tag"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__technology_ids
-msgid "Technologies"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_130
-msgid "Technology"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -3065,23 +648,8 @@ msgid "Technology Hardware & Equipment"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_195
-msgid "Technology Hardware, Storage & Peripherals"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_technology
-msgid "Technology Tag"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "Technology Used :"
-msgstr ""
-
-#. module: crm_iap_lead
-#: sql_constraint:crm.iap.lead.technology:0
-msgid "Technology tag name already exists!"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -3090,103 +658,13 @@ msgid "Telecommunication Services"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_131
-msgid "Telecommunications"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_294
-msgid "Terminus"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_132
-msgid "Textiles"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "Title"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_133
-msgid "Tobacco"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_134
-msgid "Tools"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_295
-msgid "Top Producer"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_296
-msgid "Totango"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_297
-msgid "Tout"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_298
-msgid "Toutapp"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_299
-msgid "TowerData"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_300
-msgid "Track JS"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_185
-msgid "Trading Companies & Distributors"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_135
-msgid "Translation"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_136
 msgid "Transportation"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_137
-msgid "Travel & Leisure"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_301
-msgid "Trustpilot"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_302
-msgid "Twitter Advertiser"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_303
-msgid "Twitter Badge"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_304
-msgid "Twitter Button"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -3196,269 +674,17 @@ msgid "Type"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_305
-msgid "Typeform"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_306
-msgid "Typekit By Adobe"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_307
-msgid "Uber Cart"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_308
-msgid "Ubuntu"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_309
-msgid "Ultipro"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_310
-msgid "Unix"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Up to"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_311
-msgid "UserVoice"
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:72
+#, python-format
+msgid ""
+"Up to %d additional credits will be consumed\n"
+"                                per company to identify its contacts (making a\n"
+"                                total of %d credits for this request)."
 msgstr ""
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138
 msgid "Utilities"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_139
-msgid "Venture Capital"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_312
-msgid "Vero"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_313
-msgid "Verticalresponse"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_140
-msgid "Veterinary"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_141
-msgid "Video Games"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_314
-msgid "Video.js"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_315
-msgid "Vidyard"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_316
-msgid "Vimeo"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_317
-msgid "Virtue Mart"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_318
-msgid "Visual IQ"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_319
-msgid "Visual Website Optimizer"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_320
-msgid "Volusion"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_321
-msgid "Vzaar"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_142
-msgid "Warehousing"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_143
-msgid "Web Services & Apps"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_322
-msgid "WebEngage"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_323
-msgid "Weebly"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_144
-msgid "Wholesale"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_200
-msgid "Wireless Telecommunication Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_324
-msgid "Wistia"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_325
-msgid "Wix Stores"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_326
-msgid "Woo Commerce"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_327
-msgid "Woopra"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_328
-msgid "Wootric"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_329
-msgid "Wordpress"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_330
-msgid "Workable"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_331
-msgid "Wp Engine"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_332
-msgid "Wufoo"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_334
-msgid "Yahoo Stores"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_335
-msgid "Yandex Metrica"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_336
-msgid "Yelp Seatme"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_337
-msgid "Yesware"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_338
-msgid "Yieldify"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_339
-msgid "Yotpo"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_340
-msgid "Youtube"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_341
-msgid "Zeit Now"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_342
-msgid "Zen Cart"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_343
-msgid "Zendesk"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_344
-msgid "Zenreach"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_345
-msgid "Zopim"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_346
-msgid "Zuora"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_347
-msgid "Zype"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "additional credits will be consumed per company to identify contacts.\n"
-"                                    ("
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_26
-msgid "amCharts"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -3472,19 +698,8 @@ msgid "communications"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "companies.\n"
-"                                <br/>"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_3
 msgid "consulting"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "credits will be consumed to find"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -3543,11 +758,6 @@ msgid "information_technology"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_158
-msgid "ios"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_12
 msgid "legal"
 msgstr ""
@@ -3570,11 +780,6 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_15
 msgid "owner"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_223
-msgid "ownerIQ"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -3616,9 +821,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "to"
 msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.technology,name:crm_iap_lead.crm_iap_lead_technology_333
-msgid "xt:Commerce"
-msgstr ""
-

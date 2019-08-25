@@ -338,6 +338,7 @@
             background-color: transparent;
             opacity: 0.8;
             border-radius: 0px;
+            margin-bottom: 0; // If the button comes from a field
 
             &:hover, &:focus {
                 background-color: rgba(black, 0.03);
@@ -577,10 +578,11 @@
     .o_field_translate {
         padding: 0;
         cursor: pointer;
-        width: 12px !important;
+        width: 35px !important;
         vertical-align: top;
         &::before { // seems to be useful for some old browser
             position: relative;
+            content: attr(data-code);
         }
     }
 
@@ -777,7 +779,7 @@
     }
 }
 
-// Overriden style when form view in modal
+// Overridden style when form view in modal
 .modal .modal-dialog {
     .o_form_view {
         .o_form_sheet_bg {
@@ -922,7 +924,7 @@
                 }
             }
             button.btn-link:first-child {
-                padding-left: 0;
+                padding: 0;
             }
             a.oe-link {
                 font-size: 12px;

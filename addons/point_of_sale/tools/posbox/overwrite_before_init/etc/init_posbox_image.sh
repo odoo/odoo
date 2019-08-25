@@ -25,6 +25,8 @@ PKGS_TO_INSTALL="
     fswebcam \
     nginx-full \
     dnsmasq \
+    dbus \
+    dbus-x11 \
     cups \
     printer-driver-all \
     cups-ipp-utils \
@@ -119,6 +121,9 @@ PIP_TO_INSTALL="
 
 pip3 install ${PIP_TO_INSTALL}
 
+# Dowload MPD server and library for Six terminals
+wget 'https://nightly.odoo.com/master/iotbox/eftdvs' -P /usr/local/bin/
+wget 'https://nightly.odoo.com/master/iotbox/eftapi.so' -P /usr/lib/
 
 groupadd usbusers
 usermod -a -G usbusers pi
@@ -177,8 +182,6 @@ echo "disable_overscan=1" >> /boot/config.txt
 setupcon
 
 # exclude /drivers folder from git info to be able to load specific drivers
-mkdir /home/pi/odoo/addons/hw_drivers/drivers/
-chmod 777 /home/pi/odoo/addons/hw_drivers/drivers/
 echo "addons/hw_drivers/drivers/" > /home/pi/odoo/.git/info/exclude
 
 # create dirs for ramdisks

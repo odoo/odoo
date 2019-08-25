@@ -44,7 +44,7 @@ class SaleOrder(models.Model):
 
     def _activity_cancel_on_purchase(self):
         """ If some SO are cancelled, we need to put an activity on their generated purchase. If sale lines of
-            differents sale orders impact different purchase, we only want one activity to be attached.
+            different sale orders impact different purchase, we only want one activity to be attached.
         """
         purchase_to_notify_map = {}  # map PO -> recordset of SOL as {purchase.order: set(sale.orde.liner)}
 
@@ -108,8 +108,8 @@ class SaleOrderLine(models.Model):
         decreased_values = {}
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            increased_lines = self.sudo().filtered(lambda r: r.purchase_line_count and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
-            decreased_lines = self.sudo().filtered(lambda r: r.purchase_line_count and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == 1)
+            increased_lines = self.sudo().filtered(lambda r: r.product_id.service_to_purchase and r.purchase_line_count and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+            decreased_lines = self.sudo().filtered(lambda r: r.product_id.service_to_purchase and r.purchase_line_count and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == 1)
             increased_values = {line.id: line.product_uom_qty for line in increased_lines}
             decreased_values = {line.id: line.product_uom_qty for line in decreased_lines}
 

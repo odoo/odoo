@@ -5,8 +5,9 @@
             <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
             <link rel="stylesheet" href="/point_of_sale/static/src/css/pos.css" id="pos-stylesheet"/>
             <link rel="stylesheet" href="/point_of_sale/static/src/css/keyboard.css"/>
+            <link rel="stylesheet" href="/point_of_sale/static/src/css/pos_receipts.css"/>
 
-            <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
+            <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overridden.scss"/>
 
             <script type="text/javascript" src="/point_of_sale/static/lib/backbone/backbone.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/lib/waitfont.js"></script>
@@ -16,18 +17,13 @@
             <script type="text/javascript" src="/point_of_sale/static/src/js/models.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/widget_base.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/keyboard.js"></script>
+            <script type="text/javascript" src="/point_of_sale/static/src/js/barcode_reader.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/chrome.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/devices.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/gui.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/popups.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/screens.js"></script>
         </template>
-
-    <template id="wysiwyg_iframe_css_assets" name="CSS assets for wysiwyg iframe content">
-        <t t-call-assets="web.assets_common" t-js="false"/>
-        <t t-call-assets="web.assets_backend" t-js="false"/>
-        <link rel="stylesheet" href="/point_of_sale/static/src/css/customer_facing_display_editor_thumb.css" type="text/css"/>
-    </template>
 
     <template id="customer_facing_display_html" >
         <t name="point_of_sale.customer_facing_display_html" >
@@ -68,11 +64,10 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="pos-payment_info">
-                    <div class="pos-adv" style="background-image:url(http://placehold.it/300x350?text=ADV);"></div>
                     <div class="pos-company_logo"/>
-            
+
                     <div class="pos-payment_info_details">
                         <div class="pos-total">
                             <div>
@@ -102,7 +97,7 @@
                     </div>
                 </div>
             </div>
-        </t>                    
+        </t>
     </template>
 
 </odoo>

@@ -313,8 +313,8 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('.o_external_button'));
 
-        var $originalModal = $('.modal-dialog');
-        var $focusedModal = $(document.activeElement).closest('.modal-dialog');
+        var $originalModal = $('.modal');
+        var $focusedModal = $(document.activeElement).closest('.modal');
 
         assert.equal($originalModal.length, 1, 'There should be one modal');
         assert.equal($originalModal[0], $focusedModal[0], 'Modal is focused');
@@ -322,8 +322,8 @@ QUnit.module('relational_fields', {
 
         // Open many2one modal of field in many2one modal
         await testUtils.dom.click($originalModal.find('.o_external_button'));
-        var $modals = $('.modal-dialog');
-        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+        var $modals = $('.modal');
+        $focusedModal = $(document.activeElement).closest('.modal');
 
         assert.equal($modals.length, 2, 'There should be two modals');
         assert.equal($modals[1], $focusedModal[0], 'Last modal is focused');
@@ -331,8 +331,8 @@ QUnit.module('relational_fields', {
 
         // Close second modal
         await testUtils.dom.click($modals.last().find('button[class="close"]'));
-        var $modal = $('.modal-dialog');
-        $focusedModal = $(document.activeElement).closest('.modal-dialog');
+        var $modal = $('.modal');
+        $focusedModal = $(document.activeElement).closest('.modal');
 
         assert.equal($modal.length, 1, 'There should be one modal');
         assert.equal($modal[0], $originalModal[0], 'First modal is still opened');
@@ -1847,6 +1847,28 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget many2many_tags_avatar', async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'turtle',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="partner_ids" widget="many2many_tags_avatar"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2, "should have 2 records");
+        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'), '/web/image/partner/2/image_64',
+            "should have correct avatar image");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldRadio');
 
     QUnit.test('fieldradio widget on a many2one in a new record', async function (assert) {
@@ -2128,6 +2150,42 @@ QUnit.module('relational_fields', {
         });
 
         assert.containsOnce(form, 'span.o_readonly_modifier', "should have 1 possible value in readonly mode");
+        form.destroy();
+    });
+
+    QUnit.module('FieldSelectionFont');
+
+    QUnit.test('FieldSelectionFont displays the correct fonts on options', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.fonts = {
+            type: "selection",
+            selection: [['Lato', "Lato"], ['Oswald', "Oswald"]],
+            default: 'Lato',
+            string: "Fonts",
+        };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="fonts" widget="font"/>' +
+                '</form>',
+        });
+        var options = form.$('.o_field_widget[name="fonts"] > option');
+
+        assert.strictEqual(form.$('.o_field_widget[name="fonts"]').css('fontFamily'), 'Lato',
+            "Widget font should be default (Lato)");
+        assert.strictEqual($(options[0]).css('fontFamily'), 'Lato',
+            "Option 0 should have the correct font (Lato)");
+        assert.strictEqual($(options[1]).css('fontFamily'), 'Oswald',
+            "Option 1 should have the correct font (Oswald)");
+
+        await testUtils.fields.editSelect(form.$('.o_field_widget[name="fonts"]'), '"Oswald"');
+        assert.strictEqual(form.$('.o_field_widget[name="fonts"]').css('fontFamily'), 'Oswald',
+            "Widget font should be updated (Oswald)");
+
         form.destroy();
     });
 

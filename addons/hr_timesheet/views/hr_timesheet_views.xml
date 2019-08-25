@@ -124,14 +124,15 @@
                     <separator/>
                     <filter name="month" string="Date" date="date"/>
                     <group expand="0" string="Group By">
-                        <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Project" name="groupby_project" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Task" name="groupby_task" domain="[]" context="{'group_by':'task_id'}"/>
-                        <filter string="Timesheet Date" name="groupby_date" domain="[]" context="{'group_by':'date'}" help="Timesheet by Date"/>
+                        <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Project" name="groupby_project" domain="[]" context="{'group_by': 'project_id'}"/>
+                        <filter string="Task" name="groupby_task" domain="[]" context="{'group_by': 'task_id'}"/>
+                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}" help="Timesheet by Date"/>
                     </group>
                 </search>
             </field>
         </record>
+
         <record id="view_kanban_account_analytic_line" model="ir.ui.view">
             <field name="name">account.analytic.line.kanban</field>
             <field name="model">account.analytic.line</field>
@@ -148,7 +149,7 @@
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row">
                                     <div class="col-2">
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="40" height="40" class="oe_kanban_avatar float-left"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="40" height="40" class="oe_kanban_avatar float-left"/>
                                     </div>
                                     <div class="col-10">
                                         <div>

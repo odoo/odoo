@@ -10,7 +10,6 @@
                     <field name="state_id"  widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="currency_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="open_assignation_logs"
@@ -60,7 +59,8 @@
                             <field name="odometer_count" widget="statinfo" string="Odometer"/>
                         </button>
                     </div>
-                    <field name="image_medium" widget='image' class="oe_avatar"/>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="image_128" widget='image' class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="model_id" class="oe_edit_only"/>
                         <h1>
@@ -76,7 +76,7 @@
                     <group col="2">
                         <group string="Driver">
                             <field name="active" invisible="1"/>
-                            <field name="driver_id"/>
+                            <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
                             <label for="future_driver_id"/>
                             <div class="o_row">
                                 <field name="future_driver_id"/>
@@ -156,6 +156,7 @@
                 <field name="contract_renewal_due_soon" invisible="1"/>
                 <field name="contract_renewal_overdue" invisible="1"/>
                 <field name="contract_renewal_total" invisible="1"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
     </record>
@@ -165,33 +166,34 @@
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
             <search string="All vehicles">
-                <field name="name" filter_domain="['|', ('name','ilike',self), ('license_plate','ilike',self)]" string="Vehicle"/>
-                <field name="log_drivers" filter_domain="[('log_drivers.driver_id.name', 'ilike', self)]" string="Drivers History"/>
-                <field name="driver_id"/>
+                <field string="Vehicle" name="name" filter_domain="['|', ('name', 'ilike', self), ('license_plate', 'ilike', self)]"/>
+                <field string="Drivers" name="log_drivers" filter_domain="[('log_drivers.driver_id.name', 'ilike', self)]"/>
+                <field string="Current Driver" name="driver_id"/>
                 <field name="future_driver_id"/>
                 <field name="tag_ids"/>
                 <field name="location"/>
-                <field name="state_id"/>
-                <filter name="available" string="Is Available"
+                <field string="Status" name="state_id"/>
+                <filter string="Available" name="available"
                     domain="['&amp;', ('future_driver_id', '=', False), '|', ('driver_id', '=', False), ('plan_to_change_car', '=', True)]"/>
                 <filter name="planned" string="Planned for Change" domain="[('plan_to_change_car', '=', True)]"/>
                 <separator/>
-                <filter name="alert_true" domain="['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]" string="Has Alert(s)"/>
+                <filter string="Need Action" name="alert_true" domain="['|', ('contract_renewal_due_soon', '=', True), ('contract_renewal_overdue', '=', True)]"/>
                 <separator/>
-                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
-                <filter string="Late Activities" name="activities_overdue"
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter string="Today Activities" name="activities_today"
+                <filter invisible="1" string="Today Activities" name="activities_today"
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Exception Activities" name="activities_exception"
+                    domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="1" string="Group By">
-                    <filter name="groupby_status" context="{'group_by' : 'state_id'}" string="Status"/>
-                    <filter name="groupby_model" context="{'group_by' : 'model_id'}" string="Model"/>
-                    <filter name="groupby_make" context="{'group_by' : 'brand_id'}" string="Make"/>
+                    <filter string="Status" name="groupby_status" context="{'group_by': 'state_id'}"/>
+                    <filter string="Model" name="groupby_model" context="{'group_by': 'model_id'}"/>
+                    <filter string="Brand" name="groupby_make" context="{'group_by': 'brand_id'}"/>
                 </group>
            </search>
         </field>
@@ -210,7 +212,6 @@
                 <field name="location" />
                 <field name="state_id" />
                 <field name="id" />
-                <field name="image" />
                 <field name="tag_ids" />
                 <field name="contract_renewal_due_soon" />
                 <field name="contract_renewal_overdue" />
@@ -225,7 +226,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
                             <div class="o_kanban_image">
-                                <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.raw_value)" alt="Vehicle"/>
+                                <img t-att-src="kanban_image('fleet.vehicle', 'image_128', record.id.raw_value)" alt="Vehicle"/>
                             </div>
                             <div class="oe_kanban_details">
                                 <strong class="o_kanban_record_title">
@@ -246,7 +247,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="o_kanban_button">
+                            <div class="o_kanban_button" t-if="!selection_mode">
                                 <a t-if="record.contract_count.raw_value>0" data-type="object"
                                    data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a"
                                    data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
@@ -260,7 +261,7 @@
                                     </span>
                                 </a>
                             </div>
-                            <div class="o_kanban_inline_block">
+                            <div class="o_kanban_inline_block" t-if="!selection_mode">
                                 <field name="activity_ids" widget="kanban_activity"/>
                             </div>
                         </div>
@@ -279,7 +280,7 @@
                 <field name="id"/>
                 <templates>
                     <div t-name="activity-box">
-                        <img t-att-src="activity_image('fleet.vehicle', 'image_small', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                        <img t-att-src="activity_image('fleet.vehicle', 'image_128', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
                         <div>
                             <field name="license_plate"/> : <field name="model_id"/>
                         </div>
@@ -368,12 +369,12 @@
         <field name="model">fleet.vehicle.odometer</field>
         <field name="arch" type="xml">
             <search string="Vehicles odometers" >
-                <field name="vehicle_id" />
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
                 <field name="value"/>
-                <field name="unit"/>
                 <field name="date"/>
                 <group expand="0" string="Group By">
-                    <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                    <filter name="groupby_vehicle" context="{'group_by': 'vehicle_id'}" string="Vehicle"/>
                 </group>
             </search>
         </field>

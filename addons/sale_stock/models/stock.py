@@ -123,7 +123,8 @@ class ProductionLot(models.Model):
             stock_moves = self.env['stock.move.line'].search([
                 ('lot_id', '=', lot.id),
                 ('state', '=', 'done')
-            ]).mapped('move_id').filtered(
+            ]).mapped('move_id')
+            stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
                 lambda move: move.picking_id.location_dest_id.usage == 'customer' and move.state == 'done')
             lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
             lot.sale_order_count = len(lot.sale_order_ids)
@@ -132,4 +133,5 @@ class ProductionLot(models.Model):
         self.ensure_one()
         action = self.env.ref('sale.action_orders').read()[0]
         action['domain'] = [('id', 'in', self.mapped('sale_order_ids.id'))]
+        action['context'] = dict(self._context, create=False)
         return action

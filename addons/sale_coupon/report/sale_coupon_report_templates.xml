@@ -19,8 +19,14 @@
                                     <h1 t-if="o.program_id.discount_type == 'percentage'" class="text-success">
                                         <strong><span t-field="o.program_id.discount_percentage"/>%</strong>
                                     </h1>
-                                    <t t-if="o.program_id.discount_apply_on == 'specific_product'">
-                                        <t t-set="text" t-value="'OFF ON %s' % (o.program_id.discount_specific_product_id.name.upper())"/>
+                                    <t t-if="o.program_id.discount_apply_on == 'specific_products'">
+                                        <t t-if="len(o.program_id.discount_specific_product_ids) > 1">
+                                            <t t-set="text" t-value="'OFF ON SOME PRODUCTS*'"/>
+                                            <t t-set="display_specific_products" t-value="True"/>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-set="text" t-value="'OFF ON %s' % o.program_id.discount_specific_product_ids.name.upper()"/>
+                                        </t>
                                     </t>
                                     <t t-if="o.program_id.discount_apply_on == 'cheapest_product'">
                                         <t t-set="text" t-value="'%s' % ('OFF ON THE CHEAPEST PRODUCT')"/>
@@ -38,7 +44,7 @@
                                     <strong t-field="o.expiration_date" t-options='{"format": "d MMMM y"}'/>
                                 </h3>
                                 <h3>
-                                    <em>CODE :</em>
+                                    CODE:
                                     <strong class="bg-success" t-esc="o.code"></strong>
                                 </h3>
                                 <h4 t-if="o.program_id.rule_min_quantity > 1">
@@ -49,6 +55,11 @@
                                     Valid for purchase above
                                     <strong t-esc="o.program_id.rule_minimum_amount" t-options="{'widget': 'monetary', 'display_currency': o.program_id.currency_id}"/>
                                 </h4>
+                                <p t-if="display_specific_products">
+                                    <small>
+                                        *Valid for following products: <t t-esc="', '.join(o.program_id.discount_specific_product_ids.mapped('name')).upper()"/>
+                                    </small>
+                                </p>
                                 <br/>
                                 <img alt="Barcode" t-att-src="'/report/barcode/Code128/%s' % o.code"/>
                                 <br/>

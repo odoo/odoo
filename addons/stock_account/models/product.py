@@ -97,20 +97,26 @@ class ProductProduct(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
 
     @api.depends('stock_valuation_layer_ids')
+    @api.depends_context('to_date')
     def _compute_value_svl(self):
         """Compute `value_svl` and `quantity_svl`."""
         domain = [
             ('product_id', 'in', self.ids),
-            ('company_id', '=', self.env.user.company_id.id)
+            ('company_id', '=', self.env.company.id)
         ]
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
             domain.append(('create_date', '<=', to_date))
         groups = self.env['stock.valuation.layer'].read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
+        products = self.browse()
         for group in groups:
             product = self.browse(group['product_id'][0])
-            product.value_svl = group['value']
+            product.value_svl = self.env.company.currency_id.round(group['value'])
             product.quantity_svl = group['quantity']
+            products |= product
+        remaining = (self - products)
+        remaining.value_svl = 0
+        remaining.quantity_svl = 0
 
     # -------------------------------------------------------------------------
     # SVL creation helpers
@@ -132,6 +138,7 @@ class ProductProduct(models.Model):
         }
         if self.cost_method in ('average', 'fifo'):
             vals['remaining_qty'] = quantity
+            vals['remaining_value'] = vals['value']
         return vals
 
     def _prepare_out_svl_vals(self, quantity, company):
@@ -252,14 +259,16 @@ class ProductProduct(models.Model):
             new_standard_price = candidate.unit_cost
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate.remaining_qty)
 
-            candidate_unit_cost = candidate.unit_cost
-            if candidate.stock_valuation_layer_ids:
-                candidate_unit_cost += sum(candidate.stock_valuation_layer_ids.mapped('value')) / candidate.remaining_qty
-
+            candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
             value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
+            value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
+            new_remaining_value = candidate.remaining_value - value_taken_on_candidate
+
             candidate_vals = {
                 'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                'remaining_value': new_remaining_value,
             }
+
             candidate.write(candidate_vals)
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
@@ -329,9 +338,14 @@ class ProductProduct(models.Model):
                 qty_taken_on_candidate = min(candidate.remaining_qty, qty_to_take_on_candidates)
                 qty_taken_on_candidates += qty_taken_on_candidate
 
-                value_taken_on_candidate = qty_taken_on_candidate * candidate.unit_cost
+                candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
+                value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
+                value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
+                new_remaining_value = candidate.remaining_value - value_taken_on_candidate
+
                 candidate_vals = {
                     'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                    'remaining_value': new_remaining_value
                 }
                 candidate.write(candidate_vals)
 
@@ -570,6 +584,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
 
         candidates = stock_moves\
+            .sudo()\
             .mapped('stock_valuation_layer_ids')\
             .sorted()
         qty_to_take_on_candidates = qty_to_invoice
@@ -585,7 +600,7 @@ class ProductProduct(models.Model):
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate_quantity)
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
-            tmp_value += qty_taken_on_candidate * candidate.unit_cost
+            tmp_value += qty_taken_on_candidate * (candidate.value / candidate.quantity)
             if float_is_zero(qty_to_take_on_candidates, precision_rounding=candidate.uom_id.rounding):
                 break
 
@@ -619,23 +634,23 @@ class ProductCategory(models.Model):
         """)
     property_stock_journal = fields.Many2one(
         'account.journal', 'Stock Journal', company_dependent=True,
-        help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
+        help="When doing automated inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
     property_stock_account_input_categ_id = fields.Many2one(
         'account.account', 'Stock Input Account', company_dependent=True,
-        domain=[('deprecated', '=', False)], oldname="property_stock_account_input_categ",
-        help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
-             "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
-             "can also directly be set on each product")
+        domain=[('deprecated', '=', False)],
+        help="""When doing automated inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account,
+                unless there is a specific valuation account set on the source location. This is the default value for all products in this category.
+                It can also directly be set on each product.""")
     property_stock_account_output_categ_id = fields.Many2one(
         'account.account', 'Stock Output Account', company_dependent=True,
-        domain=[('deprecated', '=', False)], oldname="property_stock_account_output_categ",
-        help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
-             "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
-             "can also directly be set on each product")
+        domain=[('deprecated', '=', False)],
+        help="""When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,
+                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.
+                It can also directly be set on each product.""")
     property_stock_valuation_account_id = fields.Many2one(
         'account.account', 'Stock Valuation Account', company_dependent=True,
         domain=[('deprecated', '=', False)],
-        help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",)
+        help="""When automated inventory valuation is enabled on a product, this account will hold the current value of the products.""",)
 
     @api.constrains('property_stock_valuation_account_id', 'property_stock_account_output_categ_id', 'property_stock_account_input_categ_id')
     def _check_valuation_accouts(self):

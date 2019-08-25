@@ -21,6 +21,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     custom_events: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.custom_events || {}, {
         content_will_be_destroyed: '_onContentWillBeDestroyed',
         content_was_recreated: '_onContentWasRecreated',
+        snippet_will_be_cloned: '_onSnippetWillBeCloned',
         snippet_cloned: '_onSnippetCloned',
         snippet_dropped: '_onSnippetDropped',
         edition_will_stopped: '_onEditionWillStop',
@@ -87,7 +88,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @private
      * @returns {Promise}
      */
-    _startEditMode: function () {
+    _startEditMode: async function () {
         var self = this;
         if (this.editModeEnable) {
             return;
@@ -95,30 +96,27 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         this.trigger_up('widgets_stop_request', {
             $target: this._targetForEdition(),
         });
-        var $welcomeMessageParent = null;
         if (this.$welcomeMessage) {
-            $welcomeMessageParent = this.$welcomeMessage.parent();
             this.$welcomeMessage.detach(); // detach from the readonly rendering before the clone by summernote
         }
         this.editModeEnable = true;
-        return new EditorMenu(this).prependTo(document.body).then(function () {
-            if (self.$welcomeMessage) {
-                $welcomeMessageParent.append(self.$welcomeMessage); // reappend if the user cancel the edition
-            }
-
-            var $target = self._targetForEdition();
-            self.$editorMessageElements = $target
-                .find('.oe_structure.oe_empty, [data-oe-type="html"]')
-                .not('[data-editor-message]')
-                .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
-            new Promise(function (resolve, reject) {
-                self.trigger_up('widgets_start_request', {
-                    editableMode: true,
-                    onSuccess: resolve,
-                    onFailure: reject,
-                });
+        await new EditorMenu(this).prependTo(document.body);
+        var $target = this._targetForEdition();
+        this.$editorMessageElements = $target
+            .find('.oe_structure.oe_empty, [data-oe-type="html"]')
+            .not('[data-editor-message]')
+            .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+        var res = await new Promise(function (resolve, reject) {
+            self.trigger_up('widgets_start_request', {
+                editableMode: true,
+                onSuccess: resolve,
+                onFailure: reject,
             });
         });
+        // Trigger a mousedown on the main edition area to focus it,
+        // which is required for Summernote to activate.
+        this.$editorMessageElements.mousedown();
+        return res;
     },
     /**
      * On save, the editor will ask to parent widgets if something needs to be
@@ -185,7 +183,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @param {OdooEvent} ev
      */
     _onEditionWillStop: function (ev) {
-        this.$editorMessageElements.removeAttr('data-editor-message');
+        this.$editorMessageElements && this.$editorMessageElements.removeAttr('data-editor-message');
         this.trigger_up('widgets_stop_request', {
             $target: this._targetForEdition(),
         });
@@ -204,8 +202,21 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         this.editModeEnable = false;
     },
     /**
+     * Called when a snippet is about to be cloned in the page. Notifies the
+     * WebsiteRoot that is should destroy the animations for this snippet.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetWillBeCloned: function (ev) {
+        this.trigger_up('animation_stop_demand', {
+            $target: ev.data.$target,
+        });
+    },
+    /**
      * Called when a snippet is cloned in the page. Notifies the WebsiteRoot
-     * that is should start the public widgets for this snippet.
+     * that is should start the public widgets for this snippet and the snippet it
+     * was cloned from.
      *
      * @private
      * @param {OdooEvent} ev
@@ -215,6 +226,13 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             editableMode: true,
             $target: ev.data.$target,
         });
+        // TODO: remove in saas-12.5, undefined $origin will restart #wrapwrap
+        if (ev.data.$origin) {
+            this.trigger_up('widgets_start_request', {
+                editableMode: true,
+                $target: ev.data.$origin,
+            });
+        }
     },
     /**
      * Called when a snippet is dropped in the page. Notifies the WebsiteRoot

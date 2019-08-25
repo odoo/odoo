@@ -278,6 +278,7 @@ class AccountMove(models.Model):
                                 continue
 
                             self._import_facturx_invoice(tree)
+                            self._remove_ocr_option()
                             buffer.close()
             except except_orm as e:
                 raise e
@@ -315,15 +316,13 @@ class AccountMove(models.Model):
             if check_res.get('flag') and not check_res.get('error'):
                 invoice_ids = decode_func(tree)
                 if invoice_ids:
-                    try:
-                        # don't propose to send to ocr
-                        invoice_ids.write({'extract_state': 'done'})
-                    except AttributeError:
-                        # account_invoice_exctract not installed
-                        pass
+                    invoice_ids._remove_ocr_option()
                     break
 
         try:
             return invoice_ids
         except UnboundLocalError:
             raise UserError(_('No decoder was found for the xml file: {}. The file is badly formatted, not supported or the decoder is not installed').format(attachment.name))
+
+    def _remove_ocr_option(self):
+        self.write({'extract_state': 'done'})

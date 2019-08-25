@@ -2,7 +2,7 @@
 <odoo>
     <act_window
         context="{'location': active_id, 'search_default_real_stock_available': 1, 'search_default_virtual_stock_available': 1,
-                    'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1}"
+                    'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1, 'create': False}"
         id="act_product_location_open"
         name="Products"
         res_model="product.product"
@@ -15,7 +15,6 @@
         <field name="arch" type="xml">
             <form string="Stock Location" create="false">
                 <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
                         <button string="Putaway Rules"
                                 class="oe_stat_button"
@@ -23,31 +22,26 @@
                                 groups="stock.group_stock_multi_locations"/>
                         <button string="Current Stock"
                                 class="oe_stat_button"
-                                icon="fa-building-o" name="%(location_open_quants)d" type="action"/>
+                                icon="fa-cubes" name="%(location_open_quants)d" type="action"/>
                         <button string="Products"
                                 class="oe_stat_button"
-                                icon="fa-filter" name="%(act_product_location_open)d" type="action"
+                                icon="fa-th-list" name="%(act_product_location_open)d" type="action"
                                 context="{'location_id': active_id}"
                                 />
                     </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <label for="location_id" class="oe_edit_only"/>
                     <h2><field name="location_id" options="{'no_create': True}"/></h2>
 
                     <group>
-                        <group string="Additional Information">
+                        <group string="Additional Information" name="additional_info">
                             <field name="active" invisible="1"/>
                             <field name="usage"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="scrap_location" attrs="{'invisible': [('usage', 'not in', ('inventory', 'internal'))]}"/>
                             <field name="return_location"/>
-                        </group>
-                        <group string="Localization" name="localization">
-                            <field name="posx"/>
-                            <field name="posy"/>
-                            <field name="posz"/>
-                            <field name="barcode"/>
                         </group>
                         <group string="Logistics" groups="stock.group_adv_location">
                             <field name="removal_strategy_id" options="{'no_create': True}"/>

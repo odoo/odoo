@@ -69,6 +69,7 @@
                 </form>
             </field>
         </record>
+
         <record id="sequence_view_tree" model="ir.ui.view">
             <field name="model">ir.sequence</field>
             <field name="arch" type="xml">
@@ -84,6 +85,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_sequence_search" model="ir.ui.view">
             <field name="model">ir.sequence</field>
             <field name="arch" type="xml">
@@ -91,9 +93,12 @@
                     <field name="name" string="Sequence"/>
                     <field name="code"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>
+
         <record id="ir_sequence_form" model="ir.actions.act_window">
             <field name="name">Sequences</field>
             <field name="type">ir.actions.act_window</field>
@@ -101,6 +106,7 @@
             <field name="view_id" ref="sequence_view_tree"/>
             <field name="context">{'active_test': False}</field>
         </record>
+
         <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
 
 </odoo>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
 
 
@@ -54,6 +54,7 @@ class User(models.Model):
     employee_count = fields.Integer(compute='_compute_employee_count')
     hr_presence_state = fields.Selection(related='employee_id.hr_presence_state')
     last_activity = fields.Date(related='employee_id.last_activity')
+    last_activity_time = fields.Char(related='employee_id.last_activity_time')
 
     @api.depends('employee_ids')
     def _compute_employee_count(self):
@@ -73,6 +74,7 @@ class User(models.Model):
             'employee_parent_id',
             'hr_presence_state',
             'last_activity',
+            'last_activity_time',
         ]
 
         hr_writable_fields = [
@@ -95,6 +97,7 @@ class User(models.Model):
             'identification_id',
             'is_address_home_a_company',
             'job_title',
+            'private_email',
             'km_home_work',
             'marital',
             'mobile_phone',
@@ -135,7 +138,7 @@ class User(models.Model):
         # avoid breaking `groups` mecanism on res.users form view.
         profile_view = self.env.ref("hr.res_users_view_form_profile")
         if profile_view and view_id == profile_view.id:
-            self = self.sudo()
+            self = self.with_user(SUPERUSER_ID)
         return super(User, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     def write(self, vals):
@@ -157,12 +160,20 @@ class User(models.Model):
         result = super(User, self).write(vals)
 
         employee_values = {}
-        for fname in [f for f in ['name', 'email', 'image', 'tz'] if f in vals]:
+        for fname in [f for f in ['name', 'email', 'image_1920', 'tz'] if f in vals]:
             employee_values[fname] = vals[fname]
         if employee_values:
             if 'email' in employee_values:
                 employee_values['work_email'] = employee_values.pop('email')
-            self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids)]).write(employee_values)
+            if 'image_1920' in vals:
+                without_image = self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids), ('image_1920', '=', False)])
+                with_image = self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids), ('image_1920', '!=', False)])
+                without_image.write(employee_values)
+                if not can_edit_self:
+                    employee_values.pop('image_1920')
+                with_image.write(employee_values)
+            else:
+                self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids)]).write(employee_values)
         return result
 
     @api.model
@@ -180,5 +191,6 @@ class User(models.Model):
         self.ensure_one()
         self.env['hr.employee'].create(dict(
             user_id=self.id,
+            name=self.name,
             **self.env['hr.employee']._sync_user(self)
         ))

@@ -103,8 +103,7 @@ class TestAccessRights(TestCommonSaleNoChart):
         # Salesperson can change a Sales Team of SO
         self.order.with_user(self.user_salesperson_1).write({'team_id': self.sales_channel.id})
         # Salesperson can't create the SO of other salesperson
-        # raise ValidationError instead of AccessError due to constraint
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(AccessError):
             self.env['sale.order'].with_user(self.user_salesperson_1).create({
                 'partner_id': self.partner_customer_usd.id,
                 'user_id': self.user_salesperson.id

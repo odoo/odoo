@@ -8,7 +8,7 @@ from dateutil import relativedelta
 import pprint
 
 from odoo import api, exceptions, fields, models, _, SUPERUSER_ID
-from odoo.tools import consteq, float_round, image_resize_images, image_process, ustr
+from odoo.tools import consteq, float_round, image_process, ustr
 from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
@@ -37,7 +37,7 @@ class PaymentAcquirer(models.Model):
     to have required fields that depend on a specific acquirer.
 
     Each acquirer has a link to an ir.ui.view record that is a template of
-    a button used to display the payment form. See examples in ``payment_ogone``
+    a button used to display the payment form. See examples in ``payment_ingenico``
     and ``payment_paypal`` modules.
 
     Methods that should be added in an acquirer-specific implementation:
@@ -59,47 +59,53 @@ class PaymentAcquirer(models.Model):
     """
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
-    _order = 'website_published desc, sequence, name'
+    _order = 'state desc, sequence, name'
 
     def _get_default_view_template_id(self):
         return self.env.ref('payment.default_acquirer_button', raise_if_not_found=False)
 
     name = fields.Char('Name', required=True, translate=True)
+    color = fields.Integer('Color', compute='_compute_color', store=True)
+    display_as = fields.Char('Displayed as', translate=True, help="How the acquirer is displayed to the customers.")
     description = fields.Html('Description')
     sequence = fields.Integer('Sequence', default=10, help="Determine the display order")
     provider = fields.Selection(
-        selection=[('manual', 'Manual Configuration')], string='Provider',
+        selection=[('manual', 'Custom Payment Form')], string='Provider',
         default='manual', required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company.id, required=True)
     view_template_id = fields.Many2one(
         'ir.ui.view', 'Form Button Template',
-        default=_get_default_view_template_id)
+        default=_get_default_view_template_id,
+        help="This template renders the acquirer button with all necessary values.\n"
+        "It is rendered with qWeb with the following evaluation context:\n"
+        "tx_url: transaction URL to post the form\n"
+        "acquirer: payment.acquirer browse record\n"
+        "user: current user browse record\n"
+        "reference: the transaction reference number\n"
+        "currency: the transaction currency browse record\n"
+        "amount: the transaction amount, a float\n"
+        "partner: the buyer partner browse record, not necessarily set\n"
+        "partner_values: specific values about the buyer, for example coming from a shipping form\n"
+        "tx_values: transaction values\n"
+        "context: the current context dictionary")
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
         help="Template for method registration")
-    environment = fields.Selection([
-        ('test', 'Test'),
-        ('prod', 'Production')], string='Environment',
-        default='test', oldname='env', required=True)
-    website_published = fields.Boolean(
-        'Visible in Portal / Website', copy=False,
-        help="Make this payment acquirer available (Customer invoices, etc.)")
-    # Formerly associated to `authorize` option from auto_confirm
+    state = fields.Selection([
+        ('disabled', 'Disabled'),
+        ('enabled', 'Enabled'),
+        ('test', 'Test Mode')], required=True, default='disabled',
+        help="""In test mode, a fake payment is processed through a test
+             payment interface. This mode is advised when setting up the
+             acquirer. Watch out, test and production modes require
+             different credentials.""")
     capture_manually = fields.Boolean(string="Capture Amount Manually",
         help="Capture the amount from Odoo, when the delivery is completed.")
     journal_id = fields.Many2one(
-        'account.journal', 'Payment Journal', domain=[('type', 'in', ['bank', 'cash'])],
-        help="""Payments will be registered into this journal. If you get paid straight on your bank account,
-                select your bank account. If you get paid in batch for several transactions, create a specific
-                payment journal for this payment acquirer to easily manage the bank reconciliation. You hold
-                the amount in a temporary transfer account of your books (created automatically when you create
-                the payment journal). Then when you get paid on your bank account by the payment acquirer, you
-                reconcile the bank statement line with this temporary transfer account. Use reconciliation
-                templates to do it in one-click.""")
-    specific_countries = fields.Boolean(string="Specific Countries",
-        help="If you leave it empty, the payment acquirer will be available for all the countries.")
+        'account.journal', 'Payment Journal', domain="[('type', 'in', ['bank', 'cash']), ('company_id', '=', company_id)]",
+        help="""Journal where the successful transactions will be posted""")
     check_validity = fields.Boolean(string="Verify Card Validity",
         help="""Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.
         Without this check, the validity will be verified at the very first transaction.""")
@@ -111,25 +117,22 @@ class PaymentAcquirer(models.Model):
     pre_msg = fields.Html(
         'Help Message', translate=True,
         help='Message displayed to explain and help the payment process.')
-    post_msg = fields.Html(
-        'Thanks Message', translate=True,
-        help='Message displayed after having done the payment process.')
+    auth_msg = fields.Html(
+        'Authorize Message', translate=True,
+        default=lambda s: _('Your payment has been authorized.'),
+        help='Message displayed if payment is authorized.')
     pending_msg = fields.Html(
         'Pending Message', translate=True,
-        default=lambda s: _('<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.'),
+        default=lambda s: _('Your payment has been successfully processed but is waiting for approval.'),
         help='Message displayed, if order is in pending state after having done the payment process.')
     done_msg = fields.Html(
         'Done Message', translate=True,
-        default=lambda s: _('<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.'),
+        default=lambda s: _('Your payment has been successfully processed. Thank you!'),
         help='Message displayed, if order is done successfully after having done the payment process.')
     cancel_msg = fields.Html(
         'Cancel Message', translate=True,
-        default=lambda s: _('<i>Cancel,</i> Your payment has been cancelled.'),
+        default=lambda s: _('Your payment has been cancelled.'),
         help='Message displayed, if order is cancel during the payment process.')
-    error_msg = fields.Html(
-        'Error Message', translate=True,
-        default=lambda s: _('<i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but will not be paid. Do not hesitate to contact us if you have any questions on the status of your order.'),
-        help='Message displayed, if error is occur during the payment process.')
     save_token = fields.Selection([
         ('none', 'Never'),
         ('ask', 'Let the customer decide'),
@@ -150,20 +153,10 @@ class PaymentAcquirer(models.Model):
 
     # TDE FIXME: remove that brol
     module_id = fields.Many2one('ir.module.module', string='Corresponding Module')
-    module_state = fields.Selection(selection=ir_module.STATES, string='Installation State', related='module_id.state', readonly=False)
+    module_state = fields.Selection(selection=ir_module.STATES, string='Installation State', related='module_id.state', store=True)
+    module_to_buy = fields.Boolean(string='Odoo Enterprise Module', related='module_id.to_buy', readonly=True, store=False)
 
-    image = fields.Binary(
-        "Image", help="This field holds the image used for this provider, limited to 1024x1024px")
-    image_medium = fields.Binary(
-        "Medium-sized image",
-        help="Medium-sized image of this provider. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved. "
-             "Use this field in form views or some kanban views.")
-    image_small = fields.Binary(
-        "Small-sized image",
-        help="Small-sized image of this provider. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
+    image_128 = fields.Image("Image", max_width=128, max_height=128)
 
     payment_icon_ids = fields.Many2many('payment.icon', string='Supported Payment Icons')
     payment_flow = fields.Selection(selection=[('form', 'Redirection to the acquirer website'),
@@ -181,12 +174,18 @@ class PaymentAcquirer(models.Model):
         elif electronic in self.inbound_payment_method_ids:
             self.inbound_payment_method_ids = [(2, electronic.id)]
 
+    @api.onchange('state')
+    def onchange_state(self):
+        """Disable dashboard display for test acquirer journal."""
+        self.journal_id.update({'show_on_dashboard': self.state == 'enabled'})
+
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
         if (operator, value) in [('=', True), ('!=', False)]:
             return [('provider', 'in', tokenized)]
         return [('provider', 'not in', tokenized)]
 
+    @api.depends('provider')
     def _compute_feature_support(self):
         feature_support = self._get_feature_support()
         for acquirer in self:
@@ -194,15 +193,28 @@ class PaymentAcquirer(models.Model):
             acquirer.authorize_implemented = acquirer.provider in feature_support['authorize']
             acquirer.token_implemented = acquirer.provider in feature_support['tokenize']
 
+    @api.depends('state', 'module_state')
+    def _compute_color(self):
+        for acquirer in self:
+            if acquirer.module_id and not acquirer.module_state == 'installed':
+                acquirer.color = 4  # blue
+            elif acquirer.state == 'disabled':
+                acquirer.color = 3  # yellow
+            elif acquirer.state == 'test':
+                acquirer.color = 2  # orange
+            elif acquirer.state == 'enabled':
+                acquirer.color = 7  # green
+
     def _check_required_if_provider(self):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
         required if record.provider is <provider>. """
         field_names = []
+        enabled_acquirers = self.filtered(lambda acq: acq.state in ['enabled', 'test'])
         for k, f in self._fields.items():
             provider = getattr(f, 'required_if_provider', None)
             if provider and any(
                 acquirer.provider == provider and not acquirer[k]
-                for acquirer in self
+                for acquirer in enabled_acquirers
             ):
                 ir_field = self.env['ir.model.fields']._get(self._name, k)
                 field_names.append(ir_field.field_description)
@@ -241,7 +253,7 @@ class PaymentAcquirer(models.Model):
             'default_debit_account_id': account.id,
             'default_credit_account_id': account.id,
             # Show the journal on dashboard if the acquirer is published on the website.
-            'show_on_dashboard': self.website_published,
+            'show_on_dashboard': self.state == 'enabled',
             # Don't show payment methods in the backend.
             'inbound_payment_method_ids': inbound_payment_method_ids,
             'outbound_payment_method_ids': [],
@@ -260,7 +272,7 @@ class PaymentAcquirer(models.Model):
         # If the trigger comes from the chart template wizard, the modules are already installed.
         acquirer_modules = self.env['ir.module.module'].search(
             [('name', 'like', 'payment_%'), ('state', 'in', ('to install', 'installed'))])
-        acquirer_names = [a.name.split('_')[1] for a in acquirer_modules]
+        acquirer_names = [a.name.split('_', 1)[1] for a in acquirer_modules]
 
         # Search for acquirers having no journal
         company = company or self.env.company
@@ -275,26 +287,14 @@ class PaymentAcquirer(models.Model):
 
     @api.model
     def create(self, vals):
-        image_resize_images(vals)
         record = super(PaymentAcquirer, self).create(vals)
         record._check_required_if_provider()
         return record
 
     def write(self, vals):
-        image_resize_images(vals)
         result = super(PaymentAcquirer, self).write(vals)
         self._check_required_if_provider()
         return result
-
-    def toggle_website_published(self):
-        ''' When clicking on the website publish toggle button, the website_published is reversed and
-        the acquirer journal is set or not in favorite on the dashboard.
-        '''
-        self.ensure_one()
-        self.website_published = not self.website_published
-        if self.journal_id:
-            self.journal_id.show_on_dashboard = self.website_published
-        return True
 
     def get_acquirer_extra_fees(self, amount, currency_id, country_id):
         extra_fees = {
@@ -327,7 +327,7 @@ class PaymentAcquirer(models.Model):
             company = self.env.company
         if not partner:
             partner = self.env.user.partner_id
-        active_acquirers = self.sudo().search([('website_published', '=', True), ('company_id', '=', company.id)])
+        active_acquirers = self.sudo().search([('state', 'in', ['enabled', 'test']), ('company_id', '=', company.id)])
         acquirers = active_acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
                                                                (acq.payment_flow == 's2s' and acq.registration_view_template_id))
         return {
@@ -475,7 +475,7 @@ class PaymentAcquirer(models.Model):
         if not self.s2s_validate(data):
             return False
         if hasattr(self, cust_method_name):
-            # As this method may be called in JSON and overriden in various addons
+            # As this method may be called in JSON and overridden in various addons
             # let us raise interesting errors before having stranges crashes
             if not data.get('partner_id'):
                 raise ValueError(_('Missing partner reference when trying to create a new payment token'))
@@ -489,11 +489,6 @@ class PaymentAcquirer(models.Model):
             method = getattr(self, cust_method_name)
             return method(data)
         return True
-
-    def toggle_environment_value(self):
-        prod = self.filtered(lambda acquirer: acquirer.environment == 'prod')
-        prod.write({'environment': 'test'})
-        (self-prod).write({'environment': 'prod'})
 
     def button_immediate_install(self):
         # TDE FIXME: remove that brol
@@ -706,7 +701,7 @@ class PaymentTransaction(models.Model):
                 inv.message_post(body=post_message)
 
     def _set_transaction_pending(self):
-        '''Move the transaction to the pending state(e.g. Wire Transfer).'''
+        '''Move the transaction to the pending state(e.g. Manual Payment).'''
         if any(trans.state != 'draft' for trans in self):
             raise ValidationError(_('Only draft transaction can be processed.'))
 
@@ -868,7 +863,7 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def create(self, values):
-        # call custom create method if defined (i.e. ogone_create for ogone)
+        # call custom create method if defined
         acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
         if values.get('partner_id'):
             partner = self.env['res.partner'].browse(values['partner_id'])
@@ -1032,7 +1027,7 @@ class PaymentToken(models.Model):
 
     @api.model
     def create(self, values):
-        # call custom create method if defined (i.e. ogone_create for ogone)
+        # call custom create method if defined
         if values.get('acquirer_id'):
             acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
 

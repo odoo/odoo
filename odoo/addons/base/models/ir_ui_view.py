@@ -222,7 +222,7 @@ class View(models.Model):
                                Note that it will read `arch_db` or `arch_fs` if in dev-xml mode.""")
     arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='Base View Architecture',
                             help="This field is the same as `arch` field without translations")
-    arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch',
+    arch_db = fields.Text(string='Arch Blob', translate=xml_translate,
                           help="This field stores the view arch.")
     arch_fs = fields.Char(string='Arch Filename', help="""File from where the view originates.
                                                           Useful to (hard) reset broken views or to read arch from file in dev-xml mode.""")
@@ -321,6 +321,8 @@ actual arch.
     @api.depends('write_date')
     def _compute_model_data_id(self):
         # get the first ir_model_data record corresponding to self
+        for view in self:
+            view.model_data_id = False
         domain = [('model', '=', 'ir.ui.view'), ('res_id', 'in', self.ids)]
         for data in self.env['ir.model.data'].sudo().search_read(domain, ['res_id'], order='id desc'):
             view = self.browse(data['res_id'])
@@ -374,6 +376,8 @@ actual arch.
         # Any exception raised below will cause a transaction rollback.
         self = self.with_context(check_field_names=True)
         for view in self:
+            if not view.arch:
+                continue
             view_arch = etree.fromstring(view.arch.encode('utf-8'))
             view._valid_inheritance(view_arch)
             view_def = view.read_combined(['arch'])
@@ -390,10 +394,11 @@ actual arch.
                     view_docs = view_docs[0]
                 for view_arch in view_docs:
                     check = valid_view(view_arch, env=self.env, model=view.model)
+                    view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
                     if not check:
-                        raise ValidationError(_('Invalid view %s definition in %s') % (view.name, view.arch_fs))
+                        raise ValidationError(_('Invalid view %s definition in %s') % (view_name, view.arch_fs))
                     if check == "Warning":
-                        _logger.warning(_('Invalid view %s definition in %s \n%s'), view.name, view.arch_fs, view.arch)
+                        _logger.warning(_('Invalid view %s definition in %s \n%s'), view_name, view.arch_fs, view.arch)
         return True
 
     @api.constrains('type', 'groups_id')
@@ -625,10 +630,10 @@ actual arch.
         # Queue of specification nodes (i.e. nodes describing where and
         # changes to apply to some parent architecture).
         try:
-            source = apply_inheritance_specs(source, specs_tree)
+            source = apply_inheritance_specs(source, specs_tree,
+                                             inherit_branding=self._context.get('inherit_branding'))
         except ValueError as e:
             self.raise_view_error(str(e), inherit_id)
-
         return source
 
     @api.model
@@ -975,7 +980,7 @@ actual arch.
                         not self._context.get("create", True) and is_base_model):
                     node.set("create", 'false')
 
-        if node.tag in ('kanban', 'tree', 'form', 'gantt', 'activity'):
+        if node.tag in ('kanban', 'tree', 'form', 'activity'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if (not node.get(action) and
                         not Model.check_access_rights(operation, raise_exception=False) or
@@ -1095,6 +1100,11 @@ actual arch.
                     if child.get('data-oe-xpath'):
                         # injected by view inheritance, skip otherwise
                         # generated xpath is incorrect
+                        # Also, if a node is known to have been replaced during applying xpath
+                        # increment its index to compute an accurate xpath for susequent nodes
+                        replaced_node_tag = child.attrib.pop('meta-oe-xpath-replacing', None)
+                        if replaced_node_tag:
+                            indexes[replaced_node_tag] += 1
                         self.distribute_branding(child)
                     else:
                         indexes[child.tag] += 1

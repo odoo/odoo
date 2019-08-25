@@ -3,7 +3,8 @@
 
 import hashlib
 
-from odoo import api, models
+from odoo import api, models, _
+from odoo.exceptions import UserError
 
 class HrEmployee(models.Model):
 
@@ -20,3 +21,17 @@ class HrEmployee(models.Model):
             e['barcode'] = hashlib.sha1(e['barcode'].encode('utf8')).hexdigest() if e['barcode'] else False
             e['pin'] = hashlib.sha1(e['pin'].encode('utf8')).hexdigest() if e['pin'] else False
         return employees_data
+
+    def unlink(self):
+        configs_with_employees = self.env['pos.config'].search([('module_pos_hr', '=', 'True')]).filtered(lambda c: c.current_session_id)
+        configs_with_all_employees = configs_with_employees.filtered(lambda c: not c.employee_ids)
+        configs_with_specific_employees = configs_with_employees.filtered(lambda c: c.employee_ids & self)
+        if configs_with_all_employees or configs_with_specific_employees:
+            error_msg = _("You cannot delete an employee that may be used in an active PoS session, close the session(s) first: \n")
+            for employee in self:
+                config_ids = configs_with_all_employees | configs_with_specific_employees.filtered(lambda c: employee in c.employee_ids)
+                if config_ids:
+                    error_msg += _("Employee: %s - PoS Config(s): %s \n") % (employee.name, ', '.join(config.name for config in config_ids))
+
+            raise UserError(error_msg)
+        return super(HrEmployee, self).unlink()

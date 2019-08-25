@@ -133,7 +133,7 @@ class Applicant(models.Model):
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
-    job_id = fields.Many2one('hr.job', "Applied Job")
+    job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages")
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages")
     salary_proposed = fields.Float("Proposed Salary", group_operator="avg", help="Salary Proposed by the Organisation")
@@ -143,7 +143,7 @@ class Applicant(models.Model):
     partner_phone = fields.Char("Phone", size=32)
     partner_mobile = fields.Char("Mobile", size=32)
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
-    department_id = fields.Many2one('hr.department', "Department")
+    department_id = fields.Many2one('hr.department', "Department", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     day_open = fields.Float(compute='_compute_day', string="Days to Open")
     day_close = fields.Float(compute='_compute_day', string="Days to Close")
     delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
@@ -162,7 +162,7 @@ class Applicant(models.Model):
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid', readonly=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing', readonly=False)
     application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email')
-
+    meeting_count = fields.Integer(compute='_compute_meeting_count', help='Meeting Count')
 
     @api.depends('date_open', 'date_closed')
     def _compute_day(self):
@@ -171,19 +171,30 @@ class Applicant(models.Model):
                 date_create = applicant.create_date
                 date_open = applicant.date_open
                 applicant.day_open = (date_open - date_create).total_seconds() / (24.0 * 3600)
+            else:
+                applicant.day_open = False
             if applicant.date_closed:
                 date_create = applicant.create_date
                 date_closed = applicant.date_closed
                 applicant.day_close = (date_closed - date_create).total_seconds() / (24.0 * 3600)
                 applicant.delay_close = applicant.day_close - applicant.day_open
+            else:
+                applicant.day_close = False
+                applicant.delay_close = False
 
     @api.depends('email_from')
     def _compute_application_count(self):
         application_data = self.env['hr.applicant'].read_group([
             ('email_from', 'in', list(set(self.mapped('email_from'))))], ['email_from'], ['email_from'])
         application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
-        for applicant in self.filtered(lambda applicant: applicant.email_from):
+        applicants = self.filtered(lambda applicant: applicant.email_from)
+        for applicant in applicants:
             applicant.application_count = application_data_mapped.get(applicant.email_from, 1) - 1
+        (self - applicants).application_count = False
+
+    def _compute_meeting_count(self):
+        for applicant in self:
+            applicant.meeting_count = self.env['calendar.event'].search_count([('applicant_id', '=', applicant.id)])
 
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(
@@ -309,12 +320,6 @@ class Applicant(models.Model):
                                                   empty_list_help_id=self.env.context.get('default_job_id'),
                                                   empty_list_help_document_name=_("job applicant"))).get_empty_list_help(help)
 
-    def action_get_created_employee(self):
-        self.ensure_one()
-        action = self.env['ir.actions.act_window'].for_xml_id('hr', 'open_view_employee_list')
-        action['res_id'] = self.mapped('emp_id').ids[0]
-        return action
-
     def action_makeMeeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
             @return: Dictionary value for created Meeting view
@@ -366,9 +371,7 @@ class Applicant(models.Model):
 
     def _track_subtype(self, init_values):
         record = self[0]
-        if 'emp_id' in init_values and record.emp_id and record.emp_id.active:
-            return self.env.ref('hr_recruitment.mt_applicant_hired')
-        elif 'stage_id' in init_values and record.stage_id:
+        if 'stage_id' in init_values and record.stage_id:
             return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
         return super(Applicant, self)._track_subtype(init_values)
 

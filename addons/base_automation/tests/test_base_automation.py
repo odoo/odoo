@@ -84,13 +84,14 @@ class base_automation_test(common.TransactionCase):
         change on another model.
         """
         partner = self.env.ref('base.res_partner_1')
-        partner.write({'customer': False})
+        partner.write({'employee': False})
         lead = self.create_lead(state='open', partner_id=partner.id)
-        self.assertFalse(lead.customer, "Customer field should updated to False")
+        self.assertFalse(lead.employee, "Customer field should updated to False")
         self.assertEqual(lead.user_id, self.user_root, "Responsible should not change on creation of Lead with state from 'draft' to 'open'.")
         # change partner, recompute on lead should trigger the rule
-        partner.write({'customer': True})
-        self.assertTrue(lead.customer, "Customer field should updated to True")
+        partner.write({'employee': True})
+        lead.flush()
+        self.assertTrue(lead.employee, "Customer field should updated to True")
         self.assertEqual(lead.user_id, self.user_demo, "Responsible should be change on write of Lead when Customer becomes True.")
 
     def test_11_recomputed_field(self):

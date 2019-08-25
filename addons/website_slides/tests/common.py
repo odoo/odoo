@@ -11,61 +11,74 @@ slides_new_test_user = partial(new_test_user, context={'mail_create_nolog': True
 
 class SlidesCase(common.SavepointCase):
 
-    def setUp(self):
-        super(SlidesCase, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(SlidesCase, cls).setUpClass()
 
-        self.user_publisher = slides_new_test_user(
-            self.env, name='Paul Publisher', login='user_publisher', email='publisher@example.com',
+        cls.user_publisher = slides_new_test_user(
+            cls.env, name='Paul Publisher', login='user_publisher', email='publisher@example.com',
             groups='base.group_user,website.group_website_publisher'
         )
 
-        self.user_emp = slides_new_test_user(
-            self.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
+        cls.user_emp = slides_new_test_user(
+            cls.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
             groups='base.group_user'
         )
 
-        self.user_portal = slides_new_test_user(
-            self.env, name='Patrick Portal', login='user_portal', email='portal@example.com',
+        cls.user_portal = slides_new_test_user(
+            cls.env, name='Patrick Portal', login='user_portal', email='portal@example.com',
             groups='base.group_portal'
         )
 
-        self.user_public = slides_new_test_user(
-            self.env, name='Pauline Public', login='user_public', email='public@example.com',
+        cls.user_public = slides_new_test_user(
+            cls.env, name='Pauline Public', login='user_public', email='public@example.com',
             groups='base.group_public'
         )
 
-        self.customer = self.env['res.partner'].create({
+        cls.customer = cls.env['res.partner'].create({
             'name': 'Caroline Customer',
             'email': 'customer@example.com',
-            'customer': True,
         })
 
-        self.channel = self.env['slide.channel'].with_user(self.user_publisher).create({
+        cls.channel = cls.env['slide.channel'].with_user(cls.user_publisher).create({
             'name': 'Test Channel',
             'channel_type': 'documentation',
             'promote_strategy': 'most_voted',
             'enroll': 'public',
             'visibility': 'public',
-            'website_published': True,
+            'is_published': True,
             'karma_gen_channel_finish': 100,
             'karma_gen_slide_vote': 5,
             'karma_gen_channel_rank': 10,
         })
-        self.slide = self.env['slide.slide'].with_user(self.user_publisher).create({
+        cls.slide = cls.env['slide.slide'].with_user(cls.user_publisher).create({
             'name': 'How To Cook Humans',
-            'channel_id': self.channel.id,
+            'channel_id': cls.channel.id,
             'slide_type': 'presentation',
-            'website_published': True,
+            'is_published': True,
             'completion_time': 2.0,
+            'sequence': 1,
         })
-
-    @contextmanager
-    def with_user(self, user):
-        """ Quick with_user environment """
-        old_uid = self.uid
-        try:
-            self.uid = user.id
-            yield
-        finally:
-            # back
-            self.uid = old_uid
+        cls.category = cls.env['slide.slide'].with_user(cls.user_publisher).create({
+            'name': 'Cooking Tips for Humans',
+            'channel_id': cls.channel.id,
+            'is_category': True,
+            'is_published': True,
+            'sequence': 2,
+        })
+        cls.slide_2 = cls.env['slide.slide'].with_user(cls.user_publisher).create({
+            'name': 'How To Cook For Humans',
+            'channel_id': cls.channel.id,
+            'slide_type': 'presentation',
+            'is_published': True,
+            'completion_time': 3.0,
+            'sequence': 3,
+        })
+        cls.slide_3 = cls.env['slide.slide'].with_user(cls.user_publisher).create({
+            'name': 'How To Cook Humans For Humans',
+            'channel_id': cls.channel.id,
+            'slide_type': 'document',
+            'is_published': True,
+            'completion_time': 1.5,
+            'sequence': 4,
+        })

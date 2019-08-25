@@ -45,10 +45,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
     }
 
     var steps = [{ // Leave category displayed by default
-        content: "click category switch",
-        trigger: ".js-category-switch",
-        run: 'click',
-    }, {
         content: 'waiting for loading to finish',
         trigger: 'body:has(.loader:hidden)',
         run: function () {
@@ -95,6 +91,10 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "wait for unit tests to finish",
         trigger: ".pos.done-testing",
         run: function () {}, // it's a check
+    }, {
+        content: "click category switch",
+        trigger: ".js-category-switch",
+        run: 'click',
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
@@ -186,7 +186,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".selection-item:contains('Public Pricelist')",
     }, {
         content: "verify that the boni shelf have been recomputed and the\
-shelf have not (their price was manually overriden)",
+shelf have not (their price was manually overridden)",
         trigger: ".total > .value:contains('$ 8.96')",
     }, {
         content: "click pricelist button",
@@ -297,7 +297,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
             trigger: ".js_connecting:visible",
             run: function () {}, // it's a check
         }, {
-            content: "verify that the order has been succesfully sent to the backend",
+            content: "verify that the order has been successfully sent to the backend",
             trigger: ".js_connected:visible",
             run: function () {}, // it's a check
         }, {

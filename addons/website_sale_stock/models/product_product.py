@@ -13,6 +13,7 @@ class ProductProduct(models.Model):
     def _compute_cart_qty(self):
         website = request and getattr(request, 'website', None)
         if not website:
+            self.cart_qty = 0
             return
         cart = website.sale_get_order()
         for product in self:

@@ -7,8 +7,10 @@ import io
 import odoo
 from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger
-from odoo.tools.translate import _
+from odoo.tools.translate import _, _lt
 
+
+TRANSLATED_TERM = _lt("Klingon")
 
 class TestTermCount(common.TransactionCase):
 
@@ -33,16 +35,6 @@ class TestTermCount(common.TransactionCase):
         self.assertEqual(translations[1].comments, '')
         field = self.env['ir.model.fields'].search([('model', '=', 'test.translation.import'), ('name', '=', 'name')])
         self.assertEqual(translations[1].res_id, field.id)
-
-        translations = self.env['ir.translation'].search([
-            ('lang', '=', 'fr_FR'),
-            ('type', '=', 'selection'),
-            ('module', '=', 'test_translation_import'),
-        ], order='src')
-        self.assertEqual(len(translations), 2)
-        self.assertEqual(translations[0].name, 'test.translation.import,import_type')
-        self.assertEqual(translations[0].res_id, 0)
-
 
     def test_count_term_module(self):
         """
@@ -170,14 +162,40 @@ class TestTermCount(common.TransactionCase):
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_tlh.import_lang()
 
-        lang_count = self.env['res.lang'].search_count([('code', '=', 'tlh')])
-        self.assertEqual(lang_count, 1, "The imported language was not creates")
+        tlh_lang = self.env['res.lang']._lang_get('tlh')
+        self.assertTrue(tlh_lang, "The imported language was not creates")
 
         trans_count = self.env['ir.translation'].search_count([('lang', '=', 'tlh')])
         self.assertEqual(trans_count, 1, "The imported translations were not created")
 
         self.env.context = dict(self.env.context, lang="tlh")
         self.assertEqual(_("Klingon"), "tlhIngan", "The code translation was not applied")
+
+    def test_lazy_translation(self):
+        """Test the import from a single po file works"""
+        with file_open('test_translation_import/i18n/tlh.po', 'rb') as f:
+            po_file = base64.encodestring(f.read())
+
+        import_tlh = self.env["base.language.import"].create({
+            'name': 'Klingon',
+            'code': 'tlh',
+            'data': po_file,
+            'filename': 'tlh.po',
+        })
+        with mute_logger('odoo.addons.base.models.res_lang'):
+            import_tlh.import_lang()
+
+        context = {'lang': "tlh"}
+        self.assertEqual(_("Klingon"), "tlhIngan", "The direct code translation was not applied")
+        context = None
+
+        # Comparison of lazy strings must be explicitely casted to string
+        with self.assertRaises(NotImplementedError):
+            TRANSLATED_TERM == "Klingon"
+        self.assertEqual(str(TRANSLATED_TERM), "Klingon", "The translation should not be applied yet")
+
+        context = {'lang': "tlh"}
+        self.assertEqual(str(TRANSLATED_TERM), "tlhIngan", "The lazy code translation was not applied")
 
     def test_import_from_csv_file(self):
         """Test the import from a single CSV file works"""
@@ -193,8 +211,8 @@ class TestTermCount(common.TransactionCase):
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_tlh.import_lang()
 
-        lang_count = self.env['res.lang'].search_count([('code', '=', 'dot')])
-        self.assertEqual(lang_count, 1, "The imported language was not creates")
+        dot_lang = self.env['res.lang']._lang_get('dot')
+        self.assertTrue(dot_lang, "The imported language was not creates")
 
         trans_count = self.env['ir.translation'].search_count([('lang', '=', 'dot')])
         self.assertEqual(trans_count, 1, "The imported translations were not created")
@@ -238,6 +256,7 @@ class TestTranslationFlow(common.TransactionCase):
             'code': 'fr_FR',
             'data': export.data,
             'filename': export.name,
+            'overwrite': False,
         })
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_fr.with_context(create_empty_translation=True).import_lang()

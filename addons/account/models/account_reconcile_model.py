@@ -16,9 +16,9 @@ class AccountReconcileModel(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
 
     rule_type = fields.Selection(selection=[
-        ('writeoff_button', _('Manually create a write-off on clicked button.')),
-        ('writeoff_suggestion', _('Suggest counterpart values.')),
-        ('invoice_matching', _('Match existing invoices/bills.'))
+        ('writeoff_button', 'Manually create a write-off on clicked button.'),
+        ('writeoff_suggestion', 'Suggest counterpart values.'),
+        ('invoice_matching', 'Match existing invoices/bills.')
     ], string='Type', default='writeoff_button', required=True)
     auto_reconcile = fields.Boolean(string='Auto-validate',
         help='Validate the statement line automatically (reconciliation based on your rule).')
@@ -54,6 +54,24 @@ class AccountReconcileModel(models.Model):
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
     match_label_param = fields.Char(string='Label Parameter')
+    match_note = fields.Selection(selection=[
+        ('contains', 'Contains'),
+        ('not_contains', 'Not Contains'),
+        ('match_regex', 'Match Regex'),
+    ], string='Note', help='''The reconciliation model will only be applied when the note:
+        * Contains: The proposition note must contains this string (case insensitive).
+        * Not Contains: Negation of "Contains".
+        * Match Regex: Define your own regular expression.''')
+    match_note_param = fields.Char(string='Note Parameter')
+    match_transaction_type = fields.Selection(selection=[
+        ('contains', 'Contains'),
+        ('not_contains', 'Not Contains'),
+        ('match_regex', 'Match Regex'),
+    ], string='Transaction Type', help='''The reconciliation model will only be applied when the transaction type:
+        * Contains: The proposition transaction type must contains this string (case insensitive).
+        * Not Contains: Negation of "Contains".
+        * Match Regex: Define your own regular expression.''')
+    match_transaction_type_param = fields.Char(string='Transaction Type Parameter')
     match_same_currency = fields.Boolean(string='Same Currency Matching', default=True,
         help='Restrict to propositions having the same currency as the statement line.')
     match_total_amount = fields.Boolean(string='Amount Matching', default=True,
@@ -348,16 +366,17 @@ class AccountReconcileModel(models.Model):
                 query += 'BETWEEN %s AND %s'
                 params += [rule.match_amount_min, rule.match_amount_max]
 
-        # Filter on label.
-        if rule.match_label == 'contains':
-            query += ' AND st_line.name ILIKE %s'
-            params += ['%%%s%%' % rule.match_label_param]
-        elif rule.match_label == 'not_contains':
-            query += ' AND st_line.name NOT ILIKE %s'
-            params += ['%%%s%%' % rule.match_label_param]
-        elif rule.match_label == 'match_regex':
-            query += ' AND st_line.name ~ %s'
-            params += [rule.match_label_param]
+        # Filter on label, note and transaction_type
+        for field in ['label', 'note', 'transaction_type']:
+            if rule['match_' + field] == 'contains':
+                query += ' AND st_line.name ILIKE %s'
+                params += ['%%%s%%' % rule['match_' + field + '_param']]
+            elif rule['match_' + field] == 'not_contains':
+                query += ' AND st_line.name NOT ILIKE %s'
+                params += ['%%%s%%' % rule['match_' + field + '_param']]
+            elif rule['match_' + field] == 'match_regex':
+                query += ' AND st_line.name ~ %s'
+                params += [rule['match_' + field + '_param']]
 
         # Filter on partners.
         if rule.match_partner:
@@ -571,6 +590,8 @@ class AccountReconcileModel(models.Model):
         '''
         if not self.match_total_amount:
             return True
+        if not candidates:
+            return False
 
         # Match total residual amount.
         total_residual = 0.0
@@ -617,6 +638,9 @@ class AccountReconcileModel(models.Model):
         # Type == 'invoice_matching'.
         # Map each (st_line.id, model_id) with matching amls.
         invoices_models = ordered_models.filtered(lambda m: m.rule_type == 'invoice_matching')
+        self.env['account.move'].flush(['state'])
+        self.env['account.move.line'].flush(['balance', 'reconciled'])
+        self.env['account.bank.statement.line'].flush(['company_id'])
         if invoices_models:
             query, params = invoices_models._get_invoice_matching_query(st_lines, excluded_ids=excluded_ids, partner_map=partner_map)
             self._cr.execute(query, params)

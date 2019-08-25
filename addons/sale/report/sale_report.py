@@ -18,7 +18,6 @@ class SaleReport(models.Model):
 
     name = fields.Char('Order Reference', readonly=True)
     date = fields.Datetime('Order Date', readonly=True)
-    confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
     product_id = fields.Many2one('product.product', 'Product Variant', readonly=True)
     product_uom = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
     product_uom_qty = fields.Float('Qty Ordered', readonly=True)
@@ -37,7 +36,7 @@ class SaleReport(models.Model):
     nbr = fields.Integer('# of Lines', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True, oldname='section_id')
+    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
     country_id = fields.Many2one('res.country', 'Customer Country', readonly=True)
     industry_id = fields.Many2one('res.partner.industry', 'Customer Industry', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Customer Entity', readonly=True)
@@ -77,7 +76,6 @@ class SaleReport(models.Model):
             count(*) as nbr,
             s.name as name,
             s.date_order as date,
-            s.confirmation_date as confirmation_date,
             s.state as state,
             s.partner_id as partner_id,
             s.user_id as user_id,
@@ -123,7 +121,6 @@ class SaleReport(models.Model):
             t.categ_id,
             s.name,
             s.date_order,
-            s.confirmation_date,
             s.partner_id,
             s.user_id,
             s.state,

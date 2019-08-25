@@ -8,7 +8,7 @@
 // Following the UMD template https://github.com/umdjs/umd/blob/master/templates/returnExportsGlobal.js
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-        // AMD. Make globaly available as well
+        // AMD. Make globally available as well
         define(['moment', 'jquery'], function (moment, jquery) {
             if (!jquery.fn) jquery.fn = {}; // webpack server rendering
             if (typeof moment !== 'function' && moment.default) moment = moment.default

@@ -36,10 +36,6 @@ tour.STEPS.SHOW_APPS_MENU_ITEM,
     content: "select the pricelist",
     trigger: 'ul.ui-autocomplete > li > a:contains(Public Pricelist)',
 }, {
-    content: "wait for pricelist to be set",
-    trigger: 'div.o_with_button[name="pricelist_id"]',
-    run: function () {},
-}, {
     trigger: "a:contains('Add a product')"
 }, {
     trigger: 'div[name="product_template_id"] input',

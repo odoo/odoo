@@ -30,6 +30,8 @@ class Website(models.Model):
         default=_get_default_website_team)
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
+    all_pricelist_ids = fields.One2many('product.pricelist', 'website_id', string='All pricelists',
+                                        help='Technical: Used to recompute pricelist_ids')
 
     def _default_recovery_mail_template(self):
         try:
@@ -43,6 +45,7 @@ class Website(models.Model):
     shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
     shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
 
+    @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
         Pricelist = self.env['product.pricelist']
         for website in self:
@@ -50,6 +53,7 @@ class Website(models.Model):
                 Pricelist._get_website_pricelists_domain(website.id)
             )
 
+    @api.depends_context('website_id')
     def _compute_pricelist_id(self):
         for website in self:
             if website._context.get('website_id') != website.id:

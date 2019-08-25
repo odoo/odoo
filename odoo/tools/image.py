@@ -25,11 +25,6 @@ FILETYPE_BASE64_MAGICWORD = {
     b'P': 'svg+xml',
 }
 
-IMAGE_BIG_SIZE = (1024, 1024)
-IMAGE_LARGE_SIZE = (256, 256)
-IMAGE_MEDIUM_SIZE = (128, 128)
-IMAGE_SMALL_SIZE = (64, 64)
-
 # Arbitraty limit to fit most resolutions, including Nokia Lumia 1020 photo,
 # 8K with a ratio up to 16:10, and almost all variants of 4320p
 IMAGE_MAX_RESOLUTION = 45e6
@@ -85,7 +80,7 @@ class ImageProcess():
 
         :param quality: quality setting to apply. Default to 0.
             - for JPEG: 1 is worse, 95 is best. Values above 95 should be
-                avoided. Fasly values will fallback to 95, but only if the image
+                avoided. Falsy values will fallback to 95, but only if the image
                 was changed, otherwise the original image is returned.
             - for PNG: set falsy to prevent conversion to a WEB palette.
             - for other formats: no effect.
@@ -219,7 +214,7 @@ class ImageProcess():
             if new_h > h:
                 new_w, new_h = (new_w * h) // new_h, h
 
-            # Corretly place the center of the crop.
+            # Correctly place the center of the crop.
             x_offset = (w - new_w) * center_x
             h_offset = (h - new_h) * center_y
 
@@ -231,7 +226,7 @@ class ImageProcess():
         return self.resize(max_width, max_height)
 
     def colorize(self):
-        """Replace the trasparent background by a random color.
+        """Replace the transparent background by a random color.
 
         :return: self to allow chaining
         :rtype: ImageProcess
@@ -250,7 +245,7 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0
     """Process the `base64_source` image by executing the given operations and
     return the result as a base64 encoded image.
     """
-    if (not base64_source or not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format:
+    if not base64_source or ((not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format):
         # for performance: don't do anything if the image is falsy or if
         # no operations have been requested
         return base64_source
@@ -275,6 +270,65 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0
 # ----------------------------------------
 # Misc image tools
 # ---------------------------------------
+
+def average_dominant_color(colors, mitigate=175, max_margin=140):
+    """This function is used to calculate the dominant colors when given a list of colors
+
+    There are 5 steps :
+        1) Select dominant colors (highest count), isolate its values and remove
+           it from the current color set.
+        2) Set margins according to the prevalence of the dominant color.
+        3) Evaluate the colors. Similar colors are grouped in the dominant set
+           while others are put in the "remaining" list.
+        4) Calculate the average color for the dominant set. This is done by
+           averaging each band and joining them into a tuple.
+        5) Mitigate final average and convert it to hex
+
+    :param colors: list of tuples having:
+        [0] color count in the image
+        [1] actual color: tuple(R, G, B, A)
+        -> these can be extracted from a PIL image using image.getcolors()
+    :param mitigate: maximum value a band can reach
+    :param max_margin: maximum difference from one of the dominant values
+    :returns: a tuple with two items:
+        [0] the average color of the dominant set as: tuple(R, G, B)
+        [1] list of remaining colors, used to evaluate subsequent dominant colors
+    """
+    dominant_color = max(colors)
+    dominant_rgb = dominant_color[1][:3]
+    dominant_set = [dominant_color]
+    remaining = []
+
+    margins = [max_margin * (1 - dominant_color[0] /
+                             sum([col[0] for col in colors]))] * 3
+
+    colors.remove(dominant_color)
+
+    for color in colors:
+        rgb = color[1]
+        if (rgb[0] < dominant_rgb[0] + margins[0] and rgb[0] > dominant_rgb[0] - margins[0] and
+            rgb[1] < dominant_rgb[1] + margins[1] and rgb[1] > dominant_rgb[1] - margins[1] and
+                rgb[2] < dominant_rgb[2] + margins[2] and rgb[2] > dominant_rgb[2] - margins[2]):
+            dominant_set.append(color)
+        else:
+            remaining.append(color)
+
+    dominant_avg = []
+    for band in range(3):
+        avg = total = 0
+        for color in dominant_set:
+            avg += color[0] * color[1][band]
+            total += color[0]
+        dominant_avg.append(int(avg / total))
+
+    final_dominant = []
+    brightest = max(dominant_avg)
+    for color in range(3):
+        value = dominant_avg[color] / (brightest / mitigate) if brightest > mitigate else dominant_avg[color]
+        final_dominant.append(int(value))
+
+    return tuple(final_dominant), remaining
+
 
 def base64_to_image(base64_source):
     """Return a PIL image from the given `base64_source`.
@@ -308,18 +362,18 @@ def image_to_base64(image, format, **params):
     return base64.b64encode(stream.getvalue())
 
 
-def is_image_size_above(base64_source, size=IMAGE_BIG_SIZE):
-    """Return whether or not the size of the given image `base64_source` is
-    above the provided `size` (tuple: width, height).
+def is_image_size_above(base64_source_1, base64_source_2):
+    """Return whether or not the size of the given image `base64_source_1` is
+    above the size of the given image `base64_source_2`.
     """
-    if not base64_source:
+    if not base64_source_1 or not base64_source_2:
         return False
-    if base64_source[:1] in (b'P', 'P'):
+    if base64_source_1[:1] in (b'P', 'P') or base64_source_2[:1] in (b'P', 'P'):
         # False for SVG
         return False
-    image = base64_to_image(base64_source)
-    width, height = image.size
-    return width > size[0] or height > size[1]
+    image_source = base64_to_image(base64_source_1)
+    image_target = base64_to_image(base64_source_2)
+    return image_source.width > image_target.width or image_source.height > image_target.height
 
 
 def image_guess_size_from_field_name(field_name):
@@ -333,67 +387,11 @@ def image_guess_size_from_field_name(field_name):
     :return: the guessed size
     :rtype: tuple (width, height)
     """
-    suffix = 'big' if field_name == 'image' else field_name.split('_')[-1]
-    if suffix == 'big':
-        return IMAGE_BIG_SIZE
-    if suffix == 'large':
-        return IMAGE_LARGE_SIZE
-    if suffix == 'medium':
-        return IMAGE_MEDIUM_SIZE
-    if suffix == 'small':
-        return IMAGE_SMALL_SIZE
-    return (0, 0)
-
-
-def image_get_resized_images(base64_source,
-        big_name='image', large_name='image_large', medium_name='image_medium', small_name='image_small'):
-    """ Standard tool function that returns a dictionary containing the
-        big, medium, large and small versions of the source image.
-
-        :param {..}_name: key of the resized image in the return dictionary;
-            'image', 'image_large', 'image_medium' and 'image_small' by default.
-            Set a key to False to not include it.
-
-        Refer to image_resize_image for the other parameters.
-
-        :return return_dict: dictionary with resized images, depending on
-            previous parameters.
-    """
-    return_dict = dict()
-    if big_name:
-        return_dict[big_name] = image_process(base64_source, size=IMAGE_BIG_SIZE)
-    if large_name:
-        return_dict[large_name] = image_process(base64_source, size=IMAGE_LARGE_SIZE)
-    if medium_name:
-        return_dict[medium_name] = image_process(base64_source, size=IMAGE_MEDIUM_SIZE)
-    if small_name:
-        return_dict[small_name] = image_process(base64_source, size=IMAGE_SMALL_SIZE)
-    return return_dict
-
-
-def image_resize_images(vals,
-        return_big=True, return_large=False, return_medium=True, return_small=True,
-        big_name='image', large_name='image_large', medium_name='image_medium', small_name='image_small'):
-    """ Update ``vals`` with image fields resized as expected. """
-    big_image = vals.get(big_name)
-    large_image = vals.get(large_name)
-    medium_image = vals.get(medium_name)
-    small_image = vals.get(small_name)
-
-    biggest_image = big_image or large_image or medium_image or small_image
-
-    if biggest_image:
-        vals.update(image_get_resized_images(biggest_image,
-            big_name=return_big and big_name, large_name=return_large and large_name, medium_name=return_medium and medium_name, small_name=return_small and small_name))
-    elif any(f in vals for f in [big_name, large_name, medium_name, small_name]):
-        if return_big:
-            vals[big_name] = False
-        if return_large:
-            vals[large_name] = False
-        if return_medium:
-            vals[medium_name] = False
-        if return_small:
-            vals[small_name] = False
+    suffix = '1024' if field_name == 'image' else field_name.split('_')[-1]
+    try:
+        return (int(suffix), int(suffix))
+    except ValueError:
+        return (0, 0)
 
 
 def image_data_uri(base64_source):
@@ -405,6 +403,37 @@ def image_data_uri(base64_source):
         FILETYPE_BASE64_MAGICWORD.get(base64_source[:1], 'png'),
         base64_source.decode(),
     )
+
+
+def get_saturation(rgb):
+    """Returns the saturation (hsl format) of a given rgb color
+
+    :param rgb: rgb tuple or list
+    :return: saturation
+    """
+    c_max = max(rgb) / 255
+    c_min = min(rgb) / 255
+    d = c_max - c_min
+    return 0 if d == 0 else d / (1 - abs(c_max + c_min - 1))
+
+
+def get_lightness(rgb):
+    """Returns the lightness (hsl format) of a given rgb color
+
+    :param rgb: rgb tuple or list
+    :return: lightness
+    """
+    return (max(rgb) + min(rgb)) / 2 / 255
+
+
+def hex_to_rgb(hx):
+    """Converts an hexadecimal string (starting with '#') to a RGB tuple"""
+    return tuple([int(hx[i:i+2], 16) for i in range(1, 6, 2)])
+
+
+def rgb_to_hex(rgb):
+    """Converts a RGB tuple or list to an hexadecimal string"""
+    return '#' + ''.join([(hex(c).split('x')[-1].zfill(2)) for c in rgb])
 
 
 if __name__=="__main__":

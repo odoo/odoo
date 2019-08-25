@@ -78,7 +78,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         # Let's do an invoice for a deposit of 100
         payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'fixed',
-            'amount': 100,
+            'fixed_amount': 100,
             'deposit_account_id': self.account_income.id
         })
         payment.create_invoices()
@@ -99,7 +99,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
 
         self.assertEquals(len(self.sale_order.invoice_ids), 2, 'Invoice should be created for the SO')
 
-        invoice = self.sale_order.invoice_ids[0]
+        invoice = self.sale_order.invoice_ids.sorted()[0]
         self.assertEquals(len(invoice.invoice_line_ids), len(self.sale_order.order_line), 'All lines should be invoiced')
         self.assertEquals(invoice.amount_total, self.sale_order.amount_total - downpayment_line.price_unit, 'Downpayment should be applied')
 

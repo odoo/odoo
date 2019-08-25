@@ -5,7 +5,6 @@
             <div class="o_calendar_widget" />
         </div>
         <div class="o_calendar_sidebar_container d-none d-md-block">
-            <i class="o_calendar_sidebar_toggler fa"/>
             <div class="o_calendar_sidebar">
                 <div class="o_calendar_mini"/>
             </div>
@@ -13,58 +12,78 @@
     </div>
 
     <t t-name="calendar-box">
-        <t t-set="color" t-value="widget.getColor(event.color_index)"/>
-        <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{!event.color_index ? 'text-white' : ''} #{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
-            <div class="fc-time"/>
-            <div class="o_fields">
-                <t t-foreach="widget.displayFields" t-as="name">
-                    <div t-attf-class="o_field_#{name} o_field_type_#{fields[name].type}">
-                        <t t-if="widget.displayFields[name].avatar_field">
-                            <t t-if="!isMobile"><t t-esc="fields[name].string"/>:</t>
-                            <div class="o_calendar_avatars float-right">
-                                <t t-foreach="widget.getAvatars(record, name, widget.displayFields[name].avatar_field).slice(0,3)" t-as="image"><t t-raw="image"/></t>
-                                <span t-if="record[name].length - 3 > 0">+<t t-esc="record[name].length - 3"/></span>
-                            </div>
-                        </t>
-                        <t t-else="">
-                            <t t-esc="format(record, name)"/>
-                        </t>
-                    </div>
-                </t>
+        <div t-att-style="typeof color === 'string' ? ('background-color:' + color) + ';' : ''" t-attf-class="#{!event.color_index ? 'text-white' : ''} #{record.is_highlighted and record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : ''}">
+            <div class="o_event_title" t-esc="record.display_name"/>
+        </div>
+    </t>
+
+    <t t-name="CalendarView.event.popover.placeholder">
+        <div t-attf-class="o_cw_popover popover card shadow #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : ''}" role="tooltip">
+            <div class="arrow"/>
+            <div class="card-header d-flex justify-content-between py-2 pr-2">
+                <h4 class="popover-header border-0 p-0 pt-1"/>
+                <span class="o_cw_popover_close ml-4"><i class="fa fa-close small"/></span>
+            </div>
+            <div class="o_cw_body">
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CalendarView.event.popover">
+        <div class="o_cw_body">
+            <ul class="list-group list-group-flush">
+                <li t-if="!widget.hideDate and widget.eventDate.date" class="list-group-item">
+                    <i class="fa fa-fw fa-calendar-o"/>
+                    <b class="text-capitalize" t-esc="widget.eventDate.date"/> <small t-if="widget.eventDate.duration"><b t-esc="_.str.sprintf('(%s)', widget.eventDate.duration)"/></small>
+                </li>
+                <li t-if="!widget.hideTime and widget.eventTime.time" class="list-group-item">
+                    <i class="fa fa-fw fa-clock-o"/>
+                    <b t-esc="widget.eventTime.time"/> <small t-if="widget.eventTime.duration"><b t-esc="_.str.sprintf('(%s)', widget.eventTime.duration)"/></small>
+                </li>
+            </ul>
+            <ul class="list-group list-group-flush o_cw_popover_fields_secondary"/>
+            <div class="card-footer border-top">
+                <a href="#" class="btn btn-primary o_cw_popover_edit">Edit</a>
+                <a href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
             </div>
         </div>
     </t>
 
     <t t-name="CalendarView.sidebar.filter">
+        <t t-set="needCollapse" t-value="widget.filters.length > 2 and widget.title"></t>
         <div class="o_calendar_filter">
-            <h3 t-if="widget.title"><t t-esc="widget.title"/></h3>
-            <div class="o_calendar_filter_items">
-                <div t-foreach="widget.filters" t-as="filter" t-if="filter.display == null || filter.display" class="o_calendar_filter_item" t-att-data-value="filter.value" t-att-data-id="filter.id">
-                    <t t-set="id_for_label" t-value="_.uniqueId('o_calendar_filter_item_')"/>
-                    <div class="custom-control custom-control-inline custom-checkbox">
-                        <input type="checkbox"
-                            t-att-id="id_for_label"
-                            name="selection"
-                            class="custom-control-input"
-                            t-att-checked="(filter.active ? true : undefined)"/>
-                        <label t-att-for="id_for_label"
-                            class="custom-control-label">
-                            <t t-if="filter.value == 'all'">
-                                <span><i class="fa fa-users fa-fw o_cal_avatar" role="img" aria-label="Avatar" title="Avatar"/></span>
-                            </t>
-                            <t t-if="widget.avatar_field &amp;&amp; (filter.value &amp;&amp; filter.value != 'all')">
-                                <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cal_avatar" alt="Avatar"/>
-                            </t>
-                            <t t-set="color" t-value="widget.getColor(filter.color_index)"/>
-                            <span t-if="typeof color === 'number'" t-attf-class="color_filter o_underline_color_#{widget.getColor(filter.color_index)}"><t t-esc="filter.label"/></span>
-                            <span t-elif="color" t-attf-style="border-bottom: 4px solid #{color};"><t t-esc="filter.label"/></span>
-                            <span t-else=""><t t-esc="filter.label"/></span>
+            <h5 t-if="needCollapse" type="button" data-toggle="collapse" t-attf-data-target="#o_cw_filter_collapse_#{widget.title}" class="d-flex justify-content-between align-items-center">
+                <t t-esc="widget.title"/><i class="o_cw_filter_collapse_icon fa fa-chevron-down"/>
+            </h5>
+
+            <h5 t-elif="widget.title" t-esc="widget.title"/>
+
+            <div t-attf-class="o_calendar_filter_items #{needCollapse ? 'collapse show' : 0}" aria-expanded="true" t-attf-id="o_cw_filter_collapse_#{widget.title}">
+                <t t-foreach="widget.filters" t-as="filter" t-if="filter.display == null || filter.display">
+                    <t t-set="idForLabel" t-value="_.uniqueId('o_calendar_filter_item_')"/>
+                    <t t-set="color" t-value="widget.getColor(filter.color_index)"/>
+                    <t t-set="isColorNumber" t-value="typeof color === 'number'"/>
+
+                    <div t-attf-class="o_calendar_filter_item w-100 position-relative mb-2 #{isColorNumber ? _.str.sprintf('o_cw_filter_color_%s', color) : ''}"
+                         t-att-data-value="filter.value" t-att-data-id="filter.id">
+
+                        <input type="checkbox" t-att-id="idForLabel" name="selection" class="position-absolute" t-att-checked="filter.active ? true : undefined"/>
+
+                        <label t-att-for="idForLabel" class="d-flex align-items-center m-0">
+                            <span t-attf-class="o_cw_filter_input_bg align-items-center d-flex flex-shrink-0 justify-content-center position-relative mr-1 #{widget.avatar_field ? 'o_beside_avatar' : ''}"
+                                t-att-style="color and !isColorNumber ? _.str.sprintf('border-color:%s;background-color:%s', color, color) : ''">
+                                <i class="fa fa-check position-relative"/>
+                            </span>
+                            <i t-if="filter.value == 'all'" class="o_cw_filter_avatar fa fa-users fa-fw  flex-shrink-0 mr-1" role="img" aria-label="Avatar" title="Avatar"/>
+                            <img t-elif="widget.avatar_field and filter.value" t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cw_filter_avatar flex-shrink-0 mr-1" alt="Avatar"/>
+                            <span class="o_cw_filter_title text-truncate flex-grow" t-esc="filter.label" t-att-title="filter.label"/>
                         </label>
+
+                        <button t-if="filter.id" class="o_remove btn bg-white text-700 py-0 px-2" title="Remove this favorite from the list" role="img" aria-label="Remove this favorite from the list">
+                            <i class="fa fa-times"/>
+                        </button>
                     </div>
-                    <t t-if="filter.id">
-                        <span class="o_remove fa fa-times" title="Remove this favorite from the list" role="img" aria-label="Remove this favorite from the list"/>
-                    </t>
-                </div>
+                </t>
             </div>
         </div>
     </t>

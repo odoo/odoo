@@ -60,10 +60,13 @@ class Category(models.Model):
             # assign name of last category, and reassign display_name (to normalize it)
             cat.name = names[-1].strip()
 
-    def read(self, fields=None, load='_classic_read'):
+    def _read(self, fields):
+        # DLE P45: `test_31_prefetch`,
+        # with self.assertRaises(AccessError):
+        #     cat1.name
         if self.search_count([('id', 'in', self._ids), ('name', '=', 'NOACCESS')]):
             raise AccessError('Sorry')
-        return super(Category, self).read(fields=fields, load=load)
+        return super(Category, self)._read(fields)
 
 
 class Discussion(models.Model):
@@ -144,6 +147,13 @@ class Message(models.Model):
         for message in self:
             message.name = self._context.get('compute_name',
                 "[%s] %s" % (message.discussion.name or '', message.author.name or ''))
+
+    @api.constrains('name')
+    def _check_name(self):
+        # dummy constraint to check on computed field
+        for message in self:
+            if message.name.startswith("[X]"):
+                raise ValidationError("No way!")
 
     @api.depends('author.name', 'discussion.name', 'body')
     def _compute_display_name(self):
@@ -338,7 +348,7 @@ class Bar(models.Model):
     _description = 'Test New API Bar'
 
     name = fields.Char()
-    foo = fields.Many2one('test_new_api.foo', compute='_compute_foo')
+    foo = fields.Many2one('test_new_api.foo', compute='_compute_foo', search='_search_foo')
     value1 = fields.Integer(related='foo.value1', readonly=False)
     value2 = fields.Integer(related='foo.value2', readonly=False)
 
@@ -346,6 +356,11 @@ class Bar(models.Model):
     def _compute_foo(self):
         for bar in self:
             bar.foo = self.env['test_new_api.foo'].search([('name', '=', bar.name)], limit=1)
+
+    def _search_foo(self, operator, value):
+        assert operator == 'in'
+        records = self.env['test_new_api.foo'].browse(value)
+        return [('name', 'in', records.mapped('name'))]
 
 
 class Related(models.Model):
@@ -480,6 +495,18 @@ class ComputeCascade(models.Model):
             record.baz = "<%s>" % (record.bar or "")
 
 
+class ModelImage(models.Model):
+    _name = 'test_new_api.model_image'
+    _description = 'Test Image field'
+
+    name = fields.Char(required=True)
+
+    image = fields.Image()
+    image_512 = fields.Image("Image 512", related='image', max_width=512, max_height=512, store=True, readonly=False)
+    image_256 = fields.Image("Image 256", related='image', max_width=256, max_height=256, store=False, readonly=False)
+    image_128 = fields.Image("Image 128", max_width=128, max_height=128)
+
+
 class BinarySvg(models.Model):
     _name = 'test_new_api.binary_svg'
     _description = 'Test SVG upload'
@@ -531,6 +558,13 @@ class FieldWithCaps(models.Model):
     pArTneR_321_id = fields.Many2one('res.partner')
 
 
+class Selection(models.Model):
+    _name = 'test_new_api.selection'
+    _description = "Selection"
+
+    state = fields.Selection([('foo', 'Foo'), ('bar', 'Bar')])
+
+
 class RequiredM2O(models.Model):
     _name = 'test_new_api.req_m2o'
     _description = 'Required Many2one'
@@ -552,6 +586,22 @@ class Attachment(models.Model):
         for rec in self:
             rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
 
+    # DLE P55: `test_cache_invalidation`
+    def modified(self, fnames, modified=None, create=False):
+        if not self:
+            return
+        comodel = self.env[self.res_model]
+        if 'res_id' in fnames and 'attachment_ids' in comodel:
+            field = comodel._fields['attachment_ids']
+            record = comodel.browse(self.res_id)
+            self.env.cache.invalidate([(field, record._ids)])
+            record.modified(['attachment_ids'])
+            if modified is None:
+                modified = {field: record}
+            else:
+                modified[field] = modified.get(field, record) | record
+        return super(Attachment, self).modified(fnames, modified=modified)
+
 
 class AttachmentHost(models.Model):
     _name = 'test_new_api.attachment.host'
@@ -569,3 +619,21 @@ class DecimalPrecisionTestModel(models.Model):
     float = fields.Float()
     float_2 = fields.Float(digits=(16, 2))
     float_4 = fields.Float(digits=(16, 4))
+
+
+class ModelA(models.Model):
+    _name = 'test_new_api.model_a'
+    _description = 'Model A'
+
+    name = fields.Char()
+    a_restricted_b_ids = fields.Many2many('test_new_api.model_b', relation='rel_model_a_model_b_1')
+    b_restricted_b_ids = fields.Many2many('test_new_api.model_b', relation='rel_model_a_model_b_2', ondelete='restrict')
+
+
+class ModelB(models.Model):
+    _name = 'test_new_api.model_b'
+    _description = 'Model B'
+
+    name = fields.Char()
+    a_restricted_a_ids = fields.Many2many('test_new_api.model_a', relation='rel_model_a_model_b_1', ondelete='restrict')
+    b_restricted_a_ids = fields.Many2many('test_new_api.model_a', relation='rel_model_a_model_b_2')

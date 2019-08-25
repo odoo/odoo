@@ -14,8 +14,8 @@
                             <field name="bic"/>
                         </group>
                         <group>
-                            <group name="address_details" string="Address">
-                                <label for="street" string="Address"/>
+                            <group name="address_details">
+                                <label for="street" string="Bank Address"/>
                                 <div class="o_address_format">
                                     <field name="street" placeholder="Street..." class="o_address_street"/>
                                     <field name="street2" placeholder="Street 2..." class="o_address_street"/>
@@ -25,10 +25,10 @@
                                     <field name="country" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
                             </group>
-                            <group name="communication_details" string="Communication">
+                            <group name="communication_details">
                                 <field name="phone"/>
                                 <field name="email" widget="email"/>
-                                <field name="active"/>
+                                <field name="active" invisible="1"/>
                             </group>
                         </group>
                     </sheet>
@@ -48,10 +48,23 @@
             </field>
         </record>
 
+        <record id="res_bank_view_search" model="ir.ui.view">
+            <field name="name">res.bank.view.search</field>
+            <field name="model">res.bank</field>
+            <field name="arch" type="xml">
+                <search string="Search Bank">
+                    <field name="name"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
         <record id="action_res_bank_form" model="ir.actions.act_window">
             <field name="name">Banks</field>
             <field name="res_model">res.bank</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="res_bank_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new bank

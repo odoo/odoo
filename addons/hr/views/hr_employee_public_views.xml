@@ -11,6 +11,8 @@
                     <field name="job_title" string="Job Title"/>
                     <field name="department_id" string="Department"/>
                     <field name="company_id" string="Company"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
@@ -30,13 +32,13 @@
             <field name="arch" type="xml">
                 <form string="Employee" create="0" write="0">
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="user_id" invisible="1"/>
                         <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <!-- Used by other modules-->
                         </div>
-                        <field name="image" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_medium"}'/>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
                             <div class="oe_title">
                                 <label for="name" class="oe_edit_only"/>
                                 <h1>
@@ -51,6 +53,7 @@
                                     <field name="mobile_phone" widget="phone"/>
                                     <field name="work_phone" widget="phone"/>
                                     <field name="work_email" widget="email"/>
+                                    <field name="work_location"/>
                                 </group>
                                 <group>
                                     <field name="department_id"/>
@@ -66,7 +69,6 @@
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
-                                            <field name="work_location"/>
                                         </group>
                                         <group name="managers" string="Responsibles">
                                             <field name="coach_id"/>
@@ -112,9 +114,9 @@
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
                             <!-- Medium employee's picture -->
-                            <field name="image" widget="image" class="o_kanban_image_fill_left d-none d-md-block" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
+                            <field name="image_128" widget="image" class="o_kanban_image_fill_left d-none d-md-block" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
                             <!-- Employee's picture optimized for mobile -->
-                            <field name="image_small" widget="image" class="o_kanban_image d-md-none rounded-circle" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
+                            <field name="image_64" widget="image" class="o_kanban_image d-md-none rounded-circle" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
 
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">

@@ -46,8 +46,8 @@ class Website(models.Model):
 
     def _default_language(self):
         lang_code = self.env['ir.default'].get('res.partner', 'lang')
-        def_lang = self.env['res.lang'].search([('code', '=', lang_code)], limit=1)
-        return def_lang.id if def_lang else self._active_languages()[0]
+        def_lang_id = self.env['res.lang']._lang_get_id(lang_code)
+        return def_lang_id or self._active_languages()[0]
 
     name = fields.Char('Website Name', required=True)
     domain = fields.Char('Website Domain')
@@ -174,6 +174,18 @@ class Website(models.Model):
         if 'favicon' in vals:
             vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
 
+    def unlink(self):
+        # Do not delete invoices, delete what's strictly necessary
+        attachments_to_unlink = self.env['ir.attachment'].search([
+            ('website_id', 'in', self.ids),
+            '|', '|',
+            ('key', '!=', False),  # theme attachment
+            ('url', 'ilike', '.custom.'),  # customized theme attachment
+            ('url', 'ilike', '.assets\\_'),
+        ])
+        attachments_to_unlink.unlink()
+        return super(Website, self).unlink()
+
     # ----------------------------------------------------------
     # Page Management
     # ----------------------------------------------------------
@@ -252,7 +264,7 @@ class Website(models.Model):
         if ispage:
             page = self.env['website.page'].create({
                 'url': page_url,
-                'website_id': website.id,  # remove it if only one webiste or not?
+                'website_id': website.id,  # remove it if only one website or not?
                 'view_id': view.id,
             })
             result['view_id'] = view.id
@@ -818,6 +830,10 @@ class Website(models.Model):
             return ''
         res = urls.url_parse(self.domain)
         return 'http://' + self.domain if not res.scheme else self.domain
+
+    def get_base_url(self):
+        self.ensure_one()
+        return self._get_http_domain() or super(BaseModel, self).get_base_url()
 
 
 class BaseModel(models.AbstractModel):

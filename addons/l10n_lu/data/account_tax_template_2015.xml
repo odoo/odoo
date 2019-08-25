@@ -1,6 +1,6 @@
 <odoo>
 	<record id="lu_2011_tax_AB-EC-0" model="account.tax.template">
-		<field name="sequence">101</field>
+		<field name="sequence">171</field>
         <field name="description">AB-EC-0</field>
         <field name="name">Purchase Goods Exempted - Extra-Community</field>
         <field name="amount">0</field>
@@ -12,7 +12,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exoneree')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -23,7 +23,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exoneree')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -50,14 +50,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -69,14 +69,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -99,14 +99,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -118,14 +118,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -148,14 +148,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -167,14 +167,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -197,14 +197,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -216,14 +216,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -241,7 +241,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exoneree')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -252,7 +252,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exoneree')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -279,14 +279,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_14')]
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -298,14 +298,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_14')]
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')]
 		    }),
 		]"/>
 	</record>
@@ -328,14 +328,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -347,14 +347,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -377,14 +377,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_3')]
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -396,14 +396,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_3')]
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')]
 		    }),
 		]"/>
 	</record>
@@ -426,14 +426,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_8')]
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -445,14 +445,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_8')]
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')]
 		    }),
 		]"/>
 	</record>
@@ -470,7 +470,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exoneree')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -481,7 +481,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exoneree')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -508,14 +508,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_14')]
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -527,14 +527,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_14')]
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')]
 		    }),
 		]"/>
 	</record>
@@ -557,14 +557,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_17')]
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -576,14 +576,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_17')]
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')]
 		    }),
 		]"/>
 	</record>
@@ -606,14 +606,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_3')]
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -625,14 +625,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')]
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')]
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -655,14 +655,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -674,14 +674,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -699,7 +699,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_achat_biens_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -710,7 +709,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_achat_biens_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -732,32 +730,30 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_achat_biens_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_achat_biens_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
 
 	<record id="lu_2015_tax_AB-PA-17" model="account.tax.template">
-		<field name="sequence">171</field>
+		<field name="sequence">101</field>
         <field name="description">AB-PA-17</field>
         <field name="name">Purchase Goods 17% - Country</field>
         <field name="amount">17</field>
@@ -770,26 +766,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_achat_biens_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_achat_biens_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -807,26 +801,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_achat_biens_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_achat_biens_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -844,26 +836,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_achat_biens_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_achat_biens_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -881,7 +871,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exonerees')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -892,7 +882,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exonerees')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -919,14 +909,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -938,14 +928,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -968,14 +958,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -987,14 +977,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -1017,14 +1007,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1036,14 +1026,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -1066,14 +1056,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1085,14 +1075,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -1110,7 +1100,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exonerees')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1121,7 +1111,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exonerees')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1148,14 +1138,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1167,14 +1157,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -1197,14 +1187,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1216,14 +1206,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -1246,14 +1236,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1265,14 +1255,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -1295,14 +1285,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1314,14 +1304,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -1339,7 +1329,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_achat_prestations_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1350,7 +1339,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_achat_prestations_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1372,26 +1360,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_achat_prestations_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_achat_prestations_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -1409,26 +1395,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_achat_prestations_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_achat_prestations_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -1446,26 +1430,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_achat_prestations_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_achat_prestations_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -1483,26 +1465,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_achat_prestations_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_achat_prestations_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -1520,7 +1500,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exoneree')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1531,7 +1511,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exoneree')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1558,14 +1538,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1577,14 +1557,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -1607,14 +1587,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1626,14 +1606,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -1656,14 +1636,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1675,14 +1655,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -1705,14 +1685,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1724,14 +1704,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -1749,7 +1729,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exoneree')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1760,7 +1740,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exoneree')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1787,14 +1767,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1806,14 +1786,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -1836,14 +1816,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1855,14 +1835,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -1885,14 +1865,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1904,14 +1884,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -1934,14 +1914,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1953,14 +1933,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -1978,7 +1958,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exoneree')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1989,7 +1969,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exoneree')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2016,14 +1996,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2035,14 +2015,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -2065,14 +2045,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2084,14 +2064,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -2114,14 +2094,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2133,14 +2113,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -2163,14 +2143,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2182,14 +2162,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -2207,7 +2187,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_frais_biens_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2218,7 +2197,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_frais_biens_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2240,26 +2218,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_frais_biens_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_frais_biens_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -2277,26 +2253,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_frais_biens_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_frais_biens_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -2314,26 +2288,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_frais_biens_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_frais_biens_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -2351,26 +2323,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_frais_biens_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_frais_biens_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -2388,7 +2358,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exonerees')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2399,7 +2369,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exonerees')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2426,14 +2396,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2445,14 +2415,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -2475,14 +2445,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2494,14 +2464,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -2524,14 +2494,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2543,14 +2513,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -2573,14 +2543,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2592,14 +2562,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -2617,7 +2587,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exonerees')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2628,7 +2598,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exonerees')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2655,14 +2625,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2674,14 +2644,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -2704,14 +2674,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2723,14 +2693,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -2753,14 +2723,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2772,14 +2742,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -2802,14 +2772,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -2821,14 +2791,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -2846,7 +2816,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_frais_prestations_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2857,7 +2826,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_frais_prestations_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2879,26 +2847,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_frais_prestations_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_frais_prestations_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -2916,26 +2882,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_frais_prestations_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_frais_prestations_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -2953,26 +2917,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_frais_prestations_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_frais_prestations_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -2990,26 +2952,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_frais_prestations_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_frais_prestations_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -3027,7 +2987,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exoneree')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3038,7 +2998,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exoneree')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3065,14 +3025,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3084,14 +3044,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -3114,14 +3074,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3133,14 +3093,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -3163,14 +3123,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3182,14 +3142,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -3212,14 +3172,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3231,14 +3191,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -3256,7 +3216,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exoneree')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3267,7 +3227,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exoneree')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3294,14 +3254,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3313,14 +3273,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -3343,14 +3303,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3362,14 +3322,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -3392,14 +3352,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3411,14 +3371,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -3441,14 +3401,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3460,14 +3420,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_3_importations_de_biens_taxe_declaree_ou_payee')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_3_due_paid_respect_importation_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -3485,7 +3445,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exoneree')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3496,7 +3456,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exoneree')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3523,14 +3483,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3542,14 +3502,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -3572,14 +3532,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3591,14 +3551,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -3621,14 +3581,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3640,14 +3600,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -3670,14 +3630,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3689,14 +3649,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_2_acquisitions_intracommunautaires_de_biens_art')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_2_due_respect_intra_comm_goods')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -3714,7 +3674,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_investissement_biens_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3725,7 +3684,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_investissement_biens_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3747,26 +3705,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_investissement_biens_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_investissement_biens_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -3784,26 +3740,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_investissement_biens_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_investissement_biens_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -3821,26 +3775,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_investissement_biens_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_investissement_biens_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -3858,26 +3810,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_investissement_biens_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_investissement_biens_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -3895,7 +3845,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exonerees')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3906,7 +3856,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exonerees')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3933,14 +3883,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -3952,14 +3902,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -3982,14 +3932,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -4001,14 +3951,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -4031,14 +3981,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -4050,14 +4000,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -4080,14 +4030,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -4099,14 +4049,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216113'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -4124,7 +4074,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exonerees')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4135,7 +4085,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exonerees')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4162,14 +4112,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -4181,14 +4131,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_14')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -4211,14 +4161,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -4230,14 +4180,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_17')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -4260,14 +4210,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -4279,14 +4229,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_3')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -4309,14 +4259,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -4328,14 +4278,14 @@
 		    (0,0, {
 		        'factor_percent': -100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_5_taxe_declaree_comme_debiteur_voir_points_ii_e')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_5_due_under_reverse_charge')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216112'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_taxe_8')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -4353,7 +4303,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_investissement_prestations_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4364,7 +4313,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_investissement_prestations_0_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4386,26 +4334,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_investissement_prestations_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_investissement_prestations_14_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -4423,26 +4369,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_investissement_prestations_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_investissement_prestations_17_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -4460,26 +4404,24 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_investissement_prestations_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_investissement_prestations_3_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
@@ -4497,32 +4439,30 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_investissement_prestations_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_investissement_prestations_8_pays')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4216111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_achats_de_biens_et_de_services_a_linterieur')],
+		        'account_id': ref('lu_2020_account_421611'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_3a_1_invoiced_by_other_taxable_person')],
 		    }),
 		]"/>
 	</record>
 
 	<record id="lu_2015_tax_V-ART-43_60b" model="account.tax.template">
-		<field name="sequence">479</field>
+		<field name="sequence">489</field>
         <field name="description">V-ART-43_60b</field>
         <field name="name">Sales - Other Exemptions (Article 43 and 60 bis)</field>
         <field name="amount">0</field>
@@ -4534,7 +4474,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_3_autres_exonerations_art_43_et_60bis')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_3_other_exemptions_art_43')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4545,7 +4485,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_3_autres_exonerations_art_43_et_60bis')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_3_other_exemptions_art_43')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4567,7 +4507,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_4_autres_exonerations_art_44_et_56quater')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_4_other_exemptions_art_44_et_56quater')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4578,7 +4518,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_4_autres_exonerations_art_44_et_56quater')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_4_other_exemptions_art_44_et_56quater')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4600,7 +4540,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_2_exportations_art_43/1/a_et_b')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_2_export')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4611,7 +4551,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_2_exportations_art_43/1/a_et_b')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_2_export')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4633,7 +4573,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_tabacs_fabriques')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4644,7 +4584,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_tabacs_fabriques')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4666,7 +4606,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_1_livraisons_intracommunautaires_de_biens_a_des')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_1_intra_community_goods_pi_vat')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4677,7 +4617,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_1_livraisons_intracommunautaires_de_biens_a_des')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_1_intra_community_goods_pi_vat')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4699,7 +4639,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_tabacs_fabriques')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4710,7 +4650,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_tabacs_fabriques')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4770,8 +4710,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_taxe_14')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -4783,14 +4723,14 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_taxe_14')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_14')],
 		    }),
 		]"/>
 	</record>
 
 	<record id="lu_2015_tax_VB-PA-17" model="account.tax.template">
-		<field name="sequence">489</field>
+		<field name="sequence">479</field>
         <field name="description">VB-PA-17</field>
         <field name="name">Sales Goods 17% - Country</field>
         <field name="amount">17</field>
@@ -4807,8 +4747,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_taxe_17')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -4820,8 +4760,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_taxe_17')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -4844,8 +4784,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_taxe_3')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -4857,8 +4797,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_taxe_3')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -4881,8 +4821,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_taxe_8')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -4894,8 +4834,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_taxe_8')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -4913,7 +4853,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_tabacs_fabriques')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4924,7 +4864,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_tabacs_fabriques')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4946,7 +4886,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_a_livraisons_subsequentes_a_des_acquisitions')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_a_subsequent_to_intra_community')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4957,7 +4897,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_a_livraisons_subsequentes_a_des_acquisitions')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_a_subsequent_to_intra_community')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4979,7 +4919,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_d_autres_operations_realisees_imposables_a')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_d_supplies_other_referred')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4990,7 +4930,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_d_autres_operations_realisees_imposables_a')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_d_supplies_other_referred')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5012,7 +4952,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_b1_prestations_de_services_a_des_identifies_a')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_b1_non_exempt_customer_vat')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5023,7 +4963,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_b1_prestations_de_services_a_des_identifies_a')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_b1_non_exempt_customer_vat')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5045,7 +4985,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_b2_prestations_de_services_a_des_identifies_a')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_b2_exempt_ms_customer')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5056,7 +4996,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_b2_prestations_de_services_a_des_identifies_a')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_b2_exempt_ms_customer')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5116,8 +5056,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_taxe_14')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -5129,8 +5069,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_taxe_14')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -5153,8 +5093,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_taxe_17')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -5166,8 +5106,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_taxe_17')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -5190,8 +5130,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_taxe_3')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -5203,8 +5143,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_taxe_3')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -5227,8 +5167,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_taxe_8')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -5240,8 +5180,8 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
-		        'account_id': ref('lu_2011_account_4614111'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_taxe_8')],
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -5259,7 +5199,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_sans_taxe')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5270,7 +5209,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_sans_taxe')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5292,7 +5230,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_base_sans_taxe')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5303,7 +5240,6 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_base_sans_taxe')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,

@@ -224,4 +224,4 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         p_specific_product.discount_apply_on = 'cheapest_product'
         order.recompute_coupon_lines()
         # 872.73 - (20% of 1 iPad) = 872.73 - 58.18 = 814.55
-        self.assertEqual(order.amount_untaxed, 814.55, "One large cabinet should be discounted by 20%")
+        self.assertAlmostEqual(order.amount_untaxed, 814.55, 2, "One large cabinet should be discounted by 20%")

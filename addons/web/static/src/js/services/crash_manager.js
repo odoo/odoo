@@ -1,27 +1,22 @@
 odoo.define('web.CrashManager', function (require) {
 "use strict";
 
+const AbstractService = require('web.AbstractService');
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var mixins = require('web.mixins');
-var ServicesMixin = require('web.ServicesMixin');
-var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 var _lt = core._lt;
 
-var map_title ={
-    user_error: _lt("User Error"),
-    warning: _lt("Warning"),
-    access_error: _lt("Access Error"),
-    missing_error: _lt("Missing Record"),
-    validation_error: _lt("Validation Error"),
-    except_orm: _lt("Global Business Error"),
-    access_denied: _lt("Access Denied"),
-    karma_error: _lt("Karma Error"),
-};
+// Register this eventlistener before qunit does.
+// Some errors needs to be negated by the crash_manager.
+window.addEventListener('unhandledrejection', ev =>
+    core.bus.trigger('crash_manager_unhandledrejection', ev)
+);
+
+let active = true;
 
 /**
  * An extension of Dialog Widget to render the warnings and errors on the website.
@@ -78,13 +73,13 @@ var WarningDialog = CrashManagerDialog.extend({
     },
 });
 
-var CrashManager = core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, ServiceProviderMixin,{
+var CrashManager = AbstractService.extend({
     init: function () {
         var self = this;
-        this.active = true;
+        active = true;
         this.isConnected = true;
 
-        mixins.EventDispatcherMixin.init.call(this);
+        this._super.apply(this, arguments);
 
         // crash manager integration
         core.bus.on('rpc_error', this, this.rpc_error);
@@ -128,7 +123,7 @@ var CrashManager = core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
 
         // listen to unhandled rejected promises, and throw an error when the
         // promise has been rejected due to a crash
-        window.addEventListener('unhandledrejection', function (ev) {
+        core.bus.on('crash_manager_unhandledrejection', this, function (ev) {
             if (ev.reason && ev.reason instanceof Error) {
                 var traceback = ev.reason.stack;
                 self.show_error({
@@ -144,13 +139,26 @@ var CrashManager = core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
                 ev.preventDefault();
             }
         });
-        ServiceProviderMixin.init.call(this);
     },
     enable: function () {
-        this.active = true;
+        active = true;
     },
     disable: function () {
-        this.active = false;
+        active = false;
+    },
+    /**
+     * @return {Object}
+     */
+    getMapTitle() {
+        return {
+            access_denied: _lt("Access Denied"),
+            access_error: _lt("Access Error"),
+            except_orm: _lt("Global Business Error"),
+            missing_error: _lt("Missing Record"),
+            user_error: _lt("User Error"),
+            validation_error: _lt("Validation Error"),
+            warning: _lt("Warning"),
+        };
     },
     handleLostConnection: function () {
         var self = this;
@@ -175,7 +183,13 @@ var CrashManager = core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
         }, delay);
     },
     rpc_error: function(error) {
-        if (!this.active) {
+        // Some qunit tests produces errors before the DOM is set.
+        // This produces an error loop as the modal/toast has no DOM to attach to.
+        if (!document.body) {
+            return;
+        }
+        var map_title = this.getMapTitle();
+        if (!active) {
             return;
         }
         if (this.connection_lost) {
@@ -229,21 +243,15 @@ var CrashManager = core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
         }
     },
     show_warning: function (error, options) {
-        if (!this.active) {
+        if (!active) {
             return;
         }
         var message = error.data ? error.data.message : error.message;
-        var title = _.str.capitalize(error.type) || _t("Oops Something went wrong !");
-        var subtitle = error.data ? error.data.title : error.title;
-        this.displayNotification(_.extend({
-            title: title,
-            message: message,
-            subtitle: subtitle,
-            sticky: true,
-        }, options));
+        var title = _.str.capitalize(error.type) || _t("Something went wrong !");
+        return this._displayWarning(message, title, options);
     },
     show_error: function (error) {
-        if (!this.active) {
+        if (!active) {
             return;
         }
         var dialog = new ErrorDialog(this, {
@@ -296,6 +304,25 @@ var CrashManager = core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
             message: exception,
             data: {debug: ""}
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} message
+     * @param {string} title
+     * @param {Object} options
+     */
+    _displayWarning: function (message, title, options) {
+        return new WarningDialog(this, {
+            ...options,
+            title,
+        }, {
+            message,
+        }).open();
     },
 });
 
@@ -375,13 +402,6 @@ return {
     CrashManager: CrashManager,
     ErrorDialog: ErrorDialog,
     WarningDialog: WarningDialog,
+    disable: () => active = false,
 };
-});
-
-odoo.define('web.crash_manager', function (require) {
-"use strict";
-
-var CrashManager = require('web.CrashManager').CrashManager;
-return new CrashManager();
-
 });

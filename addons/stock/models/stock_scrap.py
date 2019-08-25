@@ -8,6 +8,7 @@ from odoo.tools import float_compare
 
 class StockScrap(models.Model):
     _name = 'stock.scrap'
+    _inherit = ['mail.thread']
     _order = 'id desc'
     _description = 'Scrap'
 
@@ -36,7 +37,7 @@ class StockScrap(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     tracking = fields.Selection('Product Tracking', readonly=True, related="product_id.tracking")
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot',
+        'stock.production.lot', 'Lot/Serial',
         states={'done': [('readonly', True)]}, domain="[('product_id', '=', product_id)]")
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
@@ -46,7 +47,7 @@ class StockScrap(models.Model):
     move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True)
     picking_id = fields.Many2one('stock.picking', 'Picking', states={'done': [('readonly', True)]}, domain="[('company_id', '=', company_id)]")
     location_id = fields.Many2one(
-        'stock.location', 'Location', domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]",
+        'stock.location', 'Source Location', domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]",
         required=True, states={'done': [('readonly', True)]}, default=_get_default_location_id)
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
@@ -54,8 +55,8 @@ class StockScrap(models.Model):
     scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('done', 'Done')], string='Status', default="draft")
-    date_expected = fields.Datetime('Expected Date', default=fields.Datetime.now)
+        ('done', 'Done')], string='Status', default="draft", tracking=True)
+    date_done = fields.Datetime('Date')
 
     @api.onchange('picking_id')
     def _onchange_picking_id(self):
@@ -72,15 +73,8 @@ class StockScrap(models.Model):
             if self.picking_id:
                 for move_line in self.picking_id.move_line_ids:
                     if move_line.product_id == self.product_id:
-                        self.location_id = move_line.location_id
+                        self.location_id = move_line.location_id if move_line.state != 'done' else move_line.location_dest_id
                         break
-
-    @api.model
-    def create(self, vals):
-        if 'name' not in vals or vals['name'] == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
-        scrap = super(StockScrap, self).create(vals)
-        return scrap
 
     def unlink(self):
         if 'done' in self.mapped('state'):
@@ -120,10 +114,12 @@ class StockScrap(models.Model):
 
     def do_scrap(self):
         for scrap in self:
+            scrap.name = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
             move = self.env['stock.move'].create(scrap._prepare_move_values())
             # master: replace context by cancel_backorder
             move.with_context(is_scrap=True)._action_done()
             scrap.write({'move_id': move.id, 'state': 'done'})
+            scrap.date_done = fields.Datetime.now()
         return True
 
     def action_get_stock_picking(self):

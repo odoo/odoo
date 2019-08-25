@@ -22,13 +22,14 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="classname"/>
-                        <field name="website_published"/>
+                        <field name="is_published"/>
                         <field name="active"/>
                     </group>
                 </sheet>
                 </form>
             </field>
         </record>
+
         <record id="view_partner_tag_list" model="ir.ui.view">
             <field name="name">Website Tags</field>
             <field name="model">res.partner.tag</field>
@@ -37,9 +38,21 @@
                 <tree string="Website Tags" editable="bottom">
                     <field name="name"/>
                     <field name="classname"/>
-                    <field name="website_published"/>
+                    <field name="is_published"/>
                     <field name="active" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="res_partner_tag_view_search" model="ir.ui.view">
+            <field name="name">res.partner.tag.view.search</field>
+            <field name="model">res.partner.tag</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner Tag">
+                    <field name="name"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
             </field>
         </record>
 
@@ -47,6 +60,7 @@
             <field name="name">Website Tags</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.tag</field>
+            <field name="search_view_id" ref="res_partner_tag_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new contact tag

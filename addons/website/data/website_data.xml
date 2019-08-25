@@ -117,19 +117,22 @@
 
     <data noupdate="1">
         <record id="homepage_page" model="website.page">
-            <field name="website_published">True</field>
+            <field name="is_published">True</field>
             <field name="url">/</field>
             <field name="view_id" ref="homepage"/>
+            <field name="is_tracked">True</field>
         </record>
         <record id="contactus_page" model="website.page">
             <field name="url">/contactus</field>
-            <field name="website_published">True</field>
+            <field name="is_published">True</field>
             <field name="view_id" ref="contactus"/>
+            <field name="is_tracked">True</field>
         </record>
         <record id="aboutus_page" model="website.page">
-            <field name="website_published">True</field>
+            <field name="is_published">True</field>
             <field name="url">/aboutus</field>
             <field name="view_id" ref="aboutus"/>
+            <field name="is_tracked">True</field>
         </record>
 
         <!-- Default Menu to store module menus for new website -->

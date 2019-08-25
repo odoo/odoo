@@ -10,8 +10,8 @@
                 <field name="display_complete" invisible="1"/>
                 <div class="oe_button_box" name="button_box"
                      attrs="{'invisible': [('display_complete', '=', False)]}">
-                        <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" string="Locate" type="object"/>
-                        <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability Report" type="action"/>
+                        <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" string="Location" type="object"/>
+                        <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action"/>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -33,7 +33,7 @@
                     </group>
                 </group>
                 <notebook attrs="{'invisible': [('display_complete', '=', False)]}">
-                    <page string="Description">
+                    <page string="Description" name="description">
                         <field name="note"/>
                     </page>
                 </notebook>
@@ -53,9 +53,9 @@
         <field name="arch" type="xml">
             <tree string="Lots/Serial Numbers">
                 <field name="name"/>
-                <field name="ref"/>
+                <field name="ref" optional="show"/>
                 <field name="product_id"/>
-                <field name="create_date"/>
+                <field name="create_date" optional="show"/>
             </tree>
         </field>
     </record>
@@ -64,10 +64,10 @@
         <field name="model">stock.production.lot</field>
         <field name="arch" type="xml">
             <search string="Product Lots Filter">
-                <field name="name" string="Product Lots" filter_domain="['|',('name','ilike',self),('ref','ilike',self)]"/>
+                <field name="name" string="Lot/Serial Number" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]"/>
                 <field name="product_id"/>
                 <group expand="0" string="Group By">
-                    <filter name="group_by_product" string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                    <filter name="group_by_product" string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
                 </group>
             </search>
         </field>

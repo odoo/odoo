@@ -38,11 +38,13 @@ var MediaDialog = Dialog.extend({
      */
     init: function (parent, options, media) {
         var $media = $(media);
+        media = $media[0];
 
         options = _.extend({}, options);
-        options.noDocuments = options.onlyImages || options.noDocuments;
-        options.noIcons = options.onlyImages || options.noIcons;
-        options.noVideos = options.onlyImages || options.noVideos;
+        var onlyImages = options.onlyImages || this.multiImages || (media && ($media.parent().data('oeField') === 'image' || $media.parent().data('oeType') === 'image'));
+        options.noDocuments = onlyImages || options.noDocuments;
+        options.noIcons = onlyImages || options.noIcons;
+        options.noVideos = onlyImages || options.noVideos;
 
         this._super(parent, _.extend({}, {
             title: _t("Select a Media"),
@@ -91,19 +93,6 @@ var MediaDialog = Dialog.extend({
     start: function () {
         var promises = [this._super.apply(this, arguments)];
         this.$modal.find('.modal-dialog').addClass('o_select_media_dialog');
-
-        if (this.imageWidget) {
-            this.imageWidget.clear();
-        }
-        if (this.documentWidget) {
-            this.documentWidget.clear();
-        }
-        if (this.iconWidget) {
-            this.iconWidget.clear();
-        }
-        if (this.videoWidget) {
-            this.videoWidget.clear();
-        }
 
         if (this.imageWidget) {
             promises.push(this.imageWidget.appendTo(this.$("#editor-media-image")));
@@ -170,8 +159,32 @@ var MediaDialog = Dialog.extend({
         var _super = this._super;
         var args = arguments;
         return this.activeWidget.save().then(function (data) {
+            self._clearWidgets();
             self.final_data = data;
-            return _super.apply(self, args);
+            _super.apply(self, args);
+            $(data).trigger('content_changed');
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Call clear on all the widgets except the activeWidget.
+     * We clear because every widgets are modifying the "media" element.
+     * All widget have the responsibility to clear a previous element that
+     * was created from them.
+     */
+    _clearWidgets: function () {
+        [   this.imageWidget,
+            this.documentWidget,
+            this.iconWidget,
+            this.videoWidget
+        ].forEach( (widget) => {
+            if (widget !== this.activeWidget) {
+                widget && widget.clear();
+            }
         });
     },
 

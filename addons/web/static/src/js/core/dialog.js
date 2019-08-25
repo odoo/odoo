@@ -30,7 +30,8 @@ var Dialog = Widget.extend({
      * @param {Object} [options]
      * @param {string} [options.title=Odoo]
      * @param {string} [options.subtitle]
-     * @param {string} [options.size=large] - 'large', 'medium' or 'small'
+     * @param {string} [options.size=large] - 'extra-large', 'large', 'medium'
+     *        or 'small'
      * @param {boolean} [options.fullscreen=false] - whether or not the dialog
      *        should be open in fullscreen mode (the main usecase is mobile)
      * @param {string} [options.dialogClass] - class to add to the modal-body
@@ -53,12 +54,15 @@ var Dialog = Widget.extend({
      * @param {jQueryElement} [options.$parentNode]
      *        Element in which dialog will be appended, by default it will be
      *        in the body
-     * @param {boolean} [options.backdrop=true]
-     *        Whether modal rendered with backdrop or not
+     * @param {boolean|string} [options.backdrop='static']
+     *        The kind of modal backdrop to use (see BS documentation)
      * @param {boolean} [options.renderHeader=true]
      *        Whether or not the dialog should be rendered with header
      * @param {boolean} [options.renderFooter=true]
      *        Whether or not the dialog should be rendered with footer
+     * @param {function} [options.onForceClose]
+     *        Callback that triggers when the modal is closed by other means than with the buttons
+     *        e.g. pressing ESC
      */
     init: function (parent, options) {
         var self = this;
@@ -75,9 +79,10 @@ var Dialog = Widget.extend({
             buttons: [{text: _t("Ok"), close: true}],
             technical: true,
             $parentNode: false,
-            backdrop: true,
+            backdrop: 'static',
             renderHeader: true,
             renderFooter: true,
+            onForceClose: false,
         });
 
         this.$content = options.$content;
@@ -92,6 +97,7 @@ var Dialog = Widget.extend({
         this.backdrop = options.backdrop;
         this.renderHeader = options.renderHeader;
         this.renderFooter = options.renderFooter;
+        this.onForceClose = options.onForceClose;
 
         core.bus.on('close_dialogs', this, this.destroy.bind(this));
     },
@@ -114,6 +120,9 @@ var Dialog = Widget.extend({
                 renderFooter: self.renderFooter,
             }));
             switch (self.size) {
+                case 'extra-large':
+                    self.$modal.find('.modal-dialog').addClass('modal-xl');
+                    break;
                 case 'large':
                     self.$modal.find('.modal-dialog').addClass('modal-lg');
                     break;
@@ -165,6 +174,7 @@ var Dialog = Widget.extend({
                     def = buttonData.click.call(self, e);
                 }
                 if (buttonData.close) {
+                    self.onForceClose = false;
                     Promise.resolve(def).then(self.close.bind(self)).guardedCatch(self.close.bind(self));
                 }
             });
@@ -249,6 +259,11 @@ var Dialog = Widget.extend({
 
         if (this.isDestroyed()) {
             return;
+        }
+
+        // Triggers the onForceClose event if the callback is defined
+        if (this.onForceClose) {
+            this.onForceClose();
         }
         var isFocusSet = this._focusOnClose();
 
@@ -348,6 +363,7 @@ Dialog.alert = function (owner, message, options) {
             text: message,
         }),
         title: _t("Alert"),
+        onForceClose: options && (options.onForceClose || options.confirm_callback),
     }, options)).open({shouldFocusButtons:true});
 };
 
@@ -374,6 +390,7 @@ Dialog.confirm = function (owner, message, options) {
             text: message,
         }),
         title: _t("Confirmation"),
+        onForceClose: options && (options.onForceClose || options.cancel_callback),
     }, options)).open({shouldFocusButtons:true});
 };
 
@@ -424,6 +441,7 @@ Dialog.safeConfirm = function (owner, message, options) {
         buttons: buttons,
         $content: $content,
         title: _t("Confirmation"),
+        onForceClose: options && (options.onForceClose || options.cancel_callback),
     }, options));
     dialog.opened(function () {
         var $button = dialog.$footer.find('.o_safe_confirm_button');

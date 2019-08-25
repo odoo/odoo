@@ -115,8 +115,7 @@
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_oppor')}),
-                          (0, 0, {'view_mode': 'form', 'view_id': ref('crm_case_form_view_oppor')})]"/>
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_oppor')})]"/>
              <field name="help">Pipeline Analysis gives you an instant access to
                 your opportunities with information such as the expected revenue, planned cost,
                 missed deadlines or the number of interactions per opportunity. This report is
@@ -129,25 +128,6 @@
             parent="crm_menu_report" 
             action="crm_opportunity_report_action" 
             sequence="2"/>
-
-        <record id="crm_opportunity_report_action_graph" model="ir.actions.act_window">
-            <field name="name">Pipeline Analysis</field>
-            <field name="res_model">crm.lead</field>
-            <field name="view_mode">graph,pivot,tree,form</field>
-            <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
-            <field name="context">{'search_default_opportunity': True, 'search_default_current': True}</field>
-            <field name="view_ids"
-                   eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
-                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm.crm_case_tree_view_oppor')}),
-                          (0, 0, {'view_mode': 'form', 'view_id': ref('crm_case_form_view_oppor')})]"/>
-             <field name="help">Pipeline Analysis gives you an instant access to
-                your opportunities with information such as the expected revenue, planned cost,
-                missed deadlines or the number of interactions per opportunity. This report is
-                mainly used by the sales manager in order to periodically review the pipeline
-                with the the Sales Team.</field>
-        </record>
 
         <record id="crm_opportunity_report_action_lead" model="ir.actions.act_window">
             <field name="name">Leads Analysis</field>

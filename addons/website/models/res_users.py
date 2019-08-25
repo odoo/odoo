@@ -53,3 +53,19 @@ class ResUsers(models.Model):
         tools.create_unique_index(self._cr, 'res_users_login_key_unique_website_index',
             self._table, ['login', 'COALESCE(website_id,-1)'])
         return result
+
+    @classmethod
+    def authenticate(cls, db, login, password, user_agent_env):
+        """ Override to link the logged in user's res.partner to website.visitor """
+        uid = super(ResUsers, cls).authenticate(db, login, password, user_agent_env)
+        if uid:
+            with cls.pool.cursor() as cr:
+                env = api.Environment(cr, uid, {})
+                visitor_sudo = env['website.visitor']._get_visitor_from_request()
+                if visitor_sudo:
+                    vals = {
+                        'user_partner_id': env.user.partner_id.id,
+                        'name': env.user.partner_id.name
+                    }
+                    visitor_sudo.write(vals)
+        return uid

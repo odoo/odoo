@@ -98,7 +98,7 @@ class LivechatController(http.Controller):
         if previous_operator_id:
             previous_operator_id = int(previous_operator_id)
 
-        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._get_mail_channel(anonymous_name, previous_operator_id, user_id, country_id)
+        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_mail_channel(anonymous_name, previous_operator_id, user_id, country_id)
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
@@ -148,3 +148,9 @@ class LivechatController(http.Controller):
         Channel = request.env['mail.channel']
         channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
         channel.notify_typing(is_typing=is_typing, is_website_user=True)
+
+    @http.route('/im_livechat/email_livechat_transcript', type='json', auth='public', cors="*")
+    def email_livechat_transcript(self, uuid, email):
+        channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)], limit=1)
+        if channel:
+            channel._email_livechat_transcript(email)

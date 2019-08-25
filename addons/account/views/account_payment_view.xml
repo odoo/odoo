@@ -80,35 +80,41 @@
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
                 <search string="Payments">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('communication','ilike',self)]" string="Description"/>
+                    <field name="name" string="Payment"
+                        filter_domain="['|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('communication', 'ilike', self)]"/>
+                    <field name="partner_id" string="Customer/Vendor"/>
+                    <field name="journal_id"/>
                     <separator/>
-                    <field name="partner_id" />
-                    <field name="journal_id" />
-                    <field name="company_id" groups="base.group_multi_company" />
-                    <filter string="Vendor Payments" domain="[('partner_type','=','supplier')]" name="outbound_filter"/>
-                    <filter string="Customer Payments" domain="[('partner_type','=','customer')]" name="inbound_filter"/>
-                    <filter string="Transfers" domain="[('payment_type','=','transfer')]" name="transfers_filter"/>
+                    <filter string="Customer Payments" name="inbound_filter" domain="[('partner_type', '=', 'customer')]"/>
+                    <filter string="Vendor Payments" name="outbound_filter" domain="[('partner_type', '=', 'supplier')]"/>
+                    <filter string="Transfers" name="transfers_filter" domain="[('payment_type', '=', 'transfer')]"/>
                     <separator/>
-                    <filter string="Draft" domain="[('state','=','draft')]" name='state_draft'/>
-                    <filter string="Posted" domain="[('state','=','posted')]" name='state_posted'/>
-                    <filter string="Sent" domain="[('state','=','sent')]" name='state_sent'/>
-                    <filter string="Reconciled" name="reconciled" domain="[('state','=','reconciled')]"/>
+                    <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Posted" name="state_posted" domain="[('state', '=', 'posted')]"/>
+                    <filter string="Sent" name="state_sent" domain="[('state', '=', 'sent')]"/>
+                    <filter string="Reconciled" name="reconciled" domain="[('state', '=', 'reconciled')]"/>
                     <separator/>
-                    <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Payment Date" name="payment_date" date="payment_date"/>
+                    <separator/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="Customer/Vendor" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                     <filter string="Payment Method" name="paymentmethod" domain="[]" context="{'group_by': 'payment_method_id'}"/>
-                    <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Status" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Payment Date" name="groupby_payment_date" domain="[]" context="{'group_by': 'payment_date'}"/>
                     <filter string="Currency" name="currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
                     <!-- company_id is not stored (cdca5d4751a979f6b694f02d88160843f81a77f5). But we can't break structure-->
-                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company" invisible="1" />
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company" invisible="1"/>
                     <separator/>
-                    <filter string="Late Activities" name="activities_overdue"
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter string="Today Activities" name="activities_today"
+                    <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities" name="activities_upcoming_all"
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Exception Activities" name="activities_exception"
+                        domain="[('activity_exception_decoration', '!=', False)]"/>
                 </search>
             </field>
         </record>
@@ -136,7 +142,7 @@
                             <button class="oe_stat_button" name="open_payment_matching_screen"
                                     string="Payment Matching" type="object"
                                     groups="account.group_account_user"
-                                    attrs="{'invisible':[('move_reconciled','=',True)]}" icon="fa-university"/>
+                                    attrs="{'invisible':[('move_reconciled','=',True)]}" icon="fa-dollar"/>
                             <field name="has_invoices" invisible="1"/>
                             <field name="move_reconciled" invisible="1"/>
                         </div>
@@ -149,7 +155,7 @@
                             <group name="partner_group" invisible="context.get('active_model') == 'account.move'">
                                 <field name="payment_type" widget="radio"/>
                                 <field name="partner_type" widget="selection" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
-                                <field name="partner_id" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
+                                <field name="partner_id" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}" context="{'default_is_company': True}"/>
                             </group>
                             <group name="right_column">
                                 <field name="communication"/>
@@ -169,6 +175,9 @@
                                 <field name="show_partner_bank_account" invisible="1"/>
                                 <field name="require_partner_bank_account" invisible="1"/>
                                 <field name="payment_method_code" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" required="1"/>
                             </group>
                             <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
                                 <label for="payment_difference"/>
@@ -202,6 +211,7 @@
                     <group>
                         <group>
                             <field name="payment_method_id" widget="radio"/>
+                            <field name="group_payment"/>
                         </group>
                         <group>
                             <field name="journal_id" widget="selection"/>
@@ -232,8 +242,12 @@
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>
             <field name="view_mode">tree,kanban,form,graph</field>
-            <field name="context">{'default_payment_type': 'inbound', 'default_partner_type': 'customer', 'search_default_inbound_filter': 1}</field>
-            <field name="domain">[]</field>
+            <field name="context">{
+                'default_payment_type': 'inbound',
+                'default_partner_type': 'customer',
+                'search_default_inbound_filter': 1,
+                'res_partner_search_mode': 'customer',
+            }</field>
             <field name="view_id" ref="view_account_payment_tree"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -248,8 +262,12 @@
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>
             <field name="view_mode">tree,kanban,form,graph</field>
-            <field name="context">{'default_payment_type': 'outbound', 'default_partner_type': 'supplier', 'search_default_outbound_filter': 1}</field>
-            <field name="domain">[]</field>
+            <field name="context">{
+                'default_payment_type': 'outbound',
+                'default_partner_type': 'supplier',
+                'search_default_outbound_filter': 1,
+                'res_partner_search_mode': 'supplier',
+            }</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

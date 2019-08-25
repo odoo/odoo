@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 class Project(models.Model):
     _inherit = 'project.project'
 
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_expense', '=', False), ('order_id', '=', sale_order_id), ('state', 'in', ['sale', 'done'])]", copy=False,
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_expense', '=', False), ('order_id', '=', sale_order_id), ('state', 'in', ['sale', 'done']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", copy=False,
         help="Sales order item to which the project is linked. If an employee timesheets on a task that does not have a "
         "sale order item defines, and if this employee is not in the 'Employee/Sales Order Item Mapping' of the project, "
         "the timesheet entry will be linked to the sales order item defined on the project.")
@@ -143,7 +143,7 @@ class ProjectTask(models.Model):
                 sale_line_id = project.sale_line_id.id
         return sale_line_id
 
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Sales order item to which the task is linked. If an employee timesheets on a this task, "
         "and if this employee is not in the 'Employee/Sales Order Item Mapping' of the project, the "
         "timesheet entry will be linked to this sales order item.")
@@ -183,7 +183,8 @@ class ProjectTask(models.Model):
     @api.onchange('project_id')
     def _onchange_project(self):
         result = super(ProjectTask, self)._onchange_project()
-        self.sale_line_id = self.project_id.sale_line_id
+        if self.project_id.sale_line_id:
+            self.sale_line_id = self.project_id.sale_line_id
         if not self.parent_id and not self.partner_id:
             self.partner_id = self.sale_line_id.order_partner_id
         # set domain on SO: on non billable project, all SOL of customer, otherwise the one from the SO

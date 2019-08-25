@@ -23,7 +23,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
     def _check_statement_matching(self, rules, expected_values, statements=None):
         if statements is None:
             statements = self.bank_st + self.cash_st
-        statement_lines = statements.mapped('line_ids')
+        statement_lines = statements.mapped('line_ids').sorted()
         matching_values = rules._apply_rules(statement_lines)
         for st_line_id, values in matching_values.items():
             values.pop('reconciled_lines', None)
@@ -47,7 +47,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
         current_assets_account = self.env['account.account'].search(
             [('user_type_id', '=', self.env.ref('account.data_account_type_current_assets').id)], limit=1)
 
-        self.rule_0 = self.env.ref('account.reconciliation_model_default_rule')
+        self.rule_0 = self.env['account.reconcile.model'].search([('company_id', '=', self.env.company.id)])
         self.rule_1 = self.rule_0.copy()
         self.rule_1.account_id = current_assets_account
         self.rule_1.match_partner = True
@@ -56,7 +56,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             'name': 'write-off model',
             'rule_type': 'writeoff_suggestion',
             'match_partner': True,
-            'match_partner_ids': [6, 0, (self.partner_1 + self.partner_2).ids],
+            'match_partner_ids': [],
             'account_id': current_assets_account.id,
         })
 

@@ -14,7 +14,7 @@ class HrWorkEntry(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', required=True)
+    employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     date_start = fields.Datetime(required=True, string='From')
     date_stop = fields.Datetime(string='To')
     duration = fields.Float(compute='_compute_duration', inverse='_inverse_duration', store=True, string="Period")
@@ -94,6 +94,7 @@ class HrWorkEntry(models.Model):
         # use '()' to exlude the lower and upper bounds of the range.
         # Filter on date_start and date_stop (both indexed) in the EXISTS clause to
         # limit the resulting set size and fasten the query.
+        self.flush(['date_start', 'date_stop', 'employee_id', 'active'])
         query = """
             SELECT b1.id
             FROM hr_work_entry b1

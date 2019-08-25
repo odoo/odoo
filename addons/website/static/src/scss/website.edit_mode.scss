@@ -29,7 +29,6 @@
         padding: 0;
 
         .nav-item {
-            text-align: center;
             background-color: $o-brand-lightsecondary;
 
             .nav-link {
@@ -51,7 +50,7 @@
     .dropdown-menu {
         position: static !important;
         transform: none !important;
-        width: 100%;
+        min-width: 100%;
     }
 
     .o_theme_customize_option {
@@ -195,6 +194,11 @@
         }
         $i: $i + 1;
     }
+
+    .o_theme_customize_delete_google_font {
+        @include o-position-absolute(1px, 1px, 1px, auto);
+        padding: 0 8px !important;
+    }
 }
 
 
@@ -249,10 +253,14 @@
             margin: 20px;
             padding: 112px 0px;
             text-align: center;
+            color: gray('400');
             &:before {
                 content: attr(data-editor-message);
                 font-size: 20px;
-                color: gray('400');
+            }
+            &:after {
+                display: block;
+                content: attr(data-editor-sub-message);
             }
         }
         > p:empty:only-child {

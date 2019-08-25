@@ -22,7 +22,7 @@
                                 <label for="po_order_approval"/>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                 <div class="text-muted">
-                                    Managers must approve orders
+                                    Request managers to approve orders above a minimum amount
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('po_order_approval', '=', False)]}">
                                     <div class="row mt16">
@@ -39,7 +39,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="lock_confirmed_po"/>
                                 <div class="text-muted">
-                                    No longer edit orders once confirmed
+                                    Automatically lock confirmed orders to prevent edition
                                 </div>
                             </div>
                         </div>
@@ -99,22 +99,14 @@
                     </div>
                     <h2>Products</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box" title="By default, vendor prices can be set manually in the product detail form. If your vendors provide you with pricelist files, this option allows you to easily import them into the system from ‘Purchase > Vendor Pricelists’ menu.">
+                        <div class="col-12 col-lg-6 o_setting_box" title="If installed, the product variants will be added to purchase orders through a grid entry.">
                             <div class="o_setting_left_pane">
-                                <field name="group_manage_vendor_price"/>
+                                <field name="module_purchase_product_matrix"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="group_manage_vendor_price"/>
+                                <label for="module_purchase_product_matrix" string="Variant Grid Entry"/>
                                 <div class="text-muted">
-                                    Import vendor pricelists
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('group_manage_vendor_price', '=', False)]}">
-                                    <div class="mt16">
-                                        <a role="button" class="btn-link" target="_blank" href="https://www.odoo.com/documentation/user/12.0/general/base_import/import_faq.html">
-                                            <i class="fa fa-arrow-right"/>
-                                            How to import
-                                        </a>
-                                    </div>
+                                    Add several variants to the purchase order from a grid
                                 </div>
                             </div>
                         </div>

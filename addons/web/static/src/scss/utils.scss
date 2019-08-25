@@ -339,3 +339,41 @@
         margin-bottom: 5px;
     }
 }
+
+// No content helper
+@mixin o-nocontent-empty {
+    pointer-events: auto;
+    max-width: 650px;
+    margin: auto;
+    padding: 15px;
+    z-index: 1000;
+    text-align: center;
+    color: $o-tooltip-text-color;
+    font-size: 115%;
+
+    > p:first-of-type {
+        margin-top: 0;
+        color: $o-tooltip-title-text-color;
+        font-weight: bold;
+        font-size: 125%;
+    }
+
+    a {
+        cursor: pointer;
+    }
+}
+
+%o-nocontent-init-image {
+    content: "";
+    display: block;
+    margin: auto;
+    background-size: cover;
+}
+
+%o-nocontent-empty-document {
+    @extend %o-nocontent-init-image;
+    @include size(120px, 80px);
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background: transparent url(/web/static/src/img/empty_folder.svg) no-repeat center;
+}

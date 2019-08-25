@@ -20,6 +20,7 @@
         'mail',
         'resource',
         'web',
+        'mail_bot',
     ],
     'data': [
         'security/hr_security.xml',
@@ -30,6 +31,7 @@
         'views/hr_plan_views.xml',
         'views/hr_employee_category_views.xml',
         'views/hr_employee_public_views.xml',
+        'report/hr_employee_badge.xml',
         'views/hr_employee_views.xml',
         'views/hr_department_views.xml',
         'views/hr_views.xml',
@@ -38,7 +40,6 @@
         'views/mail_channel_views.xml',
         'views/res_users.xml',
         'data/hr_data.xml',
-        'report/hr_employee_badge.xml'
     ],
     'demo': [
         'data/hr_demo.xml'

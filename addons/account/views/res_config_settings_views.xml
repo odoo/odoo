@@ -34,7 +34,7 @@
                                             <label for="chart_template_id" string="Package" class="col-lg-3 o_light_label"/>
                                             <field name="chart_template_id" widget="selection"/>
                                         </div>
-                                        <div>
+                                        <div class="mt8">
                                             <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link"/>
                                         </div>
                                     </div>
@@ -145,7 +145,7 @@
                                         Record transactions in foreign currencies
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
-                                        <div class="mt16">
+                                        <div class="mt8">
                                             <button name="%(base.action_currency_all_form)d" icon="fa-arrow-right" type="action" string="Activate Other Currencies" class="btn-link"/>
                                         </div>
                                         <div class="row mt16">
@@ -256,7 +256,7 @@
                                     <div class="text-muted">
                                         Define the smallest coinage of the currency used to pay by cash.
                                     </div>
-                                    <div class="mt16">
+                                    <div class="mt8">
                                         <button name="%(account.rounding_list_action)d" icon="fa-arrow-right"
                                                 type="action" string="Cash Roundings" class="btn-link"
                                                 attrs="{'invisible': [('group_cash_rounding', '=', False)]}"/>
@@ -331,7 +331,7 @@
                                     <field name="module_account_sepa_direct_debit" class="oe_inline" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="sepa_direct_debit_right_pane">
-                                    <label string="SEPA Direct Debit (SDD)" for="module_account_sepa"/>
+                                    <label string="SEPA Direct Debit (SDD)" for="module_account_sepa_direct_debit"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Collect customer payments in one-click using Euro SEPA Service
@@ -492,31 +492,6 @@
                                 </div>
                             </div>
                         </t>
-                        <h2 groups="account.group_account_user">Automated Entries</h2>
-                        <div class="row mt16 o_settings_container" id="recommended_apps" groups="account.group_account_user">
-                            <div class="col-12 col-lg-6 o_setting_box" id="asset_types" title="This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_account_asset" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane" id="account_asset">
-                                    <label for="module_account_asset"/>
-                                    <div class="text-muted">
-                                        Use depreciation boards, automate amortization entries
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" title="This allows you to manage the revenue recognition on selling products. It keeps track of the installments occurred on those revenue recognitions, and creates account moves for those installment lines.">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_account_deferred_revenue" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane" id="automate_deferred_revenues">
-                                    <label for="module_account_deferred_revenue" string="Deferred Revenues Management"/>
-                                    <div class="text-muted">
-                                        Automate deferred revenues entries for multi-year contracts
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <h2>Analytics</h2>
                         <div class="row mt16 o_settings_container" id="analytic">
                             <div class="col-12 col-lg-6 o_setting_box" title="Allows you to use the analytic accounting." groups="account.group_account_user">
@@ -529,10 +504,10 @@
                                         Track costs &amp; revenues by project, department, etc.
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_analytic_accounting', '=', False)]}">
-                                        <div class="mt16" id="analytic_account_link">
+                                        <div class="mt8" id="analytic_account_link">
                                             <button name="%(analytic.action_analytic_account_form)d" icon="fa-arrow-right" type="action" string="Analytic Accounts" class="btn-link"/>
                                         </div>
-                                        <div id="analytic_account_groups_link">
+                                        <div class="mt8" id="analytic_account_groups_link">
                                             <button name="%(analytic.account_analytic_group_action)d" icon="fa-arrow-right" type="action" string="Analytic Account Groups" class="btn-link"/>
                                         </div>
                                     </div>
@@ -548,7 +523,7 @@
                                         Allows to tag analytic entries and to manage analytic distributions
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_analytic_tags', '=', False)]}">
-                                        <div class="mt16">
+                                        <div class="mt8">
                                             <button name="%(analytic.account_analytic_tag_action)d" icon="fa-arrow-right" type="action" string="Analytic Tags" class="btn-link"/>
                                         </div>
                                     </div>

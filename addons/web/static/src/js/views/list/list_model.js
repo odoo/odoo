@@ -20,7 +20,7 @@ odoo.define('web.ListModel', function (require) {
         //--------------------------------------------------------------------------
 
         /**
-         * Overriden to add `groupData` when performing get on list datapoints.
+         * overridden to add `groupData` when performing get on list datapoints.
          *
          * @override
          * @see _readGroupExtraFields
@@ -52,17 +52,19 @@ odoo.define('web.ListModel', function (require) {
             var model = records[0].model;
             var recordResIds = _.pluck(records, 'res_id');
             var fieldNames = records[0].getFieldNames();
+            var context = records[0].getContext();
 
             return this._rpc({
                 model: model,
                 method: 'write',
                 args: [recordResIds, changes],
-                context: records[0].getContext(),
+                context: context,
             }).then(function () {
                 return self._rpc({
                     model: model,
                     method: 'read',
                     args: [recordResIds, fieldNames],
+                    context: context,
                 });
             }).then(function (results) {
                 results.forEach(function (data) {
@@ -94,14 +96,7 @@ odoo.define('web.ListModel', function (require) {
             options = options || {};
             options.fetchRecordsWithGroups = true;
             return this._super(list, options).then(function (result) {
-                var prom;
-                if (!list.parentID) {
-                    // groupbys buttons are only displayed on the first level of
-                    // groupby so no need to fetch the extra fields for inner
-                    // groups
-                    prom = self._readGroupExtraFields(list);
-                }
-                return Promise.resolve(prom).then(_.constant(result));
+                return self._readGroupExtraFields(list).then(_.constant(result));
             });
         },
         /**

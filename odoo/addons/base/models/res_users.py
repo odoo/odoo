@@ -173,8 +173,10 @@ class Groups(models.Model):
                 raise UserError(_('The name of the group can not start with "-"'))
         # invalidate caches before updating groups, since the recomputation of
         # field 'share' depends on method has_group()
-        self.env['ir.model.access'].call_cache_clearing_methods()
-        self.env['res.users'].has_group.clear_cache(self.env['res.users'])
+        # DLE P139
+        if self.ids:
+            self.env['ir.model.access'].call_cache_clearing_methods()
+            self.env['res.users'].has_group.clear_cache(self.env['res.users'])
         return super(Groups, self).write(vals)
 
 
@@ -201,9 +203,9 @@ class Users(models.Model):
     __uid_cache = defaultdict(dict)             # {dbname: {uid: password}}
 
     # User can write on a few of his own fields (but not his groups for example)
-    SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
+    SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
     # User can read a few of his own fields
-    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
+    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image_1920', 'image_1024', 'image_512', 'image_256', 'image_128', 'image_64', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
 
     def _default_groups(self):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
@@ -224,7 +226,7 @@ class Users(models.Model):
         help="Specify a value only when creating a user or if you're "\
              "changing the user's password, otherwise leave empty. After "\
              "a change of password, the user has to login again.")
-    signature = fields.Html()
+    signature = fields.Html(string="Email Signature")
     active = fields.Boolean(default=True)
     active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
@@ -372,10 +374,10 @@ class Users(models.Model):
     def onchange_parent_id(self):
         return self.partner_id.onchange_parent_id()
 
-    def _read_from_database(self, field_names, inherited_field_names=[]):
-        super(Users, self)._read_from_database(field_names, inherited_field_names)
+    def _read(self, fields):
+        super(Users, self)._read(fields)
         canwrite = self.check_access_rights('write', raise_exception=False)
-        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(field_names):
+        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(fields):
             for record in self:
                 for f in USER_PRIVATE_FIELDS:
                     try:
@@ -437,11 +439,9 @@ class Users(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        users = super(Users, self.with_context(default_customer=False)).create(vals_list)
+        users = super(Users, self).create(vals_list)
         for user in users:
-            user.partner_id.active = user.active
-            if user.partner_id.company_id:
-                user.partner_id.write({'company_id': user.company_id.id})
+            user.partner_id.write({'company_id': user.company_id.id, 'active': user.active})
         return users
 
     def write(self, values):
@@ -475,7 +475,9 @@ class Users(models.Model):
             self.env['ir.default'].clear_caches()
 
         # clear caches linked to the users
-        if 'groups_id' in values:
+        if self.ids and 'groups_id' in values:
+            # DLE P139: Calling invalidate_cache on a new, well you lost everything as you wont be able to take it back from the cache
+            # `test_00_equipment_multicompany_user`
             self.env['ir.model.access'].call_cache_clearing_methods()
             self.env['ir.rule'].clear_caches()
             self.has_group.clear_cache(self)
@@ -861,7 +863,7 @@ class Users(models.Model):
         cfg = self.env['ir.config_parameter'].sudo()
         min_failures = int(cfg.get_param('base.login_cooldown_after', 5))
         if min_failures == 0:
-            return True
+            return False
 
         delay = int(cfg.get_param('base.login_cooldown_duration', 60))
         return failures >= min_failures and (datetime.datetime.now() - previous) < datetime.timedelta(seconds=delay)
@@ -1138,6 +1140,21 @@ class GroupsView(models.Model):
 
         if others:
             res.append((self.env['ir.module.category'], 'boolean', others, (100,'Other')))
+        return res
+
+
+class ModuleCategory(models.Model):
+    _inherit = "ir.module.category"
+
+    def write(self, values):
+        res = super().write(values)
+        if "name" in values:
+            self.env["res.groups"]._update_user_groups_view()
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self.env["res.groups"]._update_user_groups_view()
         return res
 
 

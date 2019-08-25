@@ -73,7 +73,7 @@
                     <div class="card bg-secondary" t-if="question">
                         <h6 class="card-header"><b>Writer</b></h6>
                         <div class="card-body o_card_people">
-                            <img class="o_wforum_people_photo_container d-block mx-auto mb-3" t-attf-src="/web/image/res.users/#{question.create_uid.id}/image_medium"/>
+                            <img class="o_wforum_people_photo_container d-block mx-auto mb-3" t-att-src="website.image_url(question.create_uid, 'image_128')"/>
                             <h6 class="text-center">
                                 <b><i class="fa fa-diamond text-secondary"/> <t t-esc="question.create_uid.sudo().karma"/></b>
                                 <b><a t-attf-href="/forum/#{slug(forum)}/user/#{question.create_uid.sudo().id}" t-field="question.create_uid" t-options='{"widget": "contact", "fields": ["name", "country_id"]}'/></b>
@@ -246,10 +246,10 @@
                     <a t-attf-href="/forum/#{ slug(question.forum_id) }/question/#{ slug(question) }">
                         <span class="ml-4 mr-1 fa fa-star"></span><span t-field="question.favourite_count"/> <t t-if="question.views&lt;=1">Favorite</t><t t-else="">Favorites</t>
                     </a>
-                    <t t-if="question.state == 'flagged'" class="text-black">
+                    <span t-if="question.state == 'flagged'" class="text-black">
                         <i class="fa fa-flag ml-4 mr4"/>
                         Flagged
-                    </t>
+                    </span>
                 </small>
             </div>
         </div>
@@ -397,9 +397,9 @@
                                 <h1 class="card-header h6 font-weight-bold bg-white"
                                     t-field="forum.name"/>
                                 <div class="card-img-bottom embed-responsive embed-responsive-16by9 o_wforum_forum_card_bg">
-                                    <div t-if="forum.image"
+                                    <div t-if="forum.image_256"
                                          class="oe_img_bg embed-responsive-item"
-                                         t-attf-style="background-image: url(/web/image/forum.forum/#{forum.id}/image_large); background-position: center;"/>
+                                         t-attf-style="background-image: url(#{website.image_url(forum, 'image_256')}); background-position: center;"/>
                                 </div>
                             </div>
                         </a>
@@ -797,7 +797,7 @@
                                 <t t-set="icon" t-value="'fa-check'"/>
                                 <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
                             </t>
-                            <t t-if="question.active" href="#" t-call="website_forum.link_button">
+                            <t t-if="question.active" t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/flag'"/>
                                 <t t-set="title">Flag</t>
                                 <t t-set="inDropdown" t-value="False"/>
@@ -830,10 +830,10 @@
             </t>
         </div>
         <div id="post_reply"
-                t-if="not question.uid_has_answered and question.state != 'close' and question.active != False and question.can_answer">
+                t-if="(not question.uid_has_answered or question.forum_id.mode == 'discussions') and question.state != 'close' and question.active != False and question.can_answer">
             <t t-call="website_forum.post_answer"/>
         </div>
-        <div t-if="question.uid_has_answered" class="mb16">
+        <div t-if="question.uid_has_answered and question.forum_id.mode == 'questions'" class="mb16">
             <a role="button" class="btn btn-primary" t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/edit_answer">Edit Your Answer</a>
             <span class="text-muted">(only one answer per question is allowed)</span>
         </div>
@@ -846,16 +846,19 @@
         <div class="card-body">
             <div t-if="answer.is_correct" class="validate_answer">
                 <div class="bg-success"></div>
-                <span title="Question has accepted answer" role="img" aria-label="Question has accepted answer"><i class="fa fa-check-circle text-success bg-white"/></span>
+                <span title="Question has accepted answer" role="img" aria-label="Question has accepted answer"
+                      t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct">
+                    <i class="fa fa-check-circle text-success bg-white"/>
+                </span>
             </div>
             <div class="row">
                 <div class="col-1">
                     <t t-call="website_forum.vote">
                         <t t-set="post" t-value="answer"/>
-                        <div t-if="question.can_answer" class="mt4">
+                        <div t-if="question.can_answer and question.forum_id.mode == 'questions'" class="mt4">
                             <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'} #{not answer.can_accept and 'karma_required' or ''}"
                                 t-attf-data-karma="#{answer.karma_accept}"
-                                aria-label="Send answer" title="Send answer"
+                                aria-label="Accept this answer as the best" title="Accept this answer as the best"
                                 t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"
                                 t-if="not question.has_validated_answer"/>
                         </div>
@@ -913,7 +916,7 @@
                             <t t-call="website_forum.forum_user_tooltip"/>
                         </div>
                         <a t-att-href="user_profile_url" class="o_forum_user_info">
-                            <img class="float-left o_forum_avatar" t-attf-src="/web/image/res.users/#{answer.create_uid.id}/image_medium" alt="Avatar"/>
+                            <img class="float-left o_forum_avatar" t-att-src="website.image_url(answer.create_uid, 'image_128')" alt="Avatar"/>
                         </a>
                         <a t-att-href="user_profile_url"
                             t-field="answer.create_uid"
@@ -969,7 +972,7 @@
     <div class="o_forum_user_bio text-left card">
         <div class="card-body">
             <a t-att-href="user_profile_url">
-                <img class="float-left img rounded o_forum_avatar_big" t-attf-src="/web/image/res.users/#{answer.create_uid.id}/image_medium" alt="Avatar"/>
+                <img class="float-left img rounded o_forum_avatar_big" t-att-src="website.image_url(answer.create_uid, 'image_128')" alt="Avatar"/>
             </a>
             <div class="o_forum_tooltip_header">
                 <h4 class="o_forum_tooltip_heading"><a t-att-href="user_profile_url"
@@ -1126,7 +1129,7 @@
                                                     <input type="checkbox" t-att-value="user.id" class="custom-control-input" t-attf-id="user_#{user.id}"/>
                                                     <label class="custom-control-label" t-attf-for="user_#{user.id}">
                                                         <div class="col-11 d-inline-flex">
-                                                            <img class="d-inline img o_forum_avatar" t-attf-src="/web/image/res.users/#{user.id}/image_medium" alt="Avatar"/>
+                                                            <img class="d-inline img o_forum_avatar" t-att-src="website.image_url(user, 'image_128')" alt="Avatar"/>
                                                             <b t-esc="user.name" class="d-inline"></b>
                                                         </div>
                                                     </label>
@@ -1184,10 +1187,10 @@
                                  <i t-attf-class="fa fa-user" role="img" aria-label="Question" />
                                 <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
                                 <i class="ml-4 mr4 fa fa-calendar"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
-                                <t t-if="question.state == 'flagged'" class="text-black">
+                                <span t-if="question.state == 'flagged'" class="text-black">
                                     <i class="fa fa-flag ml-4 mr4"/>
                                     Flagged
-                                </t>
+                                </span>
                             </small>
                         </div>
                     </t>

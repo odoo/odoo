@@ -46,7 +46,6 @@
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/thread_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/discuss.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/discuss_mobile.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
                     <!-- composers -->
                     <script type="text/javascript" src="/mail/static/src/js/composers/basic_composer.js"></script>
@@ -141,14 +140,8 @@
             </xpath>
         </template>
 
-        <template id="qunit_mobile_suite" name="mail_mobile_tests" inherit_id="web.qunit_mobile_suite">
-            <xpath expr="//t[@t-set='head']" position="inside">
-                <script type="text/javascript" src="/mail/static/tests/discuss_mobile_tests.js"></script>
-            </xpath>
-        </template>
-
         <template id="message_origin_link">
-            <p>This <t t-esc="self._description.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
+            <p>This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
                 <t t-foreach="origin" t-as="o">
                     <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.display_name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
                 </t>
