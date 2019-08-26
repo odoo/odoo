@@ -12,13 +12,12 @@ class PosAdyenController(http.Controller):
     @http.route('/pos_adyen/notification', type='json', methods=['POST'], auth='none', csrf=False)
     def notification(self):
         data = json.loads(request.httprequest.data)
-        _logger.info('notification received from adyen:\n%s', pprint.pformat(data))
 
         # ignore if it's not a response to a sales request
         if not data.get('SaleToPOIResponse'):
-            _logger.info('ignoring notification because it\'s not a SaleToPOIResponse')
             return
 
+        _logger.info('notification received from adyen:\n%s', pprint.pformat(data))
         terminal_identifier = data['SaleToPOIResponse']['MessageHeader']['POIID']
         payment_method = request.env['pos.payment.method'].sudo().search([('adyen_terminal_identifier', '=', terminal_identifier)], limit=1)
 
