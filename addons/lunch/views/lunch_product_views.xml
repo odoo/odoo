@@ -89,8 +89,7 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_kanban_record">
-                            <div class="o_kanban_image_fill_left d-none d-md-block"
-                                t-attf-style="background-image:url('#{kanban_image('lunch.product', 'image_128', record.product_id.raw_value)}')"/>
+                            <field name="image_128" class="o_lunch_image o_kanban_image_fill_left d-none d-md-block" options="{'placeholder': '/lunch/static/img/lunch.png'}" widget="image"/>
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
@@ -205,6 +204,7 @@
                             <field string="Products" name="product_count" widget="statinfo"/>
                         </button>
                     </div>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
                         <label for="name" class="oe-edit-only"/>
                         <h1>
