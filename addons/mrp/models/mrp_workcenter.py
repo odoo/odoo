@@ -13,6 +13,7 @@ class MrpWorkcenter(models.Model):
     _description = 'Work Center'
     _order = "sequence, id"
     _inherit = ['resource.mixin']
+    _check_company_auto = True
 
     # resource
     name = fields.Char('Work Center', related='resource_id.name', store=True, readonly=False)
@@ -61,7 +62,8 @@ class MrpWorkcenter(models.Model):
         'mrp_workcenter_alternative_rel',
         'workcenter_id',
         'alternative_workcenter_id',
-        string="Alternative Workcenters",
+        domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+        string="Alternative Workcenters", check_company=True,
         help="Alternative workcenters that can be substituted to this one in order to dispatch production"
     )
 
@@ -173,12 +175,17 @@ class MrpWorkcenter(models.Model):
         times.write({'date_end': fields.Datetime.now()})
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # resource_type is 'human' by default. As we are not living in
         # /r/latestagecapitalism, workcenters are 'material'
-        return super(MrpWorkcenter, self.with_context({
-            'default_resource_type': 'material'})).create(vals)
+        records = super(MrpWorkcenter, self.with_context(default_resource_type='material')).create(vals_list)
+        return records
+
+    def write(self, vals):
+        if 'company_id' in vals:
+            self.resource_id.company_id = vals['company_id']
+        return super(MrpWorkcenter, self).write(vals)
 
     def action_work_order(self):
         action = self.env.ref('mrp.action_work_orders').read()[0]
@@ -225,10 +232,28 @@ class MrpWorkcenterProductivity(models.Model):
     _description = "Workcenter Productivity Log"
     _order = "id desc"
     _rec_name = "loss_id"
+    _check_company_auto = True
+
+    def _get_default_company_id(self):
+        company_id = False
+        if self.env.context.get('default_company_id'):
+            company_id = self.env.context['default_company_id']
+        if not company_id and self.env.context.get('default_workorder_id'):
+            workorder = self.env['mrp.workorder'].browse(self.env.context['default_workorder_id'])
+            company_id = workorder.company_id
+        if not company_id and self.env.context.get('default_workcenter_id'):
+            workcenter = self.env['mrp.workcenter'].browse(self.env.context['default_workcenter_id'])
+            company_id = workcenter.company_id
+        if not company_id:
+            company_id = self.env.company
+        return company_id
 
     production_id = fields.Many2one('mrp.production', string='Manufacturing Order', related='workorder_id.production_id', readonly='True')
-    workcenter_id = fields.Many2one('mrp.workcenter', "Work Center", required=True)
-    workorder_id = fields.Many2one('mrp.workorder', 'Work Order')
+    workcenter_id = fields.Many2one('mrp.workcenter', "Work Center", required=True, check_company=True)
+    company_id = fields.Many2one(
+        'res.company', required=True, index=True,
+        default=lambda self: self._get_default_company_id())
+    workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
     user_id = fields.Many2one(
         'res.users', "User",
         default=lambda self: self.env.uid)
@@ -260,3 +285,4 @@ class MrpWorkcenterProductivity(models.Model):
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()
+

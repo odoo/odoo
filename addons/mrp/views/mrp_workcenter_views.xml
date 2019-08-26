@@ -324,7 +324,7 @@
                                 <field
                                     name="alternative_workcenter_ids"
                                     widget="many2many_tags"
-                                    domain="[('id','!=', id)]"
+                                    context="{'default_company_id': company_id}"
                                 />
                             </group>
                             <group>
@@ -554,10 +554,12 @@
                         <field  name="workorder_id"/>
                         <field name="workcenter_id"/>
                         <field name="loss_id"/>
+                        <field name="company_id" invisible="1"/>
                     </group><group>
                         <field name="date_start"/>
                         <field name="date_end"/>
                         <field name="duration"/>
+                        <field name="company_id"/>
                     </group>
                     <field name="description"/>
                 </group>
@@ -576,6 +578,7 @@
                 <field name="user_id"/>
                 <field name="loss_id"/>
                 <field name="duration" string="Duration (minutes)" sum="Duration"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>

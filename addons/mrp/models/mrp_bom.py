@@ -15,6 +15,7 @@ class MrpBom(models.Model):
     _inherit = ['mail.thread']
     _rec_name = 'product_tmpl_id'
     _order = "sequence"
+    _check_company_auto = True
 
     def _get_default_product_uom_id(self):
         return self.env['uom.uom'].search([], limit=1, order='id').id
@@ -29,10 +30,12 @@ class MrpBom(models.Model):
         default='normal', required=True)
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product',
-        domain="[('type', 'in', ['product', 'consu'])]", required=True)
+        check_company=True,
+        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", required=True)
     product_id = fields.Many2one(
         'product.product', 'Product Variant',
-        domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', 'in', ['product', 'consu'])]",
+        check_company=True,
+        domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', 'in', ['product', 'consu']),  '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="If a product variant is defined the BOM is available only for this product.")
     bom_line_ids = fields.One2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True)
     byproduct_ids = fields.One2many('mrp.bom.byproduct', 'bom_id', 'By-products', copy=True)
@@ -46,7 +49,7 @@ class MrpBom(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
     routing_id = fields.Many2one(
-        'mrp.routing', 'Routing',
+        'mrp.routing', 'Routing', check_company=True,
         help="The operations for producing this BoM.  When a routing is specified, the production orders will "
              " be executed through work orders, otherwise everything is processed in the production order itself. ")
     ready_to_produce = fields.Selection([
@@ -54,14 +57,14 @@ class MrpBom(models.Model):
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
         default='asap', help="Defines when a Manufacturing Order is considered as ready to be started", required=True)
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Operation Type', domain=[('code', '=', 'mrp_operation')],
+        'stock.picking.type', 'Operation Type', domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]",
+        check_company=True,
         help=u"When a procurement has a ‘produce’ route with a operation type set, it will try to create "
              "a Manufacturing Order for that product using a BoM of the same operation type. That allows "
              "to define stock rules which trigger different manufacturing orders with different BoMs.")
     company_id = fields.Many2one(
-        'res.company', 'Company',
-        default=lambda self: self.env.company,
-        required=True)
+        'res.company', 'Company', index=True,
+        default=lambda self: self.env.company)
     consumption = fields.Selection([
         ('strict', 'Strict'),
         ('flexible', 'Flexible')],
@@ -140,7 +143,7 @@ class MrpBom(models.Model):
         if picking_type:
             domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
         if company_id or self.env.context.get('company_id'):
-            domain = domain + [('company_id', '=', company_id or self.env.context.get('company_id'))]
+            domain = domain + ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]
         if bom_type:
             domain += [('type', '=', bom_type)]
         # order to prioritize bom with product_id over the one without
@@ -227,13 +230,15 @@ class MrpBomLine(models.Model):
     _order = "sequence, id"
     _rec_name = "product_id"
     _description = 'Bill of Material Line'
+    _check_company_auto = True
 
     def _get_default_product_uom_id(self):
         return self.env['uom.uom'].search([], limit=1, order='id').id
 
-    product_id = fields.Many2one(
-        'product.product', 'Component', required=True)
+    product_id = fields.Many2one( 'product.product', 'Component', required=True, check_company=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=False)
+    company_id = fields.Many2one(
+        related='bom_id.company_id', store=True, index=True, readonly=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
         digits='Product Unit of Measure', required=True)
@@ -262,7 +267,8 @@ class MrpBomLine(models.Model):
         domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
         help="BOM Product Variants needed to apply this line.")
     operation_id = fields.Many2one(
-        'mrp.routing.workcenter', 'Consumed in Operation',
+        'mrp.routing.workcenter', 'Consumed in Operation', check_company=True,
+        domain="[('routing_id', '=', routing_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
         help="The operation where the components are consumed, or the finished products created.")
     child_bom_id = fields.Many2one(
         'mrp.bom', 'Sub BoM', compute='_compute_child_bom_id')
@@ -369,21 +375,27 @@ class MrpBomLine(models.Model):
                         Use this feature to store any files, like drawings or specifications.
                     </p>'''),
             'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d}" % ('product.product', self.product_id.id)
+            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_company_id': %s}" % ('product.product', self.product_id.id, self.company_id.id)
         }
 
 
 class MrpByProduct(models.Model):
     _name = 'mrp.bom.byproduct'
     _description = 'Byproduct'
+    _check_company_auto = True
 
-    product_id = fields.Many2one('product.product', 'By-product', required=True)
+    product_id = fields.Many2one('product.product', 'By-product', required=True, check_company=True)
+    company_id = fields.Many2one(related='bom_id.company_id', store=True, index=True, readonly=True)
     product_qty = fields.Float(
         'Quantity',
         default=1.0, digits='Product Unit of Measure', required=True)
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade')
-    operation_id = fields.Many2one('mrp.routing.workcenter', 'Produced in Operation')
+    routing_id = fields.Many2one(
+        'mrp.routing', 'Routing', store=True, related='bom_id.routing_id')
+    operation_id = fields.Many2one(
+        'mrp.routing.workcenter', 'Produced in Operation', check_company=True,
+        domain="[('routing_id', '=', routing_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -401,3 +413,4 @@ class MrpByProduct(models.Model):
             }
             self.product_uom_id = self.product_id.uom_id.id
         return res
+
