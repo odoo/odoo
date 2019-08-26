@@ -51,6 +51,7 @@ class StockRule(models.Model):
             cache[domain] = po
         if not po:
             vals = self._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
+            vals['user_id'] = self.env.user.id if not self.env.user._is_superuser() else False
             company_id = values.get('company_id') and values['company_id'].id or self.env.user.company_id.id
             po = self.env['purchase.order'].with_context(force_company=company_id).sudo().create(vals)
             cache[domain] = po
