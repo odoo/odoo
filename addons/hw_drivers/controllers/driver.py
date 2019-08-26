@@ -89,6 +89,7 @@ class StatusController(http.Controller):
                 subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
                 helpers.check_certificate()
                 m.send_alldevices()
+                helpers.load_drivers()
                 image = get_resource_path('hw_drivers', 'static/img', 'True.jpg')
             except subprocess.CalledProcessError as e:
                 _logger.error('A error encountered : %s ' % e.output)
@@ -229,15 +230,12 @@ event_manager = EventManager()
 
 class Manager(Thread):
 
-    def __init__(self):
-        super(Manager, self).__init__()
-        self.load_drivers()
-
     def load_drivers(self):
         """
         This method loads local files: 'odoo/addons/hw_drivers/drivers'
         And execute these python drivers
         """
+        helpers.load_drivers()
         path = get_resource_path('hw_drivers', 'drivers')
         driversList = os.listdir(path)
         for driver in driversList:
@@ -365,6 +363,7 @@ class Manager(Thread):
         devices = {}
         updated_devices = {}
         self.send_alldevices()
+        self.load_drivers()
         cpt = 0
         while 1:
             updated_devices = self.usb_loop()
