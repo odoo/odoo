@@ -337,29 +337,6 @@ QUnit.module('Views', {
         );
     });
 
-    QUnit.module('Control Panel Rendering');
-
-    QUnit.test('invisible filters are not rendered', async function (assert) {
-        assert.expect(2);
-        var controlPanel = await createControlPanel({
-            model: 'partner',
-            arch: "<search>" +
-                        "<filter name=\"filterA\" string=\"A\" domain=\"[]\"/>" +
-                        "<filter name=\"filterB\" string=\"B\" invisible=\"1\" domain=\"[]\"/>" +
-                    "</search>",
-            data: this.data,
-            searchMenuTypes: ['filter'],
-            context: {
-                search_disable_custom_filters: true,
-            },
-        });
-        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
-        assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
-        assert.containsOnce(controlPanel, '.o_menu_item.d-none a:contains("B")');
-
-        controlPanel.destroy();
-    });
-
     QUnit.module('Control Panel behaviour');
 
     QUnit.test('remove a facet with backspace', async function (assert) {
