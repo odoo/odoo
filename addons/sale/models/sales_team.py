@@ -104,7 +104,7 @@ class CrmTeam(models.Model):
 
     def _graph_date_column(self):
         if self._context.get('in_sales_app'):
-            return 'date_order'
+            return 'date'
         return super(CrmTeam,self)._graph_date_column()
 
     def _graph_y_query(self):
