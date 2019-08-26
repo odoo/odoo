@@ -561,6 +561,11 @@ class TestSaleMrpFlow(common.SavepointCase):
         # These products are in the Test category
         # The bom consists of 2 component1 and 1 component2
         # The invoice policy of the finished product is based on delivered quantities
+        # Additional check is added for the auto-reconciliation of stock output lines.
+        # In this additional check, a new component (sub_kit_product) is added to finished product.
+        # And this new component is a bom kit as well.
+
+        ## PART 1: Check move lines when invoice line quantity is changed.
         self.env.company.currency_id = self.env.ref('base.USD')
         self.uom_unit = self.UoM.create({
             'name': 'Test-Unit',
@@ -607,12 +612,12 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.env['stock.quant'].create({
             'product_id': self.component1.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
-            'quantity': 6.0,
+            'quantity': 12.0,
         })
         self.env['stock.quant'].create({
             'product_id': self.component2.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
-            'quantity': 3.0,
+            'quantity': 6.0,
         })
         self.bom = self.env['mrp.bom'].create({
                 'product_tmpl_id': self.finished_product.product_tmpl_id.id,
@@ -668,6 +673,103 @@ class TestSaleMrpFlow(common.SavepointCase):
         # Check that the cost of Good Sold entries are equal to 2* (2 * 20 + 1 * 10) = 100
         self.assertEqual(aml_expense.debit, 100, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output.credit, 100, "Cost of Good Sold entry missing or mismatching")
+
+        ## PART 2: Check auto reconciliation of fully invoiced order.
+        # Create a new kit product which will be added as component to the bom of finished_product.
+        self.sub_kit_product = Product.create({
+                'name': 'Kit Component',
+                'type': 'product',
+                'uom_id': self.uom_unit.id,
+                'invoice_policy': 'delivery',
+                'categ_id': self.category.id})
+        self.sub_component1 = Product.create({
+                'name': 'Sub 1',
+                'type': 'product',
+                'uom_id': self.uom_unit.id,
+                'categ_id': self.category.id,
+                'standard_price': 6})
+        self.sub_component2 = Product.create({
+                'name': 'Sub 2',
+                'type': 'product',
+                'uom_id': self.uom_unit.id,
+                'categ_id': self.category.id,
+                'standard_price': 3})
+        self.env['stock.quant'].create({
+            'product_id': self.sub_component1.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'quantity': 5.0,
+        })
+        self.env['stock.quant'].create({
+            'product_id': self.sub_component2.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'quantity': 5.0,
+        })
+        self.sub_kit_bom = self.env['mrp.bom'].create({
+                'product_tmpl_id': self.sub_kit_product.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'type': 'phantom'})
+        # Add the components of sub_kit_bom.
+        BomLine.create({
+                'product_id': self.sub_component1.id,
+                'product_qty': 1.0,
+                'bom_id': self.sub_kit_bom.id})
+        BomLine.create({
+                'product_id': self.sub_component2.id,
+                'product_qty': 1.0,
+                'bom_id': self.sub_kit_bom.id})
+        # Add sub_kit_bom as component of finished_product.
+        BomLine.create({
+                'product_id': self.sub_kit_product.id,
+                'product_qty': 1.0,
+                'bom_id': self.bom.id})
+
+        # Create a SO for a specific partner for 3 units of the finished product
+        # and 2 units of sub_kit_product.
+        so_vals = {
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'name': self.finished_product.name,
+                'product_id': self.finished_product.id,
+                'product_uom_qty': 3,
+                'product_uom': self.finished_product.uom_id.id,
+                'price_unit': self.finished_product.list_price
+            }), (0, 0, {
+                'name': self.sub_kit_product.name,
+                'product_id': self.sub_kit_product.id,
+                'product_uom_qty': 2,
+                'product_uom': self.sub_kit_product.uom_id.id,
+                'price_unit': self.sub_kit_product.list_price
+            })],
+            'pricelist_id': self.env.ref('product.list0').id,
+            'company_id': self.company.id,
+        }
+        self.so = self.env['sale.order'].create(so_vals)
+        # Validate the SO
+        self.so.action_confirm()
+        # Deliver the products
+        pick = self.so.picking_ids
+        # To check the products on the picking
+        self.assertEqual(pick.move_lines.mapped('product_id'), self.component1 | self.component2 | self.sub_component1 | self.sub_component2)
+        wiz_act = pick.button_validate()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz.process()
+        # Create the invoice
+        self.so._create_invoices()
+        self.invoice = self.so.invoice_ids
+        self.invoice.post()
+        aml = self.invoice.line_ids
+        aml_expense = aml.filtered(lambda l: l.is_anglo_saxon_line and l.debit > 0)
+        aml_output = aml.filtered(lambda l: l.is_anglo_saxon_line and l.credit > 0)
+        # Check that the cost of Good Sold entries are equal to 3 * (2 * 20 + 1 * 10 + 1 * 6 + 1 * 3) + 2 * (1 * 6 + 1 * 3) = 195
+        self.assertEqual(sum(aml_expense.mapped('debit')), 195, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(sum(aml_output.mapped('credit')), 195, "Cost of Good Sold entry missing or mismatching")
+        # Stock output lines should be reconciled
+        stock_output_lines = aml.filtered(lambda line: line.account_id == account_output)
+        self.assertEqual(len(stock_output_lines), 2, msg='There should be 2 stock output lines which corresponds to the 2 order lines.')
+        for line in stock_output_lines:
+            self.assertTrue(line.full_reconcile_id, msg='Stock Interim account move lines should be fully-reconciled.')
 
     def test_03_sale_mrp_simple_kit_qty_delivered(self):
         """ Test that the quantities delivered are correct when
