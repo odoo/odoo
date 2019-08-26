@@ -27,7 +27,7 @@ class WebsiteSaleProductComparison(WebsiteSale):
             for var in product.product_tmpl_id.valid_product_template_attribute_line_ids.filtered(lambda x: x.attribute_id.create_variant):
                 cat_name = var.attribute_id.category_id.name or _('Uncategorized')
                 att_name = var.attribute_id.name
-                val = product.attribute_value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)
+                val = product.product_template_attribute_value_ids.product_attribute_value_id.filtered(lambda x: x.attribute_id == var.attribute_id)
                 if val:
                     res[cat_name][att_name][num] = val[0].name
         values['specs'] = res

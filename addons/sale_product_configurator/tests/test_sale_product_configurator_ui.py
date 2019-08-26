@@ -57,7 +57,7 @@ class TestUi(odoo.tests.HttpCase):
             'create_variant': 'no_variant'
         }])
 
-        product_attribute_values = self.env['product.attribute.value'].create([{
+        self.env['product.attribute.value'].create([{
             'name': 'PAV' + str(i),
             'is_custom': i == 9,
             'attribute_id': product_attribute.id
@@ -68,12 +68,8 @@ class TestUi(odoo.tests.HttpCase):
         self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute.id,
             'product_tmpl_id': product_template.id,
-            'value_ids': [(6, 0, product_attribute_values.filtered(
-                lambda product_attribute_value: product_attribute_value.attribute_id == product_attribute
-            ).ids)]
+            'value_ids': [(6, 0, product_attribute.value_ids.ids)],
         } for product_attribute in product_attributes])
-
-        product_template.create_variant_ids()
 
         self.start_tour("/web", 'sale_product_configurator_advanced_tour', login="admin")
 
@@ -115,8 +111,6 @@ class TestUi(odoo.tests.HttpCase):
             'product_tmpl_id': product_template.id,
             'value_ids': [(6, 0, [product_attribute_values[0].id])]
         }])
-
-        product_template.create_variant_ids()
 
         self.start_tour("/web", 'sale_product_configurator_single_custom_attribute_tour', login="admin")
 

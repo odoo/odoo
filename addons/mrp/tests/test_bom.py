@@ -9,7 +9,7 @@ from odoo.tools import float_compare, float_round
 
 class TestBoM(TestMrpCommon):
 
-    def test_explode(self):
+    def test_01_explode(self):
         boms, lines = self.bom_1.explode(self.product_4, 3)
         self.assertEqual(set([bom[0].id for bom in boms]), set(self.bom_1.ids))
         self.assertEqual(set([line[0].id for line in lines]), set(self.bom_1.bom_line_ids.ids))
@@ -20,7 +20,7 @@ class TestBoM(TestMrpCommon):
             set([line[0].id for line in lines]),
             set((self.bom_2 | self.bom_3).mapped('bom_line_ids').filtered(lambda line: not line.child_bom_id or line.child_bom_id.type != 'phantom').ids))
 
-    def test_variants(self):
+    def test_10_variants(self):
         test_bom = self.env['mrp.bom'].create({
             'product_id': self.product_7_3.id,
             'product_tmpl_id': self.product_7_template.id,
@@ -38,13 +38,13 @@ class TestBoM(TestMrpCommon):
             'bom_id': test_bom.id,
             'product_id': self.product_3.id,
             'product_qty': 2,
-            'attribute_value_ids': [(4, self.prod_attr1_v1.id)],
+            'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v1.id)],
         })
         test_bom_l3 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom.id,
             'product_id': self.product_4.id,
             'product_qty': 2,
-            'attribute_value_ids': [(4, self.prod_attr1_v2.id)],
+            'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v2.id)],
         })
         boms, lines = test_bom.explode(self.product_7_3, 4)
         self.assertIn(test_bom, [b[0]for b in boms])
@@ -64,7 +64,7 @@ class TestBoM(TestMrpCommon):
         self.assertNotIn(test_bom_l2, [l[0] for l in lines])
         self.assertIn(test_bom_l3, [l[0] for l in lines])
 
-    def test_multi_level_variants(self):
+    def test_11_multi_level_variants(self):
         tmp_picking_type = self.env['stock.picking.type'].create({
             'name': 'Manufacturing',
             'code': 'mrp_operation',
@@ -104,13 +104,13 @@ class TestBoM(TestMrpCommon):
             'bom_id': test_bom_2.id,
             'product_id': self.product_5.id,
             'product_qty': 2,
-            'attribute_value_ids': [(4, self.prod_attr1_v1.id)],
+            'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v1.id)],
         })
         test_bom_2_l3 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom_2.id,
             'product_id': self.product_5.id,
             'product_qty': 2,
-            'attribute_value_ids': [(4, self.prod_attr1_v2.id)],
+            'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v2.id)],
         })
         test_bom_2_l4 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom_2.id,
@@ -165,36 +165,44 @@ class TestBoM(TestMrpCommon):
         with self.assertRaises(exceptions.UserError):
             test_bom_3.explode(self.product_9, 1)
 
-    def test_multi_level_variants2(self):
+    def test_12_multi_level_variants2(self):
         """Test skip bom line with same attribute values in bom lines."""
 
         Product = self.env['product.product']
         ProductAttribute = self.env['product.attribute']
         ProductAttributeValue = self.env['product.attribute.value']
-        MrpProduction = self.env['mrp.production']
 
         # Product Attribute
-        att_color = ProductAttribute.create({'name': 'Color'})
-        att_size = ProductAttribute.create({'name': 'size'})
+        att_color = ProductAttribute.create({'name': 'Color', 'sequence': 1})
+        att_size = ProductAttribute.create({'name': 'size', 'sequence': 2})
 
         # Product Attribute color Value
-        att_color_red = ProductAttributeValue.create({'name': 'red', 'attribute_id': att_color.id})
-        att_color_blue = ProductAttributeValue.create({'name': 'blue', 'attribute_id': att_color.id})
+        att_color_red = ProductAttributeValue.create({'name': 'red', 'attribute_id': att_color.id, 'sequence': 1})
+        att_color_blue = ProductAttributeValue.create({'name': 'blue', 'attribute_id': att_color.id, 'sequence': 2})
         # Product Attribute size Value
-        att_size_big = ProductAttributeValue.create({'name': 'big', 'attribute_id': att_size.id})
-        att_size_medium = ProductAttributeValue.create({'name': 'medium', 'attribute_id': att_size.id})
+        att_size_big = ProductAttributeValue.create({'name': 'big', 'attribute_id': att_size.id, 'sequence': 1})
+        att_size_medium = ProductAttributeValue.create({'name': 'medium', 'attribute_id': att_size.id, 'sequence': 2})
 
         # Create Template Product
         product_template = self.env['product.template'].create({
             'name': 'Sofa',
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [
+                (0, 0, {
                     'attribute_id': att_color.id,
                     'value_ids': [(6, 0, [att_color_red.id, att_color_blue.id])]
-                }), (0, 0, {
+                }),
+                (0, 0, {
                     'attribute_id': att_size.id,
                     'value_ids': [(6, 0, [att_size_big.id, att_size_medium.id])]
-                })]
+                })
+            ]
         })
+
+        sofa_red = product_template.attribute_line_ids[0].product_template_value_ids[0]
+        sofa_blue = product_template.attribute_line_ids[0].product_template_value_ids[1]
+
+        sofa_big = product_template.attribute_line_ids[1].product_template_value_ids[0]
+        sofa_medium = product_template.attribute_line_ids[1].product_template_value_ids[1]
 
         # Create components Of BOM
         product_A = Product.create({
@@ -207,31 +215,38 @@ class TestBoM(TestMrpCommon):
             'product_tmpl_id': product_template.id,
             'product_qty': 1.0,
             'type': 'normal',
-            'bom_line_ids': [(0, 0, {
+            'bom_line_ids': [
+                (0, 0, {
                     'product_id': product_A.id,
                     'product_qty': 1,
-                    'attribute_value_ids': [(4, att_color_red.id), (4, att_color_blue.id), (4, att_size_big.id)],
-                }), (0, 0, {
+                    'bom_product_template_attribute_value_ids': [(4, sofa_red.id), (4, sofa_blue.id), (4, sofa_big.id)],
+                }),
+                (0, 0, {
                     'product_id': product_B.id,
                     'product_qty': 1,
-                    'attribute_value_ids': [(4, att_color_red.id), (4, att_color_blue.id)]
-                })]
+                    'bom_product_template_attribute_value_ids': [(4, sofa_red.id), (4, sofa_blue.id)]
+                })
+            ]
         })
 
-        combination = {(att_color_red, att_size_big): [product_A.id, product_B.id] , (att_color_red, att_size_medium): [product_B.id] , (att_color_blue, att_size_big):[product_A.id, product_B.id], (att_color_blue, att_size_medium): [product_B.id]}
+        dict_consumed_products = {
+            sofa_red + sofa_big: product_A + product_B,
+            sofa_red + sofa_medium: product_B,
+            sofa_blue + sofa_big: product_A + product_B,
+            sofa_blue + sofa_medium: product_B,
+        }
 
         # Create production order for all variants.
-        for comb in combination.keys():
-            consu_product_ids = combination[comb]
-            product = product_template.product_variant_ids.filtered(lambda x:  all(value in comb for value in x.attribute_value_ids))
+        for combination, consumed_products in dict_consumed_products.items():
+            product = product_template.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids == combination)
             mrp_order_form = Form(self.env['mrp.production'])
             mrp_order_form.product_id = product
             mrp_order = mrp_order_form.save()
 
             # Check consumed materials in production order.
-            self.assertEqual(mrp_order.move_raw_ids.mapped('product_id').ids, consu_product_ids)
+            self.assertEqual(mrp_order.move_raw_ids.product_id, consumed_products)
 
-    def test_bom_report(self):
+    def test_20_bom_report(self):
         """ Simulate a crumble receipt with mrp and open the bom structure
         report and check that data insde are correct.
         """
@@ -418,7 +433,7 @@ class TestBoM(TestMrpCommon):
         # total price = 15.51 + crumble_cost + operation_cost(10 + 1.67 = 11.67) = 27.18 + crumble_cost
         self.assertEqual(float_compare(report_values['lines']['total'], 27.18 + crumble_cost, precision_digits=2), 0, 'Product Bom Price is not correct')
 
-    def test_bom_report_variant(self):
+    def test_21_bom_report_variant(self):
         """ Test a sub BoM process with multiple variants.
         BOM 1:
         product template = car
@@ -461,11 +476,13 @@ class TestBoM(TestMrpCommon):
             'sequence': 2,
         })
 
-        self.car_gps_attribute_lines = self.env['product.template.attribute.line'].create({
+        self.car_gps_attribute_line = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.car.id,
             'attribute_id': self.gps_attribute.id,
             'value_ids': [(6, 0, [self.gps_yes.id, self.gps_no.id])],
         })
+        self.car_gps_yes = self.car_gps_attribute_line.product_template_value_ids[0]
+        self.car_gps_no = self.car_gps_attribute_line.product_template_value_ids[1]
 
         self.color_attribute = self.env['product.attribute'].create({'name': 'Color', 'sequence': 1})
         self.color_red = self.env['product.attribute.value'].create({
@@ -479,13 +496,13 @@ class TestBoM(TestMrpCommon):
             'sequence': 2,
         })
 
-        self.car_color_attribute_lines = self.env['product.template.attribute.line'].create({
+        self.car_color_attribute_line = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.car.id,
             'attribute_id': self.color_attribute.id,
             'value_ids': [(6, 0, [self.color_red.id, self.color_blue.id])],
         })
-
-        self.car.create_variant_ids()
+        self.car_color_red = self.car_color_attribute_line.product_template_value_ids[0]
+        self.car_color_blue = self.car_color_attribute_line.product_template_value_ids[1]
 
         # Blue and red paint
         uom_litre = self.env.ref('uom.product_uom_litre')
@@ -494,13 +511,14 @@ class TestBoM(TestMrpCommon):
             'uom_id': uom_litre.id,
             'uom_po_id': uom_litre.id
         })
-        self.paint_color_attribute_lines = self.env['product.template.attribute.line'].create({
+        self.paint_color_attribute_line = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.paint.id,
             'attribute_id': self.color_attribute.id,
             'value_ids': [(6, 0, [self.color_red.id, self.color_blue.id])],
         })
+        self.paint_color_red = self.paint_color_attribute_line.product_template_value_ids[0]
+        self.paint_color_blue = self.paint_color_attribute_line.product_template_value_ids[1]
 
-        self.paint.create_variant_ids()
         self.paint.product_variant_ids.write({'standard_price': 20})
 
         self.dashboard = self.env['product.template'].create({
@@ -508,18 +526,21 @@ class TestBoM(TestMrpCommon):
             'standard_price': 1000,
         })
 
-        self.dashboard_gps_attribute_lines = self.env['product.template.attribute.line'].create({
+        self.dashboard_gps_attribute_line = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.dashboard.id,
             'attribute_id': self.gps_attribute.id,
             'value_ids': [(6, 0, [self.gps_yes.id, self.gps_no.id])],
         })
-        self.dashboard_color_attribute_lines = self.env['product.template.attribute.line'].create({
+        self.dashboard_gps_yes = self.dashboard_gps_attribute_line.product_template_value_ids[0]
+        self.dashboard_gps_no = self.dashboard_gps_attribute_line.product_template_value_ids[1]
+
+        self.dashboard_color_attribute_line = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.dashboard.id,
             'attribute_id': self.color_attribute.id,
             'value_ids': [(6, 0, [self.color_red.id, self.color_blue.id])],
         })
-
-        self.dashboard.create_variant_ids()
+        self.dashboard_color_red = self.dashboard_color_attribute_line.product_template_value_ids[0]
+        self.dashboard_color_blue = self.dashboard_color_attribute_line.product_template_value_ids[1]
 
         self.gps = self.env['product.product'].create({
             'name': 'GPS',
@@ -530,72 +551,68 @@ class TestBoM(TestMrpCommon):
         bom_form_car.product_tmpl_id = self.car
         bom_form_car.product_qty = 5
         with bom_form_car.bom_line_ids.new() as line:
-            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.paint.id), ('attribute_value_ids', '=', self.color_red.id)])
+            line.product_id = self.paint._get_variant_for_combination(self.paint_color_red)
             line.product_uom_id = uom_litre
             line.product_qty = 50
+            line.bom_product_template_attribute_value_ids.add(self.car_color_red)
         with bom_form_car.bom_line_ids.new() as line:
-            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.paint.id), ('attribute_value_ids', '=', self.color_blue.id)])
+            line.product_id = self.paint._get_variant_for_combination(self.paint_color_blue)
             line.product_uom_id = uom_litre
             line.product_qty = 50
+            line.bom_product_template_attribute_value_ids.add(self.car_color_blue)
         with bom_form_car.bom_line_ids.new() as line:
-            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.dashboard.id), ('attribute_value_ids', '=', self.gps_yes.id), ('attribute_value_ids', '=', self.color_red.id)])
+            line.product_id = self.dashboard._get_variant_for_combination(self.dashboard_gps_yes + self.dashboard_color_red)
             line.product_qty = 5
+            line.bom_product_template_attribute_value_ids.add(self.car_gps_yes)
+            line.bom_product_template_attribute_value_ids.add(self.car_color_red)
         with bom_form_car.bom_line_ids.new() as line:
-            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.dashboard.id), ('attribute_value_ids', '=', self.gps_yes.id), ('attribute_value_ids', '=', self.color_blue.id)])
+            line.product_id = self.dashboard._get_variant_for_combination(self.dashboard_gps_yes + self.dashboard_color_blue)
             line.product_qty = 5
+            line.bom_product_template_attribute_value_ids.add(self.car_gps_yes)
+            line.bom_product_template_attribute_value_ids.add(self.car_color_blue)
         with bom_form_car.bom_line_ids.new() as line:
-            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.dashboard.id), ('attribute_value_ids', '=', self.gps_no.id), ('attribute_value_ids', '=', self.color_red.id)])
+            line.product_id = self.dashboard._get_variant_for_combination(self.dashboard_gps_no + self.dashboard_color_red)
             line.product_qty = 5
+            line.bom_product_template_attribute_value_ids.add(self.car_gps_no)
+            line.bom_product_template_attribute_value_ids.add(self.car_color_red)
         with bom_form_car.bom_line_ids.new() as line:
-            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.dashboard.id), ('attribute_value_ids', '=', self.gps_no.id), ('attribute_value_ids', '=', self.color_blue.id)])
+            line.product_id = self.dashboard._get_variant_for_combination(self.dashboard_gps_no + self.dashboard_color_blue)
             line.product_qty = 5
+            line.bom_product_template_attribute_value_ids.add(self.car_gps_no)
+            line.bom_product_template_attribute_value_ids.add(self.car_color_blue)
         bom_car = bom_form_car.save()
-
-        for attribute in self.gps_attribute.value_ids | self.color_attribute.value_ids:
-            bom_car.bom_line_ids.filtered(lambda l: attribute in l.product_id.attribute_value_ids).write({'attribute_value_ids': [(4, attribute.id)]})
 
         bom_dashboard = Form(self.env['mrp.bom'])
         bom_dashboard.product_tmpl_id = self.dashboard
         bom_dashboard.product_qty = 2
         with bom_dashboard.bom_line_ids.new() as line:
-            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.paint.id), ('attribute_value_ids', '=', self.color_red.id)])
+            line.product_id = self.paint._get_variant_for_combination(self.paint_color_red)
             line.product_uom_id = uom_litre
             line.product_qty = 1
+            line.bom_product_template_attribute_value_ids.add(self.dashboard_color_red)
         with bom_dashboard.bom_line_ids.new() as line:
-            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.paint.id), ('attribute_value_ids', '=', self.color_blue.id)])
+            line.product_id = self.paint._get_variant_for_combination(self.paint_color_blue)
             line.product_uom_id = uom_litre
             line.product_qty = 1
+            line.bom_product_template_attribute_value_ids.add(self.dashboard_color_blue)
         with bom_dashboard.bom_line_ids.new() as line:
             line.product_id = self.gps
             line.product_qty = 2
+            line.bom_product_template_attribute_value_ids.add(self.dashboard_gps_yes)
         bom_dashboard = bom_dashboard.save()
 
-        for attribute in self.color_attribute.value_ids:
-            bom_dashboard.bom_line_ids.filtered(lambda l: attribute in l.product_id.attribute_value_ids).write({'attribute_value_ids': [(4, attribute.id)]})
-        bom_dashboard.bom_line_ids.filtered(lambda l: l.product_id == self.gps).write({'attribute_value_ids': [(4, self.gps_yes.id)]})
+        blue_car_with_gps = self.car._get_variant_for_combination(self.car_color_blue + self.car_gps_yes)
 
-        blue_car_with_gps = self.env['product.product'].search([
-            ('product_tmpl_id', '=', self.car.id),
-            ('attribute_value_ids', '=', self.gps_yes.id),
-            ('attribute_value_ids', '=', self.color_blue.id)
-        ])
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_car.id, searchQty=1, searchVariant=blue_car_with_gps.id)
         # Two lines. blue dashboard with gps and blue paint.
         self.assertEqual(len(report_values['lines']['components']), 2)
 
         # 10l of blue paint
-        blue_paint = self.env['product.product'].search([
-            ('product_tmpl_id', '=', self.paint.id),
-            ('attribute_value_ids', '=', self.color_blue.id)
-        ])
+        blue_paint = self.paint._get_variant_for_combination(self.paint_color_blue)
         self.assertEqual(blue_paint.id, report_values['lines']['components'][0]['prod_id'])
         self.assertEqual(report_values['lines']['components'][0]['prod_qty'], 10)
         # 1 blue dashboard with GPS
-        blue_dashboard_gps = self.env['product.product'].search([
-            ('product_tmpl_id', '=', self.dashboard.id),
-            ('attribute_value_ids', '=', self.gps_yes.id),
-            ('attribute_value_ids', '=', self.color_blue.id)
-        ])
+        blue_dashboard_gps = self.dashboard._get_variant_for_combination(self.dashboard_color_blue + self.dashboard_gps_yes)
         self.assertEqual(blue_dashboard_gps.id, report_values['lines']['components'][1]['prod_id'])
         self.assertEqual(report_values['lines']['components'][1]['prod_qty'], 1)
         component = report_values['lines']['components'][1]
@@ -620,16 +637,13 @@ class TestBoM(TestMrpCommon):
         # Total cost of blue car with GPS: 10 + 700 + 200 = 910
         self.assertEqual(report_values['lines']['total'], 910)
 
-        red_car_without_gps = self.env['product.product'].search([
-            ('product_tmpl_id', '=', self.car.id),
-            ('attribute_value_ids', '=', self.gps_no.id),
-            ('attribute_value_ids', '=', self.color_red.id)
-        ])
+        red_car_without_gps = self.car._get_variant_for_combination(self.car_color_red + self.car_gps_no)
+
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_car.id, searchQty=1, searchVariant=red_car_without_gps.id)
         # Same math than before but without GPS
         self.assertEqual(report_values['lines']['total'], 210)
 
-    def test_bom_report_recursive_bom(self):
+    def test_22_bom_report_recursive_bom(self):
         """ Test report with recursive BoM and different quantities.
         BoM 1:
         product = Finished (units)

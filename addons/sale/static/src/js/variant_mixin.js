@@ -99,13 +99,13 @@ var VariantMixin = {
      * @private
      * @param {MouseEvent} ev
      */
-    handleCustomValues: function ($target){
+    handleCustomValues: function ($target) {
         var $variantContainer;
         var $customInput = false;
         if ($target.is('input[type=radio]') && $target.is(':checked')) {
             $variantContainer = $target.closest('ul').closest('li');
             $customInput = $target;
-        } else if ($target.is('select')){
+        } else if ($target.is('select')) {
             $variantContainer = $target.closest('li');
             $customInput = $target
                 .find('option[value="' + $target.val() + '"]');
@@ -119,12 +119,12 @@ var VariantMixin = {
                 if ($variantContainer.find('.variant_custom_value').length === 0
                         || $variantContainer
                               .find('.variant_custom_value')
-                              .data('attribute_value_id') !== parseInt(attributeValueId)){
+                              .data('custom_product_template_attribute_value_id') !== parseInt(attributeValueId)) {
                     $variantContainer.find('.variant_custom_value').remove();
 
                     var $input = $('<input>', {
                         type: 'text',
-                        'data-attribute_value_id': attributeValueId,
+                        'data-custom_product_template_attribute_value_id': attributeValueId,
                         'data-attribute_value_name': attributeValueName,
                         class: 'variant_custom_value form-control'
                     });
@@ -207,7 +207,7 @@ var VariantMixin = {
      *
      * @param {$.Element} $container
      * @returns {Array} array of custom values with the following format
-     *   {integer} attribute_value_id
+     *   {integer} custom_product_template_attribute_value_id
      *   {string} attribute_value_name
      *   {string} custom_value
      */
@@ -217,7 +217,7 @@ var VariantMixin = {
             var $variantCustomValueInput = $(this);
             if ($variantCustomValueInput.length !== 0){
                 variantCustomValues.push({
-                    'attribute_value_id': $variantCustomValueInput.data('attribute_value_id'),
+                    'custom_product_template_attribute_value_id': $variantCustomValueInput.data('custom_product_template_attribute_value_id'),
                     'attribute_value_name': $variantCustomValueInput.data('attribute_value_name'),
                     'custom_value': $variantCustomValueInput.val(),
                 });
@@ -233,7 +233,7 @@ var VariantMixin = {
      *
      * @param {$.Element} $container
      * @returns {Array} array of attribute values with the following format
-     *   {integer} attribute_value_id
+     *   {integer} custom_product_template_attribute_value_id
      *   {string} attribute_value_name
      *   {integer} value
      *   {string} attribute_name
@@ -255,7 +255,7 @@ var VariantMixin = {
 
             if ($variantValueInput.length !== 0){
                 noVariantAttributeValues.push({
-                    'attribute_value_id': $variantValueInput.data('value_id'),
+                    'custom_product_template_attribute_value_id': $variantValueInput.data('value_id'),
                     'attribute_value_name': $variantValueInput.data('value_name'),
                     'value': $variantValueInput.val(),
                     'attribute_name': $variantValueInput.data('attribute_name'),

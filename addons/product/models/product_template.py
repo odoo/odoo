@@ -3,11 +3,11 @@
 
 import itertools
 import logging
-_logger = logging.getLogger(__name__)
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
-from odoo.osv import expression
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -125,18 +125,7 @@ class ProductTemplate(models.Model):
     attribute_line_ids = fields.One2many('product.template.attribute.line', 'product_tmpl_id', 'Product Attributes', copy=True)
 
     valid_product_template_attribute_line_ids = fields.Many2many('product.template.attribute.line',
-        compute="_compute_valid_attributes", string='Valid Product Attribute Lines', help="Technical compute")
-    valid_product_attribute_value_ids = fields.Many2many('product.attribute.value',
-        compute="_compute_valid_attributes", string='Valid Product Attribute Values', help="Technical compute")
-    valid_product_attribute_ids = fields.Many2many('product.attribute',
-        compute="_compute_valid_attributes", string='Valid Product Attributes', help="Technical compute")
-    # wnva = without no_variant attributes
-    valid_product_template_attribute_line_wnva_ids = fields.Many2many('product.template.attribute.line',
-        compute="_compute_valid_attributes", string='Valid Product Attribute Lines Without No Variant Attributes', help="Technical compute")
-    valid_product_attribute_value_wnva_ids = fields.Many2many('product.attribute.value',
-        compute="_compute_valid_attributes", string='Valid Product Attribute Values Without No Variant Attributes', help="Technical compute")
-    valid_product_attribute_wnva_ids = fields.Many2many('product.attribute',
-        compute="_compute_valid_attributes", string='Valid Product Attributes Without No Variant Attributes', help="Technical compute")
+        compute="_compute_valid_product_template_attribute_line_ids", string='Valid Product Attribute Lines', help="Technical compute")
 
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
@@ -371,7 +360,7 @@ class ProductTemplate(models.Model):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         templates = super(ProductTemplate, self).create(vals_list)
         if "create_product_product" not in self._context:
-            templates.create_variant_ids()
+            templates._create_variant_ids()
 
         # This is needed to set given values to first variant after creation
         for template, vals in zip(templates, vals_list):
@@ -397,7 +386,7 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         res = super(ProductTemplate, self).write(vals)
         if 'attribute_line_ids' in vals or vals.get('active'):
-            self.create_variant_ids()
+            self._create_variant_ids()
         if 'active' in vals and not vals.get('active'):
             self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})
         if 'image_1920' in vals:
@@ -525,7 +514,7 @@ class ProductTemplate(models.Model):
 
         return prices
 
-    def create_variant_ids(self):
+    def _create_variant_ids(self):
         self.flush()
         Product = self.env["product.product"]
 
@@ -533,13 +522,27 @@ class ProductTemplate(models.Model):
         variants_to_activate = Product
         variants_to_unlink = Product
 
-        for tmpl_id in self.with_context(active_test=False):
+        for tmpl_id in self:
+            lines_without_no_variants = tmpl_id.valid_product_template_attribute_line_ids._without_no_variant_attributes()
+
+            all_variants = tmpl_id.with_context(active_test=False).product_variant_ids.sorted('active')
+
+            current_variants_to_create = []
+            current_variants_to_activate = Product
+
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
-            variant_alone = tmpl_id.valid_product_template_attribute_line_ids.filtered(lambda line: line.attribute_id.create_variant == 'always' and len(line.value_ids) == 1).mapped('value_ids')
-            for value_id in variant_alone:
-                updated_products = tmpl_id.product_variant_ids.filtered(lambda product: value_id.attribute_id not in product.mapped('attribute_value_ids.attribute_id'))
-                updated_products.write({'attribute_value_ids': [(4, value_id.id)]})
+            single_value_lines = lines_without_no_variants.filtered(lambda ptal: len(ptal.product_template_value_ids._only_active()) == 1)
+            if single_value_lines:
+                for variant in all_variants:
+                    combination = variant.product_template_attribute_value_ids | single_value_lines.product_template_value_ids._only_active()
+                    # Do not add single value if the resulting combination would
+                    # be invalid anyway.
+                    if (
+                        len(combination) == len(lines_without_no_variants) and
+                        combination.attribute_line_id == lines_without_no_variants
+                    ):
+                        variant.product_template_attribute_value_ids = combination
 
             # Determine which product variants need to be created based on the attribute
             # configuration. If any attribute is set to generate variants dynamically, skip the
@@ -547,24 +550,24 @@ class ProductTemplate(models.Model):
             # Technical note: if there is no attribute, a variant is still created because
             # 'not any([])' and 'set([]) not in set([])' are True.
             if not tmpl_id.has_dynamic_attributes():
-                # Iterator containing all possible `product.attribute.value` combination
+                # Iterator containing all possible `product.template.attribute.value` combination
                 # The iterator is used to avoid MemoryError in case of a huge number of combination.
-                all_variants = itertools.product(*(
-                    line.value_ids.ids for line in tmpl_id.valid_product_template_attribute_line_wnva_ids
-                ))
-                # Set containing existing `product.attribute.value` combination
+                all_combinations = itertools.product(*[
+                    ptal.product_template_value_ids._only_active() for ptal in lines_without_no_variants
+                ])
+                # Set containing existing `product.template.attribute.value` combination
                 existing_variants = {
-                    frozenset(variant.attribute_value_ids.ids)
-                    for variant in tmpl_id.product_variant_ids
+                    variant.product_template_attribute_value_ids: variant for variant in all_variants
                 }
                 # For each possible variant, create if it doesn't exist yet.
-                current_variants_to_create = []
-                for value_ids in all_variants:
-                    value_ids = frozenset(value_ids)
-                    if value_ids not in existing_variants:
+                for combination_tuple in all_combinations:
+                    combination = self.env['product.template.attribute.value'].concat(*combination_tuple)
+                    if combination in existing_variants:
+                        current_variants_to_activate += existing_variants[combination]
+                    else:
                         current_variants_to_create.append({
                             'product_tmpl_id': tmpl_id.id,
-                            'attribute_value_ids': [(6, 0, list(value_ids))],
+                            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
                             'active': tmpl_id.active,
                         })
                         if len(current_variants_to_create) > 1000:
@@ -572,23 +575,10 @@ class ProductTemplate(models.Model):
                                 'The number of variants to generate is too high. '
                                 'You should either not generate variants for each combination or generate them on demand from the sales order. '
                                 'To do so, open the form view of attributes and change the mode of *Create Variants*.'))
-
                 variants_to_create += current_variants_to_create
-            # Check existing variants if any needs to be activated or unlinked.
-            # - if the product is not active and has valid attributes and attribute values, it
-            #   should be activated
-            # - if the product does not have valid attributes or attribute values, it should be
-            #   deleted
-            valid_value_ids = tmpl_id.valid_product_attribute_value_wnva_ids
-            valid_attribute_ids = tmpl_id.valid_product_attribute_wnva_ids
-            seen_attributes = set(p.attribute_value_ids for p in tmpl_id.product_variant_ids if p.active)
-            for product_id in tmpl_id.product_variant_ids:
-                if product_id._has_valid_attributes(valid_attribute_ids, valid_value_ids):
-                    if not product_id.active and product_id.attribute_value_ids not in seen_attributes:
-                        variants_to_activate += product_id
-                        seen_attributes.add(product_id.attribute_value_ids)
-                else:
-                    variants_to_unlink += product_id
+                variants_to_activate += current_variants_to_activate
+
+            variants_to_unlink += all_variants - current_variants_to_activate
 
         if variants_to_activate:
             variants_to_activate.write({'active': True})
@@ -612,10 +602,10 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return any(a.create_variant == 'dynamic' for a in self.valid_product_attribute_ids)
+        return any(a.create_variant == 'dynamic' for a in self.valid_product_template_attribute_line_ids.attribute_id)
 
-    @api.depends('attribute_line_ids', 'attribute_line_ids.value_ids')
-    def _compute_valid_attributes(self):
+    @api.depends('attribute_line_ids.value_ids')
+    def _compute_valid_product_template_attribute_line_ids(self):
         """A product template attribute line is considered valid if it has at
         least one possible value.
 
@@ -623,28 +613,9 @@ class ProductTemplate(models.Model):
         not appear on the configurator itself (unless they have an is_custom
         value to input), indeed single value attributes can be used to filter
         products among others based on that attribute/value.
-
-        A product attribute value is considered valid for a template if it is
-        defined on a product template attribute line.
-
-        A product attribute is considered valid for a template if it
-        has at least one possible value set on the template.
-
-        For what is considered an archived variant, see `_has_valid_attributes`.
         """
-        # prefetch
-        self.mapped('attribute_line_ids.value_ids.id')
-        self.mapped('attribute_line_ids.attribute_id.create_variant')
-
         for record in self:
             record.valid_product_template_attribute_line_ids = record.attribute_line_ids.filtered(lambda ptal: ptal.value_ids)
-            record.valid_product_template_attribute_line_wnva_ids = record.valid_product_template_attribute_line_ids._without_no_variant_attributes()
-
-            record.valid_product_attribute_value_ids = record.valid_product_template_attribute_line_ids.mapped('value_ids')
-            record.valid_product_attribute_value_wnva_ids = record.valid_product_template_attribute_line_wnva_ids.mapped('value_ids')
-
-            record.valid_product_attribute_ids = record.valid_product_template_attribute_line_ids.mapped('attribute_id')
-            record.valid_product_attribute_wnva_ids = record.valid_product_template_attribute_line_wnva_ids.mapped('attribute_id')
 
     def _get_possible_variants(self, parent_combination=None):
         """Return the existing variants that are possible.
@@ -808,11 +779,11 @@ class ProductTemplate(models.Model):
             # configuration of attributes on the template
             return False
 
-        if self.valid_product_attribute_ids != combination.mapped('attribute_id'):
+        if self.valid_product_template_attribute_line_ids != combination.attribute_line_id:
             # combination has different attributes than the ones configured on the template
             return False
 
-        if self.valid_product_attribute_value_ids < combination.mapped('product_attribute_value_id'):
+        if self.valid_product_template_attribute_line_ids.product_template_value_ids._only_active() < combination:
             # combination has different values than the ones configured on the template
             return False
 
@@ -860,10 +831,8 @@ class ProductTemplate(models.Model):
         :rtype: recordset `product.product`
         """
         self.ensure_one()
-
         filtered_combination = combination._without_no_variant_attributes()
-        attribute_values = filtered_combination.mapped('product_attribute_value_id')
-        return self.env['product.product'].browse(self._get_variant_id_for_combination(attribute_values))
+        return self.env['product.product'].browse(self._get_variant_id_for_combination(filtered_combination))
 
     def _create_product_variant(self, combination, log_warning=False):
         """ Create if necessary and possible and return the product variant
@@ -871,6 +840,8 @@ class ProductTemplate(models.Model):
 
         It is possible to create only if the template has dynamic attributes
         and the combination itself is possible.
+        If we are in this case and the variant already exists but it is
+        archived, it is activated instead of being created again.
 
         :param combination: the combination for which to get or create variant.
             The combination must contain all necessary attributes, including
@@ -891,6 +862,8 @@ class ProductTemplate(models.Model):
 
         product_variant = self._get_variant_for_combination(combination)
         if product_variant:
+            if not product_variant.active and self.has_dynamic_attributes() and self._is_combination_possible(combination):
+                product_variant.active = True
             return product_variant
 
         if not self.has_dynamic_attributes():
@@ -903,33 +876,23 @@ class ProductTemplate(models.Model):
                 _logger.warning('The user #%s tried to create an invalid variant for the product %s.' % (self.env.user.id, self.id))
             return Product
 
-        attribute_values = combination.mapped('product_attribute_value_id')._without_no_variant_attributes()
-
         return Product.sudo().create({
             'product_tmpl_id': self.id,
-            'attribute_value_ids': [(6, 0, attribute_values.ids)]
+            'product_template_attribute_value_ids': [(6, 0, combination._without_no_variant_attributes().ids)]
         })
 
-    @tools.ormcache('self.id', 'attribute_values')
-    def _get_variant_id_for_combination(self, attribute_values):
+    @tools.ormcache('self.id', 'frozenset(filtered_combination.ids)')
+    def _get_variant_id_for_combination(self, filtered_combination):
         """See `_get_variant_for_combination`. This method returns an ID
-        so it can be cached."""
+        so it can be cached.
+
+        Use sudo because the same result should be cached for all users.
+        """
         self.ensure_one()
-        # If there are a lot of variants on this template, it is much faster to
-        # build a query than using the existing o2m.
-        domain = [('product_tmpl_id', '=', self.id)]
-        for pav in attribute_values:
-            domain = expression.AND([[('attribute_value_ids', 'in', pav.id)], domain])
-
-        res = self.env['product.product'].with_context(active_test=False).search(domain, order='active DESC')
-
-        # The domain above is checking for the `product.attribute.value`, but we
-        # need to make sure it's the same `product.template.attribute.value`.
-        # Also there should theorically be only 0 or 1 but an existing database
-        # might not be consistent so we need to make sure to take max 1.
-        return res.filtered(
-            lambda v: v.attribute_value_ids == attribute_values
-        )[:1].id
+        return self.env['product.product'].sudo().with_context(active_test=False).search([
+            ('product_tmpl_id', '=', self.id),
+            ('combination_indices', '=', filtered_combination._ids2str())
+        ], order='active DESC', limit=1).id
 
     @tools.ormcache('self.id')
     def _get_first_possible_variant_id(self):
@@ -993,7 +956,7 @@ class ProductTemplate(models.Model):
                     yield(combination)
             else:
                 # we have remaining attribute lines to consider
-                for ptav in reversed(attribute_lines[0].product_template_value_ids):
+                for ptav in reversed(attribute_lines[0].product_template_value_ids._only_active()):
                     ptal_stack.append(attribute_lines[1:])
                     combination_stack.append(combination + ptav)
 

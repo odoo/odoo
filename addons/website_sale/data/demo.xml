@@ -635,33 +635,45 @@
             <field name="public_categ_ids" eval="[(6, 0, [ref('website_sale.services')])]"/>
         </record>
 
-        <record id="product_template_attribute_line_1" model="product.template.attribute.line">
+        <record id="product_1_attribute_3_product_template_attribute_line" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="website_sale.product_product_1_product_template"/>
             <field name="attribute_id" ref="product.product_attribute_3"/>
             <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_5'), ref('product.product_attribute_value_6')])]"/>
         </record>
 
-        <record id="product_product_1" model="product.product">
-            <field name="default_code">SERV_125889</field>
-            <field name="product_tmpl_id" ref="website_sale.product_product_1_product_template"/>
-            <field name="attribute_value_ids" eval="[(6, 0, [ref('product.product_attribute_value_5')])]"/>
-        </record>
-        <record id="product_product_1b" model="product.product">
-            <field name="default_code">SERV_125890</field>
-            <field name="product_tmpl_id" ref="website_sale.product_product_1_product_template"/>
-            <field name="attribute_value_ids" eval="[(6, 0, [ref('product.product_attribute_value_6')])]"/>
-        </record>
-
         <!-- Handle automatically created product.template.attribute.value -->
         <function model="ir.model.data" name="_update_xmlids">
             <value model="base" eval="[{
-                'xml_id': 'website_sale.product_template_attribute_value_1',
-                'record': obj().env.ref('website_sale.product_template_attribute_line_1').product_template_value_ids[1],
+                'xml_id': 'website_sale.product_1_attribute_3_value_1',
+                'record': obj().env.ref('website_sale.product_1_attribute_3_product_template_attribute_line').product_template_value_ids[0],
+                'noupdate': True,
+            }, {
+                'xml_id': 'website_sale.product_1_attribute_3_value_2',
+                'record': obj().env.ref('website_sale.product_1_attribute_3_product_template_attribute_line').product_template_value_ids[1],
                 'noupdate': True,
             }]"/>
         </function>
 
-        <record id="product_template_attribute_value_1" model="product.template.attribute.value">
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'website_sale.product_product_1',
+                'record': obj().env.ref('website_sale.product_product_1_product_template')._get_variant_for_combination(obj().env.ref('website_sale.product_1_attribute_3_value_1')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'website_sale.product_product_1b',
+                'record': obj().env.ref('website_sale.product_product_1_product_template')._get_variant_for_combination(obj().env.ref('website_sale.product_1_attribute_3_value_2')),
+                'noupdate': True,
+            },]"/>
+        </function>
+
+        <record id="product_product_1" model="product.product">
+            <field name="default_code">SERV_125889</field>
+        </record>
+        <record id="product_product_1b" model="product.product">
+            <field name="default_code">SERV_125890</field>
+        </record>
+
+        <record id="website_sale.product_1_attribute_3_value_2" model="product.template.attribute.value">
             <field name="price_extra">18.00</field>
         </record>
 </odoo>

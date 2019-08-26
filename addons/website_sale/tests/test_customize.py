@@ -39,8 +39,6 @@ class TestUi(odoo.tests.HttpCase):
             else:
                 ptav.price_extra = 50.4
 
-        product_template.create_variant_ids()
-
     def test_01_admin_shop_customize_tour(self):
         self.start_tour("/", 'shop_customize', login="admin")
 
@@ -165,8 +163,6 @@ class TestUi(odoo.tests.HttpCase):
         product_template_attribute_values[1].price_extra = 20
         product_template_attribute_values[2].price_extra = 30
 
-        product_template.create_variant_ids()
-
         # archive first combination (first variant)
         product_template.product_variant_ids[0].active = False
         # delete second combination (which is now first variant since cache has been cleared)
@@ -208,8 +204,6 @@ class TestUi(odoo.tests.HttpCase):
 
         # set a price on the value
         ptal.product_template_value_ids.price_extra = 10
-
-        product_template.create_variant_ids()
 
         self.start_tour("/", 'tour_shop_no_variant_attribute', login="demo")
 

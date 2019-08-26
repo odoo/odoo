@@ -1125,16 +1125,11 @@ class SaleOrderLine(models.Model):
     product_uom_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
-    product_custom_attribute_value_ids = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string='User entered custom product attribute values')
+    product_custom_attribute_value_ids = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string="Custom Values")
 
     # M2M holding the values of product.attribute with create_variant field set to 'no_variant'
     # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
-    # Note: If the attributes are changed on the template, some or all records
-    # in `product_no_variant_attribute_value_ids` will be removed here, even
-    # from existing or locked sales order lines. Thus this field can only be
-    # relied on initially, but it cannot be used to recompute anything later
-    # because the result might be different then.
-    product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants')
+    product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string="Extra Values", ondelete='restrict')
 
     qty_delivered_method = fields.Selection([
         ('manual', 'Manual'),
@@ -1380,15 +1375,15 @@ class SaleOrderLine(models.Model):
     def product_id_change(self):
         if not self.product_id:
             return
-
+        valid_values = self.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
         # remove the is_custom values that don't belong to this template
         for pacv in self.product_custom_attribute_value_ids:
-            if pacv.attribute_value_id not in self.product_id.product_tmpl_id.valid_product_attribute_value_ids:
+            if pacv.custom_product_template_attribute_value_id not in valid_values:
                 self.product_custom_attribute_value_ids -= pacv
 
         # remove the no_variant attributes that don't belong to this template
         for ptav in self.product_no_variant_attribute_value_ids:
-            if ptav.product_attribute_value_id not in self.product_id.product_tmpl_id.valid_product_attribute_value_ids:
+            if ptav._origin not in valid_values:
                 self.product_no_variant_attribute_value_ids -= ptav
 
         vals = {}
@@ -1585,10 +1580,6 @@ class SaleOrderLine(models.Model):
         itself is not sufficient to create the description: we need to add
         information about those special attributes and values.
 
-        See note about `product_no_variant_attribute_value_ids` above the field
-        definition: this method is not reliable to recompute the description at
-        a later time, it should only be used initially.
-
         :return: the description related to special variant attributes/values
         :rtype: string
         """
@@ -1597,19 +1588,15 @@ class SaleOrderLine(models.Model):
 
         name = "\n"
 
-        product_attribute_with_is_custom = self.product_custom_attribute_value_ids.mapped('attribute_value_id.attribute_id')
+        custom_values = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
 
         # display the no_variant attributes, except those that are also
         # displayed by a custom (avoid duplicate)
-        for no_variant_attribute_value in self.product_no_variant_attribute_value_ids.filtered(
-            lambda ptav: ptav.attribute_id not in product_attribute_with_is_custom
-        ):
-            name += "\n" + no_variant_attribute_value.attribute_id.name + ': ' + no_variant_attribute_value.name
+        for ptav in (self.product_no_variant_attribute_value_ids - custom_values):
+            name += "\n" + ptav.display_name
 
         # display the is_custom values
         for pacv in self.product_custom_attribute_value_ids:
-            name += "\n" + pacv.attribute_value_id.attribute_id.name + \
-                ': ' + pacv.attribute_value_id.name + \
-                ': ' + (pacv.custom_value or '').strip()
+            name += "\n" + pacv.display_name
 
         return name

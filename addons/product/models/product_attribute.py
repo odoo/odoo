@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
@@ -36,7 +36,7 @@ class ProductAttribute(models.Model):
         for pa in self:
             pa.is_used_on_products = bool(pa.product_tmpl_ids)
 
-    @api.depends('attribute_line_ids.product_tmpl_id')
+    @api.depends('attribute_line_ids.active', 'attribute_line_ids.product_tmpl_id')
     def _compute_products(self):
         for pa in self:
             pa.product_tmpl_ids = pa.attribute_line_ids.product_tmpl_id
@@ -116,9 +116,6 @@ class ProductAttributeValue(models.Model):
             return super(ProductAttributeValue, self).name_get()
         return [(value.id, "%s: %s" % (value.attribute_id.name, value.name)) for value in self]
 
-    def _variant_name(self, variable_attributes):
-        return ", ".join([v.name for v in self if v.attribute_id in variable_attributes])
-
     def write(self, values):
         if 'attribute_id' in values:
             for pav in self:
@@ -159,20 +156,21 @@ class ProductTemplateAttributeLine(models.Model):
     _description = 'Product Template Attribute Line'
     _order = 'attribute_id, id'
 
+    active = fields.Boolean(default=True)
     product_tmpl_id = fields.Many2one('product.template', string="Product Template", ondelete='cascade', required=True, index=True)
     attribute_id = fields.Many2one('product.attribute', string="Attribute", ondelete='restrict', required=True, index=True)
     value_ids = fields.Many2many('product.attribute.value', string="Values", domain="[('attribute_id', '=', attribute_id)]",
-        relation='product_attribute_value_product_template_attribute_line_rel')
+        relation='product_attribute_value_product_template_attribute_line_rel', ondelete='restrict')
     product_template_value_ids = fields.One2many('product.template.attribute.value', 'attribute_line_id', string="Product Attribute Values")
 
     @api.onchange('attribute_id')
     def _onchange_attribute_id(self):
         self.value_ids = self.value_ids.filtered(lambda pav: pav.attribute_id == self.attribute_id)
 
-    @api.constrains('value_ids', 'attribute_id')
+    @api.constrains('active', 'value_ids', 'attribute_id')
     def _check_valid_values(self):
         for ptal in self:
-            if not ptal.value_ids:
+            if ptal.active and not ptal.value_ids:
                 raise ValidationError(
                     _("The attribute <strong>%s</strong> must have at least one value for the product %s.") %
                     (ptal.attribute_id.display_name, ptal.product_tmpl_id.display_name)
@@ -186,12 +184,48 @@ class ProductTemplateAttributeLine(models.Model):
         return True
 
     @api.model_create_multi
-    def create(self, values):
-        res = super(ProductTemplateAttributeLine, self).create(values)
+    def create(self, vals_list):
+        """Override to:
+        - Activate archived lines having the same configuration (if they exist)
+            instead of creating new lines.
+        - Set up related values and related variants.
+
+        Reactivating existing lines allows to re-use existing variants when
+        possible, keeping their configuration and avoiding duplication.
+        """
+        create_values = []
+        activated_lines = self.env['product.template.attribute.line']
+        for value in vals_list:
+            vals = dict(value, active=value.get('active', True))
+            # While not ideal for peformance, this search has to be done at each
+            # step to exclude the lines that might have been activated at a
+            # previous step. Since `vals_list` will likely be a small list in
+            # all use cases, this is an acceptable trade-off.
+            archived_ptal = self.search([
+                ('active', '=', False),
+                ('product_tmpl_id', '=', vals.pop('product_tmpl_id', 0)),
+                ('attribute_id', '=', vals.pop('attribute_id', 0)),
+            ], limit=1)
+            if archived_ptal:
+                # Write given `vals` in addition of `active` to ensure
+                # `value_ids` or other fields passed to `create` are saved too,
+                # but change the context to avoid updating the values and the
+                # variants until all the expected lines are created/updated.
+                archived_ptal.with_context(update_product_template_attribute_values=False).write(vals)
+                activated_lines += archived_ptal
+            else:
+                create_values.append(value)
+        res = activated_lines + super(ProductTemplateAttributeLine, self).create(create_values)
         res._update_product_template_attribute_values()
         return res
 
     def write(self, values):
+        """Override to:
+        - Add constraints to prevent doing changes that are not supported such
+            as modifying the template or the attribute of existing lines.
+        - Clean up related values and related variants when archiving or when
+            updating `value_ids`.
+        """
         if 'product_tmpl_id' in values:
             for ptal in self:
                 if ptal.product_tmpl_id.id != values['product_tmpl_id']:
@@ -207,41 +241,116 @@ class ProductTemplateAttributeLine(models.Model):
                         _("On the product %s you cannot transform the attribute <strong>%s</strong> into the attribute %s.") %
                         (ptal.product_tmpl_id.display_name, ptal.attribute_id.display_name, values['attribute_id'])
                     )
-
+        # Remove all values while archiving to make sure the line is clean if it
+        # is ever activated again.
+        if not values.get('active', True):
+            values['value_ids'] = [(5, 0, 0)]
         res = super(ProductTemplateAttributeLine, self).write(values)
-        self._update_product_template_attribute_values()
+        if 'active' in values:
+            self.env['product.template'].invalidate_cache(fnames=['attribute_line_ids'])
+        # If coming from `create`, no need to update the values and the variants
+        # before all lines are created.
+        if self.env.context.get('update_product_template_attribute_values', True):
+            self._update_product_template_attribute_values()
         return res
+
+    def unlink(self):
+        """Override to:
+        - Archive the line if unlink is not possible.
+        - Clean up related values and related variants.
+
+        Archiving is typically needed when the line has values that can't be
+        deleted because they are referenced elsewhere (on a variant that can't
+        be deleted, on a sales order line, ...).
+        """
+        # Try to remove the values first to remove some potentially blocking
+        # references, which typically works:
+        # - For single value lines because the values are directly removed from
+        #   the variants.
+        # - For values that are present on variants that can be deleted.
+        self.product_template_value_ids._only_active().unlink()
+        # Keep a reference to the related templates before the deletion.
+        templates = self.product_tmpl_id
+        # Now delete or archive the lines.
+        ptal_to_archive = self.env['product.template.attribute.line']
+        for ptal in self:
+            try:
+                with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'):
+                    super(ProductTemplateAttributeLine, ptal).unlink()
+            except Exception:
+                # We catch all kind of exceptions to be sure that the operation
+                # doesn't fail.
+                ptal_to_archive += ptal
+        ptal_to_archive.write({'active': False})
+        # For archived lines `_update_product_template_attribute_values` is
+        # implicitly called during the `write` above, but for products that used
+        # unlinked lines `_create_variant_ids` has to be called manually.
+        (templates - ptal_to_archive.product_tmpl_id)._create_variant_ids()
+        return True
 
     def _update_product_template_attribute_values(self):
         """Create or unlink `product.template.attribute.value` for each line in
         `self` based on `value_ids`.
 
+        The goal is to delete all values that are not in `value_ids`, to
+        activate those in `value_ids` that are currently archived, and to create
+        those in `value_ids` that didn't exist.
+
         This is a trick for the form view and for performance in general,
         because we don't want to generate in advance all possible values for all
         templates, but only those that will be selected.
         """
+        ProductTemplateAttributeValue = self.env['product.template.attribute.value']
         ptav_to_create = []
-        ptav_to_unlink = self.env['product.template.attribute.value']
-
+        ptav_to_unlink = ProductTemplateAttributeValue
         for ptal in self:
-            existing_pav = self.env['product.attribute.value']
+            ptav_to_activate = ProductTemplateAttributeValue
+            remaining_pav = ptal.value_ids
             for ptav in ptal.product_template_value_ids:
-                if ptav.product_attribute_value_id not in ptal.value_ids:
-                    # remove values that existed but don't exist anymore
-                    ptav_to_unlink += ptav
+                if ptav.product_attribute_value_id not in remaining_pav:
+                    # Remove values that existed but don't exist anymore, but
+                    # ignore those that are already archived because if they are
+                    # archived it means they could not be deleted previously.
+                    if ptav.ptav_active:
+                        ptav_to_unlink += ptav
                 else:
-                    existing_pav += ptav.product_attribute_value_id
+                    # Activate corresponding values that are currently archived.
+                    remaining_pav -= ptav.product_attribute_value_id
+                    if not ptav.ptav_active:
+                        ptav_to_activate += ptav
 
-            for pav in (ptal.value_ids - existing_pav):
-                # create values that didn't exist yet
-                ptav_to_create.append({
-                    'product_attribute_value_id': pav.id,
-                    'attribute_line_id': ptal.id
-                })
-
-        # unlink and create in batch for performance
+            for pav in remaining_pav:
+                # The previous loop searched for archived values that belonged to
+                # the current line, but if the line was deleted and another line
+                # was recreated for the same attribute, we need to expand the
+                # search to those with matching `attribute_id`.
+                # While not ideal for peformance, this search has to be done at
+                # each step to exclude the values that might have been activated
+                # at a previous step. Since `remaining_pav` will likely be a
+                # small list in all use cases, this is an acceptable trade-off.
+                ptav = ProductTemplateAttributeValue.search([
+                    ('ptav_active', '=', False),
+                    ('product_tmpl_id', '=', ptal.product_tmpl_id.id),
+                    ('attribute_id', '=', ptal.attribute_id.id),
+                    ('product_attribute_value_id', '=', pav.id),
+                ], limit=1)
+                if ptav:
+                    ptav.write({'ptav_active': True, 'attribute_line_id': ptal.id})
+                    # If the value was marked for deletion, now keep it.
+                    ptav_to_unlink -= ptav
+                else:
+                    # create values that didn't exist yet
+                    ptav_to_create.append({
+                        'product_attribute_value_id': pav.id,
+                        'attribute_line_id': ptal.id
+                    })
+            # Handle active at each step in case a following line might want to
+            # re-use a value that was archived at a previous step.
+            ptav_to_activate.write({'ptav_active': True})
+            ptav_to_unlink.write({'ptav_active': False})
         ptav_to_unlink.unlink()
-        self.env['product.template.attribute.value'].create(ptav_to_create)
+        ProductTemplateAttributeValue.create(ptav_to_create)
+        self.product_tmpl_id._create_variant_ids()
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -265,14 +374,17 @@ class ProductTemplateAttributeValue(models.Model):
 
     _name = "product.template.attribute.value"
     _description = "Product Template Attribute Value"
-    _order = 'product_attribute_value_id, id'
+    _order = 'attribute_line_id, product_attribute_value_id, id'
 
+    # Not just `active` because we always want to show the values except in
+    # specific case, as opposed to `active_test`.
+    ptav_active = fields.Boolean("Active", default=True)
     name = fields.Char('Value', related="product_attribute_value_id.name")
 
     # defining fields: the product template attribute line and the product attribute value
     product_attribute_value_id = fields.Many2one(
         'product.attribute.value', string='Attribute Value',
-        required=True, ondelete='restrict', index=True)
+        required=True, ondelete='cascade', index=True)
     attribute_line_id = fields.Many2one('product.template.attribute.line', required=True, ondelete='cascade', index=True)
 
     # configuration fields: the price_extra and the exclusion rules
@@ -293,6 +405,7 @@ class ProductTemplateAttributeValue(models.Model):
     # related fields: product template and product attribute
     product_tmpl_id = fields.Many2one('product.template', string="Product Template", related='attribute_line_id.product_tmpl_id', store=True, index=True)
     attribute_id = fields.Many2one('product.attribute', string="Attribute", related='attribute_line_id.attribute_id', store=True, index=True)
+    ptav_product_variant_ids = fields.Many2many('product.product', relation='product_variant_combination', string="Related Variants", readonly=True)
 
     _sql_constraints = [
         ('attribute_value_unique', 'unique(attribute_line_id, product_attribute_value_id)', "Each value should be defined only once per attribute per product."),
@@ -307,7 +420,19 @@ class ProductTemplateAttributeValue(models.Model):
                     (ptav.product_attribute_value_id.display_name, ptav.attribute_id.display_name, ptav.product_tmpl_id.display_name)
                 )
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        if any('ptav_product_variant_ids' in v for v in vals_list):
+            # Force write on this relation from `product.product` to properly
+            # trigger `_compute_combination_indices`.
+            raise UserError(_("You cannot update related variants from the values. Please update related values from the variants."))
+        return super(ProductTemplateAttributeValue, self).create(vals_list)
+
     def write(self, values):
+        if 'ptav_product_variant_ids' in values:
+            # Force write on this relation from `product.product` to properly
+            # trigger `_compute_combination_indices`.
+            raise UserError(_("You cannot update related variants from the values. Please update related values from the variants."))
         pav_in_values = 'product_attribute_value_id' in values
         product_in_values = 'product_tmpl_id' in values
         if pav_in_values or product_in_values:
@@ -322,8 +447,39 @@ class ProductTemplateAttributeValue(models.Model):
                         _("You cannot change the product of the value <strong>%s</strong> set on product %s.") %
                         (ptav.display_name, ptav.product_tmpl_id.display_name)
                     )
-
         return super(ProductTemplateAttributeValue, self).write(values)
+
+    def unlink(self):
+        """Override to:
+        - Clean up the variants that use any of the values in self:
+            - Remove the value from the variant if the value belonged to an
+                attribute line with only one value.
+            - Unlink or archive all related variants.
+        - Archive the value if unlink is not possible.
+
+        Archiving is typically needed when the value is referenced elsewhere
+        (on a variant that can't be deleted, on a sales order line, ...).
+        """
+        # Directly remove the values from the variants for lines that had single
+        # value (counting also the values that are archived).
+        single_values = self.filtered(lambda ptav: len(ptav.attribute_line_id.product_template_value_ids) == 1)
+        for ptav in single_values:
+            ptav.ptav_product_variant_ids.write({'product_template_attribute_value_ids': [(3, ptav.id, 0)]})
+        # Try to remove the variants before deleting to potentially remove some
+        # blocking references.
+        self.ptav_product_variant_ids._unlink_or_archive()
+        # Now delete or archive the values.
+        ptav_to_archive = self.env['product.template.attribute.value']
+        for ptav in self:
+            try:
+                with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'):
+                    super(ProductTemplateAttributeLine, ptav).unlink()
+            except Exception:
+                # We catch all kind of exceptions to be sure that the operation
+                # doesn't fail.
+                ptav_to_archive += ptav
+        ptav_to_archive.write({'ptav_active': False})
+        return True
 
     def name_get(self):
         """Override because in general the name of the value is confusing if it
@@ -332,13 +488,49 @@ class ProductTemplateAttributeValue(models.Model):
         """
         return [(value.id, "%s: %s" % (value.attribute_id.name, value.name)) for value in self]
 
+    def _only_active(self):
+        return self.filtered(lambda ptav: ptav.ptav_active)
+
     def _without_no_variant_attributes(self):
         return self.filtered(lambda ptav: ptav.attribute_id.create_variant != 'no_variant')
+
+    def _ids2str(self):
+        return ','.join([str(i) for i in sorted(self.ids)])
+
+    def _get_combination_name(self):
+        """Exclude values from single value lines or from no_variant attributes."""
+        return ", ".join([ptav.name for ptav in self._without_no_variant_attributes()._filter_single_value_lines()])
+
+    def _filter_single_value_lines(self):
+        """Return `self` with values from single value lines filtered out
+        depending on the active state of all the values in `self`.
+
+        If any value in `self` is archived, archived values are also taken into
+        account when checking for single values.
+        This allows to display the correct name for archived variants.
+
+        If all values in `self` are active, only active values are taken into
+        account when checking for single values.
+        This allows to display the correct name for active combinations.
+        """
+        only_active = all(ptav.ptav_active for ptav in self)
+        return self.filtered(lambda ptav: not ptav._is_from_single_value_line(only_active))
+
+    def _is_from_single_value_line(self, only_active=True):
+        """Return whether `self` is from a single value line, counting also
+        archived values if `only_active` is False.
+        """
+        self.ensure_one()
+        all_values = self.attribute_line_id.product_template_value_ids
+        if only_active:
+            all_values = all_values._only_active()
+        return len(all_values) == 1
 
 
 class ProductTemplateAttributeExclusion(models.Model):
     _name = "product.template.attribute.exclusion"
     _description = 'Product Template Attribute Exclusion'
+    _order = 'product_tmpl_id, value_ids, id'
 
     product_template_attribute_value_id = fields.Many2one(
         'product.template.attribute.value', string="Attribute Value", ondelete='cascade', index=True)
@@ -346,4 +538,4 @@ class ProductTemplateAttributeExclusion(models.Model):
         'product.template', string='Product Template', ondelete='cascade', required=True, index=True)
     value_ids = fields.Many2many(
         'product.template.attribute.value', relation="product_attr_exclusion_value_ids_rel",
-        string='Attribute Values', domain="[('product_tmpl_id', '=', product_tmpl_id)]")
+        string='Attribute Values', domain="[('product_tmpl_id', '=', product_tmpl_id), ('ptav_active', '=', True)]")

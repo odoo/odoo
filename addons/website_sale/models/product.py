@@ -202,7 +202,7 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return any(a.create_variant == 'no_variant' for a in self.valid_product_attribute_ids)
+        return any(a.create_variant == 'no_variant' for a in self.valid_product_template_attribute_line_ids.attribute_id)
 
     def _has_is_custom_values(self):
         self.ensure_one()
@@ -212,7 +212,7 @@ class ProductTemplate(models.Model):
         :return: True if at least one is_custom attribute value, False otherwise
         :rtype: bool
         """
-        return any(v.is_custom for v in self.valid_product_attribute_value_ids)
+        return any(v.is_custom for v in self.valid_product_template_attribute_line_ids.product_template_value_ids._only_active())
 
     def _get_possible_variants_sorted(self, parent_combination=None):
         """Return the sorted recordset of variants that are possible.
@@ -243,9 +243,9 @@ class ProductTemplate(models.Model):
                     - second level sort: same as "product.attribute.value"._order
             """
             keys = []
-            for attribute in variant.attribute_value_ids.sorted(_sort_key_attribute_value):
+            for attribute in variant.product_template_attribute_value_ids.sorted(_sort_key_attribute_value):
                 # if you change this order, keep it in sync with _order from `product.attribute.value`
-                keys.append(attribute.sequence)
+                keys.append(attribute.product_attribute_value_id.sequence)
                 keys.append(attribute.id)
             return keys
 
@@ -402,10 +402,10 @@ class Product(models.Model):
 
     website_url = fields.Char('Website URL', compute='_compute_product_website_url', help='The full URL to access the document through the website.')
 
-    @api.depends('product_tmpl_id.website_url', 'attribute_value_ids')
+    @api.depends('product_tmpl_id.website_url', 'product_template_attribute_value_ids')
     def _compute_product_website_url(self):
         for product in self:
-            attributes = ','.join(str(x) for x in product.attribute_value_ids.ids)
+            attributes = ','.join(str(x) for x in product.product_template_attribute_value_ids.ids)
             product.website_url = "%s#attr=%s" % (product.product_tmpl_id.website_url, attributes)
 
     def website_publish_button(self):

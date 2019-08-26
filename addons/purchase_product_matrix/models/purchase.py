@@ -142,7 +142,7 @@ class PurchaseOrderLine(models.Model):
     product_template_id = fields.Many2one('product.template', string='Product Template', related="product_id.product_tmpl_id", domain=[('purchase_ok', '=', True)])
     is_configurable_product = fields.Boolean('Is the product configurable?', related="product_template_id.has_configurable_attributes")
     product_template_attribute_value_ids = fields.Many2many(related='product_id.product_template_attribute_value_ids', readonly=True)
-    product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants')
+    product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants', ondelete='restrict')
 
     def _get_product_purchase_description(self, product):
         name = super(PurchaseOrderLine, self)._get_product_purchase_description(product)

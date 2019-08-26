@@ -184,7 +184,7 @@
                     <field name="name" string="Product" filter_domain="['|', '|', ('default_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
                 </field>
                 <field name="attribute_line_ids" position="replace">
-                    <field name="attribute_value_ids" groups="product.group_product_variant"/>
+                    <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
                     <field name="product_tmpl_id" string="Product Template"/>
                 </field>
             </field>
@@ -222,7 +222,7 @@
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Product Name"/>
                             <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
-                            <field name="attribute_value_ids" widget="many2many_tags" readonly="1"/>
+                            <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
                             <p>
                                 <span>All general settings about this product are managed on</span>
                                 <button name="open_product_template" type="object" string="the product template." class="oe_link oe_link_product pl-0 ml-1 mb-1"/>
@@ -300,7 +300,7 @@
                     <field name="default_code" optional="show"/>
                     <field name="barcode" optional="hide"/>
                     <field name="name"/>
-                    <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
+                    <field name="product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="lst_price" optional="show" string="Sales Price"/>
                     <field name="standard_price" optional="show"/>
@@ -342,7 +342,7 @@
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>
                 </field>
                 <xpath expr="//div[hasclass('oe_title')]" position="inside">
-                    <field name="attribute_value_ids" widget="many2many_tags" readonly="1"
+                    <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"
                         groups="product.group_product_variant"/>
                 </xpath>
             </field>
@@ -369,7 +369,7 @@
                                         <small t-if="record.default_code.value">[<field name="default_code"/>]</small>
                                     </strong>
                                     <div class="o_kanban_tags_section">
-                                        <field name="attribute_value_ids" groups="product.group_product_variant"/>
+                                        <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
                                     </div>
                                     <ul>
                                         <li><strong>Price: <field name="lst_price"></field></strong></li>
