@@ -12,11 +12,14 @@ class AccountBankStmtCashWizard(models.Model):
     _inherit = 'account.bank.statement.cashbox'
 
     @api.depends('pos_config_ids')
+    @api.depends_context('current_currency_id')
     def _compute_currency(self):
         super(AccountBankStmtCashWizard, self)._compute_currency()
         for cashbox in self:
             if cashbox.pos_config_ids:
                 cashbox.currency_id = cashbox.pos_config_ids[0].currency_id.id
+            elif self.env.context.get('current_currency_id'):
+                cashbox.currency_id = self.env.context.get('current_currency_id')
 
     pos_config_ids = fields.One2many('pos.config', 'default_cashbox_id')
     is_a_template = fields.Boolean(default=False)
