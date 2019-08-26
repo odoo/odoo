@@ -265,7 +265,7 @@ ProductConfiguratorWidget.include({
                 customValuesCommands.push({
                     operation: 'CREATE',
                     context: [{
-                        default_attribute_value_id: customValue.attribute_value_id,
+                        default_custom_product_template_attribute_value_id: customValue.custom_product_template_attribute_value_id,
                         default_custom_value: customValue.custom_value
                     }]
                 });
@@ -341,7 +341,7 @@ ProductConfiguratorWidget.include({
                 _.each(product.product_custom_attribute_values, function (attributeValue) {
                     defaultCustomAttributeValues.push(
                             [0, 0, {
-                                attribute_value_id: attributeValue.attribute_value_id,
+                                custom_product_template_attribute_value_id: attributeValue.custom_product_template_attribute_value_id,
                                 custom_value: attributeValue.custom_value
                             }]
                         );

@@ -196,8 +196,6 @@ class SaleOrder(models.Model):
             for ptav in combination.filtered(lambda ptav: ptav.attribute_id.create_variant == 'no_variant' and ptav not in received_no_variant_values):
                 no_variant_attribute_values.append({
                     'value': ptav.id,
-                    'attribute_name': ptav.attribute_id.name,
-                    'attribute_value_name': ptav.name,
                 })
 
             # save no_variant attributes values
@@ -208,19 +206,18 @@ class SaleOrder(models.Model):
 
             # add is_custom attribute values that were not received
             custom_values = kwargs.get('product_custom_attribute_values') or []
-            received_custom_values = product.env['product.attribute.value'].browse([int(ptav['attribute_value_id']) for ptav in custom_values])
+            received_custom_values = product.env['product.template.attribute.value'].browse([int(ptav['custom_product_template_attribute_value_id']) for ptav in custom_values])
 
-            for ptav in combination.filtered(lambda ptav: ptav.is_custom and ptav.product_attribute_value_id not in received_custom_values):
+            for ptav in combination.filtered(lambda ptav: ptav.is_custom and ptav not in received_custom_values):
                 custom_values.append({
-                    'attribute_value_id': ptav.product_attribute_value_id.id,
-                    'attribute_value_name': ptav.name,
+                    'custom_product_template_attribute_value_id': ptav.id,
                     'custom_value': '',
                 })
 
             # save is_custom attributes values
             if custom_values:
                 values['product_custom_attribute_value_ids'] = [(0, 0, {
-                    'attribute_value_id': custom_value['attribute_value_id'],
+                    'custom_product_template_attribute_value_id': custom_value['custom_product_template_attribute_value_id'],
                     'custom_value': custom_value['custom_value']
                 }) for custom_value in custom_values]
 

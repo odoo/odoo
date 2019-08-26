@@ -23,15 +23,11 @@ class TestProductAttributeValueSetup(TransactionCase):
         self._add_ram_attribute()
         self._add_hdd_attribute()
 
-        self.computer.create_variant_ids()
-
         self.computer_case = self.env['product.template'].create({
             'name': 'Super Computer Case'
         })
 
         self._add_size_attribute()
-
-        self.computer_case.create_variant_ids()
 
     def _add_ssd_attribute(self):
         self.ssd_attribute = self.env['product.attribute'].create({'name': 'Memory', 'sequence': 1})
@@ -206,15 +202,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
         # under defined variant
         combination = computer_ssd_256 + computer_ram_8
         variant = self.computer._get_variant_for_combination(combination)
-        self.assertEqual(len(variant), 0)
-
-        # also test _has_valid_attributes (case ok):
-        valid_value_ids = self.computer.valid_product_attribute_value_wnva_ids
-        valid_attribute_ids = self.computer.valid_product_attribute_wnva_ids
-        self.assertTrue(ok_variant._has_valid_attributes(valid_attribute_ids, valid_value_ids))
-
-        # also test _has_valid_attributes (case not ok):
-        self.assertFalse(ok_variant._has_valid_attributes(valid_attribute_ids, valid_value_ids - self.hdd_1))
+        self.assertFalse(variant)
 
     def test_product_filtered_exclude_for(self):
         """
@@ -289,8 +277,6 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
             'value_ids': [(6, 0, [color_red.id, color_green.id])],
         })
 
-        mouse.create_variant_ids()
-
         mouse_color_red = self._get_product_template_attribute_value(color_red, mouse)
         mouse_color_green = self._get_product_template_attribute_value(color_green, mouse)
 
@@ -317,15 +303,15 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
 
         # CASE: if multiple variants exist for the same combination and at least
         # one of them is not archived, the combination is possible
-        values = self.ssd_256 + self.ram_8 + self.hdd_1
+        combination = computer_ssd_256 + computer_ram_8 + computer_hdd_1
         self.env['product.product'].create({
             'product_tmpl_id': self.computer.id,
-            'attribute_value_ids': [(6, 0, values.ids)],
+            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
             'active': False,
         })
         self.env['product.product'].create({
             'product_tmpl_id': self.computer.id,
-            'attribute_value_ids': [(6, 0, values.ids)],
+            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
             'active': True,
         })
         self.assertTrue(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
@@ -487,26 +473,29 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
     def test_clear_caches(self):
         """The goal of this test is to make sure the cache is invalidated when
         it should be."""
-        attribute_values = self.ssd_256 + self.ram_8 + self.hdd_1
+        computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
+        computer_ram_8 = self._get_product_template_attribute_value(self.ram_8)
+        computer_hdd_1 = self._get_product_template_attribute_value(self.hdd_1)
+        combination = computer_ssd_256 + computer_ram_8 + computer_hdd_1
 
-        # CASE: initial result of _get_variant_id_for_combination
-        variant_id = self.computer._get_variant_id_for_combination(attribute_values)
-        self.assertTrue(variant_id)
+        # CASE: initial result of _get_variant_for_combination
+        variant = self.computer._get_variant_for_combination(combination)
+        self.assertTrue(variant)
 
         # CASE: clear_caches in product.product unlink
-        self.env['product.product'].browse(variant_id).unlink()
-        self.assertFalse(self.computer._get_variant_id_for_combination(attribute_values))
+        variant.unlink()
+        self.assertFalse(self.computer._get_variant_for_combination(combination))
 
         # CASE: clear_caches in product.product create
         variant = self.env['product.product'].create({
             'product_tmpl_id': self.computer.id,
-            'attribute_value_ids': [(6, 0, attribute_values.ids)],
+            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
         })
-        self.assertEqual(variant.id, self.computer._get_variant_id_for_combination(attribute_values))
+        self.assertEqual(variant, self.computer._get_variant_for_combination(combination))
 
         # CASE: clear_caches in product.product write
-        variant.attribute_value_ids = False
-        self.assertFalse(self.computer._get_variant_id_for_combination(attribute_values))
+        variant.product_template_attribute_value_ids = False
+        self.assertFalse(self.computer._get_variant_id_for_combination(combination))
 
     def test_constraints(self):
         """The goal of this test is to make sure constraints are correct."""
