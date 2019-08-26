@@ -983,6 +983,14 @@
             <field name="tag">manual_reconciliation_view</field>
         </record>
 
+        <record id="action_accrual_entry" model="ir.actions.server">
+            <field name="name">Change Period</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="binding_model_id" ref="account.model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_accrual_entry()</field>
+        </record>
+
         <act_window
             id="action_move_line_select_tax_audit"
             name="Journal Items for Tax Audit"

@@ -3568,6 +3568,11 @@ class AccountMoveLine(models.Model):
         action['domain'] = [('id', 'in', ids)]
         return action
 
+    def action_accrual_entry(self):
+        [action] = self.env.ref('account.account_accrual_accounting_wizard_action').read()
+        action['context'] = self.env.context
+        return action
+
     @api.model
     def _get_suspense_moves_domain(self):
         return [
