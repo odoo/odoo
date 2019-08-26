@@ -162,8 +162,9 @@ class StockMove(models.Model):
 
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
+        # XDU This could be improved as it can take up to 2s when 300 moves are computed.
         for move in self:
-            if move.picking_id:
+            if move.picking_id and move.picking_id.is_locked != move.is_locked:
                 move.is_locked = move.picking_id.is_locked
 
 
@@ -196,14 +197,14 @@ class StockMove(models.Model):
         for move in self:
             move.show_reserved_availability = not move.location_id.usage == 'supplier'
 
-    @api.depends('state', 'picking_id')
+    @api.depends('state', 'picking_id', 'picking_id.is_locked')
     def _compute_is_initial_demand_editable(self):
         for move in self:
-            if self._context.get('planned_picking'):
+            if not move.is_initial_demand_editable and self._context.get('planned_picking'):
                 move.is_initial_demand_editable = True
-            elif not move.picking_id.is_locked and move.state != 'done' and move.picking_id:
+            elif not move.is_initial_demand_editable and not move.picking_id.is_locked and move.state != 'done' and move.picking_id:
                 move.is_initial_demand_editable = True
-            else:
+            elif move.is_initial_demand_editable:
                 move.is_initial_demand_editable = False
 
     @api.multi
@@ -289,7 +290,7 @@ class StockMove(models.Model):
         and is represented by the aggregated `product_qty` on the linked move lines. If the move
         is force assigned, the value will be 0.
         """
-        result = {data['move_id'][0]: data['product_qty'] for data in 
+        result = {data['move_id'][0]: data['product_qty'] for data in
             self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id','product_qty'], ['move_id'])}
         for rec in self:
             rec.reserved_availability = rec.product_id.uom_id._compute_quantity(result.get(rec.id, 0.0), rec.product_uom, rounding_method='HALF-UP')
@@ -553,7 +554,7 @@ class StockMove(models.Model):
     def _prepare_merge_move_sort_method(self, move):
         move.ensure_one()
         return [
-            move.product_id.id, move.price_unit, move.product_packaging.id, move.procure_method, 
+            move.product_id.id, move.price_unit, move.product_packaging.id, move.procure_method,
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id
         ]
 
