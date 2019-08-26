@@ -32,6 +32,7 @@
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="active" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
+                    <field name="selectable_categ_ids" invisible="1"/>
                     <field name="is_installed_account_accountant" invisible="1"/>
                     <field name="company_has_template" invisible="1"/>
                     <div class="oe_title" id="title">
@@ -127,7 +128,7 @@
                                     Start selling from a default product category
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('start_category', '=', False)]}">
-                                    <field name="iface_start_categ_id"/>
+                                    <field name="iface_start_categ_id" domain="[('id','in',selectable_categ_ids)]"/>
                                 </div>
                             </div>
                         </div>
