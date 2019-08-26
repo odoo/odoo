@@ -10,11 +10,8 @@ import sys
 import netifaces
 import odoo
 from odoo import http
-import zipfile
-import io
 import os
 from odoo.tools import misc
-import urllib3
 from pathlib import Path
 
 from uuid import getnode as get_mac
@@ -149,32 +146,8 @@ class IoTboxHomepage(web.Home):
 
     @http.route('/load_drivers', type='http', auth='none', website=True)
     def load_drivers(self):
-        subprocess.check_call("sudo mount -o remount,rw /", shell=True)
-        subprocess.check_call("sudo mount -o remount,rw /root_bypass_ramdisks", shell=True)
-
-        mac = subprocess.check_output("/sbin/ifconfig eth0 |grep -Eo ..\(\:..\){5}", shell=True).decode('utf-8').split('\n')[0]
-
-        #response = requests.get(url, auth=(username, db_uuid.split('\n')[0]), stream=True)
-        server = helpers.get_odoo_server_url()
-        if server:
-            urllib3.disable_warnings()
-            pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
-            resp = False
-            server = server + '/iot/get_drivers'
-            try:
-                resp = pm.request('POST',
-                                   server,
-                                   fields={'mac': mac})
-            except Exception as e:
-                _logger.error('Could not reach configured server')
-                _logger.error('A error encountered : %s ' % e)
-            if resp and resp.data:
-                zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
-                zip_file.extractall(get_resource_path('hw_drivers', 'drivers'))
-        subprocess.check_call("sudo service odoo restart", shell=True)
-        subprocess.check_call("sudo mount -o remount,ro /", shell=True)
-        subprocess.check_call("sudo mount -o remount,ro /root_bypass_ramdisks", shell=True)
-
+        helpers.download_drivers(False)
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
         return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069/list_drivers'>"
 
     @http.route('/list_credential', type='http', auth='none', website=True)
