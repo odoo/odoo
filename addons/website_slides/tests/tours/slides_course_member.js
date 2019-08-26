@@ -2,6 +2,23 @@ odoo.define('website_slides.tours.slide.course.member', function (require) {
 'use strict';
 
 var tour = require('web_tour.tour');
+var FullScreen = require('website_slides.fullscreen');
+
+/**
+ * Alter this method for test purposes.
+ * This will make the video start at 10 minutes.
+ * As it lasts 10min24s, it will mark it as completed immediately.
+ */
+FullScreen.include({
+    _renderSlide: function () {
+
+        var slide = this.get('slide');
+        slide.embedUrl += '&start=600';
+        this.set('slide', slide);
+
+        return this._super.call(this, arguments);
+    }
+});
 
 /**
  * Global use case:
@@ -60,47 +77,12 @@ tour.register('course_tour', {
     trigger: '.o_wslides_fs_sidebar_list_item div:contains("How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks")'
 }, {
     trigger: '.player',
-    run: function () {
-        var interval = null;
-        var attempts = 0;
-        var updateTimer = function () {
-            // wait for YouTube library loading
-            if (typeof YT !== 'undefined' && YT.get) {
-                var player = null;
-                var i = 0;
-                // This is kind of ugly but we need to find the player id for that slide.
-                // There is only one player in this course but we cannot be sure of its id
-                // so we assume it's between 1 and 500 and loop until we find it.
-                while (!player && i < 500) {
-                    player = YT.get('youtube-player' + i);
-                    i++;
-                }
-                var seeked = false;
-                player.addEventListener('onReady', function (){
-                    if (player.seekTo && !seeked) {
-                        // move video to 'almost' end to mark the slide as 'done'
-                        player.seekTo(300);
-                        seeked = true;
-                    }
-                });
-                clearInterval(interval);
-            }
-
-            if (attempts > 100) {
-                // let's wait max. 5 seconds
-                clearInterval(interval);
-            }
-
-            attempts++;
-        };
-
-        interval = setInterval(updateTimer, 50);
-    }
+    run: function () {} // check player loading
 }, {
     trigger: '.o_wslides_fs_sidebar_section_slides li:contains("How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks") .o_wslides_slide_completed',
     run: function () {} // check that video slide is marked as 'done'
 }, {
-    trigger: '.o_wslides_progress_percentage:contains("67")',
+    trigger: '.o_wslides_progress_percentage:contains("100")',
     run: function () {} // check progression
 }, {
     trigger: '.o_wslides_fs_sidebar_list_item div:contains("A little chat with Harry Potted") .o_wslides_fs_slide_quiz'
