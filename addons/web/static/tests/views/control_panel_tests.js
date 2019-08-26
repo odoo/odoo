@@ -393,6 +393,39 @@ QUnit.module('Views', {
         controlPanel.destroy();
     });
 
+    QUnit.test('searchbar: do not focus hovered element when opening search results', async function (assert) {
+        assert.expect(2);
+
+        var controlPanel = await createControlPanel({
+            arch: '<search>' +
+                    '<filter name="filterA" string="foo a" domain="[]"/>' +
+                    '<filter name="filterB" string="foo b" domain="[]"/>' +
+                    '<filter name="filterC" string="foo c" domain="[]"/>' +
+                '</search>',
+            model: 'partner',
+            data: this.data,
+        });
+
+        const $searchInput = controlPanel.$('.o_searchview_input');
+        // Edits the input and triggers the 'o' key
+        await testUtils.fields.editAndTrigger($searchInput, 'foo', [$.Event('keypress', { which: 79 })]);
+        const $searchB = controlPanel.$('.o_searchview_autocomplete li:eq(1)');
+        $searchB.trigger('mouseenter');
+
+        assert.doesNotHaveClass($searchB, 'o-selection-focus', "Second search option should not be selected");
+
+        // Triggers a mousemove on the position of the filter B and then a mouseenter
+        $searchB.trigger($.Event('mousemove', {
+            clientX: $searchB.offset().left + 1,
+            clientY: $searchB.offset().top + 1,
+        }));
+        $searchB.trigger('mouseenter');
+
+        assert.hasClass($searchB, 'o-selection-focus', "Second search option should be selected after mousemove");
+
+        controlPanel.destroy();
+    });
+
     QUnit.test('load filter', async function (assert) {
         assert.expect(1);
 
