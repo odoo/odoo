@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_icon_form_view_mollie" model="ir.ui.view">
+        <field name="name">payment.icon.form.view.mollie</field>
+        <field name="model">payment.icon</field>
+        <field name="inherit_id" ref="payment.payment_icon_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr='//notebook' position='before'>
+                <group>
+                    <field name="sequence" readonly="1"/>
+                    <field name="provider" readonly="1"/>
+                    <field name="acquirer_reference" readonly="1" attrs="{'invisible': [('provider', '!=', 'mollie')]}"/>
+                </group>
+                <group>
+                    <field name="currency_ids" widget="many2many_tags" attrs="{'invisible': [('provider', '!=', 'mollie')]}"/>
+                    <field name="country_ids"  widget="many2many_tags" attrs="{'invisible': [('provider', '!=', 'mollie')]}"/>
+                </group>
+                <group>
+                    <field name="minimum_amount" attrs="{'invisible': [('provider', '!=', 'mollie')]}"/>
+                    <field name="maximum_amount" attrs="{'invisible': [('provider', '!=', 'mollie')]}"/>
+                </group>
+            </xpath>
+            <xpath expr='//notebook' position='attributes'>
+                <attribute name='invisible'>1</attribute>
+            </xpath>
+        </field>
+    </record>
+        
+    <!-- Payment icons -->
+    <record model="ir.ui.view" id="payment_icon_tree_view">
+        <field name="name">payment.icon.tree</field>
+        <field name="model">payment.icon</field>
+        <field name="arch" type="xml">
+            <tree string="Gateways">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="provider" readonly="1"/>
+                <field name="acquirer_reference" readonly="1"/>
+                <field name="minimum_amount"/>
+                <field name="maximum_amount"/>
+                <field name="currency_ids"  widget="many2many_tags"/>
+                <field name="country_ids"  widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+    <record id="mollie_gateways_action" model="ir.actions.act_window">
+	     <field name="name">Gateways</field>
+	     <field name="res_model">payment.icon</field>
+	     <field name="view_id" ref="payment_icon_tree_view"/>
+	     <field name="domain">[('provider','=','mollie')]</field>
+	 </record>
+	    
+    <record id="acquirer_form_mollie" model="ir.ui.view">
+        <field name="name">acquirer.form.mollie</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/field" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" type="action" name="%(payment_mollie_official.mollie_gateways_action)d"
+                    attrs="{'invisible': [('provider', '!=', 'mollie')]}"
+                    icon="fa-credit-card">
+                    <div class="o_stat_info o_field_widget">
+                        <span class="o_stat_text">Gateways</span>
+                    </div>
+                </button>
+                </div>
+            </xpath>
+            <xpath expr='//group[@name="acquirer"]' position='after'>
+                <group attrs="{'invisible': [('provider', '!=', 'mollie')]}">
+                    <field name="mollie_api_key_test"/>
+                    <field name="mollie_api_key_prod"/>
+                </group>
+            </xpath>
+            <xpath expr='//field[@name="journal_id"]' position='attributes'>
+                <attribute name="attrs">{'required':[('provider', '=', 'mollie')]}</attribute>
+            </xpath>
+            <xpath expr='//field[@name="payment_icon_ids"]' position='replace'/>
+            
+            <xpath expr='//field[@name="journal_id"]' position='after'>
+                <field name="payment_icon_ids" widget="many2many_tags" colspan="4" attrs="{'invisible': [('provider', '=', 'mollie')]}"/>
+            </xpath>
+            <xpath expr="//group[@name='acquirer_config']" position="before">
+                <group>
+                    <button name="update_available_mollie_methods"
+                                    string="_Update payment methods"
+                                    class="btn btn-info"
+                                    help="Will get all the configured payment methods from your Mollie account and will
+                                    make them available in Odoo automatically."
+                                    groups="base.group_system"
+                                    type="object"
+                                    attrs="{'invisible': [('provider', '!=', 'mollie')]}"/>
+                </group>
+                <group>
+
+                  <field name="method_ids" nolabel="1" attrs="{'invisible': [('provider', '!=', 'mollie')]}">
+                   <tree string="Supported method" create="false">
+                      <field name="sequence" widget="handle"/>
+                      <field name="image_small" widget="image" class="oe_avatar" nolabel="1" readonly="1"/>
+                      <field name="name" readonly="1"/>
+                      <field name="currency_ids"  widget="many2many_tags" invisible="1"/>
+                      <field name="country_ids"  widget="many2many_tags" invisible="1"/>
+                      <field name="acquirer_reference" readonly="1"/>
+                      <field name="acquirer_id" invisible="1"/>
+                      <field name="active" string="Active on website"/>
+                   </tree>
+                  </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="transaction_form_mollie" model="ir.ui.view">
+        <field name="name">transaction.form.mollie</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.transaction_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//field[@name="acquirer_reference"]' position='replace'>
+                <div>
+                    <label for="acquirer_reference"/>
+                    <field name="acquirer_reference"  readonly="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

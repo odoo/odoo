@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="mollie_form">
+            <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
+            <input type="hidden" name="OrderId" t-att-value="OrderId"/>
+            <input type="hidden" name="Description" t-att-value="Description"/>
+            <input type="hidden" name="Currency" t-att-value="Currency"/>
+            <input type="hidden" name="Amount" t-att-value="Amount"/>
+            <input type="hidden" name="Key" t-att-value="Key"/>
+            <input type="hidden" name="URL" t-att-value="URL"/>
+            <input type="hidden" name="BaseUrl" t-att-value="BaseUrl"/>
+            <input type="hidden" name="Language" t-att-value="Language"/>
+            <input type="hidden" name="Name" t-att-value="Name"/>
+            <input type="hidden" name="Email" t-att-value="Email"/>
+            <input type="hidden" name="Zip" t-att-value="Zip"/>
+            <input type="hidden" name="Address" t-att-value="Address"/>
+            <input type="hidden" name="Town" t-att-value="Town"/>
+            <input type="hidden" name="Country" t-att-value="Country"/>
+            <input type="hidden" name="Phone" t-att-value="Phone"/>
+            <input name="Method" t-att-value="Method"/>
+        </template>
+    </data>
+    <data noupdate="1">
+        <record id="payment_acquirer_mollie" model="payment.acquirer">
+            <field name="name">Mollie</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/src/img/mollie_icon.png"/>
+            <field name="provider">mollie</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="view_template_id" ref="payment_mollie_official.mollie_form"/>
+            <field name="environment">test</field>
+            <field name="dashboard_url">https://www.mollie.com/dashboard</field>
+            <field name="pre_msg"><![CDATA[
+<p>You will be redirected to the Mollie website after clicking on payment button.</p>]]></field>
+            <field name="mollie_api_key_test">mollie api test key</field>
+            <field name="mollie_api_key_prod">mollie api live key</field>
+            <field name="module_id" ref="base.module_payment_mollie_official"/>
+            <field name="description" type="html">
+                <p>
+                    A payment gateway to accept online payments via various payment methods (check https://www.mollie.com/be/payments/).
+                </p>
+                <ul>
+                    <li><i class="fa fa-check"/>eCommerce</li>
+                </ul>
+            </field>
+        </record>
+    </data>
+</odoo>
+
+

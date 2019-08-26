@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="mollie_view_order_form_inherit">
+        <field name="name">mollie.view.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_info']" position="after">
+                <group string="Mollie connection">
+                    <div class="three-inline-buttons">
+                        <strong>Mollie ref.</strong>
+                        <t t-if="record.acquirer_reference">
+	                        <button name="action_go_to_mollie_order" type="object" class="oe_link mollie_link">
+                                <field name="acquirer_reference" readonly="1"/>
+                            </button>
+                        </t>
+                    </div>
+                    <field name="acquirer_method"/>
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//field[@name='state']" position="after">
+                <group string="Mollie connection">
+                    <div>
+                        <label for="acquirer_reference"/>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

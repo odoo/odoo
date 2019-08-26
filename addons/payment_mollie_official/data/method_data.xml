@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <record id="payment_method_belfius" model="payment.icon">
+            <field name="name">Belfius Direct Net</field>
+            <field name="acquirer_reference">belfius</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/belfius.png"/>
+            <field name="sequence">3</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">0.01</field>
+            <field name="maximum_amount">50000.00</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.be')])]"/>
+            <field name="currency_ids" eval="[(6, 0, [ref('base.EUR')])]"/>
+        </record>
+        
+        <record id="payment_method_kbc" model="payment.icon">
+            <field name="name">KBC/CBC Payment button</field>
+            <field name="acquirer_reference">kbc</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/kbc.png"/>
+            <field name="sequence">4</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">0.01</field>
+            <field name="maximum_amount">50000.00</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.be')])]"/>
+            <field name="currency_ids" eval="[(6, 0, [ref('base.EUR')])]"/>
+        </record>
+        
+        <record id="payment_method_inghomepay" model="payment.icon">
+            <field name="name">ING Home'Pay</field>
+            <field name="acquirer_reference">inghomepay</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/inghomepay.png"/>
+            <field name="sequence">5</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">0.01</field>
+            <field name="maximum_amount">50000.00</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.be')])]"/>
+            <field name="currency_ids" eval="[(6, 0, [ref('base.EUR')])]"/>
+        </record>
+        
+        <record id="payment_method_creditcard" model="payment.icon">
+            <field name="name">Credit Card</field>
+            <field name="acquirer_reference">creditcard</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/creditcard.png"/>
+            <field name="sequence">6</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">0.01</field>
+            <field name="maximum_amount">2000.00</field>
+        </record>
+        
+        <record id="payment_method_sofort" model="payment.icon">
+            <field name="name">SOFORT Banking</field>
+            <field name="acquirer_reference">sofort</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/sofort.png"/>
+            <field name="sequence">7</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">0.10</field>
+            <field name="maximum_amount">50000.00</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.de'), ref('base.at'), ref('base.sz'), ref('base.nl'),
+                    ref('base.it'), ref('base.be'), ref('base.es'), ref('base.pl')])]"/>
+            <field name="currency_ids" eval="[(6, 0, [ref('base.EUR')])]"/>
+        </record>
+        
+        <record id="payment_method_giropay" model="payment.icon">
+            <field name="name">Giropay</field>
+            <field name="acquirer_reference">giropay</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/giropay.png"/>
+            <field name="sequence">8</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">1.00</field>
+            <field name="maximum_amount">50000.00</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.de')])]"/>
+            <field name="currency_ids" eval="[(6, 0, [ref('base.EUR')])]"/>
+        </record>
+        
+        <record id="payment_method_eps" model="payment.icon">
+            <field name="name">eps</field>
+            <field name="acquirer_reference">eps</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/eps.png"/>
+            <field name="sequence">9</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">1.00</field>
+            <field name="maximum_amount">10000.00</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.at')])]"/>
+            <field name="currency_ids" eval="[(6, 0, [ref('base.EUR')])]"/>
+        </record>
+
+        <record id="payment_method_banktransfer" model="payment.icon">
+            <field name="name">SEPA Bank Transfer</field>
+            <field name="acquirer_reference">banktransfer</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/banktransfer.png"/>
+            <field name="sequence">10</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">0.01</field>
+            <field name="maximum_amount">1000000.00</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.at'), ref('base.be'), ref('base.uk'), ref('base.bg'),
+                ref('base.cy'), ref('base.hr'), ref('base.ee'), ref('base.fi'), ref('base.fr'), ref('base.de'), ref('base.gr'), ref('base.ie'),
+                ref('base.it'), ref('base.lv'), ref('base.lt'), ref('base.lu'), ref('base.mt'), ref('base.nl'),
+                ref('base.bt'), ref('base.sk'), ref('base.si'), ref('base.es'), ref('base.cz'), ref('base.dk'), ref('base.hu'), ref('base.pl'),
+                ref('base.ro'), ref('base.se'), ref('base.is'), ref('base.li'), ref('base.mc'), ref('base.no'), ref('base.sm'), ref('base.ch')])]"/>
+        </record>
+        
+        <record id="payment_method_paypal" model="payment.icon">
+            <field name="name">PayPal</field>
+            <field name="acquirer_reference">paypal</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/paypal.png"/>
+            <field name="sequence">11</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">0.01</field>
+            <field name="maximum_amount">8000.00</field>
+        </record>
+        
+        <record id="payment_method_bitcoin" model="payment.icon">
+            <field name="name">Bitcoin</field>
+            <field name="acquirer_reference">bitcoin</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/bitcoin.png"/>
+            <field name="sequence">12</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">1.0</field>
+            <field name="maximum_amount">15000.00</field>
+        </record>
+        
+        <record id="payment_method_klarnapaylater" model="payment.icon">
+            <field name="name">Klarna Pay later.</field>
+            <field name="acquirer_reference">klarnapaylater</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/klarnapaylater.png"/>
+            <field name="sequence">13</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">0.01</field>
+            <field name="maximum_amount">2000.00</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.at'), ref('base.fi'), ref('base.de'), ref('base.nl')])]"/>
+            <field name="currency_ids" eval="[(6, 0, [ref('base.EUR')])]"/>
+        </record>
+        
+        <record id="payment_method_klarnasliceit" model="payment.icon">
+            <field name="name">Klarna Slice it.</field>
+            <field name="acquirer_reference">klarnasliceit</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/klarnasliceit.png"/>
+            <field name="sequence">14</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">0.01</field>
+            <field name="maximum_amount">2000.00</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.at'), ref('base.fi'), ref('base.de')])]"/>
+            <field name="currency_ids" eval="[(6, 0, [ref('base.EUR')])]"/>
+        </record>
+        
+        <record id="payment_method_paysafecard" model="payment.icon">
+            <field name="name">paysafecard</field>
+            <field name="acquirer_reference">paysafecard</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/images/icons/paysafecard.png"/>
+            <field name="sequence">15</field>
+            <field name="provider">mollie</field>
+            <field name="minimum_amount">1</field>
+            <field name="maximum_amount">999.00</field>
+        </record>
+    </data>
+</odoo>

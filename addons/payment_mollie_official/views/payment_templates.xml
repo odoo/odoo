@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Mollie Payment Assets FrontEnd" >
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/css" href="/payment_mollie_official/static/src/css/payment_mollie_official.css"/>
+        </xpath>
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/payment_mollie_official/static/src/js/payment_mollie_official.js"></script>
+        </xpath>
+    </template>
+    
+    <template id="assets_backend" name="account assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/css" href="/payment_mollie_official/static/src/css/payment_mollie_official.css"/>
+        </xpath>
+    </template>
+    
+    <template id="mollie_payment_gateway_list" name="Mollie payment gateway list">
+        <t t-set="gateways" t-value="website_sale_order.get_available_methods(mollie_aq.payment_icon_ids)"/>
+        <t t-set="gateway_count" t-value="len(gateways) if gateways else 0"/>
+        <t t-foreach="gateways" t-as="gateway">
+            <div class="card-body">
+                <label>
+                    <input type="radio" t-att-data-gateway-id="gateway.id"
+                           t-att-data-form-payment="true"
+                           name="gateway_id" t-attf-value="form_{{gateway.id}}"
+                           t-att-checked="gateway_count==1 or acquirers[0] == mollie_aq"/>
+                    <span t-field="gateway.image_payment_form" t-att-title="gateway.name"
+                      t-options='{"widget": "image", "alt-field": "name"}'>
+                    </span>
+                    <span class="gateway_name" t-esc="gateway.name"/>
+                </label>
+            </div>
+        </t>
+    </template>
+    
+    <template id="mollie_payment_tokens_list" name="Mollie payment_tokens_list" inherit_id="payment.payment_tokens_list">
+        <xpath expr="//form/div[1]" position="replace">
+            <div class="card">
+                <t t-set="acquirers_count" t-value="len(acquirers) if acquirers else 0"/>
+                <t t-set="pms_count" t-value="len(pms) if pms else 0"/>
+                <t t-set="MAX_BRAND_LINE" t-value="3"/>
+                <t t-set="mollie_aq" t-value="False"/>
+                <t t-foreach="acquirers" t-as="acq">
+                    <t t-if="acq.provider == 'mollie'">
+                        <t t-set="mollie_aq" t-value="acq"/>
+                    </t>
+                    <div t-attf-class="card-body #{'d-none' if acq.provider == 'mollie' else ''}">
+                        <label>
+                            <t t-if="acq.payment_flow == 'form'">
+                                <input type="radio" t-att-data-acquirer-id="acq.id"
+                                       t-att-data-form-payment="true"
+                                       t-att-data-provider="acq.provider"
+                                       t-att-class="'d-none' if (acquirers_count==1 and pms_count==0) else ''"
+                                       name="pm_id" t-attf-value="form_{{acq.id}}"/>
+                            </t>
+                            <t t-else="acq.payment_flow == 's2s'">
+                                <input type="radio" t-att-data-acquirer-id="acq.id"
+                                       t-att-data-s2s-payment="true"
+                                       t-att-data-provider="acq.provider"
+                                       name="pm_id" t-attf-value="new_{{acq.id}}"
+                                       t-att-class="'d-none' if (acquirers_count==1 and pms_count==0) else ''"/>
+                            </t>
+                            <span class="payment_option_name" t-esc="acq.name"/>
+                        </label>
+                        <ul class="float-right list-inline payment_icon_list" t-if="acq.provider!='mollie'">
+                            <t t-set="i" t-value="0"/>
+                            <t t-foreach="acq.payment_icon_ids" t-as="pm_icon">
+                                <li t-attf-class="list-inline-item#{'' if (i &lt; MAX_BRAND_LINE) else ' d-none'}">
+                                    <span t-field="pm_icon.image_payment_form"
+                                          t-options='{"widget": "image", "alt-field": "name"}'/>
+                                </li>
+                                <li t-if="i==MAX_BRAND_LINE" style="display:block;" class="list-inline-item">
+                                    <span class="float-right more_option text-info">
+                                        <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[MAX_BRAND_LINE:]])">and more</a>
+                                    </span>
+                                </li>
+                                <t t-set="i" t-value="i+1"/>
+                            </t>
+                        </ul>
+                    </div>
+                    <t t-if="acq.payment_flow == 'form'">
+                        <div t-attf-id="o_payment_form_acq_{{acq.id}}"
+                             t-attf-class="d-none {{'card-footer' if acq.save_token == 'ask' else ''}}">
+                            <label t-if="acq.save_token == 'ask'">
+                                <input type="checkbox" name="o_payment_form_save_token" data-remove-me=""/>
+                                Save my payment data
+                            </label>
+                        </div>
+                    </t>
+                    <t t-else="acq.payment_flow == 's2s'">
+                        <div t-attf-id="o_payment_add_token_acq_{{acq.id}}"
+                             t-attf-class="card-footer {{'d-none' if(acquirers_count &gt; 1 and pms_count==0 and acquirers[0]!=acq) else 'd-none' if pms_count &gt;0 else ''}}">
+                            <div class="clearfix">
+                                <t t-call="{{acq.sudo().get_s2s_form_xml_id()}}">
+                                    <t t-set="id" t-value="acq.id"/>
+                                    <t t-set="partner_id" t-value="partner_id"/>
+                                    <t t-if="not return_url" t-set="return_url" t-value="''"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+                <t t-if="mollie_aq and website_sale_order">
+                    <t t-call="payment_mollie_official.mollie_payment_gateway_list"/>
+                </t>
+                <t t-foreach="pms" t-as="pm">
+                    <div class="card-body">
+                        <label>
+                            <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
+                            <span class="payment_option_name" t-esc="pm.name"/>
+                            <t t-if="pm.verified">
+                                <i class="fa fa-check text-success" title="This payment method is verified by our system." role="img" aria-label="Ok"></i>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-close text-danger" title="This payment method has not been verified by our system." role="img" aria-label="Not verified"></i>
+                            </t>
+                        </label>
+                        <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-sm float-right">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </template>
+    
+    <template id="mollie_zip_required" name="Mollie address inherit" inherit_id="website_sale.address">
+        <xpath expr="//input[@name='field_required']" position="attributes">
+            <attribute name="t-att-value">'zip'</attribute>
+        </xpath>
+    </template>
+</odoo>
+
