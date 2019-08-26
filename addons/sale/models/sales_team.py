@@ -96,7 +96,7 @@ class CrmTeam(models.Model):
         data_map = dict((v[0], v[1]) for v in self._cr.fetchall())
         for team in self:
             team.invoiced = data_map.get(team.id, 0.0)
-    
+
     def _graph_get_model(self):
         if self._context.get('in_sales_app'):
             return 'sale.report'
@@ -104,7 +104,7 @@ class CrmTeam(models.Model):
 
     def _graph_date_column(self):
         if self._context.get('in_sales_app'):
-            return 'date_order'
+            return 'date'
         return super(CrmTeam,self)._graph_date_column()
 
     def _graph_y_query(self):
