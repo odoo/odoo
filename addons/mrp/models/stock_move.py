@@ -42,6 +42,9 @@ class StockMoveLine(models.Model):
             production = move_line.move_id.production_id or move_line.move_id.raw_material_production_id
             if production and move_line.state == 'done' and any(field in vals for field in ('lot_id', 'location_id', 'qty_done')):
                 move_line._log_message(production, move_line, 'mrp.track_production_move_template', vals)
+            if 'qty_done' in vals and production and float_compare(production.product_qty, vals['qty_done'], precision_rounding=production.product_uom_id.rounding) < 0:
+                production._log_downside_manufactured_quantity({move_line.move_id: (production.product_qty, vals['qty_done'])})
+
         return super(StockMoveLine, self).write(vals)
 
 
