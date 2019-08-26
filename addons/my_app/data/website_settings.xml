@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website.default_website" model="website">
+        <field name="theme_id" ref="base.module_theme_a"/>
+    </record>
+    <function model='ir.module.module' name='_theme_load'>
+        <value eval="ref('base.module_theme_a')"/>
+        <value model="website" eval="obj().env.ref('website.default_website')"/>
+    </function>
+</odoo>
