@@ -211,7 +211,7 @@ class MassMailing(models.Model):
                     else:
                         mailing_domain = [(0, '=', 1)]
                 elif self.mailing_model_name == 'res.partner':
-                    mailing_domain = [('customer', '=', True)]
+                    mailing_domain = [('customer_rank', '>', 0)]
                 elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
                     mailing_domain = [('opt_out', '=', False)]
         else:
