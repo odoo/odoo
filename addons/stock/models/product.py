@@ -511,7 +511,10 @@ class Product(models.Model):
 
     def action_product_forecast_report(self):
         action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
-        action['domain'] = [('product_id', '=', self.id)]
+        action['domain'] = [
+            ('product_id', '=', self.id),
+            ('warehouse_id', '!=', False),
+        ]
         return action
 
     @api.model
@@ -779,7 +782,10 @@ class ProductTemplate(models.Model):
 
     def action_product_tmpl_forecast_report(self):
         action = self.env.ref('stock.report_stock_quantity_action').read()[0]
-        action['domain'] = [('product_id', 'in', self.product_variant_ids.ids)]
+        action['domain'] = [
+            ('product_id', 'in', self.product_variant_ids.ids),
+            ('warehouse_id', '!=', False),
+        ]
         return action
 
 class ProductCategory(models.Model):
