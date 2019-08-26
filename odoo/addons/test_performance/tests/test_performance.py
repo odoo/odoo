@@ -4,7 +4,7 @@
 from collections import defaultdict
 import json
 
-from odoo.tests.common import TransactionCase, users, warmup
+from odoo.tests.common import TransactionCase, users, warmup, tagged
 from odoo.tools import mute_logger
 
 
@@ -414,3 +414,77 @@ class TestPerformance(TransactionCase):
         # now serialize to json, which should force evaluation
         with self.assertQueryCount(__system__=1, demo=1):
             json.dumps(result)
+
+
+@tagged('bacon_and_eggs')
+class TestIrPropertyOptimizations(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.Bacon = self.env['test_performance.bacon']
+        self.Eggs = self.env['test_performance.eggs']
+
+    def test_with_falsy_default(self):
+        self.assertFalse(self.env['ir.property'].get('property_eggs', 'test_performance.bacon'))
+
+        # warmup
+        eggs = self.Eggs.create({})
+        self.Bacon.create({})
+        self.Bacon.create({'property_eggs': eggs.id})
+
+        # create with default value
+        with self.assertQueryCount(1):
+            self.Bacon.create({})
+
+        with self.assertQueryCount(1):
+            self.Bacon.with_context(default_property_eggs=False).create({})
+
+        with self.assertQueryCount(1):
+            self.Bacon.create({'property_eggs': False})
+
+        # create with another value
+        with self.assertQueryCount(5):
+            self.Bacon.with_context(default_property_eggs=eggs.id).create({})
+
+        with self.assertQueryCount(5):
+            self.Bacon.create({'property_eggs': eggs.id})
+
+    def test_with_truthy_default(self):
+        eggs = self.Eggs.create({})
+        field = self.env['ir.model.fields']._get('test_performance.bacon', 'property_eggs')
+        self.env['ir.property'].create({
+            'name': 'property_eggs_with_bacon',
+            'fields_id': field.id,
+            'value': eggs,
+        })
+
+        self.assertEqual(eggs, self.env['ir.property'].get('property_eggs', 'test_performance.bacon'))
+
+        # warmup
+        self.Bacon.create({})
+
+        # create with default value
+        with self.assertQueryCount(1):
+            self.Bacon.create({})
+
+        with self.assertQueryCount(1):
+            self.Bacon.with_context(default_property_eggs=eggs.id).create({})
+
+        with self.assertQueryCount(1):
+            self.Bacon.create({'property_eggs': eggs.id})
+
+        # create with another value
+        eggs = self.Eggs.create({})
+        self.Bacon.create({'property_eggs': eggs.id})
+
+        with self.assertQueryCount(5):
+            self.Bacon.with_context(default_property_eggs=eggs.id).create({})
+
+        with self.assertQueryCount(5):
+            self.Bacon.create({'property_eggs': eggs.id})
+
+        with self.assertQueryCount(5):
+            self.Bacon.with_context(default_property_eggs=False).create({})
+
+        with self.assertQueryCount(5):
+            self.Bacon.create({'property_eggs': False})
