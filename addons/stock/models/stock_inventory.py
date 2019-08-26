@@ -135,6 +135,7 @@ class Inventory(models.Model):
 
     def action_cancel_draft(self):
         self.mapped('move_ids')._action_cancel()
+        self.line_ids.unlink()
         self.write({'state': 'draft'})
 
     def action_start(self):
