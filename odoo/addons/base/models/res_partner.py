@@ -310,35 +310,6 @@ class Partner(models.Model):
             partner.commercial_company_name = p.is_company and p.name or partner.company_name
 
     @api.model
-    def _get_default_image(self, partner_type, is_company, parent_id):
-        if getattr(threading.currentThread(), 'testing', False) or self._context.get('install_mode'):
-            return False
-
-        colorize, img_path, image_base64 = False, False, False
-
-        if partner_type in ['other'] and parent_id:
-            parent_image = self.browse(parent_id).image_1920
-            image_base64 = parent_image or None
-
-        if not image_base64 and partner_type == 'invoice':
-            img_path = get_module_resource('base', 'static/img', 'money.png')
-        elif not image_base64 and partner_type == 'delivery':
-            img_path = get_module_resource('base', 'static/img', 'truck.png')
-        elif not image_base64 and is_company:
-            img_path = get_module_resource('base', 'static/img', 'company_image.png')
-        elif not image_base64:
-            img_path = get_module_resource('base', 'static/img', 'avatar.png')
-            colorize = True
-
-        if img_path:
-            with open(img_path, 'rb') as f:
-                image_base64 = base64.b64encode(f.read())
-        if image_base64 and colorize:
-            image_base64 = tools.image_process(image_base64, colorize=True)
-
-        return image_base64
-
-    @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         if (not view_id) and (view_type == 'form') and self._context.get('force_email'):
             view_id = self.env.ref('base.view_partner_simple_form').id
@@ -586,10 +557,6 @@ class Partner(models.Model):
                 vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
-            # compute default image in create, because computing gravatar in the onchange
-            # cannot be easily performed if default images are in the way
-            if not vals.get('image_1920'):
-                vals['image_1920'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
         partners = super(Partner, self).create(vals_list)
 
         if self.env.context.get('_partners_skip_fields_sync'):
