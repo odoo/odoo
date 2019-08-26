@@ -91,7 +91,7 @@ var WysiwygMultizone = Wysiwyg.extend({
     save: function () {
         if (this.isDirty()) {
             return this._restoreMegaMenus()
-                .then(() => this.editor.save())
+                .then(() => this.editor.save(false))
                 .then(() => ({isDirty: true}));
         } else {
             return {isDirty: false};
