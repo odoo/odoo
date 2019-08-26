@@ -3500,6 +3500,15 @@ Fields:
                 if not field:
                     _logger.warning("%s.create() with unknown fields: %s", self._name, key)
                     continue
+                if field.company_dependent:
+                    cached_def = field.convert_to_cache(field.default(self), self)
+                    cached_val = field.convert_to_cache(val, self)
+                    if cached_val == cached_def:
+                        # val is the same as the default value defined in
+                        # 'ir.property'; by design, 'ir.property' will not
+                        # create entries specific to these records; skipping the
+                        # field inverse saves 4 SQL queries
+                        continue
                 if field.store:
                     stored[key] = val
                 if field.inherited:

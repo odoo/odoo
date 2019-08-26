@@ -39,8 +39,24 @@ class LineModel(models.Model):
         # line values should be unique per "base" - useful for testing corner cases with unique lines
         tools.create_unique_index(self._cr, 'test_performance_line_uniq', self._table, ['base_id', 'value'])
 
+
 class TagModel(models.Model):
     _name = 'test_performance.tag'
     _description = 'Test Performance Tag'
+
+    name = fields.Char()
+
+
+class Bacon(models.Model):
+    _name = 'test_performance.bacon'
+    _description = 'Test Performance Bacon'
+
+    property_eggs = fields.Many2one(
+        'test_performance.eggs', company_dependent=True, string='Eggs')
+
+
+class Eggs(models.Model):
+    _name = 'test_performance.eggs'
+    _description = 'Test Performance Eggs'
 
     name = fields.Char()
