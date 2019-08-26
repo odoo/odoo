@@ -37,20 +37,21 @@ class SlidePartnerRelation(models.Model):
         res = super(SlidePartnerRelation, self).create(values)
         completed = res.filtered('completed')
         if completed:
-            completed._completed_callback()
+            completed._set_completed_callback()
         return res
 
     def write(self, values):
         res = super(SlidePartnerRelation, self).write(values)
         if values.get('completed'):
-            self._completed_callback()
+            self._set_completed_callback()
         return res
 
-    def _completed_callback(self):
+    def _set_completed_callback(self):
         self.env['slide.channel.partner'].search([
             ('channel_id', 'in', self.channel_id.ids),
             ('partner_id', 'in', self.partner_id.ids),
-        ])._compute_completion()
+        ])._recompute_completion()
+
 
 class SlideLink(models.Model):
     _name = 'slide.slide.link'
@@ -410,7 +411,7 @@ class Slide(models.Model):
 
         if 'is_published' in values or 'active' in values:
             # if the slide is published/unpublished, recompute the completion for the partners
-            self.slide_partner_ids._completed_callback()
+            self.slide_partner_ids._set_completed_callback()
 
         return res
 
