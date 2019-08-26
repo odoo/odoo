@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-12 11:32+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 08:16+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "&times;"
 msgstr ""
@@ -31,94 +31,39 @@ msgid ""
 msgstr ""
 
 #. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr ""
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Alipay"
-msgstr ""
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr ""
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr ""
-
-#. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "CVC"
-msgstr ""
-
-#. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Card number"
-msgstr ""
-
-#. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Cardholder name"
-msgstr ""
-
-#. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
 msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:15
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Close"
 msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Error"
 msgstr ""
 
 #. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Expires (MM / YY)"
-msgstr ""
-
-#. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:37
+#: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
-msgid "Just one more second, confirming your payment..."
-msgstr ""
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr ""
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr ""
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "PayU Latam"
-msgstr ""
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
+msgid "Just one more second, We are redirecting you to Stripe..."
 msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
+msgid "Payment Method ID"
 msgstr ""
 
 #. module: payment_stripe
@@ -133,18 +78,13 @@ msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:62
+#: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
 msgid "Payment error"
 msgstr ""
 
 #. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr ""
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:174
+#: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
@@ -157,13 +97,13 @@ msgid "Provider"
 msgstr ""
 
 #. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
+#: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
+msgid "Stripe"
 msgstr ""
 
 #. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
+msgid "Stripe Payment Intent ID"
 msgstr ""
 
 #. module: payment_stripe
@@ -177,36 +117,39 @@ msgid "Stripe Secret Key"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:172
+#: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:184
+#: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:180
+#: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe: no order found for reference %s"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:260
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
-msgid "Stripe: no payment token was provided or the token creation failed."
+msgid "Unable to save card"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:170
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "We are not able to add your payment method at the moment. "
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
-msgstr ""
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
 msgstr ""

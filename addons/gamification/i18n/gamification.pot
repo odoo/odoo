@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 12:27+0000\n"
-"PO-Revision-Date: 2019-08-12 12:27+0000\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 08:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:609
+#: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "%s has joined the challenge"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:618
+#: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "%s has refused the challenge"
 msgstr ""
@@ -64,7 +64,7 @@ msgid ""
 "                            <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 560px; margin-top: 5px;\">\n"
 "                            <tbody><tr>\n"
 "                                <td valign=\"center\">\n"
-"                                    <img src=\"/web/image/gamification.badge/${object.badge_id.id}/image/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                                    <img src=\"/web/image/gamification.badge/${object.badge_id.id}/image_128/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
 "                                </td>\n"
 "                                <td valign=\"center\">\n"
 "                                    <cite>${object.badge_id.description}</cite>\n"
@@ -130,13 +130,13 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:675
+#: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:672
+#: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
@@ -144,13 +144,13 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:670
+#: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:680
+#: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
@@ -184,7 +184,7 @@ msgid ""
 "            </td>\n"
 "            <td style=\"padding:15px 20px 10px 20px;\">\n"
 "                <p style=\"text-align: center;\">\n"
-"                    <img src=\"/web/image/gamification.karma.rank/${object.rank_id.id}/image_medium\"/>\n"
+"                    <img src=\"/web/image/gamification.karma.rank/${object.rank_id.id}/image_128\"/>\n"
 "                </p>\n"
 "            </td>\n"
 "        </tr>\n"
@@ -356,7 +356,7 @@ msgid ""
 "                                                                <div style=\"height:${heightA}px;\">\n"
 "                                                                    ${extra_div | safe}   \n"
 "                                                                    <div style=\"height:55px;\">\n"
-"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" t-att-src=\"image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_small)\" alt=\"${goal['name']}\"/>\n"
+"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" t-att-src=\"image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_64)\" alt=\"${goal['name']}\"/>\n"
 "                                                                    </div>\n"
 "                                                                    <div align=\"center\" style=\"color:${bgColor};height:20px\">\n"
 "                                                                        ${goal['name']}\n"
@@ -476,7 +476,7 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.badge,rule_auth:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__users
 msgid "A selected list of users"
 msgstr ""
 
@@ -517,6 +517,11 @@ msgid "Appears in"
 msgstr ""
 
 #. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Assign Challenge To"
 msgstr ""
@@ -541,17 +546,17 @@ msgid "Authorized Users"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal.definition,computation_mode:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__python
 msgid "Automatic: execute a specific Python code"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal.definition,computation_mode:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__count
 msgid "Automatic: number of records"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal.definition,computation_mode:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__sum
 msgid "Automatic: sum on a field"
 msgstr ""
 
@@ -616,7 +621,7 @@ msgid "Brilliant"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.badge,level:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__bronze
 msgid "Bronze"
 msgstr ""
 
@@ -631,7 +636,7 @@ msgid "Can not grant"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:413
+#: code:addons/gamification/models/goal.py:0
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr ""
@@ -643,7 +648,7 @@ msgid "Cancel"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal,state:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__canceled
 msgid "Canceled"
 msgstr ""
 
@@ -806,8 +811,8 @@ msgid "Current Value"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,period:0
-#: selection:gamification.challenge,report_message_frequency:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__daily
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__daily
 msgid "Daily"
 msgstr ""
 
@@ -905,14 +910,14 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,state:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,state:0
-#: selection:gamification.goal,state:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__draft
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__draft
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Draft"
 msgstr ""
@@ -940,17 +945,17 @@ msgid "Evaluated expression for batch mode"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.badge,rule_auth:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__everyone
 msgid "Everyone"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal.definition,display_mode:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__display_mode__boolean
 msgid "Exclusive (done or not-done)"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal,state:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__failed
 msgid "Failed"
 msgstr ""
 
@@ -1139,7 +1144,7 @@ msgid "Goals"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.badge,level:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__gold
 msgid "Gold"
 msgstr ""
 
@@ -1203,6 +1208,11 @@ msgid "HR Challenges"
 msgstr ""
 
 #. module: gamification
+#: model:ir.model,name:gamification.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: gamification
 #: model:gamification.badge,name:gamification.badge_hidden
 msgid "Hidden"
 msgstr ""
@@ -1213,7 +1223,7 @@ msgid "How to compute the goal?"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,category:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__category__hr
 msgid "Human Resources / Engagement"
 msgstr ""
 
@@ -1264,12 +1274,43 @@ msgid "If this badge was rewarded through a challenge"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge__image
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1920
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_1920
 msgid "Image"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,state:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1024
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_1024
+msgid "Image 1024"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_128
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_128
+msgid "Image 128"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_256
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_256
+msgid "Image 256"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_512
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_512
+msgid "Image 512"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_64
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_64
+msgid "Image 64"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__inprogress
 msgid "In Progress"
 msgstr ""
 
@@ -1296,12 +1337,12 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal,state:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__inprogress
 msgid "In progress"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,visibility_mode:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__visibility_mode__personal
 msgid "Individual Goals"
 msgstr ""
 
@@ -1323,8 +1364,10 @@ msgid "Karma"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_res_users__karma_position
-msgid "Karma position"
+#. openerp-web
+#: code:addons/gamification/static/src/js/crash_manager.js:0
+#, python-format
+msgid "Karma Error"
 msgstr ""
 
 #. module: gamification
@@ -1377,7 +1420,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,visibility_mode:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__visibility_mode__ranking
 msgid "Leader Board (Group Ranking)"
 msgstr ""
 
@@ -1423,32 +1466,6 @@ msgid "Master"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_medium
-msgid "Medium-sized badge image"
-msgstr ""
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_karma_rank__image_medium
-msgid ""
-"Medium-sized icon of the rank. It is automatically resized as a 128x128px "
-"image, with aspect ratio preserved. Use this field in form views or some "
-"kanban views."
-msgstr ""
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge__image_medium
-msgid ""
-"Medium-sized image of the badge. It is automatically resized as a 128x128px "
-"image, with aspect ratio preserved. Use this field in form views or some "
-"kanban views."
-msgstr ""
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_medium
-msgid "Medium-sized rank icon"
-msgstr ""
-
-#. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Member"
 msgstr ""
@@ -1487,8 +1504,8 @@ msgid "Monetary Value"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,period:0
-#: selection:gamification.challenge,report_message_frequency:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__monthly
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__monthly
 msgid "Monthly"
 msgstr ""
 
@@ -1538,7 +1555,7 @@ msgid "Name"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,report_message_frequency:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__never
 msgid "Never"
 msgstr ""
 
@@ -1588,18 +1605,18 @@ msgid "No one can solve challenges like you do."
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.badge,rule_auth:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__nobody
 msgid "No one, assigned through challenges"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:687
+#: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,period:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__once
 msgid "Non recurring"
 msgstr ""
 
@@ -1649,7 +1666,7 @@ msgid "Number of users"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,report_message_frequency:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__onchange
 msgid "On change"
 msgstr ""
 
@@ -1679,7 +1696,7 @@ msgid "Owners"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.badge,rule_auth:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__having
 msgid "People having some badges"
 msgstr ""
 
@@ -1706,7 +1723,7 @@ msgid "Problem Solver"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal.definition,display_mode:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__display_mode__progress
 msgid "Progressive (using numerical values)"
 msgstr ""
 
@@ -1726,11 +1743,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_res_users__rank_id
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "Rank"
-msgstr ""
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image
-msgid "Rank Icon"
 msgstr ""
 
 #. module: gamification
@@ -1775,7 +1787,7 @@ msgid "Reach the next rank to show the rest of the world you exist."
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal,state:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
 msgid "Reached"
 msgstr ""
 
@@ -1785,7 +1797,7 @@ msgid "Reached when current value is"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal.definition,computation_mode:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__manually
 msgid "Recorded manually"
 msgstr ""
 
@@ -1855,7 +1867,7 @@ msgid "Responsible"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:490
+#: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
 msgstr ""
@@ -1903,6 +1915,11 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
+msgstr ""
+
+#. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
+msgid "Search Badge"
 msgstr ""
 
 #. module: gamification
@@ -1981,7 +1998,7 @@ msgid "Set your Timezone"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,category:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__category__other
 msgid "Settings / Gamification Tools"
 msgstr ""
 
@@ -1991,39 +2008,13 @@ msgid "Setup your Company"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.badge,level:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__silver
 msgid "Silver"
 msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__silver_badge
 msgid "Silver badges count"
-msgstr ""
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_small
-msgid "Small-sized badge image"
-msgstr ""
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_karma_rank__image_small
-msgid ""
-"Small-sized icon of the rank. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr ""
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge__image_small
-msgid ""
-"Small-sized image of the badge. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr ""
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_small
-msgid "Small-sized rank icon"
 msgstr ""
 
 #. module: gamification
@@ -2093,7 +2084,7 @@ msgid "The action that will be called to update the goal value."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:666
+#: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "The challenge %s is finished."
 msgstr ""
@@ -2125,7 +2116,7 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:92
+#: code:addons/gamification/models/goal.py:0
 #, python-format
 msgid ""
 "The domain for the definition %s seems incorrect, please check it.\n"
@@ -2146,7 +2137,7 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal.definition,condition:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__higher
 msgid "The higher the better"
 msgstr ""
 
@@ -2161,7 +2152,7 @@ msgid "The list of unique users having received this badge."
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.goal.definition,condition:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__lower
 msgid "The lower the better"
 msgstr ""
 
@@ -2172,7 +2163,7 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:109
+#: code:addons/gamification/models/goal.py:0
 #, python-format
 msgid ""
 "The model configuration for the definition %s seems incorrect, please check it.\n"
@@ -2181,7 +2172,7 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:106
+#: code:addons/gamification/models/goal.py:0
 #, python-format
 msgid ""
 "The model configuration for the definition %s seems incorrect, please check it.\n"
@@ -2282,14 +2273,9 @@ msgid "These goals will not be recomputed."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:236
+#: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "This badge can not be sent by users."
-msgstr ""
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge__image
-msgid "This field holds the image used for the badge."
 msgstr ""
 
 #. module: gamification
@@ -2340,7 +2326,7 @@ msgid "Update"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:448
+#: code:addons/gamification/models/goal.py:0
 #, python-format
 msgid "Update %s"
 msgstr ""
@@ -2376,18 +2362,8 @@ msgid "Users to that rank"
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,category:0
-msgid "Website / Forum"
-msgstr ""
-
-#. module: gamification
-#: selection:gamification.challenge,category:0
-msgid "Website / Slides"
-msgstr ""
-
-#. module: gamification
-#: selection:gamification.challenge,period:0
-#: selection:gamification.challenge,report_message_frequency:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__weekly
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__weekly
 msgid "Weekly"
 msgstr ""
 
@@ -2414,25 +2390,25 @@ msgid "With your brilliant ideas, you are an inspiration to others."
 msgstr ""
 
 #. module: gamification
-#: selection:gamification.challenge,period:0
-#: selection:gamification.challenge,report_message_frequency:0
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__yearly
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__yearly
 msgid "Yearly"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:238
+#: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "You are not in the user allowed list."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/wizard/grant_badge.py:25
+#: code:addons/gamification/wizard/grant_badge.py:0
 #, python-format
 msgid "You can not grant a badge to yourself."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:196
+#: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "You can not reset a challenge with unfinished goals."
 msgstr ""
@@ -2448,13 +2424,13 @@ msgid "You did great at your job."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:240
+#: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "You do not have the required badges."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:242
+#: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "You have already sent this badge too many time this month."
 msgstr ""

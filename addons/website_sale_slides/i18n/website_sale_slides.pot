@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 12:27+0000\n"
-"PO-Revision-Date: 2019-08-12 12:27+0000\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 08:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_sidebar_buy_now_course
+msgid "<i class=\"fa fa-bolt\"/> Buy Now"
+msgstr ""
+
+#. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_sidebar
-msgid "<span class=\"cta-title text_small_caps\">Buy Course</span>"
+msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
 msgstr ""
 
 #. module: website_sale_slides
 #. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:26
+#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Buy the course"
 msgstr ""
@@ -38,8 +43,13 @@ msgid "Course Not Buyable"
 msgstr ""
 
 #. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__channel_ids
+msgid "Courses"
+msgstr ""
+
+#. module: website_sale_slides
 #. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:16
+#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Don't have an account ?"
 msgstr ""
@@ -50,28 +60,39 @@ msgid "Enroll Policy"
 msgstr ""
 
 #. module: website_sale_slides
-#: selection:slide.channel,enroll:0
-msgid "Invite"
+#. openerp-web
+#: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
+#, python-format
+msgid ""
+"Leaving the course and re-enrolling afterwards means that you'll be charged "
+"again."
 msgstr ""
 
 #. module: website_sale_slides
-#: selection:slide.channel,enroll:0
+#: model:ir.model.fields.selection,name:website_sale_slides.selection__slide_channel__enroll__payment
 msgid "On payment"
 msgstr ""
 
 #. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_product_product
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_id
 msgid "Product"
 msgstr ""
 
 #. module: website_sale_slides
-#: sql_constraint:slide.channel:0
+#: model:ir.model.constraint,message:website_sale_slides.constraint_slide_channel_product_id_check
 msgid "Product is required for on payment channels."
 msgstr ""
 
 #. module: website_sale_slides
-#: selection:slide.channel,enroll:0
-msgid "Public"
+#: model:ir.ui.menu,name:website_sale_slides.website_slides_menu_report_revenues
+msgid "Revenues"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_kanban
+msgid "Sales"
 msgstr ""
 
 #. module: website_sale_slides
@@ -81,21 +102,21 @@ msgstr ""
 
 #. module: website_sale_slides
 #. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:16
+#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Sign Up !"
 msgstr ""
 
 #. module: website_sale_slides
 #. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:15
+#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Sign in"
 msgstr ""
 
 #. module: website_sale_slides
 #. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:7
+#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Sign in and buy the course to join it and take the quiz!"
 msgstr ""
@@ -107,21 +128,43 @@ msgstr ""
 
 #. module: website_sale_slides
 #. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:25
+#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Start Course"
 msgstr ""
 
 #. module: website_sale_slides
 #. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:9
+#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Succeed and gain karma"
 msgstr ""
 
 #. module: website_sale_slides
 #. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:10
+#: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
+#, python-format
+msgid "This course is paid."
+msgstr ""
+
+#. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_sale_revenues
+msgid "Total revenues"
+msgstr ""
+
+#. module: website_sale_slides
+#. openerp-web
+#: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "XP"
+msgstr ""
+
+#. module: website_sale_slides
+#: model:ir.actions.act_window,name:website_sale_slides.sale_report_action_slides
+msgid "eLearning Revenues"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.sale_report_view_graph_slides
+msgid "eLearning Sales Analysis"
 msgstr ""
