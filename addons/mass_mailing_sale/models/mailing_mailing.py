@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
 
 from odoo import api, fields, models
 
@@ -61,3 +62,13 @@ class MassMailing(models.Model):
         if not res:
             res.append((0, '=', 1))
         return res
+
+    @api.onchange('mailing_model_name', 'contact_list_ids')
+    def _onchange_model_and_list(self):
+        super()._onchange_model_and_list()
+
+        current_domain = literal_eval(self.mailing_domain)
+
+        if self.mailing_model_name == 'res.partner':
+            if not current_domain or current_domain == [('is_blacklisted', '=', False)]:
+                self.mailing_domain = repr([('is_blacklisted', '=', False), ('customer_rank', '>', 0)])
