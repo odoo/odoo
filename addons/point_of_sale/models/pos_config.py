@@ -137,6 +137,7 @@ class PosConfig(models.Model):
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
     iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories',
         help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
+    selectable_categ_ids = fields.Many2many('pos.category', compute='_compute_selectable_categories')
     iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
         help="The product categories will be displayed with pictures.")
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
@@ -276,6 +277,14 @@ class PosConfig(models.Model):
                 pos_config.pos_session_duration = 0
                 pos_config.current_user_id = False
 
+    @api.depends('iface_available_categ_ids')
+    def _compute_selectable_categories(self):
+        for config in self:
+            if config.iface_available_categ_ids:
+                config.selectable_categ_ids = config.iface_available_categ_ids
+            else:
+                config.selectable_categ_ids = self.env['pos.category'].search([])
+
     @api.constrains('cash_control')
     def _check_session_state(self):
         open_session = self.env['pos.session'].search([('config_id', '=', self.id), ('state', '!=', 'closed')])
@@ -372,12 +381,8 @@ class PosConfig(models.Model):
         res = {}
         if not self.limit_categories:
             self.iface_available_categ_ids = False
-        elif not len(self.iface_available_categ_ids):
-             res = {'domain': {'iface_start_categ_id': [('id', 'in', self.env['pos.category'].search([]).ids)]}}
-        elif self.iface_start_categ_id not in self.iface_available_categ_ids:
+        if self.iface_available_categ_ids and self.iface_start_categ_id.id not in self.iface_available_categ_ids.ids:
             self.iface_start_categ_id = False
-        if self.iface_available_categ_ids:
-            res = {'domain': {'iface_start_categ_id': [('id', 'in', self.iface_available_categ_ids.ids)]}}
         return res
 
     @api.onchange('is_header_or_footer')
