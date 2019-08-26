@@ -286,7 +286,7 @@ class SaleOrderLine(models.Model):
                     # if route MTO not found in ir_model_data, we treat the product as in MTS
                     pass
 
-            if mto_route and mto_route in product.route_ids:
+            if mto_route and mto_route in product_routes:
                 line.is_mto = True
             else:
                 line.is_mto = False
