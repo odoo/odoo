@@ -1369,20 +1369,23 @@ class AccountTax(models.Model):
         # Store the tax amounts we compute while searching for the total_excluded
         cached_tax_amounts = {}
         for tax in reversed(taxes):
+            tax_repartition_lines = (is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids).filtered(lambda x: x.repartition_type == 'tax')
+            sum_repartition_factor = sum(tax_repartition_lines.mapped('factor'))
+
             if tax.include_base_amount:
                 base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
                 incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
                 store_included_tax_total = True
             if tax.price_include or self._context.get('force_price_include'):
                 if tax.amount_type == 'percent':
-                    incl_percent_amount += tax.amount
+                    incl_percent_amount += tax.amount * sum_repartition_factor
                 elif tax.amount_type == 'division':
-                    incl_division_amount += tax.amount
+                    incl_division_amount += tax.amount * sum_repartition_factor
                 elif tax.amount_type == 'fixed':
-                    incl_fixed_amount += quantity * tax.amount
+                    incl_fixed_amount += quantity * tax.amount * sum_repartition_factor
                 else:
                     # tax.amount_type == other (python)
-                    tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
+                    tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner) * sum_repartition_factor
                     incl_fixed_amount += tax_amount
                     # Avoid unecessary re-computation
                     cached_tax_amounts[i] = tax_amount
@@ -1401,6 +1404,9 @@ class AccountTax(models.Model):
         i = 0
         cumulated_tax_included_amount = 0
         for tax in taxes:
+            tax_repartition_lines = (is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids).filtered(lambda x: x.repartition_type == 'tax')
+            sum_repartition_factor = sum(tax_repartition_lines.mapped('factor'))
+
             #compute the tax_amount
             if (self._context.get('force_price_include') or tax.price_include) and total_included_checkpoints.get(i):
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
@@ -1410,11 +1416,12 @@ class AccountTax(models.Model):
                 tax_amount = tax.with_context(force_price_include=False)._compute_amount(
                     base, price_unit, quantity, product, partner)
 
-            # Round the tax_amount
+            # Round the tax_amount multiplied by the computed repartition lines factor.
             tax_amount = round(tax_amount, prec)
+            factorized_tax_amount = round(tax_amount * sum_repartition_factor, prec)
 
             if tax.price_include and not total_included_checkpoints.get(i):
-                cumulated_tax_included_amount += tax_amount
+                cumulated_tax_included_amount += factorized_tax_amount
 
             # If the tax affects the base of subsequent taxes, its tax move lines must
             # receive the base tags and tag_ids of these taxes, so that the tax report computes
@@ -1425,18 +1432,24 @@ class AccountTax(models.Model):
                 subsequent_taxes = taxes[i+1:]
                 subsequent_tags = subsequent_taxes.get_tax_tags(is_refund, 'base')
 
-            # Compute the tax lines
-            tax_repartition_lines = (is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids).filtered(lambda x: x.repartition_type == 'tax')
-            sum_factor = sum(tax_repartition_lines.mapped('factor'))
-            repartition_lines_to_treat = len(tax_repartition_lines)
-            total_amount = 0
-            for repartition_line in tax_repartition_lines:
-                if repartition_lines_to_treat != 1 or sum_factor != 1.0:
-                    line_amount = round(tax_amount * repartition_line.factor, prec)
-                else:
-                    # When the sum of the repartition lines factor is 100%, we need to ensure the whole tax amount has
-                    # been spread into the repartition lines.
-                    line_amount = round(tax_amount - total_amount, prec)
+            # Compute the tax line amounts by multiplying each factor with the tax amount.
+            # Then, spread the tax rounding to ensure the consistency of each line independently with the factorized
+            # amount. E.g:
+            #
+            # Suppose a tax having 4 x 50% repartition line applied on a tax amount of 0.03 with 2 decimal places.
+            # The factorized_tax_amount will be 0.06 (200% x 0.03). However, each line taken independently will compute
+            # 50% * 0.03 = 0.01 with rounding. It means there is 0.06 - 0.04 = 0.02 as total_rounding_error to dispatch
+            # in lines as 2 x 0.01.
+            repartition_line_amounts = [round(tax_amount * line.factor, prec) for line in tax_repartition_lines]
+            total_rounding_error = round(factorized_tax_amount - sum(repartition_line_amounts), prec)
+            nber_rounding_steps = int(abs(total_rounding_error / currency.rounding))
+            rounding_error = round(nber_rounding_steps and total_rounding_error / nber_rounding_steps or 0.0, prec)
+
+            for repartition_line, line_amount in zip(tax_repartition_lines, repartition_line_amounts):
+
+                if nber_rounding_steps:
+                    line_amount += rounding_error
+                    nber_rounding_steps -= 1
 
                 taxes_vals.append({
                     'id': tax.id,
@@ -1453,16 +1466,14 @@ class AccountTax(models.Model):
                     'tax_ids': [(6, False, subsequent_taxes.ids)]
                 })
 
-                total_amount += line_amount
                 if not repartition_line.account_id:
                     total_void += line_amount
-                repartition_lines_to_treat -= 1
 
             # Affect subsequent taxes
             if tax.include_base_amount:
-                base += tax_amount
+                base += factorized_tax_amount
 
-            total_included += tax_amount
+            total_included += factorized_tax_amount
             i += 1
 
         return {
