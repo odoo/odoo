@@ -6,7 +6,6 @@ import uuid
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
-from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 
 
@@ -22,7 +21,7 @@ class ChannelUsersRelation(models.Model):
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
-    def _compute_completion(self):
+    def _recompute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
@@ -47,16 +46,10 @@ class ChannelUsersRelation(models.Model):
         partner_karma = {partner_id: karma_to_add
                          for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0}
 
-        self._post_completion_hook()
-
         if partner_karma:
             users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
             for user in users:
                 users.add_karma(partner_karma[user.partner_id.id])
-
-
-    def _post_completion_hook(self):
-        pass
 
     def unlink(self):
         """
