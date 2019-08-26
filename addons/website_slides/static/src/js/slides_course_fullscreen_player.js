@@ -51,7 +51,10 @@ odoo.define('website_slides.fullscreen', function (require) {
             });
         },
         _loadYoutubeAPI: function () {
-            var def = new Promise(function () {});
+            var self = this;
+            var def = new Promise(function (resolve) {
+                self.resolveLoadYoutube = resolve;
+            });
             if ($(document).find('script[src="' + this.youtubeUrl + '"]').length === 0) {
                 console.log('cacaprout boudin');
                 var $youtubeElement = $('<script/>', {src: this.youtubeUrl});
@@ -60,12 +63,11 @@ odoo.define('website_slides.fullscreen', function (require) {
                 // function called when the Youtube asset is loaded
                 // see https://developers.google.com/youtube/iframe_api_reference#Requirements
                 onYouTubeIframeAPIReady = function () {
-                    console.log('onYouTubeIframeAPIReady');
-                    return Promise.resolve(def);
+                    self.resolveLoadYoutube();
                 };
 
             } else {
-                return Promise.resolve(def);
+                self.resolveLoadYoutube();
             }
             return def;
         },
@@ -89,9 +91,9 @@ odoo.define('website_slides.fullscreen', function (require) {
         },
         /**
          * Specific method of the youtube api.
-         * Whenever the player starts playing, a setinterval is created.
+         * Whenever the player starts playing/pausing/buffering/..., a setinterval is created.
          * This setinterval is used to check te user's progress in the video.
-         * Once the user reaches a particular time in the video, the slide will be considered as completed
+         * Once the user reaches a particular time in the video (30s before end), the slide will be considered as completed
          * if the video doesn't have a mini-quiz.
          * This method also allows to automatically go to the next slide (or the quiz associated to the current
          * video) once the video is over
@@ -101,23 +103,35 @@ odoo.define('website_slides.fullscreen', function (require) {
          */
         _onPlayerStateChange: function (event){
             var self = this;
-            clearInterval(self.tid);
-            console.log('_onPlayerStateChange');
-            if (event.data === YT.PlayerState.PLAYING && !self.slide.completed) {
+
+            if (self.slide.completed) {
+                return;
+            }
+
+            if (event.data !== YT.PlayerState.ENDED) {
+                if (!event.target.getCurrentTime) {
+                    return;
+                }
+
+                if (self.tid) {
+                    clearInterval(self.tid);
+                }
+
+                self.currentVideoTime = event.target.getCurrentTime();
+                self.totalVideoTime = event.target.getDuration();
                 self.tid = setInterval(function (){
-                    if (event.target.getCurrentTime){
-                        var currentTime = event.target.getCurrentTime();
-                        var totalTime = event.target.getDuration();
-                        if (totalTime && (currentTime > (totalTime - 30))) {
-                            clearInterval(self.tid);
-                            if (!self.slide.hasQuestion && !self.slide.completed){
-                                self.trigger_up('slide_to_complete', self.slide);
-                            }
+                    self.currentVideoTime += 1;
+                    if (self.totalVideoTime && self.currentVideoTime > self.totalVideoTime - 30){
+                        clearInterval(self.tid);
+                        if (!self.slide.hasQuestion && !self.slide.completed){
+                            self.trigger_up('slide_to_complete', self.slide);
                         }
                     }
                 }, 1000);
-            }
-            if (event.data === YT.PlayerState.ENDED){
+            } else {
+                if (self.tid) {
+                    clearInterval(self.tid);
+                }
                 this.player = undefined;
                 if (this.slide.hasNext) {
                     this.trigger_up('slide_go_next');
