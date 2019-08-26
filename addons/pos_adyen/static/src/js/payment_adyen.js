@@ -47,7 +47,7 @@ var PaymentAdyen = PaymentInterface.extend({
         return rpc.query({
             model: 'pos.payment.method',
             method: 'proxy_adyen_request',
-            args: [[this.payment_method.id], data],
+            args: [data, this.payment_method.adyen_test_mode, this.payment_method.adyen_api_key],
         }, {
             // When a payment terminal is disconnected it takes Adyen
             // a while to return an error (~6s). So wait 10 seconds
@@ -173,7 +173,11 @@ var PaymentAdyen = PaymentInterface.extend({
         return rpc.query({
             model: 'pos.payment.method',
             method: 'get_latest_adyen_status',
-            args: [[this.payment_method.id], this._adyen_get_sale_id()],
+            args: [this.payment_method.id,
+                   this._adyen_get_sale_id(),
+                   this.payment_method.adyen_terminal_identifier,
+                   this.payment_method.adyen_test_mode,
+                   this.payment_method.adyen_api_key],
         }, {
             timeout: 5000,
             shadow: true,

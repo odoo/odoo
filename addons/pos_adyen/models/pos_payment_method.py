@@ -36,7 +36,7 @@ class PosPaymentMethod(models.Model):
         whitelisted_fields = set(('adyen_latest_response', 'adyen_latest_diagnosis'))
         return super(PosPaymentMethod, self)._is_write_forbidden(fields - whitelisted_fields)
 
-    def _adyen_diagnosis_request_data(self, pos_config_name):
+    def _adyen_diagnosis_request_data(self, pos_config_name, terminal_identifier):
         service_id = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
         return {
             "SaleToPOIRequest": {
@@ -47,7 +47,7 @@ class PosPaymentMethod(models.Model):
                     "MessageType": "Request",
                     "ServiceID": service_id,
                     "SaleID": pos_config_name,
-                    "POIID": self.adyen_terminal_identifier
+                    "POIID": terminal_identifier,
                 },
                 "DiagnosisRequest": {
                     "HostDiagnosisFlag": False
@@ -55,35 +55,49 @@ class PosPaymentMethod(models.Model):
             }
         }
 
-    def get_latest_adyen_status(self, pos_config_name):
-        self.ensure_one()
-        latest_response = self.sudo().adyen_latest_response
-        latest_response = json.loads(latest_response) if latest_response else False
-        self.sudo().adyen_latest_response = ''  # avoid handling old responses multiple times
+    @api.model
+    def get_latest_adyen_status(self, payment_method_id, pos_config_name, terminal_identifier, test_mode, api_key):
+        '''See the description of proxy_adyen_request as to why this is an
+        @api.model function.
+        '''
 
         # Poll the status of the terminal if there's no new
         # notification we received. This is done so we can quickly
         # notify the user if the terminal is no longer reachable due
         # to connectivity issues.
-        if not latest_response:
-            self.proxy_adyen_request(self._adyen_diagnosis_request_data(pos_config_name))
+        self.proxy_adyen_request(self._adyen_diagnosis_request_data(pos_config_name, terminal_identifier),
+                                 test_mode,
+                                 api_key)
+
+        payment_method = self.sudo().browse(payment_method_id)
+        latest_response = payment_method.adyen_latest_response
+        latest_response = json.loads(latest_response) if latest_response else False
+        payment_method.adyen_latest_response = ''  # avoid handling old responses multiple times
 
         return {
             'latest_response': latest_response,
-            'last_received_diagnosis_id': self.adyen_latest_diagnosis,
+            'last_received_diagnosis_id': payment_method.adyen_latest_diagnosis,
         }
 
-    def proxy_adyen_request(self, data):
-        ''' Necessary because Adyen's endpoints don't have CORS enabled '''
-        self.ensure_one()
+    @api.model
+    def proxy_adyen_request(self, data, test_mode, api_key):
+        '''Necessary because Adyen's endpoints don't have CORS enabled. This is an
+        @api.model function to avoid concurrent update errors. Adyen's
+        async endpoint can still take well over a second to complete a
+        request. By using @api.model and passing in all data we need from
+        the POS we avoid locking the pos_payment_method table. This way we
+        avoid concurrent update errors when Adyen calls us back on
+        /pos_adyen/notification which will need to write on
+        pos.payment.method.
+        '''
         TIMEOUT = 10
         endpoint = 'https://terminal-api-live.adyen.com/async'
-        if self.adyen_test_mode:
+        if test_mode:
             endpoint = 'https://terminal-api-test.adyen.com/async'
 
         _logger.info('request to adyen\n%s', pprint.pformat(data))
         headers = {
-            'x-api-key': self.adyen_api_key,
+            'x-api-key': api_key,
             'Content-Type': 'application/json'
         }
         req = requests.post(endpoint, data=json.dumps(data), headers=headers, timeout=TIMEOUT)
