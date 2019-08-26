@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2019-05-29 21:13+0000\n"
+"PO-Revision-Date: 2019-08-04 15:36+0000\n"
 "Last-Translator: trendspotter <j.podhorecky@volny.cz>\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "<span class=\"o_stat_text\">Balance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Zůstatek</span>"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
@@ -39,7 +39,7 @@ msgid ""
 "A cashmove can either be an expense or a payment.<br>\n"
 "                An expense is automatically created at the order receipt.<br>\n"
 "                A payment represents the employee reimbursement to the company."
-msgstr ""
+msgstr "Pohyb hotovosti může být buď výdaj, nebo platba.<br>\nPo přijetí objednávky se automaticky vytvoří náklad.<br>\nPlatba představuje úhradu zaměstnancům společnosti."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
@@ -72,7 +72,7 @@ msgstr "Výstraha"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_alerts
 #: model:ir.ui.menu,name:lunch.lunch_alert_menu
 msgid "Alerts"
-msgstr ""
+msgstr "Výstrahy"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
@@ -282,7 +282,7 @@ msgstr "Zobrazovaný název"
 #: code:addons/lunch/static/src/xml/lunch.xml:7
 #, python-format
 msgid "Don't forget the alerts displayed in the reddish area"
-msgstr ""
+msgstr "Nezapomeňte na upozornění zobrazená v načervenalé oblasti"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_payment
@@ -292,7 +292,7 @@ msgstr "Platby zaměstnanců"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky_is_max_budget
 msgid "Enable this option to set a maximal budget for your lucky order."
-msgstr ""
+msgstr "Povolením této možnosti nastavíte maximální rozpočet pro vaši šťastnou objednávku."
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
@@ -352,7 +352,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Here you can see today's orders grouped by vendors."
-msgstr ""
+msgstr "Zde můžete vidět dnešní objednávky seskupené podle dodavatelů."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
@@ -375,7 +375,7 @@ msgstr "Mám dnes štěstí!"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_is_max_budget
 msgid "I'm not feeling rich"
-msgstr ""
+msgstr "Necítím se bohatý"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_id
@@ -391,7 +391,7 @@ msgstr "ID"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_state
 msgid "Is an order or a payment"
-msgstr ""
+msgstr "Je to objednávka nebo platba"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert___last_update
@@ -440,7 +440,7 @@ msgstr "Oběd"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_alert
 msgid "Lunch Alert"
-msgstr ""
+msgstr "Upozornění na oběd"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:223
@@ -466,7 +466,7 @@ msgstr "vedoucí"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_max_budget
 msgid "Max Budget"
-msgstr ""
+msgstr "Maximální rozpočet"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_message
@@ -509,7 +509,7 @@ msgstr "Nové"
 #: model:ir.actions.act_window,name:lunch.lunch_order_action_form
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_form
 msgid "New Order"
-msgstr ""
+msgstr "Nová objednávka"
 
 #. module: lunch
 #: code:addons/lunch/wizard/lucky_order.py:37
@@ -544,7 +544,7 @@ msgstr "Měsíc objednání"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Order lines Tree"
-msgstr ""
+msgstr "Strom objednávkových řádek"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_order
@@ -554,17 +554,17 @@ msgstr ""
 #. module: lunch
 #: selection:lunch.order.line,state:0
 msgid "Ordered"
-msgstr ""
+msgstr "Objednáno"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Orders Form"
-msgstr ""
+msgstr "Formulář objednávek"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Orders Tree"
-msgstr ""
+msgstr "Strom objednávek"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_by_supplier
@@ -581,7 +581,7 @@ msgstr "Platba"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
 msgid "Previous Orders"
-msgstr ""
+msgstr "Předchozí objednávky"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_ids
@@ -616,12 +616,12 @@ msgstr "Kategorie výrobku"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 msgid "Product Category:"
-msgstr ""
+msgstr "Kategorie produktu:"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Product Search"
-msgstr ""
+msgstr "Hledání produktu"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
@@ -634,12 +634,12 @@ msgstr "Produkty"
 #: model:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_form
 msgid "Products Form"
-msgstr ""
+msgstr "Formulář produktu"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_tree
 msgid "Products Tree"
-msgstr ""
+msgstr "Strom produktů"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
@@ -666,7 +666,7 @@ msgstr "Opakování"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 msgid "Register Cash Moves"
-msgstr ""
+msgstr "Zaregistrovat pohyby v hotovosti"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_saturday
@@ -694,7 +694,7 @@ msgstr "Hledat"
 #: code:addons/lunch/static/src/xml/lunch.xml:5
 #, python-format
 msgid "Select a product and put your order comments on the note."
-msgstr ""
+msgstr "Vyberte produkt a do poznámky vložte poznámky k objednávce."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -720,7 +720,7 @@ msgstr "Stav"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
-msgstr ""
+msgstr "Přehled všech objednávek na obědy, seskupených podle dodavatele a podle data."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_sunday
@@ -736,7 +736,7 @@ msgstr "Firma, pro kterou uživatel aktuálně pracuje."
 #: code:addons/lunch/models/lunch.py:98
 #, python-format
 msgid "The date of your order is in the past."
-msgstr ""
+msgstr "Datum vaší objednávky je v minulosti."
 
 #. module: lunch
 #. openerp-web
@@ -758,7 +758,7 @@ msgstr "Dnes"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_by_supplier
 msgid "Today's Orders"
-msgstr ""
+msgstr "Dnešní objednávky"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_total
