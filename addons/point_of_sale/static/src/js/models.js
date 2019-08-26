@@ -173,18 +173,6 @@ exports.PosModel = Backbone.Model.extend({
         },
 
     },{
-        model:  'res.users',
-        fields: ['name','company_id', 'id'],
-        ids:    function(self){ return [session.uid]; },
-        loaded: function(self,users){
-            self.user = users[0];
-            self.user.role = 'manager';
-            self.employee.name = self.user.name;
-            self.employee.user_id = [self.user.id, self.user.name];
-            self.employees = [self.employee];
-            self.set_cashier(self.employee);
-        },
-    },{
         model:  'res.company',
         fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'state_id', 'tax_calculation_rounding_method'],
         ids:    function(self){ return [session.user_context.allowed_company_ids[0]]; },
@@ -292,6 +280,26 @@ exports.PosModel = Backbone.Model.extend({
                 self.pos_session.sequence_number = Math.max(self.pos_session.sequence_number, orders[i].data.sequence_number+1);
             }
        },
+    },{
+        model:  'res.users',
+        fields: ['name','company_id', 'id', 'groups_id'],
+        ids:    function(self){ return [session.uid]; },
+        loaded: function(self,users){
+          var role = 'cashier';
+          users[0].groups_id.some(function(group_id) {
+              if (group_id === self.config.group_pos_manager_id[0]) {
+                  role = 'manager';
+                  return true;
+              }
+            });
+            self.user = users[0];
+            self.user.role = role;
+            self.employee.name = self.user.name;
+            self.employee.role = role;
+            self.employee.user_id = [self.user.id, self.user.name];
+            self.employees = [self.employee];
+            self.set_cashier(self.employee);
+        },
     },{
         model:  'product.pricelist',
         fields: ['name', 'display_name', 'discount_policy'],
