@@ -20,10 +20,6 @@
             <t t-set="domainClass" t-value="'o_stock_reports_domain_line_1'"/>
         </t>
 
-        <t t-set="span_color" t-value="'color: #666666;'"/>
-        <t t-if="l.usage == 'in'"><t t-set="span_color" t-value="'color: #3c763d;'"/></t>
-        <t t-if="l.usage == 'out'"><t t-set="span_color" t-value="'color: #a94442;'"/></t>
-
         <tr t-att-data-unfold="l.unfoldable" t-att-data-parent_id="l.parent_id" t-att-data-id="l.id"  t-att-data-model_id="l.model_id" t-att-data-model="l.model" t-att-class="trclass" t-att-data-lot_name="l.lot_name" t-att-data-lot_id="l.lot_id">
             <t t-if="l.unfoldable == true"><t t-set="tdclass" t-value="'o_stock_reports_unfoldable'" /></t>
             <t t-set="column" t-value="0" />
@@ -47,9 +43,9 @@
                             </span>
                         </t>
                     <t t-if="l.reference != c and l.lot_name != c">
-                        <t t-if="typeof c == 'string' || typeof c == 'number'"><span t-att-style="span_color">
+                        <t t-if="typeof c == 'string' || typeof c == 'number'">
                             <t t-raw="c"/>
-                        </span></t>
+                        </t>
                         <t t-if="typeof c != 'string' &amp; typeof c != 'number'"><span t-att-style="c[1]">
                             <t t-raw="c[0]"/>
                         </span></t>
