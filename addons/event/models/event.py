@@ -423,6 +423,9 @@ class EventRegistration(models.Model):
     @api.model
     def create(self, vals):
         registration = super(EventRegistration, self).create(vals)
+        onsubscribe_schedulers = registration.event_id.event_mail_ids.filtered(lambda s: s.interval_type == 'after_sub')
+        if onsubscribe_schedulers:
+            onsubscribe_schedulers.sudo().write({'done': False})
         if registration._check_auto_confirmation():
             registration.sudo().confirm_registration()
         return registration
