@@ -485,7 +485,7 @@ QUnit.module('Views', {
 
          _.each(controlPanel.exportState().filters, function (filter) {
             if (filter.type === 'favorite') {
-                assert.deepEqual(filter.orderedBy, 
+                assert.deepEqual(filter.orderedBy,
                     [{
                         name: 'foo',
                         asc: true,

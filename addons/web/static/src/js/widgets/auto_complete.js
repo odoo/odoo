@@ -30,6 +30,7 @@ return Widget.extend({
         this.search_string = '';
         this.current_search = null;
     },
+
     start: function () {
         var self = this;
         this.$input.on('keyup', function (ev) {
@@ -90,7 +91,7 @@ return Widget.extend({
                     ev.preventDefault();
                     break;
                 case $.ui.keyCode.RIGHT:
-                    if(self.$input[0].selectionStart < self.search_string.length) {
+                    if (self.$input[0].selectionStart < self.search_string.length) {
                         ev.stopPropagation();
                         return;
                     }
@@ -104,10 +105,10 @@ return Widget.extend({
                     ev.preventDefault();
                     break;
                 case $.ui.keyCode.LEFT:
-                     if(self.$input[0].selectionStart > 0) {
+                    if (self.$input[0].selectionStart > 0) {
                         ev.stopPropagation();
-                     }
-                     break;
+                    }
+                    break;
                 case $.ui.keyCode.ESCAPE:
                     self.close();
                     self.searching = false;
@@ -115,40 +116,69 @@ return Widget.extend({
             }
         });
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    close: function () {
+        this.current_search = null;
+        this.search_string = '';
+        this.searching = true;
+        this.$el.hide();
+    },
+
+    expand: function () {
+        var self = this;
+        var current_result = this.current_result;
+        current_result.expand(this.get_search_string()).then(function (results) {
+            (results || [{ label: '(no result)' }]).reverse().forEach(function (result) {
+                result.indent = true;
+                var $li = self.make_list_item(result);
+                current_result.$el.after($li);
+            });
+            self.current_result.expanded = true;
+            self.current_result.$el.find('a.o-expand').removeClass('o-expand').addClass('o-expanded');
+        });
+    },
+
+    focus_element: function ($li) {
+        this.$('li').removeClass('o-selection-focus');
+        $li.addClass('o-selection-focus');
+        this.current_result = $li.data('result');
+    },
+
+    fold: function () {
+        var $next = this.current_result.$el.next();
+        while ($next.hasClass('o-indent')) {
+            $next.remove();
+            $next = this.current_result.$el.next();
+        }
+        this.current_result.expanded = false;
+        this.current_result.$el.find('a.o-expanded').removeClass('o-expanded').addClass('o-expand');
+    },
+
     initiate_search: function (query) {
         if (query === this.search_string && query !== this.current_search) {
             this.search(query);
         }
     },
-    search: function (query) {
-        var self = this;
-        this.current_search = query;
-        this.source({term:query}, function (results) {
-            if (results.length) {
-                self.render_search_results(results);
-                self.focus_element(self.$('li:first-child'));
-            } else {
-                self.close();
-            }
-        });
+
+    is_expandable: function () {
+        return !!this.$('.o-selection-focus .o-expand').length;
     },
-    render_search_results: function (results) {
-        var self = this;
-        var $list = this.$el;
-        $list.empty();
-        results.forEach(function (result) {
-            var $item = self.make_list_item(result).appendTo($list);
-            result.$el = $item;
-        });
-        this.show();
+
+    is_expanded: function () {
+        return this.$el[0].style.display === "block";
     },
+
     make_list_item: function (result) {
         var self = this;
         var $li = $('<li>')
-            .hover(function () {self.focus_element($li);})
+            .hover(function () { self.focus_element($li); })
             .mousedown(function (ev) {
                 if (ev.button === 0) { // left button
-                    self.select(ev, {item: {facet: result.facet}});
+                    self.select(ev, { item: { facet: result.facet } });
                     self.close();
                 }
             })
@@ -164,7 +194,7 @@ return Widget.extend({
                     self.expand();
                 }
             });
-            $expand.click(function(ev) {
+            $expand.click(function (ev) {
                 ev.preventDefault(); // to prevent url from changing due to href="#"
             });
             result.expanded = false;
@@ -173,46 +203,7 @@ return Widget.extend({
         $li.append($('<a href="#">').html(result.label));
         return $li;
     },
-    expand: function () {
-        var self = this;
-        var current_result = this.current_result;
-        current_result.expand(this.get_search_string()).then(function (results) {
-            (results || [{label: '(no result)'}]).reverse().forEach(function (result) {
-                result.indent = true;
-                var $li = self.make_list_item(result);
-                current_result.$el.after($li);
-            });
-            self.current_result.expanded = true;
-            self.current_result.$el.find('a.o-expand').removeClass('o-expand').addClass('o-expanded');
-        });
-    },
-    fold: function () {
-        var $next = this.current_result.$el.next();
-        while ($next.hasClass('o-indent')) {
-            $next.remove();
-            $next = this.current_result.$el.next();
-        }
-        this.current_result.expanded = false;
-        this.current_result.$el.find('a.o-expanded').removeClass('o-expanded').addClass('o-expand');
-    },
-    focus_element: function ($li) {
-        this.$('li').removeClass('o-selection-focus');
-        $li.addClass('o-selection-focus');
-        this.current_result = $li.data('result');
-    },
-    select_item: function (ev) {
-        this.select(ev, {item: {facet: this.current_result.facet}});
-        this.close();
-    },
-    show: function () {
-        this.$el.show();
-    },
-    close: function () {
-        this.current_search = null;
-        this.search_string = '';
-        this.searching = true;
-        this.$el.hide();
-    },
+
     move: function (direction) {
         var $next;
         if (direction === 'down') {
@@ -224,11 +215,38 @@ return Widget.extend({
         }
         this.focus_element($next);
     },
-    is_expandable: function () {
-        return !!this.$('.o-selection-focus .o-expand').length;
+
+    render_search_results: function (results) {
+        var self = this;
+        var $list = this.$el;
+        $list.empty();
+        results.forEach(function (result) {
+            var $item = self.make_list_item(result).appendTo($list);
+            result.$el = $item;
+        });
+        this.show();
     },
-    is_expanded: function() {
-        return this.$el[0].style.display === "block";
-    }
+
+    search: function (query) {
+        var self = this;
+        this.current_search = query;
+        this.source({ term: query }, function (results) {
+            if (results.length) {
+                self.render_search_results(results);
+                self.focus_element(self.$('li:first-child'));
+            } else {
+                self.close();
+            }
+        });
+    },
+
+    select_item: function (ev) {
+        this.select(ev, { item: { facet: this.current_result.facet } });
+        this.close();
+    },
+
+    show: function () {
+        this.$el.show();
+    },
 });
 });
