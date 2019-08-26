@@ -135,6 +135,7 @@ return Widget.extend({
             (results || [{ label: '(no result)' }]).reverse().forEach(function (result) {
                 result.indent = true;
                 var $li = self.make_list_item(result);
+                self._bindMouseenterLi($li[0]);
                 current_result.$el.after($li);
             });
             self.current_result.expanded = true;
@@ -143,7 +144,7 @@ return Widget.extend({
     },
 
     focus_element: function ($li) {
-        this.$('li').removeClass('o-selection-focus');
+        this.$('.o-selection-focus').removeClass('o-selection-focus');
         $li.addClass('o-selection-focus');
         this.current_result = $li.data('result');
     },
@@ -175,7 +176,6 @@ return Widget.extend({
     make_list_item: function (result) {
         var self = this;
         var $li = $('<li>')
-            .hover(function () { self.focus_element($li); })
             .mousedown(function (ev) {
                 if (ev.button === 0) { // left button
                     self.select(ev, { item: { facet: result.facet } });
@@ -203,7 +203,6 @@ return Widget.extend({
         $li.append($('<a href="#">').html(result.label));
         return $li;
     },
-
     move: function (direction) {
         var $next;
         if (direction === 'down') {
@@ -224,6 +223,14 @@ return Widget.extend({
             var $item = self.make_list_item(result).appendTo($list);
             result.$el = $item;
         });
+        this.el.onmousemove = ev => {
+            [...this.el.getElementsByTagName('li')].forEach(this._bindMouseenterLi.bind(this));
+            let targetFocus = ev.target.tagName === 'LI' ?
+                ev.target :
+                ev.target.closest('li');
+            this.focus_element($(targetFocus));
+            this.el.onmousemove = null;
+        };
         this.show();
     },
 
@@ -247,6 +254,20 @@ return Widget.extend({
 
     show: function () {
         this.$el.show();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Binds a mouseenter event to a list item to focus the item when hovering it.
+     *
+     * @private
+     * @param {HTMLElement} li
+     */
+    _bindMouseenterLi: function (li) {
+        li.onmouseenter = this.focus_element.bind(this, $(li));
     },
 });
 });
