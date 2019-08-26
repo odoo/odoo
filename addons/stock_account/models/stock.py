@@ -272,6 +272,7 @@ class StockMove(models.Model):
         qty_to_take_on_candidates = quantity or valued_quantity
         candidates = move.product_id._get_fifo_candidates_in_move_with_company(move.company_id.id)
         new_standard_price = 0
+        tmp_qty = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
             new_standard_price = candidate.price_unit
@@ -292,6 +293,7 @@ class StockMove(models.Model):
             candidate.write(candidate_vals)
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
+            tmp_qty += qty_taken_on_candidate
             tmp_value += value_taken_on_candidate
             if qty_to_take_on_candidates == 0:
                 break
@@ -305,9 +307,18 @@ class StockMove(models.Model):
         # negative stock use case. We chose to value the out move at the price of the
         # last out and a correction entry will be made once `_fifo_vacuum` is called.
         if qty_to_take_on_candidates == 0:
+            # If the move is not valued yet we compute the price_unit based on the value taken on
+            # the candidates.
+            # If the move has already been valued, it means that we editing the qty_done on the
+            # move. In this case, the price_unit computation should take into account the quantity
+            # already valued and the new quantity taken.
+            if not move.value:
+                price_unit = -tmp_value / (move.product_qty or quantity)
+            else:
+                price_unit = (-(tmp_value) + move.value) / (tmp_qty + move.product_qty)
             move.write({
                 'value': -tmp_value if not quantity else move.value or -tmp_value,  # outgoing move are valued negatively
-                'price_unit': -tmp_value / (move.product_qty or quantity),
+                'price_unit': price_unit,
             })
         elif qty_to_take_on_candidates > 0:
             last_fifo_price = new_standard_price or move.product_id.standard_price
