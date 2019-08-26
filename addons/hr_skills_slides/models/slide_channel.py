@@ -4,10 +4,11 @@
 from odoo import fields, models
 
 
-class ChannelUsersRelation(models.Model):
+class SlideChannelPartner(models.Model):
     _inherit = 'slide.channel.partner'
 
-    def _post_completion_hook(self):
+    def _recompute_completion(self):
+        res = super(SlideChannelPartner, self)._recompute_completion()
         partner_has_completed = {channel_partner.partner_id.id: channel_partner.channel_id for channel_partner in self}
         employees = self.env['hr.employee'].sudo().search([('user_id.partner_id', 'in', list(partner_has_completed.keys()))])
         for employee in employees:
@@ -23,11 +24,4 @@ class ChannelUsersRelation(models.Model):
                 'display_type': 'course',
                 'channel_id': channel.id
             })
-        return super()._post_completion_hook()
-
-
-class ResumeLine(models.Model):
-    _inherit = 'hr.resume.line'
-
-    display_type = fields.Selection(selection_add=[('course', 'Course')])
-    channel_id = fields.Many2one('slide.channel', string="Course", readonly=True)
+        return res

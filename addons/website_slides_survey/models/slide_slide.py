@@ -22,15 +22,17 @@ class SlidePartnerRelation(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('survey_quizz_passed'):
-                vals['completed'] = True
-        return super(SlidePartnerRelation, self).create(vals_list)
+        res = super(SlidePartnerRelation, self).create(vals_list)
+        completed = res.filtered('survey_quizz_passed')
+        if completed:
+            completed.write({'completed': True})
+        return res
 
     def _write(self, vals):
+        res = super(SlidePartnerRelation, self)._write(vals)
         if vals.get('survey_quizz_passed'):
-            vals['completed'] = True
-        return super(SlidePartnerRelation, self)._write(vals)
+            self.sudo().write({'completed': True})
+        return res
 
 
 class Slide(models.Model):
