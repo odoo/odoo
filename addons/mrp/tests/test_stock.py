@@ -90,10 +90,12 @@ class TestWarehouse(common.TestMrpCommon):
         lot_product_4 = self.env['stock.production.lot'].create({
             'name': '0000000000001',
             'product_id': self.product_4.id,
+            'company_id': self.env.company.id,
         })
         lot_product_2 = self.env['stock.production.lot'].create({
             'name': '0000000000002',
             'product_id': self.product_2.id,
+            'company_id': self.env.company.id,
         })
 
         stock_inv_product_4 = self.env['stock.inventory'].create({
@@ -172,7 +174,7 @@ class TestWarehouse(common.TestMrpCommon):
         workorder = mo_laptop.workorder_ids[0]
 
         workorder.button_start()
-        serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id})
+        serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id, 'company_id': self.env.company.id})
         workorder.finished_lot_id = serial
         workorder.record_production()
         mo_laptop.button_mark_done()
@@ -190,7 +192,7 @@ class TestWarehouse(common.TestMrpCommon):
         """
         self.laptop.tracking = 'serial'
         mo_laptop = self.new_mo_laptop()
-        serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id})
+        serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id, 'company_id': self.env.company.id})
 
         product_produce = self.env['mrp.product.produce'].with_context({
             'active_id': mo_laptop.id,

@@ -11,6 +11,9 @@ class StockWarnInsufficientQtyUnbuild(models.TransientModel):
 
     unbuild_id = fields.Many2one('mrp.unbuild', 'Unbuild')
 
+    def _get_reference_document_company_id(self):
+        return self.unbuild_id.company_id
+
     def action_done(self):
         self.ensure_one()
         return self.unbuild_id.action_unbuild()
