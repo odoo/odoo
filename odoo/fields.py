@@ -11,6 +11,7 @@ from operator import attrgetter
 import itertools
 import logging
 import base64
+import binascii
 
 import pytz
 
@@ -1870,12 +1871,20 @@ class Binary(Field):
             return None
         # Detect if the binary content is an SVG for restricting its upload
         # only to system users.
+        value_to_check = None
         if value[:1] in (b'P', 'P'):  # Fast detection of first 6 bits of '<' (0x3C)
-            decoded_value = base64.b64decode(value)
-            # Full mimetype detection
-            if (guess_mimetype(decoded_value).startswith('image/svg') and
-                    not record.env.is_system()):
-                raise UserError(_("Only admins can upload SVG files."))
+            try:
+                value_to_check = base64.b64decode(value, validate=True)
+            except binascii.Error:
+                pass
+        elif value[:1] in (b'<', '<'):
+            value_to_check = value
+
+        # Full mimetype detection
+        if (value_to_check and guess_mimetype(value_to_check).startswith('image/svg') and
+                not record.env.is_system()):
+            raise UserError(_("Only admins can upload SVG files."))
+
         if isinstance(value, bytes):
             return psycopg2.Binary(value)
         try:
