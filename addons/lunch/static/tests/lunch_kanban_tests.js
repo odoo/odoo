@@ -122,7 +122,7 @@ QUnit.module('LunchKanbanView', {
             "should have a 'classical kanban view' column");
         assert.hasClass(kanban.$('.o_kanban_view'), 'o_lunch_kanban_view',
             "should have classname 'o_lunch_kanban_view'");
-        assert.containsOnce(kanban, '.o_lunch_kanban > .o_lunch_kanban_banner',
+        assert.containsOnce(kanban, '.o_lunch_kanban > span > .o_lunch_kanban_banner',
             "should have a 'lunch kanban' banner");
 
         kanban.destroy();
@@ -597,7 +597,7 @@ QUnit.module('LunchKanbanView', {
                             views: [[false, 'form']],
                             target: 'new',
                             context: {
-                                default_product_id: undefined,
+                                default_product_id: 1,
                                 line_id: false,
                             },
                         },
