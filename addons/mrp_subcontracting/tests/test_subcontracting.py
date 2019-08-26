@@ -429,15 +429,18 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         lot_c1 = self.env['stock.production.lot'].create({
             'name': 'LOT C1',
-            'product_id': self.comp1.id
+            'product_id': self.comp1.id,
+            'company_id': self.env.company.id,
         })
         lot_c2 = self.env['stock.production.lot'].create({
             'name': 'LOT C2',
-            'product_id': self.comp2.id
+            'product_id': self.comp2.id,
+            'company_id': self.env.company.id,
         })
         lot_f1 = self.env['stock.production.lot'].create({
             'name': 'LOT F1',
-            'product_id': self.finished.id
+            'product_id': self.finished.id,
+            'company_id': self.env.company.id,
         })
 
         register_form = Form(self.env['mrp.product.produce'].with_context(
@@ -476,7 +479,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         corrected_final_lot = self.env['stock.production.lot'].create({
             'name': 'LOT F2',
-            'product_id': self.finished.id
+            'product_id': self.finished.id,
+            'company_id': self.env.company.id,
         })
 
         details_operation_form = Form(picking_receipt.move_lines, view=self.env.ref('stock.view_stock_move_operations'))
@@ -594,11 +598,13 @@ class TestSubcontractingTracking(TransactionCase):
 
         lot_id = self.env['stock.production.lot'].create({
             'name': 'lot1',
-            'product_id': self.finished_lot.id
+            'product_id': self.finished_lot.id,
+            'company_id': self.env.company.id,
         })
         serial_id = self.env['stock.production.lot'].create({
             'name': 'lot1',
-            'product_id': self.comp1_sn.id
+            'product_id': self.comp1_sn.id,
+            'company_id': self.env.company.id,
         })
         produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo.id,
