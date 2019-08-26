@@ -9,11 +9,11 @@ from odoo.tools import float_compare, float_round
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
-    workorder_id = fields.Many2one('mrp.workorder', 'Work Order')
-    production_id = fields.Many2one('mrp.production', 'Production Order')
-    lot_produced_ids = fields.Many2many('stock.production.lot', string='Finished Lot/Serial Number')
+    workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
+    production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
+    lot_produced_ids = fields.Many2many('stock.production.lot', string='Finished Lot/Serial Number', check_company=True)
     lot_produced_qty = fields.Float(
-        'Quantity Finished Product', digits='Product Unit of Measure',
+        'Quantity Finished Product', digits='Product Unit of Measure', check_company=True,
         help="Informative, not used in matching")
     done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
 
@@ -53,23 +53,23 @@ class StockMoveLine(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    created_production_id = fields.Many2one('mrp.production', 'Created Production Order')
+    created_production_id = fields.Many2one('mrp.production', 'Created Production Order', check_company=True)
     production_id = fields.Many2one(
-        'mrp.production', 'Production Order for finished products')
+        'mrp.production', 'Production Order for finished products', check_company=True)
     raw_material_production_id = fields.Many2one(
-        'mrp.production', 'Production Order for components')
+        'mrp.production', 'Production Order for components', check_company=True)
     unbuild_id = fields.Many2one(
-        'mrp.unbuild', 'Disassembly Order')
+        'mrp.unbuild', 'Disassembly Order', check_company=True)
     consume_unbuild_id = fields.Many2one(
-        'mrp.unbuild', 'Consumed Disassembly Order')
+        'mrp.unbuild', 'Consumed Disassembly Order', check_company=True)
     operation_id = fields.Many2one(
-        'mrp.routing.workcenter', 'Operation To Consume')  # TDE FIXME: naming
+        'mrp.routing.workcenter', 'Operation To Consume', check_company=True)  # TDE FIXME: naming
     workorder_id = fields.Many2one(
-        'mrp.workorder', 'Work Order To Consume')
+        'mrp.workorder', 'Work Order To Consume', check_company=True)
     # Quantities to process, in normalized UoMs
-    bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line')
+    bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line', check_company=True)
     byproduct_id = fields.Many2one(
-        'mrp.bom.byproduct', 'By-products',
+        'mrp.bom.byproduct', 'By-products', check_company=True,
         help="By-product line that generated the move in a manufacturing order")
     unit_factor = fields.Float('Unit Factor', default=1)
     is_done = fields.Boolean(

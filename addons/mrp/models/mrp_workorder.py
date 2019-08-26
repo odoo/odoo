@@ -19,9 +19,14 @@ class MrpWorkorder(models.Model):
     name = fields.Char(
         'Work Order', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    company_id = fields.Many2one(
+        'res.company', 'Company',
+        default=lambda self: self.env.company,
+        required=True, index=True, readonly=True)
     workcenter_id = fields.Many2one(
         'mrp.workcenter', 'Work Center', required=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        check_company=True)
     working_state = fields.Selection(
         'Workcenter Status', related='workcenter_id.working_state', readonly=False,
         help='Technical: used in views only')
@@ -51,7 +56,8 @@ class MrpWorkorder(models.Model):
         default='pending')
     leave_id = fields.Many2one(
         'resource.calendar.leaves',
-        help='Slot into workcenter calendar once planned')
+        help='Slot into workcenter calendar once planned',
+        check_company=True)
     date_planned_start = fields.Datetime(
         'Scheduled Date Start',
         compute='_compute_dates_planned',
@@ -87,7 +93,9 @@ class MrpWorkorder(models.Model):
     progress = fields.Float('Progress Done (%)', digits=(16, 2), compute='_compute_progress')
 
     operation_id = fields.Many2one(
-        'mrp.routing.workcenter', 'Operation')  # Should be used differently as BoM can change in the meantime
+        'mrp.routing.workcenter', 'Operation',
+        check_company=True)
+        # Should be used differently as BoM can change in the meantime
     worksheet = fields.Binary(
         'Worksheet', related='operation_id.worksheet', readonly=True)
     worksheet_type = fields.Selection(
@@ -104,8 +112,8 @@ class MrpWorkorder(models.Model):
         'stock.move.line', 'workorder_id', 'Moves to Track',
         help="Inventory moves for which you must scan a lot number at this work order")
     finished_lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial Number', domain="[('product_id', '=', product_id)]",
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        'stock.production.lot', 'Lot/Serial Number', domain="[('id', 'in', allowed_lots_domain)]",
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, check_company=True)
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id')
     is_user_working = fields.Boolean(
@@ -114,7 +122,7 @@ class MrpWorkorder(models.Model):
     working_user_ids = fields.One2many('res.users', string='Working user on this work order.', compute='_compute_working_users')
     last_working_user_id = fields.One2many('res.users', string='Last user that worked on this work order.', compute='_compute_working_users')
 
-    next_work_order_id = fields.Many2one('mrp.workorder', "Next Work Order")
+    next_work_order_id = fields.Many2one('mrp.workorder', "Next Work Order", check_company=True)
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     production_date = fields.Datetime('Production Date', related='production_id.date_planned_start', store=True, readonly=False)
@@ -194,7 +202,10 @@ class MrpWorkorder(models.Model):
             qty_produced = sum([max(qty_dones) for qty_dones in qties_done_per_lot.values()])
             if float_compare(qty_produced, qty_to_produce, precision_rounding=rounding) < 0:
                 # If we haven't produced enough, all lots are available
-                allowed_lot_ids = self.env['stock.production.lot'].search([('product_id', '=', production.product_id.id)])
+                allowed_lot_ids = self.env['stock.production.lot'].search([
+                    ('product_id', '=', production.product_id.id),
+                    ('company_id', '=', production.company_id.id),
+                ])
             else:
                 # If we produced enough, only the already produced lots are available
                 allowed_lot_ids = self.env['stock.production.lot'].browse(qties_done_per_lot.keys())
@@ -373,6 +384,7 @@ class MrpWorkorder(models.Model):
             return True
 
         self.ensure_one()
+        self._check_company()
         if float_compare(self.qty_producing, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
 
@@ -507,7 +519,8 @@ class MrpWorkorder(models.Model):
             'description': _('Time Tracking: ')+self.env.user.name,
             'loss_id': loss_id[0].id,
             'date_start': datetime.now(),
-            'user_id': self.env.user.id
+            'user_id': self.env.user.id,  # FIXME sle: can be inconsistent with company_id
+            'company_id': self.company_id.id,
         })
         return self.write({'state': 'progress',
                     'date_start': datetime.now(),
