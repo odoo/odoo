@@ -2152,6 +2152,7 @@ class TestStockValuation(TransactionCase):
 
         # stock values for move3
         self.assertEqual(move3.value, -80.0)
+        self.assertAlmostEqual(move3.price_unit, -10.0)
         self.assertEqual(move3.remaining_qty, 0.0)
         self.assertEqual(move3.remaining_value, 0.0)
 
@@ -2183,6 +2184,7 @@ class TestStockValuation(TransactionCase):
         # old value: -80 -(8@10)
         # new value: -148 => -(10@10 + 4@12)
         self.assertEqual(move3.value, -148)
+        self.assertAlmostEqual(move3.price_unit, -148.0/14.0)
 
         # older move
         self.assertEqual(move1.remaining_value, 0)  # before, 20
@@ -2271,6 +2273,7 @@ class TestStockValuation(TransactionCase):
 
         # stock values for move2
         self.assertEqual(move2.value, -100.0)
+        self.assertAlmostEqual(move2.price_unit, -10.0)
         self.assertEqual(move2.remaining_qty, 0.0)
         self.assertEqual(move2.remaining_value, 0.0)
 
@@ -2280,6 +2283,7 @@ class TestStockValuation(TransactionCase):
         move2.quantity_done = 8
 
         self.assertEqual(move2.value, -80.0)  # the move actually sent 8@10
+        self.assertAlmostEqual(move2.price_unit, -10.0)
         self.assertEqual(move2.remaining_qty, 0.0)
         self.assertEqual(move2.remaining_value, 0.0)
 
