@@ -13,9 +13,6 @@
             <tr t-att-data-unfold="a['unfoldable']" t-att-data-parent_id="a['parent_id']" t-att-data-id="a['id']" t-att-data-model_id="a['model_id']" t-att-data-model="a['model']" t-att-data-lot_name="a['lot_name']" t-att-data-lot_id="a['lot_id']" t-att-class="trclass">
                 <t t-set="tdclass" t-value="''" />
                 <t t-set="spanclass" t-value="''" />
-                <t t-set="span_color" t-value="'color: #666666;'"/>
-                <t t-if="a['usage'] == 'in'"><t t-set="span_color" t-value="'color: #3c763d;'"/></t>
-                <t t-if="a['usage'] == 'out'"><t t-set="span_color" t-value="'color: #a94442;'"/></t>
                 <t t-if="a.get('unfoldable')"><t t-set="tdclass" t-value="'o_stock_reports_unfoldable'" /></t>
                 <t t-if="not a.get('unfoldable')"><t t-set="spanclass" t-value="'o_stock_reports_nofoldable'" /></t>
                 <t t-set="column" t-value="0" />
@@ -41,9 +38,7 @@
                             </span>
                         </t>
                         <t t-else="">
-                            <span t-att-style="span_color">
                                 <t t-raw="c"/>
-                            </span>
                         </t>
                     </td>
                 </t>

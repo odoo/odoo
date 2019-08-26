@@ -13,15 +13,6 @@
 
         <!-- Resource: mrp.workcenter -->
 
-        <record id="mrp_workcenter_0" model="mrp.workcenter">
-            <field name="name">Assembly Station 1</field>
-            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
-            <field name="capacity">5</field>
-            <field name="time_start">10</field>
-            <field name="time_stop">8</field>
-            <field name="time_efficiency">87</field>
-        </record>
-
         <record id="mrp_workcenter_3" model="mrp.workcenter">
             <field name="name">Assembly Line 1</field>
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
@@ -33,7 +24,7 @@
         </record>
 
         <record id="mrp_workcenter_2" model="mrp.workcenter">
-            <field name="name">Assemble Station 2</field>
+            <field name="name">Assembly Line 2</field>
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
         </record>
 
@@ -62,7 +53,7 @@
 
         <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_0"/>
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Manual Assembly</field>
             <field name="time_cycle">60</field>
             <field name="sequence">5</field>
@@ -71,7 +62,7 @@
 
         <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_1"/>
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Long time assembly</field>
             <field name="time_cycle">180</field>
             <field name="sequence">15</field>
@@ -80,7 +71,7 @@
 
         <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_1"/>
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Testing</field>
             <field name="time_cycle">60</field>
             <field name="sequence">10</field>
@@ -644,21 +635,21 @@
         <!-- OEE -->
 
         <record id="mrp_workcenter_efficiency_0" model="mrp.workcenter.productivity">
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="loss_id" ref="block_reason7"/>
             <field name="date_start" eval="(datetime.now() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_end" eval="(datetime.now() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <record id="mrp_workcenter_efficiency_1" model="mrp.workcenter.productivity">
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="loss_id" ref="block_reason0"/>
             <field name="date_start" eval="(datetime.now() - timedelta(hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_end" eval="(datetime.now() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <record id="mrp_workcenter_efficiency_2" model="mrp.workcenter.productivity">
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="loss_id" ref="block_reason1"/>
             <field name="date_start" eval="(datetime.now() - timedelta(days=5, hours=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_end" eval="(datetime.now() - timedelta(days=5, hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
