@@ -2,15 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-import psycopg2
 import logging
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import ValidationError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
-
-_logger = logging.getLogger(__name__)
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -439,8 +436,8 @@ class ResPartner(models.Model):
     invoice_warn_msg = fields.Text('Message for Invoice')
     # Computed fields to order the partners as suppliers/customers according to the
     # amount of their generated incoming/outgoing account moves 
-    supplier_rank = fields.Integer(compute='_compute_rank', store=True)
-    customer_rank = fields.Integer(compute='_compute_rank', store=True)
+    supplier_rank = fields.Integer(default=0)
+    customer_rank = fields.Integer(default=0)
 
     def _get_name_search_order_by_fields(self):
         res = super()._get_name_search_order_by_fields()
@@ -455,67 +452,6 @@ class ResPartner(models.Model):
 
         order_by_field = order_by_field % field
         return '%s, %s' % (res, order_by_field % field) if res else order_by_field
-
-    @api.depends('invoice_ids', 'invoice_ids.state')
-    def _compute_rank(self):
-        """
-        The two field values may not be exact in the database!
-        To avoid any concurrent update failure while writing on the partner,
-        the count is not updated if the lock cannot be directly acquired.
-        The count will eventually be correctly computed, at the next successfull try.
-        """
-        types_in = ('in_invoice', 'in_refund', 'in_receipt')
-        types_out = ('out_invoice', 'out_refund', 'out_receipt')
-        partner_ids = tuple(self.ids)
-        queries_params = {
-            'supplier_rank': {
-                'partner_id': partner_ids,
-                'move_types': types_in
-            },
-            'customer_rank': {
-                'partner_id': partner_ids,
-                'move_types': types_out
-            },
-        }
-
-        # Update database in case an invoice is just created
-        self.flush()
-        for field, params in queries_params.items():
-            try:
-                with self.env.cr.savepoint():
-                    # Check if rows are not locked
-                    # Take this opportunity to retrieve the current partner ranks
-                    # If a customer has been created from the "Customer" menuitem
-                    # his rank should be equal to 1, even if no invoice has been
-                    # created for him yet
-                    self.env.cr.execute("""
-                        SELECT id, COALESCE({}, 0)
-                        FROM res_partner
-                        WHERE id IN %(partner_id)s
-                        FOR UPDATE NOWAIT
-                    """.format(field), params, log_exceptions=False)
-                    current_counts = dict(self.env.cr.fetchall())
-                    # Compute the real ranks, based on the posted
-                    # account moves generated from the invoices
-                    self.env.cr.execute("""
-                        SELECT m.partner_id, COUNT(*) AS move_count
-                        FROM account_move AS m
-                        WHERE
-                            type in %(move_types)s
-                            AND state = 'posted'
-                            AND partner_id IN %(partner_id)s
-                        GROUP BY m.partner_id
-                    """, params)
-                    counts = dict(self.env.cr.fetchall())
-                    # Update all ranks
-                    for partner in self:
-                        partner[field] = max(counts.get(partner.id, 0), current_counts.get(partner.id, 0))
-            except psycopg2.DatabaseError as e:
-                if e.pgcode == '55P03':
-                    _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks now.')
-                    continue
-                else:
-                    raise e
 
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
