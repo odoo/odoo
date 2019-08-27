@@ -17,7 +17,9 @@ class StockMove(SavepointCase):
         cls.transit_location = cls.env['stock.location'].search([
             ('company_id', '=', cls.env.company.id),
             ('usage', '=', 'transit'),
+            ('active', '=', False)
         ], limit=1)
+        cls.transit_location.active = True
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
         cls.product = cls.env['product.product'].create({

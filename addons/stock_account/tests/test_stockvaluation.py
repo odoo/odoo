@@ -641,7 +641,9 @@ class TestStockValuation(SavepointCase):
         transit_location = self.env['stock.location'].search([
             ('company_id', '=', self.env.company.id),
             ('usage', '=', 'transit'),
+            ('active', '=', False)
         ], limit=1)
+        transit_location.active = True
         move8 = self.env['stock.move'].create({
             'name': 'Send 10 units in transit',
             'location_id': self.stock_location.id,
