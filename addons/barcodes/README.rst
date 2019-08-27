@@ -12,7 +12,7 @@ The Barcodes module defines barcode nomenclatures whose rules identify specific 
 of items e.g. products, locations. It contains the following features:
 
 - Patterns to identify barcodes containing a numerical value (e.g. weight, price)
-- Definitin of barcode aliases that allow to identify the same product with different barcodes
+- Definition of barcode aliases that allow to identify the same product with different barcodes
 - Unlimited barcode patterns and definitions,
 - Support for encodings EAN-13, EAN-8 and UPC-A
 

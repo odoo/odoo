@@ -5,7 +5,7 @@
     'version': '1.0',
     'category': 'Hardware Drivers',
     'sequence': 6,
-    'summary': 'Provides support for customer facing displays',
+    'summary': 'Add a customer facing displays for POS',
     'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'description': """
 Screen Driver
