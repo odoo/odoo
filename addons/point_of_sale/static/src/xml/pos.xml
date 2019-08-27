@@ -1483,17 +1483,18 @@
             <span class="orders touch-scrollable">
 
                 <t t-foreach="widget.pos.get_order_list()" t-as="order">
-                    <t t-if='order === widget.pos.get_order()'>
+                    <t t-if="order === widget.pos.get_order()">
                         <span class="order-button select-order selected" t-att-data-uid="order.uid">
-                            <span class='order-sequence'>
-                                <t t-esc="order.uid.substring(order.uid.indexOf('-') +1)"/>
+                            <span class="order-sequence">
+                                <t t-esc="order.sequence_number" />
                             </span>
+                            <t t-esc="moment(order.creation_date).format('hh:mm')"/>
                         </span>
                     </t>
-                    <t t-if='order !== widget.pos.get_order()'>
+                    <t t-if="order !== widget.pos.get_order()">
                         <span class="order-button select-order" t-att-data-uid="order.uid">
-                            <span class='order-sequence'>
-                                <t t-esc="order.uid.substring(order.uid.indexOf('-') +1)"/>
+                            <span class="order-sequence">
+                                <t t-esc="order.sequence_number" />
                             </span>
                         </span>
                     </t>
