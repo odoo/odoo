@@ -4,7 +4,6 @@
 import ctypes
 import evdev
 import json
-from keysym_to_ucs import keysym_mapping
 import logging
 from lxml import etree
 import os
@@ -247,14 +246,7 @@ class KeyboardUSBDriver(Driver):
         key_pressed = ctypes.create_string_buffer(5)
         xlib.XkbTranslateKeySym(KeyboardUSBDriver.display, ctypes.byref(keysym), 0, ctypes.byref(key_pressed), 5, ctypes.byref(ctypes.c_int()))
         if key_pressed.value:
-            # Latin-1
-            return key_pressed.value.decode('latin1')
-        elif (keysym.value & 0xff000000) == 0x01000000:
-            # Already UCS
-            return chr(keysym.value & 0x00ffffff)
-        elif keysym.value in keysym_mapping:
-            # Other encodings
-            return chr(keysym_mapping[keysym.value])
+            return key_pressed.value.decode('utf-8')
         return ''
 
     def _get_active_modifiers(self, scancode):

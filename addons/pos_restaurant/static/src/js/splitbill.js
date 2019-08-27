@@ -71,7 +71,7 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
             neworder.remove_orderline(split.line);
             split.line = null;
         }
- 
+    
         splitlines[line_id] = split;
         $el.replaceWith($(QWeb.render('SplitOrderline',{
             widget: this,
@@ -199,4 +199,3 @@ return {
 }
 
 });
-
