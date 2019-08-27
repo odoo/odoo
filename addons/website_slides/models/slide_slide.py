@@ -50,7 +50,7 @@ class SlidePartnerRelation(models.Model):
         self.env['slide.channel.partner'].search([
             ('channel_id', 'in', self.channel_id.ids),
             ('partner_id', 'in', self.partner_id.ids),
-        ])._compute_completion()
+        ])._compute_completed()
 
 class SlideLink(models.Model):
     _name = 'slide.slide.link'
@@ -593,7 +593,7 @@ class Slide(models.Model):
             'completed': True} for new_slide in new_slides])
         self.env['slide.channel.partner'].sudo().search(
             [('channel_id', 'in', (self_sudo | existing_sudo.mapped('slide_id')).mapped('channel_id').ids), ('partner_id', '=', target_partner.id)]
-        ).compute_completed()
+        )._compute_completed()
         return True
 
     def _action_set_quiz_done(self):

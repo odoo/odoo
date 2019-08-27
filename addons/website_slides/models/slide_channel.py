@@ -20,7 +20,7 @@ class ChannelUsersRelation(models.Model):
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
-    def compute_completed(self):
+    def _compute_completed(self):
         mapped_data = self._get_slide_channel_data()
         users = self.env['res.users']
         for record in self.exists().filtered(lambda cp: not cp.completed):
