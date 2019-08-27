@@ -341,7 +341,7 @@ class PaymentAcquirer(models.Model):
             company = self.env.company
         if not partner:
             partner = self.env.user.partner_id
-        active_acquirers = self.sudo().search([('state', 'in', ['enabled', 'test']), ('company_id', '=', company.id)])
+        active_acquirers = self.search([('state', 'in', ['enabled', 'test']), ('company_id', '=', company.id)])
         acquirers = active_acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
                                                                (acq.payment_flow == 's2s' and acq.registration_view_template_id))
         return {
