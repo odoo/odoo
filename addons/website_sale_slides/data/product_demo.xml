@@ -2,24 +2,6 @@
 <odoo><data noupdate="1">
     <!-- CHANNEL 1: Taking care of Trees -->
     <!-- ================================================== -->
-    <record id="product_course_channel_1_option_0" model="product.product">
-        <field name="name">Water can</field>
-        <field name="standard_price">12.0</field>
-        <field name="list_price">12.0</field>
-        <field name="type">consu</field>
-        <field name="is_published" eval="True"/>
-        <field name="image_1920" type="base64" file="website_sale_slides/static/img/water_can.jpg"/>
-    </record>
-
-    <record id="product_course_channel_1_option_1" model="product.product">
-        <field name="name">Flower pot</field>
-        <field name="standard_price">4.5</field>
-        <field name="list_price">4.5</field>
-        <field name="type">consu</field>
-        <field name="is_published" eval="True"/>
-        <field name="image_1920" type="base64" file="website_sale_slides/static/img/flower_pot.jpg"/>
-    </record>
-
     <record id="product_course_channel_1" model="product.product">
         <field name="name">Taking care of Trees Course</field>
         <field name="standard_price">150.0</field>
@@ -39,10 +21,4 @@
         <field name="is_published" eval="True"/>
         <field name="image_1920" type="base64" file="website_sale_slides/static/img/product_course.png"/>
     </record>
-
-    <!-- TBE: This need to be fixed, `optional_product_ids` is a field defined in `sale_product_configurator` which is not defined as a dependency --> 
-    <!-- <record id="product_course_demo_1_product_template" model="product.template">
-        <field name="optional_product_ids" eval="[(6, 0, [ref('website_sale_slides.product_course_channel_1_option_0_product_template'),ref('website_sale_slides.product_course_channel_1_option_1_product_template')])]"/>
-    </record> -->
-
 </data></odoo>
