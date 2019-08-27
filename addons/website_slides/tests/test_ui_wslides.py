@@ -49,3 +49,19 @@ class TestUi(tests.HttpCase):
             'odoo.__DEBUG__.services["web_tour.tour"].run("course_member")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member.ready',
             login=user_portal.login)
+
+    def test_course_publisher_website_designer(self):
+        # remove membership because we need to be able to join the course during the tour
+        # group_website_designer
+        user_demo = self.env.ref('base.user_demo')
+        user_demo.flush()
+        user_demo.write({
+            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_designer').id)]
+        })
+        self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo'))
+
+        self.phantom_js(
+            '/slides',
+            'odoo.__DEBUG__.services["web_tour.tour"].run("course_publisher")',
+            'odoo.__DEBUG__.services["web_tour.tour"].tours.course_publisher.ready',
+            login=user_demo.login)
