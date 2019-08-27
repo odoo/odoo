@@ -231,6 +231,9 @@
         .o_composer_button_send, .o_chatter_avatar {
             display: none !important;
         }
+        .o_attachment {
+            width: 50%;
+        }
     }
 }
 
@@ -333,6 +336,10 @@ $o-mail-attachment-margin: 5px;
     }
 
     &.o_attachment_uploading {
+        .o_attachment_wrap {
+            padding-right: 0px;
+        }
+
         .o_attachment_progress_bar {
             display: inline-block;
             margin: 0 0 0 8px;
