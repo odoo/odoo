@@ -770,7 +770,7 @@ registry.colorpicker = SnippetOption.extend({
         if ($selected.length) {
             if ($selected.data('color')) {
                 this.$target.addClass(this.colorPrefix + $selected.data('color'));
-            } else {
+            } else if ($selected.hasClass('o_custom_color')) {
                 this.$target.css('background-color', $selected.css('background-color'));
             }
         }
