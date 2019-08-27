@@ -106,7 +106,8 @@ class WebsiteVisitor(models.Model):
                 # If visitor does not exist
                 visitor_sudo = self._create_visitor(website_page.id)
                 sign = visitor_sudo._get_visitor_sign().get(visitor_sudo.id)
-                response.set_cookie('visitor_id', sign)
+                expiration_date = datetime.now() + timedelta(days=100*365)  # never expire
+                response.set_cookie('visitor_id', sign, expires=expiration_date.timestamp())
             else:
                 # Add page even if already in visitor_page_ids as checks on relations are done in many2many write method
                 vals = {
