@@ -35,6 +35,7 @@ class Company(models.Model):
                 'usage': 'transit',
                 'location_id': parent_location and parent_location.id or False,
                 'company_id': company.id,
+                'active': False
             })
 
             company.write({'internal_transit_location_id': location.id})
