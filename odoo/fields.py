@@ -692,64 +692,33 @@ class Field(MetaField('DummyField', (object,), {})):
     #
     # Setup of field triggers
     #
-    # The triggers of a field F is a tree that contains the fields that depend
-    # on F, together with the fields to inverse to find out which records to
-    # recompute.
-    #
-    # For instance, assume that G depends on F, H depends on X.F, I depends on
-    # W.X.F, and J depends on Y.F. The triggers of F will be the tree:
-    #
-    #                                   [G]
-    #                                 X/   \Y
-    #                               [H]     [J]
-    #                             W/
-    #                           [I]
-    #
-    # This tree provides perfect support for the trigger mechanism:
-    # when F is # modified on records,
-    #  - mark G to recompute on records,
-    #  - mark H to recompute on inverse(X, records),
-    #  - mark I to recompute on inverse(W, inverse(X, records)),
-    #  - mark J to recompute on inverse(Y, records).
 
-    def setup_triggers(self, model):
-        def add_trigger(field, path):
-            """ add a trigger on field to recompute self """
-            field_model = model.env[field.model_name]
-            # trigger computations depending on one2many fields only at creation
-            nodes = [field_model._field_triggers_create.setdefault(field, {})]
-            if (field.type != 'one2many') or not field_model._field_inverses[field]:
-                nodes.append(field_model._field_triggers.setdefault(field, {}))
-            for node in nodes:
-                for f in reversed(path):
-                    node = node.setdefault(f, {})
-                n = node.setdefault(None, [])
-                if self not in n: n.append(self)
-
+    def resolve_depends(self, model):
+        """ Return the dependencies of `self` as a collection of field tuples. """
         for dotnames in self.depends:
+            field_seq = []
             field_model = model
-            path = []                   # fields from model to field_model
-            for fname in dotnames.split('.'):
-                field = field_model._fields[fname]
-
+            for index, fname in enumerate(dotnames.split('.')):
                 if model._transient and not field_model._transient:
                     # modifying fields on regular models should not trigger
                     # recomputations of fields on transient models
                     break
 
-                # Do not make self trigger itself
-                # e.g. `fields.One2many('stock.move.line', 'move_id', domain=[('product_qty', '=', 0.0)])`
-                # will have 'move_line_nosuggest_ids.product_qty' as a dependency
-                if (field is not self) or path:
-                    add_trigger(field, path)
-
-                if (field is self) and path:
+                field = field_model._fields[fname]
+                if field is self and index:
                     self.recursive = True
 
-                path.append(field)
+                field_seq.append(field)
+
+                # do not make self trigger itself: for instance, a one2many
+                # field line_ids with domain [('foo', ...)] will have
+                # 'line_ids.foo' as a dependency
+                if not (field is self and not index):
+                    yield tuple(field_seq)
+
                 if field.type in ('one2many', 'many2many'):
                     for inv_field in field_model._field_inverses[field]:
-                        add_trigger(inv_field, path)
+                        yield tuple(field_seq) + (inv_field,)
 
                 field_model = model.env.get(field.comodel_name)
 
