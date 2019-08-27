@@ -30,7 +30,7 @@ class PosController(http.Controller):
                 ('rescue', '=', False)
                 ]
         if config_id:
-            AND([domain,['config_id', '=', int(config_id)]])
+            domain = AND([domain,[('config_id', '=', int(config_id))]])
         pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
         if not pos_session:
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
