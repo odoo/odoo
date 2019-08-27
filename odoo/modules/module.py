@@ -544,6 +544,8 @@ class OdooTestResult(unittest.result.TestResult):
         """
 
         # only test case should be executed in odoo, this is only a safe guard
+        if isinstance(test, unittest.suite._ErrorHolder):
+            return
         if not isinstance(test, unittest.TestCase):
             _logger.warning('%r is not a TestCase' % test)
             return
