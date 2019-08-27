@@ -91,7 +91,7 @@ class SerialDriver(Driver):
         """Tries to build the device's name based on its type and protocol name but falls back on a default name if that doesn't work."""
 
         try:
-            name = ('%s serial %s' % (self._protocol.name, self._device_type)).title()
+            name = self._protocol.name.title()
         except Exception:
             name = 'Unknown Serial Device'
         self._device_name = name
@@ -124,11 +124,11 @@ class SerialDriver(Driver):
         """
 
         if self._connection and self._connection.isOpen():
-            self._do_action(data)
+            return self._do_action(data)
         else:
             with serial_connection(self.dev['identifier'], self._protocol) as connection:
                 self._connection = connection
-                self._do_action(data)
+                return self._do_action(data)
 
     def run(self):
         """Continuously gets new measures from the device."""

@@ -125,7 +125,7 @@
                     {% endif %}
                     {% for iot_devices in iot_device_status|groupby('type') %}
                         <div class="collapsible">
-                            <div class="title arrow-down">{{ iot_devices.grouper|capitalize }}s</div>
+                            <div class="title arrow-down">{{ iot_devices.grouper|replace("_", " ")|title }}s</div>
                             <div class="content">
                                 {% for device in iot_devices.list %}
                                     <div class="device-status">
