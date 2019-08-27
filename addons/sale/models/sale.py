@@ -1172,7 +1172,7 @@ class SaleOrderLine(models.Model):
     ], related='order_id.state', string='Order Status', readonly=True, copy=False, store=True, default='draft')
 
     customer_lead = fields.Float(
-        'Delivery Lead Time', required=True, default=0.0,
+        'Lead Time', required=True, default=0.0,
         help="Number of days between the order confirmation and the shipping of the products to the customer")
 
     display_type = fields.Selection([
