@@ -675,7 +675,7 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
             var self  = this;
             var time  = (new Date()).getTime();
             var delay = 500;
-            if (this.logo_click_time + 500 < time) {
+            if (this.logo_click_time + delay < time) {
                 this.logo_click_time  = time;
                 this.logo_click_count = 1;
             } else {
