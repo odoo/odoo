@@ -446,8 +446,6 @@ var SnippetEditor = Widget.extend({
      * @param {Object} ui
      */
     _onDragAndDropStop: function (ev, ui) {
-        this.$editable.find('.oe_drop_zone').droppable('destroy').remove();
-
         // TODO lot of this is duplicated code of the d&d feature of snippets
         if (!this.dropped) {
             var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
@@ -456,6 +454,8 @@ var SnippetEditor = Widget.extend({
                 this.dropped = true;
             }
         }
+
+        this.$editable.find('.oe_drop_zone').droppable('destroy').remove();
 
         var prev = this.$target.first()[0].previousSibling;
         var next = this.$target.last()[0].nextSibling;
