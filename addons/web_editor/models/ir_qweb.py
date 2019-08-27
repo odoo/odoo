@@ -394,7 +394,6 @@ class Image(models.AbstractModel):
 
 class Monetary(models.AbstractModel):
     _name = 'ir.qweb.field.monetary'
-    _description = 'Qweb Field Monerary'
     _inherit = 'ir.qweb.field.monetary'
 
     @api.model
