@@ -118,6 +118,7 @@ class CustomerPortal(CustomerPortal):
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'searchbar_inputs': searchbar_inputs,
             'search_in': search_in,
+            'search': search,
             'filterby': filterby,
             'default_url': '/my/purchase',
         })

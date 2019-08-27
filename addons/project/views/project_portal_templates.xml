@@ -41,11 +41,10 @@
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Projects</t>
             </t>
-            <t t-if="not projects">
-                <div class="alert alert-warning mt8" role="alert">
-                    There are no projects.
-                </div>
-            </t>
+            <div t-if="not projects" class="alert alert-info mt8" role="alert">
+                <t t-if="search and search_in">There is no project for <span t-esc="search"/> in <span t-esc="search_in"/>.</t>
+                <t t-else="">There are currently no projects for your account.</t>
+            </div>
             <t t-if="projects" t-call="portal.portal_table">
                 <thead>
                     <tr class="active">
@@ -133,9 +132,10 @@
                 <t t-set="title">Tasks</t>
             </t>
             <t t-if="not grouped_tasks">
-                <div class="alert alert-warning mt8" role="alert">
-                    There are no tasks.
-                </div>
+                <div class="alert alert-info mt8" role="alert">
+                <t t-if="search and search_in">There is no task for <span t-esc="search"/> in <span t-esc="search_in"/>.</t>
+                <t t-else="">There are currently no tasks for your account.</t>
+            </div>
             </t>
             <t t-if="grouped_tasks">
                 <t t-call="portal.portal_table">

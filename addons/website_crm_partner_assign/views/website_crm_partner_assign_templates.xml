@@ -228,8 +228,9 @@
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Leads</t>
             </t>
-            <div t-if="not leads" class="alert alert-warning mt8" role="alert">
-                There are no leads.
+            <div t-if="not leads" class="alert alert-info mt8" role="alert">
+                <t t-if="search and search_in">There is no lead for <span t-esc="search"/> in <span t-esc="search_in"/>.</t>
+                <t t-else="">There are currently no leads for your account.</t>
             </div>
             <t t-if="leads" t-call="portal.portal_table">
                 <thead>
@@ -295,11 +296,10 @@
                     </form>
                 </div>
             </div>
-            <t t-if="not opportunities">
-                <div class="alert alert-warning mt8" role="alert">
-                    There are no opportunities.
-                </div>
-            </t>
+            <div t-if="not opportunities" class="alert alert-info mt8" role="alert">
+                <t t-if="search and search_in">There is no opportunity for <span t-esc="search"/> in <span t-esc="search_in"/>.</t>
+                <t t-else="">There are currently no opportunities for your account.</t>
+            </div>
             <t t-if="opportunities" t-call="portal.portal_table">
                 <thead>
                     <tr class="active">

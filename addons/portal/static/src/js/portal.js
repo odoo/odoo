@@ -55,6 +55,7 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     events: {
         'click .search-submit': '_onSearchSubmitClick',
         'click .dropdown-item': '_onDropdownItemClick',
+        'click .o-input-clear': '_onClearSearchClick',
         'keyup input[name="search"]': '_onSearchInputKeyup',
     },
 
@@ -118,5 +119,14 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
             this._search();
         }
     },
+    /**
+     * @private
+     */
+    _onClearSearchClick: function () {
+        this.$('.dropdown-item.active').toggleClass('active');
+        this.$('.dropdown-item:first').toggleClass('active');
+        this.$('input[name="search"]').val('');
+        this._search();
+    }
 });
 });

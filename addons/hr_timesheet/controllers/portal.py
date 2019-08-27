@@ -96,6 +96,7 @@ class TimesheetCustomerPortal(CustomerPortal):
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'search_in': search_in,
+            'search': search,
             'sortby': sortby,
             'groupby': groupby,
             'searchbar_inputs': searchbar_inputs,

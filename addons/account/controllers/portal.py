@@ -96,6 +96,7 @@ class PortalAccount(CustomerPortal):
             'searchbar_sortings': searchbar_sortings,
             'searchbar_inputs': searchbar_inputs,
             'search_in': search_in,
+            'search': search,
             'sortby': sortby,
         })
         return request.render("account.portal_my_invoices", values)

@@ -26,11 +26,10 @@
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Timesheets</t>
             </t>
-            <t t-if="not grouped_timesheets">
-                <div class="alert alert-warning mt8" role="alert">
-                    There are no timesheets.
-                </div>
-            </t>
+            <div t-if="not grouped_timesheets" class="alert alert-info mt8" role="alert">
+                <t t-if="search and search_in">There is no timesheet for <span t-esc="search"/> in <span t-esc="search_in"/>.</t>
+                <t t-else="">There are currently no timesheets for your account.</t>
+            </div>
             <t t-if="grouped_timesheets">
                 <t t-call="portal.portal_table">
                     <t t-foreach="grouped_timesheets" t-as="timesheets">

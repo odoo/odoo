@@ -109,6 +109,7 @@ class CustomerPortal(CustomerPortal):
             'searchbar_sortings': searchbar_sortings,
             'searchbar_inputs': searchbar_inputs,
             'search_in': search_in,
+            'search': search,
             'sortby': sortby,
         })
         return request.render("sale.portal_my_quotations", values)

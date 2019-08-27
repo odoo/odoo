@@ -125,6 +125,7 @@ class WebsiteAccount(CustomerPortal):
             'searchbar_sortings': searchbar_sortings,
             'searchbar_inputs': searchbar_inputs,
             'search_in': search_in,
+            'search': search,
             'sortby': sortby,
         })
         return request.render("website_crm_partner_assign.portal_my_leads", values)

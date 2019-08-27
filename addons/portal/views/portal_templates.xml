@@ -258,7 +258,10 @@
                                 </t>
                             </div>
                         </div>
-                        <input type="text" class="form-control form-control-sm" placeholder="Search" t-att-value='search' name="search"/>
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" placeholder="Search" t-att-value='search' name="search"/>
+                            <i t-attf-class="o-input-clear fa fa-remove {{'' if search else 'd-none'}}"/>
+                        </div>
                         <span class="input-group-append">
                             <button class="btn btn-secondary search-submit" type="button">
                                 <span class="fa fa-search"/>
