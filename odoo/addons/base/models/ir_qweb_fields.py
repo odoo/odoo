@@ -386,7 +386,7 @@ class MonetaryConverter(models.AbstractModel):
               It's set under the ``_values`` key.
     """
     _name = 'ir.qweb.field.monetary'
-    _description = 'Qweb Field Monerary'
+    _description = 'Qweb Field Monetary'
     _inherit = 'ir.qweb.field'
 
     @api.model
