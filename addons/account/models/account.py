@@ -690,7 +690,7 @@ class AccountJournal(models.Model):
     @api.depends('company_id')
     def _belong_to_company(self):
         for journal in self:
-            journal.belong_to_company = (journal.company_id.id == self.env.user.company_id.id)
+            journal.belongs_to_company = (journal.company_id.id == self.env.user.company_id.id)
 
     @api.multi
     def _search_company_journals(self, operator, value):
