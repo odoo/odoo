@@ -10,7 +10,7 @@ from odoo.tests.common import TransactionCase
 from odoo import tools
 from odoo.modules import get_modules, get_module_path
 
-MAX_ES_VERSION = 'es9'
+MAX_ES_VERSION = 'es8'
 
 _logger = logging.getLogger(__name__)
 
