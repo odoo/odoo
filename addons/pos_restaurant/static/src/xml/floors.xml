@@ -23,6 +23,19 @@
         </t>
     </t>
 
+    <t t-extend="OrderSelectorWidget">
+        <t t-jquery=".order-sequence" t-operation="replace">
+            <span class="order-sequence">
+                <t t-if="order.server_id &amp;&amp; widget.pos.pos_session.login_number != order.uid.split('-')[1]">
+                    <t t-esc="order.uid.substring(order.uid.indexOf('-') +1)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="order.sequence_number"/>
+                </t>
+            </span>
+        </t>
+    </t>
+
     <t t-name="TableGuestsButton">
         <div class='control-button'>
             <span class='control-button-number'>
