@@ -91,7 +91,7 @@ class SerialDriver(Driver):
         """Tries to build the device's name based on its type and protocol name but falls back on a default name if that doesn't work."""
 
         try:
-            name = ('%s serial %s' % (self._protocol.name, self._device_type)).title()
+            name = self._protocol.name.title()
         except Exception:
             name = 'Unknown Serial Device'
         self._device_name = name
