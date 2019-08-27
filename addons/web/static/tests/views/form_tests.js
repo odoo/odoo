@@ -352,8 +352,10 @@ QUnit.module('Views', {
                             'The correct _view_ref should have been sent to the server, first time');
                     }
                     if (args.model === 'partner_type') {
-                        assert.deepEqual(context, {tree_view_ref: 'some_other_tree_view'},
-                            'The correct _view_ref should have been sent to the server for the subview');
+                        assert.deepEqual(context, {
+                            base_model_name: 'product',
+                            tree_view_ref: 'some_other_tree_view',
+                        }, 'The correct _view_ref should have been sent to the server for the subview');
                     }
                 }
                 return this._super.apply(this, arguments);
@@ -4524,6 +4526,35 @@ QUnit.module('Views', {
             form.destroy();
             done();
         });
+    });
+
+    QUnit.test('non inline subview and create=0 in action context', async function (assert) {
+        // the create=0 should apply on the main view (form), but not on subviews
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="product_ids" mode="kanban"/></form>',
+            archs: {
+                "product,false,kanban": `<kanban>
+                                            <templates><t t-name="kanban-box">
+                                                <div><field name="name"/></div>
+                                            </t></templates>
+                                        </kanban>`,
+            },
+            res_id: 1,
+            viewOptions: {
+                context: {create: false},
+                mode: 'edit',
+            },
+        });
+
+        assert.containsNone(form, '.o_form_button_create');
+        assert.containsOnce(form, '.o-kanban-button-new');
+
+        form.destroy();
     });
 
     QUnit.test('readonly fields with modifiers may be saved', function (assert) {
