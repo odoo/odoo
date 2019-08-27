@@ -992,6 +992,8 @@ var ListRenderer = BasicRenderer.extend({
         });
         this.trigger_up('selection_changed', { selection: this.selection });
         this._updateFooter();
+
+        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------
@@ -1174,10 +1176,11 @@ var ListRenderer = BasicRenderer.extend({
      */
     _onSelectRecord: function (ev) {
         ev.stopPropagation();
-        this._updateSelection();
-        if (!$(ev.currentTarget).find('input').prop('checked')) {
-            this.$('thead .o_list_record_selector input').prop('checked', false);
-        }
+        this._updateSelection().then(() => {
+            if (!$(ev.currentTarget).find('input').prop('checked')) {
+                this.$('thead .o_list_record_selector input').prop('checked', false);
+            }
+        });
     },
     /**
      * @private
@@ -1222,7 +1225,9 @@ var ListRenderer = BasicRenderer.extend({
     _onToggleSelection: function (ev) {
         var checked = $(ev.currentTarget).prop('checked') || false;
         this.$('tbody .o_list_record_selector input:not(":disabled")').prop('checked', checked);
-        this._updateSelection();
+        this._updateSelection().then(() => {
+            $('thead .o_list_record_selector input').prop('checked', checked);
+        });
     },
 });
 

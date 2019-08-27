@@ -809,6 +809,19 @@ var Many2oneBarcode = FieldMany2One.extend({
 var ListFieldMany2One = FieldMany2One.extend({
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * In list views, we never want to focus a readonly many2one.
+     *
+     * @override
+     */
+    isFocusable: function () {
+        return this.mode === 'edit' && this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -1500,7 +1513,9 @@ var FieldX2Many = AbstractField.extend({
     _onActiveNextWidget: function (e) {
         e.stopPropagation();
         this.renderer.unselectRow();
-        this.trigger_up('navigation_move',{direction:'next'});
+        this.trigger_up('navigation_move', {
+            direction: e.data.direction || 'next',
+        });
     },
 });
 
