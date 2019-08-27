@@ -2651,7 +2651,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         #  - mark I to recompute on inverse(W, inverse(X, records)),
         #  - mark J to recompute on inverse(Y, records).
         cls._field_triggers = cls.pool.field_triggers
-        cls._field_triggers_create = cls.pool.field_triggers_create
 
         # register constraints and onchange methods
         cls._init_constraints_onchanges()
@@ -5493,20 +5492,19 @@ Record ids: %(records)s
         """
         if not self or not fnames:
             return
-        field_triggers = self._field_triggers if not create else self._field_triggers_create
         if len(fnames) == 1:
-            tree = field_triggers.get(self._fields[next(iter(fnames))])
+            tree = self._field_triggers.get(self._fields[next(iter(fnames))])
         else:
             # merge dependency trees to evaluate all triggers at once
             tree = {}
             for fname in fnames:
-                node = field_triggers.get(self._fields[fname])
+                node = self._field_triggers.get(self._fields[fname])
                 if node:
                     trigger_tree_merge(tree, node)
         if tree:
-            self.sudo()._modified_triggers(tree)
+            self.sudo()._modified_triggers(tree, create)
 
-    def _modified_triggers(self, tree):
+    def _modified_triggers(self, tree, create=False):
         """ Process a tree of field triggers on ``self``. """
         if not self:
             return
@@ -5519,17 +5517,21 @@ Record ids: %(records)s
                         continue
                     # Dont force the recomputation of compute fields which are
                     # not stored as this is not really necessary.
+                    recursive = not create and field.recursive
                     if field.compute and field.store:
-                        if field.recursive:
+                        if recursive:
                             added = self.env.not_to_compute(field, records)
                         self.env.add_to_compute(field, records)
                     else:
-                        if field.recursive:
+                        if recursive:
                             added = self & self.env.cache.get_records(self, field)
                         self.env.cache.invalidate([(field, records._ids)])
                     # recursively trigger recomputation of field's dependents
-                    if field.recursive:
+                    if recursive:
                         added.modified([field.name])
+            elif create and key.type in ('many2one', 'many2one_reference'):
+                # upon creation, no other record has a reference to self
+                continue
             else:
                 # val is another tree of dependencies
                 model = self.env[key.model_name]
@@ -5617,7 +5619,7 @@ Record ids: %(records)s
                     yield from val
                 else:
                     yield from traverse(val)
-        return traverse(self._field_triggers_create.get(field, {}))
+        return traverse(self._field_triggers.get(field, {}))
 
     def _has_onchange(self, field, other_fields):
         """ Return whether ``field`` should trigger an onchange event in the
