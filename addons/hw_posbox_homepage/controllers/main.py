@@ -74,7 +74,7 @@ class IoTboxHomepage(web.Home):
         mac = get_mac()
         h = iter(hex(mac)[2:].zfill(12))
         ssid = helpers.get_ssid()
-        wired = subprocess.check_output('cat /sys/class/net/eth0/operstate', shell=True).decode('utf-8').strip('\n')
+        wired = subprocess.check_output(['cat', '/sys/class/net/eth0/operstate']).decode('utf-8').strip('\n')
         if wired == 'up':
             network = 'Ethernet'
         elif ssid:
