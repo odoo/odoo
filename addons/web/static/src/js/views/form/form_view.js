@@ -102,6 +102,10 @@ var FormView = BasicView.extend({
                     var refinedContext = _.pick(self.loadParams.context, function (value, key) {
                         return key.indexOf('_view_ref') === -1;
                     });
+                    // Specify the main model to prevent access rights defined in the context
+                    // (e.g. create: 0) to apply to subviews. We use here the same logic as
+                    // the one applied by the server for inline views.
+                    refinedContext.base_model_name = self.controllerParams.modelName;
                     defs.push(parent.loadViews(
                             field.relation,
                             new Context(context, self.userContext, refinedContext).eval(),

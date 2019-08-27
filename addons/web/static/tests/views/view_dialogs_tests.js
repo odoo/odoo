@@ -408,8 +408,10 @@ QUnit.module('Views', {
                             'The correct _view_ref should have been sent to the server, first time');
                     }
                     if (ev.data.modelName === 'badassery') {
-                        assert.deepEqual(evaluatedContext, {tree_view_ref: 'some_other_tree_view'},
-                            'The correct _view_ref should have been sent to the server for the subview');
+                        assert.deepEqual(evaluatedContext, {
+                            base_model_name: 'instrument',
+                            tree_view_ref: 'some_other_tree_view',
+                        }, 'The correct _view_ref should have been sent to the server for the subview');
                     }
                 },
             },
