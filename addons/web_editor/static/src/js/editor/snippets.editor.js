@@ -10,9 +10,9 @@ var Wysiwyg = require('web_editor.wysiwyg');
 var _t = core._t;
 
 var globalSelector = {
-    closest: function () { return $(); },
-    all: function () { return $(); },
-    is: function () { return false; },
+    closest: () => $(),
+    all: () => $(),
+    is: () => false,
 };
 
 /**
@@ -29,14 +29,14 @@ var SnippetEditor = Widget.extend({
     },
     custom_events: {
         cover_update: '_onCoverUpdate',
-        option_update: '_onOptionUpdate',
+        'option_update': '_onOptionUpdate',
     },
 
     /**
      * @constructor
      * @param {Widget} parent
      * @param {Element} target
-     * @param templateOptions
+     * @param {Object} templateOptions
      * @param {jQuery} $editable
      * @param {Object} options
      */
@@ -404,14 +404,20 @@ var SnippetEditor = Widget.extend({
         self.$el.addClass('d-none');
 
         var $selectorSiblings;
-        for (var i = 0 ; i < self.selectorSiblings.length ; i++) {
-            if (!$selectorSiblings) $selectorSiblings = self.selectorSiblings[i].all();
-            else $selectorSiblings = $selectorSiblings.add(self.selectorSiblings[i].all());
+        for (var i = 0; i < self.selectorSiblings.length; i++) {
+            if (!$selectorSiblings) {
+                $selectorSiblings = self.selectorSiblings[i].all();
+            } else {
+                $selectorSiblings = $selectorSiblings.add(self.selectorSiblings[i].all());
+            }
         }
         var $selectorChildren;
-        for (i = 0 ; i < self.selectorChildren.length ; i++) {
-            if (!$selectorChildren) $selectorChildren = self.selectorChildren[i].all();
-            else $selectorChildren = $selectorChildren.add(self.selectorChildren[i].all());
+        for (i = 0; i < self.selectorChildren.length; i++) {
+            if (!$selectorChildren) {
+                $selectorChildren = self.selectorChildren[i].all();
+            } else {
+                $selectorChildren = $selectorChildren.add(self.selectorChildren[i].all());
+            }
         }
 
         this.trigger_up('go_to_parent', {$snippet: this.$target});
@@ -572,14 +578,14 @@ var SnippetsMenu = Widget.extend({
     cacheSnippetTemplate: {},
     activeSnippets: [],
     custom_events: {
-        activate_insertion_zones: '_onActivateInsertionZones',
-        call_for_each_child_snippet: '_onCallForEachChildSnippet',
-        deactivate_snippet: '_onDeactivateSnippet',
-        drag_and_drop_stop: '_onDragAndDropStop',
-        go_to_parent: '_onGoToParent',
-        remove_snippet: '_onRemoveSnippet',
-        snippet_removed: '_onSnippetRemoved',
-        reload_snippet_dropzones: '_disableUndroppableSnippets',
+        'activate_insertion_zones': '_onActivateInsertionZones',
+        'call_for_each_child_snippet': '_onCallForEachChildSnippet',
+        'deactivate_snippet': '_onDeactivateSnippet',
+        'drag_and_drop_stop': '_onDragAndDropStop',
+        'go_to_parent': '_onGoToParent',
+        'remove_snippet': '_onRemoveSnippet',
+        'snippet_removed': '_onSnippetRemoved',
+        'reload_snippet_dropzones': '_disableUndroppableSnippets',
     },
 
     /**
@@ -635,22 +641,22 @@ var SnippetsMenu = Widget.extend({
         }).insertAfter(this.$el);
 
         // Active snippet editor on click in the page
-        var lastClickedElement;
-        this.$document.on('click.snippets_menu', '*', function (ev) {
+        var lastElement;
+        this.$document.on('click.snippets_menu', '*', ev => {
             var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
-            if (lastClickedElement === srcElement || !srcElement) {
+            if (!srcElement || lastElement === srcElement) {
                 return;
             }
-            lastClickedElement = srcElement;
+            lastElement = srcElement;
             _.defer(function () {
-                lastClickedElement = false;
+                lastElement = false;
             });
 
             var $target = $(srcElement);
             if ($target.closest('.oe_overlay, .note-popover').length) {
                 return;
             }
-            self._activateSnippet($target);
+            this._activateSnippet($target);
         });
 
         core.bus.on('deactivate_snippet', this, this._onDeactivateSnippet);
@@ -804,7 +810,7 @@ var SnippetsMenu = Widget.extend({
      */
     _activateInsertionZones: function ($selectorSiblings, $selectorChildren) {
         var self = this;
-        var zone_template = $('<div/>', {
+        var zoneTemplate = $('<div/>', {
             class: 'oe_drop_zone oe_insert',
         });
 
@@ -820,11 +826,11 @@ var SnippetsMenu = Widget.extend({
                 var float = css.float || css.cssFloat;
                 var parentDisplay = parentCss.display;
                 var parentFlex = parentCss.flexDirection;
-                var $drop = zone_template.clone();
+                var $drop = zoneTemplate.clone();
 
                 $zone.append($drop);
                 var node = $drop[0].previousSibling;
-                var test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) ||  node.tagName === 'BR'));
+                var test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) || node.tagName === 'BR'));
                 if (test) {
                     $drop.addClass('oe_vertical').css({
                         height: parseInt(self.window.getComputedStyle($zone[0]).lineHeight),
@@ -842,7 +848,7 @@ var SnippetsMenu = Widget.extend({
 
                 $zone.prepend($drop);
                 node = $drop[0].nextSibling;
-                test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) ||  node.tagName === 'BR'));
+                test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) || node.tagName === 'BR'));
                 if (test) {
                     $drop.addClass('oe_vertical').css({
                         height: parseInt(self.window.getComputedStyle($zone[0]).lineHeight),
@@ -875,7 +881,7 @@ var SnippetsMenu = Widget.extend({
                 var parentFlex = parentCss.flexDirection;
 
                 if ($zone.prev('.oe_drop_zone:visible').length === 0) {
-                    $drop = zone_template.clone();
+                    $drop = zoneTemplate.clone();
                     if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                         $drop.css('float', float);
                         if (!isFullWidth($zone)) {
@@ -885,7 +891,7 @@ var SnippetsMenu = Widget.extend({
                     $zone.before($drop);
                 }
                 if ($zone.next('.oe_drop_zone:visible').length === 0) {
-                    $drop = zone_template.clone();
+                    $drop = zoneTemplate.clone();
                     if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                         $drop.css('float', float);
                         if (!isFullWidth($zone)) {
@@ -918,15 +924,15 @@ var SnippetsMenu = Widget.extend({
                 zone.remove();
                 return;
             }
-            var float_prev = prev.css('float')   || 'none';
-            var float_next = next.css('float')   || 'none';
-            var disp_prev  = prev.css('display') ||  null;
-            var disp_next  = next.css('display') ||  null;
-            if ((float_prev === 'left' || float_prev === 'right')
-             && (float_next === 'left' || float_next === 'right')) {
+            var floatPrev = prev.css('float') || 'none';
+            var floatNext = next.css('float') || 'none';
+            var dispPrev = prev.css('display') || null;
+            var dispNext = next.css('display') || null;
+            if ((floatPrev === 'left' || floatPrev === 'right')
+             && (floatNext === 'left' || floatNext === 'right')) {
                 zone.remove();
-            } else if (disp_prev !== null && disp_next !== null
-             && disp_prev.indexOf('inline') >= 0 && disp_next.indexOf('inline') >= 0) {
+            } else if (dispPrev !== null && dispNext !== null
+             && dispPrev.indexOf('inline') >= 0 && dispNext.indexOf('inline') >= 0) {
                 zone.remove();
             }
         });
@@ -1040,7 +1046,7 @@ var SnippetsMenu = Widget.extend({
      *        considered (@see noCheck), this is true if the DOM elements'
      *        parent must also be in an editable environment to be considered.
      */
-    _computeSelectorFunctions : function (include, exclude, target, noCheck, isChildren) {
+    _computeSelectorFunctions: function (include, exclude, target, noCheck, isChildren) {
         var self = this;
 
         // Convert the selector for elements to include into a list
@@ -1064,7 +1070,7 @@ var SnippetsMenu = Widget.extend({
         }
 
         // (Re)join the subselectors
-        var selector =_.map(selectorList, function (s) {
+        var selector = _.map(selectorList, function (s) {
             return s + selectorConditions;
         }).join(', ');
 
@@ -1087,7 +1093,7 @@ var SnippetsMenu = Widget.extend({
                 return $from.closest(selector, parentNode).filter(function () {
                     var node = this;
                     while (node.parentNode) {
-                        if (parents.indexOf(node)!==-1) {
+                        if (parents.indexOf(node) !== -1) {
                             return true;
                         }
                         node = node.parentNode;
@@ -1131,9 +1137,9 @@ var SnippetsMenu = Widget.extend({
             var exclude = $style.data('exclude') || '';
             var target = $style.data('target');
             var noCheck = $style.data('no-check');
-            var option_id = $style.data('js');
+            var optionID = $style.data('js');
             var option = {
-                'option': option_id,
+                'option': optionID,
                 'base_selector': selector,
                 'base_exclude': exclude,
                 'base_target': target,
@@ -1151,7 +1157,7 @@ var SnippetsMenu = Widget.extend({
         globalSelector.closest = function ($from) {
             var $temp;
             var $target;
-            for (var i = 0, len = selectors.length ; i < len ; i++) {
+            for (var i = 0, len = selectors.length; i < len; i++) {
                 $temp = selectors[i].closest($from, $target && $target[0]);
                 if ($temp.length) {
                     $target = $temp;
@@ -1161,13 +1167,13 @@ var SnippetsMenu = Widget.extend({
         };
         globalSelector.all = function ($from) {
             var $target = $();
-            for (var i = 0, len = selectors.length ; i < len ; i++) {
+            for (var i = 0, len = selectors.length; i < len; i++) {
                 $target = $target.add(selectors[i].all($from));
             }
             return $target;
         };
         globalSelector.is = function ($from) {
-            for (var i = 0, len = selectors.length ; i < len ; i++) {
+            for (var i = 0, len = selectors.length; i < len; i++) {
                 if (selectors[i].is($from)) {
                     return true;
                 }
@@ -1197,9 +1203,9 @@ var SnippetsMenu = Widget.extend({
                     return; // Compatibility with elements which do not use 't-snippet'
                 }
                 var $thumbnail = $(_.str.sprintf(
-                    '<div class="oe_snippet_thumbnail">'+
-                        '<div class="oe_snippet_thumbnail_img" style="background-image: url(%s);"/>'+
-                        '<span class="oe_snippet_thumbnail_title">%s</span>'+
+                    '<div class="oe_snippet_thumbnail">' +
+                        '<div class="oe_snippet_thumbnail_img" style="background-image: url(%s);"/>' +
+                        '<span class="oe_snippet_thumbnail_title">%s</span>' +
                     '</div>',
                     $snippet.find('[data-oe-thumbnail]').data('oeThumbnail'),
                     name
@@ -1231,7 +1237,7 @@ var SnippetsMenu = Widget.extend({
 
         // Remove branding from template
         _.each($html.find('[data-oe-model], [data-oe-type]'), function (el) {
-            for (var k = 0 ; k < el.attributes.length ; k++) {
+            for (var k = 0; k < el.attributes.length; k++) {
                 if (el.attributes[k].name.indexOf('data-oe-') === 0) {
                     $(el).removeAttr(el.attributes[k].name);
                     k--;
@@ -1296,11 +1302,13 @@ var SnippetsMenu = Widget.extend({
         var cache = {};
         this.$snippets.each(function () {
             var $snippet = $(this);
-            var $snippet_body = $snippet.find('.oe_snippet_body');
+            var $snippetBody = $snippet.find('.oe_snippet_body');
 
             var check = false;
             _.each(self.templateOptions, function (option, k) {
-                if (check || !($snippet_body.is(option.base_selector) && !$snippet_body.is(option.base_exclude))) return;
+                if (check || !($snippetBody.is(option.base_selector) && !$snippetBody.is(option.base_exclude))) {
+                    return;
+                }
 
                 cache[k] = cache[k] || {
                     'drop-near': option['drop-near'] ? option['drop-near'].all().length : 0,
@@ -1321,8 +1329,8 @@ var SnippetsMenu = Widget.extend({
     _makeSnippetDraggable: function ($snippets) {
         var self = this;
         var $tumb = $snippets.find('.oe_snippet_thumbnail_img:first');
-        var left = $tumb.outerWidth()/2;
-        var top = $tumb.outerHeight()/2;
+        var left = $tumb.outerWidth() / 2;
+        var top = $tumb.outerHeight() / 2;
         var $toInsert, dropped, $snippet;
 
         $snippets.draggable({
@@ -1339,12 +1347,12 @@ var SnippetsMenu = Widget.extend({
             start: function () {
                 dropped = false;
                 $snippet = $(this);
-                var $base_body = $snippet.find('.oe_snippet_body');
+                var $baseBody = $snippet.find('.oe_snippet_body');
                 var $selectorSiblings = $();
                 var $selectorChildren = $();
                 var temp = self.templateOptions;
                 for (var k in temp) {
-                    if ($base_body.is(temp[k].base_selector) && !$base_body.is(temp[k].base_exclude)) {
+                    if ($baseBody.is(temp[k].base_selector) && !$baseBody.is(temp[k].base_exclude)) {
                         if (temp[k]['drop-near']) {
                             $selectorSiblings = $selectorSiblings.add(temp[k]['drop-near'].all());
                         }
@@ -1354,7 +1362,7 @@ var SnippetsMenu = Widget.extend({
                     }
                 }
 
-                $toInsert = $base_body.clone().data('name', $base_body.data('name'));
+                $toInsert = $baseBody.clone().data('name', $baseBody.data('name'));
 
                 if (!$selectorSiblings.length && !$selectorChildren.length) {
                     console.warn($snippet.find('.oe_snippet_thumbnail_title').text() + " have not insert action: data-drop-near or data-drop-in");
