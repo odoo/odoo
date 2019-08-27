@@ -337,7 +337,7 @@ class Picking(models.Model):
     use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
 
     owner_id = fields.Many2one(
-        'res.partner', 'Assign owner',
+        'res.partner', 'Assign Owner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="When validating the transfer, the products will be assigned to this owner.")
     printed = fields.Boolean('Printed')
