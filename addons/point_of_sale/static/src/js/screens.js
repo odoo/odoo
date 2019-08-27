@@ -747,7 +747,6 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
         var cached = this.category_cache.get_node(category.id);
         if(!cached){
             if(with_image){
-                var image_url = this.get_image_url(category);
                 var category_html = QWeb.render('CategoryButton',{ 
                         widget:  this, 
                         category: category, 
@@ -934,7 +933,6 @@ var ProductListWidget = PosBaseWidget.extend({
         var cache_key = this.calculate_cache_key(product, current_pricelist);
         var cached = this.product_cache.get_node(cache_key);
         if(!cached){
-            var image_url = this.get_product_image_url(product);
             var product_html = QWeb.render('Product',{ 
                     widget:  this, 
                     product: product,
