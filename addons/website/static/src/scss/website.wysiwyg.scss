@@ -1,48 +1,27 @@
-//------------------------------------------------------------------------------
-// Modifications applied on normal website DOM while being in the editor.
-//------------------------------------------------------------------------------
+// Override css variables to influence the default style of the editor without
+// duplicating the css.
+:root {
+    --o-we-toolbar-height: #{$o-navbar-height};
+    --o-we-bg-color: #{$o-we-color-dark};
+    --o-we-bg-color-dark: #{$o-we-color-darker};
+    --o-we-color: #{$o-we-color-text-normal};
+    --o-we-color-accent: #{$o-we-color-text-light};
 
-//------------------------------------------------------------------------------
-// Editor components style.
-//------------------------------------------------------------------------------
+    --o-we-dropdown-bg-color: #{$o-we-color-darker};
+    --o-we-dropdown-color: #{$o-we-color-text-normal};
 
-body.editor_enable {
-    padding-top: $o-navbar-height !important;
+    --o-we-snippets-bg-color: #{$o-we-color-normal};
+    --o-we-snippets-color: #{$o-we-color-text-light};
 }
 
-#wrapwrap {
-    height: calc(100vh - #{$o-navbar-height});
-}
-
-// TOP BAR (EDIT)
+// EDITOR TOP BAR AND POPOVER
 #web_editor-top-edit {
-    height: $o-navbar-height;
-    background-color: $o-we-color-dark;
-    border: 0;
-    z-index: $zindex-modal - 9;
-
-    .note-popover .popover {
-        width: 100%;
-        height: $o-navbar-height;
-        text-align: left;
-
-        .popover-body {
-            height: $o-navbar-height;
-
-            .btn {
-                height: $o-navbar-height;
-            }
-        }
-    }
-
     form.navbar-form {
+        @include o-position-absolute(0, 0, 0, auto);
+        z-index: $zindex-popover + 5;
         height: $o-navbar-height;
-        z-index: 1060;
         margin: 0;
         padding: 0;
-        position: absolute;
-        top: -1px;
-        right: -1px;
         transition: right 0.4s $o-we-md-ease 0s;
         border-left: 1px solid $o-we-color-divider;
 
@@ -96,19 +75,11 @@ body.editor_enable {
     }
 }
 
-body:not(.editor_enable) form.navbar-form {
+.note-statusbar {
     display: none;
 }
 
-// SNIPPETS
-#oe_snippets {
-    border: 0;
-    #snippets_menu {
-        height: $o-navbar-height;
-    }
-}
-
-// Translations
+// TRANSLATIONS
 .oe_translate_examples li {
     margin: 10px;
     padding: 4px;
@@ -126,60 +97,10 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     }
 }
 
-// NOTE EDITOR
-
-// SNIPPET PANEL
-#oe_snippets {
-    @include o-w-preserve-btn;
-    position: fixed;
-    width: $o-we-sidebar-width;
-    z-index: 1042;
-
-    border-top: 0;
-    border-right: 1px solid $o-we-color-divider;
-    transition: left 400ms $o-we-md-ease 0s;
-    background-image: linear-gradient(45deg, $o-we-color-normal, darken($o-we-color-normal, 10%));
-
-    #snippets_menu {
-        color: #999999;
-        background: $o-we-color-dark;
-        font-family: $o-we-font-family;
-        height: $o-navbar-height;
-        line-height: $o-navbar-height;
-    }
-
-    #o_scroll {
-        .o_panel_header {
-            color: #999999;
-        }
-    }
-}
-
-.oe_snippet {
-    background-color: $o-we-color-normal;
-
-    .oe_snippet_thumbnail {
-        .oe_snippet_thumbnail_img {
-            border: 1px solid $o-we-color-normal;
-        }
-
-        img.oe_snippet_thumbnail_img {}
-
-        .oe_snippet_thumbnail_title {
-            border: 1px solid $o-we-color-dark;
-            color: $o-we-color-text-light;
-        }
-
-        &:hover .oe_snippet_thumbnail_title {
-            color: $o-we-color-text-lighter;
-        }
-    }
-}
-
 // SNIPPET OPTIONS
 .colorpicker {
     .o_colorpicker_sections {
-        .note-color-palette>div {
+        .note-color-palette > div {
             color: $o-we-color-text-light;
         }
     }
@@ -191,7 +112,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             clear: both;
         }
 
-        >button {
+        > button {
 
             &:hover,
             &.selected {
@@ -223,170 +144,19 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     }
 }
 
-// DROPZONES
-#wrapwrap .oe_drop_zone {
-    &.oe_insert {
-        height: $o-we-dropzone-size;
-        margin: (-$o-we-dropzone-size/2) 0;
-
-        &:after {
-            border-bottom: $o-we-dropzone-border;
-        }
-
-        &.oe_vertical {
-            width: $o-we-dropzone-size;
-            margin: 0 (-$o-we-dropzone-size/2);
-
-            &:after {
-                border-right: $o-we-dropzone-border;
-            }
-        }
-    }
-}
-
-// MANIPULATORS
-#oe_manipulators {
-
-    // SNIPPET MANIPULATORS
-    .oe_overlay {
-
-        // OVERLAY OPTIONS
-        >.oe_overlay_options {
-            font-family: $o-we-font-family;
-
-            >.btn-group {
-                .btn {
-                    height: $o-we-overlay-option-size;
-                    border: 1px solid $o-we-color-dark;
-                    line-height: #{$o-we-overlay-option-size - 2px};
-
-                    color: $o-we-color-text-light;
-                    background-color: $o-we-color-light;
-
-                    &:hover {
-                        background-color: lighten($o-we-color-dark, 10%);
-                    }
-
-                    &.oe_snippet_remove {
-                        background-color: $o-we-color-danger;
-                        border-color: darken($o-we-color-danger, 20%);
-
-                        &:hover {
-                            background-color: darken($o-we-color-danger, 20%);
-                        }
-                    }
-
-                    >.fa {
-                        color: $o-we-color-text-light;
-                    }
-                }
-
-                // CUSTOMIZE MENU BUTTON
-                >.oe_options {
-                    .btn {
-                        background-color: $o-we-color-dark;
-                        color: $o-we-color-text-light;
-
-                        &:hover,
-                        &:active,
-                        &:focus {
-                            background-color: lighten($o-we-color-dark, 5%);
-                            border-color: lighten($o-we-color-dark, 10%);
-                        }
-
-                        &:before,
-                        &:after {
-                            background-color: $o-we-color-text-light;
-                        }
-                    }
-
-                    // Open menu
-                    &.show .btn {
-                        // background-color: $o-we-color-light;
-                    }
-
-                    // CUSTOMIZE MENU
-                    .dropdown-menu {
-                        border: 1px solid $o-we-color-dark;
-                        background-color: $o-we-color-light;
-
-                        .dropdown-item {
-                            color: $o-we-color-text-light;
-
-                            &:hover {
-                                background-color: fade-out($o-we-color-dark, 0.5);
-                            }
-
-                            &.active {
-                                background-color: fade-out($o-we-color-dark, 0.5);
-                            }
-                        }
-
-                        .dropdown-header {
-                            color: wheat;
-
-                            &.o_parent_editor_header {
-                                color: wheat;
-                            }
-                        }
-
-                        .dropdown-submenu {
-                            &::before {
-                                border-left-color: $o-we-color-text-light;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        &.o_top_cover>.oe_overlay_options {
-            top: $o-we-handle-border-width;
-            right: $o-we-handle-border-width;
-        }
-
-    }
-}
-
-// Animations
-@keyframes fadeInDownSmall {
-    0% {
-        opacity: 0;
-        transform: translate(0, -5px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translate(0, 0);
-    }
-}
-
+// ANIMATIONS
 @keyframes fadeInOut {
     0% {
         opacity: 0;
     }
-
     25% {
         opacity: 1;
     }
-
     75% {
         opacity: 1;
     }
-
     100% {
         opacity: 0;
-    }
-}
-
-@keyframes inputHighlighter {
-    from {
-        background: $o-brand-primary;
-    }
-
-    to {
-        width: 0;
-        background: transparent;
     }
 }
 
@@ -545,111 +315,5 @@ body .modal {
                 }
             }
         }
-    }
-}
-
-.note-editor {
-    &>.note-toolbar-wrapper .note-toolbar {
-        height: $o-navbar-height;
-
-        .btn {
-            height: $o-navbar-height !important; // force this because of themes
-        }
-    }
-
-    &>.note-statusbar {
-        display: none;
-    }
-
-    &>.note-editing-area {
-        overflow: visible;
-    }
-}
-
-#web_editor-toolbars .popover,
-.note-popover,
-.note-editor>.note-toolbar-wrapper .note-toolbar {
-    // force this because of themes
-    background-color: $o-we-color-dark !important;
-
-    .btn {
-        background-color: $o-we-color-dark !important;
-        color: $o-we-color-text-normal !important;
-        border: none !important;
-        padding: 0.0625rem 0.3125rem !important;
-
-        >.fa {
-            color: $o-we-color-text-normal !important;
-        }
-
-        &:hover {
-            color: $o-we-color-text-light !important;
-
-            >.fa {
-                color: $o-we-color-text-light !important;
-            }
-        }
-
-        &.active {
-            background-color: $o-we-color-dark !important;
-            color: $o-we-color-text-light !important;
-
-            >.fa {
-                color: $o-we-color-text-light !important;
-            }
-        }
-    }
-
-    >.btn-group {
-        margin-top: 0 !important;
-
-        &.show,
-        .btn-group.show {
-            .dropdown-toggle {
-                border-top: 2px solid white !important;
-                background-color: $o-we-color-darker !important;
-                color: white !important;
-                box-shadow: none !important;
-
-                >.fa,
-                >span {
-                    color: white !important;
-                }
-            }
-        }
-    }
-
-    .dropdown-menu {
-        margin: 0 !important;
-        border-radius: 0 !important;
-        background-color: $o-we-color-darker !important;
-        color: $o-we-color-text-normal !important;
-        white-space: normal !important;
-
-        .dropdown-item {
-            width: 100% !important;
-            color: $o-we-color-text-light !important;
-
-            >.fa {
-                color: $o-we-color-text-light !important;
-            }
-
-            &:hover {
-                background-color: $o-we-tab-active-bg !important;
-                color: white !important;
-
-                >.fa {
-                    color: white !important;
-                }
-            }
-        }
-    }
-
-    .note-para .dropdown-menu {
-        min-width: 147px !important;
-    }
-
-    .note-style .dropdown-item * {
-        color: $o-we-color-text-light !important;
     }
 }

@@ -3,29 +3,41 @@
     <t t-name="web_editor.snippet_overlay">
         <div class="oe_overlay">
             <div class="o_handles">
+                <!-- Visible overlay borders + allow to resize when not readonly -->
                 <div class="o_handle n readonly"/>
                 <div class="o_handle e readonly"/>
                 <div class="o_handle w readonly"/>
                 <div class="o_handle s readonly"/>
-            </div>
-            <div class="oe_overlay_options" contentEditable="false">
-                <div class="btn-group">
-                    <a role="button" href="#" class="btn btn-secondary oe_snippet_parent" title="Select Parent Container" aria-label="Select Parent Container"><i class="fa fa-lg fa-level-up"/></a>
-                    <div class="dropdown oe_options d-none btn-group">
-                        <a role="button" href="#" data-toggle="dropdown" class="btn btn-primary" title="Customize">Customize</a>
-                        <div class="dropdown-menu" role="menu"/>
-                    </div>
-                    <a role="button" href="#" class="btn btn-secondary oe_snippet_move" title="Drag to Move" aria-label="Drag to Move"><i class="fa fa-arrows ml4 mr4"></i></a>
-                    <a role="button" href="#" class="btn btn-secondary oe_snippet_clone" title="Duplicate Container" aria-label="Duplicate Container"><i class="fa fa-files-o ml4 mr4"></i></a>
-                    <a role="button" href="#" class="btn btn-secondary oe_snippet_remove" title="Remove Block" aria-label="Remove Block"><i class="fa fa-trash-o ml4 mr4"></i></a>
-                </div>
+
+                <!-- Invisible overlay borders which allow to drag and drop -->
+                <div class="o_move_handle n"/>
+                <div class="o_move_handle e"/>
+                <div class="o_move_handle w"/>
+                <div class="o_move_handle s"/>
             </div>
         </div>
+    </t>
+    <t t-name="web_editor.customize_block_options_section">
+        <we-customizeblock-options>
+            <we-title>
+                <span t-esc="name"/>
+                <we-button-group>
+                    <we-button class="fa fa-files-o oe_snippet_clone"
+                                title="Duplicate Container"
+                                aria-label="Duplicate Container"/>
+                    <we-button class="fa fa-trash-o oe_snippet_remove"
+                                title="Remove Block"
+                                aria-label="Remove Block"/>
+                </we-button-group>
+            </we-title>
+        </we-customizeblock-options>
+    </t>
+    <t t-name="web_editor.customize_block_option">
+        <we-customizeblock-option/>
     </t>
 
     <!-- options -->
     <div t-name="web_editor.snippet.option.colorpicker" class="colorpicker">
-        <div class="note-palette-title">Background Color</div>
         <div class="btn-group palette-reset">
             <div class="note-color-reset" data-event="foreColor" data-value="inherit" title="None" role="img" aria-label="No color">
                 <i class="fa fa-ban"/>

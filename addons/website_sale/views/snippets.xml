@@ -43,27 +43,27 @@
         <div data-js="WebsiteSaleGridLayout"
             data-selector="#products_grid .o_wsale_products_grid_table_wrapper > table"
             data-no-check="true">
-            <a href="#" class="dropdown-item" role="menuitem" data-no-preview="true" data-choose-ppg="1">
-                <i class="fa fa-cart-plus"/>Choose number of products
-            </a>
-            <div class="dropdown-submenu o_wsale_ppr_submenu" role="menuitem" aria-haspopup="true">
-                <a tabindex="-1" href="#" class="dropdown-item" role="menuitem">
-                    <i class="fa fa-columns"/>Number of Columns
-                </a>
-                <div class="dropdown-menu" role="menu" data-no-preview="true">
-                    <a href="#" class="dropdown-item" role="menuitem" data-set-ppr="2">2</a>
-                    <a href="#" class="dropdown-item" role="menuitem" data-set-ppr="3">3</a>
-                    <a href="#" class="dropdown-item" role="menuitem" data-set-ppr="4">4</a>
-                </div>
-            </div>
+            <we-button data-no-preview="true" data-choose-ppg="1">
+                <i class="fa fa-cart-plus"/> Choose number of products
+            </we-button>
+            <we-collapse-area class="o_wsale_ppr_submenu">
+                <we-toggler>
+                    <i class="fa fa-columns"/> Number of Columns
+                </we-toggler>
+                <we-collapse data-no-preview="true">
+                    <we-button data-set-ppr="2">2</we-button>
+                    <we-button data-set-ppr="3">3</we-button>
+                    <we-button data-set-ppr="4">4</we-button>
+                </we-collapse>
+            </we-collapse-area>
         </div>
 
         <div data-js="WebsiteSaleProductsItem"
             data-selector="#products_grid .oe_product"
             data-no-check="true">
-            <div class="dropdown-submenu">
-                <a tabindex="-1" href="#" class="dropdown-item">Size</a>
-                <div class="dropdown-menu o_wsale_soptions_menu_sizes" role="menu">
+            <we-collapse-area>
+                <we-toggler>Size</we-toggler>
+                <we-collapse class="o_wsale_soptions_menu_sizes">
                     <table>
                         <tr>
                             <td/><td/><td/><td/>
@@ -78,29 +78,31 @@
                             <td/><td/><td/><td/>
                         </tr>
                     </table>
-                </div>
-            </div>
-            <div class='dropdown-submenu' role="menuitem" aria-haspopup="true">
-                <a tabindex="-1" href="#" class="dropdown-item">Styles</a>
-                <div class="dropdown-menu" role="menu" data-no-preview="true" name="style"/>
-            </div>
-            <div class='dropdown-submenu' role="menuitem" aria-haspopup="true">
-                <a tabindex="-1" href="#" class="dropdown-item">Promote</a>
-                <div class="dropdown-menu" role="menu" data-no-preview="true">
-                    <a href="#" class="dropdown-item" role="menuitem" data-change-sequence="top">Push to top</a>
-                    <a href="#" class="dropdown-item" role="menuitem" data-change-sequence="up">Push up</a>
-                    <a href="#" class="dropdown-item" role="menuitem" data-change-sequence="down">Push down</a>
-                    <a href="#" class="dropdown-item" role="menuitem" data-change-sequence="bottom">Push to bottom</a>
-                </div>
-            </div>
+                </we-collapse>
+            </we-collapse-area>
+            <we-collapse-area>
+                <we-toggler>Styles</we-toggler>
+                <we-collapse data-no-preview="true" name="style"/>
+            </we-collapse-area>
+            <we-collapse-area>
+                <we-toggler>Promote</we-toggler>
+                <we-collapse data-no-preview="true">
+                    <we-button data-change-sequence="top">Push to top</we-button>
+                    <we-button data-change-sequence="up">Push up</we-button>
+                    <we-button data-change-sequence="down">Push down</we-button>
+                    <we-button data-change-sequence="bottom">Push to bottom</we-button>
+                </we-collapse>
+            </we-collapse-area>
         </div>
 
         <div data-js="ProductsSearchBar"
             data-selector=".s_wsale_products_searchbar_input">
-            <a tabindex="-1" href="#" class="dropdown-item" data-no-preview="true" data-open-searchbar-settings=""><i class="fa fa-search"></i>Products Search Bar</a>
+            <we-button data-no-preview="true" data-open-searchbar-settings="">
+                <i class="fa fa-search"/> Products Search Bar
+            </we-button>
         </div>
     </xpath>
-    <xpath expr="//div[@data-js='content']" position="attributes">
+    <xpath expr="//div[@id='so_content_addition']" position="attributes">
         <attribute name="data-selector" add=".s_wsale_products_searchbar_input" separator=","/>
         <attribute name="data-drop-near" add=".s_wsale_products_searchbar_input" separator=","/>
     </xpath>

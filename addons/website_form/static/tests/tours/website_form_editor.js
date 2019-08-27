@@ -57,12 +57,8 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".s_website_form[data-model_name]"
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
-        },
-        {
             content:  "Click on Add a model field",
-            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_modal]"
+            trigger:  "[data-website_form_field_modal]"
         },
         {
             content:  "Select the date field",
@@ -81,12 +77,12 @@ odoo.define('website_form_editor.tour', function(require) {
             run:      "text Test Date"
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
+            content: "Go to the row option",
+            trigger: 'we-customizeblock-options.o_we_closed:last',
         },
         {
             content:  "Click on Required",
-            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_require]"
+            trigger:  "[data-website_form_field_require]"
         },
         {
             content:  "Check the resulting field",
@@ -102,12 +98,8 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".s_website_form[data-model_name]"
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
-        },
-        {
             content:  "Click on Add a model field",
-            trigger:  ".oe_overlay_options:visible .dropdown-item[data-website_form_field_modal]"
+            trigger:  "[data-website_form_field_modal]"
         },
         {
             content:  "Select the record_name field",
@@ -126,12 +118,12 @@ odoo.define('website_form_editor.tour', function(require) {
             run:      "text Awesome Label"
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
+            content: "Go to the row option",
+            trigger: 'we-customizeblock-options.o_we_closed:last',
         },
         {
             content:  "Click on Hidden",
-            trigger:  ".oe_overlay_options .dropdown-item[data-toggle-class='o_website_form_field_hidden']"
+            trigger:  "[data-toggle-class='o_website_form_field_hidden']"
         },
         {
             content:  "Check the resulting field",
@@ -148,12 +140,8 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".s_website_form[data-model_name]"
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
-        },
-        {
             content:  "Click on Add a model field",
-            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_modal]"
+            trigger:  "[data-website_form_field_modal]"
         },
         {
             content:  "Select the body_html field",
@@ -172,12 +160,12 @@ odoo.define('website_form_editor.tour', function(require) {
             run:      "text Your Message"
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
+            content: "Go to the row option",
+            trigger: 'we-customizeblock-options.o_we_closed:last',
         },
         {
             content:  "Click on Required",
-            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_require]"
+            trigger:  "[data-website_form_field_require]"
         },
         {
             content:  "Check the resulting field",
@@ -193,12 +181,8 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".s_website_form[data-model_name]"
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
-        },
-        {
             content:  "Click on Add a model field",
-            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_modal]"
+            trigger:  "[data-website_form_field_modal]"
         },
         {
             content:  "Select the recipient_ids field",
@@ -221,17 +205,8 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".s_website_form[data-model_name]",
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']",
-            run:      function (actions) {
-                actions.auto();
-                // I didn't find any other way to make that submenu element appear
-                $(".oe_options .dropdown-submenu .dropdown-menu").css("display", "block");
-            }
-        },
-        {
             content:  "Click on Multiple Checkboxes in menu Add a custom field",
-            trigger:  ".oe_options .dropdown-item:contains('Multiple Checkboxes')"
+            trigger:  "we-button:contains('Multiple Checkboxes')",
         },
 
         // Customize custom multiple checkboxes field
@@ -257,7 +232,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Duplicate Option 3",
-            trigger:  ".oe_overlay_options:visible .oe_snippet_clone",
+            trigger:  ".oe_snippet_clone:last",
         },
         {
             content:  "Change first Option 3 label",
@@ -274,12 +249,12 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".col-form-label:contains('Products')"
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
+            content: "Go to the row option",
+            trigger: 'we-customizeblock-options.o_we_closed:last',
         },
         {
             content:  "Click on Required",
-            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_require]"
+            trigger:  "[data-website_form_field_require]"
         },
         {
             content:  "Check the resulting field",
@@ -298,12 +273,8 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".s_website_form[data-model_name]",
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
-        },
-        {
             content:  "Click on Radio Buttons in menu Add a custom field",
-            trigger:  ".oe_options .dropdown-item:contains('Radio Buttons')"
+            trigger:  "we-button:contains('Radio Buttons')"
         },
 
         // Customize Radio Buttons field
@@ -328,7 +299,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Duplicate Option 3",
-            trigger:  ".oe_overlay_options:visible .oe_snippet_clone",
+            trigger:  ".oe_snippet_clone:last",
         },
         {
             content:  "Change first Option 3 label",
@@ -345,20 +316,16 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".col-form-label:contains('Service')"
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
+            content: "Go to the row option",
+            trigger: 'we-customizeblock-options.o_we_closed:last',
         },
         {
             content:  "Click on Required",
-            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_require]"
-        },
-        {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
+            trigger:  "[data-website_form_field_require]"
         },
         {
             content:  "Click on Required",
-            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_require]",
+            trigger:  "[data-website_form_field_require]",
             extra_trigger:  ".form-field.o_website_form_custom.o_website_form_required_custom" +
                             ":has(.col-form-label:contains('Service'))",
         },
@@ -378,18 +345,10 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Click on Form snippet",
             trigger:  ".s_website_form[data-model_name]",
-            onend: function() {
-                // I didn't find any other way to make that submenu element appear
-                $(".oe_options > ul > li:has(ul) > ul").css("display", "block");
-            }
-        },
-        {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
         },
         {
             content:  "Click on Selection in menu Add a custom field",
-            trigger:  ".oe_options .dropdown-item:contains('Selection')"
+            trigger:  "we-button:contains('Selection')",
         },
 
         // Customize custom selection field
@@ -414,7 +373,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Duplicate Option 3",
-            trigger:  ".oe_overlay_options:visible .oe_snippet_clone",
+            trigger:  ".oe_snippet_clone:last",
         },
         {
             content:  "Change first Option 3 label",
@@ -432,19 +391,19 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Remove Germany Option",
-            trigger:  ".oe_overlay_options:visible .oe_snippet_remove",
+            trigger:  ".oe_snippet_remove:last",
         },
         {
             content:  "Click on field",
             trigger:  ".col-form-label:contains('State')"
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
+            content: "Go to the row option",
+            trigger: 'we-customizeblock-options.o_we_closed:last',
         },
         {
             content:  "Click on Required",
-            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_require]"
+            trigger:  "[data-website_form_field_require]"
         },
         {
             content:  "Check the resulting snippet",
@@ -464,12 +423,8 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".s_website_form[data-model_name]"
         },
         {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
-        },
-        {
             content:  "Click on Add a model field",
-            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_modal]"
+            trigger:  "[data-website_form_field_modal]"
         },
         {
             content:  "Select the attachment_ids field",

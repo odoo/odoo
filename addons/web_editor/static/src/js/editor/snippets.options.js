@@ -18,23 +18,16 @@ var _t = core._t;
 var SnippetOption = Widget.extend({
     events: {
         'mouseenter': '_onLinkEnter',
-        'mouseenter a': '_onLinkEnter',
+        'mouseenter we-button': '_onLinkEnter',
         'click': '_onLinkClick',
-        'click a': '_onLinkClick',
+        'click we-button': '_onLinkClick',
         'mouseleave': '_onMouseleave',
-        'mouseleave a': '_onMouseleave',
-        'mouseleave .dropdown-menu': '_onMouseleave',
+        'mouseleave we-button': '_onMouseleave',
     },
-    /**
-     * When editing a snippet, its options are shown alongside the ones of its
-     * parent snippets. The parent options are only shown if the following flag
-     * is set to false (default).
-     */
-    preventChildPropagation: false,
 
     /**
-     * The option `$el` is supposed to be the associated DOM element in the
-     * options dropdown. The option controls another DOM element: the snippet it
+     * The option `$el` is supposed to be the associated DOM UI element.
+     * The option controls another DOM element: the snippet it
      * customizes, which can be found at `$target`. Access to the whole edition
      * overlay is possible with `$overlay` (this is not recommended though).
      *
@@ -120,7 +113,7 @@ var SnippetOption = Widget.extend({
     /**
      * Default option method which allows to select one and only one class in
      * the option classes set and set it on the associated snippet. The common
-     * case is having a subdropdown with each item having a `data-select-class`
+     * case is having a sub-collapse with each item having a `data-select-class`
      * value allowing to choose the associated class.
      *
      * @param {boolean|string} previewMode
@@ -131,12 +124,14 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $opt - the related DOMElement option
      */
     selectClass: function (previewMode, value, $opt) {
-        var $group = $opt && $opt.parents('.dropdown-submenu').last();
+        var $group = $opt && $opt.parents('we-collapse-area').last();
         if (!$group || !$group.length) {
             $group = this.$el;
         }
-        var $lis = $group.find('[data-select-class]').addBack('[data-select-class]');
-        var classes = $lis.map(function () {return $(this).data('selectClass');}).get().join(' ');
+        var $lis = $group.find('[data-select-class]');
+        var classes = $lis.map(function () {
+            return $(this).data('selectClass');
+        }).get().join(' ');
 
         this.$target.removeClass(classes);
         if (value) {
@@ -146,15 +141,19 @@ var SnippetOption = Widget.extend({
     /**
      * Default option method which allows to select one or multiple classes in
      * the option classes set and set it on the associated snippet. The common
-     * case is having a subdropdown with each item having a `data-toggle-class`
+     * case is having a sub-collapse with each item having a `data-toggle-class`
      * value allowing to toggle the associated class.
      *
      * @see this.selectClass
      */
     toggleClass: function (previewMode, value, $opt) {
-        var $lis = this.$el.find('[data-toggle-class]').addBack('[data-toggle-class]');
-        var classes = $lis.map(function () {return $(this).data('toggleClass');}).get().join(' ');
-        var activeClasses = $lis.filter('.active, :has(.active)').map(function () {return $(this).data('toggleClass');}).get().join(' ');
+        var $lis = this.$el.find('[data-toggle-class]');
+        var classes = $lis.map(function () {
+            return $(this).data('toggleClass');
+        }).get().join(' ');
+        var activeClasses = $lis.filter('.active, :has(.active)').map(function () {
+            return $(this).data('toggleClass');
+        }).get().join(' ');
 
         this.$target.removeClass(classes).addClass(activeClasses);
         if (value && previewMode !== 'reset') {
@@ -168,7 +167,7 @@ var SnippetOption = Widget.extend({
 
     /**
      * Override the helper method to search inside the $target element instead
-     * of the dropdown item element.
+     * of the UI item element.
      *
      * @override
      */
@@ -211,7 +210,7 @@ var SnippetOption = Widget.extend({
      */
     _reset: function () {
         var self = this;
-        var $actives = this.$el.find('.active').addBack('.active');
+        var $actives = this.$el.find('we-button.active');
         _.each($actives, function (activeElement) {
             var $activeElement = $(activeElement);
             self.__methodNames = _.without.apply(_, [self.__methodNames].concat(_.keys($activeElement.data())));
@@ -233,8 +232,6 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $opt - the related DOMElement option
      */
     _select: function (previewMode, $opt) {
-        var self = this;
-
         // Options can say they respond to strong choice
         if (previewMode && ($opt.data('noPreview') || $opt.parent().data('noPreview'))) {
             return;
@@ -244,7 +241,6 @@ var SnippetOption = Widget.extend({
         if (!previewMode) {
             this._reset();
             this.trigger_up('request_history_undo_record', {$target: this.$target});
-            this.$target.trigger('content_changed');
         }
 
         // Search for methods (data-...) (i.e. data-toggle-class) on the
@@ -275,6 +271,8 @@ var SnippetOption = Widget.extend({
         if (!previewMode) {
             this._setActive();
         }
+
+        this.$target.trigger('content_changed');
     },
     /**
      * Tweaks the option DOM elements to show the selected value according to
@@ -286,7 +284,6 @@ var SnippetOption = Widget.extend({
     _setActive: function () {
         var self = this;
         this.$el.find('[data-toggle-class]')
-            .addBack('[data-toggle-class]')
             .removeClass('active')
             .filter(function () {
                 var className = $(this).data('toggleClass');
@@ -295,25 +292,20 @@ var SnippetOption = Widget.extend({
             .addClass('active');
 
         // Get submenus which are not inside submenus
-        var $submenus = this.$el.find('.dropdown-submenu')
-            .addBack('.dropdown-submenu')
-            .not('.dropdown-submenu .dropdown-submenu');
+        var $submenus = this.$el.find('we-collapse-area')
+            .not('we-collapse-area we-collapse-area');
 
         // Add unique active class for each submenu active item
         _.each($submenus, function (submenu) {
-            var $elements = _getSelectClassElements($(submenu));
+            var $elements = $(submenu).find('[data-select-class]');
             _processSelectClassElements($elements);
         });
 
         // Add unique active class for out-of-submenu active item
-        var $externalElements = _getSelectClassElements(this.$el)
-            .not('.dropdown-submenu *, .dropdown-submenu');
+        var $externalElements = this.$el.find('[data-select-class]')
+            .not('we-collapse-area *, we-collapse-area');
         _processSelectClassElements($externalElements);
 
-        function _getSelectClassElements($el) {
-            return $el.find('[data-select-class]')
-                .addBack('[data-select-class]');
-        }
         function _processSelectClassElements($elements) {
             var maxNbClasses = -1;
             $elements.removeClass('active')
@@ -343,18 +335,9 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkEnter: function (ev) {
-        var $opt = $(ev.target).closest('.dropdown-item');
+        var $opt = $(ev.target).closest('we-button');
         if (!$opt.length) {
             return;
-        }
-
-        var $dsmenu = $opt.parent('.dropdown-submenu');
-        if ($dsmenu.length) {
-            var $menu = $dsmenu.children('.dropdown-menu'); // FIXME
-            if ($menu.length) {
-                var menuRightPosition = $dsmenu.offset().left + $dsmenu.outerWidth() + $menu.outerWidth();
-                $menu.toggleClass('o_open_to_left', menuRightPosition > $(window).outerWidth());
-            }
         }
 
         if (!$opt.is(':hasData')) {
@@ -371,7 +354,7 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkClick: function (ev) {
-        var $opt = $(ev.target).closest('.dropdown-item');
+        var $opt = $(ev.target).closest('we-button');
         if (ev.isDefaultPrevented() || !$opt.length || !$opt.is(':hasData')) {
             return;
         }
@@ -403,8 +386,6 @@ var SnippetOption = Widget.extend({
 var registry = {};
 
 registry.sizing = SnippetOption.extend({
-    preventChildPropagation: true,
-
     /**
      * @override
      */
@@ -413,11 +394,8 @@ registry.sizing = SnippetOption.extend({
         var def = this._super.apply(this, arguments);
 
         this.$handles = this.$overlay.find('.o_handle');
-        var resizeValues = this._getSize();
-        _.each(resizeValues, function (value, key) {
-            self.$handles.filter('.' + key).toggleClass('readonly', !value);
-        });
 
+        var resizeValues = this._getSize();
         this.$handles.on('mousedown', function (ev) {
             ev.preventDefault();
 
@@ -522,7 +500,18 @@ registry.sizing = SnippetOption.extend({
      * @override
      */
     onFocus: function () {
+        var resizeValues = this._getSize();
+        _.each(resizeValues, (value, key) => {
+            this.$handles.filter('.' + key).toggleClass('readonly', !value);
+        });
+
         this._onResize();
+    },
+    /**
+     * @override
+     */
+    onBlur: function () {
+        this.$handles.addClass('readonly');
     },
 
     //--------------------------------------------------------------------------
@@ -595,6 +584,9 @@ registry.sizing = SnippetOption.extend({
         this.$overlay.find('.o_handle.w').css({
             width: ml,
             left: '-' + ml,
+        });
+        this.$overlay.find('.o_handle.e').css({
+            width: 0,
         });
         _.each(this.$overlay.find(".o_handle.n, .o_handle.s"), function (handle) {
             var $handle = $(handle);
@@ -671,7 +663,7 @@ registry.colorpicker = SnippetOption.extend({
             var $clpicker = $(qweb.render('web_editor.colorpicker'));
 
             _.each($clpicker.find('.o_colorpicker_section'), function (elem) {
-                $(elem).prepend("<div class='text-muted mt8'>" + elem.dataset.display + "</div>");
+                $(elem).prepend("<div>" + elem.dataset.display + "</div>");
             });
 
             // Retrieve excluded palettes list
@@ -705,7 +697,7 @@ registry.colorpicker = SnippetOption.extend({
             }
 
             $pt.find('.o_colorpicker_section_tabs').append($clpicker);
-            this.$el.find('.dropdown-menu').append($pt);
+            this.$el.find('we-collapse').append($pt);
         }
 
         var classes = [];
@@ -945,7 +937,7 @@ registry.background = SnippetOption.extend({
     _setCustomBackground: function (value) {
         this.__customImageSrc = value;
         this.background(false, this.__customImageSrc);
-        this.$target.addClass('oe_custom_bg');
+        this.$target.toggleClass('oe_custom_bg', !!value);
         this._setActive();
         this.$target.trigger('snippet-option-change', [this]);
     },
@@ -1193,7 +1185,7 @@ registry.many2one = SnippetOption.extend({
 
         // create search button and bind search bar
         this.$btn = $(qweb.render('web_editor.many2one.button'))
-            .insertAfter(this.$overlay.find('.oe_options'));
+            .prependTo(this.$el);
 
         this.$ul = this.$btn.find('ul');
         this.$search = this.$ul.find('li:first');
@@ -1203,17 +1195,10 @@ registry.many2one = SnippetOption.extend({
 
         // move menu item
         setTimeout(function () {
-            if (self.$overlay.find('.oe_options').hasClass('d-none')) {
-                self.$btn.css('height', '0').find('> a').addClass('d-none');
-                self.$ul.show().css({
-                    'top': '-24px', 'margin': '0', 'padding': '2px 0', 'position': 'relative'
-                });
-            } else {
-                self.$btn.find('a').on('click', function (e) {
-                    self._clear();
-                });
-            }
-        },0);
+            self.$btn.find('a').on('click', function (e) {
+                self._clear();
+            });
+        }, 0);
 
         // bind search input
         this.$search.find('input')

@@ -236,7 +236,7 @@ options.registry.blog_cover = options.Class.extend({
         var self = this;
         var isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
 
-        _.each(this.$el, function (el) {
+        _.each(this.$el.children(), function (el) {
             var $el = $(el);
 
             if (!$el.is('[data-change]')) {
@@ -255,7 +255,7 @@ options.registry.blog_cover = options.Class.extend({
             $el.find('.o_js_show_regular').toggleClass('d-none', !isRegularCover);
         });
 
-        this.$el.filter('[data-clear]').toggleClass('d-none', !self.$target.hasClass('o_wblog_has_cover'));
+        this.$el.find('[data-clear]').toggleClass('d-none', !self.$target.hasClass('o_wblog_has_cover'));
 
         this.$filterValueOpts.removeClass('active');
         this.$filterColorOpts.removeClass('active');
