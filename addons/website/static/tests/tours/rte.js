@@ -168,6 +168,7 @@ tour.register('rte_translator', {
     }, {
     content : "click language dropdown",
     trigger : '.js_language_selector .dropdown-toggle',
+    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor))',
 }, {
     content: "return in french",
     trigger : 'html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="fr_BE"]',
