@@ -242,6 +242,19 @@ exports.PosModel = Backbone.Model.extend({
                     return self.taxes_by_id[child_tax_id];
                 });
             });
+            return new Promise(function (resolve, reject) {
+              var tax_ids = _.pluck(self.taxes, 'id');
+              rpc.query({
+                  model: 'account.tax',
+                  method: 'get_real_tax_amount',
+                  args: [tax_ids],
+              }).then(function (taxes) {
+                  _.each(taxes, function (tax) {
+                      self.taxes_by_id[tax.id].amount = tax.amount;
+                  resolve();
+                  });
+              });
+            });
         },
     },{
         model:  'pos.session',
