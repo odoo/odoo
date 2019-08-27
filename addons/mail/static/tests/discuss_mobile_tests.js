@@ -3,6 +3,8 @@ odoo.define('mail.discuss_mobile_tests', function (require) {
 
 var mailTestUtils = require('mail.testUtils');
 
+var testUtils = require('web.test_utils');
+
 var createDiscuss = mailTestUtils.createDiscuss;
 
 QUnit.module('mail', {}, function () {
@@ -11,6 +13,9 @@ QUnit.module('Discuss in mobile', {
     beforeEach: function () {
         this.services = mailTestUtils.getMailServices();
         this.data = {
+            'mail.channel': {
+                fields: {},
+            },
             'mail.message': {
                 fields: {},
             },
@@ -111,6 +116,51 @@ QUnit.test('on_{attach/detach}_callback', function (assert) {
             discuss.destroy();
             done();
         }
+    });
+});
+
+QUnit.test('extended composer in mass mailing channel', function (assert) {
+    assert.expect(4);
+    var done = assert.async();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "General",
+                mass_mailing: true,
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+    }).then(function (discuss) {
+        testUtils.dom.click(discuss.$('.o_mail_mobile_tab[data-type="public"]'));
+        testUtils.dom.click(discuss.$('.o_mail_preview[data-preview-id="1"]'));
+        assert.containsOnce(
+            $,
+            '.o_thread_window',
+            "should display a chat window");
+        assert.strictEqual(
+            $('.o_thread_window').data('thread-id'),
+            1,
+            "chat window should be from channel General");
+        assert.containsOnce(
+            $('.o_thread_window'),
+            '.o_thread_composer',
+            "chat window should have a composer");
+        assert.ok(
+            $('.o_thread_window .o_thread_composer').hasClass('o_thread_composer_extended'),
+            "chat window composer should be extended composer");
+
+        discuss.destroy();
+        done();
     });
 });
 
