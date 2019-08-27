@@ -933,7 +933,7 @@
                         <t t-call="OrderReceiptWrappedProductNameLines"/>
                         <t t-if="line.display_discount_policy == 'without_discount' &amp;&amp; line.price != line.price_lst">
                             <div class="pos-receipt-left-padding">
-                                <t t-esc="widget.format_currency_no_symbol(line.price_lst)" /> 
+                                <t t-esc="widget.format_currency_no_symbol(line.price_lst)" />
                                 ->
                                 <t t-esc="widget.format_currency_no_symbol(line.price)" />
                             </div>
@@ -1458,7 +1458,7 @@
                         </em>
                         <t t-esc="line.get_unit().name" />
                         at
-                        <t t-if="line.display_discount_policy() == 'without_discount' &amp;&amp; 
+                        <t t-if="line.display_discount_policy() == 'without_discount' &amp;&amp;
                             line.get_unit_display_price() != line.get_lst_price()">
                             <s>
                                 <t t-esc="widget.format_currency(line.get_lst_price(),'Product Price')" />
@@ -1733,7 +1733,6 @@
         </div>
     </t>
 
-<!-- This is a duplicate of xml_id = point_of_sale.extra_head . We could have told models.js to do an extra rpc call for this-->
     <t t-name="CustomerFacingDisplayHead">
         <div class="resources">
             <base t-att-href="origin"/>
