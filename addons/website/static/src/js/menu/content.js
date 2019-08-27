@@ -536,6 +536,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
                 mobj.sequence = levels[menu.depth];
                 mobj.parent_id = (menu.parent_id|0) || menu.parent_id || self.root_menu_id;
                 delete(mobj.children);
+                delete(mobj.is_homepage);
                 data.push(mobj);
             }
         });
