@@ -39,6 +39,7 @@ class PosOrder(models.Model):
             'session_id':   ui_order['pos_session_id'],
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
             'pos_reference': ui_order['name'],
+            'sequence_number': ui_order['sequence_number'],
             'partner_id':   ui_order['partner_id'] or False,
             'date_order':   ui_order['creation_date'].replace('T', ' ')[:19],
             'fiscal_position_id': ui_order['fiscal_position_id'],
