@@ -1418,6 +1418,10 @@ class _String(Field):
         if not self.store:
             return records
 
+        real_recs = records.filtered('id')
+        if not real_recs._ids:
+            return records
+
         update_column = True
         update_trans = False
         single_lang = len(records.env['res.lang'].get_installed()) <= 1
@@ -1438,25 +1442,22 @@ class _String(Field):
         # update towrite if modifying the source
         if update_column:
             towrite = records.env.all.towrite[self.model_name]
-            real_record_ids = [r.id for r in records if r.id]
-            for rid in real_record_ids:
+            for rid in real_recs._ids:
                 # cache_value is already in database format
                 towrite[rid][self.name] = cache_value
-            if self.translate is True and real_record_ids:
+            if self.translate is True:
                 tname = "%s,%s" % (records._name, self.name)
-                records.env['ir.translation']._set_source(tname, real_record_ids, value)
+                records.env['ir.translation']._set_source(tname, real_recs._ids, value)
 
         if update_trans:
             if callable(self.translate):
                 # the source value of self has been updated, synchronize
                 # translated terms when possible
-                real_recs = records.filtered('id')
-                records.env['ir.translation']._sync_terms_translations(self, records)
+                records.env['ir.translation']._sync_terms_translations(self, real_recs)
 
             else:
                 # update translations
                 value = self.convert_to_column(value, records)
-                real_recs = records.filtered('id')
                 source_recs = real_recs.with_context(lang='en_US')
                 source_value = first(source_recs)[self.name]
                 if not source_value:
@@ -1471,10 +1472,10 @@ class _String(Field):
                         lang=lang,
                         type='model',
                         state='translated',
-                        res_id=res_id) for res_id in real_recs.ids])
+                        res_id=res_id) for res_id in real_recs._ids])
                 else:
                     records.env['ir.translation']._set_ids(
-                        tname, 'model', lang, real_recs.ids, value, source_value,
+                        tname, 'model', lang, real_recs._ids, value, source_value,
                     )
 
         return records
