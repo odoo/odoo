@@ -62,6 +62,11 @@ def get_mac_address():
     except:
         return netifaces.ifaddresses('wlan0')[netifaces.AF_LINK][0]['addr']
 
+def get_ssid():
+    process_iwconfig = subprocess.Popen(['iwconfig'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process_grep = subprocess.Popen(['grep', 'ESSID:"'], stdin=process_iwconfig.stdout, stdout=subprocess.PIPE)
+    return subprocess.check_output(['sed', 's/.*"\\(.*\\)"/\\1/'], stdin=process_grep.stdout).decode('utf-8').rstrip()
+
 def get_odoo_server_url():
     return read_file_first_line('odoo-remote-server.conf')
 
