@@ -283,12 +283,7 @@ class Registry(Mapping):
                         tree = tree.setdefault(label, {})
                     tree.setdefault(None, set()).add(field)
 
-        self.field_triggers_create = triggers
-        self.field_triggers = {
-            field: tree
-            for field, tree in triggers.items()
-            if not (field.type == 'one2many' and field.inverse)
-        }
+        self.field_triggers = triggers
 
         for model in models:
             model._setup_complete()
