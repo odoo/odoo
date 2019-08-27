@@ -1072,7 +1072,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if new_records:
             # new records: no business logic
             with records.env.protecting(records._field_computed.get(self, [self]), records):
-                new_records.modified([self.name], create=True)
+                new_records.modified([self.name])
                 self.write(new_records, value)
                 if self.relational:
                     new_records.modified([self.name])
