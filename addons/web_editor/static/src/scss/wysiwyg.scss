@@ -1,322 +1,168 @@
-// NOTE EDITOR
+// Use css variables to control the default style of the editor so that an
+// external assets bundle can influence it without duplicating the css.
+:root {
+    --o-we-toolbar-height: #{$o-we-toolbar-height};
 
+    --o-we-bg-color: #{$o-we-bg-color};
+    --o-we-bg-color-dark: #{$o-we-bg-color-dark};
+    --o-we-color: #{$o-we-color};
+    --o-we-color-accent: #{$o-we-color};
+
+    --o-we-dropdown-bg-color: #{$o-we-dropdown-bg-color};
+    --o-we-dropdown-color: #{$o-we-dropdown-color};
+
+    --o-we-snippets-bg-color: #{$o-we-bg-color};
+    --o-we-snippets-color: #{$o-we-color};
+}
+
+// EDITOR TOP BAR AND POPOVER
 body.editor_enable {
-    padding-top: $o-wysiwyg-toolbar-height !important;
+    padding-top: var(--o-we-toolbar-height) !important;
 }
-
-#wrapwrap {
-    height: calc(100vh - #{$o-wysiwyg-toolbar-height});
-    border: 1px solid $o-wysiwyg-border-color;
-    border-left: 0;
-    border-top: 0;
-
-    .btn {
-        -webkit-user-select: none;
-    }
-}
-
-// TOP BAR (EDIT)
 #web_editor-top-edit {
-    height: $o-wysiwyg-toolbar-height;
-    background-color: $o-wysiwyg-bg-color;
-    z-index: $o-wysiwyg-zindex - 2;
+    @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    top: 0px;
-    right: 0px;
-    left: 0px;
-    white-space: nowrap;
-    border: 1px solid $o-wysiwyg-border-color;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    z-index: $o-we-zindex;
+    height: var(--o-we-toolbar-height);
+    background-color: var(--o-we-bg-color);
 
-    transition: background-color 400ms $o-we-md-ease 0s;
-    font-family: $o-we-font-family;
-}
-
-.note-editor.note-frame {
-    background-color: inherit;
-
-    .note-editing-area .note-editable {
-        background-color: transparent !important;
-        color: inherit;
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    &.fullscreen {
-        background-color: #fff;
+    .note-popover .popover {
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        border: none !important;
     }
 }
 
-.note-editor:not(.note-frame) .note-editing-area {
-    overflow: visible;
-}
-
-#web_editor-top-edit .note-popover .popover {
-    height: $o-wysiwyg-toolbar-height - 2;
-    top: 0 !important;
-    left: 0 !important;
-    padding: 0;
+.wysiwyg_iframe,
+.note-editor {
+    border: $o-we-border-width solid $o-we-border-color;
     margin: 0;
-    border: 0;
-    width: auto;
-    text-align: center;
-    box-shadow: none;
-    background-color: $o-wysiwyg-bg-color;
-    z-index: $o-wysiwyg-zindex;
-
-    .popover-body {
-        height: $o-wysiwyg-toolbar-height - 2;
-
-        > .btn-group {
-            height: $o-wysiwyg-toolbar-height - 2;
-            margin-top: 0;
-        }
-
-        .btn {
-            height: $o-wysiwyg-toolbar-height - 2;
-            border-top: 0;
-        }
-    }
+    padding: 0;
 }
+.note-popover .popover .popover-body,
+.panel-heading.note-toolbar {
+    height: var(--o-we-toolbar-height);
+    padding-bottom: 0;
+    border-bottom: $o-we-border-width solid $o-we-border-color;
+    background-color: var(--o-we-bg-color);
+    font-family: $o-we-font-family;
+    white-space: nowrap;
 
-#web_editor-toolbars .popover,
-.note-popover.popover .popover-content,
-.note-editor .note-toolbar {
-    font-family: $o-wysiwyg-font-family;
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    .h1,
-    .h2,
-    .h3,
-    .h4,
-    .h5,
-    .h6 {
-        font-family: $o-wysiwyg-font-family;
-    }
-
-    .btn {
+    // Main layout of buttons
+    .btn-group, .btn {
+        width: auto !important;
+        height: 100% !important;
+        margin-top: 0;
+        margin-bottom: 0;
+        background: transparent;
         border: none;
         border-radius: 0;
-        background-color: inherit;
+    }
+    .btn-secondary {
         color: inherit;
-        transition: all 0.3s ease 0s;
+    }
 
-        >.fa {
-            color: inherit;
+    // Active buttons and opened dropdowns
+    .btn {
+        padding: 0.5em 0.75em !important;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+        color: var(--o-we-color);
+        font-size: $o-we-font-size !important;
+
+        &.active {
+            background-color: var(--o-we-bg-color-dark);
+            color: var(--o-we-color-accent);
         }
 
         &:hover {
-            border-top: 2px solid inherit;
-            color: inherit;
-
-            >.fa {
-                color: inherit;
-            }
+            color: var(--o-we-color-accent);
         }
 
-        .o_image_alt {
-            @include o-text-overflow(inline-block);
-            max-width: 100px;
-        }
-
-        &.active {
-            background-color: inherit;
-            color: inherit;
-            box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.5);
-
-            >.fa {
-                color: inherit;
-            }
-        }
-
-        &.o_disabled {
-            opacity: 0.5;
-            pointer-events: none;
+        &:focus, &:active, &:focus:active {
+            @extend %we-active-button;
         }
     }
-
-    .note-btn-group {
-        margin: 0;
-    }
-
-    >.btn-group {
-        margin-top: 0;
-
-        &.show,
-        .btn-group.show {
-            .dropdown-toggle {
-                border-top: 2px solid white;
-                background-color: $o-wysiwyg-bg-color-dark;
-                box-shadow: none;
-
-                >.fa,
-                >span {
-                    color: inherit;
-                }
-            }
+    .btn-group.show {
+        > .btn {
+            @extend %we-active-button;
+        }
+        &::after {
+            content: '';
+            @include o-position-absolute(100%, $o-we-border-width, auto, $o-we-border-width);
+            height: $o-we-border-width;
+            background-color: var(--o-we-dropdown-bg-color);
         }
     }
-
+    %we-active-button {
+        border-left-color: $o-we-border-color;
+        border-right-color: $o-we-border-color;
+        background: var(--o-we-dropdown-bg-color);
+        box-shadow: none !important;
+        outline: none !important;
+    }
     .dropdown-menu {
-        margin: 0;
+        margin-top: 0;
+        border: $o-we-border-width solid $o-we-border-color;
+        border-top-color: transparent;
         border-radius: 0;
-        background-color: $o-wysiwyg-bg-color;
-        color: inherit;
-        white-space: normal;
-
-        .dropdown-item {
-            width: 100%;
-            color: inherit;
-
-            >.fa {
-                color: inherit;
-            }
-
-            &:hover {
-                background-color: $o-wysiwyg-bg-color-dark;
-                color: inherit;
-
-                >.fa {
-                    color: inherit;
-                }
-            }
-        }
+        background-color: var(--o-we-dropdown-bg-color);
+        color: var(--o-we-dropdown-color);
+        box-shadow: none;
     }
-
-    .note-para .dropdown-menu {
+    .dropdown-menu.show { // To overcome .note-XXX .dropdown-menu rules
         min-width: 0;
-        white-space: nowrap;
     }
+    .dropdown-item { // To overcome summernote rules breaking this in iframes
+        display: block;
+        max-width: none;
+        overflow: visible;
+        color: var(--o-we-color);
 
-    .note-color {
+        &:hover {
+            background-color: var(--o-we-bg-color) !important;
+            color: var(--o-we-color-accent) !important;
 
-        .note-back-color-preview,
-        .note-fore-color-preview {
-            .dropdown-toggle {
-                padding: 0px 7px;
-                height: 35px;
-                width: auto;
-                border-top: none;
-                border-bottom: 3px solid;
-
-                &:after {
-                    display: none;
-                }
-            }
-        }
-
-        .dropdown-menu {
-            min-width: 180px;
-
-            .note-custom-color {
-                cursor: pointer;
-                border-radius: 5px;
-
-                &:hover {
-                    background-color: gray('400');
-                    color: black
-                }
-            }
-        }
-
-        .dropdown-toggle:after {
-            display: none;
-        }
-
-        .note-palette:first-child {
-            width: 100%;
-
-            .note-color-reset,
-            .note-custom-color {
-                width: 162px;
-            }
-
-            .note-color-reset {
-                padding: 0 3px !important;
-                height: 32px;
-            }
-
-            .note-holder,
-            .note-color-palette .note-color-row,
-            .note-custom-color-palette .note-color-row {
-                height: auto !important;
-
-                &::after {
-                    content: "";
-                    display: table;
-                    clear: both;
-                }
-
-                .note-color-btn {
-                    float: left;
-                    height: 20px;
-                    width: 20px;
-                    margin: 1px 1px 0 0;
-                    border: 1px solid black;
-                    cursor: pointer;
-                    @include o-alpha-button-preview;
-
-                    &.o_small {
-                        width: 16px;
-                        height: 16px;
-                        margin: 3px 3px 2px 2px;
-                        border-radius: 50%;
-                    }
-
-                    &.o_clear {
-                        clear: both;
-                    }
-
-                    &.o_btn_transparent {
-                        display: none;
-                    }
-                }
+            > * {
+                color: inherit !important;
             }
         }
     }
-}
 
-.note-popover.popover.note-hint-popover .popover-content {
-    height: auto;
-}
-
-.note-popover,
-.note-editor {
-    .modal .modal-footer p {
-        display: none;
+    // Specific elements
+    .o_image_alt {
+        @include o-text-overflow();
+        max-width: 150px;
+    }
+    .note-color-palette div .note-color-btn {
+        border-color: var(--o-we-dropdown-bg-color);
     }
 }
 
-.note-handle {
-    pointer-events: none;
-
-    .note-control-selection {
-        z-index: 1;
-        overflow: hidden;
-
-        .note-control-se {
-            border-top: 0;
-            border-left: 0;
-            background: transparent;
-        }
+// ANIMATIONS
+@keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        transform: translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
     }
 }
 
-.o_fake_editable:not([data-oe-model]):focus {
-    outline: none;
-}
-
-.note-editor.dragover .note-dropzone {
-    z-index: $o-wysiwyg-zindex + 1;
+@keyframes inputHighlighter {
+    from {
+        background: $o-brand-primary;
+    }
+    to {
+        width: 0;
+        background: transparent;
+    }
 }
 
 // MODALS
-
 body .modal {
 
     // SELECT MEDIA
@@ -362,7 +208,7 @@ body .modal {
                     @include o-position-absolute($top: 0, $right: 0);
                     border-radius: 0 0 0 2px;
                     &:hover {
-                        color: $o-wysiwyg-color-danger;
+                        color: $o-we-color-danger;
                     }
                 }
 
@@ -390,7 +236,7 @@ body .modal {
             }
 
             .font-icons-icons {
-                >span {
+                > span {
                     text-align: center;
                     font-size: 22px;
                     margin: 5px;
@@ -401,8 +247,8 @@ body .modal {
 
                     &.o_selected {
                         cursor: auto;
-                        background-color: $o-wysiwyg-bg-color-dark;
-                        box-shadow: 0px 0px 0px 1px $o-wysiwyg-color-success;
+                        background-color: $o-we-bg-color-dark;
+                        box-shadow: 0px 0px 0px 1px $o-we-color-success;
                     }
                 }
             }
@@ -421,7 +267,7 @@ body .modal {
                         position: relative;
                         width: 100%;
 
-                        >textarea {
+                        > textarea {
                             width: 100%;
                             min-height: 95px;
                             padding-bottom: 25px;
@@ -460,7 +306,7 @@ body .modal {
 
         .cropper-point {
             background-color: white;
-            transition: all 400ms $o-wysiwyg-md-ease 0s;
+            transition: all 400ms $o-we-md-ease 0s;
             transform: scale(1.5, 1.5);
             border-radius: 10px;
             box-shadow: 0 0 1px 1px rgba(23, 23, 23, 0.5);
@@ -482,7 +328,7 @@ body .modal {
 
     // LINK EDITOR DIALOG COLOR SELECTOR
     .o_link_dialog {
-        .o_link_dialog_color>.o_link_dialog_color_item {
+        .o_link_dialog_color > .o_link_dialog_color_item {
             position: relative;
             width: 30px;
             height: 30px;
@@ -490,7 +336,7 @@ body .modal {
             border: 2px solid rgba(0, 0, 0, 0.25);
             border-radius: 50%;
 
-            input:checked+i::before {
+            input:checked + i::before {
                 content: "\f00c";
                 @include o-position-absolute($top: 6px, $left: 5px);
             }
@@ -498,7 +344,7 @@ body .modal {
             &.btn-link {
                 padding: 3px 9px;
 
-                >span {
+                > span {
                     text-decoration: underline;
                 }
             }
@@ -511,7 +357,7 @@ body .modal {
 
     .o_we_image_optimize_dialog {
         .o_we_title_label {
-            font-size: 1rem;
+            font-size: $o-we-font-size;
         }
         .o_we_preview_area {
             max-height: 400px;
@@ -538,33 +384,4 @@ img.o_we_selected_image {
 .fa.mx-auto,
 img.o_we_custom_image.mx-auto {
     display: block;
-}
-
-// ENTER IN EDIT MODE
-
-.note-editor .css_editable_mode_display {
-    border: 1px dashed rgba(153, 153, 153, 0.5);
-    display: block !important;
-}
-
-.note-editable {
-
-    li,
-    p,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        &:empty:after {
-            content: "\00a0"
-        }
-    }
-}
-
-.wysiwyg_iframe {
-    margin: 0;
-    padding: 0;
-    border: 0;
 }

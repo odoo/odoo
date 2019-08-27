@@ -2,14 +2,22 @@
 /// This files regroups the variables and mixins which are specific to the editor.
 ///
 
-$o-we-font-family: Roboto, 'Montserrat', "Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif !default;
+$o-we-font-family: Roboto, 'Montserrat', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+
+$o-we-font-size: 13px;
+$o-we-bg-color: #F7F7F7 !default;
+$o-we-bg-color-dark: #a7a7a7 !default;
+$o-we-color: #212629 !default;
+$o-we-border-width: 1px !default;
+$o-we-border-color: rgba(0, 0, 0, 0.125) !default;
+$o-we-dropdown-bg-color: #FFFFFF;
+$o-we-dropdown-color: inherit;
 
 $o-we-color-dark: #2c2c36 !default;
 $o-we-color-darker: darken($o-we-color-dark, 2%) !default;
 $o-we-color-divider: #33363e !default;
 $o-we-color-light: #4e525b !default;
-$o-we-color-normal: #50545d !default;
-$o-we-color-paper: #fcfcfc !default;
+$o-we-color-normal: #3D4047 !default;
 $o-we-color-text-normal: #999999 !default;
 $o-we-color-text-light: #d4d5d7 !default;
 $o-we-color-text-lighter: #ebecee !default;
@@ -18,58 +26,38 @@ $o-we-color-warning: #f0ad4e !default;
 $o-we-color-success: #40ad67 !default;
 $o-we-color-info: #6999a8 !default;
 
-$o-we-sidebar-width: 210px !default;
+$o-we-sidebar-width: 230px !default;
 
-$o-we-tab-active-bg: #3D4048 !default;
+$o-we-handles-offset-to-hide: 10000px !default;
+$o-we-handles-btn-size: 18px !default;
+$o-we-handles-accent-color: #00e2ff !default;
+$o-we-handles-accent-color-preview: $o-enterprise-color !default;
+$o-we-handle-edge-size: 8px !default;
+$o-we-handle-border-width: 2px !default;
+$o-we-handle-border-width-preview: 6px !default;
 
 // Transitions
 $o-we-md-ease: cubic-bezier(0.19, 1, 0.22, 1) !default;
 
 // Editor
-$o-we-dropzone-size: 40px !default;
+$o-we-dropzone-size: 30px !default; // $grid-gutter-width (todo: allow to use the variable)
 $o-we-dropzone-border-width: 2px !default;
 $o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-brand-odoo !default;
-
-$o-we-handle-edge-size: 1px !default;
-$o-we-handle-border-width: 1px !default;
-$o-we-handles-offset-to-hide: 10000px !default;
-$o-we-handles-accent-color: #00e2ff !default;
-$o-we-handles-btn-size: 18px !default;
-
-$o-we-overlay-option-size: 25px !default;
 
 $o-we-ace-color: #2F3129 !default;
 
 $o-we-switch-size: 2ex !default;
-$o-we-switch-inactive-color: $o-we-color-paper !default;
+$o-we-switch-inactive-color: $o-we-bg-color !default;
 
 // Checklist
 $o-checklist-margin-left: 20px;
 $o-checklist-checkmark-width: 2px;
 $o-checklist-before-size: 13px;
 
-$o-wysiwyg-zindex: 1000;
+$o-we-zindex: 1000;
+$o-we-overlay-zindex: $o-we-zindex - 10;
 
-$o-wysiwyg-md-ease: cubic-bezier(0.19, 1, 0.22, 1) !default;
-
-$o-wysiwyg-font-family: Roboto,
-"Montserrat",
-"Segoe UI",
-"Helvetica Neue",
-Helvetica,
-Arial,
-sans-serif;
-
-$o-wysiwyg-toolbar-height: 32px;
-
-$o-wysiwyg-color: #212629 !default;
-$o-wysiwyg-color-light: #616669 !default;
-$o-wysiwyg-color-danger: #912629 !default;
-$o-wysiwyg-color-success: #219629 !default;
-$o-wysiwyg-bg-color: #f7f7f7 !default;
-$o-wysiwyg-bg-color-dark: #a7a7a7 !default;
-$o-wysiwyg-border-color: #a9a9a9 !default;
-
+$o-we-toolbar-height: 32px;
 
 // ============    'Preview' component Mixins    ===============
 // Create a "preview" work-area to edit/customize specific elements
@@ -191,7 +179,7 @@ $o-wysiwyg-border-color: #a9a9a9 !default;
 
     .modal-content {
         border-radius: 0;
-        background-color: $o-we-color-paper;
+        background-color: $o-we-bg-color;
 
         .modal-header {
             border-bottom-color: #e9ecef;
@@ -222,7 +210,7 @@ $o-wysiwyg-border-color: #a9a9a9 !default;
                 &.active {
                     &, &:hover, &:focus {
                         color: $o-we-color-normal;
-                        background-color: $o-we-color-paper;
+                        background-color: $o-we-bg-color;
                         border-color: #dee2e6 #dee2e6 #FFFFFF;
                     }
                 }
@@ -242,11 +230,11 @@ $o-wysiwyg-border-color: #a9a9a9 !default;
             @include button-variant($o-brand-primary, $o-brand-primary);
         }
         &.btn-secondary {
-            @include button-variant($o-we-color-paper, $o-we-color-paper);
+            @include button-variant($o-we-bg-color, $o-we-bg-color);
             color: $o-brand-primary;
         }
         &.btn-link {
-            @include button-variant($o-we-color-paper, $o-we-color-paper);
+            @include button-variant($o-we-bg-color, $o-we-bg-color);
             color: $o-brand-primary;
         }
         &.btn-success {
@@ -268,8 +256,8 @@ $o-wysiwyg-border-color: #a9a9a9 !default;
     .card {
         padding: 19px;
         margin-bottom: 20px;
-        background-color: $o-we-color-paper;
-        border: 1px solid darken($o-we-color-paper, 5%);
+        background-color: $o-we-bg-color;
+        border: 1px solid darken($o-we-bg-color, 5%);
         border-radius: 0;
         box-shadow: none;
     }
