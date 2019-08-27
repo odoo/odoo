@@ -3,7 +3,6 @@
 
 import random
 import re
-import unittest
 from unittest.mock import patch
 import textwrap
 from datetime import datetime, timedelta
@@ -45,8 +44,8 @@ class TestModulesLoading(BaseCase):
             seen.add(module)
 
 
-@tagged('standard', 'at_install', 'static_templates')
-class TestStaticInheritance(unittest.TestCase):
+@tagged('static_templates')
+class TestStaticInheritance(BaseCase):
 
     def setUp(self):
         super(TestStaticInheritance, self).setUp()
