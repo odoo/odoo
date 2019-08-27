@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="before">
                 <header style="min-height:31px;">
-                    <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new Mailing"/>
-                    <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new A/B Testing Mailing"/>
+                    <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Create a mailing"/>
+                    <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="btn-secondary" string="Create an A/B Testing Mailing"/>
                     <span><field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/></span>
                 </header>
             </xpath>
@@ -100,9 +100,9 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-            Create a new UTM campaign
+            Create a mailing campaign
             </p><p>
-            Create a campaign to structure mailing and get analysis from email status.
+            Campaigns are the perfect tool to track results across multiple mailings.
             </p>
         </field>
         <field name="domain">[('is_website', '=', False)]</field>
@@ -117,7 +117,7 @@
         parent="mass_mailing_configuration" sequence="1"
         groups="mass_mailing.group_mass_mailing_campaign"
         action="utm.action_view_utm_stage"/>
-
+        
     <menuitem id="mass_mailing_tag_menu"
         parent="mass_mailing_configuration"
         action="utm.action_view_utm_tag"
