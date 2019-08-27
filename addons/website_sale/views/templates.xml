@@ -1618,7 +1618,7 @@
                         <b>Communication: </b><span t-esc='order.reference'/>
                     </div>
                 </div>
-                <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.acquirer_id.provider == 'transfer') and (payment_tx_id.partner_id.country_id.code in ['BE', 'AT', 'DE', 'FI', 'NL']) and (payment_tx_id.currency_id.name == 'EUR')">
+                <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.acquirer_id.provider == 'transfer') and (payment_tx_id.currency_id.name == 'EUR')">
                     <div class="card-body" t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid">
                         <h3>Or scan me with your banking app.</h3>
                         <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference)"/>

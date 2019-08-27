@@ -458,12 +458,16 @@ template inheritance
 ''''''''''''''''''''
 
 Template inheritance is used to alter existing templates in-place, e.g. to
-add information to templates created by an other modules.
+add information to templates created by other modules.
 
 Template inheritance is performed via the ``t-extend`` directive which takes
 the name of the template to alter as parameter.
 
-The alteration is then performed with any number of ``t-jquery``
+When ``t-extend`` is combined with ``t-name`` a new template with the given name
+is created. In this case the extended template is not altered, instead the
+directives define how to create the new template.
+
+In both cases the alteration is then performed with any number of ``t-jquery``
 sub-directives::
 
     <t t-extend="base.template">

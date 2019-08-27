@@ -117,7 +117,7 @@ class AccountMove(models.Model):
         "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
     auto_reverse = fields.Boolean(string='Reverse Automatically', default=False, help='If this checkbox is ticked, this entry will be automatically reversed at the reversal date you defined.')
     reverse_date = fields.Date(string='Reversal Date', help='Date of the reverse accounting entry.')
-    reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True)
+    reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True, copy=False)
     tax_type_domain = fields.Char(store=False, help='Technical field used to have a dynamic taxes domain on the form view.')
 
     @api.constrains('line_ids', 'journal_id', 'auto_reverse', 'reverse_date')
@@ -380,16 +380,23 @@ class AccountMove(models.Model):
     def assert_balanced(self):
         if not self.ids:
             return True
-        prec = self.env.user.company_id.currency_id.decimal_places
 
-        self._cr.execute("""\
-            SELECT      move_id
-            FROM        account_move_line
-            WHERE       move_id in %s
-            GROUP BY    move_id
-            HAVING      abs(sum(debit) - sum(credit)) > %s
-            """, (tuple(self.ids), 10 ** (-max(5, prec))))
-        if len(self._cr.fetchall()) != 0:
+        # /!\ As this method is called in create / write, we can't make the assumption the computed stored fields
+        # are already done. Then, this query MUST NOT depend of computed stored fields (e.g. balance).
+        # It happens as the ORM makes the create with the 'no_recompute' statement.
+        self._cr.execute('''
+            SELECT line.move_id
+            FROM account_move_line line
+            JOIN account_move move ON move.id = line.move_id
+            JOIN account_journal journal ON journal.id = move.journal_id
+            JOIN res_company company ON company.id = journal.company_id
+            JOIN res_currency currency ON currency.id = company.currency_id
+            WHERE line.move_id IN %s
+            GROUP BY line.move_id, currency.decimal_places
+            HAVING ROUND(SUM(debit - credit), currency.decimal_places) != 0.0;
+        ''', [tuple(self.ids)])
+
+        if self._cr.fetchone():
             raise UserError(_("Cannot create unbalanced journal entry."))
         return True
 
@@ -682,6 +689,10 @@ class AccountMoveLine(models.Model):
         for line in self.move_id.resolve_2many_commands(
                 'line_ids', self._context['line_ids'], fields=['credit', 'debit']):
             balance += line.get('debit', 0) - line.get('credit', 0)
+        # if we are here, line_ids is in context, so journal_id should also be.
+        currency = self._context.get('journal_id') and self.env["account.journal"].browse(self._context['journal_id']).company_id.currency_id
+        if currency:
+            balance = currency.round(balance)
         if balance < 0:
             rec.update({'debit': -balance})
         if balance > 0:

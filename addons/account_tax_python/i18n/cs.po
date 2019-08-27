@@ -40,6 +40,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Vypočtěte částku daně nastavením proměnné 'result'.\n"
+"\n"
+":param base_amount: float, skutečná částka, na kterou se daň vztahuje\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset  singleton nebo None\n"
+":param partner: res.partner singleton nebo None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -52,6 +60,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Vypočítejte částku daně nastavením proměnné  'result'.\n"
+"\n"
+":param base_amount: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -64,6 +79,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Určete, zda bude daň použita, nastavením proměnné 'result' na True nebo False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -75,6 +97,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Určete, zda bude daň použita, nastavením proměnné 'result' na True nebo False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: selection:account.tax,amount_type:0
@@ -98,7 +126,7 @@ msgstr "Procento z ceny"
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price Tax Included"
-msgstr ""
+msgstr "Procentní sazba daně z ceny zahrnuta"
 
 #. module: account_tax_python
 #: selection:account.tax,amount_type:0

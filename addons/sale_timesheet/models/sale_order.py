@@ -68,7 +68,8 @@ class SaleOrder(models.Model):
 
         task_projects = self.tasks_ids.mapped('project_id')
         if len(task_projects) == 1 and len(self.tasks_ids) > 1:  # redirect to task of the project (with kanban stage, ...)
-            action = self.env.ref('project.act_project_project_2_project_task_all').read()[0]
+            action = self.with_context(active_id=task_projects.id).env.ref(
+                'project.act_project_project_2_project_task_all').read()[0]
             if action.get('context'):
                 eval_context = self.env['ir.actions.actions']._get_eval_context()
                 eval_context.update({'active_id': task_projects.id})

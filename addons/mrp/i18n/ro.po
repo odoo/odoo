@@ -30,7 +30,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
 msgid " When all components are available"
-msgstr ""
+msgstr "Când toate componentele sunt disponibile"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
@@ -82,22 +82,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pauză\" title=\"Pauză\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Execută\" title=\"Execută\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:332
@@ -117,6 +117,9 @@ msgid ""
 "['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
 "('confirmed','progress'))]}\">Raw materials not available!</span>"
 msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
+"('confirmed','progress'))]}\">Materii prime nu sunt disponibile</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -142,7 +145,7 @@ msgstr "<span class=\"o_stat_text\">Pierdere</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "<span class=\"o_stat_text\">Manufactured</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Fabricate</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -228,7 +231,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8\">to</strong>"
-msgstr ""
+msgstr "<strong class=\"mr8\">la</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -238,7 +241,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Finished Product:</strong><br/>"
-msgstr ""
+msgstr "<strong>Produs finit</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -273,7 +276,7 @@ msgstr "<strong>Motiv: </strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Responsible:</strong><br/>"
-msgstr ""
+msgstr "<strong>Responsabil:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -373,6 +376,8 @@ msgid ""
 "All components could not be reserved. Click on the \"Check Availability "
 "button\" to try to reserve components."
 msgstr ""
+"Nu toate componentele au putut fi rezervate. Faceți clic pe butonul "
+"\"Verificați disponibilitatea\" pentru a încerca rezervarea componentelor."
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
@@ -398,6 +403,8 @@ msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
 msgstr ""
+"O comandă de dezmembrare este utilizată pentru a descompune un produs finit "
+"în componentele sale."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attribute_value_ids
@@ -481,7 +488,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Structure Report"
-msgstr ""
+msgstr "Raport Structură LdM "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
@@ -550,6 +557,9 @@ msgid ""
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
+"Listele de materiale vă permit să definiți materiile prime necesare pentru "
+"realizarea unui produs finit; printr-o comandă de producție sau un pachet de"
+" produse."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -621,7 +631,7 @@ msgstr "Linii LdM"
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #, python-format
 msgid "BoM Structure"
-msgstr ""
+msgstr "Structură LdM"
 
 #. module: mrp
 #. openerp-web
@@ -629,12 +639,12 @@ msgstr ""
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #, python-format
 msgid "BoM Structure & Cost"
-msgstr ""
+msgstr "LdM Structură și cost"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Structure &amp; Cost"
-msgstr ""
+msgstr "LdM Structură și cost"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -768,7 +778,7 @@ msgstr "Companie"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_id
 msgid "Component"
-msgstr ""
+msgstr "Integrant"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1067,7 +1077,7 @@ msgstr "Efectuat"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Done Last 365 Days"
-msgstr ""
+msgstr "Efectuat ultimile 365 zile "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__done_wo
@@ -1235,7 +1245,7 @@ msgstr "Produse finite"
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_finished_product
 msgid "Finished Product Label (PDF)"
-msgstr ""
+msgstr "Etichetă produs finit (PDF)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_finished_ids
@@ -1459,6 +1469,9 @@ msgid ""
 "                                    order for this product, the delivery order will contain the raw\n"
 "                                    materials, instead of the finished product."
 msgstr ""
+"Dacă produsul este un produs finit: Când prelucrați o comandă de vânzare "
+"pentru acest produs, comanda de livrare va conține materiile prime, în loc "
+"de produsul finit."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1824,13 +1837,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product__mrp_product_qty
 #: model:ir.model.fields,field_description:mrp.field_product_template__mrp_product_qty
 msgid "Manufactured"
-msgstr ""
+msgstr "Fabricate"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "Manufactured Products"
-msgstr ""
+msgstr "Produse fabricate"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -2145,7 +2158,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_waiting
 msgid "Number of Manufacturing Orders Waiting"
-msgstr ""
+msgstr "Numărul comenzilor în așteptare"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_todo
@@ -2213,12 +2226,12 @@ msgstr "Ege"
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once a minimum number of products is processed"
-msgstr ""
+msgstr "Odată procesat un număr minim de produse"
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once all products are processed"
-msgstr ""
+msgstr "Odată ce toate produsele sunt procesate"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__name
@@ -2776,7 +2789,7 @@ msgstr "Cantitatea obținută"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
 msgid "Quantity To Be Produced"
-msgstr ""
+msgstr "Cantitatea de obținut"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__product_qty
@@ -2891,7 +2904,7 @@ msgstr ""
 #: code:addons/mrp/static/src/xml/mrp.xml:29
 #, python-format
 msgid "Report:"
-msgstr ""
+msgstr "Raport:"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reporting
@@ -2990,6 +3003,9 @@ msgid ""
 "                done to realize a Manufacturing Order. Each operation from\n"
 "                a Routing is done at a specific Work Center and has a specific duration."
 msgstr ""
+"Fișele tehnologice definesc operațiunile succesive care trebuie efectuate "
+"pentru a realiza o comandă de producție.  Fiecare operație dintr-o fișă "
+"tehnologică se face de u centru de lucru specific și are o durată specifică."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -3298,7 +3314,7 @@ msgstr "Nume fisier stocat"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Structure & Cost"
-msgstr ""
+msgstr "Structură și cost"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_bom_id
@@ -3554,7 +3570,7 @@ msgstr "Data"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_efficiency
 msgid "Time Efficiency"
-msgstr ""
+msgstr "Eficiența timpului"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_ids
@@ -3645,6 +3661,8 @@ msgid ""
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
+"Pentru fabricarea sau asamblarea produselor și utilizarea materiilor prime și a produselor finite, trebuie să vă ocupați și de operațiile de fabricație.\n"
+"Operațiunile de fabricație sunt adesea numite Ordine de lucru. Diferitele operațiuni vor avea impacturi diferite asupra costurilor de fabricație și planificare, în funcție de volumul de muncă disponibil."
 
 #. module: mrp
 #: selection:mrp.production,activity_state:0
@@ -3707,7 +3725,7 @@ msgstr "Raport trasabilitate"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_tracking
 #: model:ir.model.fields,field_description:mrp.field_stock_move__needs_lots
 msgid "Tracking"
-msgstr "Urmărire"
+msgstr "Trasabilitate"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
@@ -3936,7 +3954,7 @@ msgstr "Așteaptă materiale"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Waiting for Materials"
-msgstr ""
+msgstr "Așteaptă materiale"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -3999,13 +4017,14 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
 msgid "When components for 1st operation are available"
-msgstr ""
+msgstr "Când sunt disponibile componente pentru prima operațiune"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
 msgstr ""
+"Când produsele sunt fabricate, acestea pot fi fabricate în acest depozit."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:17
@@ -4160,6 +4179,10 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones"
 msgstr ""
+"Comenzile de lucru sunt operații care urmează să fie procesate la un centru "
+"de lucru pentru a realiza o comandă de fabricație. Comenzile de lucru sunt "
+"declanșate de comenzi de fabricație, pe baza fișei tehnologice definită pe "
+"acestea"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -4304,6 +4327,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
 msgstr ""
+"Nu puteți șterge o comandă de dezmembrare dacă starea este „Efectuată”."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:82
@@ -4375,13 +4399,13 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:323
 #, python-format
 msgid "You should provide a lot/serial number for a component."
-msgstr ""
+msgstr "Ar trebui să furnizați un lot / număr de serie pentru o componentă."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:300
 #, python-format
 msgid "You should provide a lot/serial number for the final product."
-msgstr ""
+msgstr "Ar trebui să furnizați un lot / număr de serie pentru produsul final."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time

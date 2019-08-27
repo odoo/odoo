@@ -1642,7 +1642,7 @@ class MailThread(models.AbstractModel):
             # Very unusual situation, be we should be fault-tolerant here
             message_id = "<%s@localhost>" % time.time()
             _logger.debug('Parsing Message without message-id, generating a random one: %s', message_id)
-        msg_dict['message_id'] = message_id
+        msg_dict['message_id'] = message_id.strip()
 
         if message.get('Subject'):
             msg_dict['subject'] = tools.decode_smtp_header(message.get('Subject'))

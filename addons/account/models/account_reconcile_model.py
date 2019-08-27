@@ -326,7 +326,7 @@ class AccountReconcileModel(models.Model):
             query += ' AND st_line.name NOT ILIKE %s'
             params += ['%%%s%%' % rule.match_label_param]
         elif rule.match_label == 'match_regex':
-            query += ' AND st_line.name ~ %s'
+            query += ' AND st_line.name ~* %s'
             params += [rule.match_label_param]
 
         # Filter on partners.
@@ -544,6 +544,8 @@ class AccountReconcileModel(models.Model):
         '''
         if not self.match_total_amount:
             return True
+        if not candidates:
+            return False
 
         # Match total residual amount.
         total_residual = 0.0
