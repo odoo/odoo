@@ -812,7 +812,7 @@ actual arch.
             field = Model._fields.get(node.get('name'))
             if field:
                 if field.type != 'many2one':
-                    self.raise_view_error(_('groupby can only target many2one (%(field)s') % dict(field=field.name), view_id)
+                    self.raise_view_error(_("'groupby' tags can only target many2one (%(field)s)") % dict(field=field.name), view_id)
                 attrs = fields.setdefault(node.get('name'), {})
                 children = False
                 # move all children nodes into a new node <groupby>
