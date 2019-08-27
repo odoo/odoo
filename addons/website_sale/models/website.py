@@ -196,7 +196,7 @@ class Website(models.Model):
         salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
         addr = partner.address_get(['delivery'])
         if not request.website.is_public_user():
-            last_sale_order = self.env['sale.order'].search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
+            last_sale_order = self.env['sale.order'].sudo().search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
             if last_sale_order:  # first = me
                 addr['delivery'] = last_sale_order.partner_shipping_id.id
         default_user_id = partner.parent_id.user_id.id or partner.user_id.id
