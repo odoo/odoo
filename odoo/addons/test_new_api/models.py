@@ -608,7 +608,7 @@ class Attachment(models.Model):
             rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
 
     # DLE P55: `test_cache_invalidation`
-    def modified(self, fnames, modified=None, create=False):
+    def modified(self, fnames, create=False):
         if not self:
             return
         comodel = self.env[self.res_model]
@@ -617,11 +617,7 @@ class Attachment(models.Model):
             record = comodel.browse(self.res_id)
             self.env.cache.invalidate([(field, record._ids)])
             record.modified(['attachment_ids'])
-            if modified is None:
-                modified = {field: record}
-            else:
-                modified[field] = modified.get(field, record) | record
-        return super(Attachment, self).modified(fnames, modified=modified)
+        return super(Attachment, self).modified(fnames, create)
 
 
 class AttachmentHost(models.Model):

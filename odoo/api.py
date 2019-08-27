@@ -636,14 +636,16 @@ class Environment(Mapping):
         """ Return whether ``field`` must be computed on ``record``. """
         return record.id in self.all.tocompute.get(field, ())
 
+    def not_to_compute(self, field, records):
+        """ Return the subset of ``records`` for which ``field`` must not be computed. """
+        ids = self.all.tocompute.get(field, ())
+        return records.browse(id_ for id_ in records._ids if id_ not in ids)
+
     def add_to_compute(self, field, records):
-        """ Mark ``field`` to be computed on ``records``, return newly added records. """
+        """ Mark ``field`` to be computed on ``records``. """
         if not records:
             return records
-        ids = self.all.tocompute[field]
-        added_ids = [id_ for id_ in records._ids if id_ not in ids]
-        ids.update(added_ids)
-        return records.browse(added_ids)
+        self.all.tocompute[field].update(records._ids)
 
     def remove_to_compute(self, field, records):
         """ Mark ``field`` as computed on ``records``. """
