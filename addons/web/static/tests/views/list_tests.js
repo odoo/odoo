@@ -7028,6 +7028,35 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('enter edition in editable list with <widget>', async function (assert) {
+        assert.expect(1);
+
+        var MyWidget = Widget.extend({
+            start: function () {
+                this.$el.html('<i class="fa fa-info"/>');
+            },
+        });
+        widgetRegistry.add('some_widget', MyWidget);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<widget name="some_widget"/>' +
+                    '<field name="int_field"/>' +
+                    '<field name="qux"/>' +
+                '</tree>',
+        });
+
+        // click on int_field cell of first row
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:nth(1)'));
+        assert.strictEqual(document.activeElement.name, "int_field");
+
+        list.destroy();
+        delete widgetRegistry.map.test;
+    });
 });
 
 });
