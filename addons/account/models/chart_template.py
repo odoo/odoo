@@ -57,6 +57,7 @@ class AccountAccountTemplate(models.Model):
             "to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times).")
     tag_ids = fields.Many2many('account.account.tag', 'account_account_template_account_tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
     group_id = fields.Many2one('account.group')
+    root_id = fields.Many2one('account.root')
 
     @api.depends('name', 'code')
     def name_get(self):

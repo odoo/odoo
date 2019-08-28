@@ -205,11 +205,11 @@ var AbstractView = Factory.extend({
         if (this.withSearchPanel) {
             var spProto = this.config.SearchPanel.prototype;
             var viewInfo = this.controlPanelParams.viewInfo;
-            var sections = spProto.computeSearchPanelParams(viewInfo, this.viewType);
-            if (sections) {
-                this.searchPanelParams.sections = sections;
+            var searchPanelParams = spProto.computeSearchPanelParams(viewInfo, this.viewType);
+            if (searchPanelParams.sections) {
+                this.searchPanelParams.sections = searchPanelParams.sections;
                 this.rendererParams.withSearchPanel = true;
-                spDef = Promise.resolve(cpDef).then(this._createSearchPanel.bind(this, parent));
+                spDef = Promise.resolve(cpDef).then(this._createSearchPanel.bind(this, parent, searchPanelParams));
             }
         }
 
@@ -283,7 +283,7 @@ var AbstractView = Factory.extend({
      * @param {Widget} parent
      * @returns {Promise<SearchPanel>} resolved when the searchPanel is ready
      */
-    _createSearchPanel: async function (parent) {
+    _createSearchPanel: async function (parent, params) {
         var defaultValues = {};
         Object.keys(this.loadParams.context).forEach((key) => {
             let match = /^searchpanel_default_(.*)$/.exec(key);
@@ -299,6 +299,7 @@ var AbstractView = Factory.extend({
             searchDomain: controlPanelDomain,
             sections: this.searchPanelParams.sections,
             state: this.searchPanelParams.state,
+            classes: params.classes || [],
         });
         this.controllerParams.searchPanel = searchPanel;
         this.controllerParams.controlPanelDomain = controlPanelDomain;

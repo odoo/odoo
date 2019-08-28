@@ -311,6 +311,8 @@
                         ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
                     <field name="date"/>
                     <field name="account_id"/>
+                    <field name="account_root_id"/>
+                    <field name="account_internal_type"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <field name="move_id" string="Journal Entry" filter_domain="[
@@ -345,6 +347,20 @@
                         <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
+            </field>
+        </record>
+        <record id="view_account_move_line_filter_with_root_selection" model="ir.ui.view">
+            <field name="name">account.move.line.search</field>
+            <field name="model">account.move.line</field>
+            <field name="mode">primary</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="after">
+                    <searchpanel class="account_root">
+                        <field name="account_root_id" icon="fa-filter"/>
+                    </searchpanel>
+                </xpath>
             </field>
         </record>
 
@@ -1056,6 +1072,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_general"/>
+            <field name="search_view_id" ref="view_account_move_line_filter_with_root_selection"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
 
@@ -1065,6 +1082,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_partner"/>
+            <field name="search_view_id" ref="view_account_move_line_filter_with_root_selection"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
 
