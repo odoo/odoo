@@ -68,12 +68,14 @@ var KanbanRecord = Widget.extend({
      * Called each time the record is attached to the DOM.
      */
     on_attach_callback: function () {
+        this.isInDOM = true;
         _.invoke(this.subWidgets, 'on_attach_callback');
     },
     /**
      * Called each time the record is detached from the DOM.
      */
     on_detach_callback: function () {
+        this.isInDOM = false;
         _.invoke(this.subWidgets, 'on_detach_callback');
     },
 
@@ -260,6 +262,9 @@ var KanbanRecord = Widget.extend({
                     // a widget already exists for that field, so reset it with the new state
                     widget.reset(self.state);
                     $field.replaceWith(widget.$el);
+                    if (self.isInDOM && widget.on_attach_callback) {
+                        widget.on_attach_callback();
+                    }
                 }
             } else {
                 self._processField($field, field_name);
@@ -346,6 +351,9 @@ var KanbanRecord = Widget.extend({
      */
     _render: function () {
         this.defs = [];
+        // call 'on_detach_callback' on each subwidget as they will be removed
+        // from the DOM at the next line
+        _.invoke(this.subWidgets, 'on_detach_callback');
         this._replaceElement(this.qweb.render('kanban-box', this.qweb_context));
         this.$el.addClass('o_kanban_record').attr("tabindex", 0);
         this.$el.attr('role', 'article');
