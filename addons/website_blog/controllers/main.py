@@ -238,9 +238,11 @@ class WebsiteBlog(http.Controller):
         tags = request.env['blog.tag'].search([])
 
         # Find next Post
-        all_post = BlogPost.search([('blog_id', '=', blog.id)])
+        blog_post_domain = [('blog_id', '=', blog.id)]
         if not request.env.user.has_group('website.group_website_designer'):
-            all_post = all_post.filtered(lambda r: r.post_date <= fields.Datetime.now())
+            blog_post_domain += [('post_date', '<=', fields.Datetime.now())]
+
+        all_post = BlogPost.search(blog_post_domain)
 
         if blog_post not in all_post:
             return request.redirect("/blog/%s" % (slug(blog_post.blog_id)))
