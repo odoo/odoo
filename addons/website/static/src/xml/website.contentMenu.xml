@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="website.contentMenu.dialog.submenu">
-    <li t-att-data-menu-id="submenu.id">
+    <li t-att-data-menu-id="submenu.fields['id']">
         <div class="input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text fa fa-bars" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
             </div>
             <span class="form-control d-flex align-items-center">
                 <span class="js_menu_label o_text_overflow flex-grow-1">
-                    <t t-esc="submenu.name"/>
+                    <t t-esc="submenu.fields['name']"/>
                 </span>
                 <i t-if="submenu.is_homepage" class="fa fa-home ml-3" role="img" aria-label="Home" title="Home"/>
             </span>
