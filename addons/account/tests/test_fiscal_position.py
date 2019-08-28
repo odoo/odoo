@@ -125,3 +125,20 @@ class TestFiscalPosition(common.TransactionCase):
         # Dedicated position has max precedence
         george.property_account_position_id = self.be_nat
         assert_fp(george, self.be_nat, "Forced position has max precedence")
+
+    def test_20_country_multicompany_on_off(self):
+        user = self.env.user
+        company = user.company_id
+        partner = self.ben
+
+        self.assertFalse(self.be_nat.company_id)
+        self.assertFalse(user.has_group('base.group_multi_company'))
+        fpos = self.fp.with_context(force_company=company.id).get_fiscal_position(partner_id=partner.id)
+        self.assertEquals(self.be_nat.id, fpos)
+
+        user.write({
+            'groups_id': [(4, self.env.ref('base.group_multi_company').id, False)]
+        })
+        self.assertTrue(user.has_group('base.group_multi_company'))
+        fpos = self.fp.with_context(force_company=company.id).get_fiscal_position(partner_id=partner.id)
+        self.assertFalse(fpos)
