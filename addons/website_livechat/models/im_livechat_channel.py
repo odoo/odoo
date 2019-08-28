@@ -20,6 +20,6 @@ class ImLivechatChannel(models.Model):
             # As chat requested by the visitor, delete the chat requested by an operator if any to avoid conflicts between two flows
             chat_request_channel = self.env['mail.channel'].sudo().search([('livechat_visitor_id', '=', visitor_sudo.id), ('livechat_active', '=', True)])
             for mail_channel in chat_request_channel:
-                mail_channel.close_livechat_request_session(_('has started a conversation with %s. The chat request has been canceled.') % operator.name)
+                mail_channel.close_livechat_request_session(type='cancel', speaking_with=operator.name)
 
         return mail_channel_vals

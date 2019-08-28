@@ -147,6 +147,8 @@ class WebsiteVisitor(models.Model):
             response.set_cookie('visitor_id', visitor_sudo.access_token, expires=expiration_date)
         else:
             visitor_sudo._add_tracking(domain, website_track_values)
+            if visitor_sudo.lang_id.id != request.lang.id:
+                visitor_sudo.write({'lang_id': request.lang.id})
 
     def _add_tracking(self, domain, website_track_values):
         """ Update the visitor when a website_track is added"""
@@ -155,8 +157,10 @@ class WebsiteVisitor(models.Model):
         if not last_view or last_view.visit_datetime < datetime.now() - timedelta(minutes=30):
             website_track_values['visitor_id'] = self.id
             self.env['website.track'].create(website_track_values)
-        self.env['website.visitor.lastconnection'].create({'visitor_id': self.id,
-        'connection_datetime': website_track_values['visit_datetime']})
+        self.env['website.visitor.lastconnection'].create({
+            'visitor_id': self.id,
+            'connection_datetime': website_track_values['visit_datetime']
+        })
 
     def _create_visitor(self, website_track_values=None):
         """ Create a visitor and add a track to it if website_track_values is set."""
@@ -165,6 +169,7 @@ class WebsiteVisitor(models.Model):
         vals = {
             'lang_id': request.lang.id,
             'country_id': country_id,
+            'website_id': request.website.id,
             'last_connections_ids': [(0, 0, {'connection_datetime': website_track_values['visit_datetime'] or datetime.now()})],
         }
         if not self.env.user._is_public():
