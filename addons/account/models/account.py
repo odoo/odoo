@@ -8,7 +8,7 @@ from odoo.osv import expression
 from odoo.tools.float_utils import float_round as round, float_compare
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError, ValidationError
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, tools
 from odoo.tests.common import Form
 
 TYPE_TAX_USE = [
@@ -224,6 +224,7 @@ class AccountAccount(models.Model):
         default=lambda self: self.env.company)
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     group_id = fields.Many2one('account.group')
+    root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True)
 
     opening_debit = fields.Monetary(string="Opening debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
     opening_credit = fields.Monetary(string="Opening credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
@@ -240,6 +241,14 @@ class AccountAccount(models.Model):
                     raise UserError(_('An Off-Balance account can not be reconcilable'))
                 if record.tax_ids:
                     raise UserError(_('An Off-Balance account can not have taxes'))
+
+    @api.depends('code')
+    def _compute_account_root(self):
+        #this computes the first 2 digits of the account.
+        #This field should have been a char, but the aim is to use it in a side panel view with hierarchy, and it's only supported by many2one fields so far.
+        #So instead, we make it a many2one to a psql view with what we need as records.
+        for record in self:
+            record.root_id = ord(record.code[0]) * 1000 + ord(record.code[1])
 
     @api.model
     def _search_new_account_code(self, company, digits, prefix):
@@ -540,6 +549,31 @@ class AccountGroup(models.Model):
             domain = criteria_operator + [('code_prefix', '=ilike', name + '%'), ('name', operator, name)]
         group_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(group_ids).name_get()
+
+
+class AccountRoot(models.Model):
+    _name = 'account.root'
+    _description = 'Account Root'
+    _auto = False
+
+    name = fields.Char()
+    parent_id = fields.Many2one('account.root')
+
+    def init(self):
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute('''
+            CREATE OR REPLACE VIEW %s AS (
+            SELECT DISTINCT ASCII(code) * 1000 + ASCII(SUBSTRING(code,2,1)) AS id,
+                   LEFT(code,2) AS name,
+                   ASCII(code) AS parent_id
+            FROM account_account WHERE code IS NOT NULL
+            UNION ALL
+            SELECT DISTINCT ASCII(code) AS id,
+                   LEFT(code,1) AS name,
+                   NULL::int AS parent_id
+            FROM account_account WHERE code IS NOT NULL
+            )''' % (self._table,)
+        )
 
 
 class AccountJournalGroup(models.Model):
