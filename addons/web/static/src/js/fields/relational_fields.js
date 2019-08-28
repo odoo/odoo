@@ -2040,8 +2040,8 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
 
 var FieldMany2ManyTags = AbstractField.extend({
     description: _lt("Tags"),
-    tag_template: "FieldMany2ManyTag",
-    className: "o_field_many2manytags",
+    template: "FieldMany2ManyTags",
+    tag_template: "Many2ManyTags",
     supportedFieldTypes: ['many2many'],
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         field_changed: '_onFieldChanged',
@@ -2059,12 +2059,17 @@ var FieldMany2ManyTags = AbstractField.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        if (this.mode === 'edit') {
-            this.className += ' o_input';
-        }
-
         this.colorField = this.nodeOptions.color_field;
         this.hasDropdown = false;
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        if (this.mode === 'edit') {
+            this.$el.addClass('o_input');
+        }
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -2155,8 +2160,9 @@ var FieldMany2ManyTags = AbstractField.extend({
         var self = this;
         this._renderTags();
         if (this.many2one) {
-            this.many2one.destroy();
+            return this.many2one._renderEdit();
         }
+
         this.many2one = new FieldMany2One(this, this.name, this.record, {
             mode: 'edit',
             noOpen: true,
@@ -2196,7 +2202,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @private
      */
     _renderTags: function () {
-        this.$el.html(qweb.render(this.tag_template, this._getRenderTagsContext()));
+        this.$('.o_m2m_tags').html(qweb.render(this.tag_template, this._getRenderTagsContext()));
     },
 
     //--------------------------------------------------------------------------
@@ -2253,8 +2259,8 @@ var FieldMany2ManyTags = AbstractField.extend({
 });
 
 var FieldMany2ManyTagsAvatar = FieldMany2ManyTags.extend({
-    tag_template: 'FieldMany2ManyTagAvatar',
-    className: 'o_field_many2manytags avatar',
+    template: 'FieldMany2ManyTagsAvatar',
+    tag_template: 'Many2ManyTagAvatar',
 
     //--------------------------------------------------------------------------
     // Private

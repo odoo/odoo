@@ -1190,6 +1190,40 @@ QUnit.module('fields', {}, function () {
 
             form.destroy();
         });
+
+        QUnit.test("many2many tags widget: save & new button doesn't close form popup", async function (assert) {
+            assert.expect(3);
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form string="Partners">' +
+                            '<field name="display_name"/>' +
+                            '<field name="timmy" widget="many2many_tags"/>' +
+                        '</form>',
+                res_id: 1,
+                archs: {
+                    'partner_type,false,form': '<form><field name="display_name"/></form>',
+                },
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            await testUtils.fields.many2one.clickOpenDropdown('timmy');
+            await testUtils.fields.many2one.clickItem('timmy', 'Create and Edit');
+            assert.containsOnce(document.body, $('.modal'),
+                'should have m2m create modal');
+            $('.modal input[name="display_name"]').val("test");
+
+            await testUtils.dom.click($('.modal footer button').eq(1));
+            assert.containsN(form.$('[name="timmy"]'), '.badge', 1,
+                'should have 1 tag');
+            assert.containsOnce(document.body, $('.modal'),
+                'should have m2m create modal');
+
+            form.destroy();
+        });
     });
 });
 });

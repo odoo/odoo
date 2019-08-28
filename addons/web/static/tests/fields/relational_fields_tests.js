@@ -1228,7 +1228,7 @@ QUnit.module('relational_fields', {
     QUnit.module('FieldMany2ManyTags');
 
     QUnit.test('fieldmany2many tags with and without color', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         this.data.partner.fields.partner_ids = {string: "Partner", type: "many2many", relation: 'partner'};
         var form = await createView({
@@ -1249,6 +1249,8 @@ QUnit.module('relational_fields', {
             }
         });
 
+        assert.containsOnce(form, '.o_field_many2manytags[name="timmy"] .o_m2m_tags',
+            'should have o_m2m_tags element for rendering tags');
         // add a tag on field partner_ids
         await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
         await testUtils.fields.many2one.clickHighlightedItem('partner_ids');

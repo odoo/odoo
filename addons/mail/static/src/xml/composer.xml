@@ -98,7 +98,7 @@
         </t>
     </t>
 
-    <t t-name="FieldMany2ManyTagsEmail" t-extend="FieldMany2ManyTag">
+    <t t-name="Many2ManyTagsEmail" t-extend="Many2ManyTags">
         <t t-jquery="[t-attf-class*=badge]" t-operation="replace">
             <div t-attf-class="badge badge-pill dropdown o_tag_color_0 #{el.email.indexOf('@') &lt; 0 ? 'o_tag_error' : ''}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
                 <span class="o_badge_text" t-att-title="el.email"><t t-esc="el.display_name"/></span>
