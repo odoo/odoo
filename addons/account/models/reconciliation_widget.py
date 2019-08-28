@@ -112,7 +112,8 @@ class AccountReconciliation(models.AbstractModel):
         query += 'LEFT JOIN res_partner_bank bank ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number %s\n' % (where_bank)
         query += 'LEFT JOIN res_partner p1 ON st_line.partner_id=p1.id \n'
         query += 'LEFT JOIN res_partner p2 ON bank.partner_id=p2.id \n'
-        query += 'LEFT JOIN res_partner p3 ON p3.name ILIKE st_line.partner_name %s\n' % (where_partner)
+        # By definition the commercial partner_id doesn't have a parent_id set
+        query += 'LEFT JOIN res_partner p3 ON p3.name ILIKE st_line.partner_name %s AND p3.parent_id is NULL \n' % (where_partner)
         query += 'WHERE st_line.id IN %s'
 
         params += [tuple(st_lines.ids)]

@@ -95,3 +95,35 @@ class TestReconciliationWidget(TestReconciliation):
 
         self.assertFalse(receivable1.id in mv_lines_ids)
         self.assertTrue(receivable2.id in mv_lines_ids)
+
+    def test_partner_name_with_parent(self):
+        parent_partner = self.env['res.partner'].create({
+            'name': 'test',
+        })
+        child_partner = self.env['res.partner'].create({
+            'name': 'test',
+            'parent_id': parent_partner.id,
+            'type': 'delivery',
+        })
+        inv1 = self.create_invoice_partner(currency_id=self.currency_euro_id, partner_id=child_partner.id)
+        self.assertEqual(inv1.move_id.partner_id, parent_partner)
+
+        bank_stmt = self.acc_bank_stmt_model.create({
+            'company_id': self.env.ref('base.main_company').id,
+            'journal_id': self.bank_journal_euro.id,
+            'date': time.strftime('%Y-07-15'),
+            'name': 'test',
+        })
+
+        bank_stmt_line = self.acc_bank_stmt_line_model.create({
+            'name': 'testLine',
+            'statement_id': bank_stmt.id,
+            'amount': 100,
+            'date': time.strftime('%Y-07-15'),
+            'partner_name': 'test',
+        })
+
+        bkstmt_data = self.env['account.reconciliation.widget'].get_bank_statement_line_data(bank_stmt_line.ids)
+
+        self.assertEqual(len(bkstmt_data['lines']), 1)
+        self.assertEqual(bkstmt_data['lines'][0]['partner_id'], parent_partner.id)

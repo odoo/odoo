@@ -129,6 +129,27 @@ class TestReconciliation(AccountingTestCase):
         invoice.action_invoice_open()
         return invoice
 
+    def create_invoice_partner(self, type='out_invoice', invoice_amount=50, currency_id=None, partner_id=False):
+        #we create an invoice in given currency
+        invoice = self.account_invoice_model.create({'partner_id': partner_id,
+            'currency_id': currency_id,
+            'name': type == 'out_invoice' and 'invoice to client' or 'invoice to vendor',
+            'account_id': self.account_rcv.id,
+            'type': type,
+            'date_invoice': time.strftime('%Y') + '-07-01',
+            })
+        self.account_invoice_line_model.create({'product_id': self.product.id,
+            'quantity': 1,
+            'price_unit': invoice_amount,
+            'invoice_id': invoice.id,
+            'name': 'product that cost ' + str(invoice_amount),
+            'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
+        })
+
+        #validate invoice
+        invoice.action_invoice_open()
+        return invoice
+
     def make_payment(self, invoice_record, bank_journal, amount=0.0, amount_currency=0.0, currency_id=None):
         bank_stmt = self.acc_bank_stmt_model.create({
             'journal_id': bank_journal.id,
@@ -889,27 +910,6 @@ class TestReconciliationExec(TestReconciliation):
 
         self.assertEqual(reversed_bank_line.full_reconcile_id.id, bank_line.full_reconcile_id.id)
         self.assertEqual(reversed_customer_line.full_reconcile_id.id, customer_line.full_reconcile_id.id)
-
-    def create_invoice_partner(self, type='out_invoice', invoice_amount=50, currency_id=None, partner_id=False):
-        #we create an invoice in given currency
-        invoice = self.account_invoice_model.create({'partner_id': partner_id,
-            'currency_id': currency_id,
-            'name': type == 'out_invoice' and 'invoice to client' or 'invoice to vendor',
-            'account_id': self.account_rcv.id,
-            'type': type,
-            'date_invoice': time.strftime('%Y') + '-07-01',
-            })
-        self.account_invoice_line_model.create({'product_id': self.product.id,
-            'quantity': 1,
-            'price_unit': invoice_amount,
-            'invoice_id': invoice.id,
-            'name': 'product that cost ' + str(invoice_amount),
-            'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
-        })
-
-        #validate invoice
-        invoice.action_invoice_open()
-        return invoice
 
     def test_aged_report(self):
         AgedReport = self.env['report.account.report_agedpartnerbalance'].with_context(include_nullified_amount=True)
