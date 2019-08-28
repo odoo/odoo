@@ -697,6 +697,13 @@ Model Reference
 
         :type: bool
 
+    .. attribute:: _check_company_auto
+
+        On write and create, call ``_check_company`` to ensure companies
+        consistency on the relational fields having ``check_company=True``
+        as attribute.
+        (default: ``False``)
+
     .. rubric:: CRUD
 
     .. automethod:: create
