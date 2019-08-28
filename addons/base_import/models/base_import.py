@@ -600,6 +600,17 @@ class Import(models.TransientModel):
                 has_relational_match = any(len(match) > 1 for field, match in matches.items() if match)
                 advanced_mode = has_relational_header or has_relational_match
 
+            batch = False
+            batch_cutoff = options.get('limit')
+            if batch_cutoff:
+                if count > batch_cutoff:
+                    batch = len(preview) > batch_cutoff
+                else:
+                    batch = bool(next(
+                        itertools.islice(rows, batch_cutoff - count, None),
+                        None
+                    ))
+
             return {
                 'fields': fields,
                 'matches': matches or False,
@@ -609,6 +620,7 @@ class Import(models.TransientModel):
                 'options': options,
                 'advanced_mode': advanced_mode,
                 'debug': self.user_has_groups('base.group_no_one'),
+                'batch': batch,
             }
         except Exception as error:
             # Due to lazy generators, UnicodeDecodeError (for
@@ -662,7 +674,9 @@ class Import(models.TransientModel):
             if any(row)
         ]
 
-        return data, import_fields
+        # slicing needs to happen after filtering out empty rows as the
+        # data offsets from load are post-filtering
+        return data[options.get('skip'):], import_fields
 
     @api.model
     def _remove_currency_symbol(self, value):
@@ -882,7 +896,8 @@ class Import(models.TransientModel):
         _logger.info('importing %d rows...', len(data))
 
         name_create_enabled_fields = options.pop('name_create_enabled_fields', {})
-        model = self.env[self.res_model].with_context(import_file=True, name_create_enabled_fields=name_create_enabled_fields)
+        import_limit = options.pop('limit', None)
+        model = self.env[self.res_model].with_context(import_file=True, name_create_enabled_fields=name_create_enabled_fields, _import_limit=import_limit)
         import_result = model.load(import_fields, data)
         _logger.info('done')
 
@@ -920,9 +935,20 @@ class Import(models.TransientModel):
                         })
         if 'name' in import_fields:
             index_of_name = import_fields.index('name')
-            import_result['name'] = [x[index_of_name] for x in data]
+            skipped = options.get('skip', 0)
+            # pad front as data doesn't contain anythig for skipped lines
+            r = import_result['name'] = [''] * skipped
+            # only add names for the window being imported
+            r.extend(x[index_of_name] for x in data[:import_limit])
+            # pad back (though that's probably not useful)
+            r.extend([''] * (len(data) - (import_limit or 0)))
         else:
             import_result['name'] = []
+
+        skip = options.get('skip', 0)
+        # convert load's internal nextrow to the imported file's
+        if import_result['nextrow']: # don't update if nextrow = 0 (= no nextrow)
+            import_result['nextrow'] += skip
 
         return import_result
 
