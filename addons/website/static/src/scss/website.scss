@@ -847,8 +847,14 @@ table.table_desc tr td {
             background-color: inherit;
         }
     }
-    &.s_parallax_is_fixed > .s_parallax_bg {
-        background-attachment: fixed;
+    @include media-breakpoint-up(xl) {
+        // Fixed backgrounds are disabled when using a mobile/tablet device,
+        // which is not a big deal but, on some of them (iOS...), defining the
+        // background as fixed breaks the background-size/position props.
+        // So we enable this only for >= XL devices.
+        &.s_parallax_is_fixed > .s_parallax_bg {
+            background-attachment: fixed;
+        }
     }
 }
 
