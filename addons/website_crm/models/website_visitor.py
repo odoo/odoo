@@ -7,12 +7,10 @@ from odoo import fields, models, api
 class WebsiteVisitor(models.Model):
     _inherit = 'website.visitor'
 
-    lead_ids = fields.One2many('crm.lead', 'visitor_id', string='Leads')
-    lead_count = fields.Integer('# Leads', compute="_compute_lead_count")
+    lead_ids = fields.Many2many('crm.lead', string='Leads', groups="sales_team.group_sale_salesman")
+    lead_count = fields.Integer('# Leads', compute="_compute_lead_count", groups="sales_team.group_sale_salesman")
 
-    @api.depends('lead_ids.visitor_id')
+    @api.depends('lead_ids')
     def _compute_lead_count(self):
-        page_data = self.env['crm.lead'].read_group([('visitor_id', 'in', self.ids)], ['visitor_id'], ['visitor_id'])
-        mapped_data = dict([(data['visitor_id'][0], data['visitor_id_count']) for data in page_data])
         for visitor in self:
-            visitor.lead_count = mapped_data.get(visitor.id, 0)
+            visitor.lead_count = len(visitor.lead_ids)
