@@ -72,11 +72,18 @@ class Invite(models.TransientModel):
                     'no_auto_thread': True,
                     'add_sign': True,
                 })
+                partners_data = []
+                recipient_data = self.env['mail.followers']._get_recipient_data(document, False, pids=new_partners.ids)
+                for pid, cid, active, pshare, ctype, notif, groups in recipient_data:
+                    pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
+                    if not pshare and notif:  # has an user and is not shared, is therefore user
+                        partners_data.append(dict(pdata, type='user'))
+                    elif pshare and notif:  # has an user and is shared, is therefore portal
+                        partners_data.append(dict(pdata, type='portal'))
+                    else:  # has no user, is therefore customer
+                        partners_data.append(dict(pdata, type='customer'))
                 self.env['res.partner'].with_context(auto_delete=True)._notify(
-                    message,
-                    [{'id': pid, 'share': True, 'notif': 'email', 'type': 'customer', 'groups': []} for pid in new_partners.ids],
-                    document,
-                    force_send=True,
-                    send_after_commit=False)
+                    message, partners_data, document,
+                    force_send=True, send_after_commit=False)
                 message.unlink()
         return {'type': 'ir.actions.act_window_close'}
