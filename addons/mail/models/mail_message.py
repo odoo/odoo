@@ -943,7 +943,7 @@ class Message(models.Model):
     def create(self, values):
         # coming from mail.js that does not have pid in its values
         if self.env.context.get('default_starred'):
-            self = self.with_context({'default_starred_partner_ids': [(4, self.env.user.partner_id.id)]})
+            self = self.with_context(default_starred_partner_ids=[(4, self.env.user.partner_id.id)])
 
         if 'email_from' not in values:  # needed to compute reply_to
             values['email_from'] = self._get_default_from()
