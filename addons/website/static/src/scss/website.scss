@@ -1089,6 +1089,34 @@ table.table_desc tr td {
     }
 }
 
+// Mega menu
+.o_mega_menu {
+    width: 100%;
+    padding: 0;
+    margin-top: 0;
+
+    .container, .container-fluid {
+        // Need to reforce those because they are removed since its a container
+        // inside another container (the one in the navbar)
+        padding-left: $grid-gutter-width / 2;
+        padding-right: $grid-gutter-width / 2;
+    }
+}
+.o_mega_menu_container_size {
+    @include media-breakpoint-up(md) {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    $-mm-max-widths: ();
+    @each $k, $v in $container-max-widths {
+        $-mm-max-widths: map-merge($-mm-max-widths, (
+            #{$k}: $v - $grid-gutter-width,
+        ));
+    }
+    @include make-container-max-widths($-mm-max-widths);
+}
+
 // Copyright
 .o_footer_copyright {
     padding: 8px;
