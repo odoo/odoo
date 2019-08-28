@@ -153,7 +153,7 @@ For example, let's look at the Sale Order report from the Sale module::
     <!-- Translatable template -->
     <template id="report_saleorder_document">
         <!-- Re-browse of the record with the partner lang -->
-        <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
+        <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
         <t t-call="web.external_layout">
             <div class="page">
                 <div class="oe_structure"/>
