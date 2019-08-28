@@ -134,7 +134,7 @@ class test_boolean_field(ImporterCase):
     def test_empty(self):
         self.assertEqual(
             self.import_(['value'], []),
-            {'ids': [], 'messages': []})
+            {'ids': [], 'messages': [], 'nextrow': False})
 
     def test_exported(self):
         result = self.import_(['value'], [['False'], ['True'], ])
@@ -190,7 +190,7 @@ class test_integer_field(ImporterCase):
     def test_none(self):
         self.assertEqual(
             self.import_(['value'], []),
-            {'ids': [], 'messages': []})
+            {'ids': [], 'messages': [], 'nextrow': False})
 
     def test_empty(self):
         result = self.import_(['value'], [['']])
@@ -277,7 +277,7 @@ class test_float_field(ImporterCase):
     def test_none(self):
         self.assertEqual(
             self.import_(['value'], []),
-            {'ids': [], 'messages': []})
+            {'ids': [], 'messages': [], 'nextrow': False})
 
     def test_empty(self):
         result = self.import_(['value'], [['']])
@@ -1030,7 +1030,7 @@ class test_date(ImporterCase):
     def test_empty(self):
         self.assertEqual(
             self.import_(['value'], []),
-            {'ids': [], 'messages': []})
+            {'ids': [], 'messages': [], 'nextrow': False})
 
     def test_basic(self):
         result = self.import_(['value'], [['2012-02-03']])
@@ -1052,7 +1052,7 @@ class test_datetime(ImporterCase):
     def test_empty(self):
         self.assertEqual(
             self.import_(['value'], []),
-            {'ids': [], 'messages': []})
+            {'ids': [], 'messages': [], 'nextrow': False})
 
     def test_basic(self):
         result = self.import_(['value'], [['2012-02-03 11:11:11']])

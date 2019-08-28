@@ -6,6 +6,8 @@ var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var time = require('web.time');
+var AbstractWebClient = require('web.AbstractWebClient');
+var Loading = require('web.Loading');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -194,7 +196,7 @@ var DataImport = AbstractAction.extend({
         this.$buttons = $(QWeb.render("ImportView.buttons", this));
         this.$buttons.filter('.o_import_validate').on('click', this.validate.bind(this));
         this.$buttons.filter('.o_import_import').on('click', this.import.bind(this));
-        this.$buttons.filter('.o_import_file_reload').on('click', this.loaded_file.bind(this));
+        this.$buttons.filter('.o_import_file_reload').on('click', this.loaded_file.bind(this, null));
         this.$buttons.filter('.oe_import_file').on('click', function () {
             self.$('.o_content .oe_import_file').click();
         });
@@ -291,6 +293,9 @@ var DataImport = AbstractAction.extend({
             advanced: this.$('input.oe_import_advanced_mode').prop('checked'),
             keep_matches: this.do_not_change_match,
             name_create_enabled_fields: {},
+            // start at row 1 = skip 0 lines
+            skip: Number(this.$('#oe_import_row_start').val()) - 1 || 0,
+            limit: Number(this.$('#oe_import_batch_limit').val()) || null,
         };
         _(this.opts).each(function (opt) {
             options[opt.name] =
@@ -319,7 +324,12 @@ var DataImport = AbstractAction.extend({
     },
 
     //- File & settings change section
-    onfile_loaded: function () {
+    onfile_loaded: function (event, from, to, arg) {
+        // arg is null if reload -> don't reset partial import
+        if (arg != null ) {
+            this.toggle_partial(null);
+        }
+
         this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('d-none');
         if (!this.$('input.oe_import_file').val()) { return this['settings_changed'](); }
         this.$('.oe_import_date_format').select2('val', '');
@@ -378,12 +388,16 @@ var DataImport = AbstractAction.extend({
         this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
 
+        this.$('.o_import_batch_alert').toggleClass('d-none', !result.batch);
+
+        var messages = [];
         if (result.headers.length === 1) {
+            messages.push({type: 'warning', message: _t("A single column was found in the file, this often means the file separator is incorrect")});
+        }
+
+        if (!_.isEmpty(messages)) {
             this.$('.oe_import_options').show();
-            this.onresults(null, null, null, {'messages': [{
-                type: 'warning',
-                message: _t("A single column was found in the file, this often means the file separator is incorrect")
-            }]});
+            this.onresults(null, null, null, {'messages': messages});
         }
 
         // merge option values back in case they were updated/guessed
@@ -392,10 +406,8 @@ var DataImport = AbstractAction.extend({
         });
         this.$('.oe_import_date_format').select2('val', time.strftime_to_moment_format(result.options.date_format));
         this.$('.oe_import_datetime_format').val(time.strftime_to_moment_format(result.options.datetime_format));
-        if (result.debug === false){
-            this.$('.oe_import_tracking').hide();
-            this.$('.oe_import_deferparentstore').hide();
-        }
+        // hide all "true debug" options when not in debug mode
+        this.$('.oe_import_debug_option').toggleClass('d-none', !result.debug);
 
         var $fields = this.$('.oe_import_fields input');
         this.render_fields_matches(result, $fields);
@@ -561,19 +573,28 @@ var DataImport = AbstractAction.extend({
         }).get();
 
         var tracking_disable = 'tracking_disable' in kwargs ? kwargs.tracking_disable : !this.$('#oe_import_tracking').prop('checked')
-        var defer_parent_store = 'defer_parent_store' in kwargs ? kwargs.defer_parent_store : !!this.$('#oe_import_deferparentstore').prop('checked')
         delete kwargs.tracking_disable;
-        delete kwargs.defer_parent_store;
         kwargs.context = _.extend(
             {}, this.parent_context,
-            {tracking_disable: tracking_disable, defer_parent_store_computation: defer_parent_store}
+            {tracking_disable: tracking_disable}
         );
-        return this._rpc({
-                model: 'base_import.import',
-                method: 'do',
-                args: [this.id, fields, columns, this.import_options()],
-                kwargs : kwargs,
-            }).then(null, function (reason) {
+        var self = this;
+        this.trigger_up('with_client', {callback: function () {
+            this.loading.ignore_events = true;
+        }});
+        $.blockUI({message: QWeb.render('Throbber')});
+        $(document.body).addClass('o_ui_blocked');
+        var opts = this.import_options();
+
+        var $el = $('.oe_throbber_message');
+        var msg = kwargs.dryrun ? _t("%d records tested...")
+                                : _t("%d records successfully imported...");
+        opts.callback = function (count) {
+            $el.text(_.str.sprintf(msg, count));
+        };
+
+        return this._batchedImport(opts, [this.id, fields, columns], kwargs, {done: 0, prev: 0})
+            .then(null, function (reason) {
                 var error = reason.message;
                 var event = reason.event;
                 // In case of unexpected exception, convert
@@ -582,8 +603,9 @@ var DataImport = AbstractAction.extend({
                 if (event) { event.preventDefault(); }
 
                 var msg;
-                if (error.data.type === 'xhrerror') {
-                    var xhr = error.data.objects[0];
+                var errordata = error.data || {};
+                if (errordata.type === 'xhrerror') {
+                    var xhr = errordata.objects[0];
                     switch (xhr.status) {
                     case 504: // gateway timeout
                         msg = _t("Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file).");
@@ -592,7 +614,7 @@ var DataImport = AbstractAction.extend({
                         msg = _t("An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once.");
                     }
                 } else {
-                    msg = (error.data.arguments && error.data.arguments[1] || error.data.arguments[0])
+                    msg = errordata.arguments && (errordata.arguments[1] || errordata.arguments[0])
                         || error.message;
                 }
 
@@ -601,7 +623,76 @@ var DataImport = AbstractAction.extend({
                     record: false,
                     message: msg,
                 }]});
-            }) ;
+            }).finally(function () {
+                $(document.body).removeClass('o_ui_blocked');
+                $.unblockUI();
+                self.trigger_up('with_client', {callback: function () {
+                    delete this.loading.ignore_events;
+                }});
+            });
+    }, /**
+     *
+     * @param opts import options
+     * @param args positional arguments to pass along (augmented with the options)
+     * @param kwargs keyword arguments to pass along (directly)
+     * @param {Object} rec recursion information record
+     * @param {Number} rec.done how many records have been loaded so far
+     * @param {Number} rec.prev nextrow of the previous call so we can know
+     *                          how many rows the call we're here performing
+     *                          will have consumed, and thus by how much we
+     *                          need to offset the messages of the *next* call
+     * @returns {Promise<{name, ids, messages}>}
+     * @private
+     */
+    _batchedImport: function (opts, args, kwargs, rec) {
+        opts.callback && opts.callback(rec.done || 0);
+        var self = this;
+        return this._rpc({
+            model: 'base_import.import',
+            method: 'do',
+            args: args.concat([opts]),
+            kwargs: kwargs
+        }).then(function (results) {
+            _.each(results.messages, offset_by(opts.skip));
+            if (!kwargs.dryrun && !results.ids) {
+                // update skip to failed batch
+                self.$('#oe_import_row_start').val(opts.skip + 1);
+                if (opts.skip) {
+                    // there's been an error during a "proper" import, stop & warn
+                    // about partial import maybe
+                    results.messages.push({
+                        type: 'info',
+                        priority: true,
+                        message: _.str.sprintf(_t("This file has been successfully imported up to line %d."), opts.skip)
+                    });
+                }
+                return results;
+            }
+            if (!results.nextrow) {
+                // we're done
+                return results;
+            }
+
+            // do the next batch
+            return self._batchedImport(
+                // avoid modifying opts in-place
+                _.defaults({skip: results.nextrow}, opts),
+                args, kwargs, {
+                    done: rec.done + (results.ids || []).length,
+                    prev: results.nextrow
+                }
+            ).then(function (r2) {
+                return {
+                    name: _.zip(results.name, r2.name).map(function (names) {
+                        return names[0] || names[1];
+                    }),
+                    ids: (results.ids || []).concat(r2.ids || []),
+                    messages: results.messages.concat(r2.messages),
+                    skip: r2.skip || results.nextrow,
+                    nextrow: r2.nextrow
+                }
+            });
+        });
     },
     onvalidate: function () {
         var prom = this.call_import({ dryrun: true, tracking_disable: true });
@@ -641,19 +732,31 @@ var DataImport = AbstractAction.extend({
                 type: 'info',
                 message: _t("Everything seems valid.")
             });
+        } else if (event === 'import_failed' && results.ids) {
+            // both ids in a failed import -> partial import
+            this.toggle_partial(results);
         }
+
         // row indexes come back 0-indexed, spreadsheets
         // display 1-indexed.
         var offset = 1;
         // offset more if header
         if (this.import_options().headers) { offset += 1; }
 
-        var messagesSorted = _.sortBy(_(message).groupBy('message'), function (messageGroupped) {
-            var order = 0;
-            if (messageGroupped[0].type === 'warning') {
-                order = fields.length + 1;
+        var messagesSorted = _.sortBy(_(message).groupBy('message'), function (group) {
+            if (group[0].priority){
+                return -2;
             }
-            return order + _.indexOf(fields, messageGroupped[0].field);
+
+            // sort by gravity, then, order of field in list
+            var order = 0;
+            switch (group[0].type) {
+            case 'error': order = 0; break;
+            case 'warning': order = fields.length + 1; break;
+            case 'info': order = 2 * (fields.length + 1); break;
+            default: order = 3 * (fields.length + 1); break;
+            }
+            return order + _.indexOf(fields, group[0].field);
         });
 
         this.$form.addClass('oe_import_error');
@@ -722,6 +825,24 @@ var DataImport = AbstractAction.extend({
                 },
             }));
     },
+    toggle_partial: function (result) {
+        var $form = this.$('.oe_import');
+        var $partial_warning = this.$('.o_import_partial_alert');
+        var $partial_count = this.$('.o_import_partial_count');
+        if (result == null) {
+            $partial_warning.addClass('d-none');
+            $form.add(this.$buttons).removeClass('o_import_partial_mode');
+            var $skip = this.$('#oe_import_row_start');
+            $skip.val($skip.attr('value'));
+            $partial_count.text('');
+            return;
+        }
+
+        this.$('.o_import_batch_alert').addClass('d-none');
+        $partial_warning.removeClass('d-none');
+        $form.add(this.$buttons).addClass('o_import_partial_mode');
+        $partial_count.text((result.skip || 0) + 1);
+    }
 });
 core.action_registry.add('import', DataImport);
 
@@ -745,6 +866,27 @@ StateMachine.create({
         { name: 'import_failed', from: 'importing', to: 'results' }
     ],
 });
+
+Loading.include({
+    on_rpc_event: function () {
+        if (this.ignore_events) {
+            return
+        }
+        this._super.apply(this, arguments);
+    }
+});
+AbstractWebClient.prototype.custom_events['with_client'] = function (ev) {
+    ev.data.callback.call(this);
+};
+
+function offset_by(by) {
+    return function offset_message(msg) {
+        if (msg.rows) {
+            msg.rows.from += by;
+            msg.rows.to += by;
+        }
+    }
+}
 
 return {
     DataImport: DataImport,
