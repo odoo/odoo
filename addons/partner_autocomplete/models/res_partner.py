@@ -50,8 +50,8 @@ class ResPartner(models.Model):
         if not country:
             country = self.env['res.country'].search([['name', '=ilike', country_name]])
 
-        state_id = {}
-        country_id = {}
+        state_id = False
+        country_id = False
         if country:
             country_id = {
                 'id': country.id,
