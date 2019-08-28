@@ -1091,7 +1091,7 @@ class TestReconciliation(AccountingTestCase):
                 'mv_line_ids': (inv1_receivable + inv2_receivable + pay_receivable).ids,
                 'new_mv_line_dicts': [
                     {
-                        'credit': 18.04,
+                        'credit': 20.09,  # 18.04 in foreign currency
                         'debit': 0.00,
                         'journal_id': self.bank_journal_euro.id,
                         'name': 'Total WriteOff (Fees)',
@@ -1101,7 +1101,7 @@ class TestReconciliation(AccountingTestCase):
             }
         ]
 
-        self.env['account.move.line'].process_reconciliations(data_for_reconciliation)
+        self.env["account.reconciliation.widget"].process_move_lines(data_for_reconciliation)
 
         self.assertTrue(inv1_receivable.full_reconcile_id.exists())
         self.assertEquals(inv1_receivable.full_reconcile_id, inv2_receivable.full_reconcile_id)
