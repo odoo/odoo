@@ -1044,7 +1044,7 @@ class AccountJournal(models.Model):
         invoices = self.env['account.move']
         for attachment in attachments:
             invoice = self.env['account.move'].create({})
-            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+            attachment.write({'res_model': 'mail.compose.message'})
             invoice.message_post(attachment_ids=[attachment.id])
             invoices += invoice
 
