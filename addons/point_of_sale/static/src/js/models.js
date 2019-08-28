@@ -388,7 +388,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'pos.payment.method',
-        fields: ['name', 'is_cash_count'],
+        fields: ['name', 'is_cash_count', 'use_payment_terminal'],
         domain: function(self, tmp) {
             return [['id', 'in', tmp.payment_method_ids]];
         },
@@ -403,10 +403,15 @@ exports.PosModel = Backbone.Model.extend({
                     return a.id - b.id;
                 }
             });
-            self.payment_methods_by_id = {}
+            self.payment_methods_by_id = {};
             _.each(self.payment_methods, function(payment_method) {
-                self.payment_methods_by_id[payment_method.id] = payment_method
-            })
+                self.payment_methods_by_id[payment_method.id] = payment_method;
+
+                var PaymentInterface = self.electronic_payment_interfaces[payment_method.use_payment_terminal];
+                if (PaymentInterface) {
+                    payment_method.payment_terminal = new PaymentInterface(self, payment_method);
+                }
+            });
         }
     },{
         model:  'account.fiscal.position',
@@ -1174,7 +1179,24 @@ exports.PosModel = Backbone.Model.extend({
         }
     },
 
+    electronic_payment_interfaces: {},
 });
+
+/**
+ * Call this function to map your PaymentInterface implementation to
+ * the use_payment_terminal field. When the POS loads it will take
+ * care of instantiating your interface and setting it on the right
+ * payment methods.
+ *
+ * @param {string} use_payment_terminal - value used in the
+ * use_payment_terminal selection field
+ *
+ * @param {Object} ImplementedPaymentInterface - implemented
+ * PaymentInterface
+ */
+exports.register_payment_method = function(use_payment_terminal, ImplementedPaymentInterface) {
+    exports.PosModel.prototype.electronic_payment_interfaces[use_payment_terminal] = ImplementedPaymentInterface;
+};
 
 // Add fields to the list of read fields when a model is loaded
 // by the point of sale.
@@ -2072,6 +2094,11 @@ exports.Paymentline = Backbone.Model.extend({
         this.order = options.order;
         this.amount = 0;
         this.selected = false;
+        this.ticket = '';
+        this.payment_status = '';
+        this.card_type = '';
+        this.transaction_id = '';
+
         if (options.json) {
             this.init_from_JSON(options.json);
             return;
@@ -2085,6 +2112,10 @@ exports.Paymentline = Backbone.Model.extend({
     init_from_JSON: function(json){
         this.amount = json.amount;
         this.payment_method = this.pos.payment_methods_by_id[json.payment_method_id];
+        this.payment_status = json.payment_status;
+        this.ticket = json.ticket;
+        this.card_type = json.card_type;
+        this.transaction_id = json.transaction_id;
     },
     //sets the amount of money on this payment line
     set_amount: function(value){
@@ -2105,13 +2136,45 @@ exports.Paymentline = Backbone.Model.extend({
             this.trigger('change',this);
         }
     },
+    /**
+     * returns {string} payment status.
+     */
+    get_payment_status: function() {
+        return this.payment_status;
+    },
+
+    /**
+     * Set the new payment status.
+     *
+     * @param {string} value - new status.
+     */
+    set_payment_status: function(value) {
+        this.payment_status = value;
+        this.trigger('change', this);
+    },
+
+    /**
+     * Set additional info to be printed on the receipts. value should
+     * be compatible with both the QWeb and ESC/POS receipts.
+     *
+     * @param {string} value - receipt info
+     */
+    set_receipt_info: function(value) {
+        this.ticket += value;
+        this.trigger('change', this);
+    },
+
     // returns the associated cashregister
     //exports as JSON for server communication
     export_as_JSON: function(){
         return {
             name: time.datetime_to_str(new Date()),
             payment_method_id: this.payment_method.id,
-            amount: this.get_amount()
+            amount: this.get_amount(),
+            payment_status: this.payment_status,
+            ticket: this.ticket,
+            card_type: this.card_type,
+            transaction_id: this.transaction_id,
         };
     },
     //exports as JSON for receipt printing
@@ -2624,6 +2687,17 @@ exports.Order = Backbone.Model.extend({
     get_paymentlines: function(){
         return this.paymentlines.models;
     },
+    /**
+     * Retrieve the paymentline with the specified cid
+     *
+     * @param {String} cid
+     */
+    get_paymentline: function (cid) {
+        var lines = this.get_paymentlines();
+        return lines.find(function (line) {
+            return line.cid === cid;
+        });
+    },
     remove_paymentline: function(line){
         this.assert_editable();
         if(this.selected_paymentline === line){
@@ -2653,6 +2727,32 @@ exports.Order = Backbone.Model.extend({
                 this.selected_paymentline.set_selected(true);
             }
             this.trigger('change:selected_paymentline',this.selected_paymentline);
+        }
+    },
+    electronic_payment_in_progress: function() {
+        return this.get_paymentlines()
+            .some(function(pl) {
+                if (pl.payment_status) {
+                    return !['done', 'reversed'].includes(pl.payment_status);
+                } else {
+                    return false;
+                }
+            });
+    },
+    /**
+     * Stops a payment on the terminal if one is running
+     */
+    stop_electronic_payment: function () {
+        var lines = this.get_paymentlines();
+        var line = lines.find(function (line) {
+            var status = line.get_payment_status();
+            return status && !['done', 'reversed', 'reversing', 'pending', 'retry'].includes(status);
+        });
+        if (line) {
+            line.set_payment_status('waitingCancel');
+            line.payment_method.payment_terminal.send_payment_cancel(this, line.cid).finally(function () {
+                line.set_payment_status('retry');
+            });
         }
     },
     /* ---- Payment Status --- */
@@ -2710,7 +2810,14 @@ exports.Order = Backbone.Model.extend({
     },
     get_total_paid: function() {
         return round_pr(this.paymentlines.reduce((function(sum, paymentLine) {
-            return sum + paymentLine.get_amount();
+            if (paymentLine.get_payment_status()) {
+                if (paymentLine.get_payment_status() == 'done') {
+                    sum += paymentLine.get_amount();
+                }
+            } else {
+                sum += paymentLine.get_amount();
+            }
+            return sum;
         }), 0), this.pos.currency.rounding);
     },
     get_tax_details: function(){
