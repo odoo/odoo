@@ -11,7 +11,7 @@ class WebsiteSaleOptions(WebsiteSale):
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
         r = super(WebsiteSaleOptions, self).product(product, category, search, **kwargs)
-        r.qcontext['optional_product_ids'] = [p.with_context({'active_id': p.id}) for p in product.optional_product_ids]
+        r.qcontext['optional_product_ids'] = [p.with_context(active_id=p.id) for p in product.optional_product_ids]
         return r
 
     @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)
