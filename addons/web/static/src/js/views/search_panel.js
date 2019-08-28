@@ -99,6 +99,7 @@ var SearchPanel = Widget.extend({
         this.defaultValues = params.defaultValues || {};
         this.fields = params.fields;
         this.model = params.model;
+        this.className = params.classes.concat(['o_search_panel']).join(' ');
         this.searchDomain = params.searchDomain;
     },
     /**
@@ -157,6 +158,7 @@ var SearchPanel = Widget.extend({
      */
     computeSearchPanelParams: function (viewInfo, viewType) {
         var searchPanelSections;
+        var classes;
         if (viewInfo) {
             var arch = viewUtils.parseArch(viewInfo.arch);
             viewType = viewType === 'list' ? 'tree' : viewType;
@@ -167,13 +169,19 @@ var SearchPanel = Widget.extend({
                     if (attrs.view_types) {
                         viewTypes = attrs.view_types.split(',');
                     }
+                    if (attrs.class) {
+                        classes = attrs.class.split(' ');
+                    }
                     if (viewTypes.indexOf(viewType) !== -1) {
                         searchPanelSections = _processSearchPanelNode(node, viewInfo.fields);
                     }
                 }
             });
         }
-        return searchPanelSections;
+        return {
+            sections: searchPanelSections,
+            classes: classes,
+        }
     },
     /**
      * Export the current state (categories and filters) of the searchpanel.
