@@ -136,11 +136,6 @@ class Website(Website):
 
 class WebsiteSale(http.Controller):
 
-    def _get_compute_currency_and_context(self, product=None):
-        pricelist_context, pricelist = self._get_pricelist_context()
-        compute_currency = self._get_compute_currency(pricelist, product)
-        return compute_currency, pricelist_context, pricelist
-
     def _get_pricelist_context(self):
         pricelist_context = dict(request.env.context)
         pricelist = False
@@ -151,12 +146,6 @@ class WebsiteSale(http.Controller):
             pricelist = request.env['product.pricelist'].browse(pricelist_context['pricelist'])
 
         return pricelist_context, pricelist
-
-    def _get_compute_currency(self, pricelist, product=None):
-        company = product and product._get_current_company(pricelist=pricelist, website=request.website) or pricelist.company_id or request.website.company_id
-        from_currency = (product or request.env['res.company']._get_main_company()).currency_id
-        to_currency = pricelist.currency_id
-        return lambda price: from_currency._convert(price, to_currency, company, fields.Date.today())
 
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
@@ -282,8 +271,6 @@ class WebsiteSale(http.Controller):
         else:
             attributes = ProductAttribute.browse(attributes_ids)
 
-        compute_currency = self._get_compute_currency(pricelist, products[:1])
-
         layout_mode = request.session.get('website_sale_shop_layout_mode')
         if not layout_mode:
             if request.website.viewref('website_sale.products_list_view').active:
@@ -306,7 +293,6 @@ class WebsiteSale(http.Controller):
             'ppr': ppr,
             'categories': categs,
             'attributes': attributes,
-            'compute_currency': compute_currency,
             'keep': keep,
             'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
@@ -342,9 +328,6 @@ class WebsiteSale(http.Controller):
         categs = ProductCategory.search([('parent_id', '=', False)])
 
         pricelist = request.website.get_current_pricelist()
-
-        def compute_currency(price):
-            return product.currency_id._convert(price, pricelist.currency_id, product._get_current_company(pricelist=pricelist, website=request.website), fields.Date.today())
 
         if not product_context.get('pricelist'):
             product_context['pricelist'] = pricelist.id
@@ -410,17 +393,8 @@ class WebsiteSale(http.Controller):
             elif abandoned_order.id != request.session.get('sale_order_id'):  # abandoned cart found, user have to choose what to do
                 values.update({'access_token': abandoned_order.access_token})
 
-        if order:
-            from_currency = order.company_id.currency_id
-            to_currency = order.pricelist_id.currency_id
-            compute_currency = lambda price: from_currency._convert(
-                price, to_currency, request.env.company, fields.Date.today())
-        else:
-            compute_currency = lambda price: price
-
         values.update({
             'website_sale_order': order,
-            'compute_currency': compute_currency,
             'date': fields.Date.today(),
             'suggested_products': [],
         })
@@ -482,8 +456,6 @@ class WebsiteSale(http.Controller):
 
         order = request.website.sale_get_order()
         value['cart_quantity'] = order.cart_quantity
-        from_currency = order.company_id.currency_id
-        to_currency = order.pricelist_id.currency_id
 
         if not display:
             return value
@@ -495,8 +467,6 @@ class WebsiteSale(http.Controller):
         })
         value['website_sale.short_cart_summary'] = request.env['ir.ui.view'].render_template("website_sale.short_cart_summary", {
             'website_sale_order': order,
-            'compute_currency': lambda price: from_currency._convert(
-                price, to_currency, order.company_id, fields.Date.today()),
         })
         return value
 
