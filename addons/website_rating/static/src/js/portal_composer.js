@@ -17,7 +17,7 @@ var STAR_RATING_RATIO = 2;  // conversion factor from the star (1-5) to the db r
  */
 PortalComposer.include({
     events: _.extend({}, PortalComposer.prototype.events, {
-        'click .stars': '_onClickStarBlock',
+        'click .stars i': '_onClickStar',
         'mouseleave .stars': '_onMouseleaveStarBlock',
         'mousemove .stars i': '_onMoveStar',
         'mouseleave .stars i': '_onMoveLeaveStar',
@@ -93,7 +93,9 @@ PortalComposer.include({
     /**
      * @private
      */
-    _onClickStarBlock: function () {
+    _onClickStar: function (ev) {
+        var index = this.$('.stars i').index(ev.currentTarget);
+        this.set("star_value", index + 1);
         this.user_click = true;
         this.$input.val(this.get("star_value") * STAR_RATING_RATIO);
     },
