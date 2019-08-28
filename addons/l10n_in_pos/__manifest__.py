@@ -11,6 +11,7 @@
         'point_of_sale'
     ],
     'data': [
+
     ],
     'demo': [
         'data/product_demo.xml',

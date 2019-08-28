@@ -14,7 +14,7 @@ Odoo allows to manage Indian Accounting by providing Two Formats Of Chart of Acc
 
 Note: The Schedule VI has been revised by MCA and is applicable for all Balance Sheet made after
 31st March, 2011. The Format has done away with earlier two options of format of Balance
-Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
+Sheet, now only Vertical format has been permitted which is Supported By Odoo.
   """,
     'category': 'Localization',
     'depends': [
@@ -38,7 +38,6 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'views/product_template_view.xml',
         'views/port_code_views.xml',
         'views/report_invoice.xml',
-        'views/res_company_view.xml',
         'views/res_country_state_view.xml',
         'views/res_partner_views.xml',
         'views/account_tax_views.xml',
