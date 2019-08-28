@@ -45,9 +45,7 @@ class AccountMove(models.Model):
                     isr_subscription = record.invoice_partner_bank_id.l10n_ch_isr_subscription_eur
                 elif record.currency_id.name == 'CHF':
                     isr_subscription = record.invoice_partner_bank_id.l10n_ch_isr_subscription_chf
-                else:
-                    #we don't format if in another currency as EUR or CHF
-                    pass
+                # else we don't format if in another currency as EUR or CHF
 
                 if isr_subscription:
                     isr_subscription = _format_isr_subscription_scanline(isr_subscription)
