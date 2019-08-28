@@ -130,7 +130,7 @@
 
 <!-- Layout -->
 <template id="submenu" name="Submenu">
-    <t t-set="has_visible_submenu" t-value="submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
+    <t t-set="has_visible_submenu" t-value="(submenu.is_mega_menu and submenu.is_visible) or submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
     <li t-if="submenu.is_visible and not has_visible_submenu" t-attf-class="#{item_class or ''}">
         <a t-att-href="submenu.clean_url()"
             t-attf-class="#{link_class or ''} #{'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else ''}"
@@ -143,11 +143,15 @@
     <li t-if="has_visible_submenu" t-attf-class="#{item_class or ''} dropdown #{
         (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
-        }">
-        <a t-attf-class="#{link_class or ''} dropdown-toggle" data-toggle="dropdown" href="#">
+        } #{submenu.is_mega_menu and 'position-static'}">
+        <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'}" data-toggle="dropdown" href="#">
             <span t-field="submenu.name"/>
         </a>
-        <ul class="dropdown-menu" role="menu">
+        <div t-if="submenu.is_mega_menu"
+             t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes}"
+             data-name="Mega Menu"
+             t-field="submenu.mega_menu_content"/>
+        <ul t-else="" class="dropdown-menu" role="menu">
             <t t-foreach="submenu.child_id" t-as="submenu">
                 <t t-call="website.submenu">
                     <t t-set="item_class" t-value="None"/>
@@ -243,6 +247,9 @@
         <t t-call-assets="website.assets_editor" t-css="false" groups="website.group_website_publisher" lazy_load="True"/>
     </xpath>
 
+    <xpath expr="//header" position="attributes">
+        <attribute name="data-name">Header</attribute>
+    </xpath>
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a class="navbar-brand" href="/" t-if="website" t-field="website.name">My Website</a>
     </xpath>

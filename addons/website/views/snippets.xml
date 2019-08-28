@@ -818,10 +818,81 @@
     </div>
 </template>
 
+<!-- Mega menu snippets -->
+
+<template id="s_mega_menu_multi_menus" name="Multi-Menus">
+    <section class="s_mega_menu_multi_menus py-4">
+        <div class="container">
+            <div class="row">
+                <t t-set="menu1_title">First Menu</t>
+                <t t-set="menu2_title">Second Menu</t>
+                <t t-set="menu3_title">Third Menu</t>
+                <t t-set="menu4_title">Last Menu</t>
+                <t t-foreach="[menu1_title, menu2_title, menu3_title, menu4_title]" t-as="menu_title">
+                    <div class="col-lg-3 py-2 text-center">
+                        <h4 t-esc="menu_title"/>
+                        <nav class="nav flex-column">
+                            <t t-foreach="3" t-as="i">
+                                <t t-set="text">Menu Item %s</t>
+                                <t t-set="text" t-value="text % (i + 1)"/>
+                                <a href="#" class="nav-link" data-name="Menu Item"
+                                   t-esc="text"/>
+                            </t>
+                        </nav>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mega_menu_menu_image_menu" name="Menu - Image - Menu">
+    <section class="s_mega_menu_menu_image_menu py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-4 py-2 text-center">
+                    <h4>Left Menu</h4>
+                    <nav class="nav flex-column">
+                        <t t-foreach="3" t-as="i">
+                            <t t-set="text">Menu Item %s</t>
+                            <t t-set="text" t-value="text % (i + 1)"/>
+                            <a href="#" class="nav-link" data-name="Menu Item"
+                                t-esc="text"/>
+                        </t>
+                    </nav>
+                </div>
+                <div class="col-lg-4 py-2 text-center">
+                    <img class="img-fluid" src="/web/image/website.s_mega_menu_menu_image_menu_default_image"/>
+                </div>
+                <div class="col-lg-4 py-2 text-center">
+                    <h4>Right Menu</h4>
+                    <nav class="nav flex-column">
+                        <t t-foreach="3" t-as="i">
+                            <t t-set="text">Menu Item %s</t>
+                            <t t-set="text" t-value="text % (i + 1)"/>
+                            <a href="#" class="nav-link" data-name="Menu Item"
+                                t-esc="text"/>
+                        </t>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <!-- Snippets menu -->
 <template id="snippets" inherit_id="web_editor.snippets" primary="True">
     <xpath expr="//div[@id='o_scroll']" position="replace">
         <div id="o_scroll">
+            <div id="snippet_mega_menu" class="o_panel d-none">
+                <div class="o_panel_header">
+                    <i class="fa fa-puzzle-piece"/> Mega Menu
+                </div>
+                <div class="o_panel_body">
+                    <t t-snippet="website.s_mega_menu_multi_menus" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_multi_menus.png"/>
+                    <t t-snippet="website.s_mega_menu_menu_image_menu" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_menu_image_menu.png"/>
+                </div>
+            </div>
 
             <div id="snippet_structure" class="o_panel">
                 <div class="o_panel_header">
@@ -881,7 +952,6 @@
                     <t t-snippet="website.s_rating" t-thumbnail="/website/static/src/img/snippets_thumbs/s_rating.png"/>
                 </div>
             </div>
-
         </div>
     </xpath>
 
@@ -1336,7 +1406,7 @@
     <div id="so_content_addition"
         data-selector="blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr"
         data-drop-near="p, h1, h2, h3, blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr"
-        data-drop-in=".content"/>
+        data-drop-in=".content, nav"/>
 
     <div data-js="ul"
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
@@ -1380,5 +1450,20 @@
             <i class="fa fa-fw fa-anchor"/> Anchor Name
         </we-button>
     </div>
+
+    <!-- Mega Menu settings -->
+    <div data-selector=".o_mega_menu">
+        <we-collapse-area>
+            <we-toggler><i class="fa fa-fw fa-arrows-h"/> Size</we-toggler>
+            <we-collapse>
+                <we-button data-select-class="">Full-Width</we-button>
+                <we-button data-select-class="o_mega_menu_container_size">Narrow</we-button>
+            </we-collapse>
+        </we-collapse-area>
+    </div>
+
+    <div data-selector=".o_mega_menu .nav-link"
+         data-drop-in=".o_mega_menu nav"
+         data-drop-near=".o_mega_menu .nav-link"/>
 </template>
 </odoo>

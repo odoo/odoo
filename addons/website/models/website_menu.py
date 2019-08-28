@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools.translate import html_translate
 
 
 class Menu(models.Model):
@@ -16,6 +17,20 @@ class Menu(models.Model):
         menu = self.search([], limit=1, order="sequence DESC")
         return menu.sequence or 0
 
+    def _compute_field_is_mega_menu(self):
+        for menu in self:
+            menu.is_mega_menu = bool(menu.mega_menu_content)
+
+    def _set_field_is_mega_menu(self):
+        for menu in self:
+            if menu.is_mega_menu:
+                if not menu.mega_menu_content:
+                    default_content = self.env['ir.ui.view'].render_template('website.s_mega_menu_multi_menus')
+                    menu.mega_menu_content = default_content.decode()
+            else:
+                menu.mega_menu_content = False
+                menu.mega_menu_classes = False
+
     name = fields.Char('Menu', required=True, translate=True)
     url = fields.Char('Url', default='')
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
@@ -28,6 +43,9 @@ class Menu(models.Model):
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     group_ids = fields.Many2many('res.groups', string='Visible Groups',
                                  help="User need to be at least in one of these groups to see the menu")
+    is_mega_menu = fields.Boolean(compute=_compute_field_is_mega_menu, inverse=_set_field_is_mega_menu)
+    mega_menu_content = fields.Html(translate=html_translate, sanitize=False)
+    mega_menu_classes = fields.Char()
 
     def name_get(self):
         if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
@@ -115,6 +133,7 @@ class Menu(models.Model):
                     'name': node.name,
                     'url': node.page_id.url if node.page_id else node.url,
                     'new_window': node.new_window,
+                    'is_mega_menu': node.is_mega_menu,
                     'sequence': node.sequence,
                     'parent_id': node.parent_id.id,
                 },
