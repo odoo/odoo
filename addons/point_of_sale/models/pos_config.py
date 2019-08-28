@@ -331,6 +331,13 @@ class PosConfig(models.Model):
         if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
             raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
 
+    @api.onchange('iface_tipproduct')
+    def _onchange_tipproduct(self):
+        if self.iface_tipproduct:
+            self.tip_product_id = self.env.ref('point_of_sale.product_product_tip', False)
+        else:
+            self.tip_product_id = False
+
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):
         self.iface_print_auto = self.iface_print_via_proxy

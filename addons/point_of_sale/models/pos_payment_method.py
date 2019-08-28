@@ -40,6 +40,14 @@ class PosPaymentMethod(models.Model):
     open_session_ids = fields.Many2many('pos.session', string='Pos Sessions', compute='_compute_open_session_ids', help='Open PoS sessions that are using this payment method.')
     config_ids = fields.Many2many('pos.config', string='Point of Sale Configurations')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    use_payment_terminal = fields.Selection([], 'Use a Payment Terminal', help='Record payments with a terminal on this journal.')
+    hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal', help='Technical field which is used to '
+                                               'hide use_payment_terminal when no payment interfaces are installed.')
+
+    def _compute_hide_use_payment_terminal(self):
+        no_terminals = not bool(self._fields['use_payment_terminal'].selection)
+        for payment_method in self:
+            payment_method.hide_use_payment_terminal = no_terminals
 
     @api.depends('config_ids')
     def _compute_open_session_ids(self):
@@ -51,8 +59,11 @@ class PosPaymentMethod(models.Model):
         if not self.is_cash_count:
             self.cash_journal_id = False
 
+    def _is_write_forbidden(self, fields):
+        return bool(fields and self.open_session_ids)
+
     def write(self, vals):
-        if self.open_session_ids:
+        if self._is_write_forbidden(set(vals.keys())):
             raise UserError('Kindly close and validate the following open PoS Sessions before modifying this payment method.\n'
                             'Open sessions: %s' % (' '.join(self.open_session_ids.mapped('name')),))
         return super(PosPaymentMethod, self).write(vals)
