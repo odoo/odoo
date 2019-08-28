@@ -41,7 +41,8 @@ class AccountAccountType(models.Model):
         ('expense', 'Expense'),
         ('off_balance', 'Off Balance'),
     ], string="Internal Group",
-       help="The 'Internal Group' is used to filter accounts based on the internal group set on the account type.")
+        required=True,
+        help="The 'Internal Group' is used to filter accounts based on the internal group set on the account type.")
     note = fields.Text(string='Description')
 
 

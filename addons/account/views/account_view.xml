@@ -15,7 +15,7 @@
                            <group>
                              <field name="code" placeholder="code"/>
                              <field name="name"/>
-                             <field name="user_type_id" widget="selection"/>
+                             <field name="user_type_id" widget="account_hierarchy_selection"/>
                              <field name="tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('internal_group', '=', 'off_balance')]}"/>
                              <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}" options="{'no_create_edit': True}"/>
                              <field name="group_id"/>
@@ -1397,7 +1397,7 @@ action = model.setting_init_bank_account_action()
                         <field name="name"/>
                         <field name="code"/>
                         <newline/>
-                        <field name="user_type_id" widget="selection"/>
+                        <field name="user_type_id" widget="account_hierarchy_selection"/>
                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                         <field name="tag_ids" domain="[('applicability', '!=', 'taxes')]" widget="many2many_tags" context="{'default_applicability': 'accounts'}"/>
                         <field name="reconcile"/>
