@@ -10,26 +10,26 @@
                 <div class="oe_import_with_file row">
                     <a href="#" class="oe_import_toggle col-sm-12">
                         Formatting Options…</a>
-                        <div class="row">
-                            <div class="oe_import_toggled oe_import_options js_import_options col-sm">
+                        <div class="row col-sm-12">
+                            <div class="oe_import_toggled oe_import_options js_import_options col-md-6 col-lg-4">
                                 <p t-foreach="widget.opts" t-as="option">
                                     <!-- no @name, avoid submission when file_update called -->
                                     <label t-attf-for="#{option.name}_#{_id}">
                                         <t t-esc="option.label"/></label>
                                     <input t-attf-id="#{option.name}_#{_id}"
                                            t-attf-class="oe_import_#{option.name}"
-                                           style="max-width: 50%;"
+                                           style="width: 50%;"
                                            t-att-value="option.value"/>
                                 </p>
                             </div>
-                            <div t-foreach="[widget.parse_opts_formats, widget.parse_opts_separators]" t-as="options" class="oe_import_toggled oe_import_options col-sm">
+                            <div t-foreach="[widget.parse_opts_formats, widget.parse_opts_separators]" t-as="options" class="oe_import_toggled oe_import_options col-md-6 col-lg-4">
                                 <p t-foreach="options" t-as="option">
                                     <!-- no @name, avoid submission when file_update called -->
                                     <label t-attf-for="#{option.name}_#{_id}">
                                         <t t-esc="option.label"/></label>
                                     <input t-attf-id="#{option.name}_#{_id}"
                                            t-attf-class="oe_import_#{option.name}"
-                                           style="max-width: 50%;"
+                                           style="width: 50%;"
                                            t-att-value="option.value"/>
                                 </p>
                             </div>

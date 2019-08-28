@@ -205,7 +205,7 @@ var DataImport = AbstractAction.extend({
     },
     setup_encoding_picker: function () {
         this.$('input.oe_import_encoding').select2({
-            width: '160px',
+            width: '50%',
             data: _.map(('utf-8 utf-16 windows-1252 latin1 latin2 big5 gb18030 shift_jis windows-1251 koir8_r').split(/\s+/), _make_option),
             query: dataFilteredQuery,
             initSelection: function ($e, c) {
@@ -221,7 +221,7 @@ var DataImport = AbstractAction.extend({
             {id: ' ', text: _t("Space")}
         ];
         this.$('input.oe_import_separator').select2({
-            width: '160px',
+            width: '50%',
             data: data,
             query: dataFilteredQuery,
             // this is not provided to initSelection so can't use this.data
@@ -237,7 +237,7 @@ var DataImport = AbstractAction.extend({
         ];
         var data_digits = data_decimal.concat([{id: '', text: _t("No Separator")}]);
         this.$('input.oe_import_float_thousand_separator').select2({
-            width: '160px',
+            width: '50%',
             data: data_digits,
             query: dataFilteredQuery,
             initSelection: function ($e, c) {
@@ -245,7 +245,7 @@ var DataImport = AbstractAction.extend({
             }
         });
         this.$('input.oe_import_float_decimal_separator').select2({
-            width: '160px',
+            width: '50%',
             data: data_decimal,
             query: dataFilteredQuery,
             initSelection: function ($e, c) {
@@ -275,7 +275,7 @@ var DataImport = AbstractAction.extend({
             'MMDDYYYY',
         ]).map(_make_option);
         this.$('input.oe_import_date_format').select2({
-            width: '160px',
+            width: '50%',
             data: data,
             query: dataFilteredQuery,
             initSelection: function ($e, c) {
