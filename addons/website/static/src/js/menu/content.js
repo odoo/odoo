@@ -376,6 +376,8 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
             text: data.name || '',
             isNewWindow: data.new_window,
         }, data || {}));
+
+        this.menuType = data.menuType;
     },
     /**
      * @override
@@ -389,6 +391,13 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
 
         // Adapt URL label
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
+
+        // Auto add '#' URL and hide the input if for mega menu
+        if (this.menuType === 'mega') {
+            var $url = this.$('input[name="url"]');
+            $url.val('#').trigger('change');
+            $url.closest('.form-group').addClass('d-none');
+        }
 
         return this._super.apply(this, arguments);
     },
@@ -503,6 +512,10 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             tolerance: 'pointer',
             attribute: 'data-menu-id',
             expression: '()(.+)', // nestedSortable takes the second match of an expression (*sigh*)
+            isAllowed: (placeholder, placeholderParent, currentItem) => {
+                return !placeholderParent
+                    || !currentItem[0].dataset.megaMenu && !placeholderParent[0].dataset.megaMenu;
+            },
         });
         return r;
     },
@@ -581,9 +594,13 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      * dialog to edit this new menu.
      *
      * @private
+     * @param {Event} ev
      */
-    _onAddMenuButtonClick: function () {
-        var dialog = new MenuEntryDialog(this, {}, {});
+    _onAddMenuButtonClick: function (ev) {
+        var menuType = ev.currentTarget.dataset.type;
+        var dialog = new MenuEntryDialog(this, {}, {
+            menuType: menuType,
+        });
         dialog.on('save', this, link => {
             var newMenu = {
                 'fields': {
@@ -591,6 +608,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
                     'name': link.text,
                     'url': link.url,
                     'new_window': link.isNewWindow,
+                    'is_mega_menu': menuType === 'mega',
                     'sequence': 0,
                     'parent_id': false,
                 },
@@ -628,7 +646,9 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         var menuID = $menu.data('menu-id');
         var menu = this.flat[menuID];
         if (menu) {
-            var dialog = new MenuEntryDialog(this, {}, menu.fields);
+            var dialog = new MenuEntryDialog(this, {}, _.extend({
+                menuType: menu.fields['is_mega_menu'] ? 'mega' : undefined,
+            }, menu.fields));
             dialog.on('save', this, link => {
                 _.extend(menu.fields, {
                     'name': link.text,
