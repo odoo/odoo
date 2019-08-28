@@ -649,7 +649,7 @@
                                        widget="section_and_note_one2many"
                                        mode="tree,kanban"
                                        context="{'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
-                                    <tree editable="bottom" string="Journal Items">
+                                    <tree editable="bottom" string="Journal Items" default_order="sequence, date desc, move_name desc, id">
                                         <control>
                                             <create name="add_line_control" string="Add a line"/>
                                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
@@ -658,8 +658,9 @@
 
                                         <!-- Displayed fields -->
                                         <field name="sequence" widget="handle"/>
+                                        <field name="move_name" invisible="1"/>
                                         <field name="product_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
-                                        <field name="name" widget="section_and_note_text" required="1"/>
+                                        <field name="name" widget="section_and_note_text" attrs="{'required': [('parent.type', 'not in', ('in_invoice', 'in_refund','in_receipt'))]}"/>
                                         <field name="account_id"
                                                groups="account.group_account_user"
                                                domain="[('deprecated', '=', False), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('company_id', '=', parent.company_id)]"
@@ -692,6 +693,7 @@
                                         <field name="currency_id" invisible="1"/>
                                         <field name="debit" invisible="1"/>
                                         <field name="credit" invisible="1"/>
+                                        <field name="date" invisible="1"/>
                                         <field name="date_maturity" invisible="1"/>
 
                                         <field name="tax_line_id" invisible="1"/>
@@ -735,7 +737,7 @@
                             <page id="aml_tab" string="Journal Items" groups="account.group_account_user">
                                 <field name="line_ids"
                                        context="{'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
-                                    <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')">
+                                    <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
                                         <!-- Displayed fields -->
                                         <field name="account_id"
                                                attrs="{
@@ -793,6 +795,8 @@
                                         <field name="price_total" invisible="1"/>
 
                                         <field name="sequence" invisible="1"/>
+                                        <field name="move_name" invisible="1"/>
+                                        <field name="date" invisible="1"/>
                                         <field name="tax_line_id" invisible="1"/>
                                         <field name="tax_group_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1"/>
