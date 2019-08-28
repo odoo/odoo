@@ -65,7 +65,7 @@ class AccountInvoice(models.Model):
             'origin': line.order_id.origin,
             'uom_id': line.product_uom.id,
             'product_id': line.product_id.id,
-            'account_id': invoice_line.with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
+            'account_id': invoice_line.with_context(journal_id=self.journal_id.id, type='in_invoice')._default_account(),
             'price_unit': line.order_id.currency_id._convert(
                 line.price_unit, self.currency_id, line.company_id, date or fields.Date.today(), round=False),
             'quantity': qty,

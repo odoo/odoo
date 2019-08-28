@@ -136,10 +136,10 @@ class StockRule(models.Model):
             price_unit = seller.currency_id._convert(
                 price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())
 
-        product_lang = product_id.with_context({
-            'lang': partner.lang,
-            'partner_id': partner.id,
-        })
+        product_lang = product_id.with_context(
+            lang=partner.lang,
+            partner_id=partner.id,
+        )
         name = product_lang.display_name
         if product_lang.description_purchase:
             name += '\n' + product_lang.description_purchase

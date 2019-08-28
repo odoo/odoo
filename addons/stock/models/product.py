@@ -367,7 +367,7 @@ class Product(models.Model):
         return res
 
     def action_update_quantity_on_hand(self):
-        return self.product_tmpl_id.with_context({'default_product_id': self.id}).action_update_quantity_on_hand()
+        return self.product_tmpl_id.with_context(default_product_id=self.id).action_update_quantity_on_hand()
 
     def action_view_routes(self):
         return self.mapped('product_tmpl_id').action_view_routes()

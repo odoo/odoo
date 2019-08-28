@@ -336,10 +336,10 @@ class PurchaseOrder(models.Model):
         order_lines = []
         for line in requisition.line_ids:
             # Compute name
-            product_lang = line.product_id.with_context({
-                'lang': partner.lang,
-                'partner_id': partner.id,
-            })
+            product_lang = line.product_id.with_context(
+                lang=partner.lang,
+                partner_id=partner.id,
+            )
             name = product_lang.display_name
             if product_lang.description_purchase:
                 name += '\n' + product_lang.description_purchase
