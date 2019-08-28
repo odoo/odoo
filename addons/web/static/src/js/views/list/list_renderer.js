@@ -33,8 +33,6 @@ var FIELD_CLASSES = {
     many2one: 'o_list_many2one',
 };
 
-var HEADING_COLUMNS_TO_SKIP_IN_GROUPS = 2;
-
 var ListRenderer = BasicRenderer.extend({
     className: 'o_list_view',
     events: {
@@ -603,9 +601,6 @@ var ListRenderer = BasicRenderer.extend({
                 'class': 'o_group_lable',
                 'text': name + ' (' + group.count + ')'
             }));
-        if (this.hasSelectors) {
-            $th.attr('colspan', HEADING_COLUMNS_TO_SKIP_IN_GROUPS);
-        }
         var $arrow = $('<span>')
             .css('padding-left', (groupLevel * 20) + 'px')
             .css('padding-right', '5px')
@@ -614,7 +609,8 @@ var ListRenderer = BasicRenderer.extend({
             $arrow.toggleClass('fa-caret-right', !group.isOpen)
                 .toggleClass('fa-caret-down', group.isOpen);
         }
-        $th.prepend(this._renderSelector('span', false, 'o_list_group_selector'));
+        $th.prepend($arrow);
+        $th.prepend(this._renderSelector('span', false, 'o_list_record_selector o_list_group_selector'));
         cells.push($th);
 
         var aggregateKeys = Object.keys(group.aggregateValues);
@@ -713,9 +709,9 @@ var ListRenderer = BasicRenderer.extend({
             if (!$tbody) {
                 $tbody = $('<tbody>');
             }
-            $tbody.attr('data-group_id', group.id).append(self._renderGroupRow(group, groupLevel));
+            $tbody.append(self._renderGroupRow(group, groupLevel));
             if (group.data.length) {
-                result.push($tbody);
+                result.push($tbody.attr('data-group_id', group.id));
                 result = result.concat(self._renderGroup(group, groupLevel));
                 $tbody = null;
             }
@@ -894,7 +890,7 @@ var ListRenderer = BasicRenderer.extend({
             $content.find("input[type='checkbox']").prop('disabled', disableInput);
         }
         var selectorClass = selectorClass || 'o_list_record_selector';
-        return $('<' + tag + ' width="1">')
+        return $('<' + tag + '>')
             .addClass(selectorClass)
             .append($content);
     },
@@ -966,7 +962,7 @@ var ListRenderer = BasicRenderer.extend({
                 $checked_rows.find('.o_list_record_selector input').prop('checked', true);
             }
             if (self.selectedGroups.length) {
-                var $checkedGroups = this.$('tr').filter(function (index, el) {
+                var $checkedGroups = self.$('tr').filter(function (index, el) {
                     var group = $(el).data('group');
                     return _.contains(self.selectedGroups, group && group.id);
                 });
@@ -1014,12 +1010,12 @@ var ListRenderer = BasicRenderer.extend({
     _updateSelection: function () {
         var $selectedRows = this.$('tbody .o_list_record_selector:not(".o_list_group_selector") input:checked')
             .closest('tr');
-        var $selectedGruops = this.$('tbody .o_list_record_selector.o_list_group_selector input:checked')
+        var $selectedGroups = this.$('tbody .o_list_record_selector.o_list_group_selector input:checked')
             .closest('tr')
         this.selection = _.map($selectedRows, function (row) {
             return $(row).data('id');
         });
-        this.selectedGroups = _.map($selectedGruops, function (group) {
+        this.selectedGroups = _.map($selectedGroups, function (group) {
             return $(group).data('group').id;
         });
         this.trigger_up('selection_changed', {
