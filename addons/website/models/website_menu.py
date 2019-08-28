@@ -108,25 +108,24 @@ class Menu(models.Model):
     @api.model
     def get_tree(self, website_id, menu_id=None):
         def make_tree(node):
-            page_id = node.page_id.id if node.page_id else None
-            is_homepage = page_id and self.env['website'].browse(website_id).homepage_id.id == page_id
-            menu_node = dict(
-                id=node.id,
-                name=node.name,
-                url=node.page_id.url if page_id else node.url,
-                new_window=node.new_window,
-                sequence=node.sequence,
-                parent_id=node.parent_id.id,
-                children=[],
-                is_homepage=is_homepage,
-            )
+            is_homepage = bool(node.page_id and self.env['website'].browse(website_id).homepage_id.id == node.page_id.id)
+            menu_node = {
+                'fields': {
+                    'id': node.id,
+                    'name': node.name,
+                    'url': node.page_id.url if node.page_id else node.url,
+                    'new_window': node.new_window,
+                    'sequence': node.sequence,
+                    'parent_id': node.parent_id.id,
+                },
+                'children': [],
+                'is_homepage': is_homepage,
+            }
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
             return menu_node
-        if menu_id:
-            menu = self.browse(menu_id)
-        else:
-            menu = self.env['website'].browse(website_id).menu_id
+
+        menu = menu_id and self.browse(menu_id) or self.env['website'].browse(website_id).menu_id
         return make_tree(menu)
 
     @api.model
