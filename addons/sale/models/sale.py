@@ -491,7 +491,7 @@ class SaleOrder(models.Model):
         self.filtered(lambda s: s.state == 'draft').write({'state': 'sent'})
 
         return self.env.ref('sale.action_report_saleorder')\
-            .with_context({'discard_logo_check': True}).report_action(self)
+            .with_context(discard_logo_check=True).report_action(self)
 
     @api.multi
     def action_view_invoice(self):
