@@ -2123,14 +2123,14 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
     _description = "Journal Item"
-    _order = "sequence, date desc, move_name desc, id"
+    _order = "date desc, move_name desc, id"
 
     # ==== Business fields ====
     move_id = fields.Many2one('account.move', string='Journal Entry',
         index=True, required=True, auto_join=True, ondelete="cascade",
         help="The move of this entry line.")
     move_name = fields.Char(string='Number', related='move_id.name', store=True, index=True)
-    date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False)
+    date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False, group_operator='min')
     ref = fields.Char(related='move_id.ref', store=True, copy=False, index=True, readonly=False)
     parent_state = fields.Selection(related='move_id.state', store=True, readonly=True)
     journal_id = fields.Many2one(related='move_id.journal_id', store=True, readonly=False, index=True, copy=False)
