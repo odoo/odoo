@@ -385,6 +385,7 @@ var ListRenderer = BasicRenderer.extend({
         if (node.tag === 'button') {
             tdClassName += ' o_list_button';
         } else if (node.tag === 'field') {
+            tdClassName += ' o_field_cell';
             var typeClass = FIELD_CLASSES[this.state.fields[node.attrs.name].type];
             if (typeClass) {
                 tdClassName += (' ' + typeClass);
