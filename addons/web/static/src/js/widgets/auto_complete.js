@@ -127,12 +127,22 @@ return Widget.extend({
             var $item = self.make_list_item(result).appendTo($list);
             result.$el = $item;
         });
+        // IE9 doesn't support addEventListener with option { once: true }
+        this.el.onmousemove = function (ev) {
+            self.$('li').each(function (index, li) {
+                li.onmouseenter = self.focus_element.bind(self, $(li));
+            });
+            var targetFocus = ev.target.tagName === 'LI' ?
+                ev.target :
+                ev.target.closest('li');
+            self.focus_element($(targetFocus));
+            self.el.onmousemove = null;
+        };
         this.show();
     },
     make_list_item: function (result) {
         var self = this;
         var $li = $('<li>')
-            .hover(function () {self.focus_element($li);})
             .mousedown(function (ev) {
                 if (ev.button === 0) { // left button
                     self.select(ev, {item: {facet: result.facet}});
