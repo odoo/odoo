@@ -444,7 +444,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                 this._toggleSidebar();
             }
             return this._super.apply(this, arguments).then(function () {
-                self._onChangeSlide(); // trigger manually once DOM ready, since slide content is not rendered server side
+                return self._onChangeSlide(); // trigger manually once DOM ready, since slide content is not rendered server side
             });
         },
         /**
@@ -595,6 +595,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                     }
                 }).then(function (data){
                     self._markAsCompleted(slideId, data.channel_completion);
+                    return Promise.resolve();
                 });
             }
             return Promise.resolve();
@@ -620,7 +621,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
-                    self._setCompleted(slide.id);
+                    return self._setCompleted(slide.id);
                 }
             });
         },
