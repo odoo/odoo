@@ -154,9 +154,14 @@ class PaymentTransaction(models.Model):
     def _check_or_create_sale_tx(self, order, acquirer, payment_token=None, tx_type='form', add_tx_values=None, reset_draft=True):
         tx = self
         if not tx:
-            tx = self.search([('reference', '=', order.name)], limit=1)
+            tx = self.search([
+                ('acquirer_id', '=', acquirer.id),
+                ('sale_order_id', '=', order.id),
+                ('reference', 'like', order.name),
+                ('state', 'not in', ['error', 'cancel', 'done'])
+            ], limit=1)
 
-        if tx.state in ['error', 'cancel']:  # filter incorrect states
+        if tx.state in ['error', 'cancel', 'done']:  # filter incorrect states
             tx = False
         if (tx and tx.acquirer_id != acquirer) or (tx and tx.sale_order_id != order):  # filter unmatching
             tx = False
