@@ -13,7 +13,7 @@ from odoo.http import request
 class WebsitVisitorPage(models.Model):
     _name = 'website.visitor.page'
     _description = 'Visited Pages'
-    _order = 'visit_datetime ASC'
+    _order = 'visit_datetime DESC'
     _log_access = False
 
     visitor_id = fields.Many2one('website.visitor', ondelete="cascade", index=True, required=True, readonly=True)
