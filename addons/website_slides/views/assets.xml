@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <odoo>
     <data>
-        <template id="assets_backend" name="Slides Backend Assets" inherit_id="web.assets_backend">
+        <template id="assets_backend" inherit_id="web.assets_backend" name="Slides Backend Assets">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/rating_rating_views.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/slide_channel_views.scss"/>
@@ -11,7 +11,7 @@
             </xpath>
         </template>
 
-        <template id="assets_frontend" inherit_id="website.assets_frontend" name="Slide">
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="Slides Frontend Assets">
             <xpath expr="//link[last()]" position="after">
                 <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/website_slides.scss" t-ignore="true"/>
                 <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/website_slides_profile.scss"/>
@@ -30,6 +30,14 @@
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_course_join.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_course_quiz.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_course_unsubscribe.js"/>
+            </xpath>
+        </template>
+
+        <template id="assets_tests" inherit_id="web.assets_tests" name="Slides Tests Assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_slides/tests/tours/slides_tour_tools.js"/>
+                <script type="text/javascript" src="/website_slides/tests/tours/slides_course_member.js"/>
+                <script type="text/javascript" src="/website_slides/tests/tours/slides_course_publisher.js"/>
             </xpath>
         </template>
 
