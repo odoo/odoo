@@ -858,13 +858,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :type fields: list(str)
         :param data: row-major matrix of data to import
         :type data: list(list(str))
-        :returns: {ids: list(int)|False, messages: [Message]}
+        :returns: {ids: list(int)|False, messages: [Message][, lastrow: int]}
         """
         # determine values of mode, current_module and noupdate
         mode = self._context.get('mode', 'init')
         current_module = self._context.get('module', '__import__')
         noupdate = self._context.get('noupdate', False)
-
         # add current module in context for the conversion of xml ids
         self = self.with_context(_import_current_module=current_module)
 
@@ -944,9 +943,16 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # make 'flush' available to the methods below, in the case where XMLID
         # resolution fails, for instance
         flush_self = self.with_context(import_flush=flush)
-        extracted = flush_self._extract_records(fields, data, log=messages.append)
+
+        # TODO: break load's API instead of smuggling via context?
+        limit = self._context.get('_import_limit')
+        if limit is None:
+            limit = float('inf')
+        extracted = flush_self._extract_records(fields, data, log=messages.append, limit=limit)
+
         converted = flush_self._convert_records(extracted, log=messages.append)
 
+        info = {'rows': {'to': -1}}
         for id, xid, record, info in converted:
             if xid:
                 xid = xid if '.' in xid else "%s.%s" % (current_module, xid)
@@ -962,7 +968,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # cancel all changes done to the registry/ormcache
             self.pool.reset_changes()
 
-        return {'ids': ids, 'messages': messages}
+        nextrow = info['rows']['to'] + 1
+        if nextrow < limit:
+            nextrow = 0
+        return {
+            'ids': ids,
+            'messages': messages,
+            'nextrow': nextrow,
+        }
 
     def _add_fake_fields(self, fields):
         from odoo.fields import Char, Integer
@@ -971,8 +984,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         fields['.id'] = Integer('Database ID')
         return fields
 
-    @api.model
-    def _extract_records(self, fields_, data, log=lambda a: None):
+    def _extract_records(self, fields_, data, log=lambda a: None, limit=float('inf')):
         """ Generates record dicts from the data sequence.
 
         The result is a generator of dicts mapping field names to raw
@@ -1008,7 +1020,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             return any(get_o2m_values(row)) and not any(get_nono2m_values(row))
 
         index = 0
-        while index < len(data):
+        while index < len(data) and index < limit:
             row = data[index]
 
             # copy non-relational fields to record dict
