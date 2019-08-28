@@ -12,13 +12,12 @@ import werkzeug.routing
 import werkzeug.utils
 
 import odoo
-from odoo import api, models, registry, fields
+from odoo import api, models, registry
 from odoo import SUPERUSER_ID
 from odoo.http import request
-from odoo.tools import config, ormcache
+from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN, OR
-from odoo.osv import osv
 
 from odoo.addons.base.models.qweb import QWebException
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
@@ -100,8 +99,21 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _dispatch(cls):
+        """
+        In case of rerouting for translate (e.g. when visiting odoo.com/fr_BE/),
+        _dispatch calls reroute() that returns _dispatch with altered request properties.
+        The second _dispatch will continue until end of process. When second _dispatch is finished, the first _dispatch
+        call receive the new altered request and continue.
+        At the end, 2 calls of _dispatch (and this override) are made with exact same request properties, instead of one.
+        As the response has not been sent back to the client, the visitor cookie does not exist yet when second _dispatch call
+        is treated in _handle_webpage_dispatch, leading to create 2 visitors with exact same properties.
+        To avoid this, we check if, !!! before calling super !!!, we are in a rerouting request. If not, it means that we are
+        handling the original request, in which we should create the visitor. We ignore every other rerouting requests.
+        """
+        is_rerouting = hasattr(request, 'routing_iteration')
         response = super(Http, cls)._dispatch()
-        cls._register_website_track(response)
+        if not is_rerouting:
+            cls._register_website_track(response)
         return response
 
     @classmethod
