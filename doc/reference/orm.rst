@@ -1116,6 +1116,12 @@ A domain is a list of criteria, each criterion being a triple (either a
         Takes the semantics of the model into account (i.e following the
         relationship field named by
         :attr:`~odoo.models.Model._parent_name`).
+    ``parent_of``
+        is a parent (ascendant) of a ``value`` record.
+
+        Takes the semantics of the model into account (i.e following the
+        relationship field named by
+        :attr:`~odoo.models.Model._parent_name`). 
 
 ``value``
     variable type, must be comparable (through ``operator``) to the named
