@@ -755,7 +755,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         # a comma-separated list of xids in a single cell
                         if import_compatible and field.type == 'many2many' and len(path) > 1 and path[1] == 'id':
                             xml_ids = [xid for _, xid in value.__ensure_xml_id()]
-                            current[i] = ','.join(xml_ids) or False
+                            current[i] = ','.join(xml_ids) or None
                             continue
 
                         # recursively export the fields that follow name; use
@@ -771,7 +771,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                             # append the other lines at the end
                             lines += lines2[1:]
                         else:
-                            current[i] = False
+                            current[i] = None
 
         return lines
 
