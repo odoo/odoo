@@ -1141,7 +1141,7 @@ var MockServer = Class.extend({
     _mockSearchReadController: function (args) {
         var self = this;
         var records = this._getRecords(args.model, args.domain || []);
-        var fields = args.fields || _.keys(this.data[args.model].fields);
+        var fields = args.fields && args.fields.length ? args.fields : _.keys(this.data[args.model].fields);
         var nbRecords = records.length;
         var offset = args.offset || 0;
         records = records.slice(offset, args.limit ? (offset + args.limit) : nbRecords);
