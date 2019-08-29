@@ -422,7 +422,9 @@ class AccountVoucher(models.Model):
 
             # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
             if voucher.pay_now == 'pay_now':
-                payment_id = self.env['account.payment'].create(voucher.voucher_pay_now_payment_create())
+                payment_id = (self.env['account.payment']
+                    .with_context(force_counterpart_account=voucher.account_id.id)
+                    .create(voucher.voucher_pay_now_payment_create()))
                 payment_id.post()
 
                 # Reconcile the receipt with the payment
@@ -545,3 +547,19 @@ class AccountVoucherLine(models.Model):
                 values['price_unit'] = values['price_unit'] * currency.rate
 
         return {'value': values, 'domain': {}}
+
+
+class AccountPayment(models.Model):
+    _inherit = 'account.payment'
+
+    # Allows to force the destination account
+    # for receivable/payable
+    #
+    # @override
+    def _get_counterpart_move_line_vals(self, invoice=False):
+        values = super(AccountPayment, self)._get_counterpart_move_line_vals(invoice)
+
+        if self._context.get('force_counterpart_account'):
+            values['account_id'] = self._context['force_counterpart_account']
+
+        return values
