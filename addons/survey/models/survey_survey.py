@@ -622,6 +622,39 @@ class Survey(models.Model):
 
         return result
 
+    def _get_answers_correctness(self, user_answers):
+        if not user_answers.mapped('survey_id') == self:
+            raise UserError(_('Invalid performance computation'))
+
+        res = dict((user_answer, {
+            'correct': 0,
+            'incorrect': 0,
+            'partial': 0,
+            'skipped': 0,
+        }) for user_answer in user_answers)
+
+        scored_questions = self.question_ids.filtered(
+            lambda question: question.question_type in ['simple_choice', 'multiple_choice']
+        )
+
+        for question in scored_questions:
+            question_answer_correct = question.labels_ids.filtered(lambda answer: answer.is_correct)
+            for user_answer in user_answers:
+                user_answer_lines_question = user_answer.user_input_line_ids.filtered(lambda line: line.question_id == question)
+                user_answer_correct = user_answer_lines_question.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('value_suggested')
+                user_answer_incorrect = user_answer_lines_question.filtered(lambda line: not line.answer_is_correct and not line.skipped)
+
+                if user_answer_correct == question_answer_correct:
+                    res[user_answer]['correct'] += 1
+                elif user_answer_correct and user_answer_correct < question_answer_correct:
+                    res[user_answer]['partial'] += 1
+                if not user_answer_correct and user_answer_incorrect:
+                    res[user_answer]['incorrect'] += 1
+                if not user_answer_correct and not user_answer_incorrect:
+                    res[user_answer]['skipped'] += 1
+
+        return res
+
     # ------------------------------------------------------------
     # GAMIFICATION / BADGES
     # ------------------------------------------------------------

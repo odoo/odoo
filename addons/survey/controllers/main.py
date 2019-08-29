@@ -651,4 +651,12 @@ class Survey(http.Controller):
         values = {'survey': survey, 'answer': answer}
         if token:
             values['token'] = token
+        if survey.scoring_type != 'no_scoring' and survey.certificate:
+            answer_perf = survey._get_answers_correctness(answer)[answer]
+            values['graph_data'] = json.dumps([
+                {"text": "Correct", "count": answer_perf['correct']},
+                {"text": "Partially", "count": answer_perf['partial']},
+                {"text": "Incorrect", "count": answer_perf['incorrect']},
+                {"text": "Unanswered", "count": answer_perf['skipped']}
+            ])
         return values
