@@ -22,7 +22,7 @@ odoo.define("website_forum.tour_forum", function (require) {
         content: _t("Click <em>Continue</em> to create the forum."),
         position: "right",
     }, {
-        trigger: ".btn-lg.btn-block",
+        trigger: ".o_forum_ask_btn",
         position: "left",
         content: _t("Ask the question in this forum by clicking on the button."),
     }, {
@@ -67,7 +67,7 @@ odoo.define("website_forum.tour_forum", function (require) {
         trigger: ".modal-header button.close",
         auto: true,
     }, {
-        trigger: "a[data-karma=\"20\"]:first",
+        trigger: ".o_wforum_validate_toggler[data-karma=\"20\"]:first",
         content: _t("Click here to accept this answer."),
         position: "right",
     }]);
