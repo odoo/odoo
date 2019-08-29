@@ -433,12 +433,23 @@ class AccountReconcileModel(models.Model):
                 aml.amount_currency                 AS aml_amount_currency,
                 account.internal_type               AS account_internal_type,
 
-                -- Determine a matching or not with the statement line communication using the move.name or move.ref.
-                regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
-                && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                -- Determine a matching or not with the statement line communication using the aml.name, move.name or move.ref.
+                (
+                    aml.name IS NOT NULL
+                    AND
+                    TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')) != ''
+                    AND
+                        regexp_split_to_array(TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                        && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                )
+                OR
+                    regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                    && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                 OR
                 (
                     move.ref IS NOT NULL
+                    AND
+                    TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')) != ''
                     AND
                         regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
                         && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
@@ -482,11 +493,22 @@ class AccountReconcileModel(models.Model):
                         TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')) != ''
                         AND
                         (
-                            regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
-                            && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                            (
+                                aml.name IS NOT NULL
+                                AND
+                                TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')) != ''
+                                AND
+                                    regexp_split_to_array(TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                                    && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                            )
+                            OR
+                                regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                                && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                             OR
                             (
                                 move.ref IS NOT NULL
+                                AND
+                                TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')) != ''
                                 AND
                                     regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
                                     && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')

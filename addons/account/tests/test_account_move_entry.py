@@ -110,3 +110,16 @@ class TestAccountMove(InvoiceTestCommon):
 
         with self.assertRaises(UserError):
             self.test_move.post()
+
+    def test_misc_unique_sequence_number(self):
+        ''' Ensure two journal entries can't share the same name when using the same sequence. '''
+        self.test_move.post()
+
+        # Edit the sequence to force the next move to get the same name.
+        self.test_move.journal_id\
+            .sequence_id.date_range_ids\
+            .filtered(lambda seq: seq.date_from == fields.Date.from_string('2016-01-01')).number_next -= 1
+
+        test_move2 = self.test_move.copy()
+        with self.assertRaises(ValidationError):
+            test_move2.post()
