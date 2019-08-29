@@ -1,7 +1,6 @@
 odoo.define('point_of_sale.models', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var BarcodeParser = require('barcodes.BarcodeParser');
 var BarcodeReader = require('point_of_sale.BarcodeReader');
 var PosDB = require('point_of_sale.DB');
@@ -10,7 +9,6 @@ var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
 var field_utils = require('web.field_utils');
-var rpc = require('web.rpc');
 var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
@@ -34,9 +32,10 @@ var exports = {};
 // 'pos' and is available to all widgets extending PosWidget.
 
 exports.PosModel = Backbone.Model.extend({
-    initialize: function(session, attributes) {
+    initialize: function(session, attributes, rpc) {
         Backbone.Model.prototype.initialize.call(this, attributes);
         var  self = this;
+        this.rpc = rpc;
         this.flush_mutex = new Mutex();                   // used to make sure the orders are sent to the server once at time
         this.chrome = attributes.chrome;
         this.gui    = attributes.gui;
@@ -554,7 +553,7 @@ exports.PosModel = Backbone.Model.extend({
                             params.orderBy = order;
                         }
 
-                        rpc.query(params).then(function (result) {
+                        self.rpc(params).then(function (result) {
                             try { // catching exceptions in model.loaded(...)
                                 Promise.resolve(model.loaded(self, result, tmp))
                                     .then(function () { load_model(index + 1); },
@@ -601,7 +600,7 @@ exports.PosModel = Backbone.Model.extend({
         return new Promise(function (resolve, reject) {
             var fields = _.find(self.models, function(model){ return model.label === 'load_partners'; }).fields;
             var domain = self.prepare_new_partners_domain();
-            rpc.query({
+            self.rpc({
                 model: 'res.partner',
                 method: 'search_read',
                 args: [domain, fields],
@@ -968,7 +967,7 @@ exports.PosModel = Backbone.Model.extend({
                 return order;
             })];
         args.push(options.draft || false);
-        return rpc.query({
+        return this.rpc({
                 model: 'pos.order',
                 method: 'create_from_ui',
                 args: args,
@@ -1022,7 +1021,7 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * server_ids.length;
 
-        return rpc.query({
+        return this.rpc({
                 model: 'pos.order',
                 method: 'remove_from_ui',
                 args: [server_ids],
