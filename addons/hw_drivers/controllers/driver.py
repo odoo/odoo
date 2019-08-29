@@ -474,6 +474,11 @@ if terminal_id:
     eftapi = ctypes.CDLL("eftapi.so")  # Library given by Six
     mpdm.daemon = True
     mpdm.start()
+else:
+    try:
+        subprocess.check_call(["pkill", "9", "eftdvs"])  # Check if MPD server is running
+    except subprocess.CalledProcessError:
+        pass
 
 m = Manager()
 m.daemon = True
