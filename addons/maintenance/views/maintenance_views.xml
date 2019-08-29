@@ -126,8 +126,8 @@
                 <templates>
                     <t t-name="kanban-tooltip">
                        <ul class="oe_kanban_tooltip">
-                          <li><b>Category:</b> <field name="category_id"/></li>
-                          <li><b>Request to:</b> <field name="user_id"/></li>
+                          <li t-if="record.category_id.raw_value"><b>Category:</b> <t t-esc="record.category_id.value"/></li>
+                          <li t-if="record.user_id.raw_value"><b>Request to:</b> <t t-esc="record.user_id.value"/></li>
                        </ul>
                     </t>
                     <t t-name="kanban-box">
@@ -424,8 +424,8 @@
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
-                            <li><b>Serial Number:</b> <field name="serial_no"/></li>
-                            <li><b>Model Number:</b> <field name="model"/></li>
+                            <li t-if="record.serial_no.raw_value"><b>Serial Number:</b> <t t-esc="record.serial_no.value"/></li>
+                            <li t-if="record.model.raw_value"><b>Model Number:</b> <t t-esc="record.model.value"/></li>
                         </ul>
                     </t>
                     <t t-name="kanban-box">
