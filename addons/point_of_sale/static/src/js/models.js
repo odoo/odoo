@@ -115,8 +115,7 @@ exports.PosModel = Backbone.Model.extend({
     destroy: function(){
         // FIXME, should wait for flushing, return a deferred to indicate successfull destruction
         // this.flush();
-        this.proxy.close();
-        this.barcode_reader.disconnect();
+        this.proxy.disconnect();
         this.barcode_reader.disconnect_from_proxy();
     },
 
