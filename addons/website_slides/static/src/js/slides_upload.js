@@ -16,6 +16,7 @@ var SlideUploadDialog = Dialog.extend({
         'click .o_wslides_select_type': '_onClickSlideTypeIcon',
         'change input#upload': '_onChangeSlideUpload',
         'change input#url': '_onChangeSlideUrl',
+        'change input#certification_id': '_populateWithCertificationName'
     }),
 
     /**
@@ -137,7 +138,6 @@ var SlideUploadDialog = Dialog.extend({
             'duration': this._formGetFieldValue('duration'),
             'is_published': forcePublished,
         }, this._getSelect2DropdownValues()); // add tags and category
-
         // default slide_type (for webpage for instance)
         if (_.contains(this.slide_type_data), this.get('state')) {
             values['slide_type'] = this.get('state');
@@ -162,9 +162,9 @@ var SlideUploadDialog = Dialog.extend({
                     'mime_type': this.file.type === 'image/svg+xml' ? 'image/png' : this.file.type,
                     'datas': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data
                 });
-            } else {
+            } else{
                 _.extend(values, {
-                    'image': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
+                    'image_1920': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
                 });
             }
         }
@@ -293,11 +293,30 @@ var SlideUploadDialog = Dialog.extend({
             fill_data: function (query, data) {
                 var that = this,
                     tags = {results: []};
-                _.each(data, function (obj) {
-                    if (that.matcher(query.term, obj[nameKey])) {
-                        tags.results.push({id: obj.id, text: obj[nameKey]});
-                    }
-                });
+                if($(query.element)[0].id == 'certification_id' && data.length == 0 && !this.can_create){
+                    var $select2Container = $(query.element)
+                        .closest('.form-group')
+                        .find('.select2-container');
+                    $select2Container.removeClass('is-invalid is-valid');
+                    $select2Container.addClass('is-invalid');
+                    $('#warning-no-certif').removeClass('o_hidden');
+                }else{
+                    var $select2Container = $(query.element)
+                        .closest('.form-group')
+                        .find('.select2-container');
+                    $select2Container.removeClass('is-invalid is-valid');
+                    $('#warning-no-certif').addClass('o_hidden');
+                    _.each(data, function (obj) {
+                        if (obj.certification_badge_id !== false) {
+                            if (that.matcher(query.term, obj[nameKey])) {
+                                tags.results.push({id: obj.id, text: obj[nameKey], badge_id: obj.certification_badge_id});
+                            }
+                        }
+                        else if (that.matcher(query.term, obj[nameKey])) {
+                            tags.results.push({id: obj.id, text: obj[nameKey]});
+                        }
+                    });
+                }
                 query.callback(tags);
             },
             query: function (query) {
@@ -317,7 +336,7 @@ var SlideUploadDialog = Dialog.extend({
 
         if (multi) {
             values['multiple'] = true;
-        }
+        };
 
         return values;
     },
@@ -390,7 +409,6 @@ var SlideUploadDialog = Dialog.extend({
         }
         this.$('.o_w_slide_upload_modal_container').empty();
         this.$('.o_w_slide_upload_modal_container').append(QWeb.render(tmpl, {widget: this}));
-
         this._resetModalButton();
 
         if (currentType === '_import') {
@@ -408,13 +426,14 @@ var SlideUploadDialog = Dialog.extend({
             this.$('.o_w_slide_upload').button('loading');
         }
     },
+
     _onChangeSlideUpload: function (ev) {
-        var self = this;
+        var self = this
         this._alertRemove();
 
         var $input = $(ev.currentTarget);
         var preventOnchange = $input.data('preventOnchange');
-
+        var preview = '#slide-image';
         var file = ev.target.files[0];
         var isImage = /^image\/.*/.test(file.type);
         var loaded = false;
@@ -433,7 +452,7 @@ var SlideUploadDialog = Dialog.extend({
 
         utils.getDataURLFromFile(file).then(function (buffer) {
             if (isImage) {
-                self.$('#slide-image').attr('src', buffer);
+                self.$(preview).attr('src', buffer);
             }
             buffer = buffer.split(',')[1];
             self.file.data = buffer;
@@ -485,7 +504,7 @@ var SlideUploadDialog = Dialog.extend({
                             viewport: viewport
                         }).then(function () {
                             var imageData = self.$('#data_canvas')[0].toDataURL();
-                            self.$('#slide-image').attr('src', imageData);
+                            self.$(preview).attr('src', imageData);
                             if (loaded) {
                                 self.set('can_submit_form', true);
                             }
@@ -568,7 +587,24 @@ var SlideUploadDialog = Dialog.extend({
         });
     },
 
-    _onClickGoBack: function () {
+    _populateWithCertificationName: function (ev) {
+        if(!ev.added){
+            return;
+        }
+        var certificationName = ev.added.text;
+        $("#name").val(certificationName);
+        if(ev.added.badge_id){
+            $("#certification_badge_id_readonly").val(ev.added.badge_id[0]);
+            $("#certification_give_badge").attr('disabled', true);
+
+        }
+        else{
+            $("#certification_badge_id_readonly").val(0);
+            $("#certification_give_badge").removeAttr('disabled');
+        }
+    },
+
+    _onClickGoBack: function (ev) {
         this.set('state', '_select');
         this.isValidUrl = true;
         if (this.modulesToInstallStatus && !this.modulesToInstallStatus.installing) {

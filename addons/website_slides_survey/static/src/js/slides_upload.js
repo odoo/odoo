@@ -38,7 +38,7 @@ SlidesUpload.SlideUploadDialog.include({
                 return self._rpc({
                     route: '/slides_survey/certification/search_read',
                     params: {
-                        fields: ['title'],
+                        fields: ['title','certification_badge_id'],
                     }
                 });
             }, 'title')
@@ -67,7 +67,6 @@ SlidesUpload.SlideUploadDialog.include({
                 $select2Container.addClass('is-valid');
             }
         }
-
         return result;
     },
     /**
@@ -80,13 +79,17 @@ SlidesUpload.SlideUploadDialog.include({
         var result = this._super.apply(this, arguments);
 
         var certificateValue = this.$('#certification_id').select2('data');
-        if (certificateValue) {
-            result['survey_id'] =  certificateValue.id;
+        if (certificateValue && certificateValue.create) {
+            result['survey_id'] =  [0, {'title': certificateValue.text}];
+        } else if (certificateValue) {
+            result['survey_id'] =  [certificateValue.id];
+        }
+        if (this.$('#certification_give_badge').is(':checked')) {
+            result['badge_id'] = [$("#certification_badge_id_readonly").val()]
         }
         return result;
     }
 });
-
 SlidesUpload.websiteSlidesUpload.include({
     xmlDependencies: (SlidesUpload.websiteSlidesUpload.prototype.xmlDependencies || []).concat(
         ["/website_slides_survey/static/src/xml/website_slide_upload.xml"]

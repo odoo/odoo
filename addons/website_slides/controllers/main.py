@@ -783,7 +783,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
     def prepare_preview(self, **data):
         Slide = request.env['slide.slide']
-        document_type, document_id = Slide._find_document_data_from_url(data['url'])
+        document_id = Slide._find_document_data_from_url(data['url'])
         preview = {}
         if not document_id:
             preview['error'] = _('Please enter valid youtube or google doc url')
@@ -807,7 +807,72 @@ class WebsiteSlides(WebsiteProfile):
                 return {'error': _('File is too big. File size cannot exceed 25MB')}
 
         values = dict((fname, post[fname]) for fname in self._get_valid_slide_post_values() if post.get(fname))
+        try:
+            if post.get('category_id'):
+                if post['category_id'][0] == 0:
+                    values['category_id'] = request.env['slide.category'].create({
+                        'name': post['category_id'][1]['name'],
+                        'channel_id': values.get('channel_id')
+                        }).id
+                else:
+                    values['category_id'] = post['category_id'][0]
+        except (UserError, AccessError) as e:
+            _logger.error(e)
+            return {'error': e.name}
 
+        if post.get('badge_id'):
+            try:
+                if values['badge_id'] == ['0']:
+                    values['badge_id'] = request.env['gamification.badge'].create({
+                        'name': values['name'],
+                        'description': 'Congratulation, you succeeded this certification',
+                        'rule_auth': 'nobody',
+                        'image_1920': values['image_1920'],
+                        'is_published': True,
+                        }).id
+                else:
+                    values['badge_id'] = post['badge_id'][0]
+            except (UserError, AccessError) as e:
+                _logger.error(e)
+                return {'error': e.name}
+
+        if post.get('survey_id'):           
+            try:
+                if post['survey_id'][0] == 0:
+                    survey_id = request.env['survey.survey'].create({
+                        'title': post['survey_id'][1]['title'],
+                        'questions_layout': 'page_per_question',
+                        'is_attempts_limited': True,
+                        'attempts_limit': 1,
+                        'is_time_limited': True,
+                        'time_limit': 60.0,
+                        'scoring_type': 'scoring_without_answers',
+                        'certificate': True,
+                        'passing_score': 70.0,
+                        'image_1920': values['image_1920'],
+                        'certification_mail_template_id': request.env['mail.template'].search([('name','=','Certification: Send by email')]).id,
+                        })
+                    if 'badge_id' in values:
+                        survey_id.write({
+                            'users_login_required': True,
+                            'certification_give_badge': True,
+                            'certification_badge_id': values['badge_id'],
+                        })                    
+                    values['survey_id'] = survey_id.id
+                else:
+                    values['survey_id'] = post['survey_id'][0]
+                    if 'badge_id' in values:
+                        survey = request.env['survey.survey'].search([('id','=',values['survey_id'])])
+                        survey.write({
+                            'users_login_required': True,
+                            'certification_give_badge': True,
+                            'certification_badge_id': values['badge_id'],
+                        })
+
+            except (UserError, AccessError) as e:
+                _logger.error(e)
+                return {'error': e.name}
+                
         # handle exception during creation of slide and sent error notification to the client
         # otherwise client slide create dialog box continue processing even server fail to create a slide
         try:
@@ -859,6 +924,9 @@ class WebsiteSlides(WebsiteProfile):
         if slide.slide_type == "quiz":
             action_id = request.env.ref('website_slides.slide_slide_action').id
             redirect_url = '/web#id=%s&action=%s&model=slide.slide&view_type=form' %( slide.id, action_id)
+        if slide.slide_type == "certification":
+            action_id = request.env.ref('survey.action_survey_form').id
+            redirect_url = '/web#id=%s&action=%s&model=survey.survey&view_type=form' %(values['survey_id'],action_id)
         return {
             'url': redirect_url,
             'channel_type': channel.channel_type,
@@ -868,8 +936,8 @@ class WebsiteSlides(WebsiteProfile):
 
     def _get_valid_slide_post_values(self):
         return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
-                'mime_type', 'datas', 'description', 'image_1920', 'is_published']
-
+                'mime_type', 'datas', 'description', 'image_1920', 
+                'index_content', 'is_published', 'survey_id', 'badge_id']
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):
         can_create = request.env['slide.tag'].check_access_rights('create', raise_exception=False)
