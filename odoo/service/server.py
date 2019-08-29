@@ -554,9 +554,28 @@ class GeventServer(CommonServer):
     def start(self):
         import gevent
         try:
-            from gevent.pywsgi import WSGIServer
+            from gevent.pywsgi import WSGIServer, WSGIHandler
         except ImportError:
-            from gevent.wsgi import WSGIServer
+            from gevent.wsgi import WSGIServer, WSGIHandler
+
+        class ProxyHandler(WSGIHandler):
+            """ When logging requests, try to get the client address from
+            the environment so we get proxyfix's modifications (if any).
+
+            Derived from werzeug.serving.WSGIRequestHandler.log
+            / werzeug.serving.WSGIRequestHandler.address_string
+            """
+            def format_request(self):
+                old_address = self.client_address
+                if getattr(self, 'environ', None):
+                    self.client_address = self.environ['REMOTE_ADDR']
+                elif not self.client_address:
+                    self.client_address = '<local>'
+                # other cases are handled inside WSGIHandler
+                try:
+                    return super().format_request()
+                finally:
+                    self.client_address = old_address
 
         set_limit_memory_hard()
         if os.name == 'posix':
@@ -565,7 +584,12 @@ class GeventServer(CommonServer):
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             gevent.spawn(self.watchdog)
 
-        self.httpd = WSGIServer((self.interface, self.port), self.app)
+        self.httpd = WSGIServer(
+            (self.interface, self.port), self.app,
+            log=logging.getLogger('longpolling'),
+            error_log=logging.getLogger('longpolling'),
+            handler_class=ProxyHandler,
+        )
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
         try:
             self.httpd.serve_forever()
