@@ -1154,9 +1154,12 @@ class AccountReconcileModelTemplate(models.Model):
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of balance')
+        ('percentage', 'Percentage of balance'),
+        ('regex', 'From label'),
         ], required=True, default='percentage')
     amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    amount_from_label_regex = fields.Char(string="Amount from Label (regex)", default=r"([\d\.,]+)")
+    decimal_separator = fields.Char(help="Every character that is nor a digit nor this separator will be removed from the matching string")
     force_tax_included = fields.Boolean(string='Tax Included in Price',
         help='Force the tax to be managed as a price included tax.')
     # Second part fields.
@@ -1166,9 +1169,11 @@ class AccountReconcileModelTemplate(models.Model):
     second_label = fields.Char(string='Second Journal Item Label')
     second_amount_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of amount')
+        ('percentage', 'Percentage of amount'),
+        ('regex', 'From label'),
         ], string="Second Amount type",required=True, default='percentage')
     second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_amount_from_label_regex = fields.Char(string="Second Amount from Label (regex)", default=r"([\d\.,]+)")
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')

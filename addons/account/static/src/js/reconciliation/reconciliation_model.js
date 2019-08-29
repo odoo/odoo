@@ -550,7 +550,7 @@ var StatementModel = BasicModel.extend({
         var self = this;
         var line = this.getLine(handle);
         var reconcileModel = _.find(this.reconcileModels, function (r) {return r.id === reconcileModelId;});
-        var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'force_tax_included', 'tax_ids', 'analytic_tag_ids', 'to_check'];
+        var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'force_tax_included', 'tax_ids', 'analytic_tag_ids', 'to_check', 'amount_from_label_regex', 'decimal_separator'];
         this._blurProposition(handle);
         var focus = this._formatQuickCreate(line, _.pick(reconcileModel, fields));
         focus.reconcileModelId = reconcileModelId;
@@ -1234,7 +1234,28 @@ var StatementModel = BasicModel.extend({
         var formatOptions = {
             currency_id: line.st_line.currency_id,
         };
-        var amount = values.amount !== undefined ? values.amount : line.balance.amount;
+        var amount;
+        switch(values.amount_type) {
+            case 'percentage':
+                amount = line.balance.amount * values.amount / 100;
+                break;
+            case 'regex':
+                var matching = line.st_line.name.match(new RegExp(values.amount_from_label_regex))
+                amount = null;
+                if (matching && matching.length == 2) {
+                    matching = matching[1].replace(new RegExp('\\D' + values.decimal_separator, 'g'), '');
+                    matching = matching.replace(values.decimal_separator, '.');
+                    amount = parseFloat(matching);
+                }
+                break;
+            case 'fixed':
+                amount = values.amount;
+                break;
+            default:
+                amount = values.amount !== undefined ? values.amount : line.balance.amount;
+        }
+
+
         var prop = {
             'id': _.uniqueId('createLine'),
             'label': values.label || line.st_line.name,
@@ -1248,8 +1269,7 @@ var StatementModel = BasicModel.extend({
             'credit': 0,
             'date': values.date ? values.date : field_utils.parse.date(today, {}, {isUTC: true}),
             'force_tax_included': values.force_tax_included || false,
-            'base_amount': values.amount_type !== "percentage" ?
-                (amount) : line.balance.amount * values.amount / 100,
+            'base_amount': amount,
             'percent': values.amount_type === "percentage" ? values.amount : null,
             'link': values.link,
             'display': true,
