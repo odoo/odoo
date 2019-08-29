@@ -100,7 +100,6 @@ ListRenderer.include({
         this.currentFieldIndex = null;
         this.allRecordsIds = null; // flat array of records ids used by navigation
         this.isResizing = false;
-        this.hasBeenResized = false;
         this.eventListeners = [];
     },
     /**
@@ -572,24 +571,20 @@ ListRenderer.include({
      * @private
      */
     _freezeColumnWidths: function () {
-        if (!this._hasVisibleRecords(this.state) && !this.columnWidths) {
-            // there is no record nor widths to restore -> don't force column's
-            // widths w.r.t. their label
+        if (!this.columnWidths && (!this._hasVisibleRecords(this.state) || !this.$el.is(':visible'))) {
+            // there is no record nor widths to restore or the list is not visible
+            // -> don't force column's widths w.r.t. their label
             return;
         }
-        // Freeze table width according to its size in fixed layout
         const table = this.el.getElementsByTagName('table')[0];
         const thead = table.getElementsByTagName('thead')[0];
-        table.style.tableLayout = 'fixed';
-        table.style.width = `${table.offsetWidth}px`;
 
         // Freeze each th width according to their size in auto layout
-        table.style.tableLayout = 'auto';
         [...thead.getElementsByTagName('th')].forEach((th, index) => {
             th.style.width = `${this.columnWidths ? this.columnWidths[index] : th.offsetWidth}px`;
         });
 
-        // Finally set the table layout to fixed
+        // Set the table layout to fixed
         table.style.tableLayout = 'fixed';
     },
     /**
@@ -1010,7 +1005,6 @@ ListRenderer.include({
         if (this.addTrashIcon) {
             $thead.find('tr').append($('<th>', {class: 'o_list_record_remove_header'}));
         }
-        this.hasBeenResized = false;
         return $thead;
     },
     /**
@@ -1181,6 +1175,7 @@ ListRenderer.include({
         if (rowIndex === this.currentRow) {
             return Promise.resolve();
         }
+        this._freezeColumnWidths();
         var recordId = this._getRecordID(rowIndex);
         // To select a row, the currently selected one must be unselected first
         var self = this;
@@ -1459,14 +1454,13 @@ ListRenderer.include({
         ev.preventDefault();
         ev.stopPropagation();
 
-        if (!this.hasBeenResized) {
-            this._freezeColumnWidths();
-        }
         this.isResizing = true;
-        this.hasBeenResized = true;
 
         const table = this.el.getElementsByTagName('table')[0];
         const th = ev.target.closest('th');
+        // Freeze the whole table width
+        this._freezeColumnWidths();
+        table.style.width = `${table.offsetWidth}px`;
         const thPosition = [...th.parentNode.children].indexOf(th);
         const resizingColumnElements = [...table.getElementsByTagName('tr')]
             .filter(tr => tr.children.length === th.parentNode.children.length)
