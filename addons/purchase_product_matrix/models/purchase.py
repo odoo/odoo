@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    report_grids = fields.Boolean(string="Print Products Grids", default=True, help="If set, the matrix of configurable products will be shown on the report of this order.")
+    report_grids = fields.Boolean(string="Print Variant Grids", default=True, help="If set, the matrix of configurable products will be shown on the report of this order.")
 
     """ Matrix loading and update: fields and methods :
 
