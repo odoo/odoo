@@ -35,31 +35,31 @@ class SaleOrder(models.Model):
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
-    effective_date = fields.Date("Effective Date", compute='_compute_effective_date', store=True, help="Completion date of the first delivery order.")
-    expected_date = fields.Datetime( help="Delivery date you can promise to the customer, computed from the minimum lead time of "
-                                          "the order lines in case of Service products. In case of shipping, the shipping policy of "
+    expected_date = fields.Datetime(help="Delivery date you can promise to the customer, computed from the minimum lead time of "
+                                          "the order lines in case of Service products.\n In case of shipping, the shipping policy of "
                                           "the order will be taken into account to either use the minimum or maximum lead time of "
                                           "the order lines.")
 
-    @api.depends('picking_ids.date_done')
-    def _compute_effective_date(self):
-        for order in self:
-            pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
-            dates_list = [date for date in pickings.mapped('date_done') if date]
-            order.effective_date = min(dates_list).date() if dates_list else False
-
     @api.depends('picking_policy')
     def _compute_expected_date(self):
-        super(SaleOrder, self)._compute_expected_date()
+        """ this method overrides the default _compute_expected_date method on sale orders,
+        allowing to take into account the picking policy set on the SO, and computing the
+        expected_date accordingly.
+        """
         for order in self:
-            dates_list = []
-            confirm_date = fields.Datetime.from_string(order.date_order if order.state in ['sale', 'done'] else fields.Datetime.now())
-            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
-                dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
-                dates_list.append(dt)
-            if dates_list:
-                expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
-                order.expected_date = fields.Datetime.to_string(expected_date)
+            if order.expected_date_mode == 'manual':
+                order.expected_date = order.expected_date_manual
+            else:
+                dates_list = []
+                confirm_date = fields.Datetime.from_string(order.date_order if order.state in ['sale', 'done'] else fields.Datetime.now())
+                for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
+                    dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
+                    dates_list.append(dt)
+                if dates_list:
+                    expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
+                    order.expected_date = fields.Datetime.to_string(expected_date)
+                else:
+                    order.expected_date = False
 
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
@@ -217,13 +217,10 @@ class SaleOrderLine(models.Model):
             else:
                 line.display_qty_widget = False
 
-    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'order_id.warehouse_id', 'order_id.commitment_date')
+    @api.depends('product_id', 'customer_lead', 'product_uom_qty', 'order_id.warehouse_id', 'order_id.picking_policy')
     def _compute_qty_at_date(self):
-        """ Compute the quantity forecasted of product at delivery date. There are
-        two cases:
-         1. The quotation has a commitment_date, we take it as delivery date
-         2. The quotation hasn't commitment_date, we compute the estimated delivery
-            date based on lead time"""
+        """ Compute the quantity forecasted of product at delivery date. """
+
         qty_processed_per_product = defaultdict(lambda: 0)
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
         # We first loop over the SO lines to group them by warehouse and schedule
@@ -232,8 +229,8 @@ class SaleOrderLine(models.Model):
             if not line.display_qty_widget:
                 continue
             warehouse = line.order_id.warehouse_id
-            if line.order_id.commitment_date:
-                date = line.order_id.commitment_date
+            if line.order_id.picking_policy == 'one':
+                date = line.order_id.expected_date
             else:
                 confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else datetime.now()
                 date = confirm_date + timedelta(days=line.customer_lead or 0.0)
@@ -398,8 +395,9 @@ class SaleOrderLine(models.Model):
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
         })
-        for line in self.filtered("order_id.commitment_date"):
-            date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)
+        for line in self.filtered("order_id.expected_date"):
+            date_planned = fields.Datetime.from_string(line.order_id.expected_date) - timedelta(
+                days=line.order_id.company_id.security_lead)
             values.update({
                 'date_planned': fields.Datetime.to_string(date_planned),
             })

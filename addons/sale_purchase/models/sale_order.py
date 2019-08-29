@@ -166,8 +166,8 @@ class SaleOrderLine(models.Model):
 
     def _purchase_get_date_order(self, supplierinfo):
         """ return the ordered date for the purchase order, computed as : SO commitment date - supplier delay """
-        commitment_date = fields.Datetime.from_string(self.order_id.commitment_date or fields.Datetime.now())
-        return commitment_date - relativedelta(days=int(supplierinfo.delay))
+        expected_date = fields.Datetime.from_string(self.order_id.expected_date or fields.Datetime.now())
+        return expected_date - relativedelta(days=int(supplierinfo.delay))
 
     def _purchase_service_prepare_order_values(self, supplierinfo):
         """ Returns the values to create the purchase order from the current SO line.
