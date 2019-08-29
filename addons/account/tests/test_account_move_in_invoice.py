@@ -3,6 +3,7 @@ from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
+from odoo.exceptions import ValidationError
 
 
 @tagged('post_install', '-at_install')
@@ -851,7 +852,7 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
             self.term_line_vals_1,
         ], self.move_vals)
 
-    def test_in_invoice_create_draft_refund(self):
+    def test_in_invoice_create_refund(self):
         self.invoice.post()
 
         move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
@@ -885,8 +886,10 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
             },
             {
                 **self.term_line_vals_1,
+                'name': '',
                 'debit': 1128.0,
                 'credit': 0.0,
+                'date_maturity': move_reversal.date,
             },
         ], {
             **self.move_vals,
@@ -898,7 +901,7 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
 
         move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2019-02-01'),
-            'reason': 'because',
+            'reason': 'no reason again',
             'refund_method': 'cancel',
         })
         reversal = move_reversal.reverse_moves()
@@ -927,11 +930,135 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
             },
             {
                 **self.term_line_vals_1,
+                'name': '',
                 'debit': 1128.0,
                 'credit': 0.0,
+                'date_maturity': move_reversal.date,
             },
         ], {
             **self.move_vals,
+            'date': move_reversal.date,
+            'state': 'posted',
+            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
+            'invoice_payment_state': 'paid',
+        })
+
+    def test_in_invoice_create_refund_multi_currency(self):
+        ''' Test the account.move.reversal takes care about the currency rates when setting
+        a custom reversal date.
+        '''
+        move_form = Form(self.invoice)
+        move_form.date = '2016-01-01'
+        move_form.currency_id = self.currency_data['currency']
+        move_form.save()
+
+        self.invoice.post()
+
+        # The currency rate changed from 1/3 to 1/2.
+        move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
+            'date': fields.Date.from_string('2017-01-01'),
+            'reason': 'no reason',
+            'refund_method': 'refund',
+        })
+        reversal = move_reversal.reverse_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+
+        self.assertInvoiceValues(reverse_move, [
+            {
+                **self.product_line_vals_1,
+                'amount_currency': -800.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 0.0,
+                'credit': 400.0,
+            },
+            {
+                **self.product_line_vals_2,
+                'amount_currency': -160.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 0.0,
+                'credit': 80.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'amount_currency': -144.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 0.0,
+                'credit': 72.0,
+            },
+            {
+                **self.tax_line_vals_2,
+                'amount_currency': -24.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 0.0,
+                'credit': 12.0,
+            },
+            {
+                **self.term_line_vals_1,
+                'name': '',
+                'amount_currency': 1128.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 564.0,
+                'credit': 0.0,
+                'date_maturity': move_reversal.date,
+            },
+        ], {
+            **self.move_vals,
+            'currency_id': self.currency_data['currency'].id,
+            'date': move_reversal.date,
+            'state': 'draft',
+            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
+            'invoice_payment_state': 'not_paid',
+        })
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
+            'date': fields.Date.from_string('2017-01-01'),
+            'reason': 'no reason again',
+            'refund_method': 'cancel',
+        })
+        reversal = move_reversal.reverse_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+
+        self.assertInvoiceValues(reverse_move, [
+            {
+                **self.product_line_vals_1,
+                'amount_currency': -800.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 0.0,
+                'credit': 400.0,
+            },
+            {
+                **self.product_line_vals_2,
+                'amount_currency': -160.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 0.0,
+                'credit': 80.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'amount_currency': -144.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 0.0,
+                'credit': 72.0,
+            },
+            {
+                **self.tax_line_vals_2,
+                'amount_currency': -24.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 0.0,
+                'credit': 12.0,
+            },
+            {
+                **self.term_line_vals_1,
+                'name': '',
+                'amount_currency': 1128.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 564.0,
+                'credit': 0.0,
+                'date_maturity': move_reversal.date,
+            },
+        ], {
+            **self.move_vals,
+            'currency_id': self.currency_data['currency'].id,
             'date': move_reversal.date,
             'state': 'posted',
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
@@ -1041,3 +1168,11 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
             **self.move_vals,
             'currency_id': self.currency_data['currency'].id,
         })
+
+    def test_in_invoice_duplicate_supplier_reference(self):
+        ''' Ensure two vendor bills can't share the same vendor reference. '''
+        self.invoice.ref = 'a supplier reference'
+        invoice2 = self.invoice.copy()
+
+        with self.assertRaises(ValidationError):
+            invoice2.ref = 'a supplier reference'
