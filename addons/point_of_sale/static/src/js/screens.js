@@ -688,7 +688,6 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
     init: function(parent, options){
         var self = this;
         this._super(parent,options);
-        this.product_type = options.product_type || 'all';  // 'all' | 'weightable'
         this.onlyWeightable = options.onlyWeightable || false;
         this.category = this.pos.root_category;
         this.breadcrumb = [];
