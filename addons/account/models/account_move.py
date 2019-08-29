@@ -170,6 +170,8 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         string='Salesperson',
         default=lambda self: self.env.user)
+    user_id = fields.Many2one(string='User', related='invoice_user_id',
+        help='Technical field used to fit the generic behavior in mail templates.')
     invoice_payment_state = fields.Selection(selection=[
             ('not_paid', 'Not Paid'),
             ('in_payment', 'In Payment'),
@@ -933,35 +935,43 @@ class AccountMove(models.Model):
             total_tax_currency = 0.0
             total_residual = 0.0
             total_residual_currency = 0.0
+            total = 0.0
+            total_currency = 0.0
             currencies = set()
 
             for line in move.line_ids:
                 if line.currency_id:
                     currencies.add(line.currency_id)
 
-                # Untaxed amount.
-                if (move.is_invoice(include_receipts=True) and not line.exclude_from_invoice_tab)\
-                or (move.type == 'entry' and line.debit and not line.tax_line_id):
-                    total_untaxed += line.balance
-                    total_untaxed_currency += line.amount_currency
+                if move.is_invoice(include_receipts=True):
+                    # === Invoices ===
 
-                # Tax amount.
-                if line.tax_line_id:
-                    total_tax += line.balance
-                    total_tax_currency += line.amount_currency
+                    if not line.exclude_from_invoice_tab:
+                        # Untaxed amount.
+                        total_untaxed += line.balance
+                        total_untaxed_currency += line.amount_currency
+                        total += line.balance
+                        total_currency += line.amount_currency
+                    elif line.tax_line_id:
+                        # Tax amount.
+                        total_tax += line.balance
+                        total_tax_currency += line.amount_currency
+                        total += line.balance
+                        total_currency += line.amount_currency
+                    elif line.account_id.user_type_id.type in ('receivable', 'payable'):
+                        # Residual amount.
+                        total_residual += line.amount_residual
+                        total_residual_currency += line.amount_residual_currency
+                else:
+                    # === Miscellaneous journal entry ===
+                    if line.debit:
+                        total += line.balance
+                        total_currency += line.amount_currency
 
-                # Residual amount.
-                if move.type == 'entry' or line.account_id.user_type_id.type in ('receivable', 'payable'):
-                    total_residual += line.amount_residual
-                    total_residual_currency += line.amount_residual_currency
-
-            total = total_untaxed + total_tax
-            total_currency = total_untaxed_currency + total_tax_currency
-
-            if (move.type == 'entry' and total < 0.0) or move.is_inbound():
-                sign = -1
-            else:
+            if move.type == 'entry' or move.is_outbound():
                 sign = 1
+            else:
+                sign = -1
 
             move.amount_untaxed = sign * (total_untaxed_currency if len(currencies) == 1 else total_untaxed)
             move.amount_tax = sign * (total_tax_currency if len(currencies) == 1 else total_tax)
@@ -1236,27 +1246,23 @@ class AccountMove(models.Model):
         if 'posted' in self.mapped('line_ids.payment_id.state'):
             raise ValidationError(_("You cannot modify a journal entry linked to a posted payment."))
 
-    @api.constrains('name', 'journal_id')
+    @api.constrains('name', 'journal_id', 'state')
     def _check_unique_sequence_number(self):
-        if not self:
+        moves = self.filtered(lambda move: move.state == 'posted')
+        if not moves:
             return
 
+        # /!\ Computed stored fields are not yet inside the database.
         self._cr.execute('''
-            WITH current_moves (id, name, state, company_id, journal_id, type) as ( values {} )
             SELECT move2.id
-            FROM (    SELECT id, name, state, company_id, journal_id, type from account_move
-            UNION ALL SELECT id, name, state, company_id, journal_id, type from current_moves
-            ) move
+            FROM account_move move
             INNER JOIN account_move move2 ON
                 move2.name = move.name
-                AND move2.company_id = move.company_id
                 AND move2.journal_id = move.journal_id
                 AND move2.type = move.type
                 AND move2.id != move.id
-            WHERE move.id IN %s
-            AND move.state = 'posted'
-            AND move2.state = 'posted'
-        '''.format(", ".join(["(%s, %s, %s, %s, %s, %s)"] * len(self))), list(chain(*self.mapped(lambda r: [r.id, r.name, r.state, r.company_id.id, r.journal_id.id, r.type]))) + [tuple(self.ids)])
+            WHERE move.id IN %s AND move2.state = 'posted'
+        ''', [tuple(moves.ids)])
         res = self._cr.fetchone()
         if res:
             raise ValidationError(_('Posted journal entry must have an unique sequence number per company.'))
@@ -1267,23 +1273,21 @@ class AccountMove(models.Model):
         if not moves:
             return
 
+        # /!\ Computed stored fields are not yet inside the database.
         self._cr.execute('''
-            WITH current_moves (id,  ref, company_id, commercial_partner_id, type, invoice_date) as ( values {} )
             SELECT move2.id
-            FROM (    SELECT id, ref, company_id, commercial_partner_id, type, invoice_date from account_move
-            UNION ALL SELECT id, ref, company_id, commercial_partner_id, type, invoice_date from current_moves
-            ) move
+            FROM account_move move
+            JOIN account_journal journal ON journal.id = move.journal_id
+            JOIN res_partner partner ON partner.id = move.partner_id
             INNER JOIN account_move move2 ON
                 move2.ref = move.ref
-                AND move2.company_id = move.company_id
-                AND move2.commercial_partner_id = move.commercial_partner_id
+                AND move2.company_id = journal.company_id
+                AND move2.commercial_partner_id = partner.commercial_partner_id
                 AND move2.type = move.type
-                AND (move2.invoice_date = move.invoice_date OR move.invoice_date is NULL)
+                AND (move.invoice_date is NULL OR move2.invoice_date = move.invoice_date)
                 AND move2.id != move.id
             WHERE move.id IN %s
-            AND move.type in ('in_invoice', 'in_refund')
-            AND move.ref IS NOT NULL
-        '''.format(", ".join(["(%s, %s, %s, %s, %s, CAST(%s as DATE))"] * len(self))), list(chain(*self.mapped(lambda r: [r.id, r.ref, r.company_id.id, r.commercial_partner_id.id, r.type, r.invoice_date or None]))) + [tuple(moves.ids)])
+        ''', [tuple(moves.ids)])
         if self._cr.fetchone():
             raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note.'))
 
@@ -1860,7 +1864,16 @@ class AccountMove(models.Model):
                 'reversed_entry_id': move.id,
             })
             move_vals_list.append(move._reverse_move_vals(default_values, cancel=cancel))
+
         reverse_moves = self.env['account.move'].create(move_vals_list)
+        for move, reverse_move in zip(self, reverse_moves.with_context(check_move_validity=False)):
+            # Update amount_currency if the date has changed.
+            if move.date != reverse_move.date:
+                for line in reverse_move.line_ids:
+                    if line.currency_id:
+                        line._onchange_currency()
+            reverse_move._recompute_dynamic_lines(recompute_all_taxes=False)
+        reverse_moves._check_balanced()
 
         # Reconcile moves together to cancel the previous one.
         if cancel:
@@ -1980,6 +1993,10 @@ class AccountMove(models.Model):
             excluded_move_ids = AccountMoveLine.search(AccountMoveLine._get_suspense_moves_domain() + [('move_id', 'in', self.ids)]).mapped('move_id').ids
 
         for move in self:
+            if move in move.line_ids.mapped('full_reconcile_id.exchange_move_id'):
+                raise UserError(_('You cannot cancel an exchange difference journal entry.'))
+            if move.tax_cash_basis_rec_id:
+                raise UserError(_('You cannot cancel a tax cash basis journal entry.'))
             if not move.journal_id.update_posted and move.id not in excluded_move_ids:
                 raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
             # We remove all the analytics entries for this journal
@@ -3211,7 +3228,11 @@ class AccountMoveLine(models.Model):
             for after_rec_dict in cash_basis_subjected:
                 new_rec = part_rec.create(after_rec_dict)
                 # if the pair belongs to move being reverted, do not create CABA entry
-                if cash_basis and not (new_rec.debit_move_id + new_rec.credit_move_id).mapped('move_id.reversed_entry_id'):
+                if cash_basis and not (
+                        new_rec.debit_move_id.move_id == new_rec.credit_move_id.move_id.reversed_entry_id
+                        or
+                        new_rec.credit_move_id.move_id == new_rec.debit_move_id.move_id.reversed_entry_id
+                ):
                     new_rec.create_tax_cash_basis_entry(cash_basis_percentage_before_rec)
         self.recompute()
 
@@ -3386,8 +3407,11 @@ class AccountMoveLine(models.Model):
     @api.multi
     def copy_data(self, default=None):
         res = super(AccountMoveLine, self).copy_data(default=default)
-        if self._context.get('include_business_fields'):
-            for line, values in zip(self, res):
+        for line, values in zip(self, res):
+            # Don't copy the name of a payment term line.
+            if line.move_id.is_invoice() and line.account_id.user_type_id.type in ('receivable', 'payable'):
+                values['name'] = ''
+            if self._context.get('include_business_fields'):
                 line._copy_data_extend_business_fields(values)
         return res
 
