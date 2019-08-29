@@ -2,8 +2,8 @@
 <odoo>
 <data>
     <!-- USER INPUTS -->
-    <record id="survey_user_input_search" model="ir.ui.view">
-        <field name="name">survey_user_input_search</field>
+    <record id="survey_user_input_view_search" model="ir.ui.view">
+        <field name="name">survey.user_input.view.search</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
             <search string="Search Survey">
@@ -26,8 +26,9 @@
             </search>
         </field>
     </record>
-    <record model="ir.ui.view" id="survey_user_input_form">
-        <field name="name">survey_user_input_form</field>
+
+    <record id="survey_user_input_view_form" model="ir.ui.view">
+        <field name="name">survey.user_input.view.form</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
             <form string="Survey User inputs" create="false">
@@ -76,8 +77,9 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="survey_user_input_tree">
-        <field name="name">survey_user_input_tree</field>
+
+    <record id="survey_user_input_view_tree" model="ir.ui.view">
+        <field name="name">survey.user_input.view.tree</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
             <tree string="Survey User inputs" decoration-muted="test_entry == True" create="false">
@@ -96,8 +98,8 @@
         </field>
     </record>
 
-    <record id="view_survey_user_input_kanban" model="ir.ui.view">
-        <field name="name">survey.user_input.kanban</field>
+    <record id="survey_user_input_viuew_kanban" model="ir.ui.view">
+        <field name="name">survey.user_input.view.kanban</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
             <kanban create="false">
@@ -135,8 +137,8 @@
         <field name="name">Answers</field>
         <field name="res_model">survey.user_input</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="view_id" ref="survey_user_input_tree"></field>
-        <field name="search_view_id" ref="survey_user_input_search"/>
+        <field name="view_id" ref="survey_user_input_view_tree"></field>
+        <field name="search_view_id" ref="survey_user_input_view_search"/>
         <field name="context">{'search_default_group_by_survey': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
@@ -148,8 +150,8 @@
         <field name="name">Answers</field>
         <field name="res_model">survey.user_input</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="view_id" ref="survey_user_input_tree"></field>
-        <field name="search_view_id" ref="survey_user_input_search"/>
+        <field name="view_id" ref="survey_user_input_view_tree"></field>
+        <field name="search_view_id" ref="survey_user_input_view_search"/>
         <field name="context">{'search_default_group_by_survey': True}</field>
         <field name="domain">[('test_entry', '=', False)]</field>
         <field name="help" type="html">
