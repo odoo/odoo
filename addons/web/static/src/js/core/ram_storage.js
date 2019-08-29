@@ -31,6 +31,7 @@ var RamStorage = Class.extend(mixins.EventDispatcherMixin, {
      */
     clear: function () {
         this.storage = Object.create(null);
+        this.length = 0;
     },
     /**
      * Returns the value associated with a given key in the storage
@@ -42,6 +43,13 @@ var RamStorage = Class.extend(mixins.EventDispatcherMixin, {
         return this.storage[key];
     },
     /**
+     * @param {integer} index
+     * @return {string}
+     */
+    key: function (index) {
+        return _.keys(this.storage)[index];
+    },
+    /**
      * Removes the given key from the storage
      *
      * @param {string} key
@@ -49,6 +57,7 @@ var RamStorage = Class.extend(mixins.EventDispatcherMixin, {
     removeItem: function (key) {
         delete this.storage[key];
         this.trigger('storage', {key: key, newValue: null});
+        this.length = _.keys(this.storage).length;
     },
     /**
      * Adds a given key-value pair to the storage, or update the value of the
@@ -60,6 +69,7 @@ var RamStorage = Class.extend(mixins.EventDispatcherMixin, {
     setItem: function (key, value) {
         this.storage[key] = value;
         this.trigger('storage', {key: key, newValue: value});
+        this.length = _.keys(this.storage).length;
     },
 });
 
