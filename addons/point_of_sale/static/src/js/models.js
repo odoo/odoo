@@ -2011,6 +2011,11 @@ exports.Orderline = Backbone.Model.extend({
     get_lst_price: function(){
         return this.product.lst_price;
     },
+    set_lst_price: function(price){
+      this.order.assert_editable();
+      this.product.lst_price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
+      this.trigger('change',this);
+    },
 });
 
 var OrderlineCollection = Backbone.Collection.extend({
@@ -2544,10 +2549,11 @@ exports.Order = Backbone.Model.extend({
             for (var i = 0; i < lines.length; i++) {
                 if (lines[i].get_product() === tip_product) {
                     lines[i].set_unit_price(tip);
+                    lines[i].set_lst_price(tip);
                     return;
                 }
             }
-            this.add_product(tip_product, {quantity: 1, price: tip });
+            this.add_product(tip_product, {quantity: 1, price: tip, lst_price: tip });
         }
     },
     set_pricelist: function (pricelist) {
@@ -2609,6 +2615,10 @@ exports.Order = Backbone.Model.extend({
 
         if(options.price !== undefined){
             line.set_unit_price(options.price);
+        }
+
+        if(options.lst_price !== undefined){
+            line.set_lst_price(options.lst_price);
         }
 
         //To substract from the unit price the included taxes mapped by the fiscal position
