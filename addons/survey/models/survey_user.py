@@ -200,10 +200,12 @@ class SurveyUserInputLine(models.Model):
     _description = 'Survey User Input Line'
     _rec_name = 'user_input_id'
 
+    # survey data
     user_input_id = fields.Many2one('survey.user_input', string='User Input', ondelete='cascade', required=True)
+    survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True, readonly=False)
     question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade', required=True)
     page_id = fields.Many2one(related='question_id.page_id', string="Section", readonly=False)
-    survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True, readonly=False)
+    # answer
     skipped = fields.Boolean('Skipped')
     answer_type = fields.Selection([
         ('text', 'Text'),

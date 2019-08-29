@@ -20,6 +20,10 @@ _logger = logging.getLogger(__name__)
 
 class Survey(http.Controller):
 
+    # ------------------------------------------------------------
+    # ACCESS
+    # ------------------------------------------------------------
+
     def _fetch_from_access_token(self, survey_token, answer_token):
         """ Check that given token matches an answer from the given survey_id.
         Returns a sudo-ed browse record of survey in order to avoid access rights
@@ -181,6 +185,10 @@ class Survey(http.Controller):
             'input_type': answer.input_type,
             'deadline': answer.deadline,
         }
+
+    # ------------------------------------------------------------
+    # TAKING SURVEY ROUTES
+    # ------------------------------------------------------------
 
     @http.route('/survey/start/<string:survey_token>', type='http', auth='public', website=True)
     def survey_start(self, survey_token, answer_token=None, email=False, **post):
@@ -422,6 +430,10 @@ class Survey(http.Controller):
                 ret['redirect'] += '?prev=prev'
 
         return json.dumps(ret)
+
+    # ------------------------------------------------------------
+    # COMPLETED SURVEY ROUTES
+    # ------------------------------------------------------------
 
     @http.route('/survey/print/<string:survey_token>', type='http', auth='public', website=True)
     def survey_print(self, survey_token, review=False, answer_token=None, **post):

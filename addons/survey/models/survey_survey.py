@@ -8,7 +8,7 @@ from itertools import product
 from werkzeug import urls
 import random
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -188,7 +188,10 @@ class Survey(models.Model):
         if not self.users_login_required or not self.certificate:
             self.certification_give_badge = False
 
+    # ------------------------------------------------------------
     # CRUD
+    # ------------------------------------------------------------
+
     @api.model
     def create(self, vals):
         survey = super(Survey, self).create(vals)
@@ -202,11 +205,14 @@ class Survey(models.Model):
             return self.sudo()._handle_certification_badges(vals)
         return result
 
-    # Public methods #
     def copy_data(self, default=None):
         title = _("%s (copy)") % (self.title)
         default = dict(default or {}, title=title)
         return super(Survey, self).copy_data(default)
+
+    # ------------------------------------------------------------
+    # TECHNICAL
+    # ------------------------------------------------------------
 
     def _create_answer(self, user=False, partner=False, email=False, test_entry=False, check_attempts=True, **additional_vals):
         """ Main entry point to get a token back or create a new one. This method
@@ -278,6 +284,60 @@ class Survey(models.Model):
             if check_attempts and not self._has_attempts_left(partner or (user and user.partner_id), email, invite_token):
                 raise UserError(_('No attempts left.'))
 
+    def _prepare_answer_questions(self):
+        """ Will generate the questions for a randomized survey.
+        It uses the random_questions_count of every sections of the survey to
+        pick a random number of questions and returns the merged recordset """
+        self.ensure_one()
+
+        questions = self.env['survey.question']
+
+        for page in self.page_ids:
+            if self.questions_selection == 'all':
+                questions |= page.question_ids
+            else:
+                if page.random_questions_count > 0 and len(page.question_ids) > page.random_questions_count:
+                    questions = questions.concat(*random.sample(page.question_ids, page.random_questions_count))
+                else:
+                    questions |= page.question_ids
+
+        if not questions:
+            questions = self.question_ids
+
+        return questions
+
+    def _has_attempts_left(self, partner, email, invite_token):
+        self.ensure_one()
+
+        if (self.access_mode != 'public' or self.users_login_required) and self.is_attempts_limited:
+            return self._get_number_of_attempts_lefts(partner, email, invite_token) > 0
+
+        return True
+
+    def _get_number_of_attempts_lefts(self, partner, email, invite_token):
+        """ Returns the number of attempts left. """
+        self.ensure_one()
+
+        domain = [
+            ('survey_id', '=', self.id),
+            ('test_entry', '=', False),
+            ('state', '=', 'done')
+        ]
+
+        if partner:
+            domain = expression.AND([domain, [('partner_id', '=', partner.id)]])
+        else:
+            domain = expression.AND([domain, [('email', '=', email)]])
+
+        if invite_token:
+            domain = expression.AND([domain, [('invite_token', '=', invite_token)]])
+
+        return self.attempts_limit - self.env['survey.user_input'].search_count(domain)
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
+
     @api.model
     def next_page_or_question(self, user_input, page_or_question_id, go_back=False):
         """ The next page to display to the user, knowing that page_id is the id
@@ -328,6 +388,115 @@ class Survey(models.Model):
             # This will show a regular page
             else:
                 return (pages_or_questions[current_page_index + 1][1], False)
+
+    def action_draft(self):
+        self.write({'state': 'draft'})
+
+    def action_open(self):
+        self.write({'state': 'open'})
+
+    def action_close(self):
+        self.write({'state': 'closed'})
+
+    def action_start_survey(self):
+        """ Open the website page with the survey form """
+        self.ensure_one()
+        token = self.env.context.get('survey_token')
+        trail = "?answer_token=%s" % token if token else ""
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Start Survey",
+            'target': 'self',
+            'url': self.public_url + trail
+        }
+
+    def action_send_survey(self):
+        """ Open a window to compose an email, pre-filled with the survey message """
+        # Ensure that this survey has at least one page with at least one question.
+        if (not self.page_ids and self.questions_layout == 'page_per_section') or not self.question_ids:
+            raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
+
+        if self.state == 'closed':
+            raise UserError(_("You cannot send invitations for closed surveys."))
+
+        template = self.env.ref('survey.mail_template_user_input_invite', raise_if_not_found=False)
+
+        local_context = dict(
+            self.env.context,
+            default_survey_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template and template.id or False,
+            notif_layout='mail.mail_notification_light',
+        )
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'survey.invite',
+            'target': 'new',
+            'context': local_context,
+        }
+
+    def action_print_survey(self):
+        """ Open the website page with the survey printable view """
+        self.ensure_one()
+        token = self.env.context.get('survey_token')
+        trail = "?answer_token=%s" % token if token else ""
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Print Survey",
+            'target': 'self',
+            'url': '/survey/print/%s%s' % (self.access_token, trail)
+        }
+
+    def action_result_survey(self):
+        """ Open the website page with the survey results view """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Results of the Survey",
+            'target': 'self',
+            'url': '/survey/results/%s' % self.id
+        }
+
+    def action_test_survey(self):
+        ''' Open the website page with the survey form into test mode'''
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Test Survey",
+            'target': 'self',
+            'url': '/survey/test/%s' % self.access_token,
+        }
+
+    def action_survey_user_input_completed(self):
+        action_rec = self.env.ref('survey.action_survey_user_input_notest')
+        action = action_rec.read()[0]
+        ctx = dict(self.env.context)
+        ctx.update({'search_default_survey_id': self.ids[0],
+                    'search_default_completed': 1})
+        action['context'] = ctx
+        return action
+
+    def action_survey_user_input_certified(self):
+        action_rec = self.env.ref('survey.action_survey_user_input_notest')
+        action = action_rec.read()[0]
+        ctx = dict(self.env.context)
+        ctx.update({'search_default_survey_id': self.ids[0],
+                    'search_default_quizz_passed': 1})
+        action['context'] = ctx
+        return action
+
+    def action_survey_user_input(self):
+        action_rec = self.env.ref('survey.action_survey_user_input_notest')
+        action = action_rec.read()[0]
+        ctx = dict(self.env.context)
+        ctx.update({'search_default_survey_id': self.ids[0]})
+        action['context'] = ctx
+        return action
+
+    # ------------------------------------------------------------
+    # GRAPH / RESULTS
+    # ------------------------------------------------------------
 
     def filter_input_ids(self, filters, finished=False):
         """If user applies any filters, then this function returns list of
@@ -453,6 +622,10 @@ class Survey(models.Model):
 
         return result
 
+    # ------------------------------------------------------------
+    # GAMIFICATION / BADGES
+    # ------------------------------------------------------------
+
     def _create_certification_badge_trigger(self):
         self.ensure_one()
         goal = self.env['gamification.goal.definition'].create({
@@ -502,160 +675,3 @@ class Survey(models.Model):
             # delete all challenges and goals because not needed anymore (challenge lines are deleted in cascade)
             challenges_to_delete.unlink()
             goals_to_delete.unlink()
-
-    # Actions
-
-    def action_draft(self):
-        self.write({'state': 'draft'})
-
-    def action_open(self):
-        self.write({'state': 'open'})
-
-    def action_close(self):
-        self.write({'state': 'closed'})
-
-    def action_start_survey(self):
-        """ Open the website page with the survey form """
-        self.ensure_one()
-        token = self.env.context.get('survey_token')
-        trail = "?answer_token=%s" % token if token else ""
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "Start Survey",
-            'target': 'self',
-            'url': self.public_url + trail
-        }
-
-    def action_send_survey(self):
-        """ Open a window to compose an email, pre-filled with the survey message """
-        # Ensure that this survey has at least one page with at least one question.
-        if (not self.page_ids and self.questions_layout == 'page_per_section') or not self.question_ids:
-            raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
-
-        if self.state == 'closed':
-            raise UserError(_("You cannot send invitations for closed surveys."))
-
-        template = self.env.ref('survey.mail_template_user_input_invite', raise_if_not_found=False)
-
-        local_context = dict(
-            self.env.context,
-            default_survey_id=self.id,
-            default_use_template=bool(template),
-            default_template_id=template and template.id or False,
-            notif_layout='mail.mail_notification_light',
-        )
-        return {
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'survey.invite',
-            'target': 'new',
-            'context': local_context,
-        }
-
-    def action_print_survey(self):
-        """ Open the website page with the survey printable view """
-        self.ensure_one()
-        token = self.env.context.get('survey_token')
-        trail = "?answer_token=%s" % token if token else ""
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "Print Survey",
-            'target': 'self',
-            'url': '/survey/print/%s%s' % (self.access_token, trail)
-        }
-
-    def action_result_survey(self):
-        """ Open the website page with the survey results view """
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "Results of the Survey",
-            'target': 'self',
-            'url': '/survey/results/%s' % self.id
-        }
-
-    def action_test_survey(self):
-        ''' Open the website page with the survey form into test mode'''
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "Test Survey",
-            'target': 'self',
-            'url': '/survey/test/%s' % self.access_token,
-        }
-
-    def action_survey_user_input_completed(self):
-        action_rec = self.env.ref('survey.action_survey_user_input_notest')
-        action = action_rec.read()[0]
-        ctx = dict(self.env.context)
-        ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_completed': 1})
-        action['context'] = ctx
-        return action
-
-    def action_survey_user_input_certified(self):
-        action_rec = self.env.ref('survey.action_survey_user_input_notest')
-        action = action_rec.read()[0]
-        ctx = dict(self.env.context)
-        ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_quizz_passed': 1})
-        action['context'] = ctx
-        return action
-
-    def action_survey_user_input(self):
-        action_rec = self.env.ref('survey.action_survey_user_input_notest')
-        action = action_rec.read()[0]
-        ctx = dict(self.env.context)
-        ctx.update({'search_default_survey_id': self.ids[0]})
-        action['context'] = ctx
-        return action
-
-    def _has_attempts_left(self, partner, email, invite_token):
-        self.ensure_one()
-
-        if (self.access_mode != 'public' or self.users_login_required) and self.is_attempts_limited:
-            return self._get_number_of_attempts_lefts(partner, email, invite_token) > 0
-
-        return True
-
-    def _get_number_of_attempts_lefts(self, partner, email, invite_token):
-        """ Returns the number of attempts left. """
-        self.ensure_one()
-
-        domain = [
-            ('survey_id', '=', self.id),
-            ('test_entry', '=', False),
-            ('state', '=', 'done')
-        ]
-
-        if partner:
-            domain = expression.AND([domain, [('partner_id', '=', partner.id)]])
-        else:
-            domain = expression.AND([domain, [('email', '=', email)]])
-
-        if invite_token:
-            domain = expression.AND([domain, [('invite_token', '=', invite_token)]])
-
-        return self.attempts_limit - self.env['survey.user_input'].search_count(domain)
-
-    def _prepare_answer_questions(self):
-        """ Will generate the questions for a randomized survey.
-        It uses the random_questions_count of every sections of the survey to
-        pick a random number of questions and returns the merged recordset """
-        self.ensure_one()
-
-        questions = self.env['survey.question']
-
-        for page in self.page_ids:
-            if self.questions_selection == 'all':
-                questions |= page.question_ids
-            else:
-                if page.random_questions_count > 0 and len(page.question_ids) > page.random_questions_count:
-                    questions = questions.concat(*random.sample(page.question_ids, page.random_questions_count))
-                else:
-                    questions |= page.question_ids
-
-        if not questions:
-            questions = self.question_ids
-
-        return questions
