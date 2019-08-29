@@ -202,7 +202,7 @@ class SurveyUserInputLine(models.Model):
 
     user_input_id = fields.Many2one('survey.user_input', string='User Input', ondelete='cascade', required=True)
     question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade', required=True)
-    page_id = fields.Many2one(related='question_id.page_id', string="Page", readonly=False)
+    page_id = fields.Many2one(related='question_id.page_id', string="Section", readonly=False)
     survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True, readonly=False)
     skipped = fields.Boolean('Skipped')
     answer_type = fields.Selection([
@@ -219,7 +219,7 @@ class SurveyUserInputLine(models.Model):
     value_free_text = fields.Text('Free Text answer')
     value_suggested = fields.Many2one('survey.label', string="Suggested answer")
     value_suggested_row = fields.Many2one('survey.label', string="Row answer")
-    answer_score = fields.Float('Score given for this choice')
+    answer_score = fields.Float('Score')
 
     @api.constrains('skipped', 'answer_type')
     def _answered_or_skipped(self):
