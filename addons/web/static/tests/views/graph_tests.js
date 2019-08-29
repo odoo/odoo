@@ -122,6 +122,27 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('field id not in groupBy', function (assert) {
+        assert.expect(1);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="id"/>' +
+                '</graph>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.deepEqual(args.kwargs.groupby, [],
+                        'groupby should not contain id field');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+        graph.destroy();
+    });
+
     QUnit.test('switching mode', function (assert) {
         assert.expect(6);
 
