@@ -335,6 +335,10 @@ class Picking(models.Model):
     show_validate = fields.Boolean(
         compute='_compute_show_validate',
         help='Technical field used to compute whether the validate should be shown.')
+    show_unreserve = fields.Boolean(
+        compute='_compute_show_unreserve',
+        help='Technical field used to compute whether the unreserve button should be shown.')
+
     use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
 
     owner_id = fields.Many2one(
@@ -492,6 +496,18 @@ class Picking(models.Model):
                 picking.show_validate = False
             else:
                 picking.show_validate = True
+
+    @api.depends('picking_type_code', 'immediate_transfer', 'state', 'move_type')
+    def _compute_show_unreserve(self):
+        for picking in self:
+            if picking.picking_type_code == 'incoming' or \
+                    picking.immediate_transfer or \
+                    not picking.is_locked or \
+                    (picking.state not in ['assigned', 'partially_available'] and picking.move_type != 'one') or \
+                    (picking.state not in ['assigned', 'partially_available', 'confirmed'] and picking.move_type == 'one'):
+                picking.show_unreserve = False
+            else:
+                picking.show_unreserve = True
 
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
