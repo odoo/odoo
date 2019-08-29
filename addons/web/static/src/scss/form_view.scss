@@ -128,6 +128,12 @@
             display: none!important;
         }
 
+        .o_field_x2many_list .oe_read_only {
+            display: table-cell!important;
+            opacity: 0;
+            pointer-events: none;
+        }
+
         .oe_title {
             max-width: map-get($container-max-widths, md) - (2 * $o-horizontal-padding);
         }
