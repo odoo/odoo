@@ -3,6 +3,7 @@ odoo.define('web_editor.summernote', function (require) {
 
 var core = require('web.core');
 require('summernote/summernote'); // wait that summernote is loaded
+var weDefaultOptions = require('web_editor.wysiwyg.default_options');
 
 var _t = core._t;
 
@@ -1044,7 +1045,7 @@ options.keyMap.mac['ESCAPE'] = 'cancel';
 options.keyMap.mac['UP'] = 'up';
 options.keyMap.mac['DOWN'] = 'down';
 
-options.styleTags = ['p', 'pre', 'small', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
+options.styleTags = weDefaultOptions.styleTags;
 
 $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
   var $editable = layoutInfo.editable();
@@ -2083,7 +2084,7 @@ eventHandler.modules.editor.currentStyle = function (target) {
     return styleInfo;
 };
 
-options.fontSizes = [_t('Default'), 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 62];
+options.fontSizes = weDefaultOptions.fontSizes;
 $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color, bgcolor, size) {
     var r = range.create();
     if (!r) return;
@@ -2486,7 +2487,7 @@ function mouseDownChecklist (e) {
             $lis.addClass('o_checked');
         } while ($lis.length);
     }
-};
+}
 
 var fn_attach = eventHandler.attach;
 eventHandler.attach = function (oLayoutInfo, options) {
