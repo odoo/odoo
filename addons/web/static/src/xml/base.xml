@@ -518,7 +518,7 @@
         <t t-if="widget.operator === '!'">NONE</t>
     </strong>
 </t>
-<div aria-atomic="true" t-name="DomainSelector" t-attf-class="o_domain_node o_domain_tree o_domain_selector #{widget.readonly ? 'o_read_mode' : 'o_edit_mode'}">
+<div aria-atomic="true" t-name="DomainSelector" t-attf-class="o_domain_node o_domain_tree o_domain_selector mt8 #{widget.readonly ? 'o_read_mode' : 'o_edit_mode'}">
     <t t-if="widget.children.length === 0">
         <span>Match <strong>all records</strong></span>
         <button t-if="!widget.readonly" class="btn btn-sm btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
