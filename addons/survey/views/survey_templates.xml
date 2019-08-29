@@ -57,6 +57,15 @@
                         </div>
                     </div>
                 </div>
+                <div class="container js_surveyresult p-4" t-if="graph_data">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active survey_graph" t-att-quizz-score="answer.quizz_score" t-att-id="'graph_question_%d' % answer.id" t-att-data-question_id="answer.id" data-graph_type="doughnut" t-att-graph-data="graph_data">
+                            <canvas id="doughnut_chart"></canvas>
+                            <span class="o_overall_performance"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure"/>
             </div>
         </t>
     </template>
