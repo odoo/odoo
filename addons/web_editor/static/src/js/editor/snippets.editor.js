@@ -206,17 +206,17 @@ var SnippetEditor = Widget.extend({
         }
 
         if ($parent.closest(':data("snippet-editor")').length) {
-            while (!$parent.data('snippet-editor')) {
+            var editor = $parent.data('snippet-editor');
+            while (!editor) {
                 var $nextParent = $parent.parent();
-                if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
+                if (isEmptyAndRemovable($parent)) {
                     $parent.remove();
                 }
                 $parent = $nextParent;
+                editor = $parent.data('snippet-editor');
             }
-            if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
-                _.defer(function () {
-                    $parent.data('snippet-editor').removeSnippet();
-                });
+            if (isEmptyAndRemovable($parent, editor)) {
+                setTimeout(() => editor.removeSnippet());
             }
         }
 
@@ -227,6 +227,12 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('snippet_removed');
         this.destroy();
         $parent.trigger('content_changed');
+
+        function isEmptyAndRemovable($el, editor) {
+            editor = editor || $el.data('snippet-editor');
+            return $el.children().length === 0 && $el.text().trim() === ''
+                && !$el.hasClass('oe_structure') && (!editor || editor.isTargetParentEditable);
+        }
     },
     /**
      * Displays/Hides the editor overlay and notifies the associated snippet
