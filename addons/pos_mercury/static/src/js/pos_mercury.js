@@ -255,10 +255,10 @@ ScreenWidget.include({
 // On Payment screen, allow online payments
 PaymentScreenWidget.include({
     // How long we wait for the odoo server to deliver the response of
-    // a Mercury transaction
+    // a Vantiv transaction
     server_timeout_in_ms: 95000,
 
-    // How many Mercury transactions we send without receiving a
+    // How many Vantiv transactions we send without receiving a
     // response
     server_retries: 3,
 
@@ -313,7 +313,7 @@ PaymentScreenWidget.include({
                 message = "Error " + response.error + ": " + lookUpCodeTransaction["TimeoutError"][response.error] + "<br/>" + response.message;
             } else {
                 if (can_connect_to_server) {
-                    message = _t("No response from Mercury (Mercury down?)");
+                    message = _t("No response from Vantiv (Vantiv down?)");
                 } else {
                     message = _t("No response from server (connected to network?)");
                 }
@@ -393,7 +393,7 @@ PaymentScreenWidget.include({
                 timeout: self.server_timeout_in_ms,
             })
             .then(function (data) {
-                // if not receiving a response from Mercury, we should retry
+                // if not receiving a response from Vantiv, we should retry
                 if (data === "timeout") {
                     self.retry_mercury_transaction(def, null, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
                     return;
@@ -401,7 +401,7 @@ PaymentScreenWidget.include({
 
                 if (data === "not setup") {
                     def.resolve({
-                        message: _t("Please setup your Mercury merchant account.")
+                        message: _t("Please setup your Vantiv merchant account.")
                     });
                     return;
                 }
