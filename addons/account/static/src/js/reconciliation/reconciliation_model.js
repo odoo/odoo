@@ -547,6 +547,7 @@ var StatementModel = BasicModel.extend({
      * @returns {Promise}
      */
     quickCreateProposition: function (handle, reconcileModelId) {
+        var self = this;
         var line = this.getLine(handle);
         var reconcileModel = _.find(this.reconcileModels, function (r) {return r.id === reconcileModelId;});
         var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'force_tax_included', 'tax_ids', 'analytic_tag_ids', 'to_check'];
@@ -554,18 +555,23 @@ var StatementModel = BasicModel.extend({
         var focus = this._formatQuickCreate(line, _.pick(reconcileModel, fields));
         focus.reconcileModelId = reconcileModelId;
         line.reconciliation_proposition.push(focus);
+        var defs = [];
         if (reconcileModel.has_second_line) {
-            var second = {};
-            _.each(fields, function (key) {
-                second[key] = ("second_"+key) in reconcileModel ? reconcileModel["second_"+key] : reconcileModel[key];
-            });
-            focus = this._formatQuickCreate(line, second);
-            focus.reconcileModelId = reconcileModelId;
-            line.reconciliation_proposition.push(focus);
-            this._computeReconcileModels(handle, reconcileModelId);
+            defs.push(self._computeLine(line).then(function() {
+                var second = {};
+                _.each(fields, function (key) {
+                    second[key] = ("second_"+key) in reconcileModel ? reconcileModel["second_"+key] : reconcileModel[key];
+                });
+                var second_focus = self._formatQuickCreate(line, second);
+                second_focus.reconcileModelId = reconcileModelId;
+                line.reconciliation_proposition.push(second_focus);
+                self._computeReconcileModels(handle, reconcileModelId);
+            }))
         }
-        line.createForm = _.pick(focus, this.quickCreateFields);
-        return this._computeLine(line);
+        return Promise.all(defs).then(function() {
+            line.createForm = _.pick(focus, self.quickCreateFields);
+            return self._computeLine(line);
+        })
     },
     /**
      * Remove a proposition and switch to an active mode ('create' or 'match_rp' or 'match_other')

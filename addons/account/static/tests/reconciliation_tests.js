@@ -192,8 +192,8 @@ var db = {
             {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 2, 'analytic_account_id': false, 'display_name': "Perte et Profit", 'rule_type': 'writeoff_button', 'second_tax_ids': [], 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 283, 'company_id': [1, "Demo SPRL"], 'tax_ids': [], 'amount_type': "percentage", 'name': "Perte et Profit", 'amount': 100.0, 'second_amount': 100.0, 'match_journal_ids': []},
             {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 5, 'analytic_account_id': false, 'display_name': "Fs bank", 'rule_type': 'writeoff_button', 'second_tax_ids': [], 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 284, 'company_id': [1, "Demo SPRL"], 'tax_ids': [], 'amount_type': "percentage", 'name': "Fs bank", 'amount': 100.0, 'second_amount': 100.0},
             {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 8, 'analytic_account_id': false, 'display_name': "Caisse Sand.", 'rule_type': 'writeoff_button', 'second_tax_ids': [], 'has_second_line': false, 'journal_id': false, 'label': "Caisse Sand.", 'second_label': false, 'second_account_id': false, 'account_id': 308, 'company_id': [1, "Demo SPRL"], 'tax_ids': [], 'amount_type': "percentage", 'name': "Caisse Sand.", 'amount': 100.0, 'second_amount': 100.0, 'match_journal_ids': []},
-            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 3, 'analytic_account_id': false, 'display_name': "ATOS", 'rule_type': 'writeoff_button', 'second_tax_ids': [7], 'has_second_line': true, 'journal_id': false, 'label': "ATOS Banque", 'second_label': "ATOS Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_ids': [6], 'amount_type': "percentage", 'name': "ATOS", 'amount': 97.5, 'second_amount': 2.5},
-            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 10, 'analytic_account_id': false, 'display_name': "Double", 'rule_type': 'writeoff_button', 'second_tax_ids': [], 'has_second_line': true, 'journal_id': false, 'label': "Double Banque", 'second_label': "Double Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_ids': [], 'amount_type': "percentage", 'name': "Double", 'amount': 97.5, 'second_amount': 2.5, 'match_journal_ids': [], 'analytic_tag_ids': [1,2]},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 3, 'analytic_account_id': false, 'display_name': "ATOS", 'rule_type': 'writeoff_button', 'second_tax_ids': [7], 'has_second_line': true, 'journal_id': false, 'label': "ATOS Banque", 'second_label': "ATOS Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_ids': [6], 'amount_type': "percentage", 'name': "ATOS", 'amount': 97.5, 'second_amount': -14.75},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 10, 'analytic_account_id': false, 'display_name': "Double", 'rule_type': 'writeoff_button', 'second_tax_ids': [], 'has_second_line': true, 'journal_id': false, 'label': "Double Banque", 'second_label': "Double Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_ids': [], 'amount_type': "percentage", 'name': "Double", 'amount': 97.5, 'second_amount': 100, 'match_journal_ids': [], 'analytic_tag_ids': [1,2]},
         ]
     },
     'account.reconciliation.widget': {
@@ -1303,17 +1303,17 @@ QUnit.module('account', {
         await testUtils.dom.click(widget.$('.create .quick_add button:contains(ATOS)'));
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_label, .accounting_view tbody .cell_right').text().replace(/[\n\r\s$,]+/g, ' '),
-            " ATOS Banque 1145.62 ATOS Frais 26.71 ATOS Banque Tax 20.00% 229.12 ATOS Frais Tax 10.00% include 2.67 ", "should display 4 lines");
+            " ATOS Banque 1145.63 ATOS Banque Tax 20.00% 229.13 ATOS Frais 26.78 ATOS Frais Tax 10.00% include 2.68 ", "should display 4 lines");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ''),
-            "Openbalance229.12", "should display the 'Open balance' line with value in left column");
+            "Openbalance229.22", "should display the 'Open balance' line with value in left column");
 
         await testUtils.fields.editAndTrigger(widget.$('.create .create_amount input'), '100',['input']);
 
         assert.strictEqual(widget.$('.accounting_view tbody').text().replace(/[\n\r\s$,]+/g, ' ').replace(/[\u200B]/g, ''),
-            " 101120 New ATOS Banque 1075.00 101130 New ATOS Frais 90.91 101120 New ATOS Banque Tax 20.00% 215.00 101300 New ATOS Frais Tax 10.00% include 9.09 ",
-            "should update the value of the 4 lines (because the line must have 100% of the value)");
+            " 101120 New ATOS Banque 1145.63 101120 New ATOS Banque Tax 20.00% 229.13 101130 New ATOS Frais 90.91 101300 New ATOS Frais Tax 10.00% include 9.09 ",
+            "should update the value of the 2 lines (because the line + its tax must have 100% of the value)");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ''),
-            "Openbalance215.00", "should change the 'Open balance' line because the 20.00% tax is not an include tax");
+            "Openbalance299.76", "should change the 'Open balance' line because the 20.00% tax is not an include tax");
 
         await testUtils.dom.click(widget.$('.accounting_view tbody .cell_account_code:first'));
         await testUtils.dom.click(widget.$('.accounting_view tbody .cell_label:first'));
@@ -1323,7 +1323,7 @@ QUnit.module('account', {
         await testUtils.dom.click(widget.$('.create .quick_add button:contains(Double)'));
 
         assert.strictEqual(widget.$('.accounting_view tbody').text().replace(/[\n\r\s$,]+/g, ' ').replace(/[\u200B]/g, ''),
-            " 101120 New Double Banque 1145.62 101130 New Double Frais 29.38 ",
+            " 101120 New Double Banque 1145.63 101130 New Double Frais 29.37 ",
             "should have a sum of reconciliation proposition amounts equal to the line amount");
 
         clientAction.destroy();
