@@ -9,6 +9,13 @@ body.editor_enable.editor_has_snippets {
     #web_editor-top-edit .note-popover .popover {
         left: $o-we-sidebar-width !important;
     }
+
+    .modal:not(.o_technical_modal) {
+        // set z-index so customize options visible on dialog.
+        z-index: $o-we-overlay-zindex - 1;
+        // just for fake backdrop effect
+        background-color: rgba(66, 66, 66, 0.4);
+    }
 }
 
 // SNIPPET PANEL
