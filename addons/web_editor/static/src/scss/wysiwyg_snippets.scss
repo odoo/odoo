@@ -189,8 +189,8 @@ body.editor_enable.editor_has_snippets {
 
         we-customizeblock-options {
             display: block;
-            border: $o-we-border-width solid var(--o-we-snippets-color);
-            color: var(--o-we-snippets-color);
+            border: $o-we-border-width solid $o-we-handles-accent-color;
+            color: $o-we-handles-accent-color;
             margin-top: 0.25rem;
 
             > we-title {
@@ -270,6 +270,8 @@ body.editor_enable.editor_has_snippets {
         }
 
         we-customizeblock-options.o_we_closed {
+            border-color: var(--o-we-snippets-color);
+            color: var(--o-we-snippets-color);
             cursor: pointer;
 
             > we-title {
