@@ -179,14 +179,11 @@ class SaleOrder(models.Model):
     signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
     signed_on = fields.Datetime('Signed On', help='Date of the signature.', copy=False)
 
-    commitment_date = fields.Datetime('Commitment Date',
-                                      states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-                                      copy=False, readonly=True,
-                                      help="This is the delivery date promised to the customer. "
-                                           "If set, the delivery order will be scheduled based on "
-                                           "this date rather than product lead times.")
-    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
+    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', inverse='_inverse_expected_date', stored=True,
         help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
+    expected_date_manual = fields.Datetime('Expected date',
+        help="Delivery date you can promise to the customer, set manually.")
+
     amount_undiscounted = fields.Float('Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
 
     type_name = fields.Char('Type Name', compute='_compute_type_name')
@@ -195,6 +192,9 @@ class SaleOrder(models.Model):
                                        string='Transactions', copy=False, readonly=True)
     authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
                                                   string='Authorized Transactions', copy=False, readonly=True)
+
+    is_expected_date_manual = fields.Boolean(compute='_compute_expected_date', string='Expected Date set manually',
+        help='Technical field that indicates wich expected_date must be used')
 
     _sql_constraints = [
         ('date_order_conditional_required', "CHECK( (state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
@@ -229,21 +229,24 @@ class SaleOrder(models.Model):
         for order in self:
             order.is_expired = order.state == 'sent' and order.validity_date and order.validity_date < today
 
-    @api.depends('order_line.customer_lead', 'date_order', 'order_line.state')
+    @api.depends('order_line.customer_lead', 'date_order', 'order_line.state', 'expected_date_manual')
     def _compute_expected_date(self):
         """ For service and consumable, we only take the min dates. This method is extended in sale_stock to
             take the picking_policy of SO into account.
         """
         for order in self:
             dates_list = []
+            order.expected_date = False
             confirm_date = fields.Datetime.from_string(order.date_order if order.state in ['sale', 'done'] else fields.Datetime.now())
             for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
                 dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
             if dates_list:
                 order.expected_date = fields.Datetime.to_string(min(dates_list))
-            else:
-                order.expected_date = False
+            
+            order.is_expected_date_manual = False
+            if order.expected_date and order.expected_date_manual and order.expected_date.date() != order.expected_date_manual.date():
+                order.is_expected_date_manual = True
 
     def _compute_remaining_validity_days(self):
         for record in self:
@@ -325,6 +328,13 @@ class SaleOrder(models.Model):
         values['team_id'] = partner_user.team_id.id if partner_user and partner_user.team_id else self.team_id
         self.update(values)
 
+    def _inverse_expected_date(self):
+        """ When writing on expected_date, we set the date inserted on expected_date_manual,
+        _compute_expected_date will determine if it should be used.
+        """
+        for order in self:
+            order.expected_date_manual = order.expected_date
+
     @api.onchange('user_id')
     def onchange_user_id(self):
         if self.user_id and self.user_id.sale_team_id:
@@ -359,18 +369,6 @@ class SaleOrder(models.Model):
 
         if warning:
             return {'warning': warning}
-
-    @api.onchange('commitment_date')
-    def _onchange_commitment_date(self):
-        """ Warn if the commitment dates is sooner than the expected date """
-        if (self.commitment_date and self.expected_date and self.commitment_date < self.expected_date):
-            return {
-                'warning': {
-                    'title': _('Requested date is too soon.'),
-                    'message': _("The commitment date is sooner than the expected date."
-                                 "You may be unable to honor the commitment date.")
-                }
-            }
 
     @api.model
     def create(self, vals):
@@ -499,6 +497,11 @@ class SaleOrder(models.Model):
             'default_user_id': self.user_id.id,
         }
         return action
+
+    def action_refresh_expected_date(self):
+        """ This method can be called manually from a button on the SO
+        to reset the default date."""
+        self.expected_date_manual = False
 
     def _create_invoices(self, grouped=False, final=False):
         """

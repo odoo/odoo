@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
+from datetime import timedelta
+
+from odoo import fields
 from odoo.exceptions import UserError, AccessError
 from odoo.tests import Form
 from odoo.tools import float_compare
@@ -358,3 +360,53 @@ class TestSaleOrder(TestCommonSaleNoChart):
         res = self.env['account.reconciliation.widget'].get_bank_statement_line_data([st_line3.id])
         line = res.get('lines', [{}])[0]
         self.assertEquals(line.get('sale_order_ids', []), [so.id])
+
+    def test_sale_order_expected_date_manual(self):
+        """ Check the behaviour of the field expected date
+        """
+
+        # Create a partner
+        partner_a = self.env['res.partner'].create({'name': 'Moi'})
+
+        # Create 2 products with stock available
+        product_a = self.env['product.product'].create({'name': 'Des grosses Houppes'})
+        product_b = self.env['product.product'].create({'name': 'Des petites Houppes'})
+
+        # Sell those 2 products
+        so = self.env['sale.order'].create({
+            'partner_id': partner_a.id,
+            'order_line': [
+                (0, 0, {'name': product_a.name, 'product_id': product_a.id, 'product_uom_qty': 1}),
+                (0, 0, {'name': product_b.name, 'product_id': product_b.id, 'product_uom_qty': 1}),
+            ],
+        })
+        # The so should not be set as manual expected date by default
+        self.assertFalse(so.is_expected_date_manual)
+
+        # Change the expected date of the sale order
+        new_date = fields.Datetime.now() + timedelta(days=2)
+        f = Form(so)
+        f.expected_date = new_date
+        so = f.save()
+
+        # Check the so is now set as manual expected date
+        self.assertTrue(so.is_expected_date_manual)
+
+        # Force recompute to cancel the manual expected date
+        so.action_refresh_expected_date()
+
+        # Check the so is no more set as manual expected date
+        self.assertFalse(so.is_expected_date_manual)
+
+        # Make sure the date was recomputed
+        self.assertNotEquals(so.expected_date, new_date)
+
+        so.action_confirm()
+
+        # Try to change the expected date of the sale order again, should raise
+        # an error as once confirmed the SO's expected date should be readonly
+        new_date = fields.Datetime.now() + timedelta(weeks=1)
+        with self.assertRaises(AssertionError):
+            f = Form(so)
+            f.expected_date = new_date
+            so = f.save()

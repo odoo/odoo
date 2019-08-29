@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 from odoo import fields
-from odoo.tests import common, tagged
+from odoo.tests import common, tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -84,18 +84,68 @@ class TestSaleExpectedDate(common.TransactionCase):
             ml.qty_done = ml.product_uom_qty
         picking.action_done()
         self.assertEquals(picking.state, 'done', "Picking not processed correctly!")
-        self.assertEquals(fields.Date.today(), sale_order.effective_date, "Wrong effective date on sale order!")
 
-    def test_sale_order_commitment_date(self):
+def test_sale_order_expected_date_manual(self):
+        """ Check the behaviour of the field expected date
+        """
 
-        # In order to test the Commitment Date feature in Sales Orders in Odoo,
-        # I copy a demo Sales Order with committed Date on 2010-07-12
-        new_order = self.env.ref('sale.sale_order_6').copy({'commitment_date': '2010-07-12'})
-        # I confirm the Sales Order.
-        new_order.action_confirm()
-        # I verify that the Procurements and Stock Moves have been generated with the correct date
-        security_delay = timedelta(days=new_order.company_id.security_lead)
-        commitment_date = fields.Datetime.from_string(new_order.commitment_date)
-        right_date = commitment_date - security_delay
-        for line in new_order.order_line:
-            self.assertEqual(line.move_ids[0].date_expected, right_date, "The expected date for the Stock Move is wrong")
+        # Create a partner
+        partner_a = self.env['res.partner'].create({'name': 'Moi'})
+
+        # Create 2 products with stock available
+        product_a = self.env['product.product'].create({'name': 'Des grosses Houppes'})
+        product_b = self.env['product.product'].create({'name': 'Des petites Houppes'})
+
+        # Sell those 2 products
+        so = self.env['sale.order'].create({
+            'partner_id': partner_a.id,
+            'order_line': [
+                (0, 0, {'name': product_a.name, 'product_id': product_a.id, 'product_uom_qty': 1, 'customer_lead': 1}),
+                (0, 0, {'name': product_b.name, 'product_id': product_b.id, 'product_uom_qty': 1, 'customer_lead': 2}),
+            ],
+        })
+        # The so should not be set as manual expected date by default
+        self.assertFalse(so.is_expected_date_manual)
+
+        # Change the expected date of the sale order
+        new_date = fields.Datetime.now() + timedelta(days=2)
+        f = Form(so)
+        f.expected_date = new_date
+        so = f.save()
+
+        # Check the so is now set as manual expected date
+        self.assertTrue(so.is_expected_date_manual)
+
+        # Force recompute to cancel the manual expected date
+        so.action_refresh_expected_date()
+
+        # Make sure the date was recomputed
+        self.assertFalse(so.expected_date_manual)
+
+        # Change the expected date of the sale order
+        new_date = fields.Datetime.now() + timedelta(days=7)
+        f = Form(so)
+        f.expected_date = new_date
+        so = f.save()
+
+        # The so's expected date should now bet set as manual again
+        self.assertEquals(so.expected_date_manual, new_date)
+        self.assertTrue(so.is_expected_date_manual)
+
+        # Change the picking policy
+        f = Form(so)
+        f.picking_policy = 'one'
+        so = f.save()
+
+        # The SO should not be set as manual expected date anymore
+        self.assertFalse(so.is_expected_date_manual)
+
+        so.action_confirm()
+
+        # Try to change the expected date of the sale order again, should raise
+        # an error as once confirmed the SO's expected date should be readonly
+        new_date = fields.Datetime.now() + timedelta(weeks=1)
+        with self.assertRaises(AssertionError):
+            f = Form(so)
+            f.expected_date = new_date
+            so = f.save()

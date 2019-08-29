@@ -190,7 +190,6 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Order Number"/>
                     <field name="date_order" string="Order Date"/>
-                    <field name="commitment_date" groups="sale.group_sale_order_dates"/>
                     <field name="expected_date" groups="sale.group_sale_order_dates"/>
                     <field name="partner_id"/>
                     <field name="user_id" optional="show"/>
@@ -216,7 +215,6 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Quotation Number"/>
                     <field name="create_date" string="Create Date"/>
-                    <field name="commitment_date" groups="sale.group_sale_order_dates"/>
                     <field name="expected_date" groups="sale.group_sale_order_dates"/>
                     <field name="partner_id"/>
                     <field name="user_id" optional="show"/>
@@ -642,8 +640,14 @@
                             </group>
                             <group>
                                 <group name="sale_shipping" groups="sale.group_sale_order_dates">
-                                    <field name="expected_date"/>
-                                    <field name="commitment_date"/>
+                                    <field name="is_expected_date_manual" invisible="1"/>
+                                    <label for="expected_date"/>
+                                    <div class="o_row">
+                                        <field name="expected_date" attrs="{'readonly': [('state', 'in', ['sale', 'done', 'cancel'])], 'invisible': [('is_expected_date_manual', '=', True)]}"/>
+                                        <field name="expected_date_manual" attrs="{'readonly': [('state', 'in', ['sale', 'done', 'cancel'])], 'invisible': [('is_expected_date_manual', '=', False)]}"/>
+                                        <button name="action_refresh_expected_date" attrs="{'invisible': ['|', ('state', 'in', ['sale', 'done', 'cancel']), ('is_expected_date_manual', '=', False)]}"
+                                                icon="fa-refresh" string="" title="Refresh" type="object"/>
+                                    </div>
                                 </group>
                                 <group string="Reporting" name="sale_reporting" groups="base.group_no_one">
                                     <group name="technical" colspan="2" class="mb-0">
