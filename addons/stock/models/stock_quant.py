@@ -575,7 +575,7 @@ class StockQuant(models.Model):
             'view_mode': 'list',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
-            'context': self.env.context,
+            'context': dict(self.env.context),
             'domain': domain or [],
             'help': """
                 <p class="o_view_nocontent_empty_folder">No Stock On Hand</p>
@@ -586,6 +586,16 @@ class StockQuant(models.Model):
 
         if self._is_inventory_mode():
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree_editable').id
+            # fixme: erase the following condition when it'll be possible to create a new record
+            # from a empty grouped editable list without go through the form view.
+            if not self.search_count([
+                ('company_id', '=', self.env.company.id),
+                ('location_id.usage', 'in', ['internal', 'transit'])
+            ]):
+                action['context'].update({
+                    'search_default_productgroup': 0,
+                    'search_default_locationgroup': 0
+                })
         else:
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree').id
             # Enables form view in readonly list
