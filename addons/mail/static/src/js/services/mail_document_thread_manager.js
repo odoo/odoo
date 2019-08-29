@@ -21,17 +21,22 @@ MailManager.include({
 
     start: function () {
         this._super.apply(this, arguments);
-
+        this._documentThreadWindowStates = {};
         // retrieve the open DocumentThreads from the localStorage
-        var state = this.call('local_storage', 'getItem', this.DOCUMENT_THREAD_STATE_KEY);
-        if (!state) {
-            this.call('local_storage', 'setItem', this.DOCUMENT_THREAD_STATE_KEY, {});
-        } else {
-            this.isReady().then(this._updateDocumentThreadWindows.bind(this, state));
+        var localStorageLength = this.call('local_storage', 'length');
+        for (var i = 0; i < localStorageLength; i++) {
+            var key = this.call('local_storage', 'key', i);
+            if (key.indexOf(this.DOCUMENT_THREAD_STATE_KEY) !== -1) {
+                // key format: DOCUMENT_THREAD_STATE_KEY + '/' + threadId
+                var documentThreadId = key.substring(this.DOCUMENT_THREAD_STATE_KEY.length+1);
+                this._documentThreadWindowStates[documentThreadId] =
+                    this.call('local_storage', 'getItem', key);
+            }
         }
+        this.isReady().then(this._updateDocumentThreadWindows.bind(this, this._documentThreadWindowStates));
         // listen to localStorage changes to synchronize DocumentThread's
         // windows between tabs
-        window.addEventListener('storage', this._onStorage.bind(this));
+        this.call('local_storage', 'onStorage', this, this._onStorage);
     },
 
     //--------------------------------------------------------------------------
@@ -144,12 +149,8 @@ MailManager.include({
      * @param {string} state.windowState ('closed', 'folded' or 'open')
      */
     updateDocumentThreadState: function (threadID, state) {
-        var states = this.call('local_storage', 'getItem', this.DOCUMENT_THREAD_STATE_KEY);
-        states = _.omit(states, function (state) {
-            return state.windowState === 'closed';
-        });
-        states[threadID] = state;
-        this.call('local_storage', 'setItem', this.DOCUMENT_THREAD_STATE_KEY, states);
+        this._documentThreadWindowStates[threadID] = state;
+        this.call('local_storage', 'setItem', this.DOCUMENT_THREAD_STATE_KEY + '/' + threadID, state);
     },
 
     //--------------------------------------------------------------------------
@@ -194,10 +195,17 @@ MailManager.include({
                 resModel: info[0],
             });
             if (state.windowState === 'closed') {
-                documentThread.close();
+                documentThread.close({
+                    ignoreCrossTabSync: true,
+                });
             } else {
-                documentThread.fold(state.windowState === 'folded');
-                self.openThreadWindow(documentThread.getID(), { keepFoldState: true });
+                documentThread.fold(state.windowState === 'folded', {
+                    ignoreCrossTabSync: true,
+                });
+                self.openThreadWindow(documentThread.getID(), {
+                    keepFoldState: true,
+                    ignoreCrossTabSync: true,
+                });
             }
         });
     },
@@ -213,13 +221,16 @@ MailManager.include({
      * @param {StorageEvent} ev
      */
     _onStorage: function (ev) {
-        if (ev.key === this.DOCUMENT_THREAD_STATE_KEY) {
-            var state = this.call('local_storage', 'getItem', this.DOCUMENT_THREAD_STATE_KEY);
-            this._updateDocumentThreadWindows(state);
+        var value = JSON.parse(ev.newValue);
+        if (ev.key.indexOf(this.DOCUMENT_THREAD_STATE_KEY) !== -1) {
+            // key format: DOCUMENT_THREAD_STATE_KEY + '/' + threadId
+            var documentThreadId = ev.key.substring(this.DOCUMENT_THREAD_STATE_KEY.length+1);
+            var param = {};
+            param[documentThreadId] = value;
+            this._updateDocumentThreadWindows(param);
         } else if (ev.key === this.DOCUMENT_THREAD_MESSAGE_KEY) {
-            var message = this.call('local_storage', 'getItem', this.DOCUMENT_THREAD_MESSAGE_KEY);
-            if (message) {
-                this.addMessage(message);
+            if (value) {
+                this.addMessage(value);
             }
         }
     },

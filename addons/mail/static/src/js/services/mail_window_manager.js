@@ -94,6 +94,8 @@ MailManager.include({
      *   is not open yet, and do nothing otherwise.
      * @param {boolean} [options.keepFoldState=false] if set to true, keep the
      *   fold state of the thread
+     * @param {boolean} [options.ignoreCrossTabSync=false] if set, thread
+     *   should not notify other tabs from new document thread chat window state.
      * @returns {Promise}
      */
     openThreadWindow: function (threadID, options) {
@@ -132,7 +134,9 @@ MailManager.include({
                 // thread window could not be open, which may happen due to
                 // access error while fetching messages to the document.
                 // abort opening the thread window in this case.
-                thread.close();
+                thread.close({
+                    ignoreCrossTabSync: options.ignoreCrossTabSync,
+                });
                 thread.isCreatingWindow = false;
             });
         }
