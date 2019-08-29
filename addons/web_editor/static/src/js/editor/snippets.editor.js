@@ -1278,8 +1278,8 @@ var SnippetsMenu = Widget.extend({
                     if (snippetClasses && snippetClasses.length) {
                         snippetClasses = '.' + snippetClasses.join('.');
                     }
-                    $(snippetClasses).data('name', name);
-                    $sbody.data('name', name);
+                    var $els = $(snippetClasses).not('[data-name]').add($sbody);
+                    $els.attr('data-name', name).data('name', name);
                 }
 
                 // Create the thumbnail
@@ -1446,7 +1446,7 @@ var SnippetsMenu = Widget.extend({
                     }
                 }
 
-                $toInsert = $baseBody.clone().attr('data-name', $baseBody.data('name'));
+                $toInsert = $baseBody.clone();
 
                 if (!$selectorSiblings.length && !$selectorChildren.length) {
                     console.warn($snippet.find('.oe_snippet_thumbnail_title').text() + " have not insert action: data-drop-near or data-drop-in");
