@@ -8,6 +8,8 @@ from odoo.exceptions import UserError
 from odoo.tools import mute_logger, float_compare
 
 
+# these tests create accounting entries, and therefore need a chart of accounts
+@common.tagged('post_install', '-at_install')
 class TestSaleMrpFlow(common.SavepointCase):
 
     @classmethod
