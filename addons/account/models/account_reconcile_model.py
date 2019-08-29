@@ -4,6 +4,8 @@ from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
 
+import re
+
 
 class AccountReconcileModel(models.Model):
     _name = 'account.reconcile.model'
@@ -92,12 +94,15 @@ class AccountReconcileModel(models.Model):
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of balance')
+        ('percentage', 'Percentage of balance'),
+        ('regex', 'From label'),
         ], required=True, default='percentage')
     show_force_tax_included = fields.Boolean(store=False, help='Technical field used to show the force tax included button')
     force_tax_included = fields.Boolean(string='Tax Included in Price',
         help='Force the tax to be managed as a price included tax.')
     amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    amount_from_label_regex = fields.Char(string="Amount from Label (regex)", default=r"([\d\.,]+)", help="There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\d,]+)")
+    decimal_separator = fields.Char(default=lambda self: self.env['res.lang']._lang_get(self.env.user.lang).decimal_point, help="Every character that is nor a digit nor this separator will be removed from the matching string")
     tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags',
@@ -110,12 +115,14 @@ class AccountReconcileModel(models.Model):
     second_label = fields.Char(string='Second Journal Item Label')
     second_amount_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of amount')
+        ('percentage', 'Percentage of balance'),
+        ('regex', 'From label'),
         ], string="Second Amount type",required=True, default='percentage')
     show_second_force_tax_included = fields.Boolean(store=False, help='Technical field used to show the force tax included button')
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
     second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_amount_from_label_regex = fields.Char(string="Second Amount from Label (regex)", default=r"([\d\.,]+)")
     second_tax_ids = fields.Many2many('account.tax', relation='account_reconcile_model_account_tax_bis_rel', string='Second Taxes', ondelete='restrict')
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
     second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags',
@@ -231,6 +238,12 @@ class AccountReconcileModel(models.Model):
 
         if self.amount_type == 'percentage':
             line_balance = balance * (self.amount / 100.0)
+        elif self.amount_type == "regex":
+            match = re.search(self.amount_from_label_regex, st_line.name)
+            if match:
+                line_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')) * (1 if balance > 0.0 else -1)
+            else:
+                line_balance = 0
         else:
             line_balance = self.amount * (1 if balance > 0.0 else -1)
 
@@ -258,7 +271,18 @@ class AccountReconcileModel(models.Model):
 
         # Second write-off line.
         if self.has_second_line and self.second_account_id:
-            line_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
+            remaining_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
+            if self.second_amount_type == 'percentage':
+                line_balance = remaining_balance * (self.second_amount / 100.0)
+            elif self.second_amount_type == "regex":
+                match = re.search(self.second_amount_from_label_regex, st_line.name)
+                if match:
+                    line_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.'))
+                else:
+                    line_balance = 0
+            else:
+                line_balance = self.second_amount * (1 if remaining_balance > 0.0 else -1)
+
             second_writeoff_line = {
                 'name': self.second_label or st_line.name,
                 'account_id': self.second_account_id.id,

@@ -91,6 +91,19 @@
             <field name="partner_id" ref="base.res_partner_2"/>
         </record>
 
+        <record id="demo_bank_statement_line_7" model="account.bank.statement.line">
+            <field name="ref"></field>
+            <field name="statement_id" ref="l10n_generic_coa.demo_bank_statement_1"/>
+            <field name="sequence">7</field>
+            <field name="name">R:9772938  10/07 AX 9415116318 T:5 BRT: 100,00€ C/ croip</field>
+            <field name="journal_id" model="account.journal" search="[
+                ('type', '=', 'bank'),
+                ('company_id', '=', obj().env.company.id)]"/>
+            <field name="amount">96.67</field>
+            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+        </record>
+
         <function model="account.bank.statement.line" name="fast_counterpart_creation">
             <value eval="[ref('demo_bank_statement_line_5')]"/>
         </function>
