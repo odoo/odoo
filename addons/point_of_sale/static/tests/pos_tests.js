@@ -172,5 +172,20 @@ QUnit.module("pos.ui", {
         pos.destroy();
     });
 
+    QUnit.module("UsernameWidget", function() {
+        QUnit.test("basic rendering", async function(assert) {
+            assert.expect(1);
+
+            const pos = await loadPointOfSale({
+                data: this.data,
+                session: this.session,
+            });
+
+            assert.strictEqual(pos.$(".pos-topheader .username").text().trim(), "Mitchell Admin");
+
+            pos.destroy();
+        });
+    });
+
 });
 });
