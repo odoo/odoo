@@ -128,26 +128,42 @@
                                 <group>
                                     <field name="active" invisible="1"/>
                                     <field name="user_id" string="Project Manager" attrs="{'readonly':[('active','=',False)]}"/>
-                                    <field name="privacy_visibility" widget="radio"/>
+                                    <field name="partner_id" string="Customer"/>
                                 </group>
                                 <group>
-                                    <field name="partner_id" string="Customer"/>
                                     <field name="analytic_account_id" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
-                                    <label for="rating_status" groups="project.group_project_rating"/>
-                                    <div groups="project.group_project_rating">
-                                        <field name="rating_status" widget="radio"/>
-                                        <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
-                                            Edit project's stages and set an email template on the stages on which you want to activate the rating.
-                                        </p>
-                                    </div>
-                                    <field name="rating_status_period"  class="oe_inline" attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}" groups="project.group_project_rating"/>
-                                    <field name="portal_show_rating" attrs="{'invisible': [('rating_status','==','no')]}" groups="project.group_project_rating"/>
+                                    <field name="privacy_visibility" widget="radio"/>
+
                                     <field name="subtask_project_id" groups="project.group_subtask_project"/>
                                     <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                                 <group name="extra_settings">
                                 </group>
                             </group>
+                            <div class="row mt16 o_settings_container">
+                                <div id="rating_settings" class="col-lg-6 o_setting_box" groups="project.group_project_rating">
+                                    <div class="o_setting_right_pane">
+                                        <label for="rating_status"/>
+                                        <div class="text-muted">
+                                            Get customer feedback
+                                        </div>
+                                        <div>
+                                            <field name="rating_status" widget="radio"/>
+                                            <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
+                                                Edit project's stages and set an email template on the stages on which you want to activate the rating.
+                                            </p>
+                                            <div  attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}">
+                                                <label for="rating_status_period"/>
+                                                <field name="rating_status_period"  class="oe_inline"/>
+                                            </div>
+                                            <div attrs="{'invisible': [('rating_status','==','no')]}">
+                                                <label for="portal_show_rating"/>
+                                                <field name="portal_show_rating"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <group name="misc">
                                 <group string="Time Scheduling">
                                     <field name="resource_calendar_id"/>
@@ -159,7 +175,7 @@
                                 <label for="alias_name" string="Email Alias"/>
                                 <div name="alias_def">
                                     <field name="alias_id" class="oe_read_only oe_inline"
-                                            string="Email Alias" required="0"/>
+                                        string="Email Alias" required="0"/>
                                     <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
                                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                     </div>
