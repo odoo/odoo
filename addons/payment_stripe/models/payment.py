@@ -142,6 +142,8 @@ class PaymentTransactionStripe(models.Model):
         return super(PaymentTransactionStripe, self).form_feedback(data, acquirer_name)
 
     def _stripe_create_payment_intent(self, acquirer_ref=None, email=None):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
         charge_params = {
             'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else float_round(self.amount * 100, 2)),
             'currency': self.currency_id.name.lower(),
@@ -149,6 +151,7 @@ class PaymentTransactionStripe(models.Model):
             'confirm': True,
             'payment_method': self.payment_token_id.stripe_payment_method,
             'customer': self.payment_token_id.acquirer_ref,
+            'return_url': urls.url_join(base_url, StripeController._success_url) + '?reference=%s' % self.reference
         }
         _logger.info('_stripe_create_payment_intent: Sending values to stripe, values:\n%s', pprint.pformat(charge_params))
 
@@ -156,6 +159,7 @@ class PaymentTransactionStripe(models.Model):
         if res.get('charges') and res.get('charges').get('total_count'):
             res = res.get('charges').get('data')[0]
 
+        self.stripe_payment_intent = res.get('id')
         _logger.info('_stripe_create_payment_intent: Values received:\n%s', pprint.pformat(res))
         return res
 
@@ -213,7 +217,7 @@ class PaymentTransactionStripe(models.Model):
 
     def _stripe_s2s_validate_tree(self, tree):
         self.ensure_one()
-        if self.state != 'draft':
+        if self.state not in ['draft', 'pending']:
             _logger.info('Stripe: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
@@ -241,7 +245,22 @@ class PaymentTransactionStripe(models.Model):
                 self.payment_token_id.verified = True
             return True
         if status in ('processing', 'requires_action'):
-            self.write(vals)
+            if status == 'requires_action':
+                url = tree.get('next_action', {}).get('redirect_to_url', {}).get('url')
+                if url:
+                    template = self.env.ref('payment_stripe.mail_template_stripe_user_token_authorization', False)
+                    if template:
+                        render_template = template.render({
+                            'url': url,
+                        }, engine='ir.qweb')
+                        mail_body = self.env['mail.thread']._replace_local_links(render_template)
+                        mail_values = {
+                            'body_html': mail_body,
+                            'subject': _('Authorization of Stripe Payment'),
+                            'email_to': self.partner_id.email,
+                            'email_from': self.acquirer_id.create_uid.email
+                        }
+                        self.env['mail.mail'].sudo().create(mail_values).send()
             self._set_transaction_pending()
             return True
         else:

@@ -11,6 +11,7 @@
         'views/payment_views.xml',
         'views/payment_stripe_templates.xml',
         'data/payment_acquirer_data.xml',
+        'data/payment_stripe_authorization_email_data.xml'
     ],
     'images': ['static/description/icon.png'],
     'installable': True,
