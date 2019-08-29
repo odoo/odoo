@@ -725,9 +725,6 @@ class Website(models.Model):
                 domain_part, url = rule.build(value, append_unknown=False)
                 if not query_string or query_string.lower() in url.lower():
                     page = {'loc': url}
-                    for key, val in value.items():
-                        if key.startswith('__'):
-                            page[key[2:]] = val
                     if url in ('/sitemap.xml',):
                         continue
                     if url in url_set:
@@ -751,9 +748,9 @@ class Website(models.Model):
         for page in pages:
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id and page.view_id.priority != 16:
-                record['__priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
+                record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
             if page['write_date']:
-                record['__lastmod'] = page['write_date'].date()
+                record['lastmod'] = page['write_date'].date()
             yield record
 
     @api.multi

@@ -115,6 +115,11 @@ class AccountPayment(models.Model):
         """ This method is a hook for l10n_xx_check_printing modules to implement actual check printing capabilities """
         raise UserError(_("You have to choose a check layout. For this, go in Apps, search for 'Checks layout' and install one."))
 
+
+    def set_check_amount_in_words(self):
+        for payment in self:
+            payment.check_amount_in_words = payment.currency_id.amount_to_text(payment.amount) if payment.currency_id else ''
+
     #######################
     #CHECK PRINTING METHODS
     #######################
