@@ -1715,6 +1715,13 @@ class AccountMove(models.Model):
         else:
             return abs(total_reconciled / total_amount)
 
+    def _get_reconciled_payments(self):
+        """Helper used to retrieve the reconciled payments on this journal entry"""
+        pay_term_line_ids = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+        reconciled_amls = pay_term_line_ids.mapped('matched_debit_ids.debit_move_id') + \
+                          pay_term_line_ids.mapped('matched_credit_ids.credit_move_id')
+        return reconciled_amls.mapped('payment_id')
+
     @api.multi
     def _reverse_move_vals(self, default_values, cancel=True):
         ''' Reverse values passed as parameter being the copied values of the original journal entry.
