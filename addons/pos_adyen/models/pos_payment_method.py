@@ -15,7 +15,9 @@ _logger = logging.getLogger(__name__)
 class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
-    use_payment_terminal = fields.Selection(selection_add=[('adyen', 'Adyen')])
+    def _get_payment_terminal_selection(self):
+        return super(PosPaymentMethod, self)._get_payment_terminal_selection() + [('adyen', 'Adyen')]
+
     adyen_api_key = fields.Char(string="Adyen API key", help='Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description', copy=False)
     adyen_terminal_identifier = fields.Char(help='[Terminal model]-[Serial number], for example: P400Plus-123456789', copy=False)
     adyen_test_mode = fields.Boolean(help='Run transactions in the test environment.')
@@ -116,3 +118,10 @@ class PosPaymentMethod(models.Model):
             return True
 
         return req.json()
+
+    @api.onchange('use_payment_terminal')
+    def _onchange_use_payment_terminal(self):
+        super(PosPaymentMethod, self)._onchange_use_payment_terminal()
+        if self.use_payment_terminal != 'adyen':
+            self.adyen_api_key = False
+            self.adyen_terminal_identifier = False

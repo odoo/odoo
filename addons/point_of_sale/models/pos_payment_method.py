@@ -19,6 +19,9 @@ class PosPaymentMethod(models.Model):
     _description = "Point of Sale Payment Methods"
     _order = "id asc"
 
+    def _get_payment_terminal_selection(self):
+        return []
+
     name = fields.Char(string="Payment Method", required=True)
     receivable_account_id = fields.Many2one('account.account',
         string='Intermediary Account',
@@ -40,19 +43,25 @@ class PosPaymentMethod(models.Model):
     open_session_ids = fields.Many2many('pos.session', string='Pos Sessions', compute='_compute_open_session_ids', help='Open PoS sessions that are using this payment method.')
     config_ids = fields.Many2many('pos.config', string='Point of Sale Configurations')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
-    use_payment_terminal = fields.Selection([], 'Use a Payment Terminal', help='Record payments with a terminal on this journal.')
+    use_payment_terminal = fields.Selection(selection=lambda self: self._get_payment_terminal_selection(), string='Use a Payment Terminal', help='Record payments with a terminal on this journal.')
     hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal', help='Technical field which is used to '
                                                'hide use_payment_terminal when no payment interfaces are installed.')
 
+    @api.depends('is_cash_count')
     def _compute_hide_use_payment_terminal(self):
-        no_terminals = not bool(self._fields['use_payment_terminal'].selection)
+        no_terminals = not bool(self._fields['use_payment_terminal'].selection(self))
         for payment_method in self:
-            payment_method.hide_use_payment_terminal = no_terminals
+            payment_method.hide_use_payment_terminal = no_terminals or payment_method.is_cash_count
+
+    @api.onchange('use_payment_terminal')
+    def _onchange_use_payment_terminal(self):
+        """Used by inheriting model to unset the value of the field related to the unselected payment terminal."""
+        pass
 
     @api.depends('config_ids')
     def _compute_open_session_ids(self):
         for payment_method in self:
-            self.open_session_ids = self.env['pos.session'].search([('config_id', 'in', payment_method.config_ids.ids), ('state', '!=', 'closed')])
+            payment_method.open_session_ids = self.env['pos.session'].search([('config_id', 'in', payment_method.config_ids.ids), ('state', '!=', 'closed')])
 
     @api.onchange('is_cash_count')
     def _onchange_is_cash_count(self):
