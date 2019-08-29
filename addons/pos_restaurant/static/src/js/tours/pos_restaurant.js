@@ -184,8 +184,17 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
     // Test transfering an order
     steps = steps.concat(transfer_order_to_table('T4', '002-0001'));
 
+    // Test if products still get merged after transfering the order
+    steps = steps.concat(add_product_to_order('Coca-Cola'));
+    steps = steps.concat({
+        content: 'check the order-line for Coca-Cola has 2 Units',
+        trigger: '.orderlines:has(.orderline .product-name:contains("Coca-Cola")) .info-list:contains("2.000")',
+        run: function () {},
+    })
+    steps = steps.concat(generate_product_screen_keypad_steps('1'));
+
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
-    steps = steps.concat(generate_payment_screen_keypad_steps('4.40'));
+    steps = steps.concat(generate_payment_screen_keypad_steps('4.4'));
     steps = steps.concat(finish_order());
     steps = steps.concat(open_table('T2'));
 

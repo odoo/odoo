@@ -1410,7 +1410,6 @@ exports.Orderline = Backbone.Model.extend({
         this.set_quantity(1);
         this.discount = 0;
         this.discountStr = '0';
-        this.type = 'unit';
         this.selected = false;
         this.id = orderline_id++;
         this.price_manually_set = false;
@@ -1448,7 +1447,6 @@ exports.Orderline = Backbone.Model.extend({
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;
         orderline.price = this.price;
-        orderline.type = this.type;
         orderline.selected = false;
         orderline.price_manually_set = this.price_manually_set;
         return orderline;
@@ -1470,9 +1468,6 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_discount_str: function(){
         return this.discountStr;
-    },
-    get_product_type: function(){
-        return this.type;
     },
     // sets the quantity of the product. The quantity will be rounded according to the
     // product's unity of measure properties. Quantities greater than zero will not get
@@ -1592,8 +1587,6 @@ exports.Orderline = Backbone.Model.extend({
         if( this.get_product().id !== orderline.get_product().id){    //only orderline of the same product can be merged
             return false;
         }else if(!this.get_unit() || !this.get_unit().is_pos_groupable){
-            return false;
-        }else if(this.get_product_type() !== orderline.get_product_type()){
             return false;
         }else if(this.get_discount() > 0){             // we don't merge discounted orderlines
             return false;
