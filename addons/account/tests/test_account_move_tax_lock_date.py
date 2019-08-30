@@ -50,67 +50,52 @@ class TestTaxBlockDate(AccountingTestCase):
                 })]
         }
 
-    def test_create_before_block_date(self):
+        self.move_no_tax = {
+            'name': '/',
+            'journal_id': self.sale_journal_id.id,
+            'date': self.middle_day_month_str,
+            'line_ids': [(0, 0, {
+                    'name': 'foo',
+                    'debit': 10,
+                    'account_id': self.account_id.id,
+                }), (0, 0, {
+                    'name': 'bar',
+                    'credit': 10,
+                    'account_id': self.account_id.id,
+                })]
+        }
+
+    def test_tax_lock_date_post(self):
+        """ Checks that it is impossible to post an entry
+        before the tax lock date.
         """
-        Checks that you cannot create an account.move with a date before the tax
-        lock date
-        """
+        # Posting after the lock date is always allowed
+        self.user_id.company_id.tax_lock_date = self.first_day_month_str
+        move_after_lock = self.env['account.move'].create(self.move.copy()) # copy() because mail.thread modifies the dictionary given to create
+        move_after_lock.post()
+
+        # Posting before the tax lock date is allowed only if the move doesn't contain any tax
         self.user_id.company_id.tax_lock_date = self.last_day_month_str
-        with self.assertRaises(ValidationError):
-            move = self.env['account.move'].create(self.move)
-            move.post()
+        move_before_lock_no_tax = self.env['account.move'].create(self.move_no_tax)
+        move_before_lock_no_tax.post()
 
-    def test_change_after_block_date(self):
-        """
-        Checks that you can change an account.move with a date after the tax
-        lock date
-        """
-        self.user_id.company_id.tax_lock_date = self.first_day_month_str
-        move = self.env['account.move'].create(self.move)
-        move.line_ids[0].write({'account_id': self.other_account_id.id})
-        move.line_ids[1].write({'account_id': self.other_account_id.id})
-        move.line_ids[1].write({'debit': 11})
-        move.line_ids[0].write({'credit': 11})
-        move.post()
-        move.line_ids[1].write({'tax_ids': [(5, False, False)]})
-
-    def test_change_before_block_date(self):
-        """
-        Checks that you cannot change an account.move with a date before the tax
-        lock date
-        """
-        self.user_id.company_id.tax_lock_date = self.first_day_month_str
-        move = self.env['account.move'].create(self.move)
+        # Posting before the tax lock date is not allowed for moves impacting the tax report
         self.user_id.company_id.tax_lock_date = self.last_day_month_str
-        move.line_ids[0].write({'account_id': self.other_account_id.id})
-        move.line_ids[1].write({'account_id': self.other_account_id.id})
-        with self.assertRaises(ValidationError):
-            with self.cr.savepoint():
-                move.line_ids[1].write({'debit': 11})
-        with self.assertRaises(ValidationError):
-            with self.cr.savepoint():
-                move.line_ids[1].write({'date': self.last_day_month_str, 'tax_ids': [(5, False, False)]})
-        move.line_ids[0].write({'credit': 10})
-        move.post()
+        move_before_lock = self.env['account.move'].create(self.move.copy())
+        with self.assertRaises(UserError):
+            move_before_lock.post()
 
-    def test_unlink_before_block_date(self):
-        """
-        Checks that you cannot unlink an account.move with a date before the tax
-        lock date
-        """
-        self.user_id.company_id.tax_lock_date = self.first_day_month_str
+    def test_tax_lock_date_cancel(self):
+        """ Checks that it is not possible to cancel an entry posted before the
+        tax lock date if it impacts the tax report. """
+        self.sale_journal_id.update_posted = True
         move = self.env['account.move'].create(self.move)
         move.post()
+        move_no_tax = self.env['account.move'].create(self.move_no_tax)
+        move_no_tax.post()
+
         self.user_id.company_id.tax_lock_date = self.last_day_month_str
-        with self.assertRaises(ValidationError):
-            move.unlink()
 
-    def test_unlink_after_block_date(self):
-        """
-        Checks that you can unlink an account.move with a date after the lock
-        date
-        """
-        self.user_id.company_id.tax_lock_date = self.first_day_month_str
-        move = self.env['account.move'].create(self.move)
-        move.post()
-        move.unlink()
+        move_no_tax.button_cancel()
+        with self.assertRaises(UserError):
+            move.button_cancel()
