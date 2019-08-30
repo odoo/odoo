@@ -211,7 +211,11 @@ class Channel(models.Model):
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views', 'slide_ids.is_category', 'slide_ids.active')
     def _compute_slides_statistics(self):
-        result = dict((cid, dict(total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
+        default_vals = dict(total_views=0, total_votes=0, total_time=0, total_slides=0)
+        keys = ['nbr_%s' % slide_type for slide_type in self.env['slide.slide']._fields['slide_type'].get_values(self.env)]
+        default_vals.update(dict((key, 0) for key in keys))
+
+        result = dict((cid, dict(default_vals)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
             [('active', '=', True), ('is_published', '=', True), ('channel_id', 'in', self.ids), ('is_category', '=', False)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
@@ -229,7 +233,7 @@ class Channel(models.Model):
             result[cid].update(cdata)
 
         for record in self:
-            record.update(result.get(record.id, {}))
+            record.update(result.get(record.id, default_vals))
 
     def _compute_slides_statistics_type(self, read_group_res):
         """ Compute statistics based on all existing slide types """
