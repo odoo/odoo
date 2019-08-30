@@ -1998,9 +1998,22 @@ class Image(Binary):
         return value
 
     def _compute_related(self, records):
-        super(Image, self)._compute_related(records)
-        for record in records:
-            record[self.name] = self._image_process(record[self.name])
+        values = list(records)
+        for name in self.related[:-1]:
+            try:
+                values = [first(value[name]) for value in values]
+            except AccessError as e:
+                description = records.env['ir.model']._get(records._name).name
+                raise AccessError(
+                    _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
+                        'previous_message': e.args[0],
+                        'document_kind': description,
+                        'document_model': records._name,
+                    }
+                )
+        # assign final values to records
+        for record, value in zip(records, values):
+            record[self.name] = self._image_process(value[self.related_field.name])
 
 
 class Selection(Field):
