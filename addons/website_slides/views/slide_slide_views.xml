@@ -122,15 +122,15 @@
                             <page name="statistics" string="Statistics">
                                 <group>
                                     <group name="view_statistics" string="Views">
-                                        <field string="Member views" name="slide_views"/>
-                                        <field string="Public views" name="public_views" readonly="1"/>
-                                        <field string="Total views" name="total_views"/>
+                                        <field string="Member" name="slide_views"/>
+                                        <field string="Public" name="public_views" readonly="1"/>
+                                        <field string="Total" name="total_views"/>
                                         <hr attrs="{'invisible': [('channel_allow_comment', '!=', True), ('channel_type', '=', 'training')]}"/>
                                         <field name="channel_type" invisible="1" readonly="1"/>
                                         <field name="channel_allow_comment" invisible="1" readonly="1"/>
                                         <field name="likes" attrs="{'invisible': [('channel_type', '=', 'training')]}"/>
                                         <field name="dislikes" attrs="{'invisible': [('channel_type', '=', 'training')]}"/>
-                                        <field name="comments_count" attrs="{'invisible': [('channel_allow_comment', '!=', True)]}"/>
+                                        <field name="comments_count" string="Comments" attrs="{'invisible': [('channel_allow_comment', '!=', True)]}"/>
                                     </group>
                                 </group>
                             </page>
