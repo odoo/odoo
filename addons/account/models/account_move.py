@@ -361,6 +361,7 @@ class AccountMove(models.Model):
 
     @api.multi
     def button_cancel(self):
+        self._check_tax_lock_date()
         AccountMoveLine = self.env['account.move.line']
         excluded_move_ids = []
 
@@ -398,7 +399,13 @@ class AccountMove(models.Model):
                 if not all([x.company_id.id == move.company_id.id for x in move.line_ids]):
                     raise UserError(_("Cannot create moves for different companies."))
         self.assert_balanced()
+        self._check_tax_lock_date()
         return self._check_lock_date()
+
+    def _check_tax_lock_date(self):
+        for move in self:
+            if move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date and any(line.tax_ids or line.tax_line_id or line.tag_ids.filtered(lambda x: x.applicability == 'taxes') for line in move.line_ids):
+                raise UserError(_("The operation is refused as it would impact an already issued tax statement. Please change the journal entry date or the tax lock date set in the settings ({}) to proceed").format(move.company_id.tax_lock_date or date.min))
 
     @api.multi
     def _check_lock_date(self):
@@ -738,22 +745,6 @@ class AccountMoveLine(models.Model):
                 rec['partner_id'] = last_lines[0].partner_id.id
 
         return rec
-
-    @api.multi
-    @api.constrains('tax_ids', 'tax_line_id')
-    def _check_tax_lock_date1(self):
-        for line in self:
-            if line.date <= (line.company_id.tax_lock_date or date.min):
-                raise ValidationError(_("The operation is refused as it would impact an already issued tax statement. " +
-                "Please change the journal entry date or the tax lock date set in the settings ({}) to proceed").format(line.company_id.tax_lock_date or date.min))
-
-    @api.multi
-    @api.constrains('credit', 'debit', 'date')
-    def _check_tax_lock_date2(self):
-        for line in self:
-            if (line.tax_ids or line.tax_line_id) and line.date <= (line.company_id.tax_lock_date or date.min):
-                raise ValidationError(_("The operation is refused as it would impact an already issued tax statement. " +
-                "Please change the journal entry date or the tax lock date set in the settings ({}) to proceed").format(line.company_id.tax_lock_date or date.min))
 
     @api.multi
     @api.constrains('currency_id', 'account_id')
@@ -1291,7 +1282,6 @@ class AccountMoveLine(models.Model):
     @api.multi
     def unlink(self):
         self._update_check()
-        self._check_tax_lock_date2()
         move_ids = set()
         for line in self:
             if line.move_id.id not in move_ids:
