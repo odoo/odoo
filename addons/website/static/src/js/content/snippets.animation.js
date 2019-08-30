@@ -997,7 +997,6 @@ registry.socialShare = publicWidget.Widget.extend({
         this.$('.oe_social_facebook').click($.proxy(this._renderSocial, this, 'facebook'));
         this.$('.oe_social_twitter').click($.proxy(this._renderSocial, this, 'twitter'));
         this.$('.oe_social_linkedin').click($.proxy(this._renderSocial, this, 'linkedin'));
-        this.$('.oe_social_google-plus').click($.proxy(this._renderSocial, this, 'google-plus'));
     },
     /**
      * @private
@@ -1033,7 +1032,6 @@ registry.socialShare = publicWidget.Widget.extend({
             'facebook': 'https://www.facebook.com/sharer/sharer.php?u=' + url,
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
             'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + url + '&title=' + encodeURIComponent(title),
-            'google-plus': 'https://plus.google.com/share?url=' + url,
         };
         if (!_.contains(_.keys(socialNetworks), social)) {
             return;
@@ -1055,7 +1053,7 @@ registry.socialShare = publicWidget.Widget.extend({
      */
     _onMouseEnter: function () {
         var social = this.$el.data('social');
-        this.socialList = social ? social.split(',') : ['facebook', 'twitter', 'linkedin', 'google-plus'];
+        this.socialList = social ? social.split(',') : ['facebook', 'twitter', 'linkedin'];
         this.hashtags = this.$el.data('hashtags') || '';
 
         this._render();

@@ -75,8 +75,6 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
                 url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
             } else if ($element.hasClass('o_linkedin_complete')) {
                 url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + articleURL + '&title=' + blogTitleComplete;
-            } else {
-                url = 'https://plus.google.com/share?url=' + articleURL;
             }
         } else {
             var blogPost = $element.parents('[name="blog_post"]');
@@ -89,8 +87,6 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
                 url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
             } else if ($element.hasClass('o_linkedin')) {
                 url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + articleURL + '&title=' + blogPostTitle;
-            } else if ($element.hasClass('o_google')) {
-                url = 'https://plus.google.com/share?url=' + articleURL;
             }
         }
         window.open(url, '', 'menubar=no, width=500, height=400');
