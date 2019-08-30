@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="resume_line_view_search" model="ir.ui.view">
-        <field name="name">hr.resume.search</field>
-        <field name="model">hr.resume.line</field>
-        <field name="arch" type="xml">
-            <search string="Résume">
-                <filter string="Resumé line type" name="group_by_resume_line_type" context="{'group_by':'line_type'}"/>
-            </search>
-        </field>
-    </record>
-
     <record id="hr_employee_view_search" model="ir.ui.view">
         <field name="name">hr.employee.skill.search</field>
         <field name="model">hr.employee</field>
