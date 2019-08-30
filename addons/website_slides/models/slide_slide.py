@@ -127,7 +127,7 @@ class Slide(models.Model):
     completion_time = fields.Float('Completion Time', digits=(10, 4), help="The estimated completion time for this slide")
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
-    category_id = fields.Many2one('slide.slide', string="Category", compute="_compute_category_id", store=True)
+    category_id = fields.Many2one('slide.slide', string="Section", compute="_compute_category_id", store=True)
     slide_ids = fields.One2many('slide.slide', "category_id", string="Slides")
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
