@@ -44,13 +44,12 @@ class ResConfigSettings(models.TransientModel):
     social_github = fields.Char(related='website_id.social_github', readonly=False)
     social_linkedin = fields.Char(related='website_id.social_linkedin', readonly=False)
     social_youtube = fields.Char(related='website_id.social_youtube', readonly=False)
-    social_googleplus = fields.Char(related='website_id.social_googleplus', readonly=False)
     social_instagram = fields.Char(related='website_id.social_instagram', readonly=False)
 
-    @api.depends('website_id', 'social_twitter', 'social_facebook', 'social_github', 'social_linkedin', 'social_youtube', 'social_googleplus', 'social_instagram')
+    @api.depends('website_id', 'social_twitter', 'social_facebook', 'social_github', 'social_linkedin', 'social_youtube', 'social_instagram')
     def has_social_network(self):
         self.has_social_network = self.social_twitter or self.social_facebook or self.social_github \
-            or self.social_linkedin or self.social_youtube or self.social_googleplus or self.social_instagram
+            or self.social_linkedin or self.social_youtube or self.social_instagram
 
     def inverse_has_social_network(self):
         if not self.has_social_network:
@@ -59,7 +58,6 @@ class ResConfigSettings(models.TransientModel):
             self.social_github = ''
             self.social_linkedin = ''
             self.social_youtube = ''
-            self.social_googleplus = ''
             self.social_instagram = ''
 
     has_social_network = fields.Boolean("Configure Social Network", compute=has_social_network, inverse=inverse_has_social_network)
