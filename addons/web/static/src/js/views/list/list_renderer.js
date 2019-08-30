@@ -664,6 +664,7 @@ var ListRenderer = BasicRenderer.extend({
             .addClass('o_group_header')
             .toggleClass('o_group_open', group.isOpen)
             .toggleClass('o_group_has_content', group.count > 0)
+            .attr('data-parent_id', group.parentID)
             .data('group', group)
             .append(cells);
     },
@@ -812,7 +813,7 @@ var ListRenderer = BasicRenderer.extend({
         });
 
         var $tr = $('<tr/>', { class: 'o_data_row' })
-            .attr('data-id', record.id)
+            .attr({'data-id': record.id,'data-parent_id': record.parentID})
             .append($cells);
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));
@@ -967,6 +968,13 @@ var ListRenderer = BasicRenderer.extend({
                     return _.contains(self.selectedGroups, group && group.id);
                 });
                 $checkedGroups.find('.o_list_group_selector input').prop('checked', true);
+                _.each($checkedGroups, cg => {
+                    self._doCheck(true, $(cg).closest("tbody").attr("data-group_id"));
+                    self._updateSelection();
+                })
+            }
+            if (self.$("tbody .o_list_record_selector input").filter((index, el) => {return !$(el).prop('checked')}).length == 0) {
+                self.$('thead .o_list_record_selector input').prop('checked', true);
             }
         });
         return Promise.all([this._super.apply(this, arguments), prom]);
@@ -1205,10 +1213,13 @@ var ListRenderer = BasicRenderer.extend({
      */
     _onSelectRecord: function (ev) {
         ev.stopPropagation();
-        this._updateSelection();
         if (!$(ev.currentTarget).find('input').prop('checked')) {
             this.$('thead .o_list_record_selector input').prop('checked', false);
         }
+        if ($(ev.currentTarget).closest('tbody').find('input').filter(function(){return !$(this).prop('checked')}).length > 0) {
+            this._doUnCheck($(ev.currentTarget).closest('tr').attr('data-parent_id'));
+        }
+        this._updateSelection();
     },
     /**
      * @private
@@ -1223,6 +1234,7 @@ var ListRenderer = BasicRenderer.extend({
      * @param {DOMEvent} ev
      */
     _onToggleGroup: function (ev) {
+        var self = this;
         ev.preventDefault();
         ev.stopPropagation();
         if ($(ev.target).hasClass('o_list_group_selector')) {
@@ -1255,8 +1267,37 @@ var ListRenderer = BasicRenderer.extend({
         var $checkeBox = $(ev.currentTarget);
         var group = $checkeBox.closest('.o_group_has_content').data('group');
         var checked = $checkeBox.prop('checked') || false;
-        this.$('tbody[data-group_id="'+ group.id +'"]').next().find('.o_list_record_selector input:not(":disabled")').prop('checked', checked);
+        this._doCheck(checked, group.id);
+        if (!checked) {
+            this._doUnCheck($checkeBox.closest('.o_group_has_content').attr('data-parent_id'));
+        }
         this._updateSelection();
+        if (this.$("tbody .o_list_record_selector input").filter((index, el) => {return !$(el).prop('checked')}).length > 0) {
+            this.$('thead .o_list_record_selector input').prop('checked', false);
+        }
+    },
+    /**
+     * @private
+     * @param {boolean} checked
+     * @param {string} group_id check/uncheck child elements in heirarchy.
+     */
+    _doCheck: function(checked, group_id) {
+        this.$('tbody tr[data-parent_id="'+ group_id +'"] .o_list_record_selector input:not(":disabled")').prop('checked', checked);
+        _.each(this.$('tbody tr.o_group_header[data-parent_id="'+ group_id +'"]'),tr => {
+            if(this.$(tr).closest('tbody').attr('data-group_id')){
+                this._doCheck(checked, this.$(tr).closest('tbody').attr('data-group_id'));
+            }
+        });
+    },
+    /**
+     * @private
+     * @param {string} parent_id uncheck parent elements in heirarchy. 
+     */
+    _doUnCheck: function (parent_id) {
+        this.$('tbody[data-group_id="'+ parent_id +'"] tr.o_group_open input').prop('checked', false);
+        if(this.$('tbody[data-group_id="'+ parent_id +'"] tr.o_group_open').attr('data-parent_id')){
+            this._doUnCheck(this.$('tbody[data-group_id="'+ parent_id +'"] tr.o_group_open').attr('data-parent_id'));
+        }
     },
     /**
      * When the user clicks on the 'checkbox' on the left of a record, we need

@@ -4798,7 +4798,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list grouped by date:month', async function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
         var list = await createView({
             View: ListView,
@@ -4885,12 +4885,12 @@ QUnit.module('Views', {
 
         // open the first group
         await testUtils.dom.click(list.$('.o_group_header:first'));
-        assert.strictEqual(list.$('th.o_group_name').eq(1).children().length, 1,
-            "There should be an empty element creating the indentation for the subgroup.");
-        assert.hasClass(list.$('th.o_group_name').eq(1).children().eq(0), 'fa',
-            "The first element of the row name should have the fa class");
-        assert.strictEqual(list.$('th.o_group_name').eq(1).children().eq(0).is('span'), true,
-            "The first element of the row name should be a span");
+        assert.strictEqual(list.$('th.o_group_name').eq(1).children().length, 3,
+            "There should be three child elements");
+        assert.hasClass(list.$('th.o_group_name').eq(1).children().eq(0), 'o_list_group_selector',
+            "The first element of the row name should have the 'o_list_group_selector' class");
+        assert.hasClass(list.$('th.o_group_name').eq(1).children().eq(1), 'fa',
+            "The first element of the row name should have the 'fa' class");
         assert.hasClass(list.$('th.o_group_name').eq(1).children().eq(2), 'o_group_lable',
             "The first element of the row name should be a class 'o_group_lable'");
         list.destroy();
