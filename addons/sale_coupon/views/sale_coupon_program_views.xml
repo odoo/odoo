@@ -22,7 +22,7 @@
                     <group>
                         <group name="conditions" string="Conditions">
                             <field name="program_type" invisible="1"/>
-                            <field name="rule_products_domain" placeholder="Select product" widget="domain" options="{'model': 'product.product'}"/>
+                            <field name="rule_products_domain" placeholder="Select product" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
                             <label string="Quantity" for="rule_min_quantity" attrs="{'invisible': [('rule_products_domain', '=', False)]}"/>
                             <div attrs="{'invisible': [('rule_products_domain', '=',False)]}">
                                 <field name="rule_min_quantity" class="oe_inline"/>
@@ -210,7 +210,7 @@
                 <field name="sequence" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='program_type']" position="after">
-                <field name="rule_partners_domain" placeholder="Select customer" widget="domain" options="{'model': 'res.partner'}"/>
+                <field name="rule_partners_domain" placeholder="Select customer" widget="domain" options="{'model': 'res.partner', 'in_dialog': true}"/>
             </xpath>
             <xpath expr="//div[@name='rule_minimum_amount']" position="after">
                 <field name="promo_code_usage" widget="radio"/>
