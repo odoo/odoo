@@ -931,6 +931,7 @@ models.PosModel = models.PosModel.extend({
             }
             this.set_order(null); // unset curent selected order
 
+            return Promise.resolve();
         } else {
 
             clearInterval(this.table_longpolling);
@@ -938,7 +939,7 @@ models.PosModel = models.PosModel.extend({
             this.set_idle_timer();
 
             this.set_synch('connecting', 1);
-            this._get_from_server(table.id)
+            return this._get_from_server(table.id)
                 .then(function (server_orders) {
                     var orders = self.get_order_list();
                     orders.forEach(function(order){
