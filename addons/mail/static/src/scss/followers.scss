@@ -15,6 +15,11 @@
         color: $body-color;
         font-weight: bold;
         text-align: right;
+        min-width: 8rem;
+        &.btn {
+            padding-right: $grid-gutter-width*0.25;
+            padding-left: $grid-gutter-width*0.25;
+        }
 
         .o_follow, .o_followers_unfollow, .o_followers_following {
             display: none;
