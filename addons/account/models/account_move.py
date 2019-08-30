@@ -241,7 +241,7 @@ class AccountMove(models.Model):
             processed_taxes += to_process_taxes
 
             # Apply tags on base line
-            line.tag_ids = taxes.mapped('invoice_repartition_line_ids').filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids')
+            line.tag_ids = line.tax_ids.mapped('invoice_repartition_line_ids').filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids')
 
             # Process taxes.
             for tax in to_process_taxes:
