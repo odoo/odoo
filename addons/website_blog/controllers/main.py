@@ -230,7 +230,7 @@ class WebsiteBlog(http.Controller):
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog_post.blog_id, tag=tag, date_begin=date_begin, date_end=date_end)
 
         if not blog_post.blog_id.id == blog.id:
-            return request.redirect("/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post)))
+            return request.redirect("/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post)), code=301)
 
         tags = request.env['blog.tag'].search([])
 

@@ -494,7 +494,7 @@ class Picking(models.Model):
         # TDE FIXME: what ?
         # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
         # As it is a create the format will be a list of (0, 0, dict)
-        moves = vals.get('move_lines') or vals.get('move_ids_without_package')
+        moves = vals.get('move_lines', []) + vals.get('move_ids_without_package', [])
         if moves and vals.get('location_id') and vals.get('location_dest_id'):
             for move in moves:
                 if len(move) == 3 and move[0] == 0:

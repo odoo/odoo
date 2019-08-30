@@ -85,7 +85,7 @@ var MockServer = Class.extend({
             throw new Error('Model ' + model + ' was not defined in mock server data');
         }
         var fields = $.extend(true, {}, this.data[model].fields);
-        var fvg = this._fieldsViewGet(params.arch, model, fields, viewOptions.context);
+        var fvg = this._fieldsViewGet(params.arch, model, fields, viewOptions.context || {});
         if (toolbar) {
             fvg.toolbar = toolbar;
         }
@@ -214,6 +214,17 @@ var MockServer = Class.extend({
 
         var inTreeView = (doc.tagName === 'tree');
 
+        // mock _postprocess_access_rights
+        const isBaseModel = !context.base_model_name || (model === context.base_model_name);
+        var views = ['kanban', 'tree', 'form', 'gantt', 'activity'];
+        if (isBaseModel && views.indexOf(doc.tagName) !== -1) {
+            for (let action of ['create', 'delete', 'edit', 'write']) {
+                if (!doc.getAttribute(action) && action in context && !context[action]) {
+                    doc.setAttribute(action, 'false');
+                }
+            }
+        }
+
         this._traverse(doc, function (node) {
             if (node.nodeType === Node.TEXT_NODE) {
                 return false;
@@ -318,7 +329,7 @@ var MockServer = Class.extend({
                     relModel = field.relation;
                     relFields = $.extend(true, {}, self.data[relModel].fields);
                     field.views[children.tagName] = self._fieldsViewGet(children, relModel,
-                        relFields, context);
+                        relFields, _.extend({}, context, {base_model_name: model}));
                 });
             }
 

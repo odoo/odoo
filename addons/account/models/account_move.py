@@ -162,7 +162,7 @@ class AccountMove(models.Model):
         help="Technical field used to keep track of the tax cash basis reconciliation. "
         "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
     auto_post = fields.Boolean(string='Post Automatically', default=False, help='If this checkbox is ticked, this entry will be automatically posted at its date.')
-    reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True)
+    reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True, copy=False)
     to_check = fields.Boolean(string='To Check', default=False, help='If this checkbox is ticked, it means that the user was not sure of all the related informations at the time of the creation of the move and that the move needs to be checked again.')
     tax_type_domain = fields.Char(store=False, help='Technical field used to have a dynamic taxes domain on the form view.')
 
@@ -588,7 +588,7 @@ class AccountMoveLine(models.Model):
                         else:
                             date = partial_line.credit_move_id.date if partial_line.debit_move_id == line else partial_line.debit_move_id.date
                             rate = line.currency_id.with_context(date=date).rate
-                        amount_residual_currency += sign_partial_line * partial_line.amount * rate
+                        amount_residual_currency += sign_partial_line * line.currency_id.round(partial_line.amount * rate)
 
             #computing the `reconciled` field.
             reconciled = False
@@ -720,6 +720,10 @@ class AccountMoveLine(models.Model):
         balance = 0
         for line in move.line_ids:
             balance += line.debit - line.credit
+        # if we are here, line_ids is in context, so journal_id should also be.
+        currency = self._context.get('journal_id') and self.env["account.journal"].browse(self._context['journal_id']).company_id.currency_id
+        if currency:
+            balance = currency.round(balance)
         if balance < 0:
             rec.update({'debit': -balance})
         if balance > 0:
