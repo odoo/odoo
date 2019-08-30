@@ -31,14 +31,19 @@ class HrExpense(models.Model):
 
     @api.model
     def _get_employee_id_domain(self):
-
         res= [('id', '=', 0)] # Nothing accepted by domain, by default
         if self.user_has_groups('hr_expense.group_hr_expense_manager') or self.user_has_groups('account.group_account_user'):
             res = [] # Then, domain accepts everything
         elif self.user_has_groups('hr_expense.group_hr_expense_user') and self.env.user.employee_ids:
-            employee = self.env.user.employee_ids[0]
-            res = ['|', '|', ('department_id.manager_id.id', '=', employee.id),
-                   ('parent_id.id', '=', employee.id), ('expense_manager_id.id', '=', employee.id)]
+            user = self.env.user
+            employee = user.employee_ids[0]
+            res = [
+                '|', '|', '|',
+                ('department_id.manager_id', '=', employee.id),
+                ('parent_id', '=', employee.id),
+                ('id', '=', employee.id),
+                ('expense_manager_id', '=', user.id),
+            ]
         elif self.env.user.employee_ids:
             employee = self.env.user.employee_ids[0]
             res = [('id', '=', employee.id)]
