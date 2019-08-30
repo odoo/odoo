@@ -210,12 +210,12 @@
             </header>
             <sheet>
                 <field name="leave_type_request_unit" invisible="1"/>
-                <div class="oe_title" attrs="{'invisible': [('display_name', '=', False)]}">
+                <div class="oe_title" attrs="{'invisible': [('display_name', '=', False)]}" name="title">
                     <h1>
                         <field name="display_name"/>
                     </h1>
                 </div>
-                <div class="row">
+                <div class="row" name="status_id">
                     <label class="col-2" for="holiday_status_id"/>
                     <!-- RLI FIXME: we should avoid redefining the domain in the view when there already is a domain on the model -->
                     <field name="holiday_status_id" domain="['&amp;', ('virtual_remaining_leaves', '&gt;', 0), '|', ('allocation_type', 'in', ['fixed_allocation', 'no']),'&amp;',('allocation_type', '=', 'fixed'), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="col-9" nolabel="1"/>
@@ -314,7 +314,7 @@
                         <field name="department_id" groups="hr_holidays.group_hr_holidays_user" invisible="1"/>
                     </group>
                 </group>
-                <div class="row">
+                <div class="row" name="description">
                     <label class="col-2" for="name"/>
                     <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" class="col-9" nolabel="1"/>
                 </div>
@@ -358,6 +358,19 @@
         <field name="mode">primary</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
+            <div name="status_id" position="replace"/>
+            <div name="title" position="replace">
+                <field name="display_name" invisible="1"/>
+                <div class="oe_title" name="title">
+                    <h2>
+                        <field name="holiday_status_id" nolabel="1"/>
+                    </h2>
+                </div>
+            </div>
+            <div name="description" position="replace"/>
+            <field name="user_id" position="before">
+                <field name="name"/>
+            </field>
             <xpath expr="//group[@name='col_right']" position="replace">
                 <group>
                     <field name="holiday_type" string="Mode"
@@ -381,7 +394,7 @@
                     <field name="payslip_status" groups="hr_holidays.group_hr_holidays_user" widget="toggle_button"/>
                 </group>
                 <div groups="hr_holidays.group_hr_holidays_manager">
-                    <separator string="Comment by Manager"/>
+                    <separator string="Manager's Comment"/>
                     <field name="report_note" placeholder="e.g. Report to the next month..."/>
                 </div>
             </xpath>
@@ -405,18 +418,33 @@
         <field name="mode">primary</field>
         <field name="priority">5</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='holiday_status_id']" position="before">
-                <field name="employee_id"/>
-            </xpath>
-            <xpath expr="//group[@name='col_right']" position="replace">
-                <field name="department_id" invisible="1"/>
-                <group>
-                    <widget name="hr_leave_stats"/>
-                </group>
+            <div name="status_id" position="replace"/>
+            <div name="title" position="replace">
+                <field name="display_name" invisible="1"/>
+                <div class="oe_title" name="title">
+                    <h1>
+                        <field name="employee_id" nolabel="1"/>
+                    </h1>
+                    <h2>
+                        <field name="holiday_status_id" nolabel="1"/>
+                    </h2>
+                </div>
+            </div>
+            <div name="description" position="replace"/>
+            <field name="user_id" position="before">
+                <field name="name"/>
+            </field>
+            <xpath expr="//sheet" position="inside">
                 <div groups="hr_holidays.group_hr_holidays_manager">
-                    <separator string="Comment by Manager"/>
+                    <separator string="Manager's Comment"/>
                     <field name="report_note" placeholder="e.g. Report to the next month..."/>
                 </div>
+            </xpath>
+            <xpath expr="//group[@name='col_right']" position="replace">
+                <group class="mt-0">
+                    <widget name="hr_leave_stats"/>
+                </group>
+                <field name="department_id" invisible="1"/>
             </xpath>
         </field>
     </record>

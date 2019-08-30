@@ -6,7 +6,7 @@
         <thead>
             <tr>
                 <td colspan="2">
-                    <div class="o_horizontal_separator">Time Off taken by <t t-esc="widget.employee.data.display_name"/> in <t t-esc="widget.date.format('YYYY')"/></div>
+                    <div class="o_horizontal_separator"><t t-esc="widget.employee.data.display_name"/> in <t t-esc="widget.date.format('YYYY')"/></div>
                 </td>
             </tr>
         </thead>
@@ -19,7 +19,7 @@
             <t t-foreach="widget.leavesPerType" t-as="leave_type">
                 <tr>
                     <td><t t-esc="leave_type.holiday_status_id[1]"/></td>
-                    <td  class="w-50"><t t-esc="leave_type.number_of_days"/></td>
+                    <td  class="w-50"><t t-esc="leave_type.number_of_days"/> day(s)</td>
                 </tr>
             </t>
         </tbody>
@@ -31,8 +31,7 @@
         <thead>
             <tr>
                 <td colspan="2">
-                    <div class="o_horizontal_separator">In <t t-esc="widget.date.format('MMMM')"/> for <t t-esc="widget.department.data.display_name"/> Department
-                    </div>
+                    <div class="o_horizontal_separator"><t t-esc="widget.department.data.display_name"/> in <t t-esc="widget.date.format('MMMM')"/></div>
                 </td>
             </tr>
         </thead>
@@ -44,7 +43,7 @@
             </t>
             <t t-foreach="widget.departmentLeaves" t-as="leave">
                 <tr t-attf-class="{{leave.employee_id[0] === widget.employee.res_id ? 'font-weight-bold' : ''}}">
-                    <td><t t-esc="leave.employee_id[1]"/></td>
+                    <td><t t-esc="leave.employee_id[1]"/>: <t t-esc="leave.number_of_days"/> day(s) </td>
                     <td class="w-50"><t t-esc="leave.date_from"/> - <t t-esc="leave.date_to"/></td>
                 </tr>
             </t>
@@ -53,11 +52,13 @@
     </t>
 
     <div t-name="hr_holidays.leave_stats" class="o_leave_stats">
-        <t t-if="widget.leavesPerType">
-            <t t-call="hr_holidays.leave_per_type"/>
-        </t>
-        <t t-if="widget.departmentLeaves">
-            <t t-call="hr_holidays.department_leave"/>
+        <t t-if="widget.employee">
+            <t t-if="widget.leavesPerType">
+                <t t-call="hr_holidays.leave_per_type"/>
+            </t>
+            <t t-if="widget.departmentLeaves">
+                <t t-call="hr_holidays.department_leave"/>
+            </t>
         </t>
     </div>
 
