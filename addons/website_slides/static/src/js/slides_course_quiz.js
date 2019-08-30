@@ -95,7 +95,7 @@ odoo.define('website_slides.quiz', function (require) {
             } else if (alert_code === 'public_user') {
                 message = _t("You must be logged to submit the quiz.");
             }
-            this.$('.o_wslides_js_lesson_quiz_error span').html(message);
+            this.$('.o_wslides_js_lesson_quiz_error span:first').html(message);
             this.$('.o_wslides_js_lesson_quiz_error').removeClass('d-none');
         },
 
