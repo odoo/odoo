@@ -212,7 +212,6 @@ class View(models.Model):
                              ('graph', 'Graph'),
                              ('pivot', 'Pivot'),
                              ('calendar', 'Calendar'),
-                             ('diagram', 'Diagram'),
                              ('gantt', 'Gantt'),
                              ('kanban', 'Kanban'),
                              ('search', 'Search'),
@@ -765,18 +764,7 @@ actual arch.
             self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
 
-        if node.tag in ('field', 'node', 'arrow'):
-            if node.get('object'):
-                attrs = {}
-                views = {}
-                xml_form = E.form(*(f for f in node if f.tag == 'field'))
-                xarch, xfields = self.with_context(base_model_name=model).postprocess_and_fields(node.get('object'), xml_form, view_id)
-                views['form'] = {
-                    'arch': xarch,
-                    'fields': xfields,
-                }
-                attrs = {'views': views}
-                fields = xfields
+        if node.tag == 'field':
             if node.get('name'):
                 attrs = {}
                 field = Model._fields.get(node.get('name'))
@@ -917,17 +905,7 @@ actual arch.
         if model not in self.env:
             self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
-
-        if node.tag == 'diagram':
-            if node.getchildren()[0].tag == 'node':
-                node_model = self.env[node.getchildren()[0].get('object')]
-                node_fields = node_model.fields_get(None)
-                fields.update(node_fields)
-            if node.getchildren()[1].tag == 'arrow':
-                arrow_fields = self.env[node.getchildren()[1].get('object')].fields_get(None)
-                fields.update(arrow_fields)
-        else:
-            fields = Model.fields_get(None)
+        fields = Model.fields_get(None)
 
         node = self.add_on_change(model, node)
 
@@ -971,14 +949,6 @@ actual arch.
         many2one-based grouping views. """
         Model = self.env[model]
         is_base_model = self.env.context.get('base_model_name', model) == model
-
-        if node.tag == 'diagram':
-            if node.getchildren()[0].tag == 'node':
-                node_model = self.env[node.getchildren()[0].get('object')]
-                if (not node.get("create") and
-                        not node_model.check_access_rights('create', raise_exception=False) or
-                        not self._context.get("create", True) and is_base_model):
-                    node.set("create", 'false')
 
         if node.tag in ('kanban', 'tree', 'form', 'activity'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
