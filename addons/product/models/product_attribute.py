@@ -392,15 +392,14 @@ class ProductTemplateAttributeValue(models.Model):
         string="Value Price Extra",
         default=0.0,
         digits='Product Price',
-        help="""Price Extra: Extra price for the variant with
-        this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200.""")
+        help="Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200.")
     exclude_for = fields.One2many(
         'product.template.attribute.exclusion',
         'product_template_attribute_value_id',
         string="Exclude for",
         relation="product_template_attribute_exclusion",
-        help="""Make this attribute value not compatible with
-        other values of the product or some attribute values of optional and accessory products.""")
+        help="Make this attribute value not compatible with "
+             "other values of the product or some attribute values of optional and accessory products.")
 
     # related fields: product template and product attribute
     product_tmpl_id = fields.Many2one('product.template', string="Product Template", related='attribute_line_id.product_tmpl_id', store=True, index=True)
