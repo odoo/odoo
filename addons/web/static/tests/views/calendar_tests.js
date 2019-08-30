@@ -513,8 +513,7 @@ QUnit.module('Views', {
                 'quick_add="False" '+
                 'date_stop="stop" '+
                 'all_day="allday" '+
-                'mode="month" '+
-                'readonly_form_view_id="1">'+
+                'mode="month">'+
                     '<field name="name"/>'+
             '</calendar>',
             archs: archs,
