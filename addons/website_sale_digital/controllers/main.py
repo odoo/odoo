@@ -3,6 +3,8 @@
 
 import base64
 from cStringIO import StringIO
+import os
+import mimetypes
 from werkzeug.utils import redirect
 
 from odoo import http
@@ -66,7 +68,7 @@ class WebsiteSaleDigital(website_account):
         # Check if this is a valid attachment id
         attachment = request.env['ir.attachment'].sudo().search_read(
             [('id', '=', int(attachment_id))],
-            ["name", "datas", "file_type", "res_model", "res_id", "type", "url"]
+            ["name", "datas", "datas_fname", "mimetype", "res_model", "res_id", "type", "url"]
         )
 
         if attachment:
@@ -101,6 +103,11 @@ class WebsiteSaleDigital(website_account):
                 return request.not_found()
         elif attachment["datas"]:
             data = StringIO(base64.standard_b64decode(attachment["datas"]))
-            return http.send_file(data, filename=attachment['name'].encode('utf-8'), as_attachment=True)
+            extension = os.path.splitext(attachment["datas_fname"] or '')[1]
+            extension = extension if extension else mimetypes.guess_extension(attachment["mimetype"])
+            filename = attachment['name']
+            filename = filename if os.path.splitext(filename)[1] else filename + extension
+            filename = filename.encode('utf-8')
+            return http.send_file(data, filename=filename, as_attachment=True)
         else:
             return request.not_found()
