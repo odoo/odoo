@@ -13,7 +13,6 @@ RATING_LIMIT_MIN = 1
 
 
 class Rating(models.Model):
-
     _name = "rating.rating"
     _description = "Rating"
     _order = 'write_date desc'
