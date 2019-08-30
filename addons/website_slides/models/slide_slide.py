@@ -197,6 +197,8 @@ class Slide(models.Model):
         Lists are manually sorted because when adding a new browse record order
         will not be correct as the added slide would actually end up at the
         first place no matter its sequence."""
+        self.category_id = False  # initialize whatever the state
+
         channel_slides = {}
         for slide in self:
             if slide.channel_id.id not in channel_slides:
