@@ -34,7 +34,19 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="selectable_categ_ids" invisible="1"/>
                     <field name="is_installed_account_accountant" invisible="1"/>
+                    <field name="current_session_id" invisible="1" />
                     <field name="company_has_template" invisible="1"/>
+                    <div
+                        class="alert alert-warning"
+                        style="text-align:center"
+                        role="alert"
+                        attrs="{'invisible': [('current_session_id', '=', False)]}"
+                    >
+                        <p style="margin:0px">
+                            You cannot edit this configuration because there is an open session linked to it.
+                            Please close the session in order to make modifications.
+                        </p>
+                    </div>
                     <div class="oe_title" id="title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
