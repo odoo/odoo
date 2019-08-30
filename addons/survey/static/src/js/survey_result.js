@@ -2,6 +2,7 @@ odoo.define('survey.result', function (require) {
 'use strict';
 
 require('web.dom_ready');
+var _t = require('web.core')._t;
 
 if(!$('.js_surveyresult').length) {
     return Promise.reject("DOM doesn't contain '.js_surveyresult'");
@@ -159,6 +160,35 @@ if(!$('.js_surveyresult').length) {
         return chartConfig;
     }
 
+    //initialize doughnut Chart
+    function init_doughnut_chart(graph_data, quizz_score){
+        var data = graph_data.map(function (point) {
+            return point.count;
+        });
+        var chartConfig = {
+            type: 'doughnut',
+            data: {
+                labels: graph_data.map(function (point) {
+                    return point.text;
+                }),
+                datasets: [{
+                    label: '',
+                    data: data,
+                    backgroundColor: data.map(function (val, index) {
+                        return D3_COLORS[index % 20];
+                    }),
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: _.str.sprintf(_t("Overall Performance %.2f%s"), parseFloat(quizz_score), '%'),
+                },
+            }
+        };
+        return chartConfig;
+    }
+
     //load chart to svg element chart:initialized chart, response:AJAX response, quistion_id:if of survey question, tick_limit:text length limit
     function load_chart(chartConfig, containerSelector){
         var $container = $(containerSelector).css({position: 'relative'});
@@ -185,6 +215,11 @@ if(!$('.js_surveyresult').length) {
         }
         else if(graph_type == 'pie'){
             chartConfig = init_pie_chart(graph_data);
+            return load_chart(chartConfig, containerSelector);
+        }
+        else if (graph_type === 'doughnut') {
+            var quizz_score = $(graph).attr("quizz-score") || 0.0;
+            chartConfig = init_doughnut_chart(graph_data, quizz_score);
             return load_chart(chartConfig, containerSelector);
         }
     });
