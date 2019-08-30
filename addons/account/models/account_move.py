@@ -1335,27 +1335,6 @@ class AccountMove(models.Model):
         return True
 
     @api.multi
-    def _check_tax_lock_date(self):
-        if not self:
-            return
-
-        self._cr.execute('''
-            SELECT move.id, company.tax_lock_date
-            FROM account_move move
-            JOIN account_journal journal ON journal.id = move.journal_id
-            JOIN res_company company ON company.id = journal.company_id
-            WHERE move.id IN %s
-            AND move.date < company.tax_lock_date
-        ''', [tuple(self.ids)])
-
-        query_res = self._cr.fetchone()
-        if query_res:
-            raise UserError(_('''
-                The operation is refused as it would impact an already issued tax statement.
-                Please change the journal entry date or the tax lock date set in the settings (%s) to proceed
-            ''' % query_res[1]))
-
-    @api.multi
     def _check_move_consistency(self):
         for move in self:
             if move.line_ids:
@@ -1916,7 +1895,6 @@ class AccountMove(models.Model):
                 move.invoice_date = fields.Date.context_today(self)
                 move.with_context(check_move_validity=False)._onchange_invoice_date()
 
-        self._check_tax_lock_date()
         self._check_move_consistency()
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         self.mapped('line_ids').create_analytic_lines()

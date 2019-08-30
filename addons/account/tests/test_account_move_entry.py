@@ -108,9 +108,6 @@ class TestAccountMove(InvoiceTestCommon):
 
         self.cr.execute('ROLLBACK TO SAVEPOINT test_misc_tax_lock_date_1')
 
-        with self.assertRaises(UserError):
-            self.test_move.post()
-
     def test_misc_unique_sequence_number(self):
         ''' Ensure two journal entries can't share the same name when using the same sequence. '''
         self.test_move.post()
