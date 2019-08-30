@@ -1471,8 +1471,9 @@ QUnit.module('Views', {
             { field: 'date', expected: 92, type: 'Date' },
             { field: 'datetime', expected: 146, type: 'Datetime' },
             { field: 'amount', expected: 104, type: 'Monetary' },
+            { field: 'the_button', expected: 25, type: 'with custom width' },
         ];
-        assert.expect(8);
+        assert.expect(9);
 
         this.data.foo.records = [];
         var list = await createView({
@@ -1487,6 +1488,7 @@ QUnit.module('Views', {
                         '<field name="date"/>' +
                         '<field name="datetime"/>' +
                         '<field name="amount"/>' +
+                        '<button name="the_button" width="25px"></button>' +
                     '</tree>',
         });
 
@@ -1739,8 +1741,9 @@ QUnit.module('Views', {
             { field: 'date', expected: 92, type: 'Date' },
             { field: 'datetime', expected: 146, type: 'Datetime' },
             { field: 'amount', expected: 104, type: 'Monetary' },
+            { field: 'the_button', expected: 25, type: 'with custom width' },
         ];
-        assert.expect(8);
+        assert.expect(9);
 
         var list = await createView({
             View: ListView,
@@ -1754,6 +1757,7 @@ QUnit.module('Views', {
                         '<field name="date"/>' +
                         '<field name="datetime"/>' +
                         '<field name="amount"/>' +
+                        '<button name="the_button" width="25px"></button>' +
                     '</tree>',
             groupBy: ['int_field'],
         });
