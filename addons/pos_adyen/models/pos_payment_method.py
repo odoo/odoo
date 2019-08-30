@@ -25,12 +25,13 @@ class PosPaymentMethod(models.Model):
     @api.constrains('adyen_terminal_identifier')
     def _check_adyen_terminal_identifier(self):
         for payment_method in self:
-            existing_payment_method = self.search([('id', '!=', payment_method.id),
-                                                   ('adyen_terminal_identifier', '=', payment_method.adyen_terminal_identifier)],
-                                                  limit=1)
-            if existing_payment_method:
-                raise ValidationError(_('Terminal %s is already used on payment method %s.')
-                                      % (payment_method.adyen_terminal_identifier, existing_payment_method.display_name))
+            if payment_method.adyen_terminal_identifier:
+                existing_payment_method = self.search([('id', '!=', payment_method.id),
+                                                       ('adyen_terminal_identifier', '=', payment_method.adyen_terminal_identifier)],
+                                                      limit=1)
+                if existing_payment_method:
+                    raise ValidationError(_('Terminal %s is already used on payment method %s.')
+                                          % (payment_method.adyen_terminal_identifier, existing_payment_method.display_name))
 
     def _is_write_forbidden(self, fields):
         whitelisted_fields = set(('adyen_latest_response', 'adyen_latest_diagnosis'))
