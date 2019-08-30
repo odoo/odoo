@@ -26,7 +26,7 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         # create the color attribute
         product_attribute = self.env['product.attribute'].create({
             'name': 'Beautiful Color',
-            'type': 'color',
+            'display_type': 'color',
         })
 
         # create the color attribute values

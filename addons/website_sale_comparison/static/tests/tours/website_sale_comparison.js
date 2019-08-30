@@ -174,7 +174,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
                 method: 'create',
                 args: [{
                     'name': 'color',
-                    'type': 'color',
+                    'display_type': 'color',
                     'create_variant': 'dynamic',
                 }],
             }).then(function (attributeId) {
