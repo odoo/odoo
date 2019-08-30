@@ -1696,6 +1696,41 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('editable list: unnamed columns cannot be resized', async function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records = [{ id: 1, o2m: [1] }];
+        this.data.bar.records = [{ id: 1, display_name: "Oui" }];
+        var form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { mode: 'edit' },
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="o2m">' +
+                            '<tree editable="top">' +
+                                '<field name="display_name"/>' +
+                                '<button name="the_button" icon="fa-heart"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        const [charTh, buttonTh] = form.$('.o_field_one2many th');
+        const thRect = charTh.getBoundingClientRect();
+        const resizeRect = charTh.getElementsByClassName('o_resize')[0].getBoundingClientRect();
+
+        assert.strictEqual(thRect.x + thRect.width, resizeRect.x + resizeRect.width,
+            "First resize handle should be attached at the end of the first header");
+        assert.containsNone(buttonTh, '.o_resize',
+            "Columns without name should not have a resize handle");
+
+        form.destroy();
+    });
+
     QUnit.test('width of some of the fields should be hardcoded if no data (grouped case)', async function (assert) {
         const assertions = [
             { field: 'bar', expected: 40, type: 'Boolean' },

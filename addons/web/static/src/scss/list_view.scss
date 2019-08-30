@@ -188,6 +188,10 @@
                 table-layout: fixed;
             }
 
+            th {
+                position: relative;
+            }
+
             span.o_resize {
                 bottom: 0;
                 cursor: col-resize;
@@ -195,6 +199,7 @@
                 right: 0;
                 top: 0;
                 width: 10px;
+                z-index: 10;
             }
 
             .o_list_record_remove_header {
@@ -213,7 +218,7 @@
                 }
             }
 
-            .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
+            .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier):not(.o_invisible_modifier) {
                 position: relative; // for o_field_translate
                 background-color: white;
                 .o_input {
