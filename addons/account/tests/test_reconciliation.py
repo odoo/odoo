@@ -1221,7 +1221,7 @@ class TestReconciliationExec(TestReconciliation):
                 'mv_line_ids': (inv1_receivable + inv2_receivable + pay_receivable).ids,
                 'new_mv_line_dicts': [
                     {
-                        'credit': 20.09,  # 18.04 in foreign currency
+                        'credit': 18.04,
                         'debit': 0.00,
                         'journal_id': self.bank_journal_euro.id,
                         'name': 'Total WriteOff (Fees)',
