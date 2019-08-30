@@ -11,7 +11,7 @@ class SlideQuestion(models.Model):
     _description = "Slide Quiz Question"
 
     sequence = fields.Integer("Sequence", default=10)
-    question = fields.Char("Question Name", required=True, translate=True)
+    question = fields.Char("Question Name", translate=True, required=True)
     slide_id = fields.Many2one('slide.slide', string="Slide", required=True)
     answer_ids = fields.One2many('slide.answer', 'question_id', string="Answer")
     # statistics
@@ -27,19 +27,19 @@ class SlideQuestion(models.Model):
                 if answer.is_correct:
                     good_answer_count += 1
                     if good_answer_count > 1:
-                        raise ValidationError(_('A question can only have one good answer'))
+                        raise ValidationError(_('Question "%s" can only have one good answer') % question.question)
 
     @api.constrains('answer_ids')
     def _check_correct_answer(self):
         for question in self:
             if not any([answer.is_correct for answer in question.answer_ids]):
-                raise ValidationError(_("A question must at least have one good answer"))
+                raise ValidationError(_('Question "%s" must at least have one good answer') % question.question)
 
     @api.constrains('answer_ids')
     def _check_at_least_2_answers(self):
         for question in self:
             if len(question.answer_ids) < 2:
-                raise ValidationError(_("A question must at least have two possible answers"))
+                raise ValidationError(_('Question "%s" has no valid answer, please set one') % question.question)
 
     @api.depends('slide_id')
     def _compute_statistics(self):
@@ -66,5 +66,5 @@ class SlideAnswer(models.Model):
     _order = 'question_id, id'
 
     question_id = fields.Many2one('slide.question', string="Question", required=True)
-    text_value = fields.Char("Answer", required=True, translate=True)
+    text_value = fields.Char("Answer", translate=True, required=True)
     is_correct = fields.Boolean("Is correct answer")
