@@ -1009,14 +1009,14 @@ ListRenderer.include({
     },
     /**
      * Overriden to add a resize handle in editable list column headers.
-     * Only applies to data column headers
+     * Only applies to headers containing text.
      *
      * @override
      * @private
      */
     _renderHeaderCell: function () {
         const $th = this._super.apply(this, arguments);
-        if (this.editable && this._hasVisibleRecords(this.state)) {
+        if (this.editable && $th[0].innerHTML.length && this._hasVisibleRecords(this.state)) {
             const resizeHandle = document.createElement('span');
             resizeHandle.classList = 'o_resize';
             resizeHandle.onclick = this._onClickResize.bind(this);
