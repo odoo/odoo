@@ -2029,6 +2029,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                     line.set_amount(0);
                     line.set_payment_status('reversed');
                 } else {
+                    line.can_be_reversed = false;
                     line.set_payment_status('done');
                 }
                 self.render_paymentlines();
