@@ -59,11 +59,10 @@ class ProductProduct(models.Model):
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
 
-    # YTI FIX ME: PLEASE RENAME ME INTO attribute_type
-    type = fields.Selection([
+    display_type = fields.Selection([
         ('radio', 'Radio'),
         ('select', 'Select'),
-        ('color', 'Color')], default='radio', required=True)
+        ('color', 'Color')], default='radio', required=True, help="The display type used in the Product Configurator.")
 
 
 class ProductAttributeValue(models.Model):
@@ -71,10 +70,9 @@ class ProductAttributeValue(models.Model):
 
     is_custom = fields.Boolean('Is custom value', help="Allow users to input custom values for this attribute value")
     html_color = fields.Char(
-        string='HTML Color Index',
-        help="""Here you can set a
-        specific HTML color index (e.g. #ff0000) to display the color if the
-        attribute type is 'Color'.""")
+        string='Color',
+        help="Here you can set a specific HTML color index (e.g. #ff0000) to display the color if the attribute type is 'Color'.")
+    display_type = fields.Selection(related='attribute_id.display_type', readonly=True)
 
 
 class ProductTemplateAttributeValue(models.Model):
@@ -82,6 +80,7 @@ class ProductTemplateAttributeValue(models.Model):
 
     html_color = fields.Char('HTML Color Index', related="product_attribute_value_id.html_color")
     is_custom = fields.Boolean('Is custom value', related="product_attribute_value_id.is_custom")
+    display_type = fields.Selection(related='product_attribute_value_id.display_type', readonly=True)
 
 
 class ProductAttributeCustomValue(models.Model):
