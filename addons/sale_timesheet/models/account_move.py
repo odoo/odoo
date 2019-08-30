@@ -43,6 +43,16 @@ class AccountMove(models.Model):
             }
         }
 
+    def action_timesheet_from_invoice(self):
+        self.ensure_one()
+        return {
+            "name": _("Timesheet"),
+            "type": "ir.actions.act_window",
+            "res_model": "account.analytic.line",
+            "view_mode": "tree,form,graph",
+            "domain": [('timesheet_invoice_id', '=', self.id)],
+        }
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
