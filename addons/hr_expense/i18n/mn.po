@@ -3,9 +3,8 @@
 # * hr_expense
 # 
 # Translators:
-# Otgonbayar.A <gobi.mn@gmail.com>, 2018
-# Onii Onii <onii0223@yahoo.com>, 2018
 # Martin Trigaux, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # 
 msgid ""
@@ -28,8 +27,8 @@ msgid ""
 "<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for"
 " incoming receipts</i>"
 msgstr ""
-"<i class=\"text-muted oe_edit_only\">[Код]-г ирэх имэйлийн гарчигийн угвтар "
-"болгож хэрэглэ</i>"
+"<i class=\"text-muted oe_edit_only\">[Дотоод код]-г хүлээн авах имэйлийн "
+"гарчиг хэсэг дээр ашиглаарай</i>"
 
 #. module: hr_expense
 #. openerp-web
@@ -39,6 +38,9 @@ msgid ""
 "<p>Approve the report here.</p><p>Tip: if you refuse, don’t forget to give "
 "the reason thanks to the hereunder message tool</p>"
 msgstr ""
+"<p>Энд зардлын тооцоог батлана.</p><p>Зөвлөгөө: Хэрэв та зөвшөөрөхөөс "
+"татгалзвал, зурвас хэсэгт татгалзаж буй шалтгаанаа тэмдэглэж үлдээхээ бүү "
+"мартаарай</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -48,6 +50,8 @@ msgid ""
 "<p>Click on <b> Action Create Report </b> to submit selected expenses to "
 "your manager</p>"
 msgstr ""
+"<p>Та <b> Зардлын тооцоо үүсгэх </b> товч дээр дарж сонгогдсон зардлуудыг "
+"өөрийн удирдлагаар зөвшөөрүүлээрэй</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -55,20 +59,22 @@ msgstr ""
 #, python-format
 msgid "<p>Click on <b> Create Report </b> to create the report.</p>"
 msgstr ""
+"<p>Та <b> Тооцоо үүсгэх </b> товч дээр дарж зардлын тайлан тооцоо "
+"үүсгээрэй.</p>"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tour.js:23
 #, python-format
 msgid "<p>Once your <b> Expense </b> is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>Таны <b> Зардал </b> бүрдэж дууссан бол хадгалж болно.</p>"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tour.js:36
 #, python-format
 msgid "<p>Select expenses to submit them to your manager</p>"
-msgstr ""
+msgstr "<p>Удирдлагаараа хянуулж зөвшөөрүүлэх зардлуудаа сонгоно уу</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -78,8 +84,9 @@ msgid ""
 "<p>The accountant receive approved expense reports.</p><p>He can post "
 "journal entries in one click if taxes and accounts are right.</p>"
 msgstr ""
-"<p>Нягтлан батлагдсан зардлын тайланг хүлээж авна.</p><p>Хэрав татвар, данс "
-"зөв байвал нягтлан журналын бичилтийг нэг товшилтаар илгээх боломжтой.</p>"
+"<p>Нягтлан батлагдсан зардлын тооцоог хүлээж авна.</p><p>Хэрав татвар, данс "
+"зөв байвал нягтлан ганц товч даралтаар зохих журналын бичилтүүдийг үүсгэх "
+"боломжтой.</p>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -94,12 +101,12 @@ msgstr "<strong>Тайлбар:</strong>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Employee:</strong>"
-msgstr "<strong>Ажилчин:</strong>"
+msgstr "<strong>Ажилтан:</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Payment By:</strong>"
-msgstr "<strong>Төлбөр Төлөгч:</strong>"
+msgstr "<strong>Төлбөрийг:</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -118,8 +125,8 @@ msgid ""
 "A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related"
 " to your expense %s has been made."
 msgstr ""
-"%s %s-н төлбөр хийгдсэн. <a href='/mail/view?%s'>%s</a> төлбөрийн кодтой "
-"бөгөөд холбогдох зардал %s"
+"%s %sдүнтэй төлбөр <a href='/mail/view?%s'>%s</a> дугаартайгаар бүртгэгдэж "
+"таны %s зардалтай холбогдлоо. "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -135,7 +142,7 @@ msgstr "Санхүү"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction
 msgid "Action Needed"
-msgstr "Үйлдэл Шаардлагатай"
+msgstr "Үйлдэл шаардсан"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_ids
@@ -147,7 +154,7 @@ msgstr "Ажилбар"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_state
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_state
 msgid "Activity State"
-msgstr "Ажилбарын Төлөв"
+msgstr "Ажилбарын төлөв"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.mail_activity_type_action_config_hr_expense
@@ -158,24 +165,24 @@ msgstr "Ажилбарын төрөл"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Actual expense sheets, not the refused ones"
-msgstr "Жинхэнэ зардлын хуудсаад, татгалзагдсан нь биш"
+msgstr "Хүчинтэй зардлын хуудсаад, татгалзагдсан нь биш"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:158
 #, python-format
 msgid "Add a new expense,"
-msgstr ""
+msgstr "Шинэ зардал үүсгэх,"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
 #: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Flight"
-msgstr "Агаарын Нислэг"
+msgstr "Агаарын нислэг"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
-msgstr "Бүх зардлын тайлан"
+msgstr "Бүх зардлын тооцоо"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
@@ -196,7 +203,7 @@ msgstr "Шинжилгээний данс"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Шинжилгээний Пайзууд"
+msgstr "Шинжилгээний пайз"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -218,14 +225,14 @@ msgstr "Баталсан зардал"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Attach Document"
-msgstr ""
+msgstr "Баримт хавсаргах"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tour.js:27
 #, python-format
 msgid "Attach your receipt here."
-msgstr ""
+msgstr "Тооцооны баримтаа энд хавсаргана уу."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
@@ -236,22 +243,22 @@ msgstr "Хавсралтын тоо"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "Bank Journal"
-msgstr "Банкны Журнал"
+msgstr "Банкны журнал"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__reference
 msgid "Bill Reference"
-msgstr "Тооцооны код"
+msgstr "Баримтын дугаар"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_reset
 msgid "Can Reset"
-msgstr ""
+msgstr "Дахин тохируулах боломжтой"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
 msgid "Can be Expensed"
-msgstr "Зарлагадаж болох"
+msgstr "Зардал болгож ашиглах"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -263,12 +270,12 @@ msgstr "Цуцлах"
 #: model:product.product,name:hr_expense.car_travel
 #: model:product.template,name:hr_expense.car_travel_product_template
 msgid "Car Travel Expenses"
-msgstr "Унааны Зардал"
+msgstr "Унааны зардал"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
-msgstr "Үнэн зөв зохимжтойг гэрчилсэн,<br/>(Огноо ба гарын үсэг).<br/><br/>"
+msgstr "Үнэн зөв болохыг гэрчилсэн,<br/>(Огноо ба гарын үсэг).<br/><br/>"
 
 #. module: hr_expense
 #: selection:hr.expense,payment_mode:0
@@ -283,7 +290,7 @@ msgstr "Компани"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__company_id
 msgid "Company related to this journal"
-msgstr "Энэ журналын холбогдох компани"
+msgstr "Энэ журналын харьяалагдах компани"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
@@ -304,7 +311,7 @@ msgstr "Батлагдсан зардлууд"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Create Report"
-msgstr ""
+msgstr "Тооцоо үүсгэх"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_request_approve_expense_sheet
@@ -313,12 +320,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Create a new expense"
-msgstr ""
+msgstr "Шинэ зардал үүсгэх"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Create a new expense category"
-msgstr ""
+msgstr "Шинэ зардлын ангилал үүсгэх"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -326,7 +333,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "Create a new expense report"
-msgstr ""
+msgstr "Шинэ зардлын тооцоо үүсгэх"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -363,18 +370,18 @@ msgstr "Огноо"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_alias_prefix
 msgid "Default Alias Name for Expenses"
-msgstr "Зардлын Үндсэн Давхар Нэр"
+msgstr "Зардал хүлээн авах имэйл алиас"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__department_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Department"
-msgstr "Хэлтэс"
+msgstr "Алба нэгж"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__name
 msgid "Description"
-msgstr "Тодорхойлолт"
+msgstr "Тайлбар"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__display_name
@@ -382,7 +389,7 @@ msgstr "Тодорхойлолт"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__display_name
 msgid "Display Name"
-msgstr "Дэлгэцийн Нэр"
+msgstr "Дэлгэрэнгүй нэр"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -399,12 +406,12 @@ msgstr "Ноорог"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 msgid "Draft Payment"
-msgstr "Ноорог Талбар"
+msgstr "Ноорог төлбөр"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Email Alias"
-msgstr "Хуурмаг имэйл"
+msgstr "Имэйл алиас"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -423,12 +430,12 @@ msgstr "Ажилтан"
 #. module: hr_expense
 #: selection:hr.expense,payment_mode:0
 msgid "Employee (to reimburse)"
-msgstr "Ажилтан (нөхөн олгох)"
+msgstr "Ажилтан (-д нөхөн олгох)"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_approved_expense
 msgid "Employee Expenses"
-msgstr ""
+msgstr "Ажилтаны зардал"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__address_id
@@ -447,7 +454,7 @@ msgstr "Зардал"
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
 msgid "Expense Approval"
-msgstr ""
+msgstr "Зардал зөвшөөрөх"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -457,7 +464,7 @@ msgstr "Зардлын огноо"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
 msgid "Expense Journal"
-msgstr "Зардалын Журнал"
+msgstr "Зардлын журнал"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_line_ids
@@ -469,34 +476,34 @@ msgstr "Зардлын мөрүүд"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Products"
-msgstr "Зардлын Бараа"
+msgstr "Зардлын бараа"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Expense Refuse Reason Wizard"
-msgstr ""
+msgstr "Зардал түтгэлзүүлэлтийн шалтгааны цонх"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet_register_payment_wizard
 msgid "Expense Register Payment Wizard"
-msgstr ""
+msgstr "Зардлын төлбөр бүртгэх цонх"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Report"
-msgstr "Зардлын Тайлан"
+msgstr "Зардлын тооцоо"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__state
 msgid "Expense Report State"
-msgstr "Зардлын Тайлангийн Төлөв"
+msgstr "Зардлын тооцооны төлөв"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
 msgid "Expense Report Summary"
-msgstr "Зардлын Тайлангийн Хураангуй"
+msgstr "Зардлын тооцооны товчоо"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report
@@ -504,33 +511,33 @@ msgstr "Зардлын Тайлангийн Хураангуй"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Reports"
-msgstr "Зардлын Тайлан"
+msgstr "Зардлын тооцоо"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
 msgid "Expense Reports Analysis"
-msgstr "Зардлын Тайлангийн Шинжилгээ"
+msgstr "Зардлын тооцоо анализ"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_pay
 msgid "Expense Reports To Pay"
-msgstr "Төлөх Зардлын Тайлан"
+msgstr "Төлөх зардлын тооцоо"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_post
 msgid "Expense Reports To Post"
-msgstr "Илгээх Зардлын Тайлан"
+msgstr "Санхүү бүртгэх зардлын тооцоо"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
-msgstr "Батлах Зардлын Тайлан"
+msgstr "Батлах зардлын тооцоо"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
 msgid "Expense Responsible"
-msgstr ""
+msgstr "Зардлын хариуцагч"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -540,22 +547,22 @@ msgstr "Зардлыг татгалзсан шалтгаан"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved"
-msgstr "Зардлын тайлан батлагдсан"
+msgstr "Зардлын тооцоо батлагдсан"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr "Зардлын тайлан төлөгдсөн"
+msgstr "Зардлын тооцоо төлөгдсөн"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr "Зардлын тайлан татгалзагдсан"
+msgstr "Зардлын тооцоо түтгэлзсэн"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line__expense_id
 msgid "Expense where the move line come from"
-msgstr ""
+msgstr "Журналын бичилтийн эх сурвалж бүхий зардал"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -584,28 +591,29 @@ msgstr "Зардлын шинжилгээ"
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr "Зардлын Тайлан"
+msgstr "Зардлын тайлан"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr "Батлах Зардлын Тайлан"
+msgstr "Батлах зардлын тооцоо"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses by Date"
-msgstr ""
+msgstr "Зардлууд огноогоор"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses in Draft"
-msgstr ""
+msgstr "Ноорог зардлууд"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:568
 #, python-format
 msgid "Expenses must be paid by the same entity (Company or employee)."
 msgstr ""
+"Зардлыг ижил харилцагчийн заалттайгаар төлөх ёстой (Компани эсвэл ажилтан)."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:623
@@ -613,8 +621,7 @@ msgstr ""
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
 "entries."
-msgstr ""
-"Зардал нь заасан санхүүгийн бичилтийг үүсгэх зардлын журналтай байх ёстой."
+msgstr "Зардалд санхүүгийн бичилт үүсгэх журнал тодорхойлогдсон байх ёстой."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -625,17 +632,17 @@ msgstr "Таны багийн гишүүдийн зардал"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses to Invoice"
-msgstr "Нэхэмжлэх Зардалууд"
+msgstr "Нэхэмжлэл үүсгэх зардал"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_hr_expense
 msgid "Expenses to Process"
-msgstr ""
+msgstr "Боловсруулах зардал"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_refused
 msgid "Explicitely Refused by manager or acccountant"
-msgstr ""
+msgstr "Менежер эсвэл нягтлангаас түтгэлзүүлсэн"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
@@ -659,7 +666,7 @@ msgstr "Дагагчид (Харилцагчид)"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Former Employees"
-msgstr "Анхны Ажилтан"
+msgstr "Анхны ажилтан"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_approved_expense
@@ -668,19 +675,19 @@ msgid ""
 "From here the accountant will be able to approve as well as refuse the "
 "expenses which are verified by the HR Manager."
 msgstr ""
-"Хүний нөөцийн менежерийн шалгасан зардлуудыг нягтлан энд батлах эсвэл "
-"татгалзана."
+"Энэ хэсэгт HR Менежерээс зөвшөөрөгдөж ирсэн зардлыг нягтлан бодогч батлах "
+"эсвэл түтгэлзүүлэх боломжтой."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Future Activities"
-msgstr "Ирээдүйн Үйл ажиллагаанууд"
+msgstr "Ирээдүйн ажилбарууд"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "General Information"
-msgstr "Ерөнхий Мэдээлэл"
+msgstr "Үндсэн мэдээлэл"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -691,12 +698,12 @@ msgstr "Бүлэглэх"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
 msgid "HR Department"
-msgstr "Хэлтэс"
+msgstr "HR алба нэгж"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_multiple_currency
 msgid "Handle lines with different currencies"
-msgstr ""
+msgstr "Олон ялгаатай валютын мөрүүд үүсгэх"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__hide_payment_method
@@ -706,12 +713,12 @@ msgstr "Төлбөрийн аргыг нуух"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_ids
 msgid "Hr Expense"
-msgstr ""
+msgstr "HR Зардал"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_sheet_id
 msgid "Hr Expense Sheet"
-msgstr ""
+msgstr "HR Зардлын багц"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
@@ -768,7 +775,7 @@ msgstr "Журналын мөр"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet____last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard____last_update
 msgid "Last Modified on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
@@ -776,7 +783,7 @@ msgstr "Сүүлийн засвар хийсэн огноо"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__write_uid
 msgid "Last Updated by"
-msgstr "Сүүлийн засвар хийсэн"
+msgstr "Сүүлд зассан этгээд"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_date
@@ -784,19 +791,19 @@ msgstr "Сүүлийн засвар хийсэн"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__write_date
 msgid "Last Updated on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Late Activities"
-msgstr "Хожимдсон Үйл ажиллагаанууд"
+msgstr "Хоцорсон ажилбарууд"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__use_mailgateway
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Let your employees record expenses by email"
-msgstr ""
+msgstr "Ажилтнууд зардлаа имэйлээр илгээхийг зөвшөөрөх"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
@@ -815,7 +822,7 @@ msgstr "Менежер"
 #: code:addons/hr_expense/static/src/js/tour.js:61
 #, python-format
 msgid "Managers can get all reports to approve from this menu."
-msgstr "Менежерүүд энэ менюнээс батлах бүх зардлыг авна."
+msgstr "Менежерүүд энэ цэснээс батлах шаардлагатай бүх зардлын тооцоог олно."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__communication
@@ -838,7 +845,7 @@ msgstr "Зурвасууд"
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
 msgid "My Expense Reports"
-msgstr ""
+msgstr "Миний зардлын тооцоо"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
@@ -846,12 +853,12 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_to_submit
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "My Expenses"
-msgstr "Миний Зардлууд"
+msgstr "Миний зардлууд"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "My Reports"
-msgstr "Миний тайлан"
+msgstr "Миний тооцоо"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -861,7 +868,7 @@ msgstr "Манай багийн зардал"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "My Team Reports"
-msgstr "Манай багийн тайлан"
+msgstr "Манай багийн тооцоо"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -872,7 +879,7 @@ msgstr "Нэр"
 #: code:addons/hr_expense/models/hr_expense.py:186
 #, python-format
 msgid "New Expense Report"
-msgstr ""
+msgstr "Шинэ зардлын тооцоо"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -884,7 +891,7 @@ msgstr "Дараагийн ажилбарын эцсийн огноо"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_summary
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_summary
 msgid "Next Activity Summary"
-msgstr "Дараагийн Ажилбарын Хураангуй"
+msgstr "Дараагийн ажилбарын хураангуй"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_type_id
@@ -899,34 +906,36 @@ msgid ""
 "No Expense account found for the product %s (or for its category), please "
 "configure one."
 msgstr ""
+"%s бараанд (эсвэл үүний ангилалд) зардлын данс тохируулаагүй байна, ямар нэг"
+" данс тохируулна уу."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:261
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
-msgstr "%s ажилтанд гэрийн хаяг байхгүй байна, тохируулна уу."
+msgstr "%s ажилтанд гэрийн хаяг тодорхойлогдоогүй байна, тохируулна уу."
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_approved_expense
 msgid "No approved employee expenses"
-msgstr ""
+msgstr "Зөвшөөрөгдсөн зардал алга"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:257
 #: code:addons/hr_expense/models/hr_expense.py:368
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
-msgstr "%s журналд кредит данс байхгүй байна, тохируулна уу."
+msgstr "%s журналд кредит данс тодорхойлогдоогүй байна, тохируулна уу."
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 msgid "No expense reports to approve"
-msgstr ""
+msgstr "Зөвшөөрөх зардлын тооцоо алга"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_unsubmitted_expense
 msgid "No unreported employee expenses"
-msgstr ""
+msgstr "Тооцоо үүсгээгүй зардал алга"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__description
@@ -944,7 +953,7 @@ msgstr "Үйлдлийн тоо"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_number
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_number
 msgid "Number of Attachments"
-msgstr "Хавсралтын Тоо"
+msgstr "Хавсралтын тоо"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
@@ -986,7 +995,7 @@ msgstr "Мэргэжилтэн"
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr "Зардлын үүсгэсэн бол батлах менежеррүүгээ илгээнэ үү."
+msgstr "Зардлаа үүсгэсний дараа зөвшөөрөл олгох удирдлага руугаа илгээнэ үү."
 
 #. module: hr_expense
 #. openerp-web
@@ -996,19 +1005,23 @@ msgid ""
 "Once your <b>Expense report</b> is ready, you can submit it to your manager "
 "and wait for the approval from your manager."
 msgstr ""
+"Таны <b>Зардлын тооцоо</b> бэлэн болоход, та өөрийн удирдлага руугаа илгээн "
+"зөвшөөрөл хүлээх хэрэгтэй."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:706
 #, python-format
 msgid "Only HR Officers or the concerned employee can reset to draft."
 msgstr ""
+"Зөвхөн HR мэргэжилтэн эсвэл үүсгэсэн ажилтан нь зардлыг ноорог төлөвт "
+"шилжүүлэх боломжтой."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:667
 #: code:addons/hr_expense/models/hr_expense.py:688
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
-msgstr ""
+msgstr "Зөвхөн Менежер болон HR мэргэжилтэн зардлыг зөвшөөрөх боломжтой"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1031,7 +1044,7 @@ msgstr "Төлөгдсөн"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_mode
 msgid "Paid By"
-msgstr ""
+msgstr "Төлбөрийн хэлбэр"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__partner_id
@@ -1041,12 +1054,12 @@ msgstr "Харилцагч"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__amount
 msgid "Payment Amount"
-msgstr "Төлбөрийн Дүн"
+msgstr "Төлбөрийн дүн"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__payment_date
 msgid "Payment Date"
-msgstr "Төлбөрийн Огноо"
+msgstr "Төлбөрийн огноо"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__journal_id
@@ -1056,7 +1069,7 @@ msgstr "Төлбөрийн хэлбэр"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__payment_method_id
 msgid "Payment Type"
-msgstr "Төлбөрийн Төрөл"
+msgstr "Төлбөрийн төрөл"
 
 #. module: hr_expense
 #: selection:hr.expense,activity_state:0
@@ -1092,7 +1105,7 @@ msgstr "Үнэ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Price in Company Currency"
-msgstr ""
+msgstr "Компани валютаарх үнэ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_id
@@ -1103,17 +1116,17 @@ msgstr "Бараа"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Product Name"
-msgstr "Барааны Нэр"
+msgstr "Барааны нэр"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
 msgid "Product Template"
-msgstr "Барааны үлгэр"
+msgstr "Барааны загвар"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
 msgid "Product Variants"
-msgstr "Барааны Хувилбар"
+msgstr "Барааны хувилбар"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1133,12 +1146,12 @@ msgstr "Шалтгаан"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Reason :"
-msgstr ""
+msgstr "Шалтгаан :"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr ""
+msgstr "Зардлыг татгалзах шалтгаан"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__partner_bank_account_id
@@ -1148,7 +1161,7 @@ msgstr "Хүлээн авах банкны данс"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Recording"
-msgstr ""
+msgstr "Бүртгэл"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1164,7 +1177,7 @@ msgstr "Татгалзах"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
 msgid "Refuse Expense"
-msgstr "Зардлыг Татгалзах"
+msgstr "Зардлыг татгалзах"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
@@ -1177,30 +1190,30 @@ msgstr "Татгалзсан"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Refused Expenses"
-msgstr "Татгалзсан Зардал"
+msgstr "Татгалзсан зардал"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_sheet_register_payment_wizard_action
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Register Payment"
-msgstr "Төлбөр Бүртгэх"
+msgstr "Төлбөр бүртгэх"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Report"
-msgstr "Тайлан"
+msgstr "Тооцоо"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_currency_id
 msgid "Report Company Currency"
-msgstr ""
+msgstr "Компаны валют"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Reported"
-msgstr "Тайлагнасан"
+msgstr "Тооцоо хийсэн"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
@@ -1210,22 +1223,22 @@ msgstr "Тайлан"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_approve_expense_sheet
 msgid "Reports to Approve"
-msgstr "Батлах Тайлан"
+msgstr "Батлах тооцоо"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_to_pay_expense_sheet
 msgid "Reports to Pay"
-msgstr "Төлөх Зардал"
+msgstr "Төлөх зардал"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_to_post_expense_sheet
 msgid "Reports to Post"
-msgstr "Илгээх Зардал"
+msgstr "Санхүүд бүртгэх зардал"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Reset to Draft"
-msgstr "Ноороглох"
+msgstr "Ноорог болгох"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_user_id
@@ -1251,7 +1264,7 @@ msgstr "Тохиргоо"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Setup your domain alias"
-msgstr "Домайн давхар нэр тохируулах"
+msgstr "Домайн алиас тохируулах"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__show_partner_bank_account
@@ -1262,17 +1275,18 @@ msgstr "Харилцагчийн банкны данс харуулах"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Show all records which has next action date is before today"
-msgstr "Өнөөдрөөс өмнө дараагийн арга хэмжээг товлосон бүх рекордыг харуулах"
+msgstr "Гүйцэтгэх хугацаа нь өнгөрсөн ажилбаруудыг харах"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
 msgid "Specify whether the product can be selected in an expense."
 msgstr ""
+"Энэхүү барааг зардлын хүсэлт дээр сонгож ашиглаж болох эсэхийг тодорхойлно."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "State"
-msgstr "Муж"
+msgstr "Төлөв"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -1303,12 +1317,12 @@ msgstr "Зардлын төлөв."
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
 msgid "Submit Report"
-msgstr ""
+msgstr "Тооцоо илгээх"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Submit to Manager"
-msgstr "Менежерт Илгээх"
+msgstr "Удирдлагад илгээх"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
@@ -1324,7 +1338,7 @@ msgstr "Дэд дүн"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Taxes"
-msgstr "Татварууд"
+msgstr "Татвар"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__hide_payment_method
@@ -1332,8 +1346,8 @@ msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
-"'Гараар' төрөлтэй зөвхөн ганц журналь сонгогдсон байвал төлбөрийн аргыг "
-"харуулахгүй байхад зориулагдсан техникийн талбар"
+"'Гараар' төрөлтэй цор ганц журнал ашиглагдахаар байвал төлбөрийн аргыг "
+"нуухад зориулагдсан техникийн талбар"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__show_partner_bank_account
@@ -1350,12 +1364,13 @@ msgstr ""
 #, python-format
 msgid ""
 "The accountant can register a payment to reimburse the employee directly."
-msgstr "Нягтлан ажилчинд шууд нөхөн олгохдоо төлбөрийг бүртгэж болно."
+msgstr ""
+"Ажилтанд зардлыг нөхөн олгох тохиолдолд нягтлан төлбөр бүртгэх боломжтой."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
 msgid "The journal used when the expense is done."
-msgstr "Зардал хийгдэхэд хэрэглэгдэх журнал"
+msgstr "Зардлыг хаахад ашиглагдах журнал"
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_sheet_register_payment.py:48
@@ -1366,7 +1381,7 @@ msgstr "Төлбөрийн дүн заавал эерэг тоо байх ёст
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
-msgstr "Зардлыг компани төлөхөд төлбөрийн арга нь хэрэглэгдэнэ."
+msgstr "Энэхүү төлбөрийн хэлбэр нь зардлыг компани төлөх үед ашиглагдана."
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_approve
@@ -1384,7 +1399,7 @@ msgstr "Төлөх"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_post
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Post"
-msgstr "Илгээх"
+msgstr "Санхүүд бүртгэх"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -1394,7 +1409,7 @@ msgstr "Илгээх"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "To report"
-msgstr ""
+msgstr "Тооцоо үүсгэх"
 
 #. module: hr_expense
 #: selection:hr.expense,activity_state:0
@@ -1406,7 +1421,7 @@ msgstr "Өнөөдөр"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Today Activities"
-msgstr "Өнөөдрийн Ажилбарууд"
+msgstr "Өнөөдрийн ажилбар"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
@@ -1416,7 +1431,7 @@ msgstr "Нийт"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
 msgid "Total (Company Currency)"
-msgstr ""
+msgstr "Нийт (компаны валютаар)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount
@@ -1429,7 +1444,7 @@ msgstr "Нийт дүн"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__unit_amount
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Unit Price"
-msgstr "Нэгж Үнэ"
+msgstr "Нэгж үнэ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
@@ -1448,7 +1463,7 @@ msgstr "Ширхэг(үүд)"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_unread
 msgid "Unread Messages"
-msgstr "Уншаагүй Зурвасууд"
+msgstr "Уншаагүй зурвас"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread_counter
@@ -1459,13 +1474,15 @@ msgstr "Уншаагүй зурвасын тоолуур"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_unsubmitted_expense
 msgid "Unreported Expenses"
-msgstr "Тайлагнаагүй Зардал"
+msgstr "Тооцоо үүсгээгүй зардал"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid ""
 "User responsible of expense approval. Should be Expense Officer or Manager."
 msgstr ""
+"Зардлыг зөвшөөрөх эрх бүхий хэрэглэгч. Зардлын мэргэжилтэн эсвэл Менежер "
+"байх ёстой."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
@@ -1475,17 +1492,17 @@ msgstr "Батлах"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "View Attached Documents"
-msgstr "Хавсарсан Баримтыг Харах"
+msgstr "Хавсарсан баримтыг харах"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "View Attachments"
-msgstr "Зардал Харах"
+msgstr "Хавсралт харах"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "View Report"
-msgstr "Тайлан Харах"
+msgstr "Тооцоо харах"
 
 #. module: hr_expense
 #. openerp-web
@@ -1493,7 +1510,7 @@ msgstr "Тайлан Харах"
 #: code:addons/hr_expense/static/src/js/tour.js:18
 #, python-format
 msgid "Want to manage your expenses? It starts here."
-msgstr ""
+msgstr "Та өөрийн зардлаа хөтлөн бүртгэхийг хүсч байна уу? Эндээс эхэлнэ."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -1511,19 +1528,22 @@ msgstr "Вебсайтын харилцааны түүх"
 #: code:addons/hr_expense/models/hr_expense.py:675
 #, python-format
 msgid "You can only approve your department expenses"
-msgstr ""
+msgstr "Та зөвхөн өөрийн алба нэгжид харьяалагдах зардлыг зөвшөөрөх боломжтой"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:620
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
-msgstr "Санхүүгийн бичилтийг зөвхөн батлагдсан зардал дээр үүсгэх боломжтой."
+msgstr ""
+"Та зөвхөн зөвшөөрөгдсөн зардлуудад үндэслэн санхүүгийн бичилт үүсгэх "
+"боломжтой."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:696
 #, python-format
 msgid "You can only refuse your department expenses"
 msgstr ""
+"Та зөвхөн өөрийн алба нэгжид харьяалагдах зардлыг түтгэлзүүлэх боломжтой."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1534,53 +1554,59 @@ msgid ""
 "between brackets, the product will be set automatically. Type the expense "
 "amount in the mail subject to set it on the expense too."
 msgstr ""
+"Та зориулалтын имэйл алиас тохируулснаар зардлыг хялбар бүртгэх боломжтой. "
+"Төлбөрийн баримтыг имэйлээр хавсаргаж илгээснээр системд зардлын мөр "
+"автоматаар бүртгэгдэнэ. Хэрэв имэйлийн гарчиг хэсэгт барааны дотоодыг кодыг "
+"бичсэн байвал тухайн зардлын бараа зардлын мөр дээр автоматаар сонгогдоно. "
+"Мөн имэйлийн гарчиг дотор зардлын мөнгөн дүнг бичвэл системд үүсэх зардлын "
+"бүртгэл дээр автоматаар тусгагдана."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:575
 #, python-format
 msgid "You cannot add expenses of another employee."
-msgstr ""
+msgstr "Та өөр ажилтны өмнөөс зардал бүртгэх боломжгүй."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:672
 #, python-format
 msgid "You cannot approve your own expenses"
-msgstr ""
+msgstr "Та өөрийн үүсгэсэн зардлыг зөвшөөрөх боломжгүй"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:145
 #, python-format
 msgid "You cannot delete a posted or approved expense."
-msgstr ""
+msgstr "Та зөвшөөрөгдсөн эсвэл санхүүд бүртгэгдсэн зардлыг устгах боломжгүй."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:587
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr ""
+msgstr "Та санхүүд бүртгэгдсэн эсвэл төлөгдсөн зардлыг устгах боломжгүй."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:693
 #, python-format
 msgid "You cannot refuse your own expenses"
-msgstr ""
+msgstr "Та өөрийн үүсгэсэн зардлыг түтгэлзүүлэх боломжгүй"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:182
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
-msgstr ""
+msgstr "Та өөр өөр ажилтны зардлыг нийлүүлж тооцоо үүсгэх боломжгүй."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:180
 #, python-format
 msgid "You cannot report twice the same line!"
-msgstr "Ижил мөрийг хоёр дахиж тайлагнаж болохгүй!"
+msgstr "Та зардлын тооцоонд ижил зардлын мөрийг хоёр удаа оруулсан байна!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "Таны зардал"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1600,7 +1626,7 @@ msgstr "ж. NY-рүү явсан"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr ""
+msgstr "түтгэлзсэн"
 
 #. module: hr_expense
 #: model:product.product,weight_uom_name:hr_expense.air_ticket
