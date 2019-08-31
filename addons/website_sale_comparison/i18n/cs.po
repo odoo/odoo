@@ -1,20 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_comparison
-# 
-# Translators:
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2018
-# Michal Veselý <michal@veselyberanek.net>, 2018
-# Martin Trigaux, 2018
-# J. Podhorecky <j.podhorecky@volny.cz>, 2018
+# 	* website_sale_comparison
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: J. Podhorecky <j.podhorecky@volny.cz>, 2018\n"
+"POT-Creation-Date: 2019-08-12 12:27+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,23 +16,30 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_8
-msgid "134.7 x 200 x 7.2 mm"
-msgstr "134,7 x 200 x 7,2 mm"
-
-#. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_7
-msgid "308 g"
-msgstr "308 g"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.recommended_product
 msgid "<i class=\"fa fa-exchange\"/> Compare"
-msgstr "<i class=\"fa fa-exchange\"/> Porovnat"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Add to Cart"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
+msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
+msgid "<span class=\"fa fa-exchange\"/> Add to compare"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -53,30 +53,20 @@ msgid "<strong>Price:</strong>"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_1
-msgid "Apple"
-msgstr "Apple"
-
-#. module: website_sale_comparison
 #: model:ir.actions.act_window,name:website_sale_comparison.product_attribute_category_action
 #: model:ir.ui.menu,name:website_sale_comparison.menu_attribute_category_action
 msgid "Attribute Categories"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_1
-msgid "Brand"
-msgstr "Značka"
-
-#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "Category"
-msgstr "Kategorie"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__name
 msgid "Category Name"
-msgstr "Název kategorie"
+msgstr ""
 
 #. module: website_sale_comparison
 #. openerp-web
@@ -90,7 +80,7 @@ msgstr ""
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:51
+#: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:52
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #, python-format
 msgid "Compare Products"
@@ -99,49 +89,44 @@ msgstr ""
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__create_uid
 msgid "Created by"
-msgstr "Vytvořil(a)"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
-
-#. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_8
-msgid "Dimensions"
-msgstr "Rozměry"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný název"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category____last_update
 msgid "Last Modified on"
-msgstr "Naposled změněno"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr ""
 
 #. module: website_sale_comparison
 #. openerp-web
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:7
 #, python-format
 msgid "Product"
-msgstr "Výrobek"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_attribute
@@ -157,23 +142,23 @@ msgstr ""
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_template
 msgid "Product Template"
-msgstr "Šablona výrobku"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
 msgid "Product image"
-msgstr "Obrázek produktu"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
 msgid "Remove"
-msgstr "Odebrat"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__sequence
 msgid "Sequence"
-msgstr "Číselná řada"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,help:website_sale_comparison.field_product_attribute__category_id
@@ -193,23 +178,18 @@ msgid "Specifications for"
 msgstr ""
 
 #. module: website_sale_comparison
-#: code:addons/website_sale_comparison/controllers/main.py:23
+#: code:addons/website_sale_comparison/controllers/main.py:24
 #: code:addons/website_sale_comparison/models/website_sale_comparison.py:30
 #, python-format
 msgid "Uncategorized"
-msgstr "Nezařazené"
+msgstr ""
 
 #. module: website_sale_comparison
 #. openerp-web
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:15
 #, python-format
 msgid "Warning"
-msgstr "Varování"
-
-#. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_7
-msgid "Weight"
-msgstr "Hmotnost"
+msgstr ""
 
 #. module: website_sale_comparison
 #. openerp-web
@@ -221,4 +201,4 @@ msgstr ""
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "or"
-msgstr "nebo"
+msgstr ""

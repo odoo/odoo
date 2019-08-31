@@ -1,79 +1,84 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_address_city
+# 	* base_address_city
 # 
 # Translators:
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Rolandas <info@paninfo.lt>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Martin Trigaux, 2019
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
+# Silvija Butko <silvija.butko@gmail.com>, 2019
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: UAB \"Draugiški sprendimai\" <transifex@draugiskisprendimai.lt>, 2017\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: base_address_city
-#: model:ir.model.fields,help:base_address_city.field_res_country_enforce_cities
-#: model:ir.model.fields,help:base_address_city.field_res_partner_country_enforce_cities
-#: model:ir.model.fields,help:base_address_city.field_res_users_country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_users__country_enforce_cities
 msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
 msgstr ""
+"Pažymėkite šį laukelį, kad užtikrintumėte, jog kiekvienas tos šalies adresas"
+" turėtų pasirinktą miestą iš šalies miestų sąrašo."
 
 #. module: base_address_city
 #: model:ir.actions.act_window,name:base_address_city.action_res_city_tree
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_res_country_city_extended_form
 msgid "Cities"
-msgstr ""
+msgstr "Miestai"
 
 #. module: base_address_city
+#: code:addons/base_address_city/models/res_partner.py:55
 #: model:ir.model,name:base_address_city.model_res_city
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_tree
+#, python-format
 msgid "City"
 msgstr "Miestas"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_partner_city_id
-#: model:ir.model.fields,field_description:base_address_city.field_res_users_city_id
-msgid "Company"
-msgstr "Įmonė"
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__city_id
+msgid "City of Address"
+msgstr "Adreso miestas"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_partner
 msgid "Contact"
-msgstr "Kontaktas"
+msgstr "Kontaktai"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_country
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_country_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__country_id
 msgid "Country"
 msgstr "Valstybė"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_create_uid
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_create_date
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_display_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__display_name
 msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+msgstr "Rodomas pavadinimas"
 
 #. module: base_address_city
 #: model_terms:ir.actions.act_window,help:base_address_city.action_res_city_tree
@@ -82,50 +87,53 @@ msgid ""
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
+"Rodyti ir valdyti visų miestų, kurie gali būti priskirti jūsų\n"
+"partnerių įrašams, sąrašą. Atkreipkite dėmesį, kad šis pasirinkimas gali būti nustatytas kiekvienai\n"
+"šaliai atskirai, kad būtų forsuojamas privalomas miesto iš šio sąrašo turėjimas."
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_country_enforce_cities
-#: model:ir.model.fields,field_description:base_address_city.field_res_partner_country_enforce_cities
-#: model:ir.model.fields,field_description:base_address_city.field_res_users_country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr ""
+msgstr "Forsuoti miestus"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city___last_update
+#: model:ir.model.fields,field_description:base_address_city.field_res_city____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_write_uid
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_write_date
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__name
 msgid "Name"
-msgstr "Pavadinimas"
+msgstr "Vardas"
 
 #. module: base_address_city
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
 msgid "Search City"
-msgstr ""
+msgstr "Ieškoti miesto"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_state_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id
 msgid "State"
 msgstr "Būsena"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_zipcode
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__zipcode
 msgid "Zip"
 msgstr "Pašto kodas"

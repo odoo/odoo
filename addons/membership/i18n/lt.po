@@ -1,64 +1,77 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * membership
+# 	* membership
 # 
 # Translators:
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Aleksandr Jadov <a.jadov@tata.lt>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Aleksandr Jadov <a.jadov@tata.lt>, 2019
+# Martin Trigaux, 2019
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: UAB \"Draugiški sprendimai\" <transifex@draugiskisprendimai.lt>, 2017\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:11+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_num_invoiced
+#: model:ir.model.fields,field_description:membership.field_report_membership__num_invoiced
 msgid "# Invoiced"
-msgstr ""
+msgstr "# Pateiktų sąskaitų"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_num_paid
+#: model:ir.model.fields,field_description:membership.field_report_membership__num_paid
 msgid "# Paid"
-msgstr ""
+msgstr "# Apmokėtų"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_num_waiting
+#: model:ir.model.fields,field_description:membership.field_report_membership__num_waiting
 msgid "# Waiting"
-msgstr ""
+msgstr "# Laukiančių"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
-msgid "<i class=\"fa fa-clock-o\" aria-hidden=\"true\"/><strong> From: </strong>"
+msgid ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> From: </strong>"
 msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> Nuo: </strong>"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid "<strong> To:</strong>"
-msgstr ""
+msgstr "<strong> Į:</strong>"
 
 #. module: membership
-#: model:ir.model.fields,help:membership.field_res_partner_associate_member
-#: model:ir.model.fields,help:membership.field_res_users_associate_member
+#: model:ir.model.fields,help:membership.field_res_partner__associate_member
+#: model:ir.model.fields,help:membership.field_res_users__associate_member
 msgid ""
-"A member with whom you want to associate your membership. It will consider "
+"A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Narys, su kuriuo norite susieti savo narystę. Tai įvertins susieto nario "
+"narystės būseną."
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
 msgid "Account Invoice line"
-msgstr ""
+msgstr "Paskyros sąskaitos eilutė"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
@@ -66,27 +79,22 @@ msgid "Add a description..."
 msgstr "Pridėkite aprašymą..."
 
 #. module: membership
-#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "All Members"
-msgstr "Visi nariai"
+#: model_terms:ir.actions.act_window,help:membership.action_membership_members
+msgid "Add a new member"
+msgstr "Pridėti naują narį"
 
 #. module: membership
-#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "All non Members"
-msgstr "Visi ne nariai"
-
-#. module: membership
-#: model:ir.model.fields,help:membership.field_membership_membership_line_member_price
+#: model:ir.model.fields,help:membership.field_membership_membership_line__member_price
 msgid "Amount for the membership"
-msgstr ""
+msgstr "Suma narystei"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_associate_member_id
-#: model:ir.model.fields,field_description:membership.field_res_partner_associate_member
-#: model:ir.model.fields,field_description:membership.field_res_users_associate_member
+#: model:ir.model.fields,field_description:membership.field_report_membership__associate_member_id
+#: model:ir.model.fields,field_description:membership.field_res_partner__associate_member
+#: model:ir.model.fields,field_description:membership.field_res_users__associate_member
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
-msgstr ""
+msgstr "Susietas narys"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -96,7 +104,7 @@ msgstr "Susijęs partneris"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Buy Membership"
-msgstr ""
+msgstr "Pirkti narystę"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
@@ -104,22 +112,22 @@ msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_res_partner_membership_cancel
-#: model:ir.model.fields,field_description:membership.field_res_users_membership_cancel
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_cancel
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_cancel
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "Narystės atšaukimo data"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_cancel
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_cancel
 msgid "Cancel date"
-msgstr ""
+msgstr "Atšaukimo data"
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__canceled
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__canceled
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__canceled
 msgid "Cancelled Member"
-msgstr ""
+msgstr "Atšauktas narys"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
@@ -127,32 +135,32 @@ msgid "Category"
 msgstr "Kategorija"
 
 #. module: membership
-#: model:ir.model.fields,help:membership.field_product_product_membership
-#: model:ir.model.fields,help:membership.field_product_template_membership
+#: model:ir.model.fields,help:membership.field_product_product__membership
+#: model:ir.model.fields,help:membership.field_product_template__membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Tikrinti, ar produktui galima narystė."
 
 #. module: membership
-#: model_terms:ir.actions.act_window,help:membership.action_membership_members
-msgid "Click to add a new Member"
-msgstr ""
-
-#. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_company_id
-#: model:ir.model.fields,field_description:membership.field_report_membership_company_id
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__company_id
+#: model:ir.model.fields,field_description:membership.field_report_membership__company_id
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
 msgstr "Įmonė"
 
 #. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line__company_id
+msgid "Company related to this journal"
+msgstr "Įmonė, susieta su šiuo žurnalu"
+
+#. module: membership
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
 msgid "Configuration"
-msgstr "Nustatymai"
+msgstr "Konfigūracija"
 
 #. module: membership
 #: model:ir.model,name:membership.model_res_partner
 msgid "Contact"
-msgstr "Kontaktas"
+msgstr "Kontaktai"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_tree
@@ -160,108 +168,98 @@ msgid "Contacts"
 msgstr "Kontaktai"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_invoice_create_uid
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_create_uid
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__create_uid
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_invoice_create_date
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_create_date
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__create_date
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_membership_state
+#: model:ir.model.fields,field_description:membership.field_report_membership__membership_state
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Current Membership State"
-msgstr ""
+msgstr "Esama narystės būsena"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_res_partner_membership_state
-#: model:ir.model.fields,field_description:membership.field_res_users_membership_state
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_state
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_state
 msgid "Current Membership Status"
-msgstr ""
+msgstr "Esama narystės būsena"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Customers"
-msgstr "Pirkėjai"
+msgstr "Klientai"
 
 #. module: membership
-#: model:ir.model.fields,help:membership.field_product_product_membership_date_from
-#: model:ir.model.fields,help:membership.field_product_template_membership_date_from
-#: model:ir.model.fields,help:membership.field_res_partner_membership_start
-#: model:ir.model.fields,help:membership.field_res_users_membership_start
+#: model:ir.model.fields,help:membership.field_product_product__membership_date_from
+#: model:ir.model.fields,help:membership.field_product_template__membership_date_from
+#: model:ir.model.fields,help:membership.field_res_partner__membership_start
+#: model:ir.model.fields,help:membership.field_res_users__membership_start
 msgid "Date from which membership becomes active."
 msgstr "Data, nuo kurios narystė tampa aktyvia."
 
 #. module: membership
-#: model:ir.model.fields,help:membership.field_membership_membership_line_date
+#: model:ir.model.fields,help:membership.field_membership_membership_line__date
 msgid "Date on which member has joined the membership"
-msgstr ""
+msgstr "Data, kai narys pradėjo narystę"
 
 #. module: membership
-#: model:ir.model.fields,help:membership.field_res_partner_membership_cancel
-#: model:ir.model.fields,help:membership.field_res_users_membership_cancel
+#: model:ir.model.fields,help:membership.field_res_partner__membership_cancel
+#: model:ir.model.fields,help:membership.field_res_users__membership_cancel
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "Data, kai narystė buvo atšaukta"
 
 #. module: membership
-#: model:ir.model.fields,help:membership.field_product_product_membership_date_to
-#: model:ir.model.fields,help:membership.field_product_template_membership_date_to
-#: model:ir.model.fields,help:membership.field_res_partner_membership_stop
-#: model:ir.model.fields,help:membership.field_res_users_membership_stop
+#: model:ir.model.fields,help:membership.field_product_product__membership_date_to
+#: model:ir.model.fields,help:membership.field_product_template__membership_date_to
+#: model:ir.model.fields,help:membership.field_res_partner__membership_stop
+#: model:ir.model.fields,help:membership.field_res_users__membership_stop
 msgid "Date until which membership remains active."
 msgstr "Data, iki kurios narystė išlieka aktyvi."
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_invoice_display_name
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_display_name
-#: model:ir.model.fields,field_description:membership.field_report_membership_display_name
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__display_name
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__display_name
+#: model:ir.model.fields,field_description:membership.field_report_membership__display_name
 msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+msgstr "Rodomas pavadinimas"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_tot_earned
+#: model:ir.model.fields,field_description:membership.field_report_membership__tot_earned
 msgid "Earned Amount"
-msgstr ""
+msgstr "Gautas kiekis"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_date_to
+#: model:ir.model.fields,field_description:membership.field_report_membership__date_to
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Date"
 msgstr "Pabaigos data"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Membership Date"
-msgstr ""
+msgstr "Narystės pabaigos data"
 
 #. module: membership
-#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "End Month"
-msgstr "Mėnesio pabaiga"
-
-#. module: membership
-#: model:ir.model.fields,help:membership.field_report_membership_date_to
+#: model:ir.model.fields,help:membership.field_report_membership__date_to
 msgid "End membership date"
-msgstr ""
+msgstr "Narystės pabaigos data"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Ending Month Of Membership"
-msgstr ""
+msgid "Ending Date Of Membership"
+msgstr "Narystės galiojimo pabaiga"
 
 #. module: membership
-#: sql_constraint:product.template:0
+#: model:ir.model.constraint,message:membership.constraint_product_template_membership_date_greater
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: membership
-#: code:addons/membership/models/partner.py:159
-#, python-format
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Klaida! Pabaigos data negali būti nustatyta prieš pradžios datą."
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -269,23 +267,18 @@ msgid "Forecast"
 msgstr "Prognozė"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_res_partner_free_member
-#: model:ir.model.fields,field_description:membership.field_res_users_free_member
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields,field_description:membership.field_res_partner__free_member
+#: model:ir.model.fields,field_description:membership.field_res_users__free_member
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__free
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__free
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__free
 msgid "Free Member"
 msgstr "Nemokamas narys"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_from
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
 msgid "From"
 msgstr "Nuo"
-
-#. module: membership
-#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
-msgid "From Month"
-msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -299,9 +292,9 @@ msgid "Group by..."
 msgstr "Grupuoti pagal..."
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_invoice_id
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_id
-#: model:ir.model.fields,field_description:membership.field_report_membership_id
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__id
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__id
+#: model:ir.model.fields,field_description:membership.field_report_membership__id
 msgid "ID"
 msgstr "ID"
 
@@ -311,37 +304,30 @@ msgid "Inactive"
 msgstr "Neaktyvus"
 
 #. module: membership
-#: model:ir.model,name:membership.model_account_invoice
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_id
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_id
 msgid "Invoice"
-msgstr "Sąskaita faktūra"
+msgstr "Sąskaita-faktūra"
 
 #. module: membership
-#: model:ir.model,name:membership.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Sąskaitos faktūros eilutė"
-
-#. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Invoice Membership"
-msgstr ""
+msgstr "Narystės sąskaita"
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__invoiced
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__invoiced
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__invoiced
 msgid "Invoiced Member"
-msgstr ""
+msgstr "Nariui pateikta sąskaita"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr ""
+msgstr "Pateikta sąskaita/Apmokėta/Nemokamai"
 
 #. module: membership
-#: model:ir.model.fields,help:membership.field_res_partner_membership_state
-#: model:ir.model.fields,help:membership.field_res_users_membership_state
+#: model:ir.model.fields,help:membership.field_res_partner__membership_state
+#: model:ir.model.fields,help:membership.field_res_users__membership_state
 msgid ""
 "It indicates the membership state.\n"
 "-Non Member: A partner who has not applied for any membership.\n"
@@ -351,9 +337,16 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Tai parodo narystės būseną.\n"
+"- Ne narys: partneris, kuris neturi jokios narystės.\n"
+"- Atšauktas narys: narys, kuris atšaukė savo narystę.\n"
+"- Senas narys: narys, kurio narystės galiojimas baigėsi.\n"
+"- Laukiantis narys: narys, kuris pateikė paraišką ir kurio sąskaita bus sukurta.\n"
+"- Apmokęstintas narys: narys, kurio sąskaita buvo sukurta.\n"
+"- Mokantis narys: narys, kuris sumokėjo narystės mokestį."
 
 #. module: membership
-#: model:ir.model.fields,help:membership.field_membership_membership_line_state
+#: model:ir.model.fields,help:membership.field_membership_membership_line__state
 msgid ""
 "It indicates the membership status.\n"
 "-Non Member: A member who has not applied for any membership.\n"
@@ -363,61 +356,84 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"Tai parodo narystės statusą.\n"
+"- Ne narys: narys, kuris neturi jokios narystės.\n"
+"- Atšauktas narys: narys, kuris atšaukė savo narystę.\n"
+"- Senas narys: narys, kurio narystės data baigėsi.\n"
+"- Laukiantis narys: narys, kuris pateikė užklausą, ir kurio sąskaita bus sukurta.\n"
+"- Nariui pateikta sąskaita: narys, kurio sąskaita-faktūra buvo sukurta.\n"
+"- Apmokėtas narys: narys, kuris sumokėjo narystės sumą."
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date
 msgid "Join Date"
 msgstr "Prisijungimo data"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_invoice___last_update
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line___last_update
-#: model:ir.model.fields,field_description:membership.field_report_membership___last_update
+#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+msgid "Join Membership"
+msgstr ""
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_move
+msgid "Journal Entries"
+msgstr "Žurnalo įrašai"
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_move_line
+msgid "Journal Item"
+msgstr "Žurnalo įrašas"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice____last_update
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line____last_update
+#: model:ir.model.fields,field_description:membership.field_report_membership____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_invoice_write_uid
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_write_uid
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__write_uid
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_invoice_write_date
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_write_date
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__write_date
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_partner_id
+#: model:ir.model.fields,field_description:membership.field_report_membership__partner_id
 msgid "Member"
 msgstr "Narys"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_invoice_member_price
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__member_price
 msgid "Member Price"
-msgstr ""
+msgstr "Nario kaina"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_association
 #: model:ir.ui.menu,name:membership.menu_membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_members_tree
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Members"
 msgstr "Nariai"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
 msgid "Members Analysis"
-msgstr ""
+msgstr "Nario analizė"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_invoice_product_id
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_membership_id
-#: model:ir.model.fields,field_description:membership.field_product_product_membership
-#: model:ir.model.fields,field_description:membership.field_product_template_membership
-#: model:ir.model.fields,field_description:membership.field_res_partner_member_lines
-#: model:ir.model.fields,field_description:membership.field_res_users_member_lines
+#: model:ir.model.fields,field_description:membership.field_membership_invoice__product_id
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__membership_id
+#: model:ir.model.fields,field_description:membership.field_product_product__membership
+#: model:ir.model.fields,field_description:membership.field_product_template__membership
+#: model:ir.model.fields,field_description:membership.field_res_partner__member_lines
+#: model:ir.model.fields,field_description:membership.field_res_users__member_lines
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_graph1
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_pivot
@@ -426,90 +442,95 @@ msgid "Membership"
 msgstr "Narystė"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_res_partner_membership_amount
-#: model:ir.model.fields,field_description:membership.field_res_users_membership_amount
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_amount
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "Narystės suma"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
 msgid "Membership Analysis"
-msgstr ""
+msgstr "Narystės analizė"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Membership Duration"
-msgstr ""
+msgstr "Narystės trukmė"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_product_product_membership_date_to
-#: model:ir.model.fields,field_description:membership.field_product_template_membership_date_to
-#: model:ir.model.fields,field_description:membership.field_res_partner_membership_stop
-#: model:ir.model.fields,field_description:membership.field_res_users_membership_stop
+#: model:ir.model.fields,field_description:membership.field_product_product__membership_date_to
+#: model:ir.model.fields,field_description:membership.field_product_template__membership_date_to
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_stop
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_stop
 msgid "Membership End Date"
-msgstr "Narystės laikotarpio pabaiga"
+msgstr "Narystės pabaigos data"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_member_price
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__member_price
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_tree
 msgid "Membership Fee"
-msgstr ""
+msgstr "Narystės mokestis"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_invoice
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Membership Invoice"
-msgstr ""
+msgstr "Narystės sąskaita"
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_membership_line
+msgid "Membership Line"
+msgstr "Narystės eilutė"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership Partners"
-msgstr ""
+msgstr "Narystės partneriai"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_membership_id
+#: model:ir.model.fields,field_description:membership.field_report_membership__membership_id
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Membership Product"
-msgstr ""
+msgstr "Narystės produktas"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
-msgstr ""
+msgstr "Narystės produktai"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_product_product_membership_date_from
-#: model:ir.model.fields,field_description:membership.field_product_template_membership_date_from
-#: model:ir.model.fields,field_description:membership.field_res_partner_membership_start
-#: model:ir.model.fields,field_description:membership.field_res_users_membership_start
+#: model:ir.model.fields,field_description:membership.field_product_product__membership_date_from
+#: model:ir.model.fields,field_description:membership.field_product_template__membership_date_from
+#: model:ir.model.fields,field_description:membership.field_res_partner__membership_start
+#: model:ir.model.fields,field_description:membership.field_res_users__membership_start
 msgid "Membership Start Date"
-msgstr "Narystės laikotarpio pradžia"
+msgstr "Narystės pradžios data"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership State"
-msgstr ""
+msgstr "Narystės būsena"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_state
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__state
 msgid "Membership Status"
-msgstr ""
+msgstr "Narystės būsena"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_tree
 msgid "Membership products"
-msgstr ""
+msgstr "Narystės produktai"
 
 #. module: membership
 #: model:ir.actions.server,name:membership.ir_cron_update_membership_ir_actions_server
 #: model:ir.cron,cron_name:membership.ir_cron_update_membership
 #: model:ir.cron,name:membership.ir_cron_update_membership
 msgid "Membership: update memberships"
-msgstr ""
+msgstr "Narystė: atnaujinti narystes"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
@@ -522,59 +543,56 @@ msgid "Month"
 msgstr "Mėnuo"
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__none
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__none
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__none
 msgid "Non Member"
 msgstr "Ne narys"
-
-#. module: membership
-#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "None/Canceled/Old/Waiting"
-msgstr ""
 
 #. module: membership
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                 Current Membership Status, Discussions and History of Membership, etc."
+"                  Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
+"\"Odoo\" jums padeda lengvai sekti visus veiksmus, susijusius su nariu:\n"
+"Esama narystės būsena, diskusijos ir narystės istorija ir t.t."
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__old
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__old
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__old
 msgid "Old Member"
-msgstr ""
+msgstr "Senas narys"
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__paid
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__paid
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__paid
 msgid "Paid Member"
-msgstr ""
+msgstr "Apmokėtas narys"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_partner
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__partner
 msgid "Partner"
 msgstr "Partneris"
 
 #. module: membership
-#: code:addons/membership/models/partner.py:181
+#: code:addons/membership/models/partner.py:0
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr ""
+msgstr "Partneris neturi adreso sąskaitos sukūrimui."
 
 #. module: membership
-#: code:addons/membership/models/partner.py:179
+#: code:addons/membership/models/partner.py:0
 #, python-format
 msgid "Partner is a free Member."
-msgstr ""
+msgstr "Partneris yra nemokamas narys."
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_tot_pending
+#: model:ir.model.fields,field_description:membership.field_report_membership__tot_pending
 msgid "Pending Amount"
-msgstr ""
+msgstr "Laukianti suma"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
@@ -582,7 +600,7 @@ msgid "Product Template"
 msgstr "Produkto šablonas"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_quantity
+#: model:ir.model.fields,field_description:membership.field_report_membership__quantity
 msgid "Quantity"
 msgstr "Kiekis"
 
@@ -594,35 +612,32 @@ msgstr "Ataskaitos"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Revenue Done"
-msgstr ""
+msgstr "Atliktos pajamos"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_user_id
+#: model:ir.model.fields,field_description:membership.field_report_membership__user_id
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Salesperson"
 msgstr "Pardavėjas"
 
 #. module: membership
-#: model:ir.model.fields,help:membership.field_res_partner_free_member
-#: model:ir.model.fields,help:membership.field_res_users_free_member
+#: model:ir.model.fields,help:membership.field_res_partner__free_member
+#: model:ir.model.fields,help:membership.field_res_users__free_member
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Pasirinkite, jei norite suteikti nemokamą narystę."
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_report_membership_start_date
+#: model:ir.model.fields,field_description:membership.field_report_membership__start_date
+#: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Start Date"
 msgstr "Pradžios data"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Start Month"
-msgstr "Pradžios mėnuo"
-
-#. module: membership
-#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Starting Month Of Membership"
-msgstr ""
+msgid "Starting Date Of Membership"
+msgstr "Narystės pradžios data"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
@@ -630,44 +645,51 @@ msgid "Taxes"
 msgstr "Mokesčiai"
 
 #. module: membership
-#: model:ir.model.fields,help:membership.field_res_partner_membership_amount
-#: model:ir.model.fields,help:membership.field_res_users_membership_amount
+#: model:ir.model.fields,help:membership.field_membership_membership_line__account_invoice_id
+msgid "The move of this entry line."
+msgstr "Šios įrašo eilutės perkėlimas."
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner__membership_amount
+#: model:ir.model.fields,help:membership.field_res_users__membership_amount
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "Partnerio suderėta kaina"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr ""
+msgstr "Ši pastaba bus rodoma komerciniuose pasiūlymuose..."
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr ""
+msgstr "Tai parodys apmokėtus, senus ir bendros gautos sumos stulpelius"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
 msgstr ""
+"Tai parodys laukiančius, pateiktų sąskaitų ir bendrus laukiančius stulpelius"
 
 #. module: membership
-#: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
 msgid "To"
-msgstr "Iki"
+msgstr " Kam"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Vendors"
-msgstr "Pardavėjai"
+msgstr "Tiekėjai"
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__waiting
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__waiting
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__waiting
 msgid "Waiting Member"
-msgstr ""
+msgstr "Laukiantis narys"
 
 #. module: membership
-#: model:ir.model,name:membership.model_membership_membership_line
-msgid "membership.membership_line"
-msgstr ""
+#: code:addons/membership/models/partner.py:0
+#, python-format
+msgid "You cannot create recursive associated members."
+msgstr "Negalite kurti pasikartojančių susietų narių."

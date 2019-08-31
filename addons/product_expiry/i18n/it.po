@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * product_expiry
+# 	* product_expiry
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
-# Paolo Valier, 2018
-# David Minneci <david@numeko.it>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Paolo Valier, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# mymage <stefano.consolaro@mymage.it>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +25,6 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
 msgid ""
 "<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
@@ -64,7 +63,6 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
 msgstr "Date"
@@ -80,9 +78,14 @@ msgid "Expiration Alerts"
 msgstr "Avvisi di scadenza"
 
 #. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
+msgid "Expiry has been reminded"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "Lotto/Seriale"
+msgstr "Lotto/Serie"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -126,7 +129,7 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
 msgid "Procurement Group"
-msgstr "Gruppo di Approvvigionamento"
+msgstr "Gruppo di approvvigionamento"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
@@ -137,13 +140,13 @@ msgstr "Tempo di avviso del prodotto"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "Product Expiry Alert"
-msgstr "Avviso di Scadenza di Prodotto"
+msgstr "Avviso scadenza prodotto"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__life_time
 msgid "Product Life Time"
-msgstr "Tempo di vita del prodotto"
+msgstr "Ciclo di vita del prodotto"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
@@ -165,7 +168,7 @@ msgstr "Periodo di utilizzabilità prodotto"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quants"
-msgstr "Quanti"
+msgstr "Quantitativi"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__removal_date
@@ -179,7 +182,7 @@ msgid "The Alert Date has been reached."
 msgstr "La data di avviso di scadenza è stata raggiunta."
 
 #. module: product_expiry
-#: code:addons/product_expiry/models/production_lot.py:84
+#: code:addons/product_expiry/models/production_lot.py:0
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
 msgstr ""
@@ -199,10 +202,8 @@ msgstr ""
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
+"removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
-"In questa data i beni con questo Numero di Serie saranno rimossi dallo stock"
-" di magazzino."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date

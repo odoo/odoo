@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_gamification
+# 	* hr_gamification
 # 
 # Translators:
-# Martin Trigaux, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# snow wang <147156565@qq.com>, 2018
-# 演奏王 <wangwhai@qq.com>, 2018
+# Martin Trigaux, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# 演奏王 <wangwhai@qq.com>, 2019
+# snow wang <147156565@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: 演奏王 <wangwhai@qq.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +34,8 @@ msgstr ""
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__badge_ids
 msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
@@ -54,6 +56,7 @@ msgid "Badges"
 msgstr "徽章"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
@@ -61,13 +64,20 @@ msgstr "徽章是对良好的工作成员的奖励。授予您认为应得的那
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__direct_badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Badges directly linked to the employee"
 msgstr "与雇员相关联的徽章"
 
 #. module: hr_gamification
+#: model:ir.model,name:hr_gamification.model_hr_employee_base
+msgid "Basic Employee"
+msgstr ""
+
+#. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Cancel"
-msgstr "取消"
+msgstr "取消日期"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.challenge_list_action2
@@ -89,15 +99,16 @@ msgstr "创建一个新的目标"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "描述他们做了什么，以及为什么它很重要（将公开）"
+msgstr "描述他们做了什么，以及为什么它很重要（会被公开）"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__direct_badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Direct Badge"
 msgstr "直接徽章"
 
 #. module: hr_gamification
-#: model:ir.model,name:hr_gamification.model_hr_employee
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__employee_id
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__employee_id
 msgid "Employee"
@@ -105,11 +116,15 @@ msgstr "员工"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__badge_ids
 msgid "Employee Badges"
 msgstr "员工徽章"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__goal_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__goal_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__goal_ids
 msgid "Employee HR Goals"
 msgstr "员工人力资源目标"
 
@@ -140,11 +155,13 @@ msgid "Goals History"
 msgstr "历史目标"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant a Badge"
 msgstr "授予徽章"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant this employee his first badge"
 msgstr "授予该员工首枚徽章"
@@ -161,10 +178,13 @@ msgstr "授予的员工人数"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__has_badges
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__has_badges
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__has_badges
 msgid "Has Badges"
 msgstr "拥有徽章"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Received Badges"
 msgstr "回收徽章"
@@ -172,7 +192,7 @@ msgstr "回收徽章"
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_gamification_badge_user_wizard__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "用于管理资源访问权限的相关用户名。"
+msgstr "管理资源访问权限的相关用户名"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
@@ -219,6 +239,7 @@ msgid "You can send badges only to employees linked to a user."
 msgstr "只能将徽章授予存在的职员用户"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
 msgstr "奖励该职员的突出表现"
