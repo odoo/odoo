@@ -1,16 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_stripe
+# 	* payment_stripe
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Martin Trigaux, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +22,7 @@ msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "&times;"
 msgstr "&times;"
@@ -35,85 +37,40 @@ msgstr ""
 "指向您的品牌或產品的正方形圖片的相對或絕對網址。在條紋配置文件中定義。請參閱：https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr "Authorize.Net"
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr "Buckaroo"
-
-#. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "CVC"
-msgstr "信用卡認證編號"
-
-#. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Card number"
-msgstr "卡號"
-
-#. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Cardholder name"
-msgstr "持卡人姓名"
-
-#. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
 msgstr "檢出圖像URL"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:15
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Close"
 msgstr "關閉"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Error"
 msgstr "錯誤"
 
 #. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Expires (MM / YY)"
-msgstr "到期日 (MM / YY)"
-
-#. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:33
+#: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
-msgid "Just one more second, confirming your payment..."
-msgstr "正在確認您的付款，只需再等一秒鐘..."
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr "手工配置"
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr "Ogone"
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
-msgstr "PayUmoney"
+msgid "Just one more second, We are redirecting you to Stripe..."
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "收單"
+msgstr "付款收單方"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
+msgid "Payment Method ID"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
@@ -127,18 +84,13 @@ msgstr "付款交易"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:59
+#: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
 msgid "Payment error"
 msgstr "付款錯誤"
 
 #. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr "Paypal"
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:174
+#: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
@@ -151,19 +103,19 @@ msgid "Provider"
 msgstr "服務商"
 
 #. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
-msgstr "Sips"
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
+#: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
 msgid "Stripe"
 msgstr "條帶"
 
 #. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
+msgid "Stripe Payment Intent ID"
+msgstr ""
+
+#. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr "Stripe 可發佈密鑰"
+msgstr "Stripe 公鑰"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
@@ -171,30 +123,39 @@ msgid "Stripe Secret Key"
 msgstr "Stripe 密鑰"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:172
+#: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
 msgstr "Stripe 為我們提供了以下關於 '%s' 問題的信息："
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:184
+#: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
 msgstr "Stripe：已找到 %s 個可用於參考 %s 的訂單"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:180
+#: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe: no order found for reference %s"
 msgstr "Stripe：未找到參考 %s 的訂單"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:170
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "Unable to save card"
+msgstr ""
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "We are not able to add your payment method at the moment. "
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
 msgstr "很遺憾地告訴您，交易已失敗。"
-
-#. module: payment_stripe
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr "電匯"

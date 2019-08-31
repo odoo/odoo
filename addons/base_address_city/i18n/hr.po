@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_address_city
+# 	* base_address_city
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2017
-# Martin Trigaux, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2017\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,15 +31,17 @@ msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
 msgstr ""
+"Označite ovo  polje da se osigurate da svaka adresa iz ove države ima "
+"odabran 'Grad' sa liste gradova"
 
 #. module: base_address_city
 #: model:ir.actions.act_window,name:base_address_city.action_res_city_tree
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_res_country_city_extended_form
 msgid "Cities"
-msgstr ""
+msgstr "Gradovi"
 
 #. module: base_address_city
-#: code:addons/base_address_city/models/res_partner.py:29
+#: code:addons/base_address_city/models/res_partner.py:55
 #: model:ir.model,name:base_address_city.model_res_city
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_tree
@@ -50,7 +53,7 @@ msgstr "Grad"
 #: model:ir.model.fields,field_description:base_address_city.field_res_partner__city_id
 #: model:ir.model.fields,field_description:base_address_city.field_res_users__city_id
 msgid "City of Address"
-msgstr ""
+msgstr "Grad adrese"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_partner
@@ -71,12 +74,12 @@ msgstr "Kreirao"
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__create_date
 msgid "Created on"
-msgstr "Datum kreiranja"
+msgstr "Kreirano"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__display_name
 msgid "Display Name"
-msgstr "Naziv za prikaz"
+msgstr "Naziv"
 
 #. module: base_address_city
 #: model_terms:ir.actions.act_window,help:base_address_city.action_res_city_tree
@@ -85,13 +88,16 @@ msgid ""
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
+"Prikaži i upravljaj popisom gradova koji mogu biti dodijeljeni vašim "
+"partnerima. Primjetite da na svajkoj državi za sebe možete postaviti obavezu"
+" odabira grada ili slobodni unos."
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_country__enforce_cities
 #: model:ir.model.fields,field_description:base_address_city.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_city.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr ""
+msgstr "Prisili korištenje Gradova"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__id
@@ -121,7 +127,7 @@ msgstr "Naziv"
 #. module: base_address_city
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
 msgid "Search City"
-msgstr ""
+msgstr "Potraži grad"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id
