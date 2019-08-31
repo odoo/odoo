@@ -11,6 +11,7 @@
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
 # Rémi CAZENAVE <remi@le-filament.com>, 2019
 # Martin Trigaux, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -411,6 +412,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Êtes-vous sûr de vouloir annuler la transaction autorisée? Cette action ne "
+"peut pas être annulée."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -552,7 +555,7 @@ msgstr "Ville"
 #: code:addons/payment/static/src/xml/payment_processing.xml:40
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "Cliquez ici pour être redirigé vers la page de confirmation."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -862,7 +865,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:132
 #, python-format
 msgid "If, the payment hasn't been confirmed you can contact us."
-msgstr ""
+msgstr "Si le paiement n'a pas été confirmé, vous pouvez nous contacter."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image
@@ -1136,7 +1139,7 @@ msgstr "Pas d'intermédiaires de paiement trouvés."
 #: code:addons/payment/static/src/xml/payment_processing.xml:118
 #, python-format
 msgid "No payment has been processed."
-msgstr ""
+msgstr "Aucun paiement n'a été traité."
 
 #. module: payment
 #. openerp-web
@@ -1218,12 +1221,14 @@ msgstr "Seules des transactions en brouillon/autorisées peuvent être postées.
 #, python-format
 msgid "Only transactions having the capture status can be captured."
 msgstr ""
+"Seules les transactions ayant le statut de capture peuvent être capturées."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1025
 #, python-format
 msgid "Only transactions having the capture status can be voided."
 msgstr ""
+"Seules les transactions ayant le statut de capture peuvent être annulées."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1399,14 +1404,14 @@ msgstr "Paiements"
 #: code:addons/payment/static/src/xml/payment_processing.xml:9
 #, python-format
 msgid "Payments failed"
-msgstr ""
+msgstr "Les paiements ont échoué"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:26
 #, python-format
 msgid "Payments received"
-msgstr ""
+msgstr "Paiement reçu"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
@@ -1503,7 +1508,7 @@ msgstr "Indiquez le numéro de commande dans le champ libellé."
 #: code:addons/payment/static/src/xml/payment_processing.xml:139
 #, python-format
 msgid "Please wait ..."
-msgstr ""
+msgstr "Veuillez patienter..."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -1640,7 +1645,7 @@ msgstr "Erreur serveur"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "Erreur du serveur:"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -1839,7 +1844,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:117
 #, python-format
 msgid "This transaction has been cancelled."
-msgstr ""
+msgstr "Cette transaction a été annulée."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__transaction_ids
@@ -1864,12 +1869,12 @@ msgstr "Type"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr ""
+msgstr "Impossible de contacter le serveur Odoo."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Use SEPA QR Code"
-msgstr ""
+msgstr "Utiliser un QR code SEPA"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__date
@@ -1912,7 +1917,7 @@ msgstr "Annuler la transaction"
 #: code:addons/payment/static/src/xml/payment_processing.xml:87
 #, python-format
 msgid "Waiting for payment"
-msgstr ""
+msgstr "En attente de paiement"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:666
@@ -1959,6 +1964,8 @@ msgstr ""
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
 msgstr ""
+"Nous ne sommes pas en mesure de trouver votre paiement, mais ne vous "
+"inquiétez pas."
 
 #. module: payment
 #. openerp-web
@@ -1986,7 +1993,7 @@ msgstr "Votre payement est en cours de traitement, veuillez patienter..."
 #: code:addons/payment/static/src/xml/payment_processing.xml:99
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr ""
+msgstr "Nous attendons que l'acquéreur du paiement confirme le paiement."
 
 #. module: payment
 #. openerp-web
@@ -2007,6 +2014,7 @@ msgstr "Virement bancaire"
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
 msgstr ""
+"Vous pouvez cliquer ici pour être redirigé vers la page de confirmation."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
@@ -2020,20 +2028,22 @@ msgstr ""
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
+"Vous devriez recevoir un courriel confirmant votre paiement dans quelques "
+"minutes."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:77
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr ""
+msgstr "Vous serez averti lorsque le paiement sera confirmé."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:58
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr ""
+msgstr "Vous serez averti lorsque le paiement sera entièrement confirmé."
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
