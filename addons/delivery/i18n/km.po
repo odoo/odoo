@@ -233,7 +233,7 @@ msgstr "ទម្ងន់ជាដុំ"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
 msgid "Can be Expensed"
-msgstr ""
+msgstr "អាចត្រូវបានបង់ថ្លៃ "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
@@ -277,7 +277,7 @@ msgstr "ក្រុមហ៊ុនដឹកជញ្ជូន"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_from_categ_ids
 msgid "Category Routes"
-msgstr ""
+msgstr "ប្រភេទបញ្ញតិ្ត"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
@@ -386,11 +386,16 @@ msgid ""
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"ចរន្តគុណភាពនៃទំនិញ\n"
+"ការទំនាក់ទំនងជាមួយនឹងទីតាំងនៃសារពើភ័ណ្ឌតែមួយ, ការបញ្ជូលទីតាំងទំនិញហាងទាំងនេះ, ឬណាមួយនៃកូនរបស់ខ្លួន។\n"
+"ការទំនាក់ទំនងជាមួយឃ្លាំងតែមួយ, ការបញ្ជូលក្នុងទីតាំងទំនិញហាងទាំងនេះក្នុងទីតាំងឃ្លាំងនៃសារពើភ័ណ្ឌទាំងនេះ, ឬកូនៗណាមួយ។\n"
+"រក្សាទុកនៅក្នុងស្តុកទីតាំងនៃឃ្លាំងនៃហាងនេះ, ឬកូនៗណាមួយ។\n"
+"បើមិនដូច្នេះទេ, ការបញ្ជូលទំនិញហាងក្នុងទីតាំងណាមួយជាមួយ'ការរួមបញ្ជូល' ប្រភេទ។"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
 msgid "Customer Lead Time"
-msgstr ""
+msgstr "ពេលវេលាអតិថិជនដែលសំខាន"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
@@ -489,12 +494,12 @@ msgstr "ពិស្តារ"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
 msgid "Description on Picking"
-msgstr ""
+msgstr "ការពិពណ៌នាអំពីការជ្រើសរើស"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination"
-msgstr ""
+msgstr "ទិសដៅ"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_event_ok
@@ -548,7 +553,7 @@ msgstr "ការចុះឈ្មោះព្រឹត្តិការណ៍
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
 msgid "Event Tickets"
-msgstr ""
+msgstr "សំបុត្រព្រឹត្តិការណ៍"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin
@@ -623,7 +628,7 @@ msgstr "អ្នកដើរតាម (ដៃគូរ)"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "ការព្យាករណ៍គុណភាព"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_virtual_available
@@ -633,6 +638,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"ការព្យាករណ៍គុណភាព(ការគណនាស្មើ្ននឹងគុណភាពក្នុងដៃ - ការនាំចេញ + ការនាំចូល)\n"
+"ការទំនាក់ទំនងជាមួយនឹងទីតាំងសារពើភ័ណ្ឌតែមួយ, ការបញ្ជូលទំនិញហាងក្នុងទីតាំងស្តុកនៃឃ្លាំងទាំងនេះ, ឬកូនណាមួយ\n"
+"ការទំនាក់ទំនងនឹងឃ្លាំងតែមួយ,បញ្ជូលទំនិញហាងក្នុងទីតាំងស្តុកនៃឃ្លាំង, ឬកូន ៗ របស់វា។\n"
+"បើមិនដូច្នេះទេ, នេះរួមបញ្ចូលទាំងទំនិញដែលបានរក្សាទុកនៅក្នុងទីតាំងស្តុកណាមួយដែលមានប្រភេទ 'ខាងក្នុង'."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -762,7 +771,7 @@ msgstr "គណនីចំណូល"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
 msgid "Incoming"
-msgstr ""
+msgstr "ដែលចូល"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -793,12 +802,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_inventory
 msgid "Inventory Location"
-msgstr ""
+msgstr "ទីតាំងសារពើភ័ណ្ឌ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_valuation
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "ការវាយតម្លៃសារពើភ័ណ្ឌ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
@@ -970,7 +979,7 @@ msgstr "សារ"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_orderpoint_ids
 msgid "Minimum Stock Rules"
-msgstr ""
+msgstr "វិធានភាគហ៊ុនអប្បបរមា"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name
@@ -1125,7 +1134,7 @@ msgstr "លទ្ឋិផលតំលៃ"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_id
 msgid "Pricelist"
-msgstr ""
+msgstr "តារាង​តំលៃ "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
@@ -1192,7 +1201,7 @@ msgstr "គំរូផលិតផល"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_type
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_type
 msgid "Product Type"
-msgstr ""
+msgstr "ប្រភេទផលិតផល"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_use_time
@@ -1251,7 +1260,7 @@ msgstr "ចំនួន"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_qty_available
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "បរិមាណនៅក្នុងដៃ"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_incoming_qty
@@ -1284,7 +1293,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
-msgstr ""
+msgstr "ការស្នើរសុំច្បាប់ឡើងវិញ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
@@ -1333,7 +1342,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "លក់តាមការបញ្ជាទិញ"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
