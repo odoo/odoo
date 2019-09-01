@@ -11,9 +11,9 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # dpms <pieter.van.de.wygaert@telenet.be>, 2018
 # Wynand Tastenhoye <wta@odoo.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5621,7 +5621,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr ""
+msgstr "Geeft aan dat deze boeking een BTW regel is"
 
 #. module: account
 #. openerp-web
@@ -5960,7 +5960,7 @@ msgstr "Facturen zonder betaling"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "Boekhouding"
+msgstr "Facturatie"
 
 #. module: account
 #: selection:account.reconcile.model,match_amount:0
@@ -12031,6 +12031,7 @@ msgid ""
 "Wrong credit or debit value in accounting entry! Credit and debit should be "
 "positive."
 msgstr ""
+"Verkeerde credit- of debetwaarde bij boeking! Credit en debet moet nul zijn."
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -12038,6 +12039,7 @@ msgid ""
 "Wrong credit or debit value in accounting entry! Credit or debit should be "
 "zero."
 msgstr ""
+"Verkeerde credit- of debetwaarde bij boeking! Credit of debet moet nul zijn."
 
 #. module: account
 #: code:addons/account/models/account_move.py:944
@@ -12152,6 +12154,8 @@ msgid ""
 "You cannot change the type of an invoice line. Instead you should delete the"
 " current line and create a new line of the proper type."
 msgstr ""
+"U kunt het type factuurregel niet wijzigen. In plaats daarvan moet u de "
+"huidige regel verwijderen en een nieuwe regel van het juiste type maken."
 
 #. module: account
 #: code:addons/account/models/account_move.py:703
