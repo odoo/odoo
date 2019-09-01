@@ -5,11 +5,11 @@
 # Translators:
 # Martin Trigaux, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Quim - eccit <quim@eccit.com>, 2018
 # Josep Sànchez <papapep@gmx.com>, 2018
 # Lluís Dalmau <lluis.dalmau@guifi.net>, 2018
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018
 # Manel Fernandez <manelfera@outlook.com>, 2018
+# Quim - eccit <quim@eccit.com>, 2019
 # Arnau Ros, 2019
 # 
 msgid ""
@@ -137,6 +137,10 @@ msgid ""
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
+"${object.subject o (object.record_name i 'Re: %s' % object.record_name) o "
+"(object.parent_id i object.parent_id.subject i 'Re: %s' % "
+"object.parent_id.subject) o (object.parent_id and "
+"object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:29
@@ -2461,7 +2465,7 @@ msgstr "Missatge inicial del fil"
 #: model:ir.ui.menu,name:mail.mail_channel_integrations_menu
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Integrations"
-msgstr ""
+msgstr "Integracions"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_internal
@@ -2906,7 +2910,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Tipus d'activitat de correu electrònic"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -3332,7 +3336,7 @@ msgstr "Recipient de l'acció requerida"
 #: code:addons/mail/static/src/xml/client_action.xml:138
 #, python-format
 msgid "New Channel"
-msgstr ""
+msgstr "Nou canal"
 
 #. module: mail
 #. openerp-web

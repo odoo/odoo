@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Birgir Steinarsson <biggboss83@gmail.com>, 2019
+# Martin Trigaux, 2019
 # Björn Ingvarsson <boi@exigo.is>, 2019
 # 
 msgid ""
@@ -1630,7 +1631,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Domain"
-msgstr ""
+msgstr "Lén"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1792,7 +1793,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "Error"
-msgstr ""
+msgstr "Villa!"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2489,7 +2490,7 @@ msgstr "Label"
 #: model:ir.model.fields,field_description:website.field_res_config_settings_language_ids
 #: model:ir.model.fields,field_description:website.field_website_language_ids
 msgid "Languages"
-msgstr ""
+msgstr "Tungumál"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2982,6 +2983,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Only applies if this view inherits from an other one (inherit_id is not False/Null).\n"
+"\n"
+"* if extension (default), if this view is requested the closest primary view\n"
+"is looked up (via inherit_id), then all views inheriting from it with this\n"
+"view's model are applied\n"
+"* if primary, the closest primary view is fully resolved (even if it uses a\n"
+"different model than this one), then this view's inheritance specs\n"
+"(<xpath/>) are applied, and the result is used as if it were this view's\n"
+"actual arch.\n"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info

@@ -103,7 +103,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tour.js:39
 #, python-format
 msgid "<p>Select expenses to submit them to your manager</p>"
-msgstr ""
+msgstr "<p>Удирдлагаараа хянуулж зөвшөөрүүлэх зардлуудаа сонгоно уу</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -345,7 +345,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tour.js:35
 #, python-format
 msgid "Attach your receipt here."
-msgstr ""
+msgstr "Тооцооны баримтаа энд хавсаргана уу"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_bank_journal_id
@@ -721,7 +721,7 @@ msgstr "Зардлын тайлан илгээгдсэн, зөвшөөрөл х�
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line_expense_id
 msgid "Expense where the move line come from"
-msgstr ""
+msgstr "Журналын бичилтийн эх сурвалж бүхий зардал"
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
@@ -839,7 +839,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_is_refused
 msgid "Explicitely Refused by manager or acccountant"
-msgstr ""
+msgstr "Менежер эсвэл нягтлангаас түтгэлзүүлсэн"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -922,12 +922,12 @@ msgstr "Зочид буудлын байрлах"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_hr_expense_ids
 msgid "Hr Expense"
-msgstr ""
+msgstr "HR Зардал"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_hr_expense_sheet_id
 msgid "Hr Expense Sheet"
-msgstr ""
+msgstr "HR Зардлын тооцоо"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
@@ -1000,7 +1000,7 @@ msgstr "Сүүлийн засвар хийсэн огноо"
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings_use_mailgateway
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Let your employees record expenses by email"
-msgstr ""
+msgstr "Ажилтнууд зардлаа имэйлээр илгээхийг зөвшөөрөх"
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_manager
@@ -1074,6 +1074,8 @@ msgid ""
 "No Expense account found for the product %s (or for its category), please "
 "configure one."
 msgstr ""
+"%s бараанд (эсвэл үүний ангилалд) зардлын данс тохируулаагүй байна, ямар нэг"
+" данс тохируулна уу."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:231
@@ -1308,12 +1310,12 @@ msgstr "Шалтгаан"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Reason :"
-msgstr ""
+msgstr "Шалтгаан :"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr ""
+msgstr "Зардлыг татгалзах шалтгаан"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1323,7 +1325,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Recording"
-msgstr ""
+msgstr "Бүртгэл"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1734,6 +1736,12 @@ msgid ""
 "between brackets, the product will be set automatically. Type the expense "
 "amount in the mail subject to set it on the expense too."
 msgstr ""
+"Та зориулалтын имэйл алиас тохируулснаар зардлыг хялбар бүртгэх боломжтой. "
+"Төлбөрийн баримтыг имэйлээр хавсаргаж илгээснээр системд зардлын мөр "
+"автоматаар бүртгэгдэнэ. Хэрэв имэйлийн гарчиг хэсэгт барааны дотоодыг кодыг "
+"бичсэн байвал тухайн зардлын бараа зардлын мөр дээр автоматаар сонгогдоно. "
+"Мөн имэйлийн гарчиг дотор зардлын мөнгөн дүнг бичвэл системд үүсэх зардлын "
+"бүртгэл дээр автоматаар тусгагдана."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:598
@@ -1751,7 +1759,7 @@ msgstr "Илгээсэн зардлыг устгах боломжгүй."
 #: code:addons/hr_expense/models/hr_expense.py:469
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr ""
+msgstr "Та санхүүд бүртгэгдсэн эсвэл төлөгдсөн зардлыг устгах боломжгүй."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:111
@@ -1784,7 +1792,7 @@ msgstr "Та зардлуудыг шивнэ,"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "Таны зардал"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1829,7 +1837,7 @@ msgstr "ж. NY-рүү явсан"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr ""
+msgstr "түтгэлзсэн"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:344
