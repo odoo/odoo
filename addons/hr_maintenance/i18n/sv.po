@@ -3,17 +3,19 @@
 # * hr_maintenance
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2018
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2018
+# Martin Trigaux, 2019
+# Kim Asplund <kim.asplund@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Christelle Wehbe <libanon_cristelle@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:59+0000\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +54,7 @@ msgid "Department"
 msgstr "Avdelning"
 
 #. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
@@ -61,13 +64,24 @@ msgid "Employee"
 msgstr "Anställd"
 
 #. module: hr_maintenance
-#: model:ir.model,name:hr_maintenance.model_maintenance_equipment
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_ids
 msgid "Equipment"
 msgstr ""
 
 #. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_count
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_count
+msgid "Equipments"
+msgstr "Utrustning"
+
+#. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_maintenance_equipment
+msgid "Maintenance Equipment"
+msgstr ""
+
+#. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_request
-msgid "Maintenance Requests"
+msgid "Maintenance Request"
 msgstr ""
 
 #. module: hr_maintenance
@@ -94,3 +108,8 @@ msgstr "Ej tilldelade"
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__equipment_assign_to
 msgid "Used By"
 msgstr ""
+
+#. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_res_users
+msgid "Users"
+msgstr "Användare"

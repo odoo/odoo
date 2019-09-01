@@ -1,18 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * barcodes
+# 	* barcodes
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# Анатолій Пономаренко <aponomarenko020@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +27,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcodes.py:204
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr "'*' не є дійсним шаблоном штрих-кода. Ви мали на увазі '.*' ?"
+msgstr "'*' не є дійсним шаблоном штрих-коду. Ви мали на увазі '.*' ?"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:202
@@ -63,8 +66,8 @@ msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
 msgstr ""
-"Номенклатура штрих-кодів визначає, як POS буде їх ідентифікувати та "
-"зчитувати "
+"Номенклатура штрих-кодів визначає, як точка продажу буде їх ідентифікувати "
+"та зчитувати "
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -166,7 +169,7 @@ msgstr "Кредитна карта"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:390
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:389
 #, python-format
 msgid "Discard"
 msgstr "Відмінити"
@@ -205,7 +208,7 @@ msgstr "Кодування"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:326
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:325
 #, python-format
 msgid "Error: Barcode command is undefined"
 msgstr "Помилка: команда штрих-коду невизначена"
@@ -219,7 +222,7 @@ msgstr "Помилка: документ не редагується"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:362
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:361
 #, python-format
 msgid "Error: No last scanned barcode"
 msgstr "Помилка: немає останнього відсканованого штрих-коду"
@@ -303,7 +306,7 @@ msgstr ""
 "Шаблон також може визначати як числові значення, такі як вага чи ціна, можуть\n"
 "бути зашиті у штрих-код. Вони вказуються як <code>{NNN}</code>, де N\n"
 "визначають місце і кількість цифр. Числа з комою також підтримуються, якщо\n"
-"вказати числа після коми літерами D, наприклад, <code>{NNNDD}</code>. В цьому випадку, штрих-код у відповідних записах <i>повинен</i> вказувати ці числа, як нулі."
+"вказати числа після коми літерами D, наприклад, <code>{NNNDD}</code>. В цьому випадку, штрихкод у відповідних записах <i>повинен</i> вказувати ці числа, як нулі."
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -322,7 +325,7 @@ msgstr "Правила"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:382
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:381
 #, python-format
 msgid "Select"
 msgstr "Обрати"
@@ -334,7 +337,7 @@ msgstr "Послідовність"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:381
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:380
 #, python-format
 msgid "Set quantity"
 msgstr "Встановити кількість"
@@ -373,7 +376,8 @@ msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
-"Це правило діятиме, якщо штрих-код закодовано точно зазначеним кодуванням"
+"Дане правило діятиме, тільки якщо штрих-код закодовано точно зазначеним "
+"кодуванням"
 
 #. module: barcodes
 #. openerp-web
@@ -384,7 +388,7 @@ msgstr "Для зміни цього документу, спочатку зап
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:363
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:362
 #, python-format
 msgid "To set the quantity please scan a barcode first."
 msgstr ""
@@ -402,7 +406,7 @@ msgid ""
 "setting determines if a UPC/EAN barcode should be automatically converted in"
 " one way or another when trying to match a rule with the other encoding."
 msgstr ""
-"UPC коди можна конвертувати у EAN дописуючи нулі спочатку. Це налаштування "
+"UPC коди можна конвертувати у EAN, дописуючи нулі спочатку. Це налаштування "
 "вказує, чи конвертувати автоматично UPC/EAN штрих-коди в тому чи іншому "
 "напрямку під час пошуку правила для відповідного кодування."
 

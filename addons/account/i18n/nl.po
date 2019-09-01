@@ -17,10 +17,10 @@
 # Wynand Tastenhoye <wta@odoo.com>, 2019
 # Erik-Jan Bulthuis <ejbulthuis@erpopen.nl>, 2019
 # woutvanrooij <wout.vanrooij@dynapps.be>, 2019
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -234,6 +234,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Zie hier \n"
+"        % if object.number:\n"
+"            factuur <strong>${object.number}</strong>\n"
+"        % else:\n"
+"            factuur\n"
+"        %endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin})\n"
+"        % endif\n"
+"        voor een bedrag van <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        ten aanzien van ${object.company_id.name}.\n"
+"        % if object.state=='paid':\n"
+"            Deze factuur werd reeds betaald.\n"
+"        % else:\n"
+"            Met het oog op een vlotte afwikkeling zouden we het op prijs stellen indien u dit zo spoedig mogelijk doet.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Mocht u vragen hebben aarzel dan niet om contact met ons op te nemen . \n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -440,6 +468,8 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Fiscale lokalisatie</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -619,7 +649,7 @@ msgstr "<span>Prijs</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Bills</span>"
-msgstr ""
+msgstr "<span>Importeer facturen</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -994,7 +1024,7 @@ msgstr "Dagboek"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
 msgid "Account Journal Group"
-msgstr ""
+msgstr "Dagboekgroepen"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
@@ -1078,12 +1108,12 @@ msgstr "Belasting-grootboekrekening"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
-msgstr ""
+msgstr "BTW-groep"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
 msgid "Account Tax Report Line"
-msgstr ""
+msgstr "BTW rapportage regels"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1181,7 +1211,7 @@ msgstr "Rekening op product"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__account_id
 msgid "Account on which to post the tax amount"
-msgstr ""
+msgstr "Rekening waarop het BTW-bedrag te posten"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
@@ -1382,7 +1412,7 @@ msgstr "Voeg een dagboek toe"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Add a journal group"
-msgstr ""
+msgstr "Voeg een dagboek groep toe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1662,7 +1692,7 @@ msgstr "Verschuldigd bedrag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual_signed
 msgid "Amount Due Signed"
-msgstr ""
+msgstr "Verschuldigd bedrag ondertekend"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_total_amount
@@ -2166,7 +2196,7 @@ msgstr "Bank bewerkingen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__bank_partner_id
 msgid "Bank Partner"
-msgstr ""
+msgstr "Bank Relatie"
 
 #. module: account
 #. openerp-web
@@ -2361,7 +2391,7 @@ msgstr "Facturatie"
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
-msgstr ""
+msgstr "Facturatie Administrator"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_in_invoice_type
@@ -2529,7 +2559,7 @@ msgstr "Annuleer"
 #. module: account
 #: selection:account.move.reversal,refund_method:0
 msgid "Cancel: create credit note and reconcile (full refunding)"
-msgstr ""
+msgstr "Annuleer: maak creditnota en letter af (volledige terugbetaling)"
 
 #. module: account
 #: selection:account.invoice.report,state:0 selection:account.move,state:0
@@ -2547,6 +2577,7 @@ msgstr "Geannuleerde factuur"
 #, python-format
 msgid "Cannot create an invoice of type %s with a journal having %s as type."
 msgstr ""
+"Kan geen factuur van het type %s maken met een dagboek van het type %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1334
@@ -2558,7 +2589,7 @@ msgstr "Het is niet mogelijk om mutaties te maken voor meerdere bedrijven."
 #: code:addons/account/models/account_move.py:1292
 #, python-format
 msgid "Cannot create unbalanced journal entry. Ids: %s"
-msgstr ""
+msgstr "Kan geen ongebalanceerde boeking maken. Ids: %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:277
@@ -2887,6 +2918,8 @@ msgid ""
 "Choose how you want to credit this invoice. You cannot \"modify\" nor "
 "\"cancel\" if the invoice is already reconciled."
 msgstr ""
+"Kies hoe u deze factuur wilt crediteren. U kan de factuur niet wijzigen of "
+"annuleren als ze al afgeletterd is."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.actions_account_fiscal_year
@@ -3261,7 +3294,7 @@ msgstr "Land waarvoor deze regel beschikbaar is."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__country_id
 msgid "Country for which this tag is available, when applied on taxes."
-msgstr ""
+msgstr "Land waarvoor deze regel beschikbaar is, indien toegepast op BTW"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3272,7 +3305,7 @@ msgstr "Aanmaken"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form_multi
 msgid "Create Payment"
-msgstr ""
+msgstr "Betaling aanmaken"
 
 #. module: account
 #: code:addons/account/models/company.py:305
@@ -3293,7 +3326,7 @@ msgstr "Maak een klantfactuur"
 #. module: account
 #: selection:account.move.reversal,refund_method:0
 msgid "Create a draft credit note (partial refunding)"
-msgstr ""
+msgstr "Maak concept creditnota (gedeeltelijke terugbetaling)"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3334,7 +3367,7 @@ msgstr "Maak een nieuw afletter model"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
 msgid "Create a new sales receipt"
-msgstr ""
+msgstr "Maak een nieuw betaalbewijs"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_sellable
@@ -3371,6 +3404,8 @@ msgstr "Betaalbewijs aanmaken"
 #: selection:account.move.reversal,refund_method:0
 msgid "Create credit note, reconcile and create a new draft invoice (cancel)"
 msgstr ""
+"Maak een creditnota, letter ze af en maak een nieuwe conceptfactuur "
+"(annuleren)"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:387
@@ -3392,6 +3427,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
 msgstr ""
+"Maak facturen, registreer betalingen en volg communicatie met uw "
+"leveranciers op."
 
 #. module: account
 #. openerp-web
@@ -4366,7 +4403,7 @@ msgstr "Standaard e-mailen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email your Invoices/Bills"
-msgstr ""
+msgstr "E-mail uw facturen/rekeningen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__date_to
@@ -4466,7 +4503,7 @@ msgstr "Wisselkoers mutatie"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__exclude_from_invoice_tab
 msgid "Exclude From Invoice Tab"
-msgstr ""
+msgstr "Uitsluiten van factuur tabblad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -4528,7 +4565,7 @@ msgstr "Vrij aan boord"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
 msgid "Factor Ratio"
-msgstr ""
+msgstr "Factor Ratio"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor
@@ -4536,6 +4573,8 @@ msgid ""
 "Factor to apply on the account move lines generated from this repartition "
 "line"
 msgstr ""
+"Factor die moet worden toegepast op de accountverplaatsingsregels die zijn "
+"gegenereerd op basis van deze herpartitieregel"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -4587,7 +4626,7 @@ msgstr "Grootboekrekening"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
 msgid "Financial Tags"
-msgstr ""
+msgstr "Financiële labels"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -5640,7 +5679,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_has_outstanding
 msgid "Invoice Has Outstanding"
-msgstr ""
+msgstr "Factuur Heeft Openstaande"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
@@ -6111,7 +6150,7 @@ msgstr "Dagboeken controle"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
 msgid "Json Activity Data"
-msgstr ""
+msgstr "JSON activiteitsgegevens"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -8612,7 +8651,7 @@ msgstr "Omkeringsdatum"
 #: code:addons/account/models/account_move.py:3810
 #, python-format
 msgid "Reversal of %s"
-msgstr ""
+msgstr "Omkering van %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:3842
@@ -12273,7 +12312,7 @@ msgstr "naam"
 #: selection:account.tax.repartition.line,repartition_type:0
 #: selection:account.tax.repartition.line.template,repartition_type:0
 msgid "of tax"
-msgstr ""
+msgstr "of belasting"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -12337,7 +12376,7 @@ msgstr "het bovenliggende bedrijf"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
-msgstr ""
+msgstr "te controleren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

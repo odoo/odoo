@@ -48,12 +48,14 @@
 # LEONARD Jean-Christophe <jean-christophe.leonard@myceliandre.fr>, 2019
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2019
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
-# Alex Tuyls <alt@odoo.com>, 2019
+# Alex T <alt@odoo.com>, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # Martin Trigaux, 2019
 # Florian Hatat, 2019
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
+# Jonathan Wynands <jwy@odoo.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -61,7 +63,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:27+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -362,6 +364,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Bon de commande\" "
+"title=\"Bon de commande\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -456,7 +460,7 @@ msgstr "En signant ce devis, vous acceptez les conditions suivantes :"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>Rem.(%)</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -818,6 +822,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Êtes-vous sûr de vouloir annuler la transaction autorisée? Cette action ne "
+"peut pas être annulée."
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -1353,7 +1359,7 @@ msgstr "Contenu digital"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Disc.%"
-msgstr ""
+msgstr "Disc.%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
@@ -1424,7 +1430,7 @@ msgstr "Montant de l'acompte"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:142
 #, python-format
 msgid "Down Payment: %s"
-msgstr "Acompte"
+msgstr "Acompte : %s"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -3085,7 +3091,7 @@ msgstr "Analyse des ventes"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Rapport d'analyse des ventes"
 
 #. module: sale
 #: selection:sale.report,state:0
