@@ -190,7 +190,7 @@ msgstr "Метод калькуляції"
 #: code:addons/stock_account/models/product.py:668
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
-msgstr ""
+msgstr "Зміна методу оцінки запасів для категорії товару %s: з %s на %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id
@@ -260,6 +260,8 @@ msgid ""
 "                                has changed for product template %s: from %s"
 " to %s."
 msgstr ""
+"Через зміну категорії товару (з %s на %s), метод оцінки запасів змінено для "
+"шаблону товару %s: з %s на %s."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -269,7 +271,7 @@ msgstr "First In First Out (FIFO)"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
 msgid "Has Account Moves"
-msgstr ""
+msgstr "Має бухгалтерське проведення"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__id
@@ -319,7 +321,7 @@ msgstr "Оцінка запасу"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Is Anglo Saxon Line"
-msgstr ""
+msgstr "Це англо-саксонський рядок"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
@@ -362,7 +364,7 @@ msgstr "Останнє оновлення"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked Stock Valuation Layer"
-msgstr ""
+msgstr "Пов'язаний рівень оцінки запасів"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
@@ -393,6 +395,8 @@ msgid ""
 "Please define an expense account for this product: \"%s\" (id:%d) - or for "
 "its category: \"%s\"."
 msgstr ""
+"Визначіть рахунок витрат для цього товару: \"%s\" (id:%d) - або для цієї "
+"категорії: \"%s\"."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__new_price
@@ -426,7 +430,7 @@ msgstr "Шаблон товару"
 #: code:addons/stock_account/models/product.py:185
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr ""
+msgstr "Значення товару змінене вручну (з %s на %s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -437,7 +441,7 @@ msgstr "Кількість"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 msgid "Quantity Svl"
-msgstr ""
+msgstr "Кількість рівня оцінки запасів"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -539,6 +543,7 @@ msgstr "Етап оцінювання запасу"
 #: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Technical field used to retrieve the anglo-saxon lines."
 msgstr ""
+"Технічне поле використовується для отримання англо-саксонських рядків."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:631
@@ -597,6 +602,8 @@ msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
 " moves should impact the valuation of the stock."
 msgstr ""
+"Немає рівнів оцінки. Рівні оцінки створюються, коли деякі переміщення "
+"товарів мають впливати на оцінку запасів."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -621,7 +628,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
 msgid "Unit Value"
-msgstr ""
+msgstr "Значення одиниці"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
@@ -679,12 +686,12 @@ msgstr "Оцінка"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
 msgid "Valuation Layer?"
-msgstr ""
+msgstr "Рівень оцінки?"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 msgid "Value Svl"
-msgstr ""
+msgstr "Рівень оцінки запасів"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:640
@@ -747,6 +754,8 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"У вас немає рахунка вхідної оцінки, визначеної на категорії товару. Вам "
+"необхідно визначити його перед початком цієї операції."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:336
@@ -775,7 +784,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:204
 #, python-format
 msgid "You must set a counterpart account."
-msgstr ""
+msgstr "Вам потрібно встановити рахунок контрагента."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price

@@ -23,7 +23,6 @@
 # Olivier Dony <odo@odoo.com>, 2018
 # Richard Mathot <rim@odoo.com>, 2018
 # Clo <clo@odoo.com>, 2018
-# Cécile Collart <cco@odoo.com>, 2018
 # e2f <projects@e2f.com>, 2018
 # Fabien Pinckaers <fp@openerp.com>, 2018
 # Nathan Noël <nathan070@me.com>, 2018
@@ -37,6 +36,7 @@
 # Mohamed Cherkaoui <chermed@gmail.com>, 2019
 # Shark McGnark <peculiarcheese@gmail.com>, 2019
 # William Olhasque <william.olhasque@scopea.fr>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:32+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: William Olhasque <william.olhasque@scopea.fr>, 2019\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,6 +89,9 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"<h3>Veuillez effectuer un paiement à l'adresse suivante:</h3><ul><li> "
+"Banque: %s</li><li> Numéro de compte: %s</li><li>Titulaire du compte: "
+"%s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -101,6 +104,8 @@ msgid ""
 "<i class=\"fa fa-check text-muted\" title=\"This payment method has not been"
 " verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-muted\" title=\"This payment method has not been"
+" verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -119,12 +124,12 @@ msgstr "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Accueil\" title=\"Accu
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-lock\"/> Pay"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"/> Payer"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"/> Add new card"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-circle\"/>Ajouter une nouvelle carte "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -434,7 +439,7 @@ msgstr "Adyen"
 #: model:payment.acquirer,name:payment.payment_acquirer_alipay
 #: selection:payment.acquirer,provider:0
 msgid "Alipay"
-msgstr ""
+msgstr "Alipay"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -466,6 +471,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Êtes-vous sûr de vouloir annuler la transaction autorisée? Cette action ne "
+"peut pas être annulée."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -607,7 +614,7 @@ msgstr "Ville"
 #: code:addons/payment/static/src/xml/payment_processing.xml:40
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "Cliquez ici pour être redirigé vers la page de confirmation."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -927,7 +934,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:132
 #, python-format
 msgid "If, the payment hasn't been confirmed you can contact us."
-msgstr ""
+msgstr "Si le paiement n'a pas été confirmé, vous pouvez nous contacter."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image
@@ -1052,12 +1059,12 @@ msgstr "Rendre l'intermédiaire de paiement disponible (factures client, etc.)"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage Payment Methods"
-msgstr ""
+msgstr "Gérer les méthodes de paiement"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage payment methods"
-msgstr ""
+msgstr "Gérer les moyens de paiement"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1206,7 +1213,7 @@ msgstr "Pas d'intermédiaires de paiement trouvés."
 #: code:addons/payment/static/src/xml/payment_processing.xml:118
 #, python-format
 msgid "No payment has been processed."
-msgstr ""
+msgstr "Aucun paiement n'a été traité."
 
 #. module: payment
 #. openerp-web
@@ -1288,12 +1295,14 @@ msgstr "Seules des transactions en brouillon/autorisées peuvent être postées.
 #, python-format
 msgid "Only transactions having the capture status can be captured."
 msgstr ""
+"Seules les transactions ayant le statut de capture peuvent être capturées."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1047
 #, python-format
 msgid "Only transactions having the capture status can be voided."
 msgstr ""
+"Seules les transactions ayant le statut de capture peuvent être annulées."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1475,14 +1484,14 @@ msgstr "Paiements"
 #: code:addons/payment/static/src/xml/payment_processing.xml:9
 #, python-format
 msgid "Payments failed"
-msgstr ""
+msgstr "Les paiements ont échoué"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:26
 #, python-format
 msgid "Payments received"
-msgstr ""
+msgstr "Paiement reçu"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
@@ -1571,7 +1580,7 @@ msgstr "Indiquez le numéro de commande dans le champ libellé."
 #: code:addons/payment/static/src/xml/payment_processing.xml:139
 #, python-format
 msgid "Please wait ..."
-msgstr ""
+msgstr "Veuillez patienter..."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -1722,7 +1731,7 @@ msgstr "Erreur serveur"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "Erreur du serveur:"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -1883,6 +1892,8 @@ msgid ""
 "This Transaction was automatically processed & refunded in order to validate"
 " a new credit card."
 msgstr ""
+"Cette transaction a été automatiquement traitée et remboursée afin de "
+"valider une nouvelle carte de crédit."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1937,7 +1948,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:117
 #, python-format
 msgid "This transaction has been cancelled."
-msgstr ""
+msgstr "Cette transaction a été annulée."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_move__transaction_ids
@@ -1958,6 +1969,8 @@ msgid ""
 "Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.\n"
 "        Without this check, the validity will be verified at the very first transaction."
 msgstr ""
+"Déclenche une transaction de 1 unité monétaire et son remboursement pour vérifier la validité des nouvelles cartes de crédit saisies sur le portail client.\n"
+"Sans cette vérification, la validité sera vérifiée à la toute première transaction."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__type
@@ -1969,12 +1982,12 @@ msgstr "Type"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr ""
+msgstr "Impossible de contacter le serveur Odoo."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Use SEPA QR Code"
-msgstr ""
+msgstr "Utiliser un QR code SEPA"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__date
@@ -2004,7 +2017,7 @@ msgstr "Vérifiée"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__check_validity
 msgid "Verify Card Validity"
-msgstr ""
+msgstr "Vérifier la validité de la carte"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__website_published
@@ -2022,7 +2035,7 @@ msgstr "Annuler la transaction"
 #: code:addons/payment/static/src/xml/payment_processing.xml:87
 #, python-format
 msgid "Waiting for payment"
-msgstr ""
+msgstr "En attente de paiement"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:677
@@ -2069,6 +2082,8 @@ msgstr ""
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
 msgstr ""
+"Nous ne sommes pas en mesure de trouver votre paiement, mais ne vous "
+"inquiétez pas."
 
 #. module: payment
 #. openerp-web
@@ -2096,7 +2111,7 @@ msgstr "Votre payement est en cours de traitement, veuillez patienter..."
 #: code:addons/payment/static/src/xml/payment_processing.xml:99
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr ""
+msgstr "Nous attendons que l'acquéreur du paiement confirme le paiement."
 
 #. module: payment
 #. openerp-web
@@ -2117,6 +2132,7 @@ msgstr "Virement bancaire"
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
 msgstr ""
+"Vous pouvez cliquer ici pour être redirigé vers la page de confirmation."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:143
@@ -2130,20 +2146,22 @@ msgstr ""
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
+"Vous devriez recevoir un courriel confirmant votre paiement dans quelques "
+"minutes."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:77
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr ""
+msgstr "Vous serez averti lorsque le paiement sera confirmé."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:58
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr ""
+msgstr "Vous serez averti lorsque le paiement sera entièrement confirmé."
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_stripe

@@ -51,13 +51,14 @@
 # Nicolas JEUDY <njeudy@panda-chi.io>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # William Olhasque <william.olhasque@scopea.fr>, 2019
-# Alex Tuyls <alt@odoo.com>, 2019
+# Alex T <alt@odoo.com>, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
 # Martin Trigaux, 2019
 # ShevAbam, 2019
 # Fabien Pinckaers <fp@openerp.com>, 2019
 # Guilhaume Bordiau <github@guilhaume.fr>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -65,7 +66,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:27+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Guilhaume Bordiau <github@guilhaume.fr>, 2019\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -274,6 +275,10 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mail
 #. openerp-web
@@ -538,7 +543,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__category
 msgid "Action to Perform"
-msgstr ""
+msgstr "Action à effectuer"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -547,6 +552,9 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Les actions peuvent déclencher des comportements spécifiques, tels que "
+"l’ouverture de la vue du calendrier ou automatiquement marquer comme fait "
+"lorsqu’un document est téléchargé."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -650,7 +658,7 @@ msgstr "Ajouter"
 #: code:addons/mail/static/src/xml/chatter.xml:30
 #, python-format
 msgid "Add Attachments"
-msgstr ""
+msgstr "Ajouter des pièces jointes"
 
 #. module: mail
 #. openerp-web
@@ -2895,7 +2903,7 @@ msgstr "Interne Seulement"
 #. module: mail
 #: selection:mail.notification,failure_type:0
 msgid "Invalid email address"
-msgstr ""
+msgstr "Adresse e-mail non-valide"
 
 #. module: mail
 #: code:addons/mail/models/mail_blacklist.py:35
@@ -3028,7 +3036,7 @@ msgstr "Est un membre"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__is_moderator
 msgid "Is moderator"
-msgstr ""
+msgstr "Est un modérateur"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__is_pinned
@@ -3925,7 +3933,7 @@ msgstr "Nouvelles personnes"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "New values"
-msgstr ""
+msgstr "Nouvelles valeurs"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__moderation_guidelines
@@ -4063,7 +4071,7 @@ msgstr "Aucun"
 #: model:ir.model.fields,field_description:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_users__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Email normalisé"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_note
@@ -4224,7 +4232,7 @@ msgstr "Ancienne valeur de texte"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Old values"
-msgstr ""
+msgstr "Anciennes valeurs"
 
 #. module: mail
 #. openerp-web
@@ -4820,7 +4828,7 @@ msgstr "ID de l'enregistrement du fil"
 #: code:addons/mail/models/mail_message.py:961
 #, python-format
 msgid "Records:"
-msgstr ""
+msgstr "Enregistrements:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -5147,21 +5155,21 @@ msgstr ""
 #: code:addons/mail/static/src/js/views/activity/activity_controller.js:46
 #, python-format
 msgid "Search: %s"
-msgstr ""
+msgstr "Recherche: %s"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:402
 #, python-format
 msgid "Seen by Everyone"
-msgstr ""
+msgstr "Vu par tous"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:406
 #, python-format
 msgid "Seen by:"
-msgstr ""
+msgstr "Vu par:"
 
 #. module: mail
 #. openerp-web
@@ -5618,7 +5626,7 @@ msgstr "Le code HTML avec caractères d'échappement remplaçant le raccourci"
 #: model:ir.model.fields,help:mail.field_res_partner__user_id
 #: model:ir.model.fields,help:mail.field_res_users__user_id
 msgid "The internal user in charge of this contact."
-msgstr ""
+msgstr "L'utilisateur interne en charge de ce contact."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
