@@ -57,6 +57,8 @@ msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
 msgstr ""
+"ការជ្រើសរើសព្រឹត្តិការណ៍ "
+"និងវានឹងមានការចុះបញ្ជីនៃការបង្កើតថ្មីសម្រាប់ព្រឹត្តិការណ៍នេះ។"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
@@ -64,6 +66,8 @@ msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
 msgstr ""
+"ជ្រើសរើសកន្លែងសំបុត្រ "
+"និងវានឹងបង្កើតការចុះបញ្ជីឌឺរេចជាថ្មីសម្រាប់ព្រឹត្តិការណ៍សំបុត្រ។"
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_2_product
@@ -92,6 +96,9 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"បញ្ជាក់ពីលេខសំបុត្រដែលទំនេរ។ ប្រសិនបើអ្នកការចុះបញ្ជីជាច្រើន "
+"អ្នកនឹងមិនអាចក្លាយជាអ្នកលក់បន្តទៀតទេ។ កំណត់លេខ ០ "
+"ដើម្បីមិនអើពើនឹងច្បាប់នេះដែលមិនកំណត់។"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
@@ -153,17 +160,17 @@ msgstr "ការចុះឈ្មោះព្រឹត្តិការណ៍
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ticket_id
 msgid "Event Ticket"
-msgstr ""
+msgstr "សំបុត្រព្រឹត្តិការណ៍"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ticket_ids
 msgid "Event Tickets"
-msgstr ""
+msgstr "សំបុត្រព្រឹត្តិការណ៍"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
 msgid "Event's Ticket"
-msgstr ""
+msgstr "សំបុត្រព្រឹត្តិការណ៍"
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_1_product
@@ -217,7 +224,7 @@ msgstr "មានកំណត់"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_max
 msgid "Maximum Available Seats"
-msgstr ""
+msgstr "មជ្ឈមណ្ឌលជាអតិបរមា"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_name
@@ -235,7 +242,7 @@ msgstr ""
 #: code:addons/event_sale/models/event.py:129
 #, python-format
 msgid "No more available seats for this ticket"
-msgstr ""
+msgstr "មិនមានកន្លែងអង្គុយសម្រាប់សំបុត្រនេះទេ។"
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_0_product
@@ -246,12 +253,12 @@ msgstr ""
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
 msgid "Origin"
-msgstr ""
+msgstr "ប្រភព"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_registration_id
 msgid "Original Registration"
-msgstr ""
+msgstr "ការចុះឈ្មោះដើម។"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_phone
@@ -266,12 +273,12 @@ msgstr "តម្លៃ"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce
 msgid "Price Reduce"
-msgstr ""
+msgstr "បញ្ចុះតម្លៃ"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "ការកាត់បន្ថយថ្លៃពន្ធ inc"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
@@ -299,12 +306,12 @@ msgstr "ការចុះឈ្មោះ"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_event_registration_ids
 msgid "Registrations to Edit"
-msgstr ""
+msgstr "ការចុះឈ្មោះដើម្បីកែសម្រួល"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_reserved
 msgid "Reserved Seats"
-msgstr ""
+msgstr "កន្លែងអង្គុយបម្រុងទុក"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
@@ -320,12 +327,12 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_deadline
 msgid "Sales End"
-msgstr ""
+msgstr "លក់ចុងគ្រា"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "លក់តាមការបញ្ជាទិញ"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
@@ -375,7 +382,7 @@ msgstr "សំបុត្រ"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "ការកក់កន្លែងអង្គុយដែលមិនបានបញ្ជាក់។"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
@@ -387,7 +394,7 @@ msgstr "គ្មានដែនកំណត់"
 #: model:event.event.ticket,name:event_sale.event_2_ticket_2
 #: model:event.event.ticket,name:event_sale.event_3_ticket_2
 msgid "VIP"
-msgstr ""
+msgstr "VIP"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

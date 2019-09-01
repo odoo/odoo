@@ -44,18 +44,19 @@
 # 6534c450c77b2549e41c52e2051f5839, 2017
 # William Henrotin <whe@odoo.com>, 2017
 # e2f <projects@e2f.com>, 2018
-# 44fd1b7fd1ad5b321e37d151521961ad, 2018
 # Florian Hatat, 2018
 # Richard Mathot <rim@odoo.com>, 2018
 # Pierrick Brun <brun.pierrick@protonmail.com>, 2018
 # Bertrand LATOUR <divoir@gmail.com>, 2018
-# bb76cd9ac0cb7e20167a14728edb858b, 2019
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2019
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
 # Doryan R, 2019
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
+# 44fd1b7fd1ad5b321e37d151521961ad, 2019
+# bb76cd9ac0cb7e20167a14728edb858b, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -63,7 +64,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-23 16:30+0000\n"
 "PO-Revision-Date: 2016-09-07 09:14+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1347,6 +1348,8 @@ msgid ""
 "Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 "    "
 msgstr ""
+"\n"
+"Ajoute la possibilité de spécifier le pays d'origine des marchandises et la TVA du partenaire dans le rapport XML Intrastat."
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mercury
@@ -5078,6 +5081,21 @@ msgid ""
 "\n"
 "    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
+"\n"
+"Cet add-on apporte les exigences techniques de la réglementation française CGI art. 286, I. 3 ° bis qui stipule certains critères concernant l'inaltérabilité, la sécurité, le stockage et l'archivage des données relatives aux ventes aux particuliers (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Installez-le si vous utilisez l'application Point de vente pour vendre à des particuliers.\n"
+"\n"
+"Le module ajoute les fonctionnalités suivantes:\n"
+"\n"
+"    Inaltérabilité: désactivation de toutes les méthodes permettant d'annuler ou de modifier les données clés des commandes, des factures et des écritures de caisse\n"
+"\n"
+"    Sécurité: algorithme de chaînage pour vérifier l'inaltérabilité\n"
+"\n"
+"  Stockage: clôtures automatiques des ventes avec calcul des totaux par période et cumulés (journalier, mensuel, annuel)\n"
+"\n"
+"    Accès pour télécharger le certificat de conformité obligatoire délivré par Odoo SA (uniquement pour les utilisateurs Odoo Enterprise)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_certification
@@ -5096,6 +5114,19 @@ msgid ""
 "\n"
 "    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
+"\n"
+"Cet add-on apporte les exigences techniques de la réglementation française CGI art. 286, I. 3 ° bis qui stipule certains critères concernant l'inaltérabilité, la sécurité, le stockage et l'archivage des données relatives aux ventes aux particuliers (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Le module ajoute les fonctionnalités suivantes:\n"
+"\n"
+"   Inaltérabilité: désactivation de tous les moyens d'annuler ou de modifier les données de clé, les factures et les écritures au journal\n"
+"\n"
+"    Sécurité: algorithme de chaînage pour vérifier l'inaltérabilité\n"
+"\n"
+"    Stockage: clôtures automatiques des ventes avec calcul des totaux par période et cumulés (journalier, mensuel, annuel)\n"
+"\n"
+"    Accès à télécharger le certificat de conformité obligatoire délivré par Odoo SA (réservé aux utilisateurs Odoo Enterprise)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -5791,6 +5822,15 @@ msgid ""
 "    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
 "\n"
 msgstr ""
+"\n"
+"Ce module ajoute la prise en charge des clôtures automatiques des ventes avec le calcul des totaux par période et cumulés (quotidien, mensuel, annuel).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Le module ajoute les fonctionnalités suivantes:\n"
+"\n"
+"\n"
+"Stockage: clôtures automatiques des ventes avec calcul des totaux par période et cumulés (journalier, mensuel, annuel)\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_barcodes
@@ -7170,6 +7210,8 @@ msgid ""
 "- Create/update: a mandatory field is not set.\n"
 "- Delete: another model requires the record being deleted. If possible, archive it instead."
 msgstr ""
+"- Créer / mettre à jour: un champ obligatoire n'est pas défini.\n"
+"- Supprimer: un autre modèle nécessite la suppression de l'enregistrement. Si possible, archivez-le à la place."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -8865,7 +8907,7 @@ msgstr "Declaration Intrastat Belge"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_2019
 msgid "Belgian Intrastat Declaration - Complement for 2019"
-msgstr ""
+msgstr "Déclaration belge Intrastat - Complément pour 2019"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
@@ -8931,6 +8973,7 @@ msgstr "Bhoutan"
 #: model:ir.module.module,summary:base.module_mrp_plm
 msgid "Bill of Materials, Routings, Versions, Engineering Change Orders"
 msgstr ""
+"Nomenclatures, acheminements, versions, ordres de modification technique"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -9800,6 +9843,7 @@ msgstr "Calculer"
 #: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
 msgid "Compute taxes with TaxCloud after online delivery computation."
 msgstr ""
+"Calculez les taxes avec TaxCloud après le calcul de la livraison en ligne."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -9930,7 +9974,7 @@ msgstr "Type de containte"
 #: code:addons/model.py:158
 #, python-format
 msgid "Constraint:"
-msgstr ""
+msgstr "Contrainte:"
 
 #. module: base
 #: sql_constraint:ir.model.constraint:0
@@ -12228,12 +12272,15 @@ msgstr "France - Certification anti-fraude à la TVA (CGI 286 I-3 bis)"
 msgid ""
 "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
 msgstr ""
+"France - Certification antifraude TVA (CGI 286 I-3 bis) - Clôture des ventes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
 msgid ""
 "France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
 msgstr ""
+"France - Certification anti-fraude à la TVA pour Point de Vente (CGI 286 I-3"
+" bis)"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -12710,7 +12757,7 @@ msgstr "Assistance"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_forum
 msgid "Helpdesk: Knowledge Base"
-msgstr ""
+msgstr "Assistance : base de connaissances"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_point_of_sale
@@ -14579,7 +14626,7 @@ msgstr "Sous-produits de la fabrication"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
 msgid "MRP features for Quality Control"
-msgstr ""
+msgstr "Fonctionnalités de MRP pour le module Contrôle qualité"
 
 #. module: base
 #: model:res.country,name:base.mo
@@ -18785,7 +18832,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
 msgid "TaxCloud and Delivery - Ecommerce"
-msgstr ""
+msgstr "TaxCloud et Livraison - eCommerce"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_taxcloud
@@ -19344,6 +19391,8 @@ msgid ""
 "The server is busy right now, module operations are not possible at this "
 "time, please try again later."
 msgstr ""
+"Le serveur est occupé en ce moment, les opérations de module ne sont "
+"actuellement pas possibles, veuillez réessayer plus tard."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_code
@@ -19499,6 +19548,9 @@ msgid ""
 "This module ensures that when delivery price is computed online, and taxes are computed with TaxCloud, the tax computation is done correctly on both the order and delivery.\n"
 "    "
 msgstr ""
+"Ce module garantit que lorsque le prix de livraison est calculé en ligne, et"
+" que les taxes sont calculées avec TaxCloud, le calcul de la taxe est "
+"effectué correctement à la fois sur la commande et sur la livraison."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -21266,7 +21318,7 @@ msgstr "Vous ne pouvez pas créer de hiérarchie de partenaires récursive."
 #: code:addons/base/ir/ir_ui_view.py:314
 #, python-format
 msgid "You cannot create recursive inherited views."
-msgstr ""
+msgstr "Vous ne pouvez pas créer de vues héritées récursives."
 
 #. module: base
 #: code:addons/base/res/res_users.py:340

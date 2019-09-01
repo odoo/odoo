@@ -11,6 +11,7 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
 # M Palau <mpalau@tda.ad>, 2019
+# Arnau Ros, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-09-07 09:18+0000\n"
-"Last-Translator: M Palau <mpalau@tda.ad>, 2019\n"
+"Last-Translator: Arnau Ros, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -321,6 +322,8 @@ msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
 " event or change the dates on which it is held.)</em>"
 msgstr ""
+"<em>(Chamber Works reserva el dret de cancel·lar, renombrar or "
+"reubicar<br>un esdeveniment o canviar les dates en que es realitza).</em>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -328,6 +331,8 @@ msgid ""
 "<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
 " Programming</i></font>"
 msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">Per aprendre\n"
+"<i>Odoo Programming</i></font>"
 
 #. module: event
 #: model:event.event,description:event.event_1
@@ -358,7 +363,7 @@ msgstr ""
 #: model:event.event,description:event.event_3
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
-msgstr ""
+msgstr "<i>Seràs capaç de crear pàgines dinàmiques interactuant amb ORM.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -368,6 +373,8 @@ msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
 msgstr ""
+"<i>Seras capaç de desenvolupar una aplicació sencera amb backend i "
+"interfície d'usuari .</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -376,6 +383,8 @@ msgstr ""
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
 msgstr ""
+"<i>Seras capaç de desenvolupar components dinàmics senzills en pàgines "
+"HTML.</i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -411,6 +420,11 @@ msgid ""
 "development </strong>process. This course is for new developers or for IT "
 "professionals eager to learn more about technical aspects.</span>"
 msgstr ""
+"<span style=\"text-align: -webkit-center; \">Aquest curs està pensat per a "
+"desenvolupadors que hagin d'adquirir coneixements sobre processos de "
+"<strong>desenvolupament d'aplicacions de negoci </strong>. Aquest curs és "
+"per a nous desenvolupadors o professionals de les noves tecnologies amb "
+"ganes d'aprendre més sobre aspectes tècnics</span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1007,12 +1021,12 @@ msgstr "Logo de l'esdeveniment"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr ""
+msgstr "Programador de correus d'esdeveniments"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr ""
+msgstr "Programadors de correus d'esdeveniments"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1095,12 +1109,12 @@ msgstr "Anàlisi d'esdeveniments"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr ""
+msgstr "Programadors de correus d'esdeveniments"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Events in New state"
-msgstr ""
+msgstr "Esdeveniments en un nou estat"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1125,7 +1139,7 @@ msgstr "Previst"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr ""
+msgstr "Assistents prevists"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1135,12 +1149,12 @@ msgstr "Filtres estesos..."
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
-msgstr ""
+msgstr "Finalitzar esdeveniment"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
-msgstr ""
+msgstr "Per qualsevol informació, contacta'ns a"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_max
@@ -1148,6 +1162,8 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
+"Per a cada esdeveniment podeu definir un registre màxim de places (nombre "
+"d’assistents), per sobre d’aquest número no s’accepten les inscripcions."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -1156,6 +1172,9 @@ msgid ""
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
+"Per cada esdeveniment pots definir un mínim de seients reservats (nombre "
+"d'assistents), si no s'arriba al nombre de registres mencionats "
+"l'esdeveniment no es pot confirmar (valor a 0 per ignorar aquesta norma)"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -1165,7 +1184,7 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr ""
+msgstr "Flux funcional de les aplicacions principals;"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1316,16 +1335,18 @@ msgstr "Introducció, CRM, gestió de vendes"
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
 msgid "It will select this default maximum value when you choose this event"
 msgstr ""
+"Seleccionarà el valor màxim per defecte quan esculli aquest esdeveniment"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_min
 msgid "It will select this default minimum value when you choose this event"
 msgstr ""
+"Seleccionarà el valor mínim per defecte quan esculli aquest esdeveniment"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
 msgid "Kanban Color Index"
-msgstr ""
+msgstr "Index de colors de Kanban"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings___last_update

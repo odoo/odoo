@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
-# zbik2607 <darek@krokus.com.pl>, 2016
 # Jakobus Buntownikus <buntownix@gmail.com>, 2016
 # Slawomir Adamus <melthalion@gmail.com>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
 # Martin Trigaux, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2017
 # Monika Grzelak <m.e.grzelak@gmail.com>, 2017
-# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
 # Tomasz Leppich <t.leppich@gmail.com>, 2018
 # Paweł Wodyński <pw@myodoo.pl>, 2018
+# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2016-09-07 09:25+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2018\n"
+"Last-Translator: Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1351,6 +1351,13 @@ msgstr "Grupuj pozycje dziennika"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:135
+#, python-format
+msgid "HTTPS connection to IoT Box failed"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1322
 #, python-format
 msgid "Hardware Events"
@@ -1473,7 +1480,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/gui.js:266
 #, python-format
 msgid "Incorrect Password"
-msgstr ""
+msgstr "Niepoprawne hasło"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_note
@@ -1678,6 +1685,15 @@ msgstr "program lojalnościowy"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Make Payment"
 msgstr "Wykonaj płatność"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:137
+#, python-format
+msgid ""
+"Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
+"the certificate of your IoT Box."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos

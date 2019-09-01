@@ -4,20 +4,22 @@
 # 
 # Translators:
 # lam nguyen <lamev.inc@gmail.com>, 2016
-# Martin Trigaux, 2016
-# fanha99 <fanha99@hotmail.com>, 2016
 # Hoang Loc Le Huu <loclhh@gmail.com>, 2016
 # son dang <son.dang@doda100.com>, 2016
+# fanha99 <fanha99@hotmail.com>, 2016
 # Phạm Lân <phamquanglan@gmail.com>, 2016
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Martin Trigaux, 2016
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2018
+# Dung Nguyen Thi <dungnt@trobz.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
+"PO-Revision-Date: 2016-09-07 09:24+0000\n"
+"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,6 +106,10 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Lỗi,</i> xin lưu ý rằng có lỗi xảy ra trong quá trình giao dịch. "
+"Đơn hàng đã được xác nhận nhưng sẽ không được thanh toán. Đừng ngần ngại "
+"liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào về tình trạng đơn đặt "
+"hàng của bạn.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -527,7 +533,7 @@ msgstr "Hãy để khách hàng quyết định"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "Cung cấp công cụ thanh toán này (Hóa đơn khách hàng, v.v.) "
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -546,6 +552,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Hình ảnh kích thước chuẩn của người cung cấp. Nó sẽ tự động thay đổi kích "
+"thước thành hình ảnh 128x128px , với tỷ lệ khung hình được bảo toàn. Sử dụng"
+" trường này trong dạng view hoặc kanban."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
@@ -626,11 +635,13 @@ msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Lưu ý rằng mã bảo mật từ tổ chức thanh toán được đặt chỉ ủy quyền giao dịch "
+"(thay vì nắm bắt số tiền) không có sẵn"
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:619
@@ -665,7 +676,7 @@ msgstr "Tên đối tác"
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
@@ -770,7 +781,7 @@ msgstr "Tham chiếu"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "Mã của TX được lưu trữ trong cơ sở dữ liệu của tổ chức thanh toán"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -785,7 +796,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
 msgid "S2S Form Template"
-msgstr ""
+msgstr "Mẫu S2S"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_token_action
@@ -822,7 +833,7 @@ msgstr "Tên viết tắt"
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
@@ -854,7 +865,7 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
@@ -890,6 +901,8 @@ msgstr ""
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
 msgstr ""
+"Trường này lưu trữ hình ảnh sử dụng cho biểu tưởng nhà cung cấp, giới hạn "
+"1024x1024px"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

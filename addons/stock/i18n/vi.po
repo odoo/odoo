@@ -22,6 +22,7 @@
 # fanha99 <fanha99@hotmail.com>, 2018
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2019
+# Dung Nguyen Thi <dungnt@trobz.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2016-09-07 09:29+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2019\n"
+"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -356,7 +357,7 @@ msgstr "<span><strong>Địa Chỉ Giao Hàng</strong></span>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Địa chỉ nhà cung cấp:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -497,7 +498,7 @@ msgstr "<strong>Địa điểm</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr ""
+msgstr "<strong>Số lô/sê-ri</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4833,7 +4834,7 @@ msgstr "Kiện hàng ưu tiên"
 #: model:ir.model.fields,field_description:stock.field_make_procurement_route_ids
 #: model:ir.model.fields,field_description:stock.field_procurement_order_route_ids
 msgid "Preferred Routes"
-msgstr ""
+msgstr "Lộ trình ưu tiên"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_route_ids
@@ -6253,6 +6254,10 @@ msgid ""
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
 msgstr ""
+"Trường kỹ thuật đã được sử dụng để ghi nhận giá vốn sản phẩm trong suốt quá "
+"trình xác nhận phiếu giao nhận (khi phương thức tính giá vốn là 'Trung Bình'"
+" hoặc 'Thực tế'. Giá trị sẽ dựa trên đơn vị tiền tệ của công ty và đơn vị "
+"tính trong sản phẩm."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_split_from
@@ -6402,6 +6407,8 @@ msgid ""
 "The parent location that includes this location. Example : The 'Dispatch "
 "Zone' is the 'Gate 1' parent location."
 msgstr ""
+"Địa điểm kho cha bao gồm địa điểm kho này. Ví dụ: 'Dispatch Zone' là địa "
+"điểm cha của 'Gate 1'."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:795

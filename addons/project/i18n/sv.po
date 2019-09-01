@@ -13,9 +13,9 @@
 # Kristoffer Grundström <hamnisdude@gmail.com>, 2016
 # Frida E, 2017
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
 # Martin Trigaux, 2018
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2016-09-07 09:27+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2019\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,7 +160,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "# Dagar till deadline"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -1385,7 +1385,7 @@ msgstr "Skapa ett Ganttschema med dina aktiviteter och sluttidpunkter"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr ""
+msgstr "Skapa ett projekt"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
@@ -1850,7 +1850,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Followed by Me"
-msgstr ""
+msgstr "Följt av mig"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1992,6 +1992,10 @@ msgid ""
 "   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
+"Håller synligheten på uppgiftern eller ärendet som tillhör aktuellt projekt\n"
+"- Endast inbjudna: Anställda kan endast se projekt, aktiviteter och ärenden som de följer\n"
+"- Synlig för alla anställda: Anställda kan se alla projekt, aktiviteter och ärenden\n"
+"- Synlig för inbjudna kunder: Anställda kan se allt; om modulen website är aktiverad, kan portalanvändare se sina projekt, aktivieteter och ärenden under förutsättning att de eller någon annan anställd på deras företag har tillåtelse att titta.\n"
 
 #. module: project
 #: code:addons/project/models/project.py:567
@@ -2554,7 +2558,7 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
-msgstr ""
+msgstr "Endast inbjudna"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2599,6 +2603,8 @@ msgid ""
 "Organize your activities (plan tasks, track issues, invoice timesheets) for "
 "internal, personal or customer projects."
 msgstr ""
+"Organisera dina aktivieter (planera aktiviteter, följ upp ärenden, "
+"fakturerar tid) för interna, personliga eller kundprojekt."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3462,7 +3468,7 @@ msgstr "Tidsestimering för aktiviteter"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Time Scheduling"
-msgstr ""
+msgstr "Tidplandering"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
