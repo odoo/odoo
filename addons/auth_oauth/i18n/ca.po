@@ -3,18 +3,20 @@
 # * auth_oauth
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
 # Bàrbara Partegàs <barbararof@gmail.com>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
 # Eric Antones <eantones@users.noreply.github.com>, 2016
+# Martin Trigaux, 2016
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
+# Arnau Ros, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Eric Antones <eantones@users.noreply.github.com>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:16+0000\n"
+"Last-Translator: Arnau Ros, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +49,7 @@ msgstr "Permetre la entrada als usuaris amb Google "
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
 msgid "Allowed"
-msgstr ""
+msgstr "Permès"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -57,7 +59,7 @@ msgstr "Autenticació"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
 msgid "Authentication URL"
-msgstr ""
+msgstr "URL d'autenticació"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_bank_account_count
@@ -72,7 +74,7 @@ msgstr "Missatge"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_css_class
 msgid "CSS class"
-msgstr ""
+msgstr "Clase CSS"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -138,7 +140,7 @@ msgstr "Termini de pagament del client"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
 msgid "Data URL"
-msgstr ""
+msgstr "URL de les dades"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
@@ -232,42 +234,42 @@ msgstr "Missatge per a factura"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
 msgid "OAuth Access Token"
-msgstr ""
+msgstr "Token d'accés OAuth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_provider_id
 msgid "OAuth Provider"
-msgstr ""
+msgstr "Proveïdor OAuth"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 msgid "OAuth Providers"
-msgstr ""
+msgstr "Proveïdors OAuth"
 
 #. module: auth_oauth
 #: sql_constraint:res.users:0
 msgid "OAuth UID must be unique per provider"
-msgstr ""
+msgstr "L'identificador únic OAuth ha de ser exclusiu per cada proveïdor"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_uid
 msgid "OAuth User ID"
-msgstr ""
+msgstr "ID d'usuari de OAuth"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
 msgid "OAuth2 provider"
-msgstr ""
+msgstr "Proveïdor OAuth2"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_users_form
 msgid "Oauth"
-msgstr ""
+msgstr "OAuth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_oauth_uid
 msgid "Oauth Provider user_id"
-msgstr ""
+msgstr "User_ID del proveïdor d'OAuth"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -292,12 +294,12 @@ msgstr "Límit a pagar"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_name
 msgid "Provider name"
-msgstr ""
+msgstr "Nom de proveïdor"
 
 #. module: auth_oauth
 #: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
 msgid "Providers"
-msgstr ""
+msgstr "Proveïdors "
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -307,7 +309,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
 msgid "Scope"
-msgstr ""
+msgstr "Àmbit"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_invoice_warn
@@ -329,7 +331,7 @@ msgstr "Seqüència"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
 msgid "Server uri"
-msgstr ""
+msgstr "URI del servidor"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -345,7 +347,7 @@ msgstr ""
 #: code:addons/auth_oauth/controllers/main.py:97
 #, python-format
 msgid "Sign up is not allowed on this database."
-msgstr ""
+msgstr "El registre no està permès en aquesta base de dades"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
@@ -464,7 +466,7 @@ msgstr "Camp útil per expressar l'import en divisa"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
 msgid "Validation URL"
-msgstr ""
+msgstr "URL de validació "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
@@ -479,12 +481,15 @@ msgid ""
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
 msgstr ""
+"No tens accés a aquesta base de dades o la teva invitació ha caducat. Si us "
+"plau,sol·licita una invitació i assegura't de seguir l'enllaç del correu "
+"d'invitació. "
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
-msgstr ""
+msgstr "arc"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_base_config_settings
@@ -494,7 +499,7 @@ msgstr "base.config.settings"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
-msgstr ""
+msgstr "e.g. 1234-xyz.apps.googleusercontent.com"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
