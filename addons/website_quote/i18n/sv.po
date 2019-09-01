@@ -14,6 +14,7 @@
 # 03992e16f8df6e39b9d1cc0ff635887e, 2017
 # Kim Asplund <kim.asplund@gmail.com>, 2019
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2017-09-20 10:27+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2019\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2019\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -305,11 +306,13 @@ msgid ""
 "<strong>This offer expired!</strong><br/>\n"
 "                                  Contact us for new quote."
 msgstr ""
+"<strong>Denna offert har löpt ut!</strong><br/>\n"
+"                                  Kontakta oss för en ny."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<strong>This offer expires in</strong>"
-msgstr ""
+msgstr "<strong>Offerten är giltig i</strong>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -317,6 +320,8 @@ msgid ""
 "<strong>This quotation has been canceled.</strong> Contact us to get a new "
 "quote."
 msgstr ""
+"<strong>Den här offerten är avbruten.</strong> Kontakta oss för en ny "
+"offert."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -652,7 +657,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Edit Quote"
-msgstr ""
+msgstr "Redigera offerten"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -662,7 +667,7 @@ msgstr "Ändra mall"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Giltig till och med:"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_ir_model_fields
@@ -1029,7 +1034,7 @@ msgstr "Tilläggsproduktrader"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Offer"
-msgstr ""
+msgstr "Vårt erbjudande"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1077,7 +1082,7 @@ msgstr ""
 #: code:addons/website_quote/controllers/main.py:197
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Betala och bekräfta"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1181,12 +1186,12 @@ msgstr "Offert"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "Offertens giltighetstid"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
 msgid "Quotation Option"
-msgstr ""
+msgstr "Offertalternativ"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_template_id
@@ -1217,7 +1222,7 @@ msgstr "Offertmallar"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_quote_viewed
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "Offert visad"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -1287,7 +1292,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Sales Quotation Template Lines"
-msgstr ""
+msgstr "Offertmallsrader"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
@@ -1413,6 +1418,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
+"Denna e-postmall kommer att skickas vid bekräftelse.\n"
+"Lämna blank utan åtgärd."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1426,7 +1433,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "This order"
-msgstr ""
+msgstr "Denna kundorder"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1562,7 +1569,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.actions.report,name:website_quote.report_web_quote
 msgid "Web Quotation"
-msgstr ""
+msgstr "Webboffert"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -1609,7 +1616,7 @@ msgstr ""
 #: code:addons/website_quote/controllers/main.py:150
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "Du kan inte utöka en bekräftad order."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1657,12 +1664,12 @@ msgstr "Ditt meddelande är skickat!"
 #. module: website_quote
 #: model:mail.template,subject:website_quote.confirmation_mail
 msgid "Your order ${object.name} is confirmed"
-msgstr ""
+msgstr "Din kundorder ${object.name} är bekräftad"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Din betalning har bekräftas."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
