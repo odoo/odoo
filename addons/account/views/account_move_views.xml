@@ -61,6 +61,9 @@
                                         <field name="currency_id" invisible="1"/>
                                         <field name="amount_currency"/>
                                     </group>
+                                    <group string="Product" attrs="{'invisible': [('product_id', '=', False)]}">
+                                        <field name="product_id"/>
+                                    </group>
                                     <group string="States">
                                         <field name="blocked"/>
                                     </group>
