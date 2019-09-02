@@ -303,8 +303,12 @@ var ModelFieldSelector = Widget.extend({
         function processChain(chain) {
             var fieldName = chain.pop();
             var field = this._getLastPageField(fieldName);
-            if (field && field.relation && chain.length > 0) { // Fetch next chain node if any and possible
-                return this._pushPageData(field.relation).then(processChain.bind(this, chain));
+            if (field && field.relation) {
+                if (chain.length) { // Fetch next chain node if any and possible
+                    return this._pushPageData(field.relation).then(processChain.bind(this, chain));
+                } else { // Simply update the last popover page
+                    return this._pushPageData(field.relation);
+                }
             } else if (field && chain.length === 0) { // Last node fetched
                 return Promise.resolve();
             } else if (!field && fieldName === "1") { // TRUE_LEAF
