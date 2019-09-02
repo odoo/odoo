@@ -82,8 +82,10 @@
             <t t-foreach="slides" t-as="slide">
                 <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
                 <t t-set="is_member" t-value="slide.channel_id.is_member"/>
+                <t t-set="can_access" t-value="slide.is_preview or is_member or slide.channel_id.can_publish"/>
                 <li t-att-class="'o_wslides_fs_sidebar_list_item d-flex align-items-top py-1 %s' % ('active' if slide.id == current_slide.id else '')"
                     t-att-data-id="slide.id"
+                    t-att-data-can-access="can_access"
                     t-att-data-name="slide.name"
                     t-att-data-type="slide.slide_type"
                     t-att-data-slug="slug(slide)"
@@ -98,20 +100,30 @@
                         <i t-if="not slide_completed and is_member" class="fa fa-circle-thin fa-fw" t-att-data-slide-id="slide.id"/>
                     </span>
                     <div class="ml-2">
-                        <a class="d-block pt-1" href="#">
+                        <a t-if="can_access" class="d-block pt-1" href="#">
                             <div class="d-flex ">
                                 <t t-call="website_slides.slide_icon"/>
                                 <div class="o_wslides_fs_slide_name" t-esc="slide.name"/>
                             </div>
                         </a>
+                        <span t-else="" class="d-block pt-1" href="#">
+                            <div class="d-flex ">
+                                <t t-call="website_slides.slide_icon"/>
+                                <div class="o_wslides_fs_slide_name  text-muted" t-esc="slide.name"/>
+                            </div>
+                        </span>
                         <ul class="list-unstyled w-100 pt-2 small" t-if="slide.link_ids or (slide.question_ids and not slide.slide_type =='quiz')" >
                             <li t-if="slide.link_ids" t-foreach="slide.link_ids" t-as="link" class="pl-0 mb-1">
-                                <a class="o_wslides_fs_slide_link" t-att-href="link.link" target="_blank">
+                                <a t-if="can_access" class="o_wslides_fs_slide_link" t-att-href="link.link" target="_blank">
                                     <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
                                 </a>
+                                <span t-else="" class="o_wslides_fs_slide_link text-muted">
+                                    <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
+                                </span>
                             </li>
                             <li class="o_wslides_fs_sidebar_list_item pl-0 mb-1" t-if="slide.question_ids and not slide.slide_type == 'quiz'"
                                 t-att-data-id="slide.id"
+                                t-att-data-can-access="can_access"
                                 t-att-data-name="slide.name"
                                 t-att-data-type="slide.slide_type"
                                 t-att-data-slug="slug(slide)"
@@ -119,9 +131,12 @@
                                 t-att-data-is-quiz="1"
                                 t-att-data-completed="1 if slide_completed else 0"
                                 t-att-data-readonly="not is_member">
-                                <a class="o_wslides_fs_slide_quiz" href="#" t-att-index="i">
+                                <a t-if="can_access" class="o_wslides_fs_slide_quiz" href="#" t-att-index="i">
                                     <i class="fa fa-flag-checkered text-warning mr-2"/>Quiz
                                 </a>
+                                <span t-else="" class="text-muted">
+                                    <i class="fa fa-flag-checkered text-warning mr-2"/>Quiz
+                                </span>
                             </li>
                         </ul>
                     </div>
