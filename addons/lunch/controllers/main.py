@@ -75,7 +75,12 @@ class LunchController(http.Controller):
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
-        return user.last_lunch_location_id.id
+        user_location = user.last_lunch_location_id
+        has_multi_company_access = not user_location.company_id or user_location.company_id.id in request._context.get('allowed_company_ids', request.env.company.ids)
+
+        if not user_location or not has_multi_company_access:
+            return request.env['lunch.location'].search([], limit=1).id
+        return user_location.id
 
     def _make_infos(self, user, **kwargs):
         res = dict(kwargs)
@@ -93,9 +98,11 @@ class LunchController(http.Controller):
             'currency': {'symbol': currency.symbol, 'position': currency.position},
         })
 
-        if not user.last_lunch_location_id:
-            user.last_lunch_location_id = request.env['lunch.location'].search([], limit=1)
         user_location = user.last_lunch_location_id
+        has_multi_company_access = not user_location.company_id or user_location.company_id.id in request._context.get('allowed_company_ids', request.env.company.ids)
+
+        if not user_location or not has_multi_company_access:
+            user.last_lunch_location_id = user_location = request.env['lunch.location'].search([], limit=1)
 
         alert_domain = expression.AND([
             [('available_today', '=', True)],
