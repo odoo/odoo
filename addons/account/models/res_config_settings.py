@@ -99,8 +99,11 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
-        self.chart_template_id = self.company_id.chart_template_id or False
         self.has_accounting_entries = self.env['account.chart.template'].existing_accounting(self.company_id)
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        self.chart_template_id = self.company_id.chart_template_id
 
     @api.onchange('show_line_subtotals_tax_selection')
     def _onchange_sale_tax(self):
