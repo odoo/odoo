@@ -577,7 +577,14 @@ var FormController = BasicController.extend({
             return;
         }
 
-        def.then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
+        // Kind of hack for FormViewDialog: button on footer should trigger the dialog closing
+        // if the `close` attribute is set
+        def.then(function () {
+            self._enableButtons();
+            if (attrs.close) {
+                self.trigger_up('close_dialog');
+            }
+        }).guardedCatch(this._enableButtons.bind(this));
     },
     /**
      * Called when the user wants to create a new record -> @see createRecord

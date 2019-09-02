@@ -21,6 +21,7 @@ var Dialog = Widget.extend({
     xmlDependencies: ['/web/static/src/xml/dialog.xml'],
     custom_events: _.extend({}, Widget.prototype.custom_events, {
         focus_control_button: '_onFocusControlButton',
+        close_dialog: '_onCloseDialog',
     }),
     events: _.extend({}, Widget.prototype.events, {
         'keydown .modal-footer button': '_onFooterButtonKeyDown',
@@ -316,6 +317,13 @@ var Dialog = Widget.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+    /**
+     * @private
+     */
+    _onCloseDialog: function (ev) {
+        ev.stopPropagation();
+        this.close();
+    },
     /**
      * Moves the focus to the first button primary in the footer of the dialog
      *
