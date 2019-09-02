@@ -23,6 +23,27 @@
         </field>
     </record>
 
+    <record id="lunch_product_report_view_search" model="ir.ui.view">
+        <field name="name">lunch.product.report.search</field>
+        <field name="model">lunch.product.report</field>
+        <field name="arch" type="xml">
+            <search string="Product Search">
+                <field name="name" string="Product"/>
+                <field name="category_id" string="Category"/>
+                <field name="supplier_id"/>
+                <field name="description"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
+                    <filter name="group_by_category" string="Category" context="{'group_by': 'category_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B"/>
+                    <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
     <record id="lunch_product_view_tree" model="ir.ui.view">
         <field name="name">lunch.product.tree</field>
         <field name="model">lunch.product</field>
@@ -275,7 +296,7 @@
         <field name="res_model">lunch.product.report</field>
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="view_lunch_product_kanban_order"/>
-        <field name="search_view_id" ref="lunch_product_view_search"/>
+        <field name="search_view_id" ref="lunch_product_report_view_search"/>
         <field name="domain">[('supplier_id.available_today', '=', True), '|', ('user_id', '=', False), ('user_id', '=', uid)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
