@@ -60,6 +60,7 @@ class ResPartnerBank(models.Model):
     # fields to configure ISR payment slip generation
     l10n_ch_isr_subscription_chf = fields.Char(string='CHF ISR subscription number', help='The subscription number provided by the bank or Postfinance, used to generate ISR in CHF. eg. 01-162-8')
     l10n_ch_isr_subscription_eur = fields.Char(string='EUR ISR subscription number', help='The subscription number provided by the bank or Postfinance, used to generate ISR in EUR. eg. 03-162-5')
+    l10n_ch_isrb_id_number = fields.Char(string='ISR-B Custmer ID', help='ISR-B Customer ID number for ISR. Used only when generating ISR reference through a bank. This will prefix your references. It is not necessary for standard ISR from Postfinance. e.g. 999999')
 
     @api.model
     def _get_supported_account_types(self):

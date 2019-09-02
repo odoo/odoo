@@ -55,16 +55,42 @@ class AccountMove(models.Model):
             record.l10n_ch_isr_subscription = isr_subscription
             record.l10n_ch_isr_subscription_formatted = isr_subscription_formatted
 
+    def _get_isrb_id_number(self):
+        self.ensure_one()
+        partner_bank = self.move_line_id.invoice_id.partner_bank_id
+        return partner_bank.l10n_ch_isrb_id_number or ''
+
     @api.depends('name', 'invoice_partner_bank_id.l10n_ch_postal')
     def _compute_l10n_ch_isr_number(self):
-        """ The ISR reference number is 27 characters long. The first 12 of them
-        contain the postal account number of this ISR's issuer, removing the zeros
-        at the beginning and filling the empty places with zeros on the right if it is
-        too short. The next 14 characters contain an internal reference identifying
+        """ The ISR reference number is 27 characters long. The firsts of them,
+        usually 6 characters, contain the customer ID of this ISR's issuer, removing
+        the zeros at the beginning and filling the empty places with zeros on the right
+        if it is too short. The next characters contain an internal reference identifying
         the invoice. For this, we use the invoice sequence number, removing each
         of its non-digit characters, and pad the unused spaces on the left of
         this number with zeros. The last character of the ISR number is the result
         of a recursive modulo 10 on its first 26 characters.
+
+        e.g.
+
+            ISR (Postfinance)
+
+            120000000000234478943216899
+            \________________________/|
+                     1                2
+
+            (1) 12000000000023447894321689 | reference
+            (2) 9: control digit for identification number and reference
+
+            ISR-B (Indirect through a bank, requires a customer ID)
+
+            150001123456789012345678901
+            \____/\__________________/|
+               4           5          6
+
+            (1) 150001 | id number of the customer (size may vary)
+            (2) 12345678901234567890 | reference
+            (3) 1: control digit for identification number and reference
         """
         def _space_isr_number(isr_number):
             to_treat = isr_number
@@ -80,7 +106,7 @@ class AccountMove(models.Model):
             isr_number = False
             isr_number_spaced = False
             if record.name and record.l10n_ch_isr_subscription:
-                invoice_issuer_ref = re.sub('^0*', '', record.l10n_ch_isr_subscription)
+                invoice_issuer_ref = re.sub('^0*', '', record._get_isrb_id_number())
                 invoice_issuer_ref = invoice_issuer_ref.ljust(l10n_ch_ISR_NUMBER_ISSUER_LENGTH, '0')
                 invoice_ref = re.sub('[^\d]', '', record.name)
                 #We only keep the last digits of the sequence number if it is too long
@@ -88,7 +114,7 @@ class AccountMove(models.Model):
                 internal_ref = invoice_ref.zfill(l10n_ch_ISR_NUMBER_LENGTH - l10n_ch_ISR_NUMBER_ISSUER_LENGTH - 1) # -1 for mod10r check character
 
                 isr_number = mod10r(invoice_issuer_ref + internal_ref)
-                isr_number_spaced = _space_isr_number(record.l10n_ch_isr_number)
+                isr_number_spaced = _space_isr_number(record._get_isrb_id_number)
             record.l10n_ch_isr_number = isr_number
             record.l10n_ch_isr_number_spaced = isr_number_spaced
 
@@ -99,7 +125,7 @@ class AccountMove(models.Model):
         'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_optical_line(self):
         """ The optical reading line of the ISR looks like this :
-                left>isr_ref+ bank_ref>
+                left>isr_ref+ subscr_num>
 
            Where:
            - left is composed of two ciphers indicating the currency (01 for CHF,
@@ -109,10 +135,40 @@ class AccountMove(models.Model):
            left contains a last cipher, which is the result of a recursive modulo
            10 function ran over the rest of it.
 
-            - isr_ref is the ISR reference number
+            - isr_ref is the ISR reference number which can include the customer
+              id in case of ISR-B (ISR through a bank)
 
-            - bank_ref is the full postal bank code (aka clearing number) of the
+            - subscr_num is the full postal bank code (aka clearing number) of the
             bank supporting the ISR (including the zeros).
+
+            A scan line can have the 2 following formats:
+
+            ISR (Postfinance)
+
+            0100003949753> 120000000000234478943216899+ 010001628
+            |/\________/|  \________________________/|  \_______/
+            1     2     3           4                5      6
+
+            (1) 01 | currency
+            (2) 0000394975 | amount 3949.75
+            (3) 4 | control digit for amount
+            (5) 12000000000023447894321689 | reference
+            (6) 9: control digit for identification number and reference
+            (7) 010001628: subscription number (01-162-8)
+
+            ISR-B (Indirect through a bank, requires a customer ID)
+
+            0100000494004> 150001123456789012345678901+ 010234567
+            |/\________/|  \____/\__________________/|  \_______/
+            1     2     3     4           5          6      7
+
+            (1) 01 | currency
+            (2) 0000049400 | amount 494.00
+            (3) 4 | control digit for amount
+            (4) 150001 | id number of the customer (size may vary, usually 6 chars)
+            (5) 12345678901234567890 | reference
+            (6) 1: control digit for identification number and reference
+            (7) 010234567: subscription number (01-23456-7)
         """
         for record in self:
             if record.l10n_ch_isr_number and record.l10n_ch_isr_subscription and record.currency_id.name:

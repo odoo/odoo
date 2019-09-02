@@ -8,8 +8,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='acc_number']" position="after">
                     <field name="l10n_ch_postal"/>
-                    <field name="l10n_ch_isr_subscription_chf"/>
-                    <field name="l10n_ch_isr_subscription_eur"/>
+                    <group name="ISR generation options">
+                      <field name="l10n_ch_isr_subscription_chf"/>
+                      <field name="l10n_ch_isr_subscription_eur"/>
+                      <field name="l10n_ch_isrb_id_number"/>
+                    </group>
                 </xpath>
             </field>
         </record>
