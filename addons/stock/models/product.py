@@ -718,6 +718,13 @@ class ProductTemplate(models.Model):
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         return super(ProductTemplate, self).write(vals)
 
+    def unlink(self):
+        """ Override unlink to prevent deletion when there are linked lots/serial numbers. """
+        tracked_product_tmpl_ids = self.filtered(lambda pt: pt.tracking != 'none')
+        if tracked_product_tmpl_ids:
+            raise UserError(_('You still have some Lots/Serial Numbers linked to this product. Please archive or delete them first.'))
+        return super(ProductTemplate, self).unlink()
+
     # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
         return self.product_variant_ids.action_open_quants()
