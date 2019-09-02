@@ -210,6 +210,12 @@ database
     when creating new databases from the database-management screens, use the
     specified `template database`_. Defaults to ``template1``.
 
+.. option:: --pg_path </path/to/postgresql/binaries>
+
+    Path to the PostgreSQL binaries that are used by the database manager to
+    dump and restore databases. You have to specify this option only if these
+    binaries are located in a non-standard directory.
+
 .. option:: --no-database-list
 
     Suppresses the ability to list databases available on the system
