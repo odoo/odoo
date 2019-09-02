@@ -1867,6 +1867,17 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     },
 });
 
+var KanbanFieldBinaryImage = FieldBinaryImage.extend({
+    // In kanban views, there is a weird logic to determine whether or not a
+    // click on a card should open the record in a form view.  This logic checks
+    // if the clicked element has click handlers bound on it, and if so, does
+    // not open the record (assuming that the click will be handle by someone
+    // else).  In the case of this widget, there are clicks handler but they
+    // only apply in edit mode, which is never the case in kanban views, so we
+    // simply remove them.
+    events: {},
+});
+
 var FieldBinaryFile = AbstractFieldBinary.extend({
     description: _lt("File"),
     template: 'FieldBinaryFile',
@@ -3266,6 +3277,7 @@ return {
     FieldPdfViewer: FieldPdfViewer,
     AbstractFieldBinary: AbstractFieldBinary,
     FieldBinaryImage: FieldBinaryImage,
+    KanbanFieldBinaryImage: KanbanFieldBinaryImage,
     FieldBoolean: FieldBoolean,
     BooleanToggle: BooleanToggle,
     FieldChar: FieldChar,
@@ -3278,7 +3290,7 @@ return {
     FieldFloatTime: FieldFloatTime,
     FieldFloatFactor: FieldFloatFactor,
     FieldFloatToggle: FieldFloatToggle,
-    FieldPercentage : FieldPercentage,
+    FieldPercentage: FieldPercentage,
     FieldInteger: FieldInteger,
     FieldMonetary: FieldMonetary,
     FieldPercentPie: FieldPercentPie,
