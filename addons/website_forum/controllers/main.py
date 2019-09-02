@@ -136,6 +136,7 @@ class WebsiteForum(WebsiteProfile):
         values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
         values.update({
             'main_object': tag or forum,
+            'edit_in_backend': not tag,
             'question_ids': question_ids,
             'question_count': question_count,
             'pager': pager,
@@ -186,10 +187,6 @@ class WebsiteForum(WebsiteProfile):
             'active_char_tag': active_char_tag,
         })
         return request.render("website_forum.tag", values)
-
-    @http.route('/forum/<model("forum.forum"):forum>/edit_welcome_message', auth="user", website=True)
-    def edit_welcome_message(self, forum, **kw):
-        return request.render("website_forum.edit_welcome_message", {'forum': forum})
 
     # Questions
     # --------------------------------------------------

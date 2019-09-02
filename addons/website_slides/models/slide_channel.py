@@ -301,6 +301,9 @@ class Channel(models.Model):
                 base_url = channel.get_base_url()
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
+    def get_backend_menu_id(self):
+        return self.env.ref('website_slides.website_slides_menu_root').id
+
     def _compute_action_rights(self):
         user_karma = self.env.user.karma
         for channel in self:

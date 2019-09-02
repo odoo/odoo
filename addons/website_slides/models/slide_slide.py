@@ -362,6 +362,9 @@ class Slide(models.Model):
                     url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
 
+    def get_backend_menu_id(self):
+        return self.env.ref('website_slides.website_slides_menu_root').id
+
     @api.depends('channel_id.can_publish')
     def _compute_can_publish(self):
         for record in self:
