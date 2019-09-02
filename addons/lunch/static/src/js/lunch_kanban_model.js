@@ -6,6 +6,7 @@ odoo.define('lunch.LunchKanbanModel', function (require) {
  * override of the KanbanModel.
  */
 
+var session = require('web.session');
 var KanbanModel = require('web.KanbanModel');
 
 var LunchKanbanModel = KanbanModel.extend({
@@ -70,6 +71,7 @@ var LunchKanbanModel = KanbanModel.extend({
         return this._rpc({
             route: '/lunch/user_location_get',
             params: {
+                context: session.user_context,
                 user_id: this.userId,
             },
         });
