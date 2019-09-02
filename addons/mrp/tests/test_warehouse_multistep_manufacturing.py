@@ -165,6 +165,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         production_form.product_id = self.complex_product
         production_form.picking_type_id = self.warehouse.manu_type_id
         production = production_form.save()
+        production.action_confirm()
 
         move_raw_ids = production.move_raw_ids
         self.assertEqual(len(move_raw_ids), 2)
@@ -197,23 +198,31 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         # Picking: SFP PostProcessing -> Stock
         ## Stick from Subprocess
-        picking = pickings[1]
+        picking = self.env['stock.picking'].search([
+            ('move_lines.product_id', '=', self.finished_product.id),
+            ('location_dest_id', '=', self.warehouse.lot_stock_id.id),
+            ('group_id', '=', production.procurement_group_id.id)
+        ])
         self.assertEqual(len(picking.move_lines), 1)
-        picking.product_id = self.finished_product
 
         # Picking: PC Stock -> Preprocessing
         ## Stick
         ## Raw Iron
-        picking = pickings[0]
+        picking = self.env['stock.picking'].search([
+            ('move_lines.product_id', 'in', [self.finished_product.id, self.raw_product_2.id]),
+            ('location_id', '=', self.warehouse.lot_stock_id.id),
+            ('group_id', '=', production.procurement_group_id.id)
+        ])
         self.assertEqual(len(picking.move_lines), 2)
-        picking.move_lines[0].product_id = self.finished_product
-        picking.move_lines[1].product_id = self.raw_product_2
 
         # Picking: SFP PostProcessing -> Stock
         ## Arrow from this process
-        picking = pickings[2]
+        picking = picking = self.env['stock.picking'].search([
+            ('move_lines.product_id', '=', self.complex_product.id),
+            ('location_dest_id', '=', self.warehouse.lot_stock_id.id),
+            ('group_id', '=', production.procurement_group_id.id)
+        ])
         self.assertEqual(len(picking.move_lines), 1)
-        picking.product_id = self.complex_product
 
 
     def test_manufacturing_flow(self):
