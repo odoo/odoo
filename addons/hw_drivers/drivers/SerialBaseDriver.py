@@ -138,7 +138,7 @@ class SerialDriver(Driver):
                 self._connection = connection
                 self._status['status'] = self.STATUS_CONNECTED
                 self._push_status()
-                while True:
+                while self._run:
                     self._take_measure()
                     time.sleep(self._protocol.newMeasureDelay)
         except Exception:

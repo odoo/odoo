@@ -129,6 +129,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
         self.data = {'value': ''}
         self.gatt_device = False
         self._device_manufacturer = ''
+        self._run = True
 
     @property
     def device_name(self):
@@ -178,6 +179,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
         raise NotImplementedError()
 
     def disconnect(self):
+        self._run = False
         del iot_devices[self.device_identifier]
 
 
