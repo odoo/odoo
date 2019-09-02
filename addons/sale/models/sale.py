@@ -490,14 +490,19 @@ class SaleOrder(models.Model):
             action['res_id'] = invoices.id
         else:
             action = {'type': 'ir.actions.act_window_close'}
-        action['context'] = {
+
+        context = {
             'default_type': 'out_invoice',
-            'default_partner_id': self.partner_id.id,
-            'default_partner_shipping_id': self.partner_shipping_id.id,
-            'default_invoice_payment_term_id': self.payment_term_id.id,
-            'default_invoice_origin': self.name,
-            'default_user_id': self.user_id.id,
         }
+        if len(self) == 1:
+            context.update({
+                'default_partner_id': self.partner_id.id,
+                'default_partner_shipping_id': self.partner_shipping_id.id,
+                'default_invoice_payment_term_id': self.payment_term_id.id,
+                'default_invoice_origin': self.mapped('name'),
+                'default_user_id': self.user_id.id,
+            })
+        action['context'] = context
         return action
 
     def _create_invoices(self, grouped=False, final=False):
@@ -696,7 +701,7 @@ class SaleOrder(models.Model):
 
     def _get_forbidden_state_confirm(self):
         return {'done', 'cancel'}
-    
+
     def _prepare_analytic_account_data(self, prefix=None):
         """
         Prepare method for analytic account data
