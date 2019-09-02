@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import itertools
 from unittest.mock import patch
 
 from odoo import api
@@ -12,7 +11,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('resend_test')
+@tagged('mail_wizards')
 class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
 
     @classmethod
@@ -48,9 +47,13 @@ class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
         super(TestMailResend, self).setUp()
         TestMailResend.bus_update_failure = []
 
-    def assertNotifStates(self, states, message):
-        notif = self.env['mail.notification'].search([('mail_message_id', '=', message.id)], order="res_partner_id asc")
-        self.assertEquals(tuple(notif.mapped('notification_status')), states)
+    def assertPartnerNotif(self, partner, state, message):
+        # TDE CLEANME: quick fix, should be cleaned and moved to mail testing tools
+        notif = self.env['mail.notification'].search([
+            ('res_partner_id', '=', partner.id),
+            ('mail_message_id', '=', message.id)]
+        )
+        self.assertEquals(notif.notification_status, state)
         return notif
 
     def assertBusMessage(self, partners):
@@ -80,23 +83,34 @@ class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
             message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
         self.assertBusMessage([self.partner_admin])
         self.assertEmails(self.partner_admin, [])
-        self.assertNotifStates(('exception', 'exception', 'exception', 'exception'), message)
+        for partner in [self.user1.partner_id, self.user2.partner_id, self.partner1, self.partner2]:
+            self.assertPartnerNotif(partner, 'exception', message)
+
         wizard = self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({})
         self.assertEqual(wizard.notification_ids.mapped('res_partner_id'), self.partners, "wizard should manage notifications for each failed partner")
         wizard.resend_mail_action()
         self.assertBusMessage([self.partner_admin] * 3)  # three more failure sent on bus, one for each mail in failure and one for resend
         self.assertEmails(self.partner_admin, self.partners)
-        self.assertNotifStates(('exception', 'sent', 'exception', 'sent'), message)
+        for partner in [self.user1.partner_id, self.partner1]:
+            self.assertPartnerNotif(partner, 'exception', message)
+        for partner in [self.user2.partner_id, self.partner2]:
+            self.assertPartnerNotif(partner, 'sent', message)
+
         self.user1.write({"email": 'u1@example.com'})
         self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({}).resend_mail_action()
         self.assertBusMessage([self.partner_admin] * 2)  # two more failure update sent on bus, one for failed mail and one for resend
         self.assertEmails(self.partner_admin, self.invalid_email_partners)
-        self.assertNotifStates(('sent', 'sent', 'exception', 'sent'), message)
+        for partner in [self.partner1]:
+            self.assertPartnerNotif(partner, 'exception', message)
+        for partner in [self.user1.partner_id, self.user2.partner_id, self.partner2]:
+            self.assertPartnerNotif(partner, 'sent', message)
+
         self.partner1.write({"email": 'p1@example.com'})
         self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({}).resend_mail_action()
         self.assertBusMessage([self.partner_admin])  # A success update should be sent on bus once the email has no more failure
         self.assertEmails(self.partner_admin, self.partner1)
-        self.assertNotifStates(('sent', 'sent', 'sent', 'sent'), message)
+        for partner in [self.user1.partner_id, self.user2.partner_id, self.partner1, self.partner2]:
+            self.assertPartnerNotif(partner, 'sent', message)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_send_no_failure(self):
@@ -117,14 +131,25 @@ class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
         wizard.resend_mail_action()
         self.assertEmails(self.partner_admin, self.user1)
         self.assertBusMessage([self.partner_admin] * 2)  # two more failure sent on bus, one for failure, one for resend
-        self.assertNotifStates(('exception', 'sent', 'canceled', 'sent'), message)
+        for partner in [self.user1.partner_id]:
+            self.assertPartnerNotif(partner, 'exception', message)
+        for partner in [self.partner1]:
+            self.assertPartnerNotif(partner, 'canceled', message)
+        for partner in [self.user2.partner_id, self.partner2]:
+            self.assertPartnerNotif(partner, 'sent', message)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_cancel_all(self):
         message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
-        self.assertNotifStates(('exception', 'sent', 'exception', 'sent'), message)
+        for partner in [self.user1.partner_id, self.partner1]:
+            self.assertPartnerNotif(partner, 'exception', message)
+        for partner in [self.user2.partner_id, self.partner2]:
+            self.assertPartnerNotif(partner, 'sent', message)
         self.assertBusMessage([self.partner_admin] * 2)
         wizard = self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({})
         wizard.cancel_mail_action()
-        self.assertNotifStates(('canceled', 'sent', 'canceled', 'sent'), message)
+        for partner in [self.user1.partner_id, self.partner1]:
+            self.assertPartnerNotif(partner, 'canceled', message)
+        for partner in [self.user2.partner_id, self.partner2]:
+            self.assertPartnerNotif(partner, 'sent', message)
         self.assertBusMessage([self.partner_admin])  # one update for cancell

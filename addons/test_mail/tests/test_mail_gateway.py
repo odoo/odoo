@@ -388,6 +388,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
 
         # name order win
         self.test_record.message_unsubscribe(follower_user.partner_id.ids)
+        self.test_record.flush()
         record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, 'groups@test.com', subject='FirstFoundWinner')
         self.assertEqual(record.create_uid, self.user_employee)
         self.assertEqual(record.message_ids[0].subject, 'FirstFoundWinner')
