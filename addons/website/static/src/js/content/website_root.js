@@ -170,7 +170,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
                         + '<br/>'
                         + _.str.sprintf(
                             _t('It might be possible to edit the relevant items or fix the issue in <a href="%s">the classic Odoo interface</a>'),
-                            '/web#return_label=Website&model=' + $data.data('object') + '&id=' + $data.data('id')
+                            '/web#model=' + $data.data('object') + '&id=' + $data.data('id')
                         ),
                 }),
             }).open();
