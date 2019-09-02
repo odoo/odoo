@@ -123,8 +123,8 @@ QUnit.test('extended composer in mass mailing channel', async function (assert) 
         services: this.services,
     });
 
-    testUtils.dom.click(discuss.$('.o_mail_mobile_tab[data-type="public"]'));
-    testUtils.dom.click(discuss.$('.o_mail_preview[data-preview-id="1"]'));
+    await testUtils.dom.click(discuss.$('.o_mail_mobile_tab[data-type="multi_user_channel"]'));
+    await testUtils.dom.click(discuss.$('.o_mail_preview[data-preview-id="1"]'));
     assert.containsOnce(
         $,
         '.o_thread_window',
