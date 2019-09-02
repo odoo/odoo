@@ -697,13 +697,15 @@ class ProductPackaging(models.Model):
     _name = "product.packaging"
     _description = "Product Packaging"
     _order = 'sequence'
+    _check_company_auto = True
 
     name = fields.Char('Package Type', required=True)
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
-    product_id = fields.Many2one('product.product', string='Product')
+    product_id = fields.Many2one('product.product', string='Product', check_company=True)
     qty = fields.Float('Contained Quantity', help="Quantity of products contained in the packaging.")
     barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification. Scan this packaging barcode from a transfer in the Barcode app to move all the contained units")
     product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', readonly=True)
+    company_id = fields.Many2one('res.company', 'Company', index=True)
 
 
 class SupplierInfo(models.Model):
@@ -714,7 +716,7 @@ class SupplierInfo(models.Model):
     name = fields.Many2one(
         'res.partner', 'Vendor',
         ondelete='cascade', required=True,
-        help="Vendor of this product")
+        help="Vendor of this product", check_company=True)
     product_name = fields.Char(
         'Vendor Product Name',
         help="This vendor's product name will be used when printing a request for quotation. Keep empty to use the internal one.")
@@ -743,10 +745,10 @@ class SupplierInfo(models.Model):
     date_start = fields.Date('Start Date', help="Start date for this vendor price")
     date_end = fields.Date('End Date', help="End date for this vendor price")
     product_id = fields.Many2one(
-        'product.product', 'Product Variant',
+        'product.product', 'Product Variant', check_company=True,
         help="If not set, the vendor price will apply to all variants of this product.")
     product_tmpl_id = fields.Many2one(
-        'product.template', 'Product Template',
+        'product.template', 'Product Template', check_company=True,
         index=True, ondelete='cascade')
     product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count', readonly=False)
     delay = fields.Integer(
