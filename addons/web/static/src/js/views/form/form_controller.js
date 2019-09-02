@@ -20,8 +20,6 @@ var FormController = BasicController.extend({
         toggle_column_order: '_onToggleColumnOrder',
         focus_control_button: '_onFocusControlButton',
         form_dialog_discarded: '_onFormDialogDiscarded',
-        swipe_left: '_onSwipeLeft',
-        swipe_right: '_onSwipeRight',
     }),
     /**
      * @override
@@ -741,30 +739,6 @@ var FormController = BasicController.extend({
         var self = this;
         this._disableButtons();
         this.saveRecord().then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
-    },
-    /**
-     * Called when user swipes left. Move to next record.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onSwipeLeft: function (ev) {
-        ev.stopPropagation();
-        if (this.pager) {
-            this.pager.next();
-        }
-    },
-    /**
-     * Called when user swipes right. Move to previous record.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onSwipeRight: function (ev) {
-        ev.stopPropagation();
-        if (this.pager) {
-            this.pager.previous();
-        }
     },
     /**
      * This method is called when someone tries to sort a column, most likely
