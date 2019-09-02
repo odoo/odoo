@@ -161,7 +161,7 @@
 
                             <!-- To display tags //no options -->
                             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                                <a class="mr8" t-attf-href="#{blog_url(tag=one_tag.id, date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
+                                <a class="mr8" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
                             </t>
                             <div class="o_sharing_links">
                                 <a class="fa fa-twitter-square o_twitter"></a>
@@ -243,7 +243,7 @@
                     <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
                         <span class="fa fa-tags"/>
                         <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                            <a class="label label-primary mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
+                            <a class="label label-primary mr8" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-esc="one_tag.name"/>
                         </t>
                     </p>
                     <div t-if="'cover_full' in blog_post_cover_properties.get('resize_class', '')" id="blog_angle_down">
@@ -404,7 +404,7 @@
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="tags" t-as="nav_tag">
             <li t-att-class="nav_tag.id in active_tag_ids and 'active' or None" style="display: inline-block;">
-                <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, nav_tag.id))}">
+                <a t-att-rel="'nofollow' if active_tag_ids else None" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, nav_tag.id))}">
                     <span t-field="nav_tag.name"/>
                 </a>
             </li>
@@ -429,12 +429,12 @@
                 <t t-foreach="nav_list[year]" t-as="months">
                     <t t-if="months['date_begin'] == date">
                         <li class="active">
-                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
+                            <a t-ignore="True" rel="nofollow" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
                     </t>
                     <t t-else="1">
                         <li>
-                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
+                            <a t-ignore="True" rel="nofollow" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
                     </t>
                 </t>
