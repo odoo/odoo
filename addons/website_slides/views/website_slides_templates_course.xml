@@ -110,8 +110,6 @@
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div id="wrap" t-attf-class="wrap mt-0">
-            <t t-set="main_object" t-value="channel"/>
-
             <div t-attf-class="o_wslides_course_header o_wslides_gradient position-relative text-white pb-md-0 pt-2 pt-md-5 #{'pb-3' if channel.channel_type == 'training' else 'o_wslides_course_doc_header pb-5'}">
                 <t t-call="website_slides.course_nav"/>
 

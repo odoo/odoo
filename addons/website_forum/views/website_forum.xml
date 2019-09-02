@@ -58,7 +58,7 @@
                         <h1 class="s_title_thin o_default_snippet_text text-center"><t t-esc="forum.name"></t></h1>
                     </div>
                 </div>
-                <div t-if="is_public_user and not forum_welcome_message" class="forum_intro">
+                <div t-if="editable or (is_public_user and not forum_welcome_message)" t-att-class="'css_non_editable_mode_hidden' if editable else 'forum_intro'">
                     <div t-field="forum.welcome_message"/>
                 </div>
             </div>
@@ -150,16 +150,6 @@
                 <li class="nav-item">
                     <a t-attf-href="/forum/#{ slug(forum) }/faq" t-attf-class="nav-link #{header.get('is_guidelines') and 'active'}">About</a>
                 </li>
-                <span class="navbar-text" groups="base.group_erp_manager">|</span>
-                <li class="nav-item dropdown mx-auto" groups="base.group_erp_manager">
-                    <a class="nav-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                        <i class="fa fa-cog" role="img"/> Settings
-                    </a>
-                    <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                        <a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1" class="dropdown-item">Design Welcome Message</a>
-                        <a role="menuitem" tabindex="-1" t-attf-href="/web#id=#{forum.id}&amp;view_type=form&amp;model=forum.forum" class="dropdown-item">Edit Forum in the backend</a>
-                    </div>
-                </li>
             </ul>
 
             <!-- Mobile -->
@@ -229,25 +219,6 @@
             </form>
         </div>
     </div>
-</template>
-
-<!-- Template use to edit the welcome_message -->
-<template id="edit_welcome_message">
-    <t t-call="website.layout">
-        <section t-attf-class="s_cover parallax s_parallax_is_fixed py-3 #{forum.image_1920 and 'bg-black-50' or 'o_wforum_forum_card_bg text-white'}" data-scroll-background-ratio="1">
-            <span t-if="forum.image_1920" class="s_parallax_bg oe_img_bg oe_custom_bg" t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920')}'); background-position: center;"/>
-            <div class="container">
-                <div class="row s_nb_column_fixed">
-                    <div class="col-lg-12 s_title" data-name="Title">
-                        <h1 class="s_title_thin o_default_snippet_text text-center"><t t-esc="forum.name"></t></h1>
-                    </div>
-                </div>
-                <div  class="forum_intro">
-                    <div t-field="forum.welcome_message"/>
-                </div>
-            </div>
-        </section>
-    </t>
 </template>
 
 <!-- Display a post -->

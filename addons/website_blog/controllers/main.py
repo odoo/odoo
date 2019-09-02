@@ -158,6 +158,7 @@ class WebsiteBlog(http.Controller):
 
         if blog:
             values['main_object'] = blog
+            values['edit_in_backend'] = True
             values['blog_url'] = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
         else:
             values['blog_url'] = QueryURL('/blog', ['tag'], date_begin=date_begin, date_end=date_end)

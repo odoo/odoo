@@ -161,3 +161,6 @@ class Event(models.Model):
         res['default_twitter']['twitter:card'] = 'summary'
         res['default_meta_description'] = self.subtitle
         return res
+
+    def get_backend_menu_id(self):
+        return self.env.ref('event.event_main_menu').id
