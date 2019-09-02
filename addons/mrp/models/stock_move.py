@@ -233,10 +233,13 @@ class StockMove(models.Model):
         res = super(StockMove, self)._should_be_assigned()
         return bool(res and not (self.production_id or self.raw_material_production_id))
 
+    def _key_assign_picking(self):
+        keys = super(StockMove, self)._key_assign_picking()
+        return keys + (self.created_production_id,)
+
     def _search_picking_for_assignation_domain(self):
         res = super(StockMove, self)._search_picking_for_assignation_domain()
-        if self.created_production_id:
-            res.append(('move_lines.created_production_id', '=', self.created_production_id.id))
+        res.append(('move_lines.created_production_id', '=', self.created_production_id.id))
         return res
 
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
