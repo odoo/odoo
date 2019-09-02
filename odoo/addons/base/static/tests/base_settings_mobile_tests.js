@@ -35,15 +35,30 @@ QUnit.module('mobile_base_settings_tests', {
         assert.expect(2);
 
         // mimic touchSwipe library's swipe method
-        var oldSwipe = $.fn.swipe;
-        var swipeLeft, swipeRight;
-        $.fn.swipe = function (params) {
-            swipeLeft = params.swipeLeft;
-            swipeRight = params.swipeRight;
-        };
+        let oldSwipe;
+        let swipeLeft;
+        let swipeRight;
+
+        const MockedBaseSettingRenderer = BaseSetting.Renderer.extend({
+            async willStart() {
+                const prom = await this._super.apply(this, arguments);
+                oldSwipe = $.fn.swipe;
+                $.fn.swipe = function (params) {
+                    swipeLeft = params.swipeLeft;
+                    swipeRight = params.swipeRight;
+                };
+                return prom;
+            }
+        });
+
+        const MockedBaseSettingsView = BaseSettingsView.extend({
+            config: Object.assign({}, BaseSettingsView.prototype.config, {
+                Renderer: MockedBaseSettingRenderer,
+            }),
+        });
 
         var form = await createView({
-            View: BaseSettingsView,
+            View: MockedBaseSettingsView,
             model: 'project',
             data: this.data,
             arch: '<form string="Settings" class="oe_form_configuration o_base_settings">' +
