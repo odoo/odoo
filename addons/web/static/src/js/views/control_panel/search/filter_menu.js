@@ -25,6 +25,12 @@ var FilterMenu = DropdownMenu.extend({
      * @param {Object} fields
      */
     init: function (parent, filters, fields) {
+        // put all invisible filters at last otherwise keyboard navigation in dropdown will break
+        var filterGroups = _.partition(filters, function (item) {
+            return item.invisible;
+        });
+        filters = filterGroups[1]; // visible filters
+        filters = filters.concat(filterGroups[0]); // invisible filters
         this._super(parent, filters);
 
         // determines where the filter menu is displayed and its style
@@ -103,7 +109,12 @@ var FilterMenu = DropdownMenu.extend({
             this.propositions = [];
         }
         var $generatorMenu = QWeb.render('FilterMenuGenerator', {widget: this});
-        this.$menu.append($generatorMenu);
+        // put filter menu generator before hidden menuitem otherwise keyboard navigation stops
+        if (this.$menu.find('.o_menu_item.d-none').length) {
+            this.$menu.find('.o_menu_item.d-none:first').before($generatorMenu);
+        } else {
+            this.$menu.append($generatorMenu);
+        }
         this.$addFilterMenu = this.$menu.find('.o_add_filter_menu');
         if (this.generatorMenuIsOpen && !this.propositions.length) {
             this._appendProposition();

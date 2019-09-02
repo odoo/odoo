@@ -359,6 +359,42 @@ QUnit.module('Views', {
 
         controlPanel.destroy();
     });
+    QUnit.test('navigation with invisible filters, invisible filters should rendered at last', async function (assert) {
+        assert.expect(6);
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search>" +
+                        "<filter name=\"filterA\" string=\"A\" domain=\"[]\"/>" +
+                        "<filter name=\"filterB\" string=\"B\" invisible=\"1\" domain=\"[]\"/>" +
+                        "<filter name=\"filterC\" string=\"C\" domain=\"[]\"/>" +
+                    "</search>",
+            data: this.data,
+            searchMenuTypes: ['filter'],
+        });
+
+        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        assert.strictEqual(controlPanel.$('.o_menu_item a:eq(0)').text().trim(), "A",
+            "Filter A should be at 0th index");
+        assert.strictEqual(controlPanel.$('.o_menu_item a:eq(1)').text().trim(), "C",
+            "Filter C should be at 1st index");
+        assert.strictEqual(controlPanel.$('.o_menu_item a:eq(2)').text().trim(), "B",
+            "Filter B should be at 2nd index");
+
+        $(document.activeElement).trigger({type: "keydown", which: $.ui.keyCode.DOWN});
+        assert.strictEqual(document.activeElement, controlPanel.$('.o_menu_item a:contains("A")')[0],
+            "Filter A should have focus");
+
+        $(document.activeElement).trigger({type: "keydown", which: $.ui.keyCode.DOWN});
+        assert.strictEqual(document.activeElement, controlPanel.$('.o_menu_item a:contains("C")')[0],
+            "Filter C should have focus");
+
+        $(document.activeElement).trigger({type: "keydown", which: $.ui.keyCode.DOWN});
+        assert.strictEqual(document.activeElement,
+            controlPanel.$('.o_add_custom_filter')[0],
+            "Add Custom Filter should have focus");
+
+        controlPanel.destroy();
+    });
 
     QUnit.module('Control Panel behaviour');
 
