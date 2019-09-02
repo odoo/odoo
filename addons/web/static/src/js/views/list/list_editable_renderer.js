@@ -641,6 +641,18 @@ ListRenderer.include({
         return $borderDataRow;
     },
     /**
+     * Compute the sum of the weights for each columns, excluding
+     * those with an absolute width. param `$thread` is useful for studio, in
+     * order to show column hooks.
+     *
+     * @private
+     * @param {jQuery} $thead
+     * @return {integer}
+     */
+    _getColumnsTotalWidth($thead) {
+        return this.columns.reduce((acc, column) => acc + (column.attrs.relativeWidth || 0), 0);
+    },
+    /**
      * Returns the width of a column according the 'width' attribute set in the
      * arch, the widget or the field type. A fixed width is harcoded for some
      * field types (e.g. date and numeric fields). By default, the remaining
@@ -1053,11 +1065,7 @@ ListRenderer.include({
 
         if (!this.columnWidths) {
             if (!this._hasVisibleRecords(this.state)) {
-                // we compute the sum of the weights for each columns, excluding
-                // those with an absolute width.
-                var totalWidth = this.columns.reduce(function (acc, column) {
-                    return acc + (column.attrs.relativeWidth || 0);
-                }, 0);
+                var totalWidth = this._getColumnsTotalWidth($thead);
                 this.columns.forEach(function (column) {
                     let width;
                     if (column.attrs.absoluteWidth) {
