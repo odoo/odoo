@@ -7,7 +7,9 @@ import logging
 import hashlib
 import re
 
+
 from werkzeug import urls
+from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, tools
@@ -437,37 +439,42 @@ class Website(models.Model):
     # Languages
     # ----------------------------------------------------------
 
-    def get_alternate_languages(self, req=None):
+    def _get_alternate_languages(self, canonical_params):
+        self.ensure_one()
+
+        if not self._is_canonical_url(canonical_params=canonical_params):
+            # no hreflang on non-canonical pages
+            return []
+
+        languages = self.language_ids
+        if len(languages) <= 1:
+            # no hreflang if no alternate language
+            return []
+
         langs = []
-        if req is None:
-            req = request.httprequest
-        default = self.get_current_website().default_lang_id.url_code
         shorts = []
 
-        def get_url_localized(router, lang):
-            arguments = dict(request.endpoint_arguments)
-            for key, val in list(arguments.items()):
-                if isinstance(val, models.BaseModel):
-                    arguments[key] = val.with_context(lang=lang)
-            return router.build(request.endpoint, arguments)
-
-        router = request.httprequest.app.get_db_router(request.db).bind('')
-        for lg in self.language_ids:
-            lg_path = ('/' + lg.url_code) if lg.url_code != default else ''
+        for lg in languages:
             lg_codes = lg.code.split('_')
-            shorts.append(lg_codes[0])
-            uri = get_url_localized(router, lg.url_code) if request.endpoint else request.httprequest.path
-            if req.query_string:
-                uri += u'?' + req.query_string.decode('utf-8')
-            lang = {
+            short = lg_codes[0]
+            shorts.append(short)
+            langs.append({
                 'hreflang': ('-'.join(lg_codes)).lower(),
-                'short': lg_codes[0],
-                'href': req.url_root[0:-1] + lg_path + uri,
-            }
-            langs.append(lang)
+                'short': short,
+                'href': self._get_canonical_url_localized(lang=lg, canonical_params=canonical_params),
+            })
+
+        # if there is only one region for a language, use only the language code
         for lang in langs:
             if shorts.count(lang['short']) == 1:
                 lang['hreflang'] = lang['short']
+
+        # add the default
+        langs.append({
+            'hreflang': 'x-default',
+            'href': self._get_canonical_url_localized(lang=self.default_lang_id, canonical_params=canonical_params),
+        })
+
         return langs
 
     # ----------------------------------------------------------
@@ -826,6 +833,55 @@ class Website(models.Model):
     def get_base_url(self):
         self.ensure_one()
         return self._get_http_domain() or super(BaseModel, self).get_base_url()
+
+    def _get_canonical_url_localized(self, lang, canonical_params):
+        """Returns the canonical URL for the current request with translatable
+        elements appropriately translated in `lang`.
+
+        If `request.endpoint` is not true, returns the current `path` instead.
+
+        `url_quote_plus` is applied on the returned path.
+        """
+        self.ensure_one()
+        if request.endpoint:
+            router = request.httprequest.app.get_db_router(request.db).bind('')
+            arguments = dict(request.endpoint_arguments)
+            for key, val in list(arguments.items()):
+                if isinstance(val, models.BaseModel):
+                    if val.env.context.get('lang') != lang.url_code:
+                        arguments[key] = val.with_context(lang=lang.url_code)
+            path = router.build(request.endpoint, arguments)
+        else:
+            # The build method returns a quoted URL so convert in this case for consistency.
+            path = urls.url_quote_plus(request.httprequest.path, safe='/')
+        lang_path = ('/' + lang.url_code) if lang != self.default_lang_id else ''
+        canonical_query_string = '?%s' % urls.url_encode(canonical_params) if canonical_params else ''
+        return self.get_base_url() + lang_path + path + canonical_query_string
+
+    def _get_canonical_url(self, canonical_params):
+        """Returns the canonical URL for the current request."""
+        self.ensure_one()
+        return self._get_canonical_url_localized(lang=request.lang, canonical_params=canonical_params)
+
+    def _is_canonical_url(self, canonical_params):
+        """Returns whether the current request URL is canonical."""
+        self.ensure_one()
+        # Compare OrderedMultiDict because the order is important, there must be
+        # only one canonical and not params permutations.
+        params = request.httprequest.args
+        canonical_params = canonical_params or OrderedMultiDict()
+        if params != canonical_params:
+            return False
+        # Compare URL at the first rerouting iteration (if available) because
+        # it's the one with the language in the path.
+        # It is important to also test the domain of the current URL.
+        current_url = request.httprequest.url_root[:-1] + (hasattr(request, 'rerouting') and request.rerouting[0] or request.httprequest.path)
+        canonical_url = self._get_canonical_url_localized(lang=request.lang, canonical_params=None)
+        # A request path with quotable characters (such as ",") is never
+        # canonical because request.httprequest.base_url is always unquoted,
+        # and canonical url is always quoted, so it is never possible to tell
+        # if the current URL is indeed canonical or not.
+        return current_url == canonical_url
 
 
 class BaseModel(models.AbstractModel):

@@ -418,14 +418,16 @@ class IrHttp(models.AbstractModel):
                 nearest_lang = not func and cls.get_nearest_lang(request.env['res.lang']._lang_get_code(path[1]))
                 url_lang = nearest_lang and path[1]
 
-                # if lang in url but not the displayed or default language --> change or remove
-                # or no lang in url, and lang to dispay not the default language --> add lang
-                # and not a POST request
-                # and not a bot or bot but default lang in url
-                if ((url_lang and (url_lang != request.lang.url_code or url_lang == default_lg_id.url_code))
-                        or (not url_lang and request.is_frontend_multilang and request.lang != default_lg_id)
-                        and request.httprequest.method != 'POST') \
-                        and (not is_a_bot or (url_lang and url_lang == default_lg_id.url_code)):
+                # The default lang should never be in the URL, and a wrong lang
+                # should never be in the URL.
+                wrong_url_lang = url_lang and (url_lang != request.lang.url_code or url_lang == default_lg_id.url_code)
+                # The lang is missing from the URL if multi lang is enabled for
+                # the route and the current lang is not the default lang.
+                # POST requests are excluded from this condition.
+                missing_url_lang = not url_lang and request.is_frontend_multilang and request.lang != default_lg_id and request.httprequest.method != 'POST'
+                # Bots should never be redirected when the lang is missing
+                # because it is the only way for them to index the default lang.
+                if wrong_url_lang or (missing_url_lang and not is_a_bot):
                     if url_lang:
                         path.pop(1)
                     if request.lang != default_lg_id:
@@ -440,6 +442,12 @@ class IrHttp(models.AbstractModel):
                     path.pop(1)
                     routing_error = None
                     return cls.reroute('/'.join(path) or '/')
+                elif missing_url_lang and is_a_bot:
+                    # Ensure that if the URL without lang is not redirected, the
+                    # current lang is indeed the default lang, because it is the
+                    # lang that bots should index in that case.
+                    request.lang = default_lg_id
+                    request.context = dict(request.context, lang=default_lg_id.code)
 
             if request.lang == default_lg_id:
                 context = dict(request.context)
