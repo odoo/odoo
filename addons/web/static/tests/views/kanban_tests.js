@@ -5854,6 +5854,44 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('click on image field in kanban with oe_kanban_global_click', async function (assert) {
+        assert.expect(2);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div class="oe_kanban_global_click">' +
+                                '<field name="image" widget="image"/>' +
+                            '</div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            mockRPC: function (route) {
+                if (route.startsWith('data:image')) {
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                switch_view: function (event) {
+                    assert.deepEqual(_.pick(event.data, 'mode', 'model', 'res_id', 'view_type'), {
+                        mode: 'readonly',
+                        model: 'partner',
+                        res_id: 1,
+                        view_type: 'form',
+                    }, "should trigger an event to open the clicked record in a form view");
+                },
+            },
+        });
+
+        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+
+        await testUtils.dom.click(kanban.$('.o_field_image').first());
+
+        kanban.destroy();
+    });
 });
 
 });
