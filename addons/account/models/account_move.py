@@ -21,6 +21,27 @@ class AccountMove(models.Model):
     _order = 'date desc, id desc'
 
     @api.multi
+    @api.constrains('name', 'journal_id', 'state')
+    def _check_unique_sequence_number(self):
+        moves = self.filtered(lambda move: move.state == 'posted')
+        if not moves:
+            return
+
+        # /!\ Computed stored fields are not yet inside the database.
+        self._cr.execute('''
+            SELECT move2.id
+            FROM account_move move
+            INNER JOIN account_move move2 ON
+                move2.name = move.name
+                AND move2.journal_id = move.journal_id
+                AND move2.id != move.id
+            WHERE move.id IN %s AND move2.state = 'posted'
+        ''', [tuple(self.ids)])
+        res = self._cr.fetchone()
+        if res:
+            raise ValidationError(_('Posted journal entry must have an unique sequence number per company.'))
+
+    @api.multi
     @api.depends('name', 'state')
     def name_get(self):
         result = []

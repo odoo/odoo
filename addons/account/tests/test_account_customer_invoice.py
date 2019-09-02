@@ -1,5 +1,7 @@
 from odoo.addons.account.tests.account_test_users import AccountTestUsers
 import datetime
+from odoo.exceptions import ValidationError
+
 
 
 class TestAccountCustomerInvoice(AccountTestUsers):
@@ -220,3 +222,34 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         refund = invoice.refund()
         self.assertEqual(invoice.tax_line_ids.mapped('account_id'), tax_account)
         self.assertEqual(refund.tax_line_ids.mapped('account_id'), tax_refund_account)
+
+    def test_prevent_duplicate_account_move_name(self):
+        company = self.env.user.company_id
+
+        journal = self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', company.id)], limit=1)
+        self.assertTrue(journal.exists())
+
+        last_next = journal.sequence_number_next
+
+        # Post a journal entry, the name should be generated based on the journal's sequence number.
+        account_move_1 = self.env['account.move'].create({
+            'date': datetime.date.today(),  # time.strftime('%Y-%m-%d'),
+            'journal_id': journal.id,
+            'state': 'draft',
+        })
+        account_move_1.post()
+
+        #self.assertEquals(journal.sequence_number_next, last_next + 1)
+
+        # Reset the journal's sequence number.
+        journal.sequence_number_next = last_next
+
+        # Attempt to post a second entry with the same sequence number.
+        account_move_2 = self.env['account.move'].create({
+            'date': datetime.date.today(),
+            'journal_id': journal.id,
+            'state': 'draft',
+        })
+
+        with self.assertRaises(ValidationError):
+            account_move_2.post()
