@@ -131,6 +131,8 @@ class KeyboardUSBDriver(Driver):
         key_input = self._barcode_scanner_input if self._device_type == "scanner" else self._keyboard_input
         try:
             for event in self.input_device.read_loop():
+                if not self._run:
+                    break
                 if event.type == evdev.ecodes.EV_KEY:
                     data = evdev.categorize(event)
                     if data.keystate == 1:
