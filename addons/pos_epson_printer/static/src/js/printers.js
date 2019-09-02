@@ -17,14 +17,17 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
     },
 
     callback_connect: function (resultConnect) {
+        var self = this;
         var deviceId = 'local_printer';
         var options = {'crypto' : false, 'buffer' : false};
         if ((resultConnect == 'OK') || (resultConnect == 'SSL_CONNECT_OK')) {
             this.ePOSDevice.createDevice(deviceId, this.ePOSDevice.DEVICE_TYPE_PRINTER, options, this.callback_createDevice.bind(this));
         } else {
-            this.pos.gui.show_popup('error', {
-                'title': _t('Connection to the printer failed'),
-                'body':  _t('Please check if the printer is still connected, if the configured IP address is correct and if your printer supports the ePOS protocol.'),
+            this.pos.chrome.ready.then(function () {
+                self.pos.gui.show_popup('error', {
+                    'title': _t('Connection to the printer failed'),
+                    'body':  _t('Please check if the printer is still connected, if the configured IP address is correct and if your printer supports the ePOS protocol.'),
+                });
             });
         }
     },
