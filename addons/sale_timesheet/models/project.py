@@ -94,7 +94,7 @@ class Project(models.Model):
         action['context'] = {
             'active_id': self.id,
             'active_ids': self.ids,
-            'search_default_display_name': self.name,
+            'search_default_name': self.name,
         }
         return action
 
