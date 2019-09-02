@@ -17,6 +17,7 @@ from PIL import Image, ImageOps
 
 from odoo import http, _
 from odoo.addons.hw_drivers.controllers.driver import event_manager, Driver, PPDs, conn, printers, cups_lock, iot_devices
+from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers
 
 _logger = logging.getLogger(__name__)
@@ -87,7 +88,7 @@ class PrinterDriver(Driver):
             'reason': None,
         }
         self.send_status()
-        if 'direct' in self._device_connection:
+        if 'direct' in self._device_connection or helpers.get_odoo_server_url():
             self.add_connected_printer()
             self.print_status()
 
