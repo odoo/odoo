@@ -280,10 +280,6 @@ var StatementModel = BasicModel.extend({
     createProposition: function (handle) {
         var line = this.getLine(handle);
         var prop = _.filter(line.reconciliation_proposition, '__focus');
-        var last = prop[prop.length-1];
-        if (last && !this._isValid(last)) {
-            return Promise.resolve(false);
-        }
         prop = this._formatQuickCreate(line);
         line.reconciliation_proposition.push(prop);
         line.createForm = _.pick(prop, this.quickCreateFields);
