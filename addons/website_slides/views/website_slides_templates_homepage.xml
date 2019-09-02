@@ -238,7 +238,7 @@
                                         t-esc="tag_group.name"/>
                                     <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
                                         <t t-foreach="tag_group.tag_ids" t-as="tag">
-                                            <a t-att-class="'dropdown-item %s' % ('active' if tag in search_tags else '')"
+                                            <a rel="nofollow" t-att-class="'dropdown-item %s' % ('active' if tag in search_tags else '')"
                                                 t-att-href="'/slides/all?%s' % keep_query('*', **{'channel_tag_group_id_%s' % tag_group.id: tag.id if tag not in search_tags else False})"
                                                 t-esc="tag.name"/>
                                         </t>
