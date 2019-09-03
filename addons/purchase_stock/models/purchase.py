@@ -14,12 +14,7 @@ class PurchaseOrder(models.Model):
 
     @api.model
     def _default_picking_type(self):
-        type_obj = self.env['stock.picking.type']
-        company_id = self.env.context.get('company_id') or self.env.company.id
-        types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
-        if not types:
-            types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
-        return types[:1]
+        return self._get_picking_type(self.env.context.get('company_id') or self.env.company.id)
 
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
@@ -59,6 +54,10 @@ class PurchaseOrder(models.Model):
     def _onchange_picking_type_id(self):
         if self.picking_type_id.default_location_dest_id.usage != 'customer':
             self.dest_address_id = False
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        self.picking_type_id = self._get_picking_type(self.company_id.id)
 
     # --------------------------------------------------
     # CRUD
@@ -174,6 +173,13 @@ class PurchaseOrder(models.Model):
         if self.dest_address_id:
             return self.dest_address_id.property_stock_customer.id
         return self.picking_type_id.default_location_dest_id.id
+
+    @api.model
+    def _get_picking_type(self, company_id):
+        picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
+        if not picking_type:
+            picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
+        return picking_type[:1]
 
     @api.model
     def _prepare_picking(self):

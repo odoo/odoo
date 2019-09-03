@@ -16,31 +16,41 @@ class StockMoveLine(models.Model):
 
     picking_id = fields.Many2one(
         'stock.picking', 'Stock Picking', auto_join=True,
+        check_company=True,
         help='The stock operation where the packing has been made')
     move_id = fields.Many2one(
         'stock.move', 'Stock Move',
+        check_company=True,
         help="Change to a better name", index=True)
-    company_id = fields.Many2one('res.company', string='Company', related='move_id.company_id', store=True, readonly=True)
-    product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True, index=True)
+    product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True)
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
         'Real Reserved Quantity', digits=0,
         compute='_compute_product_qty', inverse='_set_product_qty', store=True)
     product_uom_qty = fields.Float('Reserved', default=0.0, digits='Product Unit of Measure', required=True)
     qty_done = fields.Float('Done', default=0.0, digits='Product Unit of Measure', copy=False)
-    package_id = fields.Many2one('stock.quant.package', 'Source Package', ondelete='restrict')
-    package_level_id = fields.Many2one('stock.package_level', 'Package Level')
-    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
+    package_id = fields.Many2one(
+        'stock.quant.package', 'Source Package', ondelete='restrict',
+        check_company=True,
+        domain="[('location_id', '=', location_id)]")
+    package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True)
+    lot_id = fields.Many2one(
+        'stock.production.lot', 'Lot/Serial Number',
+        domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)
     lot_name = fields.Char('Lot/Serial Number Name')
     result_package_id = fields.Many2one(
         'stock.quant.package', 'Destination Package',
-        ondelete='restrict', required=False,
+        ondelete='restrict', required=False, check_company=True,
+        domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]",
         help="If set, the operations are packed into this package")
     date = fields.Datetime('Date', default=fields.Datetime.now, required=True)
-    owner_id = fields.Many2one('res.partner', 'From Owner',
+    owner_id = fields.Many2one(
+        'res.partner', 'From Owner',
+        check_company=True,
         help="When validating the transfer, the products will be taken from this owner.")
-    location_id = fields.Many2one('stock.location', 'From', required=True)
-    location_dest_id = fields.Many2one('stock.location', 'To', required=True)
+    location_id = fields.Many2one('stock.location', 'From', check_company=True, required=True)
+    location_dest_id = fields.Many2one('stock.location', 'To', check_company=True, required=True)
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     picking_type_use_create_lots = fields.Boolean(related='picking_id.picking_type_id.use_create_lots', readonly=True)
@@ -163,7 +173,10 @@ class StockMoveLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-
+            if vals.get('move_id'):
+                vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
+            elif vals.get('picking_id'):
+                vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
             # If the move line is directly create on the picking view.
             # If this picking is already done we should generate an
             # associated done move.
@@ -183,7 +196,6 @@ class StockMoveLine(models.Model):
                         'picking_id': picking.id,
                     })
                     vals['move_id'] = new_move.id
-        
         mls = super(StockMoveLine, self).create(vals_list)
 
         for ml in mls:
@@ -400,7 +412,7 @@ class StockMoveLine(models.Model):
                             # `use_create_lots` and `use_existing_lots`.
                             if ml.lot_name and not ml.lot_id:
                                 lot = self.env['stock.production.lot'].create(
-                                    {'name': ml.lot_name, 'product_id': ml.product_id.id}
+                                    {'name': ml.lot_name, 'product_id': ml.product_id.id, 'company_id': ml.move_id.company_id.id}
                                 )
                                 ml.write({'lot_id': lot.id})
                         elif not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots:
@@ -420,6 +432,8 @@ class StockMoveLine(models.Model):
             else:
                 ml_to_delete |= ml
         ml_to_delete.unlink()
+
+        (self - ml_to_delete)._check_company()
 
         # Now, we can actually move the quant.
         done_ml = self.env['stock.move.line']
@@ -545,3 +559,4 @@ class StockMoveLine(models.Model):
     def _should_bypass_reservation(self, location):
         self.ensure_one()
         return location.should_bypass_reservation() or self.product_id.type != 'product'
+

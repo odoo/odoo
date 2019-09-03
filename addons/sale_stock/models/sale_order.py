@@ -31,7 +31,7 @@ class SaleOrder(models.Model):
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse',
         required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        default=_default_warehouse_id, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        default=_default_warehouse_id, check_company=True)
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
@@ -105,10 +105,10 @@ class SaleOrder(models.Model):
         for order in self:
             order.delivery_count = len(order.picking_ids)
 
-    @api.onchange('warehouse_id')
-    def _onchange_warehouse_id(self):
-        if self.warehouse_id.company_id:
-            self.company_id = self.warehouse_id.company_id.id
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id:
+            self.warehouse_id = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
 
     @api.onchange('partner_shipping_id')
     def _onchange_partner_shipping_id(self):
@@ -194,8 +194,8 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     qty_delivered_method = fields.Selection(selection_add=[('stock_move', 'Stock Moves')])
-    product_packaging = fields.Many2one('product.packaging', string='Package', default=False)
-    route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict')
+    product_packaging = fields.Many2one( 'product.packaging', string='Package', default=False, check_company=True)
+    route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict', check_company=True)
     move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
     product_type = fields.Selection(related='product_id.type')
     virtual_available_at_date = fields.Float(compute='_compute_qty_at_date')
@@ -397,6 +397,7 @@ class SaleOrderLine(models.Model):
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
+            'company_id': self.order_id.company_id,
         })
         for line in self.filtered("order_id.commitment_date"):
             date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)

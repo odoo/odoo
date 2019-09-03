@@ -92,7 +92,7 @@
                     <group>
                         <group>
                             <field name="id" invisible="1"/>
-                            <field name="product_id" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('bom_ids', '!=', False), ('bom_ids.active', '=', True), ('bom_ids.type', '=', 'normal')]"/>
+                            <field name="product_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row no-gutters d-flex">
@@ -106,12 +106,6 @@
                                 </div>
                             </div>
                             <field name="bom_id"
-                                domain="['&amp;', '|',
-                                            ('product_id','=',product_id),
-                                            '&amp;',
-                                                ('product_tmpl_id.product_variant_ids','=',product_id),
-                                                ('product_id','=',False),
-                                                ('type', '=', 'normal')]"
                                 context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
@@ -169,7 +163,7 @@
                             </div>
                             <field name="user_id"/>
                             <field name="origin"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field name="show_final_lots" invisible="1"/>
                             <field name="production_location_id" invisible="1" readonly="1"/>
                         </group>
@@ -182,7 +176,8 @@
                             <field name="finished_move_line_ids" context="{'form_view_ref': 'mrp.view_finisehd_move_line'}" attrs="{'readonly': [('is_locked', '=', True)], 'invisible': [('finished_move_line_ids', '=', [])]}">
                                  <tree default_order="done_move" editable="bottom" create="0" delete="0" decoration-muted="state in ('done', 'cancel')">
                                     <field name="product_id" readonly="1"/>
-                                    <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" attrs="{'invisible': [('lots_visible', '=', False)]}"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="lot_id" groups="stock.group_production_lot" context="{'default_product_id': product_id}" attrs="{'invisible': [('lots_visible', '=', False)]}"/>
                                     <field name="product_uom_id" groups="uom.group_uom"/>
                                     <field name="qty_done" string="Produced"/>
                                     <field name="lots_visible" invisible="1"/>
@@ -197,9 +192,9 @@
                         <page string="Miscellaneous" groups="stock.group_stock_multi_locations">
                             <group>
                                 <group>
-                                    <field name="picking_type_id" domain="[('code', '=', 'mrp_operation')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="location_src_id" options="{'no_create': True}" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="location_dest_id" options="{'no_create': True}" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_src_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_dest_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </group>
                             </group>
                         </page>
@@ -351,7 +346,7 @@
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
-            <field name="context">{'search_default_todo': True}</field>
+            <field name="context">{'search_default_todo': True, 'default_company_id': allowed_company_ids[0]}</field>
             <field name="domain">[('picking_type_id.active', '=', True)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
