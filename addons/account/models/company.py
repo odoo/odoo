@@ -148,12 +148,19 @@ Best Regards,'''))
     def get_and_update_account_dashboard_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
             are displayed only one time. """
-        return self.get_and_update_onbarding_state('account_dashboard_onboarding_state', [
+        return self.get_and_update_onbarding_state(
+            'account_dashboard_onboarding_state',
+            self.get_account_dashboard_onboarding_steps_states_names()
+        )
+
+    def get_account_dashboard_onboarding_steps_states_names(self):
+        """ Necessary to add/edit steps from other modules (account_winbooks_import in this case). """
+        return [
             'base_onboarding_company_state',
             'account_setup_bank_data_state',
             'account_setup_fy_data_state',
             'account_setup_coa_state',
-        ])
+        ]
 
     def _check_lock_dates(self, vals):
         '''Check the lock dates for the current companies. This can't be done in a api.constrains because we need
