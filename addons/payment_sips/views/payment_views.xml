@@ -11,9 +11,9 @@
                     <group attrs="{'invisible': [('provider', '!=', 'sips')]}">
                         <field name="sips_merchant_id"/>
                         <field name="sips_secret"/>
-                        <field name="sips_test_url"/>
-                        <field name="sips_prod_url"/>
-                        <field name="sips_version"/>
+                        <field name="sips_test_url" groups='base.group_no_one'/>
+                        <field name="sips_prod_url" groups='base.group_no_one'/>
+                        <field name="sips_version" groups='base.group_no_one'/>
                     </group>
                 </xpath>
             </field>

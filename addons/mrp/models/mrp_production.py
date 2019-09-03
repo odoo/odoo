@@ -277,6 +277,7 @@ class MrpProduction(models.Model):
                 order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_raw_ids | order.move_finished_ids)
             else:
                 order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
+            order.post_visible &= all(wo.state in ['done', 'cancel'] for wo in order.workorder_ids) or all(m.product_id.tracking == 'none' for m in order.move_raw_ids)
 
     @api.multi
     @api.depends('move_raw_ids.quantity_done', 'move_raw_ids.product_uom_qty')
@@ -529,6 +530,8 @@ class MrpProduction(models.Model):
     @api.multi
     def open_produce_product(self):
         self.ensure_one()
+        if self.bom_id.type == 'phantom':
+            raise UserError(_('You cannot produce a MO with a bom kit product.'))
         action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
         return action
 
