@@ -1,26 +1,12 @@
-odoo.define('web.CalendarRenderer', function (require) {
+odoo.define('web.CalendarSidebar', function (require) {
 "use strict";
 
-var AbstractRenderer = require('web.AbstractRenderer');
-var config = require('web.config');
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var field_utils = require('web.field_utils');
-var FieldManagerMixin = require('web.FieldManagerMixin');
-var QWeb = require('web.QWeb');
 var relational_fields = require('web.relational_fields');
 var session = require('web.session');
-var utils = require('web.utils');
+var FieldManagerMixin = require('web.FieldManagerMixin');
+var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 
-var _t = core._t;
-var qweb = core.qweb;
-
-var scales = {
-    day: 'agendaDay',
-    week: 'agendaWeek',
-    month: 'month'
-};
 
 var SidebarFilterM2O = relational_fields.FieldMany2One.extend({
     _getSearchBlacklist: function () {
@@ -166,6 +152,36 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         });
     },
 });
+
+return {
+    'SidebarFilterM2O': SidebarFilterM2O,
+    'SidebarFilter': SidebarFilter
+};
+
+});
+
+
+odoo.define('web.CalendarRenderer', function (require) {
+"use strict";
+
+var SidebarFilter = require('web.CalendarSidebar').SidebarFilter;
+var AbstractRenderer = require('web.AbstractRenderer');
+var config = require('web.config');
+var core = require('web.core');
+var field_utils = require('web.field_utils');
+var QWeb = require('web.QWeb');
+var session = require('web.session');
+var utils = require('web.utils');
+
+var _t = core._t;
+var qweb = core.qweb;
+
+var scales = {
+    day: 'agendaDay',
+    week: 'agendaWeek',
+    month: 'month'
+};
+
 
 return AbstractRenderer.extend({
     template: "CalendarView",
