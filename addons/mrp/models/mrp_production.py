@@ -614,6 +614,8 @@ class MrpProduction(models.Model):
     @api.multi
     def open_produce_product(self):
         self.ensure_one()
+        if self.bom_id.type == 'phantom':
+            raise UserError(_('You cannot produce a MO with a bom kit product.'))
         action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
         return action
 
