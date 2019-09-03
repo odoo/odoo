@@ -1040,16 +1040,16 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_sales_purchases"/>
-            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+            <field name="view_mode">tree,pivot,graph</field>
         </record>
 
         <record id="action_account_moves_journal_purchase" model="ir.actions.act_window">
             <field name="context">{'journal_type':'purchase', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_purchases':1, 'name_groupby':1, 'expand': 1}</field>
-            <field name="name">Purchase</field>
+            <field name="name">Purchases</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_sales_purchases"/>
-            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+            <field name="view_mode">tree,pivot,graph</field>
         </record>
 
         <record id="action_account_moves_journal_bank_cash" model="ir.actions.act_window">
@@ -1058,7 +1058,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_bank_cash"/>
-            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+            <field name="view_mode">tree,pivot,graph</field>
         </record>
 
         <record id="action_account_moves_journal_misc" model="ir.actions.act_window">
@@ -1067,7 +1067,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_misc"/>
-            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+            <field name="view_mode">tree,pivot,graph</field>
         </record>
 
         <record id="action_account_moves_ledger_general" model="ir.actions.act_window">
@@ -1077,7 +1077,7 @@
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_general"/>
             <field name="search_view_id" ref="view_account_move_line_filter_with_root_selection"/>
-            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+            <field name="view_mode">tree,pivot,graph</field>
         </record>
 
         <record id="action_account_moves_ledger_partner" model="ir.actions.act_window">
@@ -1087,7 +1087,7 @@
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_partner"/>
             <field name="search_view_id" ref="view_account_move_line_filter_with_root_selection"/>
-            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+            <field name="view_mode">tree,pivot,graph</field>
         </record>
 
         <record id="action_account_moves_all_tree" model="ir.actions.act_window">
