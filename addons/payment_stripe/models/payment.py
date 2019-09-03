@@ -127,6 +127,23 @@ class PaymentTransactionStripe(models.Model):
     _inherit = 'payment.transaction'
 
     stripe_payment_intent = fields.Char(string='Stripe Payment Intent ID', readonly=True)
+    stripe_payment_intent_secret = fields.Char()
+
+    def create(self, vals):
+        # Con't be done using stripe_create as it is called before the tx is actually created
+        res = super().create(vals)
+        if 'on_session' in self.env.context:
+            # customer is in front of the screen, use payment intents
+            pi = res._stripe_create_payment_intent(confirm=False)
+            res.stripe_payment_intent_secret = pi.get('client_secret')
+            res.stripe_payment_intent = pi.get('id')
+        return res
+
+    def get_json_fields(self):
+        """Return the list of fields that should be sent to the client when dealing with draft transactions through JS code. """
+        res = super().get_json_fields()
+        res.append('stripe_payment_intent_secret')
+        return res
 
     def form_feedback(self, data, acquirer_name):
         if data.get('reference') and acquirer_name == 'stripe':
@@ -141,7 +158,7 @@ class PaymentTransactionStripe(models.Model):
             _logger.info('Stripe: entering form_feedback with post data %s' % pprint.pformat(data))
         return super(PaymentTransactionStripe, self).form_feedback(data, acquirer_name)
 
-    def _stripe_create_payment_intent(self, acquirer_ref=None, email=None):
+    def _stripe_create_payment_intent(self, acquirer_ref=None, email=None, confirm=True):
         charge_params = {
             'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else float_round(self.amount * 100, 2)),
             'currency': self.currency_id.name.lower(),

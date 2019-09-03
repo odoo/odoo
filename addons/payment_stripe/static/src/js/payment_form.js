@@ -49,6 +49,7 @@ PaymentForm.include({
         var formData = self.getFormData(inputsForm);
         var stripe = this.stripe;
         var card = this.stripe_card_element;
+        var tx_reference;
         if (card._invalid) {
             return;
         }
@@ -75,9 +76,67 @@ PaymentForm.include({
                     window.location.reload();
                 }
             } else {
-                $checkedRadio.val(result.id);
-                self.el.submit();
+                var json_url = self.$el.data('json-action');
+                formData.pm_id = result.id;
+                return self._rpc({
+                    route: json_url,
+                    params: formData
+                });
             }
+        }).then(function(result) {
+            var pi_secret = result.stripe_payment_intent_secret;
+            tx_reference = result.reference;
+            return stripe.handleCardPayment(pi_secret);
+        }).then(function(result) {
+            if (result.error) {
+                return Promise.reject({"message": {"data": { "message": result.error.message}}});
+            }
+            console.log(result);
+            return self._rpc({
+                route: '/payment/stripe/s2s/process_payment_intent',
+                params: _.extend({}, result.paymentIntent, {reference: tx_reference}),
+            })
+        }).then(function(result) {
+            window.location = '/payment/process';
+        }).guardedCatch(function (error) {
+            // if the rpc fails, pretty obvious
+            self.enableButton(button);
+            self.displayError(
+                _t('Unable to save card'),
+                _t("We are not able to add your payment method at the moment. ") +
+                    self._parseError(error)
+            );
+        });
+    },
+    _chargeStripeToken: function (ev, $checkedRadio) {
+        var self = this;
+        var json_url = this.$el.data('json-action');
+        var formData = this.getFormData(this.$el);
+        if (ev.type === 'submit') {
+            var button = $(ev.target).find('*[type="submit"]')[0]
+        } else {
+            var button = ev.target;
+        }
+        this.disableButton(button);
+        var tx_reference;
+        var stripe = Stripe(formData.stripe_publishable_key);
+        return this._rpc({
+            route: json_url,
+            params: formData
+        }).then(function(result) {
+            var pi_secret = result.stripe_payment_intent_secret;
+            tx_reference = result.reference;
+            return stripe.handleCardPayment(pi_secret);
+        }).then(function(result) {
+            if (result.error) {
+                return Promise.reject({"message": {"data": { "message": result.error.message}}});
+            }
+            return self._rpc({
+                route: '/payment/stripe/s2s/process_payment_intent',
+                params: _.extend({}, result.paymentIntent, {reference: tx_reference}),
+            });
+        }).then(function(result) {
+            window.location = '/payment/process';
         }).guardedCatch(function (error) {
             // if the rpc fails, pretty obvious
             self.enableButton(button);
@@ -162,6 +221,8 @@ PaymentForm.include({
         // first we check that the user has selected a stripe as s2s payment method
         if ($checkedRadio.length === 1 && this.isNewPaymentRadio($checkedRadio) && $checkedRadio.data('provider') === 'stripe') {
             return this._createStripeToken(ev, $checkedRadio);
+        } else if ($checkedRadio.attr('name') === 'pm_id' && !this.isNewPaymentRadio($checkedRadio) && !this.isFormPaymentRadio($checkedRadio) && $checkedRadio.data('provider') === 'stripe') {
+            return this._chargeStripeToken(ev, $checkedRadio);
         } else {
             return this._super.apply(this, arguments);
         }
