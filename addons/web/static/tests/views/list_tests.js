@@ -3268,6 +3268,57 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('grouped list with another grouped list parent, click unfold', function (assert) {
+        assert.expect(3);
+        this.data.bar.fields = {
+            cornichon: {string: 'cornichon', type: 'char'},
+        };
+
+        var rec = this.data.bar.records[0];
+        // create records to have the search more button
+        var newRecs = [];
+        for (var i=0; i<8; i++) {
+            var newRec = _.extend({}, rec);
+            newRec.id = 10 + i;
+            newRec.cornichon = 'extra fin';
+            newRecs.push(newRec)
+        }
+        this.data.bar.records = newRecs;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/><field name="m2o"/></tree>',
+            groupBy: ['bar'],
+            archs: {
+                'bar,false,list': '<tree><field name="cornichon"/></tree>',
+                'bar,false,search': '<search><filter context="{\'group_by\': \'cornichon\'}" string="cornichon"/></search>',
+            },
+        });
+
+        list.update({groupBy: []});
+
+        testUtilsDom.click(list.$('.o_data_cell:eq(0)'));
+
+        testUtilsDom.click(list.$('.o_selected_row .o_data_cell .o_field_many2one input'));
+        $('.ui-autocomplete .ui-menu-item:contains("Search More")').mouseenter().click();
+
+        assert.containsOnce($('body'), '.modal-content');
+
+        assert.containsNone($('body'), '.modal-content .o_group_name', 'list in modal not grouped');
+
+        testUtilsDom.click($('body .modal-content button:contains(Group By)'));
+
+        testUtilsDom.click($('body .modal-content .o_menu_item a:contains(cornichon)'));
+
+        testUtilsDom.click($('body .modal-content .o_group_header'));
+
+        assert.containsOnce($('body'), '.modal-content .o_group_open');
+
+        list.destroy();
+    });
+
     QUnit.test('field values are escaped', function (assert) {
         assert.expect(1);
         var value = '<script>throw Error();</script>';
