@@ -74,13 +74,13 @@ var SlideUploadDialog = Dialog.extend({
         this.$('.alert-warning').remove();
     },
     /**
-     * Category and tags management from select2
+     * Section and tags management from select2
      *
      * @private
      */
     _bindSelect2Dropdown: function () {
         var self = this;
-        this.$('#category_id').select2(this._select2Wrapper(_t('Category'), false,
+        this.$('#category_id').select2(this._select2Wrapper(_t('Section'), false,
             function () {
                 return self._rpc({
                     route: '/slides/category/search_read',

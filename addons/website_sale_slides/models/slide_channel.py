@@ -9,9 +9,10 @@ class Channel(models.Model):
 
     enroll = fields.Selection(selection_add=[('payment', 'On payment')])
     product_id = fields.Many2one('product.product', 'Product', index=True)
-    product_sale_revenues = fields.Float(
+    product_sale_revenues = fields.Monetary(
         string='Total revenues', compute='_compute_product_sale_revenues',
         groups="sales_team.group_sale_salesman")
+    currency_id = fields.Many2one(related='product_id.currency_id')
 
     _sql_constraints = [
         ('product_id_check', "CHECK( enroll!='payment' OR product_id IS NOT NULL )", "Product is required for on payment channels.")
