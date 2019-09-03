@@ -1256,7 +1256,7 @@ class AccountMove(models.Model):
             WHERE move.id IN %s
             AND move.type in ('in_invoice', 'in_refund')
             AND move.ref IS NOT NULL
-        '''.format(", ".join(["(%s, %s, %s, %s, %s, CAST(%s as DATE))"] * len(self))), list(chain(*self.mapped(lambda r: [r.id, r.ref, r.company_id.id, r.commercial_partner_id.id, r.type, r.invoice_date or None]))) + [tuple(moves.ids)])
+        '''.format(", ".join(["(%s, %s, %s, %s, %s, CAST(%s as DATE))"] * len(moves))), list(chain(*moves.mapped(lambda r: [r.id, r.ref, r.company_id.id, r.commercial_partner_id.id, r.type, r.invoice_date or None]))) + [tuple(moves.ids)])
         if self._cr.fetchone():
             raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note.'))
 
