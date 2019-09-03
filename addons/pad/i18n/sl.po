@@ -1,81 +1,92 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * pad
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2019-06-12 12:24+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3);\n"
 
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "API Key"
-msgstr ""
+msgstr "API ključ"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Družbe"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common_display_name
+#: model:ir.model,name:pad.model_res_config_settings
+msgid "Config Settings"
+msgstr "Uredi nastavitve"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_pad_common__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: pad
-#: model:ir.model.fields,help:pad.field_res_company_pad_key
-#: model:ir.model.fields,help:pad.field_res_config_settings_pad_key
+#: model:ir.model.fields,help:pad.field_res_company__pad_key
+#: model:ir.model.fields,help:pad.field_res_config_settings__pad_key
 msgid "Etherpad lite api key."
-msgstr ""
+msgstr "Etherpad lite api ključ."
 
 #. module: pad
-#: model:ir.model.fields,help:pad.field_res_company_pad_server
-#: model:ir.model.fields,help:pad.field_res_config_settings_pad_server
+#: model:ir.model.fields,help:pad.field_res_company__pad_server
+#: model:ir.model.fields,help:pad.field_res_config_settings__pad_server
 msgid "Etherpad lite server. Example: beta.primarypad.com"
-msgstr ""
+msgstr "Etherpad lite strežnik. Primer: beta.primarypad.com"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common_id
+#: model:ir.model.fields,field_description:pad.field_pad_common__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common___last_update
+#: model:ir.model.fields,field_description:pad.field_pad_common____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnjič spremenjeno"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:147
+#: code:addons/pad/static/src/js/pad.js:149
 #, python-format
 msgid "Loading"
-msgstr ""
+msgstr "Nalaganje"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company_pad_key
+#: model:ir.model.fields,field_description:pad.field_res_company__pad_key
 msgid "Pad Api Key"
-msgstr ""
+msgstr "Pad Api ključ"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_config_settings_pad_key
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_key
 msgid "Pad Api Key *"
 msgstr ""
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company_pad_server
-msgid "Pad Server"
+#: model:ir.model,name:pad.model_pad_common
+msgid "Pad Common"
 msgstr ""
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_config_settings_pad_server
+#: model:ir.model.fields,field_description:pad.field_res_company__pad_server
+msgid "Pad Server"
+msgstr "Pad strežnik"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_server
 msgid "Pad Server *"
 msgstr ""
 
@@ -86,6 +97,8 @@ msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
 "with your connection."
 msgstr ""
+"Ustvarjanje zvezka spodletelo, težava je pri URL povezavi na vaš zvezek ali "
+"pa z vašo povezavo."
 
 #. module: pad
 #. openerp-web
@@ -99,33 +112,30 @@ msgstr ""
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "Server"
+msgstr "Strežnik"
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/xml/pad.xml:14
+#, python-format
+msgid "Switch pad"
 msgstr ""
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:166
+#: code:addons/pad/static/src/js/pad.js:168
 #, python-format
 msgid "This pad will be initialized on first edit"
-msgstr ""
+msgstr "Ta zvezek bo inicializiran ob prvem urejanju."
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:160
+#: code:addons/pad/static/src/js/pad.js:162
 #, python-format
 msgid "Unable to load pad"
-msgstr ""
+msgstr "Zvezka ni bilo mogoče naložiti"
 
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "e.g. beta.primarypad.com"
-msgstr ""
-
-#. module: pad
-#: model:ir.model,name:pad.model_pad_common
-msgid "pad.common"
-msgstr ""
-
-#. module: pad
-#: model:ir.model,name:pad.model_res_config_settings
-msgid "res.config.settings"
-msgstr ""
+msgstr "npr. beta.primarypad.com"
