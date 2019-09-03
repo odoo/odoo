@@ -507,7 +507,9 @@ ListRenderer.include({
      */
     updateState: function (state, params) {
         this.columnWidths = false;
-        if (params.keepWidths) {
+        // There are some cases where a record is added to an invisible list
+        // e.g. set a quotation template with optionnal products
+        if (params.keepWidths && this.$el.is(':visible')) {
             this.columnWidths = this.$('thead th').toArray().map(function (th) {
                 return $(th).outerWidth();
             });
