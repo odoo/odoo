@@ -32,3 +32,11 @@ class StockBackorderConfirmation(models.TransientModel):
 
     def process_cancel_backorder(self):
         self._process(cancel_backorder=True)
+
+    def action_process(self):
+        self._process()
+        return {'type': 'ir.actions.act_window_close', 'infos': 'apply'}
+
+    def action_process_cancel_backorder(self):
+        self._process(cancel_backorder=True)
+        return {'type': 'ir.actions.act_window_close', 'infos': 'apply'}

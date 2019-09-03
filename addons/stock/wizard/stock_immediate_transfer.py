@@ -35,3 +35,10 @@ class StockImmediateTransfer(models.TransientModel):
         if pick_to_backorder:
             return pick_to_backorder.action_generate_backorder_wizard()
         return False
+
+    def action_process(self):
+        res = self.process() or dict()
+        if not res.get('type'):
+            res.update({'type': 'ir.actions.act_window_close'})
+        res.update({'infos': 'apply'})
+        return res
