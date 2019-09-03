@@ -648,13 +648,14 @@ class HolidaysRequest(models.Model):
 
     def unlink(self):
         error_message = _('You cannot delete a time off which is in %s state')
+        state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
 
         if not self.user_has_groups('hr_holidays.groups_hr_user'):
             if any(hol.state != 'draft' for hol in self):
-                raise UserError(error_message % self[:1].state)
+                raise UserError(error_message % state_description_values.get(self[:1].state))
         else:
             for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
-                raise UserError(_('You cannot delete a time off which is in %s state.') % (holiday.state,))
+                raise UserError(error_message % (state_description_values.get(holiday.state),))
         return super(HolidaysRequest, self).unlink()
 
     def copy_data(self, default=None):
