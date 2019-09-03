@@ -645,7 +645,7 @@ class Task(models.Model):
         for task in self:
             if task.project_id:
                 if task.project_id.company_id != task.company_id:
-                    raise ValidationError(_('Your task must beo in the same company as its project.'))
+                    raise ValidationError(_('Your task must be in the same company as its project.'))
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
