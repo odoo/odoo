@@ -232,7 +232,12 @@ var LivechatButton = Widget.extend({
             is_note: data.is_note,
             customer_email_data: []
         };
-
+        var hasAlreadyMessage = _.some(this.messages, function (message) {
+            return message.id === msg.id;
+        });
+        if (hasAlreadyMessage) {
+            return;
+        }
         // Compute displayed author name or email
         msg.displayed_author = msg.author_id && msg.author_id[1] ||
                                this.options.default_username;
