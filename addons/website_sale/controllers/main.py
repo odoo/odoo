@@ -977,7 +977,10 @@ class WebsiteSale(http.Controller):
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
         order = request.env['sale.order'].sudo().browse(sale_order_id).exists()
-        assert order.id == request.session.get('sale_last_order_id')
+        if order.id != request.session.get('sale_last_order_id'):
+            # either something went wrong or the session is unbound
+            # prevent recalling every 3rd of a second in the JS widget
+            return {}
 
         return {
             'recall': order.get_portal_last_transaction().state == 'pending',
