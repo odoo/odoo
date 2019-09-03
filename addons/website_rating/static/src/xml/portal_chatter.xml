@@ -9,9 +9,6 @@
             <attribute name="t-attf-action">#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : '/mail/chatter_post'}</attribute>
         </t>
         <t t-jquery=".o_portal_chatter_composer_form input[name='csrf_token']" t-operation="after">
-            <t t-call="website_rating.rating_star_input">
-                <t t-set="default_rating" t-value="widget.options['default_rating_value']"/>
-            </t>
             <input type="hidden" name="message_id" t-att-value="widget.options['default_message_id']" t-if="widget.options['default_message_id']"/>
         </t>
     </t>

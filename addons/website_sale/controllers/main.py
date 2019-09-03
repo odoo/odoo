@@ -3,6 +3,7 @@
 import json
 import logging
 from datetime import datetime
+from math import floor
 from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import fields, http, tools, _
@@ -154,7 +155,7 @@ class WebsiteSale(http.Controller):
         order = post.get('order') or 'website_sequence ASC'
         return 'is_published desc, %s, id desc' % order
 
-    def _get_search_domain(self, search, category, attrib_values, search_in_description=True):
+    def _get_search_domain(self, search, category, attrib_values, min_rating, search_in_description=True):
         domains = [request.website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
@@ -185,6 +186,8 @@ class WebsiteSale(http.Controller):
                     ids = [value[1]]
             if attrib:
                 domains.append([('attribute_line_ids.value_ids', 'in', ids)])
+        if min_rating:
+            domains.append([('rating_avg', '>=', min_rating)])
 
         return expression.AND(domains)
 
@@ -228,13 +231,14 @@ class WebsiteSale(http.Controller):
         ppr = request.env['website'].get_current_website().shop_ppr or 4
 
         attrib_list = request.httprequest.args.getlist('attrib')
+        min_rating = request.httprequest.args.get('min_rating') or 0
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
 
-        domain = self._get_search_domain(search, category, attrib_values)
+        domain = self._get_search_domain(search, category, attrib_values, min_rating)
 
-        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, order=post.get('order'))
+        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, min_rating=min_rating, order=post.get('order'))
 
         pricelist_context, pricelist = self._get_pricelist_context()
 
@@ -245,6 +249,8 @@ class WebsiteSale(http.Controller):
             post["search"] = search
         if attrib_list:
             post['attrib'] = attrib_list
+        if min_rating:
+            post['min_rating'] = min_rating
 
         Product = request.env['product.template'].with_context(bin_size=True)
 
@@ -294,6 +300,7 @@ class WebsiteSale(http.Controller):
             'ppr': ppr,
             'categories': categs,
             'attributes': attributes,
+            'min_rating': floor(float(min_rating) / 2),
             'keep': keep,
             'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
@@ -321,10 +328,11 @@ class WebsiteSale(http.Controller):
             category = ProductCategory.browse(int(category)).exists()
 
         attrib_list = request.httprequest.args.getlist('attrib')
+        min_rating = request.httprequest.args.get('min_rating')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attrib_set = {v[1] for v in attrib_values}
 
-        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_list)
+        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_list, min_rating=min_rating)
 
         categs = ProductCategory.search([('parent_id', '=', False)])
 

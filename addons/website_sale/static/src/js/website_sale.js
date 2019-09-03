@@ -122,6 +122,7 @@ var core = require('web.core');
 var config = require('web.config');
 var concurrency = require('web.concurrency');
 var publicWidget = require('web.public.widget');
+var RatingSelector = require('portal.rating.composer').RatingSelector;
 var VariantMixin = require('sale.VariantMixin');
 var wSaleUtils = require('website_sale.utils');
 require("web.zoomodoo");
@@ -910,6 +911,47 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
                 this.$menu.children().first().focus();
                 break;
         }
+    },
+});
+
+publicWidget.registry.RatingFilterSelector = publicWidget.Widget.extend({
+    selector: '#o_wsale_rating_filter_option',
+    events: {
+        'change input[name="rating_value"]': '_onValueChange',
+    },
+
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.options = {
+            display_badge: false,
+        };
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.options.default_rating_value = this.$('input[name="rating_value"]').val();
+        var ratingSelector = new RatingSelector(this, this.options);
+        var prom = [];
+        prom.push(this._super.apply(this, arguments));
+        prom.push(ratingSelector.replace(this.$('.o_rating_star_card')));
+        return Promise.all(prom);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onValueChange: function () {
+        var search = $.deparam(window.location.search.substring(1));
+        search['min_rating'] = this.$('input[name="rating_value"]').val();
+        window.location.search = $.param(search);
     },
 });
 });

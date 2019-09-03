@@ -170,6 +170,14 @@
                         <span itemprop="price" style="display:none;" t-esc="combination_info['price']" />
                         <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
                     </div>
+                    <div class="oe_subdescription" contenteditable="false">
+                        <div t-if="request.website.viewref('website_sale.product_comment').active" class="product_rating" contenteditable="false">
+                            <t t-call="website_rating.rating_widget_stars_static">
+                                <t t-set="rating_avg" t-value="product.rating_avg"/>
+                                <t t-set="rating_count" t-value="product.rating_count"/>
+                            </t>
+                        </div>
+                    </div>
                 </div>
                 <div class="o_wsale_product_btn"/>
             </div>
@@ -177,10 +185,8 @@
     </template>
 
     <template id="products_description" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Product Description">
-        <xpath expr="//*[hasclass('product_price')]" position="after">
-            <div class="oe_subdescription" contenteditable="false">
-                <div itemprop="description" t-field="product.description_sale"/>
-            </div>
+        <xpath expr="//*[hasclass('oe_subdescription')]" position="inside">
+            <div itemprop="description" t-field="product.description_sale"/>
         </xpath>
     </template>
 
@@ -295,11 +301,15 @@
             <t t-set="list_price_asc_label">Catalog price: Low to High</t>
             <t t-set="name_asc_label">Name: A to Z</t>
             <t t-set="name_desc_label">Name: Z to A</t>
+            <t t-if="request.website.viewref('website_sale.product_comment').active" t-set="rating_asc_label">Rating: 0 to 5</t>
+            <t t-if="request.website.viewref('website_sale.product_comment').active" t-set="rating_desc_label">Rating: 5 to 0</t>
             <t t-set="website_sale_sortable" t-value="[
                 (list_price_desc_label, 'list_price desc'),
                 (list_price_asc_label, 'list_price asc'),
                 (name_asc_label, 'name asc'),
-                (name_desc_label, 'name desc')
+                (name_desc_label, 'name desc'),
+                (rating_asc_label, 'rating_avg asc'),
+                (rating_desc_label, 'rating_avg desc')
             ]"/>
             <t t-set="website_sale_sortable_current" t-value="[sort for sort in website_sale_sortable if sort[1]==request.params.get('order', '')]"/>
             <div class="dropdown mt-2 ml-md-2 dropdown_sorty_by">
@@ -450,6 +460,31 @@
                         </t>
                     </ul>
                 </form>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="products_rating" inherit_id="website_sale.products" active="False" customize_show="True" name="Filter by Rating" priority="12">
+        <xpath expr="//div[@id='products_grid_before']" position="before">
+            <t t-set="enable_left_column" t-value="True"/>
+        </xpath>
+        <xpath expr="//div[@id='products_grid_before']" position="inside">
+            <div id="o_wsale_rating_filter_option">
+                <strong>Minimal Rating</strong>
+                <div class="o_rating_star_card">
+                    <t t-set="empty_star" t-value="5 - min_rating"/>
+
+                    <div class="stars enabled">
+                        <t t-foreach="range(0, min_rating)" t-as="num">
+                            <i class="fa fa-star" role="img" aria-label="One star" title="One star"></i>
+                        </t>
+                        <t t-foreach="range(0, empty_star)" t-as="num" role="img" t-attf-aria-label="{{empty_star}} on 5" t-attf-title="{{empty_star}} on 5">
+                            <i class="fa fa-star-o"></i>
+                        </t>
+                    </div>
+                    <i t-attf-class="fa fa-refresh refresh {{min_rating or 'd-none'}}"></i>
+                    <input type="hidden" readonly="readonly" name="rating_value" t-att-value="min_rating * 2"/>
+                </div>
             </div>
         </xpath>
     </template>

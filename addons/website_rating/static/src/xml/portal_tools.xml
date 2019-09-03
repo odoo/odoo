@@ -62,9 +62,9 @@
     </t>
 
     <t t-name="website_rating.rating_star_input">
-        <div class="o_rating_star_card" t-if="widget.options['display_rating']">
-            <t t-set="val_integer" t-value="Math.floor(default_rating)"/>
-            <t t-set="val_decimal" t-value="default_rating - val_integer"/>
+        <div class="o_rating_star_card">
+            <t t-set="val_integer" t-value="Math.floor(widget.options.default_rating_value)"/>
+            <t t-set="val_decimal" t-value="widget.options.default_rating_value - val_integer"/>
             <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
 
             <div class="stars enabled">
@@ -75,13 +75,14 @@
                     <i class="fa fa-star-half-o" role="img" aria-label="Half a star" title="Half a star"></i>
                 </t>
                 <t t-foreach="_.range(0, empty_star)" t-as="num" role="img" t-attf-aria-label="#{empty_star} on 5" t-attf-title="#{empty_star} on 5">
-                    <i class="fa fa-star-o text-black-25"></i>
+                    <i class="fa fa-star-o"></i>
                 </t>
             </div>
+            <i t-attf-class="fa fa-refresh refresh #{widget.options.default_rating_value ? '' : 'd-none'}"></i>
             <div class="rate_text">
                 <span class="badge badge-info"></span>
             </div>
-            <input type="hidden" readonly="readonly" name="rating_value" t-att-value="default_rating || ''"/>
+            <input type="hidden" readonly="readonly" name="rating_value" t-att-value="widget.options.default_rating_value || ''"/>
         </div>
     </t>
 </templates>

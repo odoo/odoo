@@ -10,6 +10,7 @@ var xml_load = ajax.loadXML(
     '/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml',
     QWeb
 );
+require('website_sale.website_sale');
 
 /**
  * Addition to the variant_mixin._onChangeCombination

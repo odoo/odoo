@@ -99,7 +99,7 @@ class RatingMixin(models.AbstractModel):
         """ Returns a normalized domain on rating.rating to select the records to
             include in count, avg, ... computation of current model.
         """
-        return ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', self.ids), ('consumed', '=', True)]
+        return ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', self.ids), ('consumed', '=', True), ('rating', '>', 0)]
 
     def rating_get_partner_id(self):
         if hasattr(self, 'partner_id') and self.partner_id:
@@ -202,7 +202,7 @@ class RatingMixin(models.AbstractModel):
                 otherwise, key is the value of the information (string) : either stat name (avg, total, ...) or 'repartition'
                 containing the same dict if add_stats was False.
         """
-        base_domain = expression.AND([self._rating_domain(), [('rating', '>=', 1)]])
+        base_domain = self._rating_domain()
         if domain:
             base_domain += domain
         data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
