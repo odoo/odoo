@@ -945,16 +945,18 @@
         <t t-if="website_sale_order and website_sale_order.website_order_line">
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <div class="row mb8 cart_line">
-                    <div class="col-3">
+                    <div class="col-3 div-img">
                         <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'rounded'}" />
                     </div>
                     <div class="col-9">
-                        <div>
+                        <div class="div-product_name">
                             <t t-call="website_sale.cart_line_product_link">
                                 <span class="h6" t-esc="line.name_short" />
                             </t>
                         </div>
-                        Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
+                        <div class="div-qty">
+                            Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
+                        </div>
                     </div>
                 </div>
             </t>
