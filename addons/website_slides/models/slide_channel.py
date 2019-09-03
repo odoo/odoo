@@ -523,16 +523,7 @@ class Channel(models.Model):
         all_slides = self.env['slide.slide'].sudo().search(base_domain, order=order)
         category_data = []
 
-        # First add uncategorized slides
-        uncategorized_slides = all_slides.filtered(lambda slide: not slide.category_id)
-        if uncategorized_slides or force_void:
-            category_data.append({
-                'category': False, 'id': False,
-                'name': _('Uncategorized'), 'slug_name': _('Uncategorized'),
-                'total_slides': len(uncategorized_slides),
-                'slides': uncategorized_slides[(offset or 0):(offset + limit or len(uncategorized_slides))],
-            })
-        # Then all categories by natural order
+        # First add all categories by natural order
         for category in all_categories:
             category_slides = all_slides.filtered(lambda slide: slide.category_id == category)
             if not category_slides and not force_void:
@@ -542,6 +533,15 @@ class Channel(models.Model):
                 'name': category.name, 'slug_name': slug(category),
                 'total_slides': len(category_slides),
                 'slides': category_slides[(offset or 0):(limit + offset or len(category_slides))],
+            })
+        # Then add uncategorized slides
+        uncategorized_slides = all_slides.filtered(lambda slide: not slide.category_id)
+        if uncategorized_slides or force_void:
+            category_data.append({
+                'category': False, 'id': False,
+                'name': _('Uncategorized'), 'slug_name': _('Uncategorized'),
+                'total_slides': len(uncategorized_slides),
+                'slides': uncategorized_slides[(offset or 0):(offset + limit or len(uncategorized_slides))],
             })
         return category_data
 
