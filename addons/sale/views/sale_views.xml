@@ -196,6 +196,8 @@
                     <field name="user_id" optional="show"/>
                     <field name="team_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
+                    <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total Tax Included" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="invoice_status" optional="show"/>
@@ -220,6 +222,8 @@
                     <field name="user_id" optional="show"/>
                     <field name="team_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
+                    <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total Tax Included" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state" optional="show"/>
