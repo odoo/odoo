@@ -1,23 +1,54 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_picking_batch
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2019-06-12 12:24+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3);\n"
 
 #. module: stock_picking_batch
-#: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
-msgid "Add pickings to a batch picking"
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Lot/Serial Number</strong>"
+msgstr "<strong>Lot/serijska številka</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Package</strong>"
+msgstr "<strong>Paket</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Product Barcode</strong>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Responsible:</strong>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
+msgid "Action Needed"
+msgstr "Potreba po ukrepu"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
+msgid "Activity State"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -33,226 +64,369 @@ msgid "Add to Batch"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit_stock_picking_batch
-msgid "Batch"
-msgstr ""
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
+msgid "Attachment Count"
+msgstr "Število prilog"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Barcode"
+msgstr "Črtna koda"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:64
+#: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_id_8938
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__batch_id
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #, python-format
 msgid "Batch Picking"
+msgstr "Serijski zbirnik"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
+msgid "Batch Picking Lines"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__name
 msgid "Batch Picking Name"
-msgstr ""
+msgstr "Naziv serijskega zbirnika"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 msgid "Batch Pickings"
-msgstr ""
+msgstr "Serijski zbirniki"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Pickings not finished"
-msgstr ""
+msgstr "Serijski zbirniki še niso dokončani"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_id_8938
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this picking"
-msgstr ""
+msgstr "Serija povezana s tem zbirnikom"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Cancel"
-msgstr ""
+msgstr "Prekliči"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Cancel picking"
-msgstr ""
+msgstr "Preklic zbiranja"
 
 #. module: stock_picking_batch
 #: selection:stock.picking.batch,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Preklicano"
 
 #. module: stock_picking_batch
-#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
-msgid "Click to create a Batch Picking."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Commitment Date"
+msgstr "Rok izvedbe"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Confirm"
-msgstr ""
+msgstr "Potrdi"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Confirm picking"
+msgstr "Potrdi zbirnik"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid "Create a new batch picking"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_create_uid
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_create_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_create_date
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_create_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_display_name
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_display_name
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Destination"
+msgstr "Destinacija"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: selection:stock.picking.batch,state:0
 msgid "Done"
-msgstr ""
+msgstr "Opravljeno"
 
 #. module: stock_picking_batch
 #: selection:stock.picking.batch,state:0
 msgid "Draft"
+msgstr "Osnutek"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_follower_ids
+msgid "Followers"
+msgstr "Sledilci"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Sledilci (kanali)"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Sledilci (partnerji)"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Future Activities"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Group By"
-msgstr ""
+msgstr "Združi po"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_id
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: stock_picking_batch
-#: model:product.product,name:stock_picking_batch.product_product_ice_cream_choco
-#: model:product.template,name:stock_picking_batch.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate"
-msgstr ""
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 
 #. module: stock_picking_batch
-#: model:product.product,description_sale:stock_picking_batch.product_product_ice_cream_choco
-#: model:product.template,description_sale:stock_picking_batch.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate with sticks"
-msgstr ""
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 
 #. module: stock_picking_batch
-#: model:product.product,description_sale:stock_picking_batch.product_product_ice_cream_vani
-#: model:product.product,name:stock_picking_batch.product_product_ice_cream_vani
-#: model:product.template,description_sale:stock_picking_batch.product_product_ice_cream_vani_product_template
-#: model:product.template,name:stock_picking_batch.product_product_ice_cream_vani_product_template
-msgid "Ice Cream Vanilla"
-msgstr ""
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Če je označeno, imajo nekatera sporočila napako pri dostavi."
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_immediate_transfer
 msgid "Immediate Transfer"
-msgstr ""
+msgstr "Takojšen prenos"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:92
 #, python-format
 msgid "Immediate Transfer?"
-msgstr ""
+msgstr "Takojšen prenos?"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
+msgid "Is Follower"
+msgstr "Je sledilec"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch____last_update
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch____last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_uid
+msgid "Last Updated by"
+msgstr "Zadnjič posodobil"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-msgid "In Progress"
+msgid "Late Activities"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch___last_update
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch___last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_write_uid
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_write_uid
-msgid "Last Updated by"
-msgstr ""
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_write_date
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_write_date
-msgid "Last Updated on"
-msgstr ""
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_picking_ids
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
 msgid "List of picking associated to this batch"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Glavna priponka"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
+msgid "Message Delivery error"
+msgstr "Napaka pri dostavi sporočila"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_ids
+msgid "Messages"
+msgstr "Sporočila"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__name
 msgid "Name of the batch picking"
+msgstr "Naziv serijskega zbirnika"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_id
+msgid "Next Activity Type"
 msgstr ""
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:52
 #, python-format
 msgid "Nothing to print."
+msgstr "Ničesar za izpis."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Število aktivnosti"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
+msgid "Number of error"
+msgstr "Številka napake"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Število sporočil, ki zahtevajo dejavnost"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Število sporočil, ki niso bila pravilno dostavljena."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Število neprebranih sporočil"
+
+#. module: stock_picking_batch
+#: selection:stock.picking.batch,activity_state:0
+msgid "Overdue"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_user_id
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__user_id
 msgid "Person responsible for this batch picking"
-msgstr ""
+msgstr "Oseba odgovorna za ta serijski zbirnik"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_immediate_transfer_pick_to_backorder_ids
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
 msgid "Pick To Backorder"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer_pick_to_backorder_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Picking"
+msgstr "Prevzem"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Picking Reference"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
 msgid "Picking to backorder"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_picking_ids
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Pickings"
+msgstr "Zbirniki"
+
+#. module: stock_picking_batch
+#: selection:stock.picking.batch,activity_state:0
+msgid "Planned"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Print"
-msgstr ""
+msgstr "Tiskanje"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_user_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product"
+msgstr "Izdelek"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Responsible"
-msgstr ""
+msgstr "Odgovoren"
 
 #. module: stock_picking_batch
-#: selection:stock.picking.batch,state:0
-msgid "Running"
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_user_id
+msgid "Responsible User"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#: selection:stock.picking.batch,state:0
+msgid "Running"
+msgstr "V teku"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Scheduled Date"
+msgstr "Načrtovani datum"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Picking"
-msgstr ""
+msgstr "Iskanje serijskih zbirnikov"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Select a batch"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -266,62 +440,100 @@ msgstr ""
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:77
 #, python-format
-msgid ""
-"Some products require lots/serial numbers, so you need to specify those "
-"first!"
-msgstr ""
-
-#. module: stock_picking_batch
-#: model:product.product,name:stock_picking_batch.product_product_dry_specu
-#: model:product.template,name:stock_picking_batch.product_product_dry_specu_product_template
-msgid "Speculoos"
-msgstr ""
-
-#. module: stock_picking_batch
-#: model:product.product,description_sale:stock_picking_batch.product_product_dry_specu
-#: model:product.template,description_sale:stock_picking_batch.product_product_dry_specu_product_template
-msgid "Speculoos - A belgian speciality"
+msgid "Some products require lots/serial numbers."
 msgstr ""
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
 #: model:mail.message.subtype,name:stock_picking_batch.mt_batch_state
 msgid "Stage Changed"
-msgstr ""
+msgstr "Faza spremenjena"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_state
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__state
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "State"
+msgstr "Regija"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Status"
+msgstr "Status"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
 msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Picking"
-msgstr ""
+msgstr "Serijski zbirniki zalog"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Summary:"
+msgstr "Povzetek:"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
 "The goal of the batch picking is to group operations that may\n"
-"            (needs to) be done together in order to increase their efficiency.\n"
-"            It may also be useful to assign jobs (one person = one batch) or\n"
-"            help the timing management of operations (tasks to be done at 1pm)."
+"            (needs to) be done together in order to increase their "
+"efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) "
+"or\n"
+"            help the timing management of operations (tasks to be done at "
+"1pm)."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "To take from:"
+msgstr ""
+
+#. module: stock_picking_batch
+#: selection:stock.picking.batch,activity_state:0
+msgid "Today"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Today Activities"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Transfer"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:63
 #, python-format
 msgid "Transferred by"
-msgstr ""
+msgstr "Premestil"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-msgid "User"
-msgstr ""
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_unread
+msgid "Unread Messages"
+msgstr "Neprebrana sporočila"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Števec neprebranih sporočil"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
+msgid "Website Messages"
+msgstr "Sporočila iz spletne strani"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
+msgid "Website communication history"
+msgstr "Kronologija komunikacij spletne strani"
