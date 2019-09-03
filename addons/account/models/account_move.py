@@ -1410,6 +1410,8 @@ class AccountMoveLine(models.Model):
                 if line.move_id.id not in move_ids:
                     move_ids.add(line.move_id.id)
             self.env['account.move'].browse(list(move_ids))._post_validate()
+        if 'analytic_account_id' in vals or 'analytic_tag_ids' in vals:
+            self.create_analytic_lines()
         return result
 
     @api.multi
