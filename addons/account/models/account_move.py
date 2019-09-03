@@ -1482,7 +1482,11 @@ class AccountMove(models.Model):
         result = []
         for move in self:
             if self._context.get('name_groupby') and not (move.type == 'entry' and move.state == 'draft'):
-                name = '**%s**, %s       %s' % (format_date(self.env, move.date), move.name, move.partner_id.name or '')
+                name = '**%s**, %s' % (format_date(self.env, move.date), move.name or '')
+                if move.ref:
+                    name += '     (%s)' % move.ref
+                if move.partner_id.name:
+                    name += ' - %s' % move.partner_id.name
             elif move.type == 'entry':
                 # Miscellaneous operation.
                 if move.state == 'draft':
