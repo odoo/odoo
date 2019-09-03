@@ -53,6 +53,7 @@
                                 <t t-set="mode" t-value="'payment'"/>
                                 <t t-set="prepare_tx_url" t-value="'/website_payment/transaction/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference + '/' + str(partner_id)"/>
                                 <t t-set="form_action" t-value="'/website_payment/token/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference + '/' + str(partner_id)"/>
+                                <t t-set="json_action" t-value="'/website_payment/token/json/' + str(amount) + '/' + str(currency.id) + '/' + reference"/>
                             </t>
                             <div t-if="not acquirers" class="alert alert-danger" role="alert">
                                 <p>No payment acquirer found.</p>

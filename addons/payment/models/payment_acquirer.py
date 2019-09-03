@@ -644,6 +644,10 @@ class PaymentTransaction(models.Model):
         transactions = self.filtered(lambda t: t.state != 'draft')
         return transactions and transactions[0] or transactions
 
+    def get_json_fields(self):
+        """Return the list of fields that should be sent to the client when dealing with draft transactions through JS code. """
+        return ['id', 'reference']
+
     def _get_payment_transaction_sent_message(self):
         self.ensure_one()
         if self.payment_token_id:

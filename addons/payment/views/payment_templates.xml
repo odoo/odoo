@@ -24,6 +24,7 @@
         -->
         <form t-if="pms or acquirers" method="post" class="o_payment_form mt-3 clearfix"
                 t-att-action="form_action if form_action else '#'"
+                t-att-data-json-action="json_action"
                 t-att-data-success-url="success_url or ''"
                 t-att-data-error-url="error_url or ''"
                 t-att-data-access-token="access_token or ''"
@@ -123,7 +124,7 @@
                     <t t-if="not verify_validity or (pm.acquirer_id.check_validity and pm.verified) or not pm.acquirer_id.check_validity">
                         <div class="card-body o_payment_acquirer_select">
                             <label>
-                                <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
+                                <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id" t-att-data-provider="pm.acquirer_id.provider"/>
                                 <span class="payment_option_name" t-esc="pm.name"/>
                                 <t t-if="pm.verified">
                                     <i class="fa fa-check text-success" title="This payment method is verified by our system." role="img" aria-label="Ok"></i>

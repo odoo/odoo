@@ -22,7 +22,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.transaction_ids.get_last_transaction()
 
-    def _create_payment_transaction(self, vals):
+    def _create_payment_transaction(self, vals, process_directly=True):
         '''Similar to self.env['payment.transaction'].create(vals) but the values are filled with the
         current invoices fields (e.g. the partner or the currency).
         :param vals: The values to create a new payment.transaction.
@@ -82,7 +82,7 @@ class AccountMove(models.Model):
         transaction = self.env['payment.transaction'].create(vals)
 
         # Process directly if payment_token
-        if transaction.payment_token_id:
+        if transaction.payment_token_id and process_directly:
             transaction.s2s_do_transaction()
 
         return transaction

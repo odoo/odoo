@@ -41,7 +41,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     displayError: function (title, message) {
         var $checkedRadio = this.$('input[type="radio"]:checked'),
-            acquirerID = this.getAcquirerIdFromRadio($checkedRadio[0]);
+        acquirerID = this.getAcquirerIdFromRadio($checkedRadio[0]);
         var $acquirerForm;
         if (this.isNewPaymentRadio($checkedRadio[0])) {
             $acquirerForm = this.$('#o_payment_add_token_acq_' + acquirerID);
@@ -50,7 +50,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             $acquirerForm = this.$('#o_payment_form_acq_' + acquirerID);
         }
 
-        if ($checkedRadio.length === 0) {
+        if (!$acquirerForm || $acquirerForm.length === 0) {
             return new Dialog(null, {
                 title: _t('Error: ') + _.str.escapeHTML(title),
                 size: 'medium',

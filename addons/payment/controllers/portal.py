@@ -300,6 +300,42 @@ class WebsitePayment(http.Controller):
             _logger.exception(e)
         return request.redirect('/payment/process')
 
+    @http.route('/website_payment/token/json/<string:amount>/<string:currency_id>/<path:reference>', type='json', auth='public', website=True)
+    def payment_token_json(self, pm_id, reference, amount, currency_id, partner_id=False, return_url=None, **kwargs):
+        """ Creates the transaction in state draft, without processing it yet. """
+        token = request.env['payment.token'].browse(int(pm_id))
+        order_id = kwargs.get('order_id')
+
+        if not token:
+            return {'error': _('No token selected')}
+
+        values = {
+            'acquirer_id': token.acquirer_id.id,
+            'reference': reference,
+            'amount': float(amount),
+            'currency_id': int(currency_id),
+            'partner_id': int(partner_id),
+            'payment_token_id': int(pm_id),
+            'type': 'server2server',
+            'return_url': return_url,
+        }
+
+        if order_id:
+            values['sale_order_ids'] = [(6, 0, [int(order_id)])]
+
+        tx = request.env['payment.transaction'].sudo().with_context(lang=None, on_session=True).create(values)
+        secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
+        token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+        token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
+        tx.return_url = return_url or '/website_payment/confirm?tx_id=%d&access_token=%s' % (tx.id, token)
+        PaymentProcessing.add_payment_transaction(tx)
+        fields = tx.get_json_fields()
+        return tx.read(fields)[0]
+
+    @http.route('/website_payment/token/v2/process_tx', type='json')
+    def process_token_transaction(self, tx_id, **kwargs):
+        return True
+        
     @http.route(['/website_payment/confirm'], type='http', auth='public', website=True, sitemap=False)
     def confirm(self, **kw):
         tx_id = int(kw.get('tx_id', 0))
