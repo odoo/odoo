@@ -60,7 +60,7 @@ PaymentForm.include({
             return stripe.handleCardSetup(intent_secret, card);
         }).then(function(result) {
             if (result.error) {
-                return Promise.reject({"message": {"data": { "message": result.error.message}}});
+                return Promise.reject({"message": {"data": { "arguments": [result.error.message]}}});
             } else {
                 _.extend(formData, {"payment_method": result.setupIntent.payment_method});
                 return self._rpc({
@@ -78,26 +78,8 @@ PaymentForm.include({
             } else {
                 var json_url = self.$el.data('json-action');
                 formData.pm_id = result.id;
-                return self._rpc({
-                    route: json_url,
-                    params: formData
-                });
+                return self._chargeStripeToken(self.stripe, json_url, formData)
             }
-        }).then(function(result) {
-            var pi_secret = result.stripe_payment_intent_secret;
-            tx_reference = result.reference;
-            return stripe.handleCardPayment(pi_secret);
-        }).then(function(result) {
-            if (result.error) {
-                return Promise.reject({"message": {"data": { "message": result.error.message}}});
-            }
-            console.log(result);
-            return self._rpc({
-                route: '/payment/stripe/s2s/process_payment_intent',
-                params: _.extend({}, result.paymentIntent, {reference: tx_reference}),
-            })
-        }).then(function(result) {
-            window.location = '/payment/process';
         }).guardedCatch(function (error) {
             // if the rpc fails, pretty obvious
             self.enableButton(button);
@@ -108,7 +90,7 @@ PaymentForm.include({
             );
         });
     },
-    _chargeStripeToken: function (ev, $checkedRadio) {
+    _chargeExistingToken: function (ev, $checkedRadio) {
         var self = this;
         var json_url = this.$el.data('json-action');
         var formData = this.getFormData(this.$el);
@@ -118,10 +100,22 @@ PaymentForm.include({
             var button = ev.target;
         }
         this.disableButton(button);
-        var tx_reference;
         var stripe = Stripe(formData.stripe_publishable_key);
+        return this._chargeStripeToken(stripe, json_url, formData).guardedCatch(function (error) {
+            // if the rpc fails, pretty obvious
+            self.enableButton(button);
+            self.displayError(
+                _t('Unable to save card'),
+                _t("We were not able to process your payment. ") +
+                    self._parseError(error)
+            );
+        });
+    },
+    _chargeStripeToken: function(stripe, json_tx_url, formData) {
+        var tx_reference;
+        var self = this;
         return this._rpc({
-            route: json_url,
+            route: json_tx_url,
             params: formData
         }).then(function(result) {
             var pi_secret = result.stripe_payment_intent_secret;
@@ -129,7 +123,7 @@ PaymentForm.include({
             return stripe.handleCardPayment(pi_secret);
         }).then(function(result) {
             if (result.error) {
-                return Promise.reject({"message": {"data": { "message": result.error.message}}});
+                return Promise.reject({"message": {"data": { "arguments": [result.error.message]}}});
             }
             return self._rpc({
                 route: '/payment/stripe/s2s/process_payment_intent',
@@ -137,14 +131,6 @@ PaymentForm.include({
             });
         }).then(function(result) {
             window.location = '/payment/process';
-        }).guardedCatch(function (error) {
-            // if the rpc fails, pretty obvious
-            self.enableButton(button);
-            self.displayError(
-                _t('Unable to save card'),
-                _t("We are not able to add your payment method at the moment. ") +
-                    self._parseError(error)
-            );
         });
     },
     /**
@@ -222,7 +208,7 @@ PaymentForm.include({
         if ($checkedRadio.length === 1 && this.isNewPaymentRadio($checkedRadio) && $checkedRadio.data('provider') === 'stripe') {
             return this._createStripeToken(ev, $checkedRadio);
         } else if ($checkedRadio.attr('name') === 'pm_id' && !this.isNewPaymentRadio($checkedRadio) && !this.isFormPaymentRadio($checkedRadio) && $checkedRadio.data('provider') === 'stripe') {
-            return this._chargeStripeToken(ev, $checkedRadio);
+            return this._chargeExistingToken(ev, $checkedRadio);
         } else {
             return this._super.apply(this, arguments);
         }
