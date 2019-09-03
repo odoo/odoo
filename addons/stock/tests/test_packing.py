@@ -103,6 +103,7 @@ class TestPacking(SavepointCase):
             'package_id': pack.id,
             'picking_id': picking.id,
             'location_dest_id': self.stock_location.id,
+            'company_id': picking.company_id.id,
         })
         self.assertEquals(package_level.state, 'draft',
                           'The package_level should be in draft as it has no moves, move lines and is not confirmed')
@@ -165,11 +166,13 @@ class TestPacking(SavepointCase):
             'package_id': pack.id,
             'picking_id': picking.id,
             'location_dest_id': self.stock_location.id,
+            'company_id': picking.company_id.id,
         })
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
             'location_dest_id': self.stock_location.id,
+            'company_id': picking.company_id.id,
         })
         picking.action_confirm()
         self.assertEqual(picking.package_level_ids.mapped('location_id.id'), [self.stock_location.id],

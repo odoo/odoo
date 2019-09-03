@@ -21,7 +21,7 @@
                     <attribute name="string">Delivery</attribute>
                 </xpath>
                 <xpath expr="//field[@name='expected_date']" position="before">
-                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses"/>
+                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1"/>
                     <field name="incoterm" widget="selection" groups="sale_stock.group_display_incoterm"/>
                     <field name="picking_policy" required="True"/>
                 </xpath>

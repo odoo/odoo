@@ -97,12 +97,13 @@ class ProductProduct(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
 
     @api.depends('stock_valuation_layer_ids')
-    @api.depends_context('to_date')
+    @api.depends_context('to_date', 'force_company')
     def _compute_value_svl(self):
         """Compute `value_svl` and `quantity_svl`."""
+        company_id = self.env.context.get('force_company', self.env.company.id)
         domain = [
             ('product_id', 'in', self.ids),
-            ('company_id', '=', self.env.company.id)
+            ('company_id', '=', company_id),
         ]
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
@@ -172,7 +173,7 @@ class ProductProduct(models.Model):
         """
         # Handle stock valuation layers.
         svl_vals_list = []
-        company_id = self.env.user.company_id
+        company_id = self.env.company
         for product in self:
             if product.cost_method not in ('standard', 'average'):
                 continue
@@ -634,22 +635,23 @@ class ProductCategory(models.Model):
         """)
     property_stock_journal = fields.Many2one(
         'account.journal', 'Stock Journal', company_dependent=True,
+        domain="[('company_id', '=', allowed_company_ids[0])]", check_company=True,
         help="When doing automated inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
     property_stock_account_input_categ_id = fields.Many2one(
         'account.account', 'Stock Input Account', company_dependent=True,
-        domain=[('deprecated', '=', False)],
+        domain="[('company_id', '=', allowed_company_ids[0]), ('deprecated', '=', False)]", check_company=True,
         help="""When doing automated inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account,
                 unless there is a specific valuation account set on the source location. This is the default value for all products in this category.
                 It can also directly be set on each product.""")
     property_stock_account_output_categ_id = fields.Many2one(
         'account.account', 'Stock Output Account', company_dependent=True,
-        domain=[('deprecated', '=', False)],
+        domain="[('company_id', '=', allowed_company_ids[0]), ('deprecated', '=', False)]", check_company=True,
         help="""When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,
                 unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.
                 It can also directly be set on each product.""")
     property_stock_valuation_account_id = fields.Many2one(
         'account.account', 'Stock Valuation Account', company_dependent=True,
-        domain=[('deprecated', '=', False)],
+        domain="[('company_id', '=', allowed_company_ids[0]), ('deprecated', '=', False)]", check_company=True,
         help="""When automated inventory valuation is enabled on a product, this account will hold the current value of the products.""",)
 
     @api.constrains('property_stock_valuation_account_id', 'property_stock_account_output_categ_id', 'property_stock_account_input_categ_id')

@@ -148,6 +148,7 @@ class StockMove(models.Model):
         """
         svl_vals_list = []
         for move in self:
+            move = move.with_context(force_company=move.company_id.id)
             valued_move_lines = move._get_in_move_lines()
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
@@ -170,6 +171,7 @@ class StockMove(models.Model):
         """
         svl_vals_list = []
         for move in self:
+            move = move.with_context(force_company=move.company_id.id)
             valued_move_lines = move._get_out_move_lines()
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
@@ -189,6 +191,7 @@ class StockMove(models.Model):
         """
         svl_vals_list = []
         for move in self:
+            move = move.with_context(force_company=move.company_id.id)
             valued_move_lines = move.move_line_ids
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
@@ -251,12 +254,15 @@ class StockMove(models.Model):
                 stock_valuation_layers |= getattr(todo_valued_moves, '_create_%s_svl' % valued_type)()
                 continue
 
+
         for svl in stock_valuation_layers:
             if not svl.product_id.valuation == 'real_time':
                 continue
             if svl.currency_id.is_zero(svl.value):
                 continue
             svl.stock_move_id._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+
+        stock_valuation_layers._check_company()
 
         # For every in move, run the vacuum for the linked product.
         products_to_vacuum = valued_moves['in'].mapped('product_id')
@@ -288,8 +294,8 @@ class StockMove(models.Model):
         tmpl_dict = defaultdict(lambda: 0.0)
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
-        for move in self.filtered(lambda move: move._is_in() and move.product_id.cost_method == 'average'):
-            product_tot_qty_available = move.product_id.quantity_svl + tmpl_dict[move.product_id.id]
+        for move in self.filtered(lambda move: move._is_in() and move.with_context(force_company=move.company_id.id).product_id.cost_method == 'average'):
+            product_tot_qty_available = move.product_id.with_context(force_company=move.company_id.id).quantity_svl + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
             valued_move_lines = move._get_in_move_lines()
@@ -304,7 +310,7 @@ class StockMove(models.Model):
                 new_std_price = move._get_price_unit()
             else:
                 # Get the standard price
-                amount_unit = std_price_update.get((move.company_id.id, move.product_id.id)) or move.product_id.standard_price
+                amount_unit = std_price_update.get((move.company_id.id, move.product_id.id)) or move.product_id.with_context(force_company=move.company_id.id).standard_price
                 qty = forced_qty or qty_done
                 new_std_price = ((amount_unit * product_tot_qty_available) + (move._get_price_unit() * qty)) / (product_tot_qty_available + qty)
 
@@ -317,6 +323,7 @@ class StockMove(models.Model):
         """ Return the accounts and journal to use to post Journal Entries for
         the real-time valuation of the quant. """
         self.ensure_one()
+        self = self.with_context(force_company=self.company_id.id)
         accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
 
         if self.location_id.valuation_out_account_id:

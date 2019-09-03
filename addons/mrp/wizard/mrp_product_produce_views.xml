@@ -9,6 +9,7 @@
                     <group>
                         <group>
                             <field name="serial" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="production_id" invisible="1"/>
                             <field name="product_id" readonly="1"/>
                             <field name="is_pending_production" invisible="1"/>
@@ -20,7 +21,7 @@
                             <field name="product_tracking" invisible="1"/>
                             <label for="finished_lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')]}"/>
                             <div class="o_row">
-                                <field name="finished_lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none'), ('finished_lot_id', '!=', False)]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+                                <field name="finished_lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none'), ('finished_lot_id', '!=', False)]}" context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
                                 <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" attrs="{'invisible': ['|', ('product_tracking', '=', 'none'), ('finished_lot_id', '!=', False)]}"/>
                             </div>
                         </group>
@@ -29,9 +30,10 @@
                     <group>
                         <field name="raw_workorder_line_ids" attrs="{'invisible': [('raw_workorder_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_finished_lot_id': finished_lot_id}">
                             <tree editable="top" delete="0" decoration-danger="(qty_to_consume &lt; qty_done)">
-                                <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" required="1" domain="[('id', '!=', parent.product_id)]" force_save="1"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" required="1" domain="[('id', '!=', parent.product_id), ('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]" force_save="1"/>
                                 <field name="product_tracking" invisible="1"/>
-                                <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id, 'active_mo_id': parent.production_id}" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot"/>
+                                <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id, 'active_mo_id': parent.production_id, 'default_company_id': company_id}" groups="stock.group_production_lot"/>
                                 <field name="qty_to_consume" readonly="1" force_save="1"/>
                                 <field name="qty_reserved" readonly="1" force_save="1" optional="show"/>
                                 <field name="qty_done"/>
@@ -44,9 +46,10 @@
                     <group>
                         <field name="finished_workorder_line_ids" attrs="{'invisible': [('finished_workorder_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_finished_lot_id': finished_lot_id}">
                             <tree editable="top" delete="0" decoration-danger="(qty_to_consume &lt; qty_done)">
-                                <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" required="1" domain="[('id', '!=', parent.product_id)]" force_save="1"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" required="1" domain="[('id', '!=', parent.product_id), ('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]" force_save="1"/>
                                 <field name="product_tracking" invisible="1"/>
-                                <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id}" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot"/>
+                                <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id}" groups="stock.group_production_lot"/>
                                 <field name="qty_to_consume" string="To Produce" readonly="1" force_save="1"/>
                                 <field name="qty_done" string="Produced"/>
                                 <field name="product_uom_id" readonly="1" force_save="1" groups="uom.group_uom"/>
