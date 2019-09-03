@@ -11,10 +11,10 @@
                     <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
                 </div>
                 <div class="col-12 col-md-5" t-if="top3_users">
-                    <div class="ml-4">
+                    <div class="ml-4 ml-md-2 mt-3">
                         <t t-foreach="top3_users" t-as="user">
                             <img class="rounded-circle img-fluid shadow ml-n4"
-                                style="border: 6px solid white"
+                                style="border: 6px solid white; max-width: 40%"
                                 t-attf-src="/web/image/res.users/#{user['id']}/image_128"/>
                         </t>
                     </div>
