@@ -130,7 +130,7 @@
             <field name="model">account.move.line</field>
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" editable="bottom">
+                <tree string="Journal Items" create="false">
                     <field name="date" optional="show"/>
                     <field name="journal_id" options='{"no_open":True}'/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
