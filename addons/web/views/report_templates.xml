@@ -98,7 +98,13 @@
                             var toPage = document.getElementsByClassName('topage');
                             for(var j = 0; j&lt;toPage.length; j++)
                                 toPage[j].textContent = vars['sitepages'];
+                            var section = document.getElementsByClassName('section');
+                            for(var j = 0; j&lt;section.length; j++)
+                                section[j].textContent = vars['section'];
 
+                            var subsection = document.getElementsByClassName('subsection');
+                            for(var j = 0; j&lt;subsection.length; j++)
+                                subsection[j].textContent = vars['subsection'];
                             var index = vars['webpage'].split('.', 4)[3]
                             var header = document.getElementById('minimal_layout_report_headers');
                             if(header !== null){

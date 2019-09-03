@@ -347,6 +347,7 @@ class IrActionsReport(models.Model):
 
         header_node = etree.Element('div', id='minimal_layout_report_headers')
         footer_node = etree.Element('div', id='minimal_layout_report_footers')
+        cover_node = etree.Element('div', id='minimal_layout_report_covers')
         bodies = []
         res_ids = []
 
@@ -362,6 +363,12 @@ class IrActionsReport(models.Model):
             body_parent = node.getparent()
             node.getparent().remove(node)
             footer_node.append(node)
+
+        # Retrieve cover
+        for node in root.xpath(match_klass.format('cover')):
+            body_parent = node.getparent()
+            node.getparent().remove(node)
+            cover_node.append(node)
 
         # Retrieve bodies
         for node in root.xpath(match_klass.format('article')):
@@ -389,8 +396,9 @@ class IrActionsReport(models.Model):
 
         header = layout.render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
         footer = layout.render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
+        cover = layout.render(dict(subst=True, body=lxml.html.tostring(cover_node), base_url=base_url))
 
-        return bodies, res_ids, header, footer, specific_paperformat_args
+        return bodies, res_ids, header, footer, cover, specific_paperformat_args
 
     @api.model
     def _run_wkhtmltopdf(
@@ -398,6 +406,7 @@ class IrActionsReport(models.Model):
             bodies,
             header=None,
             footer=None,
+            cover=None,
             landscape=False,
             specific_paperformat_args=None,
             set_viewport_size=False):
@@ -435,7 +444,12 @@ class IrActionsReport(models.Model):
                 foot_file.write(footer)
             temporary_files.append(foot_file_path)
             files_command_args.extend(['--footer-html', foot_file_path])
-
+        if cover:
+            cover_file_fd, cover_file_path = tempfile.mkstemp(suffix='.html', prefix='report.cover.tmp.')
+            with closing(os.fdopen(cover_file_fd, 'wb')) as cover_file:
+                cover_file.write(cover)
+            temporary_files.append(cover_file_path)
+            files_command_args.extend(['cover', cover_file_path, 'toc'])
         paths = []
         for i, body in enumerate(bodies):
             prefix = '%s%d.' % ('report.body.tmp.', i)
@@ -716,7 +730,7 @@ class IrActionsReport(models.Model):
         # Ensure the current document is utf-8 encoded.
         html = html.decode('utf-8')
 
-        bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(context)._prepare_html(html)
+        bodies, html_ids, header, footer, cover, specific_paperformat_args = self.with_context(context)._prepare_html(html)
 
         if self.attachment and set(res_ids) != set(html_ids):
             raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
@@ -726,6 +740,7 @@ class IrActionsReport(models.Model):
             bodies,
             header=header,
             footer=footer,
+            cover=cover,
             landscape=context.get('landscape'),
             specific_paperformat_args=specific_paperformat_args,
             set_viewport_size=context.get('set_viewport_size'),

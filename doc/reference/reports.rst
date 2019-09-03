@@ -226,6 +226,37 @@ Useful Remarks
 
 .. _reference/reports/paper_formats:
 
+Cover with Table of Content
+---------------------------
+
+A minimal template would look like::
+
+    <template id="report_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="cover">
+                    <span>Cover</span>
+                </div>
+                <div class="header">
+                    <div class="text-right">
+                        <span style="font-size:34px" class="section"/>
+                        <span style="font-size:34px" class="subsection"/>
+                    </div>
+                </div>
+                <div class="page">
+                    <h2>Report title</h2>
+                    <p>This object's name is <span t-field="o.name"/></p>
+                </div>
+                <div class="footer">
+                    <div class="text-right">
+                        Page: <span class="page"/> / <span class="topage"/>
+                    </div>
+                </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
 Paper Format
 ============
 
