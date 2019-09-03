@@ -10,12 +10,24 @@ class TestSaleMargin(common.TransactionCase):
     def setUp(self):
         super(TestSaleMargin, self).setUp()
         self.SaleOrder = self.env['sale.order']
+        Partner = self.env['res.partner']
 
         self.product_uom_id = self.ref('uom.product_uom_unit')
-        self.product_id = self.ref('product.product_product_24')
-        self.partner_id = self.ref('base.res_partner_4')
-        self.partner_invoice_address_id = self.ref('base.res_partner_address_7')
-        self.pricelist_id = self.ref('product.list0')
+        self.product_id = self.env['product.product'].create({
+            'name': 'Individual Workplace',
+            'type': 'consu',
+        }).id
+        self.partner_id = Partner.create({'name': 'Ready Mat'}).id
+        self.partner_invoice_address_id = Partner.create({
+            'name': 'Billy Fox',
+            'parent_id': self.partner_id,
+            'function': "Production Supervisor",
+            'email': "billy.fox45@example.com",
+            'phone': (915)-498-5611}).id
+        self.pricelist_id = self.env['product.pricelist'].create({
+            'name': 'Public Pricelist',
+            'sequence': 1,
+        }).id
 
     def test_sale_margin(self):
         """ Test the sale_margin module in Odoo. """
