@@ -2,25 +2,36 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from werkzeug import url_encode
 
-class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
+class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
     _name = "hr.expense.sheet.register.payment.wizard"
     _description = "Expense Register Payment Wizard"
 
     @api.model
-    def _default_partner_id(self):
-        context = dict(self._context or {})
-        active_ids = context.get('active_ids', [])
-        expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
-        return expense_sheet.address_id.id or expense_sheet.employee_id.id and expense_sheet.employee_id.address_home_id.id
+    def default_get(self, fields):
+        result = super(HrExpenseSheetRegisterPaymentWizard, self).default_get(fields)
 
-    partner_id = fields.Many2one('res.partner', string='Partner', required=True, default=_default_partner_id, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        active_model = self._context.get('active_model')
+        if active_model != 'hr.expense.sheet':
+            raise UserError(_('You can only apply this action from an expense report.'))
+
+        active_id = self._context.get('active_id')
+        if 'expense_sheet_id' in fields and active_id:
+            result['expense_sheet_id'] = active_id
+
+        if 'partner_id' in fields and active_id and not result.get('partner_id'):
+            expense_sheet = self.env['hr.expense.sheet'].browse(active_id)
+            result['partner_id'] = expense_sheet.address_id.id or expense_sheet.employee_id.id and expense_sheet.employee_id.address_home_id.id
+        return result
+
+    expense_sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", required=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True, domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]")
-    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True, required=True)
+    company_id = fields.Many2one('res.company', related='expense_sheet_id.company_id', string='Company', readonly=True)
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True)
     amount = fields.Monetary(string='Payment Amount', required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id)
@@ -33,8 +44,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        active_ids = self._context.get('active_ids', [])
-        expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
+        expense_sheet = self.expense_sheet_id
         if expense_sheet.employee_id.id and expense_sheet.employee_id.sudo().bank_account_id.id:
             self.partner_bank_account_id = expense_sheet.employee_id.sudo().bank_account_id.id
         elif self.partner_id and len(self.partner_id.bank_ids) > 0:
