@@ -11,7 +11,7 @@ class Expense(models.Model):
         states={'draft': [('readonly', False)], 'reported': [('readonly', False)]},
         # NOTE: only confirmed SO can be selected, but this domain in activated throught the name search with the `sale_expense_all_order`
         # context key. So, this domain is not the one applied.
-        domain=[('state', '=', 'sale')],
+        domain="[('state', '=', 'sale'), ('company_id', '=', company_id)]",
         help="If the product has an expense policy, it will be reinvoiced on this sales order")
     can_be_reinvoiced = fields.Boolean("Can be reinvoiced", compute='_compute_can_be_reinvoiced')
 
