@@ -7,7 +7,7 @@ from odoo.addons.account.tests.test_reconciliation import TestReconciliation
 _logger = logging.getLogger(__name__)
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install',  '-standard', 'to_fix')
 @odoo.tests.common.at_install(False)
 @odoo.tests.common.post_install(True)
 class TestUi(odoo.tests.HttpCase):
