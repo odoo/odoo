@@ -76,8 +76,8 @@ tour.register('shop_mail', {
         run: 'click',
     },
     {
-        content: "Select first found recipient",
-        trigger: '.ui-menu-item a.ui-menu-item-wrapper:first',
+        content: "Select azure interior",
+        trigger: '.ui-menu-item a:contains(Interior24)',
         in_modal: false,
     },
     {
