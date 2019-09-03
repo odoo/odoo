@@ -2038,7 +2038,7 @@ For example here is a map:
     .. code-block:: xml
 
         <map res_partner="partner_id" default_order="date_begin" routing="true">
-            <field name="name" string="Task: "/>
+            <field name="name" string="Task"/>
         </map>
 
 .. _reference/views/qweb:
