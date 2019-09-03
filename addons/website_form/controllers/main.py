@@ -176,6 +176,17 @@ class WebsiteForm(http.Controller):
         model_name = model.sudo().model
         record = request.env[model_name].sudo().with_context(mail_create_nosubscribe=True).create(values)
 
+        # email cc will be added as a follower if he/she is a known partner
+        if values.get('email_cc') and issubclass(request.registry[model_name], request.registry['mail.thread.cc']):
+            emails = record._mail_cc_sanitized_raw_dict(values.get('email_cc'))
+            partner_ids = []
+            for email in emails:
+                existing_partner = request.env['res.partner'].sudo().search([('email', '=', email)])
+                if existing_partner:
+                    partner_ids.append(existing_partner.id)
+            if partner_ids:
+                record.message_subscribe(partner_ids=partner_ids)
+
         if custom or meta:
             _custom_label = "%s\n___________\n\n" % _("Other Information:")  # Title for custom fields
             if model_name == 'mail.mail':
