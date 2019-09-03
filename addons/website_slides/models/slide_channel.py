@@ -106,7 +106,7 @@ class Channel(models.Model):
         ('latest', 'Latest Published'),
         ('most_voted', 'Most Voted'),
         ('most_viewed', 'Most Viewed')],
-        string="Featuring Policy", default='latest', required=True)
+        string="Featured Content", default='latest', required=True)
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_presentation = fields.Integer('Presentations', compute='_compute_slides_statistics', store=True)
     nbr_document = fields.Integer('Documents', compute='_compute_slides_statistics', store=True)
@@ -130,11 +130,11 @@ class Channel(models.Model):
         help="Email template to send slide publication through email",
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_published'))
     share_template_id = fields.Many2one(
-        'mail.template', string='Shared Template',
+        'mail.template', string='Share Template',
         help="Email template used when sharing a slide",
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_shared'))
     enroll = fields.Selection([
-        ('public', 'Public'), ('invite', 'Invite')],
+        ('public', 'Public'), ('invite', 'On Invitation')],
         default='public', string='Enroll Policy', required=True,
         help='Condition to enroll: everyone, on invite, on payment (sale bridge).')
     enroll_msg = fields.Html(
@@ -142,7 +142,7 @@ class Channel(models.Model):
         default=False, translate=tools.html_translate, sanitize_attributes=False)
     enroll_group_ids = fields.Many2many('res.groups', string='Auto Enroll Groups', help="Members of those groups are automatically added as members of the channel.")
     visibility = fields.Selection([
-        ('public', 'Public'), ('members', 'Members')],
+        ('public', 'Public'), ('members', 'Members Only')],
         default='public', string='Visibility', required=True,
         help='Applied directly as ACLs. Allow to hide channels and their content for non members.')
     partner_ids = fields.Many2many(
@@ -154,7 +154,7 @@ class Channel(models.Model):
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher', depends=['partner_ids'])
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id', string='Upload Groups',
-        help="Who can publish: responsible, members of upload_group_ids if defined or website publisher group members.")
+        help="Group of users allowed to publish contents on a documentation course.")
     # not stored access fields, depending on each user
     completed = fields.Boolean('Done', compute='_compute_user_statistics', compute_sudo=False)
     completion = fields.Integer('Completion', compute='_compute_user_statistics', compute_sudo=False)
@@ -493,7 +493,7 @@ class Channel(models.Model):
     def action_view_slides(self):
         action = self.env.ref('website_slides.slide_slide_action').read()[0]
         action['context'] = {'default_channel_id': self.id}
-        action['domain'] = [('channel_id', "=", self.id)]
+        action['domain'] = [('channel_id', "=", self.id), ('is_category', '=', False)]
         return action
 
     def action_view_ratings(self):
@@ -523,16 +523,7 @@ class Channel(models.Model):
         all_slides = self.env['slide.slide'].sudo().search(base_domain, order=order)
         category_data = []
 
-        # First add uncategorized slides
-        uncategorized_slides = all_slides.filtered(lambda slide: not slide.category_id)
-        if uncategorized_slides or force_void:
-            category_data.append({
-                'category': False, 'id': False,
-                'name': _('Uncategorized'), 'slug_name': _('Uncategorized'),
-                'total_slides': len(uncategorized_slides),
-                'slides': uncategorized_slides[(offset or 0):(offset + limit or len(uncategorized_slides))],
-            })
-        # Then all categories by natural order
+        # First add all categories by natural order
         for category in all_categories:
             category_slides = all_slides.filtered(lambda slide: slide.category_id == category)
             if not category_slides and not force_void:
@@ -542,6 +533,15 @@ class Channel(models.Model):
                 'name': category.name, 'slug_name': slug(category),
                 'total_slides': len(category_slides),
                 'slides': category_slides[(offset or 0):(limit + offset or len(category_slides))],
+            })
+        # Then add uncategorized slides
+        uncategorized_slides = all_slides.filtered(lambda slide: not slide.category_id)
+        if uncategorized_slides or force_void:
+            category_data.append({
+                'category': False, 'id': False,
+                'name': _('Uncategorized'), 'slug_name': _('Uncategorized'),
+                'total_slides': len(uncategorized_slides),
+                'slides': uncategorized_slides[(offset or 0):(offset + limit or len(uncategorized_slides))],
             })
         return category_data
 

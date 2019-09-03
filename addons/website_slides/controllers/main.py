@@ -831,7 +831,10 @@ class WebsiteSlides(WebsiteProfile):
             else:
                 values.update({
                     'category_id': post['category_id'][0],
+                    'sequence': request.env['slide.slide'].browse(post['category_id'][0]).sequence + 1
                 })
+        else:
+            values['sequence'] = -1
 
         # create slide itself
         try:
