@@ -974,6 +974,35 @@ class WebsiteSale(http.Controller):
         PaymentProcessing.add_payment_transaction(tx)
         return request.redirect('/payment/process')
 
+    @http.route('/shop/payment/token/json', type='json', auth='public', website=True)
+    def payment_token_json(self, pm_id=None, **kwargs):
+        """ Method that handles payment using saved tokens
+
+        :param int pm_id: id of the payment.token that we want to use to pay.
+        """
+        order = request.website.sale_get_order()
+        # do not crash if the user has already paid and try to pay again
+        if not order:
+            return request.redirect('/shop/?error=no_order')
+
+        assert order.partner_id.id != request.website.partner_id.id
+
+        try:
+            pm_id = int(pm_id)
+        except ValueError:
+            return request.redirect('/shop/?error=invalid_token_id')
+
+        # We retrieve the token the user want to use to pay
+        if not request.env['payment.token'].sudo().search_count([('id', '=', pm_id)]):
+            return request.redirect('/shop/?error=token_not_found')
+
+        # Create transaction
+        vals = {'payment_token_id': pm_id, 'return_url': '/shop/payment/validate'}
+
+        tx = order.with_context(on_session=True)._create_payment_transaction(vals, process_directly=False)
+        PaymentProcessing.add_payment_transaction(tx)
+        return tx.read(tx.get_json_fields())[0]
+
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
         order = request.env['sale.order'].sudo().browse(sale_order_id).exists()

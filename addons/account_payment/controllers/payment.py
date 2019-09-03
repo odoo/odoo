@@ -91,3 +91,37 @@ class PaymentPortal(http.Controller):
 
         params['success'] = 'pay_invoice'
         return request.redirect('/payment/process')
+
+    @http.route('/invoice/pay/json/<int:invoice_id>/s2s_token_tx', type='json', auth='public')
+    def invoice_pay_token_json(self, invoice_id, pm_id=None, **kwargs):
+        """ Use a token to perform a s2s transaction """
+        import pudb; pu.db
+        access_token = kwargs.get('access_token')
+        params = {}
+        if access_token:
+            params['access_token'] = access_token
+
+        invoice_sudo = request.env['account.move'].sudo().browse(invoice_id).exists()
+        if not invoice_sudo:
+            return False
+
+        success_url = kwargs.get(
+            'success_url', "%s?%s" % (invoice_sudo.access_url, url_encode({'access_token': access_token}) if access_token else '')
+        )
+        try:
+            token = request.env['payment.token'].sudo().browse(int(pm_id))
+        except (ValueError, TypeError):
+            token = False
+        token_owner = invoice_sudo.partner_id if request.env.user._is_public() else request.env.user.partner_id
+        if not token or token.partner_id != token_owner:
+            return False
+
+        vals = {
+            'payment_token_id': token.id,
+            'type': 'server2server',
+            'return_url': _build_url_w_params(success_url, params),
+        }
+
+        tx = invoice_sudo.with_context(on_session=True)._create_payment_transaction(vals, process_directly=False)
+        PaymentProcessing.add_payment_transaction(tx)
+        return tx.read(tx.get_json_fields())[0]

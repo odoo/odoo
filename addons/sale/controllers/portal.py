@@ -322,3 +322,30 @@ class CustomerPortal(CustomerPortal):
         tx = order._create_payment_transaction(vals)
         PaymentProcessing.add_payment_transaction(tx)
         return request.redirect('/payment/process')
+
+    @http.route('/my/orders/<int:order_id>/transaction/token/json', type='json', auth='public', website=True)
+    def payment_token_json(self, order_id, pm_id=None, **kwargs):
+
+        order = request.env['sale.order'].sudo().browse(order_id)
+        if not order:
+            return request.redirect("/my/orders")
+        if not order.order_line or pm_id is None or not order.has_to_be_paid():
+            return request.redirect(order.get_portal_url())
+
+        # try to convert pm_id into an integer, if it doesn't work redirect the user to the quote
+        try:
+            pm_id = int(pm_id)
+        except ValueError:
+            return request.redirect(order.get_portal_url())
+
+        # Create transaction
+        vals = {
+            'payment_token_id': pm_id,
+            'type': 'server2server',
+            'return_url': order.get_portal_url(),
+        }
+
+        tx = order.with_context(on_session=True)._create_payment_transaction(vals, process_directly=False)
+        PaymentProcessing.add_payment_transaction(tx)
+        return tx.read(tx.get_json_fields())[0]
+

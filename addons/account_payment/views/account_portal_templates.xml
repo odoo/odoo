@@ -54,6 +54,7 @@
                                     <t t-set="access_token" t-value="access_token or ''"/>
                                     <t t-set="callback_method" t-value="''"/>
                                     <t t-set="form_action" t-value="'/invoice/pay/' + str(invoice.id) + '/s2s_token_tx/'"/>
+                                    <t t-set="json_action" t-value="'/invoice/pay/json/' + str(invoice.id) + '/s2s_token_tx/'"/>
                                     <t t-set="prepare_tx_url" t-value="'/invoice/pay/' + str(invoice.id) + '/form_tx/'"/>
                                     <t t-set="submit_txt">Pay Now</t>
                                     <t t-set="icon_class" t-value="'fa-lock'"/>

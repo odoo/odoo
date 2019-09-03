@@ -248,6 +248,7 @@
                                             <t t-set="submit_txt">Pay &amp; Confirm</t>
                                             <t t-set="icon_class" t-value="'fa-lock'"/>
                                             <t t-set="form_action" t-value="sale_order.get_portal_url(suffix='/transaction/token')"/>
+                                            <t t-set="json_action" t-value="sale_order.get_portal_url(suffix='/transaction/token/json')"/>
                                             <t t-set="prepare_tx_url" t-value="sale_order.get_portal_url(suffix='/transaction/')"/>
                                             <t t-set="access_token" t-value="sale_order.access_token"/>
                                         </t>
