@@ -248,6 +248,19 @@ exports.PosModel = Backbone.Model.extend({
                     return self.taxes_by_id[child_tax_id];
                 });
             });
+            return new Promise(function (resolve, reject) {
+              var tax_ids = _.pluck(self.taxes, 'id');
+              rpc.query({
+                  model: 'account.tax',
+                  method: 'get_real_tax_amount',
+                  args: [tax_ids],
+              }).then(function (taxes) {
+                  _.each(taxes, function (tax) {
+                      self.taxes_by_id[tax.id].amount = tax.amount;
+                  resolve();
+                  });
+              });
+            });
         },
     },{
         model:  'pos.session',
@@ -828,7 +841,7 @@ exports.PosModel = Backbone.Model.extend({
             self.flush_mutex.exec(function () {
                 var flushed = self._flush_orders(self.db.get_orders(), opts);
 
-                flushed.then(resolve, resolve);
+                flushed.then(resolve, reject);
 
                 return flushed;
             });
@@ -912,13 +925,14 @@ exports.PosModel = Backbone.Model.extend({
             });
 
             return server_ids;
-        }).catch(function(){
+        }).catch(function(error){
             var pending = self.db.get_orders().length;
             if (self.get('failed')) {
                 self.set('synch', { state: 'error', pending: pending });
             } else {
                 self.set('synch', { state: 'disconnected', pending: pending });
             }
+            return Promise.reject(error);
         });
     },
 
@@ -981,6 +995,7 @@ exports.PosModel = Backbone.Model.extend({
                     self.set('failed',error);
                 }
                 console.error('Failed to send orders:', orders);
+                throw error;
             });
     },
 

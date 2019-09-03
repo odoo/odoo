@@ -115,7 +115,7 @@ class AccountMove(models.Model):
         default=_get_default_currency)
     line_ids = fields.One2many('account.move.line', 'move_id', string='Journal Items', copy=True, readonly=True,
         states={'draft': [('readonly', False)]})
-    partner_id = fields.Many2one('res.partner', readonly=True, tracking=True,
+    partner_id = fields.Many2one('res.partner', readonly=True, tracking=True, ondelete="restrict",
         states={'draft': [('readonly', False)]},
         string='Customer/Vendor')
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity', store=True, readonly=True,
@@ -2730,7 +2730,7 @@ class AccountMoveLine(models.Model):
                         else:
                             date = partial_line.credit_move_id.date if partial_line.debit_move_id == line else partial_line.debit_move_id.date
                             rate = line.currency_id.with_context(date=date).rate
-                        amount_residual_currency += sign_partial_line * partial_line.amount * rate
+                        amount_residual_currency += sign_partial_line * line.currency_id.round(partial_line.amount * rate)
 
             #computing the `reconciled` field.
             reconciled = False
@@ -3023,8 +3023,14 @@ class AccountMoveLine(models.Model):
         elif self._context.get('line_ids') and any(field_name in default_fields for field_name in ('debit', 'credit', 'account_id', 'partner_id')):
             move = self.env['account.move'].new({'line_ids': self._context['line_ids']})
 
+            # if we are here, line_ids is in context, so journal_id should also be.
+            journal = self.env['account.journal'].browse(self._context.get('default_journal_id') or self._context['journal_id'])
+            currency = journal.exists() and journal.company_id.currency_id
+
             # Suggest default value for debit / credit to balance the journal entry.
             balance = sum(line['debit'] - line['credit'] for line in move.line_ids)
+            if currency:
+                balance = currency.round(balance)
             if balance < 0.0:
                 values.update({'debit': -balance})
             if balance > 0.0:

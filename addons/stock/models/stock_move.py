@@ -663,15 +663,20 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.group_id, self.location_id, self.location_dest_id, self.picking_type_id
 
-    def _search_picking_for_assignation(self):
-        self.ensure_one()
-        picking = self.env['stock.picking'].search([
+    def _search_picking_for_assignation_domain(self):
+        return [
                 ('group_id', '=', self.group_id.id),
                 ('location_id', '=', self.location_id.id),
                 ('location_dest_id', '=', self.location_dest_id.id),
                 ('picking_type_id', '=', self.picking_type_id.id),
                 ('printed', '=', False),
-                ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
+                ('state', 'in', ['draft', 'confirmed', 'waiting',
+                    'partially_available', 'assigned'])
+                ]
+
+    def _search_picking_for_assignation(self):
+        self.ensure_one()
+        picking = self.env['stock.picking'].search(self._search_picking_for_assignation_domain(), limit=1)
         return picking
 
     def _assign_picking(self):
@@ -1140,7 +1145,7 @@ class StockMove(models.Model):
         for result_package in moves_todo\
                 .mapped('move_line_ids.result_package_id')\
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
-            if len(result_package.quant_ids.mapped('location_id')) > 1:
+            if len(result_package.quant_ids.filtered(lambda q: float_is_zero(abs(q.quantity) + abs(q.reserved_quantity), precision_rounding=q.product_uom_id.rounding)).mapped('location_id')) > 1:
                 raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
         picking = moves_todo.mapped('picking_id')
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})

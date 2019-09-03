@@ -2503,7 +2503,7 @@ var FieldSelection = AbstractField.extend({
     description: _lt("Selection"),
     template: 'FieldSelection',
     specialData: "_fetchSpecialRelation",
-    supportedFieldTypes: ['selection', 'many2one'],
+    supportedFieldTypes: ['selection'],
     events: _.extend({}, AbstractField.prototype.events, {
         'change': '_onChange',
     }),
@@ -2556,10 +2556,14 @@ var FieldSelection = AbstractField.extend({
      */
     _renderEdit: function () {
         this.$el.empty();
+        var required = this.attrs.modifiersValue && this.attrs.modifiersValue.required;
         for (var i = 0 ; i < this.values.length ; i++) {
+            var disabled = required && this.values[i][0] === false;
+
             this.$el.append($('<option/>', {
                 value: JSON.stringify(this.values[i][0]),
-                text: this.values[i][1]
+                text: this.values[i][1],
+                style: disabled ? "display: none" : "",
             }));
         }
         var value = this.value;
@@ -2598,9 +2602,7 @@ var FieldSelection = AbstractField.extend({
                 return v[0] === false && v[1] === '';
             });
         }
-        if (!this.attrs.modifiersValue || !this.attrs.modifiersValue.required) {
-            this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
-        }
+        this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
     },
 
     //--------------------------------------------------------------------------

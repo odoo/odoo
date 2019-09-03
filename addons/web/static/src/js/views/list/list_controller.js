@@ -598,6 +598,7 @@ var ListController = BasicController.extend({
     _onEditGroupClicked: function (ev) {
         ev.stopPropagation();
         this.do_action({
+            context: {create: false},
             type: 'ir.actions.act_window',
             views: [[false, 'form']],
             res_model: ev.data.record.model,

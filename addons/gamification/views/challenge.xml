@@ -15,7 +15,7 @@
     <record id="goals_from_challenge_act" model="ir.actions.act_window">
         <field name="res_model">gamification.goal</field>
         <field name="name">Related Goals</field>
-        <field name="view_mode">kanban,tree</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'search_default_group_by_definition': True, 'search_default_inprogress': True, 'search_default_challenge_id': active_id, 'default_challenge_id': active_id}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
@@ -61,7 +61,7 @@
                         <label for="user_domain" class="oe_edit_only" string="Assign Challenge To"/>
                         <div>
                             <field name="user_domain" widget="domain" options="{'model': 'res.users'}" />
-                            <field name="user_ids" groups="base.group_no_one" widget="many2many_tags" readonly="True" />
+                            <field name="user_ids" widget="many2many_tags" />
                         </div>
                     </div>
 
@@ -171,7 +171,7 @@
     <record id="challenge_list_action" model="ir.actions.act_window">
         <field name="name">Challenges</field>
         <field name="res_model">gamification.challenge</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,tree</field>
         <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

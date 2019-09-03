@@ -2293,6 +2293,7 @@ QUnit.module('Views', {
             intercepts: {
                 do_action: function (event) {
                     assert.deepEqual(event.data.action, {
+                        context: {create: false},
                         res_id: 2,
                         res_model: 'res_currency',
                         type: 'ir.actions.act_window',
@@ -2303,6 +2304,42 @@ QUnit.module('Views', {
             },
         });
         await testUtils.dom.click(list.$('.o_group_header:eq(0) button'));
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with subfields, and onchange', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.onchanges = {
+            foo: function () {},
+        };
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree editable="bottom" expand="1">
+                    <field name="foo"/>
+                    <field name="currency_id"/>
+                    <groupby name="currency_id">
+                        <field name="position" invisible="1"/>
+                    </groupby>
+                </tree>`,
+            groupBy: ['currency_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.deepEqual(args.args[3], {
+                        foo: "1",
+                        currency_id: "",
+                    }, 'onchange spec should not follow relation of many2one fields');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:first'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), "new value");
+
         list.destroy();
     });
 

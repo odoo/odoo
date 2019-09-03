@@ -28,6 +28,8 @@ class AccountTaxPython(models.Model):
 
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         self.ensure_one()
+        if product and product._name == 'product.template':
+            product = product.product_variant_id
         if self.amount_type == 'code':
             company = self.env.company
             localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
@@ -39,6 +41,8 @@ class AccountTaxPython(models.Model):
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True):
         taxes = self.filtered(lambda r: r.amount_type != 'code')
         company = self.env.company
+        if product and product._name == 'product.template':
+            product = product.product_variant_id
         for tax in self.filtered(lambda r: r.amount_type == 'code'):
             localdict = self._context.get('tax_computation_context', {})
             localdict.update({'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company})
