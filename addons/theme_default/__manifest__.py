@@ -9,7 +9,6 @@
     'version': '1.0',
     'depends': ['website', 'website_theme_install'],
     'data': [
-        'data/theme_default_data.xml',
     ],
     'images': [
         'static/description/cover.png',

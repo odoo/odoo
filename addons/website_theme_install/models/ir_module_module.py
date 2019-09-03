@@ -358,17 +358,10 @@ class IrModuleModule(models.Model):
 
         self._theme_upgrade_upstream()
 
-        next_action = False
         if self.state != 'installed':
-            next_action = self.button_immediate_install()
+            self.button_immediate_install()
 
-        # Alter next action for redirect
-        if not next_action:
-            next_action = website.button_go_website()
-        if next_action.get('tag') == 'reload' and not next_action.get('params', {}).get('menu_id'):
-            next_action = self.env.ref('website.action_website').read()[0]
-
-        return next_action
+        return website.button_go_website()
 
     def button_remove_theme(self):
         """Remove the current theme of the current website."""
