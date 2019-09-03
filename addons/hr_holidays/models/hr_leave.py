@@ -552,10 +552,11 @@ class HolidaysRequest(models.Model):
         if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
             return
 
+        is_leave_user = self.user_has_groups('hr_holidays.group_hr_holidays_user')
         if state == 'validate1':
-            if employee.leave_manager_id != self.env.user:
+            if employee.leave_manager_id != self.env.user and not is_leave_user:
                 raise AccessError(_('You cannot first approve a leave for %s, because you are not his leave manager' % (employee.name,)))
-        elif state == 'validate' and not self.user_has_groups('hr_holidays.group_hr_holidays_user'):
+        elif state == 'validate' and not is_leave_user:
             # Is probably handled via ir.rule
             raise AccessError(_('You don\'t have the rights to apply second approval on a leave request'))
 
