@@ -4144,6 +4144,7 @@ Record ids: %(records)s
                         qualifield_name = "COALESCE(%s, false)" % qualifield_name
                     order_by_elements.append("%s %s" % (qualifield_name, order_direction))
                 else:
+                    _logger.warning("Model %r cannot be sorted on field %r (not a column)", self._name, order_field)
                     continue  # ignore non-readable or "non-joinable" fields
 
         return order_by_elements
