@@ -561,7 +561,9 @@ var FormController = BasicController.extend({
      * @private
      */
     _onEdit: function () {
-        this._setMode('edit');
+        // wait for potential pending changes to be saved (done with widgets
+        // allowing to edit in readonly)
+        this.mutex.getUnlockedDef().then(this._setMode.bind(this, 'edit'));
     },
     /**
      * This method is called when someone tries to freeze the order, most likely
