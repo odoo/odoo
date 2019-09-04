@@ -1041,8 +1041,14 @@ class GroupsView(models.Model):
         return user
 
     def write(self, values):
+        # determine which values the "user groups view" depends on
+        VIEW_DEPS = ('category_id', 'implied_ids')
+        view_values0 = [g[name] for name in VIEW_DEPS if name in values for g in self]
         res = super(GroupsView, self).write(values)
-        self._update_user_groups_view()
+        # update the "user groups view" only if necessary
+        view_values1 = [g[name] for name in VIEW_DEPS if name in values for g in self]
+        if view_values0 != view_values1:
+            self._update_user_groups_view()
         # actions.get_bindings() depends on action records
         self.env['ir.actions.actions'].clear_caches()
         return res
@@ -1062,7 +1068,6 @@ class GroupsView(models.Model):
         """ Modify the view with xmlid ``base.user_groups_view``, which inherits
             the user form view, and introduces the reified group fields.
         """
-
         # remove the language to avoid translations, it will be handled at the view level
         self = self.with_context(lang=None)
 
@@ -1139,10 +1144,11 @@ class GroupsView(models.Model):
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
 
-            new_context = dict(view._context)
-            new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
-            new_context['lang'] = None
-            view.with_context(new_context).write({'arch': xml_content})
+            if xml_content != view.arch:  # avoid useless xml validation if no change
+                new_context = dict(view._context)
+                new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
+                new_context['lang'] = None
+                view.with_context(new_context).write({'arch': xml_content})
 
     def get_application_groups(self, domain):
         """ Return the non-share groups that satisfy ``domain``. """
