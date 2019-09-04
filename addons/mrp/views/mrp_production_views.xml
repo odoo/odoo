@@ -97,7 +97,7 @@
                             <label for="product_qty"/>
                             <div class="o_row no-gutters d-flex">
                                 <div class="col">
-                                    <field name="product_qty" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="product_qty" class="mr-1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}" force_save="1" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <button type="action"
                                         name="%(mrp.action_change_production_qty)d"
