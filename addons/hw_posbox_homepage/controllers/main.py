@@ -263,14 +263,18 @@ class IoTboxHomepage(web.Home):
 
     @http.route('/server_connect', type='http', auth='none', cors='*', csrf=False)
     def connect_to_server(self, token, iotname):
-        credential = token.split('|')
-        url = credential[0]
-        token = credential[1]
-        if len(credential) > 2:
-            # IoT Box send token with db_uuid and enterprise_code only since V13
-            db_uuid = credential[2]
-            enterprise_code = credential[3]
-            helpers.add_credential(db_uuid, enterprise_code)
+        if token:
+            credential = token.split('|')
+            url = credential[0]
+            token = credential[1]
+            if len(credential) > 2:
+                # IoT Box send token with db_uuid and enterprise_code only since V13
+                db_uuid = credential[2]
+                enterprise_code = credential[3]
+                helpers.add_credential(db_uuid, enterprise_code)
+        else:
+            url = helpers.get_odoo_server_url()
+            token = helpers.get_token()
         reboot = 'reboot'
         subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, iotname, token, reboot])
         return 'http://' + helpers.get_ip() + ':8069'
