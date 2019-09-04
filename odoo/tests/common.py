@@ -1401,8 +1401,11 @@ class Form(object):
                 stack.append(e1 or e2)
             elif isinstance(it, list):
                 f, op, val = it
+                _logger.info('%s %s %s', f, op, val)
                 # hack-ish handling of parent.<field> modifiers
                 f, n = re.subn(r'^parent\.', '', f, 1)
+                # import ipdb; ipdb.set_trace()
+                _logger.info('%s %s %s', f, n, vals)
                 field_val = (vals['•parent•'] if n else vals)[f]
                 stack.append(self._OPS[op](field_val, val))
             else:
