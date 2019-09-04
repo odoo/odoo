@@ -37,32 +37,36 @@ class TestPartnerAutocompleteFields(TransactionCase):
                 'acc_number': 'BE00000000000000',
                 'acc_holder_name': 'Odoo',
             }],
-            # 'child_ids': [{
-            #     'name': 'Shipping address of Odoo',
-            #     'country_id': self.be.id,
-            #     'comment': 'Shipping address of Odoo',
-            #     'street': '40 Chaussée de Namur',
-            #     'city': 'Ramillies',
-            #     'zip': '1367',
-            #     'phone': '+1 650-691-3277',
-            #     'email': 'info2@odoo.com',
-            # }, {
-            #     'name': 'Invoicing address of Odoo',
-            #     'country_id': self.be.id,
-            #     'comment': 'Invoicing address of Odoo',
-            #     'street': '40 Chaussée de Namur',
-            #     'city': 'Ramillies',
-            #     'zip': '1367',
-            #     'phone': '+1 650-691-3277',
-            #     'email': 'info3@odoo.com',
-            # }],
+            'child_ids': [{
+                'parent_id': False,
+                'name': 'Shipping address of Odoo',
+                'country_id': self.be.id,
+                'comment': 'Shipping address of Odoo',
+                'street': '40 Chaussée de Namur',
+                'city': 'Ramillies',
+                'zip': '1367',
+                'phone': '+1 650-691-3277',
+                'email': 'info2@odoo.com',
+            }, {
+                'parent_id': False,
+                'name': 'Invoicing address of Odoo',
+                'country_id': self.be.id,
+                'comment': 'Invoicing address of Odoo',
+                'street': '40 Chaussée de Namur',
+                'city': 'Ramillies',
+                'zip': '1367',
+                'phone': '+1 650-691-3277',
+                'email': 'info3@odoo.com',
+            }],
         }
 
         ctx = {'default_%s' % key: value for key, value in {**self.data, **o2m_data}.items()}
+
         self.partner_model = self.env['res.partner'].with_context(ctx)
 
     def test_10_test(self):
 
         f = Form(self.partner_model)
+        
         self.assertEqual(0, 0)
-        f.save()
+        aa = f.save()
