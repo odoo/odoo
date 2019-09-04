@@ -51,7 +51,7 @@
             <field name="account_id" ref="do_niif_21030102"/>
             <field name="refund_account_id" ref="do_niif_21030102"/>
             <field eval="1" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_V_ITBIS_18')])]" name="tag_ids"/>
+            <field eval="[(6,0,[ref('tag_V_ITBIS_18_Incluido')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
         </record>
         <record id="tax_tip_sale" model="account.tax.template">
@@ -106,6 +106,7 @@
             <field name="account_id" ref="do_niif_11080101"/>
             <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="0" name="price_include"/>
+            <field eval="[(6,0,[ref('tag_V_ITBIS_16')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
         </record>
         <record id="tax_16_purch_incl" model="account.tax.template">
@@ -119,6 +120,7 @@
             <field name="account_id" ref="do_niif_11080101"/>
             <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="1" name="price_include"/>
+            <field eval="[(6,0,[ref('tag_C_ITBIS_16_Incluido')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
         </record>
         <record id="tax_9_purch" model="account.tax.template">
@@ -132,6 +134,7 @@
             <field name="account_id" ref="do_niif_11080101"/>
             <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="0" name="price_include"/>
+            <field eval="[(6,0,[ref('tag_V_ITBIS_9')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
         </record>
         <record id="tax_9_purch_incl" model="account.tax.template">
@@ -145,6 +148,7 @@
             <field name="account_id" ref="do_niif_11080101"/>
             <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="1" name="price_include"/>
+            <field eval="[(6,0,[ref('tag_V_ITBIS_9_Incluido')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
         </record>
         <record id="tax_8_purch" model="account.tax.template">
@@ -158,6 +162,7 @@
             <field name="account_id" ref="do_niif_11080101"/>
             <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="0" name="price_include"/>
+            <field eval="[(6,0,[ref('tag_V_ITBIS_8')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
         </record>
         <record id="tax_8_purch_incl" model="account.tax.template">
@@ -171,6 +176,7 @@
             <field name="account_id" ref="do_niif_11080101"/>
             <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="1" name="price_include"/>
+            <field eval="[(6,0,[ref('tag_V_ITBIS_8_Incluido')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
         </record>
         <record id="tax_tip_purch" model="account.tax.template">
@@ -366,6 +372,20 @@
             <field name="name">Retención 75% ITBIS Bienes a Informales (N08-10)</field>
             <field name="description">-75% ITBIS (N08-10)</field>
             <field name="amount">-13.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="do_niif_21030205"/>
+            <field name="refund_account_id" ref="do_niif_21030205"/>
+            <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="group_itbis"/>
+        </record>
+        
+         <record id="ret_100_tax_nonformal" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">66</field>
+            <field name="name">Retención 100% ITBIS Bienes a Informales (N08-10 2019)</field>
+            <field name="description">-100% ITBIS (N08-10 2019)</field>
+            <field name="amount">-18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="account_id" ref="do_niif_21030205"/>
