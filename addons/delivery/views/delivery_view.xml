@@ -110,11 +110,8 @@
                                 <div>
                                     <field name="margin" class="oe_inline"/>%
                                 </div>
-                                <div class="o_row o_td_label">
-                                    <field name="free_over"/>
-                                    <label for="free_over"/>
-                                </div>
-                                <field nolabel="1" name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
+                                <field name="free_over"/>
+                                <field name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
                                 <field name="product_id" context="{'default_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False}" />
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="can_generate_return" invisible="1"/>
