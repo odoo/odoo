@@ -2,11 +2,11 @@ odoo.define('rating.portal.composer', function (require) {
 'use strict';
 
 var core = require('web.core');
-var portalChatter = require('portal.chatter');
+var portalComposer = require('portal.composer');
 
 var _t = core._t;
 
-var PortalComposer = portalChatter.PortalComposer;
+var PortalComposer = portalComposer.PortalComposer;
 
 var STAR_RATING_RATIO = 2;  // conversion factor from the star (1-5) to the db rating range (1-10)
 
