@@ -142,7 +142,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
         """
         On specific driver override this method to give connection type of device
         return string
-        possible value : direct - network - bluetooth - serial
+        possible value : direct - network - bluetooth - serial - hdmi
         """
         return self._device_connection
 
@@ -151,7 +151,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
         """
         On specific driver override this method to give type of device
         return string
-        possible value : printer - camera - keyboard - scanner - device
+        possible value : printer - camera - keyboard - scanner - display - device
         """
         return self._device_type
 
@@ -294,6 +294,26 @@ class Manager(Thread):
         else:
             _logger.warning('Odoo server not set')
 
+    def get_connected_displays(self):
+        display_devices = {}
+        hdmi = subprocess.check_output(['tvservice', '-n']).decode('utf-8')
+        if hdmi.find('=') != -1:
+            hdmi_serial = sub('[^a-zA-Z0-9 ]+', '', hdmi.split('=')[1]).replace(' ', '_')
+            iot_device = IoTDevice({
+                'identifier': hdmi_serial,
+                'name': hdmi.split('=')[1],
+            }, 'display')
+            display_devices[hdmi_serial] = iot_device
+
+        if not len(display_devices):
+            # No display connected, create "fake" device to be accessed from another computer
+            display_devices['distant_display'] = IoTDevice({
+                'identifier': "distant_display",
+                'name': "Distant Display",
+            }, 'display')
+
+        return display_devices
+
     def serial_loop(self):
         serial_devices = {}
         for identifier in glob('/dev/serial/by-path/*'):
@@ -364,11 +384,14 @@ class Manager(Thread):
         updated_devices = {}
         self.send_alldevices()
         self.load_drivers()
+        # The list of devices doesn't change after the Raspberry has booted
+        display_devices = self.get_connected_displays()
         cpt = 0
         while 1:
             updated_devices = self.usb_loop()
             updated_devices.update(self.video_loop())
             updated_devices.update(mpdm.devices)
+            updated_devices.update(display_devices)
             updated_devices.update(bt_devices)
             updated_devices.update(socket_devices)
             updated_devices.update(self.serial_loop())
