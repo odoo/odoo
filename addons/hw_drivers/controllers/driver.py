@@ -476,7 +476,7 @@ if terminal_id:
     mpdm.start()
 else:
     try:
-        subprocess.check_call(["pkill", "9", "eftdvs"])  # Check if MPD server is running
+        subprocess.check_call(["pkill", "-9", "eftdvs"])  # Check if MPD server is running
     except subprocess.CalledProcessError:
         pass
 
