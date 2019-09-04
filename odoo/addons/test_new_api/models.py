@@ -682,3 +682,28 @@ class ModelChildNoCheck(models.Model):
     name = fields.Char()
     company_id = fields.Many2one('res.company', required=True)
     parent_id = fields.Many2one('test_new_api.model_parent', check_company=False)
+
+
+# model with explicit and stored field 'display_name'
+class Display(models.Model):
+    _name = 'test_new_api.display'
+    _description = 'Model that overrides display_name'
+
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = 'My id is %s' % (record.id)
+
+
+# abstract model with automatic and non-stored field 'display_name'
+class Mixin(models.AbstractModel):
+    _name = 'test_new_api.mixin'
+    _description = 'Dummy mixin model'
+
+
+# in this model extension, the field 'display_name' should not be inherited from
+# 'test_new_api.mixin'
+class ExtendedDisplay(models.Model):
+    _name = 'test_new_api.display'
+    _inherit = ['test_new_api.mixin', 'test_new_api.display']
