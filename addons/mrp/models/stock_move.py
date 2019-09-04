@@ -285,7 +285,8 @@ class StockMove(models.Model):
         return bool(res and not (self.production_id or self.raw_material_production_id))
 
     def _search_picking_for_assignation_domain(self):
-        res = super(StockMove, self)._search_picking_for_assignation_domain()
+        res = []
         if self.created_production_id:
             res.append(('move_lines.created_production_id', '=', self.created_production_id.id))
+        res.extend(super(StockMove,self)._search_picking_for_assignation_domain())
         return res
