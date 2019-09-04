@@ -43,6 +43,7 @@ var PortalComposer = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
+        var self = this;
         this.$attachmentButton = this.$('.o_portal_chatter_attachment_btn');
         this.$fileInput = this.$('.o_portal_chatter_file_input');
         this.$sendButton = this.$('.o_portal_chatter_composer_btn');
@@ -50,7 +51,16 @@ var PortalComposer = publicWidget.Widget.extend({
         this.$attachmentIds = this.$('.o_portal_chatter_attachment_ids');
         this.$attachmentTokens = this.$('.o_portal_chatter_attachment_tokens');
 
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments).then(function () {
+            if (self.options.default_attachment_ids) {
+                self.attachments = self.options.default_attachment_ids || [];
+                _.each(self.attachments, function(attachment) {
+                    attachment.state = 'done';
+                });
+                self._updateAttachments();
+            }
+            return Promise.resolve();
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -108,6 +118,7 @@ var PortalComposer = publicWidget.Widget.extend({
                     'access_token': self.options.token,
                 };
                 ajax.post('/portal/attachment/add', data).then(function (attachment) {
+                    attachment.state = 'pending';
                     self.attachments.push(attachment);
                     self._updateAttachments();
                     resolve();
