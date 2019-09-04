@@ -6,6 +6,7 @@ var BasicModel = require('web.BasicModel');
 var core = require('web.core');
 var basicFields = require('web.basic_fields');
 var FormView = require('web.FormView');
+var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
 var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
@@ -1884,6 +1885,43 @@ QUnit.module('Views', {
         assert.containsNone(list, '.o_selected_row');
         assert.strictEqual(list.$('th[data-name="datetime"]')[0].offsetWidth, width);
 
+        list.destroy();
+    });
+
+    QUnit.test('column widths are re-computed on window resize', async function (assert) {
+        assert.expect(2);
+
+        testUtils.mock.patch(ListRenderer, {
+            RESIZE_DELAY: 0,
+        });
+
+        this.data.foo.records[0].text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ' +
+            'Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ' +
+            'ipsum purus bibendum est.';
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree editable="bottom">
+                        <field name="datetime"/>
+                        <field name="text"/>
+                    </tree>`,
+        });
+
+        const initialTextWidth = list.$('th[data-name="text"]')[0].offsetWidth;
+        const selectorWidth = list.$('th.o_list_record_selector')[0].offsetWidth;
+
+        // simulate a window resize
+        list.$el.width(`${list.$el.width() / 2}px`);
+        core.bus.trigger('resize');
+        await testUtils.nextTick();
+
+        const postResizeTextWidth = list.$('th[data-name="text"]')[0].offsetWidth;
+        const postResizeSelectorWidth = list.$('th.o_list_record_selector')[0].offsetWidth;
+        assert.ok(postResizeTextWidth < initialTextWidth);
+        assert.strictEqual(selectorWidth, postResizeSelectorWidth);
+
+        testUtils.mock.unpatch(ListRenderer);
         list.destroy();
     });
 

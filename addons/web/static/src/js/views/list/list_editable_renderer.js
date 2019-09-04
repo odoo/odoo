@@ -19,6 +19,7 @@ var utils = require('web.utils');
 var _t = core._t;
 
 ListRenderer.include({
+    RESIZE_DELAY: 200,
     custom_events: _.extend({}, ListRenderer.prototype.custom_events, {
         navigation_move: '_onNavigationMove',
     }),
@@ -109,6 +110,7 @@ ListRenderer.include({
     start: function () {
         if (this.editable) {
             core.bus.on('click', this, this._onWindowClicked.bind(this));
+            core.bus.on('resize', this, _.debounce(this._onResize.bind(this), this.RESIZE_DELAY));
         }
         return this._super();
     },
@@ -543,7 +545,6 @@ ListRenderer.include({
         el.addEventListener(type, callback, options);
         this.eventListeners.push({ type, el, callback, options });
     },
-
     /**
      * Destroy all field widgets corresponding to a record.  Useful when we are
      * removing a useless row.
@@ -581,9 +582,18 @@ ListRenderer.include({
         const table = this.el.getElementsByTagName('table')[0];
         const thead = table.getElementsByTagName('thead')[0];
 
+        // Set table layout auto and remove inline style to make sure that css
+        // rules apply (e.g. fixed width of record selector)
+        table.style.tableLayout = 'auto';
+        [...table.getElementsByTagName('th')].forEach((th) => {
+            th.style.width = null;
+        });
+
         // Freeze each th width according to their size in auto layout
-        [...thead.getElementsByTagName('th')].forEach((th, index) => {
-            th.style.width = `${this.columnWidths ? this.columnWidths[index] : th.offsetWidth}px`;
+        const thElements = [...thead.getElementsByTagName('th')];
+        const thWidths = thElements.map((th) => th.offsetWidth);
+        thElements.forEach((th, index) => {
+            th.style.width = `${this.columnWidths ? this.columnWidths[index] : thWidths[index]}px`;
         });
 
         // Set the table layout to fixed
@@ -1418,6 +1428,15 @@ ListRenderer.include({
                 self.trigger_up('list_record_remove', {id: id});
             });
         }
+    },
+    /**
+     * React to window resize events by recomputing the width of each column.
+     *
+     * @private
+     */
+    _onResize: function () {
+        this.columnWidths = false;
+        this._freezeColumnWidths();
     },
     /**
      * If the list view editable, just let the event bubble. We don't want to
