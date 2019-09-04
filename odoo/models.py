@@ -4069,6 +4069,7 @@ Fields:
                         qualifield_name = "COALESCE(%s, false)" % qualifield_name
                     order_by_elements.append("%s %s" % (qualifield_name, order_direction))
                 else:
+                    _logger.warning(_("Sorting field %s on model %s is non-readable and non-joinable, and thus have no effect") % (order_field, self._name))
                     continue  # ignore non-readable or "non-joinable" fields
 
         return order_by_elements
