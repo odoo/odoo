@@ -134,7 +134,7 @@ class Employee(models.AbstractModel):
         if not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
         if not self.mobile_phone:
-            raise UserError(_("There is no professional phone for this employee."))
+            raise UserError(_("There is no professional mobile for this employee."))
 
         context = dict(self.env.context)
         context.update(default_res_model='hr.employee', default_res_id=self.id, default_composition_mode='comment', default_number_field_name='mobile_phone')
