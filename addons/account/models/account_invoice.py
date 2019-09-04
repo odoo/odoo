@@ -127,8 +127,10 @@ class AccountInvoice(models.Model):
             if line.currency_id == self.currency_id:
                 residual += line.amount_residual_currency if line.currency_id else line.amount_residual
             else:
-                from_currency = line.currency_id or line.company_id.currency_id
-                residual += from_currency._convert(line.amount_residual, self.currency_id, line.company_id, line.date or fields.Date.today())
+                if line.currency_id:
+                    residual += line.currency_id._convert(line.amount_residual_currency, self.currency_id, line.company_id, line.date or fields.Date.today())
+                else:
+                    residual += line.company_id.currency_id._convert(line.amount_residual, self.currency_id, line.company_id, line.date or fields.Date.today())
         self.residual_company_signed = abs(residual_company_signed) * sign
         self.residual_signed = abs(residual) * sign
         self.residual = abs(residual)
@@ -691,17 +693,22 @@ class AccountInvoice(models.Model):
         email_from = email_escape_char(email_split(email_from)[0])
         partner_id = self._search_on_partner(email_from, extra_domain=[('supplier', '=', True)])
 
+        is_internal = lambda p: (p.user_ids and
+                                 all(p.user_ids.mapped(lambda u: u.has_group('base.group_user'))))
         # 2) otherwise, if the email sender is from odoo internal users then it is likely that the vendor sent the bill
         # by mail to the internal user who, inturn, forwarded that email to the alias to automatically generate the bill
         # on behalf of the vendor.
         if not partner_id:
             user_partner_id = self._search_on_user(email_from)
             if user_partner_id and user_partner_id in self.env.ref('base.group_user').users.mapped('partner_id').ids:
-                # In this case, we will look for the vendor's email address in email's body and assume if will come first
-                email_addresses = email_re.findall(msg_dict.get('body'))
+                # In this case, we will look for the vendor's email address in email's body
+                email_addresses = set(email_re.findall(msg_dict.get('body')))
                 if email_addresses:
-                    partner_ids = [pid for pid in self._find_partner_from_emails([email_addresses[0]], force_create=False) if pid]
-                    partner_id = partner_ids and partner_ids[0]
+                    pids_list = [self._find_partner_from_emails([email], force_create=False) for email in email_addresses]
+                    partner_ids = set(pid for pids in pids_list for pid in pids if pid)
+                    potential_vendors = self.env['res.partner'].browse(partner_ids).filtered(lambda x: not is_internal(x))
+                    partner_id = ((potential_vendors.filtered('supplier') and potential_vendors.filtered('supplier')[0].id)
+                                  or (potential_vendors and potential_vendors[0].id))
             # otherwise, there's no fallback on the partner_id found for the regular author of the mail.message as we want
             # the partner_id to stay empty
 
@@ -725,8 +732,6 @@ class AccountInvoice(models.Model):
 
         # Subscribe internal users on the newly created bill
         partners = self.env['res.partner'].browse(seen_partner_ids)
-        is_internal = lambda p: (p.user_ids and
-                                 all(p.user_ids.mapped(lambda u: u.has_group('base.group_user'))))
         partners_to_subscribe = partners.filtered(is_internal)
         if partners_to_subscribe:
             invoice.message_subscribe([p.id for p in partners_to_subscribe])
