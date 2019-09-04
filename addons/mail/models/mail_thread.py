@@ -2077,6 +2077,9 @@ class MailThread(models.AbstractModel):
             create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
             create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
             create_values_list.append(create_values)
+        if 'default_child_ids' in self._context:
+            ctx = {key: val for key, val in self._context.items() if key != 'default_child_ids'}
+            self = self.with_context(ctx)
         return self.env['mail.message'].create(create_values_list)
 
     # ------------------------------------------------------
