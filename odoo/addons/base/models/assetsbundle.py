@@ -186,10 +186,10 @@ class AssetsBundle(object):
     def checksum(self):
         """
         Not really a full checksum.
-        We compute a SHA1 on the rendered bundle + max linked files last_modified date
+        We compute a SHA512/256 on the rendered bundle + max linked files last_modified date
         """
         check = u"%s%s" % (json.dumps(self.files, sort_keys=True), self.last_modified)
-        return hashlib.sha1(check.encode('utf-8')).hexdigest()
+        return hashlib.sha512(check.encode('utf-8')).hexdigest()[:64]
 
     def _get_asset_template_url(self):
         return "/web/content/{id}-{unique}/{extra}{name}{sep}{type}"
