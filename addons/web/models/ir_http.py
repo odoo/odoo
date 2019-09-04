@@ -62,9 +62,9 @@ class Http(models.AbstractModel):
             "show_effect": True,
             "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user.company_ids) > 1,
             "cache_hashes": {
-                "load_menus": hashlib.sha1(menu_json_utf8).hexdigest(),
+                "load_menus": hashlib.sha512(menu_json_utf8).hexdigest()[:64],  # sha512/256
                 "qweb": qweb_checksum,
-                "translations": hashlib.sha1(translations_json_utf8).hexdigest(),
+                "translations": hashlib.sha512(translations_json_utf8).hexdigest()[:64],  # sha512/256
             },
         }
 
