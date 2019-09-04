@@ -233,6 +233,7 @@ class HolidaysType(models.Model):
                     'virtual_remaining_leaves': lt.virtual_remaining_leaves,
                     'max_leaves': lt.max_leaves,
                     'leaves_taken': lt.leaves_taken,
+                    'request_unit': lt.request_unit,
                 }, lt.allocation_type)
             for lt in leave_types]
 
