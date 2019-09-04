@@ -49,11 +49,12 @@ def first(records):
 
 def resolve_mro(model, name, predicate):
     """ Return the list of successively overridden values of attribute ``name``
-        in mro order on ``model`` that satisfy ``predicate``.
+        in mro order on ``model`` that satisfy ``predicate``.  Model classes
+        (the ones that appear in the registry) are ignored.
     """
     result = []
     for cls in type(model).__mro__:
-        if name in cls.__dict__:
+        if not getattr(cls, 'pool', None) and name in cls.__dict__:
             value = cls.__dict__[name]
             if not predicate(value):
                 break
@@ -392,6 +393,9 @@ class Field(MetaField('DummyField', (object,), {})):
         # determine all inherited field attributes
         modules = set()
         attrs = {}
+        if self.args.get('automatic') and resolve_mro(model, name, self._can_setup_from):
+            # prevent an automatic field from overriding a real field
+            self.args.clear()
         if not (self.args.get('automatic') or self.args.get('manual')):
             # magic and custom fields do not inherit from parent classes
             for field in reversed(resolve_mro(model, name, self._can_setup_from)):
