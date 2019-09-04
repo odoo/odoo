@@ -2579,8 +2579,32 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('date field should remove the date  if the date is not valid', async function (assert) {
-        assert.expect(1);
+    QUnit.test('date field: set an invalid date when the field is already set', async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><field name="date"/></form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        var $input = form.$('.o_field_widget[name=date] input');
+
+        assert.strictEqual($input.val(), "02/03/2017");
+
+        $input.val('mmmh').trigger('change');
+        assert.strictEqual($input.val(), "02/03/2017", "should have reset the original value");
+
+        form.destroy();
+    });
+
+    QUnit.test('date field: set an invalid date when the field is not set yet', async function (assert) {
+        assert.expect(2);
 
         var form = await createView({
             View: FormView,
@@ -2588,13 +2612,18 @@ QUnit.module('basic_fields', {
             data: this.data,
             arch: '<form string="Partners"><field name="date"/></form>',
             res_id: 4,
+            viewOptions: {
+                mode: 'edit',
+            },
         });
-        // switch to edit mode
-        await testUtils.form.clickEdit(form);
-        // set an invalid date
+
         var $input = form.$('.o_field_widget[name=date] input');
+
+        assert.strictEqual($input.text(), "");
+
         $input.val('mmmh').trigger('change');
         assert.strictEqual($input.text(), "", "The date field should be empty");
+
         form.destroy();
     });
 

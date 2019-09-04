@@ -85,31 +85,34 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      */
     _onShareArticle: function (ev) {
         var url = '';
+        var articleURL;
         ev.preventDefault();
         var $element = $(ev.currentTarget);
         if ($element.is('*[class*="_complete"]')) {
-            var blogTitleComplete = $('#blog_post_name').html() || '';
+            var blogTitleComplete = encodeURIComponent($('#blog_post_name').html() || '');
+            articleURL = encodeURIComponent(window.location.href);
             if ($element.hasClass('o_twitter_complete')) {
-                url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blogTitleComplete + "! Check it live: " + window.location.href;
+                url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blogTitleComplete + "! Check it live: " + articleURL;
             } else if ($element.hasClass('o_facebook_complete')) {
-                url = 'https://www.facebook.com/sharer/sharer.php?u=' + window.location.href;
+                url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
             } else if ($element.hasClass('o_linkedin_complete')) {
-                url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + window.location.href + '&title=' + blogTitleComplete;
+                url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + articleURL + '&title=' + blogTitleComplete;
             } else {
-                url = 'https://plus.google.com/share?url=' + window.location.href;
+                url = 'https://plus.google.com/share?url=' + articleURL;
             }
         } else {
             var blogPost = $element.parents('[name="blog_post"]');
-            var blogPostTitle = blogPost.find('.o_blog_post_title').html() || '';
+            var blogPostTitle = encodeURIComponent(blogPost.find('.o_blog_post_title').html() || '');
             var blogArticleLink = blogPost.find('.o_blog_post_title').parent('a').attr('href');
+            articleURL = encodeURIComponent(window.location.host + blogArticleLink);
             if ($element.hasClass('o_twitter')) {
-                url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blogPostTitle + "! " + window.location.host + blogArticleLink;
+                url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blogPostTitle + "! " + articleURL;
             } else if ($element.hasClass('o_facebook')) {
-                url = 'https://www.facebook.com/sharer/sharer.php?u=' + window.location.host + blogArticleLink;
+                url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
             } else if ($element.hasClass('o_linkedin')) {
-                url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + window.location.host + blogArticleLink + '&title=' + blogPostTitle;
+                url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + articleURL + '&title=' + blogPostTitle;
             } else if ($element.hasClass('o_google')) {
-                url = 'https://plus.google.com/share?url=' + window.location.host + blogArticleLink;
+                url = 'https://plus.google.com/share?url=' + articleURL;
             }
         }
         window.open(url, '', 'menubar=no, width=500, height=400');
