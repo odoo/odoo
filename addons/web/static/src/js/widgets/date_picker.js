@@ -89,8 +89,8 @@ var DateWidget = Widget.extend({
      * set datetime value
      */
     changeDatetime: function () {
+        var oldValue = this.getValue();
         if (this.isValid()) {
-            var oldValue = this.getValue();
             this._setValueFromUi();
             var newValue = this.getValue();
             var hasChanged = !oldValue !== !newValue;
@@ -107,6 +107,9 @@ var DateWidget = Widget.extend({
                 }
                 this.trigger("datetime_changed");
             }
+        } else {
+            var formattedValue = oldValue ? this._formatClient(oldValue) : null;
+            this.$input.val(formattedValue);
         }
     },
     /**

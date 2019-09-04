@@ -45,6 +45,19 @@ var AbstractStorageService = AbstractService.extend({
         return val ? JSON.parse(val) : defaultValue;
     },
     /**
+     * @param {integer} index
+     * @return {string}
+     */
+    key: function (index) {
+        return this.storage.key(index);
+    },
+    /**
+     * @return {integer}
+     */
+    length: function () {
+        return this.storage.length;
+    },
+    /**
      * Removes the given key from the storage
      *
      * @param {string} key
