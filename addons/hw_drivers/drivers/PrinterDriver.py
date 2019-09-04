@@ -17,6 +17,7 @@ from PIL import Image, ImageOps
 
 from odoo import http, _
 from odoo.addons.hw_drivers.controllers.driver import event_manager, Driver, PPDs, conn, printers, cups_lock, iot_devices
+from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers
 
 _logger = logging.getLogger(__name__)
@@ -245,14 +246,14 @@ class PrinterDriver(Driver):
         homepage = ''
 
         hosting_ap = os.system('pgrep hostapd') == 0
-        ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).decode('utf-8').rstrip()
+        ssid = helpers.get_ssid()
         if hosting_ap:
             with open('/root_bypass_ramdisks/etc/hostapd/hostapd.conf') as config_file:
                 lines = config_file.readlines()
             ssid = lines[1].split("=")[1].replace("\n", "")
-            wlan = 'Wireless network:\n%s\n\n' % ssid
+            wlan = '\nWireless network:\n%s\n\n' % ssid
         elif ssid:
-            wlan = 'Wireless network:\n%s\n\n' % ssid
+            wlan = '\nWireless network:\n%s\n\n' % ssid
 
         interfaces = ni.interfaces()
         ips = []

@@ -63,8 +63,8 @@ class IoTboxHomepage(web.Home):
         hostname = str(socket.gethostname())
         mac = get_mac()
         h = iter(hex(mac)[2:].zfill(12))
-        ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).decode('utf-8').rstrip()
-        wired = subprocess.check_output('cat /sys/class/net/eth0/operstate', shell=True).decode('utf-8').strip('\n')
+        ssid = helpers.get_ssid()
+        wired = subprocess.check_output(['cat', '/sys/class/net/eth0/operstate']).decode('utf-8').strip('\n')
         if wired == 'up':
             network = 'Ethernet'
         elif ssid:
