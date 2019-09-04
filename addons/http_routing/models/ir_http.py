@@ -265,7 +265,7 @@ class IrHttp(models.AbstractModel):
         session_info.update({
             'translationURL': '/website/translations/',
             'cache_hashes': {
-                'translations': hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest(),
+                'translations': hashlib.sha512(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest()[:64],  # sha512/256
             },
         })
         return session_info
