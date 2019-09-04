@@ -4,7 +4,6 @@
         // It allows to transform the <head> only once
         var mergedHead = false;
         var current_client_url = "";
-        var stop_longpolling = false;
 
         function longpolling() {
             $.ajax({
@@ -15,14 +14,13 @@
                 data: JSON.stringify({jsonrpc: '2.0'}),
 
                 success: function(data) {
-                    if (typeof data.result.stop_longpolling !== 'undefined') {
-                        stop_longpolling = data.result.stop_longpolling;
-                    }
                     if (data.result.error) {
                         $('.error-message').text(data.result.error);
                         $('.error-message').removeClass('d-none');
+                        setTimeout(longpolling, 5000);
+                        return;
                     }
-                    if (data.result.ip_from && data.result.rendered_html) {
+                    if (data.result.rendered_html) {
                         var trimmed = $.trim(data.result.rendered_html);
                         var $parsedHTML = $('<div>').html($.parseHTML(trimmed,true)); // WARNING: the true here will executes any script present in the string to parse
                         var new_client_url = $parsedHTML.find(".resources > base").attr('href');
@@ -47,15 +45,11 @@
                             foreign_js();
                         }
                     }
-                    if (!stop_longpolling) {
-                        longpolling();
-                    }
+                    longpolling();
                 },
 
                 error: function (jqXHR, status, err) {
-                    if (!stop_longpolling) {
-                        setTimeout(longpolling, 5000);
-                    }
+                    setTimeout(longpolling, 5000);
                 },
 
                 timeout: 30000,
