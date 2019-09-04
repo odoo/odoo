@@ -43,6 +43,7 @@ var ThreadField = AbstractField.extend({
             displayOrder: ThreadWidget.ORDER.DESC,
             displayDocumentLinks: false,
             displayMarkAsRead: false,
+            hasMessageAttachmentDeletable: true,
             squashCloseMessages: false,
         });
 
