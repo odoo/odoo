@@ -63,6 +63,9 @@ class MrpWorkorder(models.Model):
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
 
+    is_first_wo = fields.Boolean(string="Is the first WO to produce",
+        compute='_compute_is_first_wo')
+
     state = fields.Selection([
         ('pending', 'Pending'),
         ('ready', 'Ready'),
@@ -139,6 +142,11 @@ class MrpWorkorder(models.Model):
     def _compute_is_produced(self):
         rounding = self.production_id.product_uom_id.rounding
         self.is_produced = float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0
+
+    @api.multi
+    def _compute_is_first_wo(self):
+        for wo in self:
+            wo.is_first_wo = (wo.production_id.workorder_ids[0] == wo)
 
     @api.one
     @api.depends('time_ids.duration', 'qty_produced')
