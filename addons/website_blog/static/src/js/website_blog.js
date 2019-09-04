@@ -27,30 +27,33 @@ function animate(event) {
 
 function shareArticle(event){
     var url = '';
+    var articleURL;
     if ($(this).is('*[class*="_complete"]')) {
-        var blog_title_complete = $('#blog_post_name').html() || '';
+        var blog_title_complete = encodeURIComponent($('#blog_post_name').html() || '');
+        articleURL = encodeURIComponent(window.location.href);
         if ($(this).hasClass('o_twitter_complete')){
-            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : '+blog_title_complete+"! Check it live: "+window.location.href;
+            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blog_title_complete + "! Check it live: " + articleURL;
         } else if ($(this).hasClass('o_facebook_complete')){
-            url = 'https://www.facebook.com/sharer/sharer.php?u='+window.location.href;
+            url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
         } else if ($(this).hasClass('o_linkedin_complete')){
-            url = 'https://www.linkedin.com/shareArticle?mini=true&url='+window.location.href+'&title='+blog_title_complete;
+            url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + articleURL + '&title=' + blog_title_complete;
         } else {
-            url = 'https://plus.google.com/share?url='+window.location.href;
+            url = 'https://plus.google.com/share?url=' + articleURL;
         }
     }
     else {
         var blog_post = $(this).parents("[name='blog_post']");
-        var blog_post_title = blog_post.find('.o_blog_post_title').html() || '';
+        var blog_post_title = encodeURIComponent(blog_post.find('.o_blog_post_title').html() || '');
         var blog_article_link = blog_post.find('.o_blog_post_title').parent('a').attr('href');
+        articleURL = encodeURIComponent(window.location.host + blog_article_link);
         if ($(this).hasClass('o_twitter')) {
-            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : '+blog_post_title+"! "+window.location.host+blog_article_link;
+            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blog_post_title + "! " + articleURL;
         } else if ($(this).hasClass('o_facebook')){
-            url = 'https://www.facebook.com/sharer/sharer.php?u='+window.location.host+blog_article_link;
+            url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
         } else if ($(this).hasClass('o_linkedin')){
-            url = 'https://www.linkedin.com/shareArticle?mini=true&url='+window.location.host+blog_article_link+'&title='+blog_post_title;
+            url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + articleURL + '&title=' + blog_post_title;
         } else if ($(this).hasClass('o_google')){
-            url = 'https://plus.google.com/share?url='+window.location.host+blog_article_link;
+            url = 'https://plus.google.com/share?url=' + articleURL;
         }
     }
     window.open(url, "", "menubar=no, width=500, height=400");
