@@ -7755,6 +7755,46 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
+    QUnit.test('edit a record in readonly and switch to edit before it is actually saved', async function (assert) {
+        assert.expect(3);
+
+        const prom = $.Deferred(); // testUtils.makeTestPromise();
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form>
+                    <field name="foo"/>
+                    <field name="bar" widget="toggle_button"/>
+                </form>`,
+            mockRPC: function (route, args) {
+                const result = this._super.apply(this, arguments);
+                if (args.method === 'write') { // delay the write RPC
+                    assert.deepEqual(args.args[1], {bar: false});
+                    return prom.then(_.constant(result));
+                }
+                return result;
+            },
+            res_id: 1,
+        });
+
+        // edit the record (in readonly) with toogle_button widget (and delay the write RPC)
+        await testUtils.dom.click(form.$('.o_field_widget[name=bar]'));
+
+        // switch to edit mode
+        await testUtils.form.clickEdit(form);
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_readonly'); // should wait for the RPC to return
+
+        // make write RPC return
+        prom.resolve();
+        // await testUtils.nextTick();
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+
+        form.destroy();
+    });
+
     QUnit.module('FormViewTABMainButtons');
 
     QUnit.test('using tab in an empty required string field should not move to the next field',function(assert) {
