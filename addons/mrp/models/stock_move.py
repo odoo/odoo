@@ -5,6 +5,7 @@ from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 from odoo.addons import decimal_precision as dp
+from odoo.osv import expression
 
 
 class StockMoveLine(models.Model):
@@ -283,3 +284,10 @@ class StockMove(models.Model):
     def _should_be_assigned(self):
         res = super(StockMove, self)._should_be_assigned()
         return bool(res and not (self.production_id or self.raw_material_production_id))
+
+    def _search_picking_for_assignation_domain(self):
+        new_dom = []
+        if not self._context.get('split_sfp_picking_nofix') and self.created_production_id:
+            new_dom = [('move_lines.created_production_id', '=',self.created_production_id.id)]
+        res = super(StockMove,self)._search_picking_for_assignation_domain()
+        return expression.AND([new_dom, res])

@@ -121,6 +121,100 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(sam_move.picking_type_id, self.warehouse.sam_type_id)
         self.assertFalse(sam_move.move_dest_ids)
 
+    def test_manufacturing_complex_product_3_steps(self):
+        """ Test MO/picking after manufacturing a complex product which uses
+        manufactured components. Ensure that everything is created and picked
+        correctly.
+        """
+        # Create manifactured product which uses another manifactured
+
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Arrow'
+        product_form.type = 'product'
+        product_form.route_ids.clear()
+        product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
+        product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
+        self.complex_product = product_form.save()
+
+        ## Create raw product for manufactured product
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Raw Iron'
+        product_form.type = 'product'
+        product_form.uom_id = self.uom_unit
+        product_form.uom_po_id = self.uom_unit
+        self.raw_product_2 = product_form.save()
+
+        ## Create bom for manufactured product
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_id = self.complex_product
+        bom_product_form.product_tmpl_id = self.complex_product.product_tmpl_id
+        with bom_product_form.bom_line_ids.new() as line:
+            line.product_id = self.finished_product
+            line.product_qty = 1.0
+        with bom_product_form.bom_line_ids.new() as line:
+            line.product_id = self.raw_product_2
+            line.product_qty = 1.0
+
+        self.complex_bom = bom_product_form.save()
+
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.complex_product
+        production_form.picking_type_id = self.warehouse.manu_type_id
+        production = production_form.save()
+
+        move_raw_ids = production.move_raw_ids
+        self.assertEqual(len(move_raw_ids), 2)
+        sfp_move_raw_id, raw_move_raw_id = move_raw_ids
+        self.assertEqual(sfp_move_raw_id.product_id, self.finished_product)
+        self.assertEqual(raw_move_raw_id.product_id, self.raw_product_2)
+
+        for move_raw_id in move_raw_ids:
+            self.assertEqual(move_raw_id.picking_type_id, self.warehouse.manu_type_id)
+
+            pbm_move = move_raw_id.move_orig_ids
+            self.assertEqual(len(pbm_move), 1)
+            self.assertEqual(pbm_move.location_id, self.warehouse.lot_stock_id)
+            self.assertEqual(pbm_move.location_dest_id, self.warehouse.pbm_loc_id)
+            self.assertEqual(pbm_move.picking_type_id, self.warehouse.pbm_type_id)
+
+        move_finished_ids = production.move_finished_ids
+        self.assertEqual(len(move_finished_ids), 1)
+        self.assertEqual(move_finished_ids.product_id, self.complex_product)
+        self.assertEqual(move_finished_ids.picking_type_id, self.warehouse.manu_type_id)
+        sam_move = move_finished_ids.move_dest_ids
+        self.assertEqual(len(sam_move), 1)
+        self.assertEqual(sam_move.location_id, self.warehouse.sam_loc_id)
+        self.assertEqual(sam_move.location_dest_id, self.warehouse.lot_stock_id)
+        self.assertEqual(sam_move.picking_type_id, self.warehouse.sam_type_id)
+        self.assertFalse(sam_move.move_dest_ids)
+
+        pickings = production.picking_ids.sorted('id', reverse=True)
+        self.assertEqual(len(pickings), 3)
+
+        # Picking: SFP PostProcessing -> Stock
+        ## Stick from Subprocess
+        picking = pickings[1]
+        self.assertEqual(len(picking.move_lines), 1)
+        picking.product_id = self.finished_product
+
+        # Picking: PC Stock -> Preprocessing
+        ## Stick
+        ## Raw Iron
+        picking = pickings[0]
+        self.assertEqual(len(picking.move_lines), 2)
+        picking.move_lines[0].product_id = self.finished_product
+        picking.move_lines[1].product_id = self.raw_product_2
+
+        # Picking: SFP PostProcessing -> Stock
+        ## Arrow from this process
+        picking = pickings[2]
+        self.assertEqual(len(picking.move_lines), 1)
+        picking.product_id = self.complex_product
+
+
     def test_manufacturing_flow(self):
         """ Simulate a pick pack ship delivery combined with a picking before
         manufacturing and store after manufacturing. Also ensure that the MO and
