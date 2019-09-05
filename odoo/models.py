@@ -4905,7 +4905,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     target0 = self
                 else:
                     env = self.env(user=SUPERUSER_ID, context={'active_test': False})
-                    target0 = env[model_name].search([(path, 'in', self.ids)])
+                    target0 = env[model_name].search([(path, 'in', self.ids)], order='id')
                     target0 = target0.with_env(self.env)
                 # prepare recomputation for each field on linked records
                 for field in stored:
