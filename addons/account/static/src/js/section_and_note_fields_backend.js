@@ -217,5 +217,7 @@ var SectionAndNoteFieldText = function (parent, name, record, options) {
 
 fieldRegistry.add('section_and_note_one2many', SectionAndNoteFieldOne2Many);
 fieldRegistry.add('section_and_note_text', SectionAndNoteFieldText);
-
+return {SectionAndNoteListRenderer:SectionAndNoteListRenderer,
+        SectionAndNoteFieldOne2Many:SectionAndNoteFieldOne2Many,
+        SectionAndNoteFieldText:SectionAndNoteFieldText};
 });
