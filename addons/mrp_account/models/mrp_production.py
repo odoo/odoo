@@ -70,7 +70,7 @@ class MrpProduction(models.Model):
 
     def action_view_stock_valuation_layers(self):
         self.ensure_one()
-        domain = [('id', 'in', (self.move_raw_ids + self.move_finished_ids).stock_valuation_layer_ids.ids)]
+        domain = [('id', 'in', (self.move_raw_ids + self.move_finished_ids + self.scrap_ids.move_id).stock_valuation_layer_ids.ids)]
         action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
         return dict(action, domain=domain)
 
