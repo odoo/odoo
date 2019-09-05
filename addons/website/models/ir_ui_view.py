@@ -197,8 +197,15 @@ class View(models.Model):
               * In non website context, every view with a website will be removed
               * In a website context, every view from another website
         """
+        IrUiView = self.env['ir.ui.view']
+        if not self:
+            return IrUiView
+        # Only fetch website_id because the arch_db xml_translate is too costly
+        # to prefetch when not necessary.
+        if self[0]._in_cache_without(IrUiView.website_id):
+            self.read(['key', 'website_id'])
         current_website_id = self._context.get('website_id')
-        most_specific_views = self.env['ir.ui.view']
+        most_specific_views = IrUiView
         if not current_website_id:
             return self.filtered(lambda view: not view.website_id)
 
