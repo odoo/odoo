@@ -27,7 +27,7 @@
     </record>
 
     <!-- Add action entry in the Action Menu for Partners -->
-    <act_window id="res_partner_act_window_sms_composer_single"
+    <act_window id="res_partner_act_window_sms_composer_multi"
         name="Send SMS Text Message"
         binding_model="res.partner"
         res_model="sms.composer"
@@ -37,9 +37,10 @@
         context="{
             'default_composition_mode': 'mass',
             'default_mass_keep_log': True,
+            'default_res_ids': active_ids
         }"
     />
-    <act_window id="res_partner_act_window_sms_composer_multi"
+    <act_window id="res_partner_act_window_sms_composer_single"
         name="Send SMS Text Message"
         binding_model="res.partner"
         res_model="sms.composer"
