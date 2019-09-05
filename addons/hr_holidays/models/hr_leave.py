@@ -629,7 +629,7 @@ class HolidaysRequest(models.Model):
 
         if not is_officer:
             if any(hol.date_from.date() < fields.Date.today() for hol in self):
-                raise UserError(_('You cannot update a leave that already begun'))
+                raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
 
         employee_id = values.get('employee_id', False)
         if not self.env.context.get('leave_fast_create'):
