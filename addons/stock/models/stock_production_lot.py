@@ -33,10 +33,18 @@ class ProductionLot(models.Model):
     ]
 
     def _domain_product_id(self):
-        domain = "[('type', '=', 'product'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+        domain = [
+            "('tracking', '!=', 'none')",
+            "('type', '=', 'product')",
+            "'|'",
+                "('company_id', '=', False)",
+                "('company_id', '=', company_id)"
+        ]
         if self.env.context.get('default_product_tmpl_id'):
-            domain = "[('type', '=', 'product'), ('product_tmpl_id', '=', %s), '|', ('company_id', '=', False), ('company_id', '=', company_id)]" % self.env.context['default_product_tmpl_id']
-        return domain
+            domain.insert(0,
+                ("('product_tmpl_id', '=', %s)" % self.env.context['default_product_tmpl_id'])
+            )
+        return '[' + ', '.join(domain) + ']'
 
     def _check_create(self):
         active_picking_id = self.env.context.get('active_picking_id', False)
