@@ -386,7 +386,10 @@ actual arch.
                 view_doc = etree.fromstring(view_arch_utf8)
                 self._check_groups_validity(view_doc, view.name)
                 # verify that all fields used are valid, etc.
-                self.postprocess_and_fields(view.model, view_doc, view.id)
+                try:
+                    self.postprocess_and_fields(view.model, view_doc, view.id)
+                except ValueError as e:
+                    raise ValidationError("%s\n\n%s" % (_("Error while validating view"), tools.ustr(e)))
                 # RNG-based validation is not possible anymore with 7.0 forms
                 view_docs = [view_doc]
                 if view_docs[0].tag == 'data':
