@@ -487,6 +487,10 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _setup_regular_base(self, model):
         """ Setup the attributes of a non-related field. """
+        pass
+
+    def _setup_regular_full(self, model):
+        """ Determine the dependencies and inverse field(s) of ``self``. """
         if self.depends is not None:
             return
 
@@ -515,9 +519,10 @@ class Field(MetaField('DummyField', (object,), {})):
 
         self.depends_context = (self.depends_context or ()) + depends_context
 
-    def _setup_regular_full(self, model):
-        """ Setup the inverse field(s) of ``self``. """
-        pass
+        # display_name may depend on context['lang'] (`test_lp1071710`)
+        if self.automatic and self.name == 'display_name' and model._rec_name:
+            if model._fields[model._rec_name].translate:
+                self.depends_context += ('lang',)
 
     #
     # Setup of related fields
@@ -2688,17 +2693,14 @@ class _RelationalMulti(_Relational):
     def convert_to_display_name(self, value, record):
         raise NotImplementedError()
 
-    def _setup_regular_base(self, model):
-        super(_RelationalMulti, self)._setup_regular_base(model)
+    def _setup_regular_full(self, model):
+        super(_RelationalMulti, self)._setup_regular_full(model)
         if isinstance(self.domain, list):
             self.depends += tuple(
                 self.name + '.' + arg[0]
                 for arg in self.domain
                 if isinstance(arg, (tuple, list)) and isinstance(arg[0], str)
             )
-
-    def _setup_regular_full(self, model):
-        super(_RelationalMulti, self)._setup_regular_full(model)
         # make self depend on 'active_test' if there is a field 'active' in the comodel
         if 'active' in model.env[self.comodel_name] and 'active_test' not in (self.depends_context or ()):
             self.depends_context = (self.depends_context or ()) + ('active_test',)
