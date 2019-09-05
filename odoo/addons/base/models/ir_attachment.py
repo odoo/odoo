@@ -41,6 +41,8 @@ class IrAttachment(models.Model):
             if attachment.res_model and attachment.res_id:
                 record = self.env[attachment.res_model].browse(attachment.res_id)
                 attachment.res_name = record.display_name
+            else:
+                attachment.res_name = False
 
     @api.model
     def _storage(self):
