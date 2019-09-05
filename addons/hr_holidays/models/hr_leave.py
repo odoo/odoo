@@ -534,17 +534,17 @@ class HolidaysRequest(models.Model):
             dto    = leave.date_to
             if leave.holiday_status_id.validity_start and leave.holiday_status_id.validity_stop:
                 if dfrom and dto and (dfrom.date() < vstart or dto.date() > vstop):
-                    raise UserError(
+                    raise ValidationError(
                         _('You can take %s only between %s and %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_start, leave.holiday_status_id.validity_stop))
             elif leave.holiday_status_id.validity_start:
                 if dfrom and (dfrom.date() < vstart):
-                    raise UserError(
+                    raise ValidationError(
                         _('You can take %s from %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_start))
             elif leave.holiday_status_id.validity_stop:
                 if dto and (dto.date() > vstop):
-                    raise UserError(
+                    raise ValidationError(
                         _('You can take %s until %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_stop))
 

@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.addons.resource.models.resource import HOURS_PER_DAY
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
 
@@ -361,7 +361,7 @@ class HolidaysAllocation(models.Model):
                 today = fields.Date.today()
 
                 if vstart > today or vstop < today:
-                    raise UserError(_('You can allocate %s only between %s and %s') % (allocation.holiday_status_id.display_name,
+                    raise ValidationError(_('You can allocate %s only between %s and %s') % (allocation.holiday_status_id.display_name,
                                                                                   allocation.holiday_status_id.validity_start, allocation.holiday_status_id.validity_stop))
 
     @api.model
