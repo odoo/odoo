@@ -392,6 +392,9 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return [self] + list(self.product_template_image_ids)
 
+    def action_archive(self):
+        self.write({'website_published': False})
+        return super(ProductTemplate, self).action_archive()
 
 class Product(models.Model):
     _inherit = "product.product"
