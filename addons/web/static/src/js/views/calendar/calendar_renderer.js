@@ -422,7 +422,6 @@ return AbstractRenderer.extend({
                     element.find('.fc-content').after($('<div/>', {class: 'fc-bg'}));
                 }
 
-                // For month view: Show background for all-day/multidate events only
                 if (view.name === 'month' && event.record) {
                     var start = event.r_start || event.start;
                     var end = event.r_end || event.end;
@@ -430,7 +429,12 @@ return AbstractRenderer.extend({
                     // note: add & remove 1 min to avoid issues with 00:00
                     var isSameDayEvent = start.clone().add(1, 'minute').isSame(end.clone().subtract(1, 'minute'), 'day');
                     if (!event.record.allday && isSameDayEvent) {
+                        // For month view: do not show background for non allday, single day events
                         element.addClass('o_cw_nobg');
+                        if (event.showTime && !self.hideTime) {
+                            const displayTime = start.format(self._getDbTimeFormat());
+                            element.find('.fc-content .fc-time').text(displayTime);
+                        }
                     }
                 }
 
@@ -662,6 +666,16 @@ return AbstractRenderer.extend({
         return Promise.resolve(prom);
     },
     /**
+     * Returns the time format from database parameters (only hours and minutes).
+     * FIXME: this looks like a weak heuristic...
+     *
+     * @private
+     * @returns {string}
+     */
+    _getDbTimeFormat: function () {
+        return _t.database.parameters.time_format.search('%H') !== -1 ? 'HH:mm' : 'hh:mm a';
+    },
+    /**
      * Prepare context to display in the popover.
      *
      * @private
@@ -686,8 +700,7 @@ return AbstractRenderer.extend({
 
         // Do not display timing if the event occur across multiple days. Otherwise use user's timing preferences
         if (!this.hideTime && !eventData.record.allday && isSameDayEvent) {
-            // Fetch user's preferences
-            var dbTimeFormat = _t.database.parameters.time_format.search('%H') != -1 ? 'HH:mm': 'hh:mm a';
+            var dbTimeFormat = this._getDbTimeFormat();
 
             context.eventTime.time = start.clone().format(dbTimeFormat) + ' - ' + end.clone().format(dbTimeFormat);
 

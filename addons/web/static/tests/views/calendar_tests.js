@@ -1732,6 +1732,108 @@ QUnit.module('Views', {
         assert.strictEqual($('#ui-datepicker-div:empty').length, 0, "should have a clean body");
     });
 
+    QUnit.test('show start time of single day event for month mode', async function (assert) {
+        assert.expect(4);
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" ' +
+                'string="Events" ' +
+                'date_start="start" ' +
+                'date_stop="stop" ' +
+                'all_day="allday" ' +
+                'mode="month"/>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                getTZOffset: function () {
+                    return -240;
+                },
+            },
+        });
+
+        assert.strictEqual(calendar.$('.fc-event:contains(event 2) .fc-content .fc-time').text(), "06:55",
+            "should have a correct time 06:55 AM in month mode");
+        assert.strictEqual(calendar.$('.fc-event:contains(event 4) .fc-content .fc-time').text(), "",
+            "should not display a time for all day event");
+        assert.strictEqual(calendar.$('.fc-event:contains(event 5) .fc-content .fc-time').text(), "",
+            "should not display a time for multiple days event");
+        // switch to week mode
+        await testUtils.dom.click(calendar.$('.o_calendar_button_week'));
+        assert.strictEqual(calendar.$('.fc-event:contains(event 2) .fc-content .fc-time').text(), "",
+            "should not show time in week mode as week mode already have time on y-axis");
+
+        calendar.destroy();
+    });
+
+    QUnit.test('start time should not shown for date type field', async function (assert) {
+        assert.expect(1);
+
+        this.data.event.fields.start.type = "date";
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" ' +
+                'string="Events" ' +
+                'date_start="start" ' +
+                'date_stop="stop" ' +
+                'mode="month"/>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                getTZOffset: function () {
+                    return -240;
+                },
+            },
+        });
+
+        assert.strictEqual(calendar.$('.fc-event:contains(event 2) .fc-content .fc-time').text(), "",
+            "should not show time for date type field");
+
+        calendar.destroy();
+    });
+
+    QUnit.test('start time should not shown in month mode if hide_time is true', async function (assert) {
+        assert.expect(1);
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" ' +
+                'string="Events" ' +
+                'date_start="start" ' +
+                'date_stop="stop" ' +
+                'hide_time="True" ' +
+                'mode="month"/>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                getTZOffset: function () {
+                    return -240;
+                },
+            },
+        });
+
+        assert.strictEqual(calendar.$('.fc-event:contains(event 2) .fc-content .fc-time').text(), "",
+            "should not show time for hide_time attribute");
+
+        calendar.destroy();
+    });
+
     QUnit.test('readonly date_start field', async function (assert) {
         assert.expect(4);
 
@@ -2523,11 +2625,11 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(calendar.$('.fc-event:eq(0)').text().trim(), "event 1");
+        assert.strictEqual(calendar.$('.fc-event:eq(0)').text().replace(/\s/g, ''), "08:00event1");
         await testUtils.dom.click(calendar.$('.fc-event:eq(0)'));
         assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "12/09/2016 08:00:00");
 
-        assert.strictEqual(calendar.$('.fc-event:eq(5)').text().trim(), "event 6");
+        assert.strictEqual(calendar.$('.fc-event:eq(5)').text().replace(/\s/g, ''), "16:00event6");
         await testUtils.dom.click(calendar.$('.fc-event:eq(5)'));
         assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "12/16/2016 16:00:00");
 
@@ -2538,11 +2640,11 @@ QUnit.module('Views', {
         );
         await testUtils.nextTick();
 
-        assert.strictEqual(calendar.$('.fc-event:first').text().trim(), "event 6");
+        assert.strictEqual(calendar.$('.fc-event:eq(0)').text().replace(/\s/g, ''), "16:00event6");
         await testUtils.dom.click(calendar.$('.fc-event:eq(0)'));
         assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "11/27/2016 16:00:00");
 
-        assert.strictEqual(calendar.$('.fc-event:eq(1)').text().trim(), "event 1");
+        assert.strictEqual(calendar.$('.fc-event:eq(1)').text().replace(/\s/g, ''), "08:00event1");
         await testUtils.dom.click(calendar.$('.fc-event:eq(1)'));
         assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "12/09/2016 08:00:00");
 
