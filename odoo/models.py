@@ -1099,12 +1099,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         field_names = set(field_names)
         for check in self._constraint_methods:
             if not field_names.isdisjoint(check._constrains):
-                try:
-                    check(self)
-                except ValidationError as e:
-                    raise
-                except Exception as e:
-                    raise ValidationError("%s\n\n%s" % (_("Error while validating constraint"), tools.ustr(e)))
+                check(self)
 
     @api.model
     def default_get(self, fields_list):
