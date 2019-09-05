@@ -773,8 +773,6 @@ actual arch.
         children = True
 
         modifiers = {}
-        if model not in self.env:
-            self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
 
         if node.tag == 'field':
