@@ -41,6 +41,10 @@ class AccountAnalyticLine(models.Model):
             return {'domain': {
                 'task_id': [('project_id', '=', self.project_id.id)]
             }}
+        return {'domain': {
+            'task_id': [('project_id.allow_timesheets', '=', True)]
+        }}
+
 
     @api.onchange('task_id')
     def _onchange_task_id(self):
