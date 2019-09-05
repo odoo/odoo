@@ -26,7 +26,9 @@ class PortalMixin(models.AbstractModel):
         }
         if hasattr(self, 'access_token') and self.access_token:
             params['access_token'] = self.access_token
-        if hasattr(self, 'partner_id') and self.partner_id:
+
+        # signup_get_auth_param comes from auth_signup which is not in the dependencies
+        if hasattr(self, 'partner_id') and self.partner_id and hasattr(self.partner_id, 'signup_get_auth_param'):
             params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
 
         return '/mail/view?' + url_encode(params)
