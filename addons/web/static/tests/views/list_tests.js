@@ -3826,12 +3826,13 @@ QUnit.module('Views', {
             },
         });
 
-        list.update({groupBy: []});
+        await list.update({groupBy: []});
 
         await testUtils.dom.click(list.$('.o_data_cell:eq(0)'));
 
         await testUtils.dom.click(list.$('.o_selected_row .o_data_cell .o_field_many2one input'));
-        $('.ui-autocomplete .ui-menu-item:contains("Search More")').mouseenter().click();
+        await testUtils.dom.triggerEvents($('.ui-autocomplete a:contains(Search More)'),
+            ['mouseenter', 'click']);
 
         assert.containsOnce($('body'), '.modal-content');
 
