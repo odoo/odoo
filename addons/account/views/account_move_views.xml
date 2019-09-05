@@ -466,7 +466,8 @@
                     <header>
                         <!-- Post -->
                         <button name="action_post" string="Post" class="oe_highlight"
-                                type="object" groups="account.group_account_invoice"/>
+                                type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                         <!-- Send (only invoices) -->
                         <button name="action_invoice_sent"
                                 type="object"
