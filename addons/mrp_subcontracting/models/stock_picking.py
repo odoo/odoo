@@ -123,12 +123,13 @@ class StockPicking(models.Model):
         product = subcontract_move.product_id
         warehouse = self._get_warehouse(subcontract_move)
         vals = {
+            'company_id': subcontract_move.company_id.id,
             'procurement_group_id': group.id,
             'product_id': product.id,
             'product_uom_id': subcontract_move.product_uom.id,
             'bom_id': bom.id,
-            'location_src_id': subcontract_move.picking_id.partner_id.property_stock_subcontractor.id,
-            'location_dest_id': subcontract_move.picking_id.partner_id.property_stock_subcontractor.id,
+            'location_src_id': subcontract_move.picking_id.partner_id.with_context(force_company=subcontract_move.company_id.id).property_stock_subcontractor.id,
+            'location_dest_id': subcontract_move.picking_id.partner_id.with_context(force_company=subcontract_move.company_id.id).property_stock_subcontractor.id,
             'product_qty': subcontract_move.product_uom_qty,
             'picking_type_id': warehouse.subcontracting_type_id.id
         }
@@ -137,7 +138,7 @@ class StockPicking(models.Model):
     def _subcontracted_produce(self, subcontract_details):
         self.ensure_one()
         for move, bom in subcontract_details:
-            mo = self.env['mrp.production'].create(self._prepare_subcontract_mo_vals(move, bom))
+            mo = self.env['mrp.production'].with_context(force_company=move.company_id.id).create(self._prepare_subcontract_mo_vals(move, bom))
             self.env['stock.move'].create(mo._get_moves_raw_values())
             mo.action_confirm()
 
