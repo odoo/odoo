@@ -11,7 +11,7 @@ from collections import defaultdict
 import uuid
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import AccessError, ValidationError, MissingError
+from odoo.exceptions import AccessError, ValidationError, MissingError, UserError
 from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -88,6 +88,9 @@ class IrAttachment(models.Model):
         dirname = os.path.dirname(full_path)
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
+        # prevent sha-1 collision
+        if os.path.isfile(full_path) and not self._same_content(bin_data, full_path):
+            raise UserError("The attachment is colliding with an existing file.")
         return fname, full_path
 
     @api.model
@@ -222,6 +225,20 @@ class IrAttachment(models.Model):
         """
         # an empty file has a checksum too (for caching)
         return hashlib.sha1(bin_data or b'').hexdigest()
+
+    @api.model
+    def _same_content(self, bin_data, filepath):
+        BLOCK_SIZE = 1024
+        with open(filepath, 'rb') as fd:
+            i = 0
+            while True:
+                data = fd.read(BLOCK_SIZE)
+                if data != bin_data[i * BLOCK_SIZE:(i + 1) * BLOCK_SIZE]:
+                    return False
+                if not data:
+                    break
+                i += 1
+        return True
 
     def _compute_mimetype(self, values):
         """ compute the mimetype of the given values
