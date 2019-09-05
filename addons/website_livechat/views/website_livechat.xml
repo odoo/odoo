@@ -225,7 +225,7 @@
                                     <t t-foreach="channels" t-as="channel">
                                         <div t-attf-class="media#{' mt-3' if channel_index else ''}">
                                             <a t-attf-href="/livechat/channel/#{ slug(channel)}">
-                                                <img t-att-src="channel.image_64 and image_data_uri(channel.image_64) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
+                                                <img t-att-src="channel.image_128 and image_data_uri(channel.image_128) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
                                             </a>
                                             <div class="media-body">
                                                 <h4><t t-esc="channel.name"/></h4>
