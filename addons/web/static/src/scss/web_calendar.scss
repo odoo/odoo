@@ -581,38 +581,8 @@ $o-cw-filter-avatar-size: 20px;
 }
 
 // ===============  Generate color classes ===============
-// These colors are specifically designed for calendar
-// ===============  =============== ======================
-$o-cw-colors: (
-    #5e0231, // 1:
-    #97743a, // 2:
-    #F4A460, // 3:
-    #F7CD1F, // 4:
-    #6CC1ED, // 5:
-    #4285F4, // 6: Default User
-    #8E24AA, // 7:
-    #2C8397, // 8:
-    #475577, // 9:
-    #D6145F, // 10:
-    #30C381, // 11:
-    #9365B8, // 12:
-    #aa4b6b, // 13:
-    #348F50, // 14:
-    #AA3A38, // 15:
-    #173e43, // 16:
-    #134E5E, // 17:
-    #795548, // 18:
-    #6be585, // 19:
-    #999966, // 20:
-    #e9d362, // 21:
-    #b56969, // 22:
-    #bdc3c7, // 23:
-    #649173, // 24:
-);
-
-
-@for $i from 1 to length($o-cw-colors) + 1 {
-    $color: nth($o-cw-colors, $i);
+@for $i from 1 through length($o-colors-complete) {
+    $color: nth($o-colors-complete, $i);
 
     .o_calendar_view .fc-view {
         .fc-event.o_calendar_color_#{$i} {
