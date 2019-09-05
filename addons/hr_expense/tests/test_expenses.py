@@ -53,6 +53,19 @@ class TestCheckJournalEntry(TransactionCase):
             'company_id': company.id
         })
 
+        self.bank_journal = self.env['account.journal'].create({
+            'name': 'Payment Journal',
+            'code': 'PAY',
+            'type': 'bank',
+            'company_id': company.id
+        })
+
+        self.outbound_pay_method = self.env['account.payment.method'].create({
+            'name': 'outbound',
+            'code': 'out',
+            'payment_type': 'outbound',
+        })
+
         self.expense = self.env['hr.expense.sheet'].create({
             'name': 'Expense for John Smith',
             'employee_id': self.employee.id,
@@ -107,3 +120,40 @@ class TestCheckJournalEntry(TransactionCase):
         self.assertEquals(expense.tax_ids.ids, [self.tax.id])
         self.assertEquals(expense.total_amount, 10863.60)
         self.assertTrue(expense.employee_id in user_demo.employee_ids)
+
+    def test_partial_payment_multiexpense(self):
+        self.expense_line.unit_amount = 200
+        expense_line2 = self.expense_line.copy({
+            'sheet_id': self.expense.id
+        })
+        self.expense.approve_expense_sheets()
+        self.expense.action_sheet_move_create()
+        exp_move_lines = self.expense.account_move_id.line_ids
+        payable_move_lines = exp_move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
+        self.assertEquals(len(payable_move_lines), 2)
+
+        WizardRegister = self.env['hr.expense.sheet.register.payment.wizard'].with_context(active_ids=self.expense.ids)
+
+        register_pay1 = WizardRegister.create({
+            'journal_id': self.bank_journal.id,
+            'payment_method_id': self.outbound_pay_method.id,
+            'amount': 300,
+        })
+        register_pay1.expense_post_payment()
+
+        exp_move_lines = self.expense.account_move_id.line_ids
+        payable_move_lines = exp_move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
+        self.assertEquals(len(payable_move_lines.filtered(lambda l: l.reconciled)), 1)
+
+        register_pay2 = WizardRegister.create({
+            'journal_id': self.bank_journal.id,
+            'payment_method_id': self.outbound_pay_method.id,
+            'amount': 100,
+        })
+        register_pay2.expense_post_payment()
+        exp_move_lines = self.expense.account_move_id.line_ids
+        payable_move_lines = exp_move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
+        self.assertEquals(len(payable_move_lines.filtered(lambda l: l.reconciled)), 2)
+
+        full_reconcile = payable_move_lines.mapped('full_reconcile_id')
+        self.assertEquals(len(full_reconcile), 1)
