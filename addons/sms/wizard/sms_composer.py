@@ -21,7 +21,16 @@ class SendSMS(models.TransientModel):
             return result
 
         result['res_model'] = result.get('res_model') or self.env.context.get('active_model')
-        result['composition_mode'] = result.get('composition_mode') or 'comment'
+        result['composition_mode'] = result.get('composition_mode')
+
+        # guess the composition mode, if multiples ids => mass composition else comment
+        if self.env.context.get('default_composition_mode') and self.env.context.get('default_composition_mode') == "guess":
+            if self.env.context.get('active_ids') and len(self.env.context.get('active_ids')) > 1:
+                result['composition_mode'] = 'mass'
+                result['res_id'] = False
+            else:
+                result['composition_mode'] = 'comment'
+                result['res_ids'] = False
 
         if not result.get('active_domain'):
             result['active_domain'] = repr(self.env.context.get('active_domain', []))
@@ -124,7 +133,7 @@ class SendSMS(models.TransientModel):
     @api.onchange('composition_mode', 'res_model', 'res_id', 'template_id')
     def _onchange_template_id(self):
         if self.template_id and self.composition_mode == 'comment' and self.res_id:
-            self.body = self.template_id._render_template(self.template_id.body, self.res_model, [self.res_id])[self.res_id]
+            self.body = self.template_id._get_translated_bodies([self.res_id])[self.res_id]
         elif self.template_id:
             self.body = self.template_id.body
 
@@ -216,11 +225,7 @@ class SendSMS(models.TransientModel):
 
     def _prepare_body_values(self, records):
         if self.template_id and self.body == self.template_id.body:
-            lang_to_rids = self.template_id._get_ids_per_lang(records.ids)
-            all_bodies = {}
-            for lang, rids in lang_to_rids.items():
-                template = self.template_id.with_context(lang=lang)
-                all_bodies.update(template._render_template(template.body, records._name, rids))
+            all_bodies = self.template_id._get_translated_bodies(records.ids)
         else:
             all_bodies = self.env['mail.template']._render_template(self.body, records._name, records.ids)
         return all_bodies
