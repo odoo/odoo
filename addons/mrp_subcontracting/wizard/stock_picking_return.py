@@ -12,7 +12,7 @@ class ReturnPicking(models.TransientModel):
         res = super(ReturnPicking, self)._onchange_picking_id()
         if not any(self.product_return_moves.filtered(lambda r: r.quantity > 0).move_id.mapped('is_subcontract')):
             return res
-        subcontract_location = self.picking_id.partner_id.property_stock_subcontractor
+        subcontract_location = self.picking_id.partner_id.with_context(force_company=self.picking_id.company_id.id).property_stock_subcontractor
         self.location_id = subcontract_location.id
         domain_location = OR([
             ['|', ('id', '=', self.original_location_id.id), ('return_location', '=', True)],
