@@ -563,8 +563,10 @@ class AccountReconcileModel(models.Model):
 
         if line_residual > total_residual:
             amount_percentage = (total_residual / line_residual) * 100
-        else:
+        elif total_residual:
             amount_percentage = (line_residual / total_residual) * 100
+        else:
+            return False
         return amount_percentage >= self.match_total_amount_param
 
     @api.multi
