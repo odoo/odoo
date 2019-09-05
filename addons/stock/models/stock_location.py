@@ -69,9 +69,8 @@ class Location(models.Model):
 
     @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
-        """ Forms complete name of location from parent location to child location. """
         for location in self:
-            if location.location_id.complete_name:
+            if location.location_id and location.usage != 'view':
                 location.complete_name = '%s/%s' % (location.location_id.complete_name, location.name)
             else:
                 location.complete_name = location.name
@@ -121,19 +120,6 @@ class Location(models.Model):
                 else:
                     super(Location, children_location - self).with_context({'do_not_check_quant': True}).write(values)
         return super(Location, self).write(values)
-
-    def name_get(self):
-        ret_list = []
-        for location in self:
-            orig_location = location
-            name = location.name
-            while location.location_id and location.usage != 'view':
-                location = location.location_id
-                if not name:
-                    raise UserError(_('You have to set a name for this location.'))
-                name = location.name + "/" + name
-            ret_list.append((orig_location.id, name))
-        return ret_list
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
