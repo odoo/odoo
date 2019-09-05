@@ -1,19 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_paypal
+# 	* payment_paypal
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,29 +22,23 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token
-msgid "Access Token"
-msgstr "访问令牌"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"<br/><br/>\n"
+"                Thanks,<br/>\n"
+"                <b>The Odoo Team</b>"
+msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token_validity
-msgid "Access Token Validity"
-msgstr "访问令牌的有效性"
+#: code:addons/payment_paypal/models/payment.py:0
+#, python-format
+msgid "Add your Paypal account to Odoo"
+msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr "Authorize.Net"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr "Buckaroo"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid "Email"
+msgstr "EMail"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
@@ -57,29 +51,34 @@ msgid "Fixed international fees"
 msgstr "固定国际费用"
 
 #. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"Hello,\n"
+"                <br/><br/>\n"
+"                You have received a payment through PayPal.<br/>\n"
+"                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
+"                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
+msgstr ""
+
+#. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
 msgid "How to configure your paypal account?"
 msgstr "如何设置您的Paypal账户？"
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr "手工配置"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
+msgid "Merchant Account ID"
+msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr "Ogone"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
-msgstr "PayUmoney"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
+msgid "PDT Identity Token"
+msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "付款收单方"
+msgstr "付款收单单位"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
@@ -94,14 +93,9 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
 msgid "Paypal"
 msgstr "Paypal"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
-msgid "Paypal Email ID"
-msgstr "邮箱地址支付ID"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
@@ -109,17 +103,7 @@ msgid "Paypal Instant Payment Notification"
 msgstr "Paypal 即时支付提醒"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
-msgid "Paypal Merchant ID"
-msgstr "Paypal 销售商 ID"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
-msgid "Paypal PDT Token"
-msgstr "Paypal 付款数据传输标记"
-
-#. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:138
+#: code:addons/payment_paypal/models/payment.py:0
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr "Paypal: 接收到的数据缺失参照 (%s) 或 txn_id (%s)"
@@ -130,24 +114,9 @@ msgid "Provider"
 msgstr "供应商"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_password
-msgid "Rest API Password"
-msgstr "重置 API 密码"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_username
-msgid "Rest API Username"
-msgstr "重置 API 用户名"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
-msgstr "Sips"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
-msgstr "条带"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid "Set Paypal credentials"
+msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
@@ -167,11 +136,6 @@ msgid "Use IPN"
 msgstr "使用 IPN"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_enabled
-msgid "Use Rest API"
-msgstr "使用 Rest API"
-
-#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
 msgstr "可变国内费用(百分比)"
@@ -180,8 +144,3 @@ msgstr "可变国内费用(百分比)"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
 msgstr "可变国际费用（百分比）"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr "电汇"

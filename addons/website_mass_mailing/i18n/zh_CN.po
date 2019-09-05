@@ -1,29 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_mass_mailing
+# 	* website_mass_mailing
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# v2exerer <9010446@qq.com>, 2018
-# Siyuan Gu <siyuancn@hotmail.com>, 2018
-# Gary Wei <Gary.wei@elico-corp.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# Lisa Zhang <lzh@odoo.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# snow wang <147156565@qq.com>, 2018
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# v2exerer <9010446@qq.com>, 2019
+# Gary Wei <Gary.wei@elico-corp.com>, 2019
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
+# bf2549c5415a9287249cba2b8a5823c7, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# Lisa Zhang <lzh@odoo.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: snow wang <147156565@qq.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,39 +30,39 @@ msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid "&amp;times;"
-msgstr "&amp;times;"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid ""
-"<strong>Newsletter Popup!</strong> The newsletter popup snippet effect is "
-"active on this page. Click"
-msgstr "<strong>时事快讯!</strong> 此时事快讯片段效果被激活这个页面上。点击"
+"<strong>Newsletter Popup!</strong> The newsletter popup is active on this "
+"page."
+msgstr ""
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:15
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 #, python-format
 msgid "Add a Newsletter Subscribe Button"
 msgstr "添加一个通讯订阅按钮"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:53
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 #, python-format
 msgid "Add a Newsletter Subscribe Popup"
 msgstr "添加一个快讯订阅弹出"
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
+msgid "Always First."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
+msgid "Be the first to find out all the latest news, products and trends."
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Change Newsletter"
 msgstr "变更新闻信"
-
-#. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_res_config_settings
-msgid "Config Settings"
-msgstr "配置设定"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
@@ -74,9 +71,31 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
-msgid "Encourage to subscribe to mailing lists with a popup"
-msgstr "鼓励通过弹出窗口订阅邮件列表"
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_uid
+msgid "Created by"
+msgstr "创建者"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "DRAG BUILDING BLOCKS HERE"
+msgstr "把模块拖拉到这"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
+msgid "Edit Popup"
+msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
@@ -86,12 +105,12 @@ msgstr "Facebook"
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
 msgid "Google Plus"
-msgstr "谷歌 Plus"
+msgstr "Google Plus"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid "Here To Edit Dialog Content"
-msgstr "在这里编辑对话内容"
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__id
+msgid "ID"
+msgstr "ID"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
@@ -99,32 +118,54 @@ msgid "Instagram"
 msgstr "Instagram"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "LinkedIn"
-msgstr "LinkedIn"
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup____last_update
+msgid "Last Modified on"
+msgstr "最后更改日"
 
 #. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_mail_mass_mailing_list
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_uid
+msgid "Last Updated by"
+msgstr "最后更新者"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_date
+msgid "Last Updated on"
+msgstr "更新时间"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "LinkedIn"
+msgstr "领英"
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_mailing_list
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__mailing_list_id
 msgid "Mailing List"
 msgstr "邮件列表"
 
 #. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:21
-#, python-format
-msgid "Newsletter"
-msgstr "新闻信"
+#: model:ir.model,name:website_mass_mailing.model_website_mass_mailing_popup
+msgid "Mailing list popup"
+msgstr ""
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.view_mail_mass_mailing_list_form
-msgid "Popup Content"
-msgstr "弹出内容"
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
+#, python-format
+msgid "Newsletter"
+msgstr "快讯"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Subscribe"
 msgstr "订阅"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Success"
+msgstr "成功"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
@@ -132,18 +173,9 @@ msgid "Thanks"
 msgstr "谢谢"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
-msgid "Thanks for your subscription!"
-msgstr "感谢你的订阅!"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
-msgid ""
-"This adds a new Newsletter Popup snippet to drag & drop on your website "
-"pages. It triggers a popup when visitors land on the page. This popup "
-"prompts them to enter their email address to join a mailing list."
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__toast_content
+msgid "Toast Content"
 msgstr ""
-"这增加了一个新的时事快讯片段，以拖放到在你的网站页面上。当访问者登陆页面时，会弹出一个弹出窗口。提示他们输入他们的电子邮件地址加入邮件列表。"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
@@ -151,34 +183,26 @@ msgid "Twitter"
 msgstr "Twitter"
 
 #. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:83
-#, python-format
-msgid "Type Here ..."
-msgstr "在这里输入..."
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__website_id
+msgid "Website"
+msgstr "网站"
 
 #. module: website_mass_mailing
-#: model:res.groups,name:website_mass_mailing.group_website_popup_on_exit
-msgid "Use subscription pop up on the website"
-msgstr "使用网站的弹出订阅"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_res_config_settings__group_website_popup_on_exit
-msgid "Website Popup"
-msgstr "网站弹出窗口"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list__popup_content
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__popup_content
 msgid "Website Popup Content"
 msgstr "网站弹出内容"
 
 #. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list__popup_redirect_url
-msgid "Website Popup Redirect URL"
-msgstr "网站弹出重新定向网址"
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__website_popup_ids
+msgid "Website Popups"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.mailing_list_view_form
+msgid "Website popups"
+msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "your email..."
-msgstr "您的电子邮件..."
+msgstr "您的EMail..."

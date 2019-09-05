@@ -74,8 +74,8 @@
                     <group>
                         <group>
                             <field name="owner_user_id" string="Requested By" invisible="1"/>
-                            <field name="equipment_id"  context="{'default_category_id':category_id}"/>
-                            <field name="category_id" groups="maintenance.group_equipment_manager" attrs="{'invisible': [('equipment_id', '=', False)]}"/>
+                            <field name="equipment_id"  context="{'default_company_id':company_id, 'default_category_id':category_id}"/>
+                            <field name="category_id" groups="maintenance.group_equipment_manager" context="{'default_company_id':company_id}" attrs="{'invisible': [('equipment_id', '=', False)]}"/>
                             <field name="request_date" readonly="True"/>
                             <field name="done" invisible="1"/>
                             <field name="close_date" attrs="{'invisible': [('done', '!=', True)]}" readonly="True"/>
@@ -94,6 +94,7 @@
                             </div>
                             <field name="priority" widget="priority"/>
                             <field name="email_cc" string="Email cc" groups="base.group_no_one"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <field name='description' placeholder="Internal Note ......."/>
@@ -338,6 +339,7 @@
                         <button name="%(hr_equipment_request_action_from_equipment)d"
                             type="action"
                             class="oe_stat_button"
+                            context="{'default_company_id': company_id}"
                             icon="fa-wrench">
                             <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                         </button>
@@ -350,12 +352,12 @@
                     <group>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="category_id" options="{&quot;no_open&quot;: True}"/>
+                            <field name="category_id" options="{&quot;no_open&quot;: True}" context="{'default_company_id':company_id}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="owner_user_id" string="Owner"/>
                         </group>
                         <group>
-                            <field name="maintenance_team_id" attrs="{'required': [('period', '!=', 0)]}"/>
+                            <field name="maintenance_team_id" attrs="{'required': [('period', '!=', 0)]}" context="{'default_company_id':company_id}"/>
                             <field name="technician_user_id"/>
                             <field name="assign_date" groups="base.group_no_one"/>
                             <field name="scrap_date" groups="base.group_no_one"/>

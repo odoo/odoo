@@ -6,11 +6,14 @@ from pathlib import Path
 import datetime
 from OpenSSL import crypto
 import urllib3
+import io
 import json
 import logging
 import subprocess
+import zipfile
 
 from odoo import _
+from odoo.modules.module import get_resource_path
 
 _logger = logging.getLogger(__name__)
 
@@ -59,6 +62,11 @@ def get_mac_address():
     except:
         return netifaces.ifaddresses('wlan0')[netifaces.AF_LINK][0]['addr']
 
+def get_ssid():
+    process_iwconfig = subprocess.Popen(['iwconfig'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process_grep = subprocess.Popen(['grep', 'ESSID:"'], stdin=process_iwconfig.stdout, stdout=subprocess.PIPE)
+    return subprocess.check_output(['sed', 's/.*"\\(.*\\)"/\\1/'], stdin=process_grep.stdout).decode('utf-8').rstrip()
+
 def get_odoo_server_url():
     return read_file_first_line('odoo-remote-server.conf')
 
@@ -102,6 +110,26 @@ def load_certificate():
             subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
             subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"])
             subprocess.check_call(["sudo", "service", "nginx", "restart"])
+
+def download_drivers(auto=True):
+    """
+    Get the drivers from the configured Odoo server
+    """
+    server = get_odoo_server_url()
+    if server:
+        urllib3.disable_warnings()
+        pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
+        server = server + '/iot/get_drivers'
+        try:
+            resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto})
+            if resp.data:
+                subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+                zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
+                zip_file.extractall(get_resource_path('hw_drivers', 'drivers'))
+                subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
+        except Exception as e:
+            _logger.error('Could not reach configured server')
+            _logger.error('A error encountered : %s ' % e)
 
 def read_file_first_line(filename):
     path = Path.home() / filename

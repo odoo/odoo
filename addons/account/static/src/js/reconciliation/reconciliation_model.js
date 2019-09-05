@@ -280,10 +280,6 @@ var StatementModel = BasicModel.extend({
     createProposition: function (handle) {
         var line = this.getLine(handle);
         var prop = _.filter(line.reconciliation_proposition, '__focus');
-        var last = prop[prop.length-1];
-        if (last && !this._isValid(last)) {
-            return Promise.resolve(false);
-        }
         prop = this._formatQuickCreate(line);
         line.reconciliation_proposition.push(prop);
         line.createForm = _.pick(prop, this.quickCreateFields);
@@ -547,25 +543,31 @@ var StatementModel = BasicModel.extend({
      * @returns {Promise}
      */
     quickCreateProposition: function (handle, reconcileModelId) {
+        var self = this;
         var line = this.getLine(handle);
         var reconcileModel = _.find(this.reconcileModels, function (r) {return r.id === reconcileModelId;});
-        var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'force_tax_included', 'tax_ids', 'analytic_tag_ids', 'to_check'];
+        var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'force_tax_included', 'tax_ids', 'analytic_tag_ids', 'to_check', 'amount_from_label_regex', 'decimal_separator'];
         this._blurProposition(handle);
         var focus = this._formatQuickCreate(line, _.pick(reconcileModel, fields));
         focus.reconcileModelId = reconcileModelId;
         line.reconciliation_proposition.push(focus);
+        var defs = [];
         if (reconcileModel.has_second_line) {
-            var second = {};
-            _.each(fields, function (key) {
-                second[key] = ("second_"+key) in reconcileModel ? reconcileModel["second_"+key] : reconcileModel[key];
-            });
-            focus = this._formatQuickCreate(line, second);
-            focus.reconcileModelId = reconcileModelId;
-            line.reconciliation_proposition.push(focus);
-            this._computeReconcileModels(handle, reconcileModelId);
+            defs.push(self._computeLine(line).then(function() {
+                var second = {};
+                _.each(fields, function (key) {
+                    second[key] = ("second_"+key) in reconcileModel ? reconcileModel["second_"+key] : reconcileModel[key];
+                });
+                var second_focus = self._formatQuickCreate(line, second);
+                second_focus.reconcileModelId = reconcileModelId;
+                line.reconciliation_proposition.push(second_focus);
+                self._computeReconcileModels(handle, reconcileModelId);
+            }))
         }
-        line.createForm = _.pick(focus, this.quickCreateFields);
-        return this._computeLine(line);
+        return Promise.all(defs).then(function() {
+            line.createForm = _.pick(focus, self.quickCreateFields);
+            return self._computeLine(line);
+        })
     },
     /**
      * Remove a proposition and switch to an active mode ('create' or 'match_rp' or 'match_other')
@@ -1228,7 +1230,28 @@ var StatementModel = BasicModel.extend({
         var formatOptions = {
             currency_id: line.st_line.currency_id,
         };
-        var amount = values.amount !== undefined ? values.amount : line.balance.amount;
+        var amount;
+        switch(values.amount_type) {
+            case 'percentage':
+                amount = line.balance.amount * values.amount / 100;
+                break;
+            case 'regex':
+                var matching = line.st_line.name.match(new RegExp(values.amount_from_label_regex))
+                amount = null;
+                if (matching && matching.length == 2) {
+                    matching = matching[1].replace(new RegExp('\\D' + values.decimal_separator, 'g'), '');
+                    matching = matching.replace(values.decimal_separator, '.');
+                    amount = parseFloat(matching);
+                }
+                break;
+            case 'fixed':
+                amount = values.amount;
+                break;
+            default:
+                amount = values.amount !== undefined ? values.amount : line.balance.amount;
+        }
+
+
         var prop = {
             'id': _.uniqueId('createLine'),
             'label': values.label || line.st_line.name,
@@ -1242,8 +1265,7 @@ var StatementModel = BasicModel.extend({
             'credit': 0,
             'date': values.date ? values.date : field_utils.parse.date(today, {}, {isUTC: true}),
             'force_tax_included': values.force_tax_included || false,
-            'base_amount': values.amount_type !== "percentage" ?
-                (amount) : line.balance.amount * values.amount / 100,
+            'base_amount': amount,
             'percent': values.amount_type === "percentage" ? values.amount : null,
             'link': values.link,
             'display': true,

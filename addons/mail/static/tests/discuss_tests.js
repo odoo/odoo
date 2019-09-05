@@ -1119,6 +1119,53 @@ QUnit.test('drag and drop file in composer [REQUIRE NON-INCOGNITO WINDOW]', asyn
     discuss.destroy();
 });
 
+QUnit.test('non-deletable message attachments', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.message'].records = [{
+        attachment_ids: [{
+            filename: "text.txt",
+            id: 250,
+            mimetype: 'text/plain',
+            name: "text.txt",
+        }, {
+            filename: "image.png",
+            id: 251,
+            mimetype: 'image/png',
+            name: "image.png",
+        }],
+        author_id: [5, "Demo User"],
+        body: "<p>test</p>",
+        id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+        model: 'some.document',
+        record_name: "SomeDocument",
+        res_id: 100,
+    }];
+
+    const discuss = await createDiscuss({
+        context: {},
+        data: this.data,
+        params: {},
+        services: this.services,
+        session: {
+            partner_id: 3,
+        },
+    });
+    assert.containsN(
+        discuss,
+        '.o_attachment',
+        2,
+        "should display 2 attachments");
+    assert.containsNone(
+        discuss.$('.o_attachment'),
+        'o_attachment_delete_cross',
+        "attachments should not be deletable");
+
+    discuss.destroy();
+});
+
 QUnit.test('reply to message from inbox', async function (assert) {
     assert.expect(11);
 

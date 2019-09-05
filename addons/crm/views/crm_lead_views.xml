@@ -176,10 +176,14 @@
                                     <field name="partner_address_email"
                                         attrs="{'invisible': [('partner_address_email', '==', False)]}" widget="email" string="Email"/>
                                 </div>
-                                <field name="partner_address_phone"
-                                    attrs="{'invisible': [('partner_address_phone', '==', False)]}" readonly="1" widget="phone" string="Phone"/>
+                                <field string="Phone"
+                                    name="partner_address_phone"
+                                    widget="phone" options="{'enable_sms': True}"
+                                    readonly="1"
+                                    attrs="{'invisible': [('partner_address_phone', '==', False)]}"/>
                                 <field name="phone"
-                                    attrs="{'invisible':  [('partner_address_phone', '!=', False)]}" widget="phone"/>
+                                    widget="phone" options="{'enable_sms': True}"
+                                    attrs="{'invisible':  [('partner_address_phone', '!=', False)]}"/>
                             </group>
                             <group attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <label for="contact_name"/>
@@ -198,7 +202,7 @@
                                 </div>
                                 <field name="email_cc" groups="base.group_no_one"/>
                                 <field name="function"/>
-                                <field name="phone" widget="phone"/>
+                                <field name="phone" widget="phone" options="{'enable_sms': True}"/>
                                 <field name="mobile"/>
                             </group>
                             <group attrs="{'invisible': [('type', '=', 'lead')]}">

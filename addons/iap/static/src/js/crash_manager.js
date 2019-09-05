@@ -20,7 +20,7 @@ CrashManager.include({
      */
     _getButtonMessage: function (isTrial){
         var isEnterprise = _.last(odoo.session_info.server_version_info) === 'e';
-        return isTrial && isEnterprise ? _t('Start a Trial at Odoo') : _t('Buy credits at Odoo');
+        return isTrial && isEnterprise ? _t('Start a Trial at Odoo') : _t('Buy credits');
     },
     /**
      * @override

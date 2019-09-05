@@ -20,7 +20,7 @@ class TestUi(odoo.tests.HttpCase):
 
         # To be able to test reconciliation, admin user must have access to accounting features, so we give him the right group for that
         self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('account.group_account_user').id)]})
-        
+
         payload = {'action':'bank_statement_reconciliation_view', 'statement_line_ids[]': bank_stmt_line.ids}
         prep = requests.models.PreparedRequest()
         prep.prepare_url(url="http://localhost/web#", params=payload)

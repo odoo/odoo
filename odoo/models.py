@@ -289,6 +289,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     _needaction = False         # whether the model supports "need actions" (see mail)
     _translate = True           # False disables translations export for this model
+    _check_company_auto = False
 
     # default values for _transient_vacuum()
     _transient_check_count = 0
@@ -3029,6 +3030,61 @@ Fields:
                 # mention the first one only to keep the error message readable
                 raise ValidationError(_('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
+    def _check_company(self, fnames=None):
+        """ Check the companies of the values of the given field names. """
+        if fnames is None:
+            fnames = self._fields
+
+        regular_fields = []
+        property_fields = []
+        for name in fnames:
+            field = self._fields[name]
+            if field.relational and field.check_company and \
+                    'company_id' in self.env[field.comodel_name]:
+                if not field.company_dependent:
+                    regular_fields.append(name)
+                else:
+                    property_fields.append(name)
+
+        if not (regular_fields or property_fields):
+            return
+
+        inconsistent_fields = set()
+        inconsistent_recs = self.browse()
+        for record in self:
+            company = record.company_id if record._name != 'res.company' else record
+            # The first part of the check verifies that all records linked via relation fields are compatible
+            # with the company of the origin document, i.e. `self.account_id.company_id == self.company_id`
+            for name in regular_fields:
+                if not (record[name].company_id <= company):
+                    inconsistent_fields.add(name)
+                    inconsistent_recs |= record
+            # The second part of the check (for property / company-dependent fields) verifies that the records
+            # linked via those relation fields are compatible with the company that owns the property value, i.e.
+            # the company for which the value is being assigned, i.e:
+            #      `self.property_account_payable_id.company_id == self.env.context['force_company']`
+            if self.env.context.get('force_company'):
+                company = self.env['res.company'].browse(self.env.context['force_company'])
+            else:
+                company = self.env.company
+            for name in property_fields:
+                if not (record[name].company_id <= company):
+                    inconsistent_fields.add(name)
+                    inconsistent_recs |= record
+
+        if inconsistent_fields:
+            message = _("""Some records are incompatible with the company of the %(document_descr)s.
+
+Incompatibilities:
+Fields: %(fields)s
+Record ids: %(records)s
+""")
+            raise UserError(message % {
+                'document_descr': self.env['ir.model']._get(self._name).name,
+                'fields': ', '.join(sorted(inconsistent_fields)),
+                'records': ', '.join([str(a) for a in inconsistent_recs.ids[:6]]),
+            })
+
     @api.model
     def check_access_rights(self, operation, raise_exception=True):
         """ Verifies that the operation given by ``operation`` is allowed for
@@ -3306,6 +3362,7 @@ Fields:
         records_to_inverse = {}                     # {field: records}
         relational_names = []
         protected = set()
+        check_company = False
         for fname in vals:
             field = self._fields[fname]
             if field.inverse:
@@ -3315,7 +3372,10 @@ Fields:
                 records_to_inverse[field] = self.filtered('id')
             if field.relational or self._field_inverses[field]:
                 relational_names.append(fname)
-            protected.update(self._field_computed.get(field, [field]))
+            if field.compute and not field.readonly:
+                protected.update(self._field_computed.get(field, [field]))
+            if fname == 'company_id' or (field.relational and field.check_company):
+                check_company = True
 
         # protect fields being written against recomputation
         with env.protecting(protected, self):
@@ -3386,6 +3446,8 @@ Fields:
             # validate inversed fields
             real_recs._validate_fields(inverse_fields)
 
+        if check_company and self._check_company_auto:
+            self._check_company()
         return True
 
     def _write(self, vals):
@@ -3500,6 +3562,15 @@ Fields:
                 if not field:
                     _logger.warning("%s.create() with unknown fields: %s", self._name, key)
                     continue
+                if field.company_dependent:
+                    cached_def = field.convert_to_cache(field.default(self), self)
+                    cached_val = field.convert_to_cache(val, self)
+                    if cached_val == cached_def:
+                        # val is the same as the default value defined in
+                        # 'ir.property'; by design, 'ir.property' will not
+                        # create entries specific to these records; skipping the
+                        # field inverse saves 4 SQL queries
+                        continue
                 if field.store:
                     stored[key] = val
                 if field.inherited:
@@ -3507,11 +3578,8 @@ Fields:
                 elif field.inverse:
                     inversed[key] = val
                     inversed_fields.add(field)
-                # ignore the protection of compute fields which do not have an
-                # inverse, otherwise their computation are not correctly
-                # performed, neither the fields which are computed in the same
-                # compute method (`test_validation_error`)
-                if not field.compute or field.inverse:
+                # protect non-readonly computed fields against (re)computation
+                if field.compute and not field.readonly:
                     protected.update(self._field_computed.get(field, [field]))
 
             data_list.append(data)
@@ -3574,6 +3642,8 @@ Fields:
         for data in data_list:
             data['record']._validate_fields(set(data['inversed']) - set(data['stored']))
 
+        if self._check_company_auto:
+            records._check_company()
         return records
 
     @api.model
@@ -5443,9 +5513,7 @@ Fields:
                     # Dont force the recomputation of compute fields which are
                     # not stored as this is not really necessary.
                     if field.compute and field.store:
-                        records_to_invalidate = records.filtered(lambda r: not r.id)
-                        self.env.add_to_compute(field, records - records_to_invalidate)
-                        self.env.cache.invalidate([(field, records_to_invalidate._ids)])
+                        self.env.add_to_compute(field, records)
                     else:
                         self.env.cache.invalidate([(field, records._ids)])
                     # recursively trigger recomputation of field's dependents

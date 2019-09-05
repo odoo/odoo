@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_links
+# 	* website_links
 # 
 # Translators:
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Martin Trigaux, 2018
-# Luigi Di Naro <gigidn@gmail.com>, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
-# Paolo Valier, 2018
-# maiolif <maiolif@mgftools.com>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
+# Martin Trigaux, 2019
+# Simone Bernini <simone@aperturelabs.it>, 2019
+# Paolo Valier, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# mymage <stefano.consolaro@mymage.it>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,21 +27,21 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#: code:addons/website_links/static/src/js/website_links_charts.js:49
 #, python-format
 msgid " clicks"
 msgstr "click"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#: code:addons/website_links/static/src/js/website_links_charts.js:99
 #, python-format
 msgid " countries"
 msgstr "nazioni"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#: code:addons/website_links/static/src/js/website_links_charts.js:58
 #, python-format
 msgid "# of clicks"
 msgstr "# di click"
@@ -49,8 +50,8 @@ msgstr "# di click"
 #: model_terms:ir.ui.view,arch_db:website_links.share_page_menu
 msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
 msgstr ""
-"<span title=\"Traccia questa pagina per contare le visualizzazioni\">Traccia"
-" questa Pagina</span>"
+"<span title=\"Traccia questa pagina per contare i clic\">Traccia questa "
+"pagina</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -65,12 +66,12 @@ msgstr "<strong>Medio</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Original URL</strong>"
-msgstr "<strong>URL di origine</strong>"
+msgstr "<strong>URL originale</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Redirected URL</strong>"
-msgstr "<strong>Url di redirect</strong>"
+msgstr "<strong>URL reindirizzato</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -80,12 +81,12 @@ msgstr "<strong>Origine</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Tracked Link</strong>"
-msgstr "<strong>Link Tracciato</strong>"
+msgstr "<strong>Link tracciato</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "All Time"
-msgstr "Di sempre"
+msgstr "Dall'inizio"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -102,6 +103,14 @@ msgstr ""
 
 #. module: website_links
 #. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:411
+#, python-format
+msgid "Copied"
+msgstr "Copiato"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:413
 #: code:addons/website_links/static/src/xml/recent_link.xml:37
 #, python-format
 msgid "Copy"
@@ -113,11 +122,11 @@ msgstr "Copia"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "Edit code"
-msgstr "Modifica il codice"
+msgstr "Modificare il codice"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:356
+#: code:addons/website_links/static/src/js/website_links.js:488
 #, python-format
 msgid "Generating link..."
 msgstr "Generazione link..."
@@ -142,13 +151,13 @@ msgstr "Ultimo mese"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Week"
-msgstr "Ultima Settimana"
+msgstr "Ultima settimana"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
-msgstr "Link Tracker"
+msgstr "Monitoraggio link"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -167,7 +176,7 @@ msgstr "Più cliccato"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Newest"
-msgstr "i più recenti"
+msgstr "I più recenti"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -180,8 +189,8 @@ msgid ""
 "Share this page with a <strong>short link</strong> that includes "
 "<strong>analytics trackers</strong>."
 msgstr ""
-"Condividi questa pagina con un <strong>breve link</strong> che includa un "
-"<strong>track analitico</strong>."
+"Condividi questa pagina con un <strong>link corto</strong> che include "
+"<strong>tracciatori analitici</strong>."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -206,12 +215,28 @@ msgstr "Statistiche"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:229
-#: code:addons/website_links/static/src/js/website_links_charts.js:230
-#: code:addons/website_links/static/src/js/website_links_charts.js:231
+#: code:addons/website_links/static/src/js/website_links.js:208
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:54
+#, python-format
+msgid "The code cannot be left empty"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:156
+#: code:addons/website_links/static/src/js/website_links_charts.js:157
+#: code:addons/website_links/static/src/js/website_links_charts.js:158
 #, python-format
 msgid "There is no data to show"
 msgstr "Non ci sono dati da visualizzare"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:245
+#: code:addons/website_links/static/src/js/website_links_code_editor.js:74
+#, python-format
+msgid "This code is already taken"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -219,8 +244,9 @@ msgid ""
 "Those trackers can be used in Google Analytics to track clicks and visitors,"
 " or in Odoo reports to track opportunities and related revenues."
 msgstr ""
-"Questi link possono esser usati in Google Analytics per tracciare visite e "
-"visitatori, o nei report Odoo per tracciare opportunità e relativi ricavi."
+"Questi link possono esser usati in Google Analytics per tracciare clic e "
+"visitatori, o nei resoconti Odoo per tracciare opportunità e relativi "
+"ricavi."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -229,21 +255,21 @@ msgstr "URL"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:225
+#: code:addons/website_links/static/src/js/website_links.js:303
 #, python-format
 msgid "Unable to get recent links"
 msgstr "Impossibile ottenere link recenti"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#: code:addons/website_links/static/src/js/website_links_charts.js:93
 #, python-format
 msgid "Undefined"
 msgstr "Non definito"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:248
+#: code:addons/website_links/static/src/js/website_links.js:331
 #, python-format
 msgid "You don't have any recent links."
 msgstr "Non ci sono link recenti."
@@ -266,7 +292,7 @@ msgstr "cancella"
 #: code:addons/website_links/static/src/xml/recent_link.xml:8
 #, python-format
 msgid "clicks"
-msgstr "click"
+msgstr "clic"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -275,24 +301,24 @@ msgstr "copia"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:266
+#: code:addons/website_links/static/src/js/website_links.js:361
 #, python-format
 msgid "e.g. Newsletter, Social Network, .."
-msgstr "es. Newsletter, Social Network, .."
+msgstr "es. newsletter, social network, ..."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:263
+#: code:addons/website_links/static/src/js/website_links.js:358
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
-msgstr "es. Promozioni di giugno, Newsletter invernale, .."
+msgstr "es. promozione di giugno, newsletter invernale, ..."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:269
+#: code:addons/website_links/static/src/js/website_links.js:364
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
-msgstr "es. Motori di ricerca, pagina Sito Web, .."
+msgstr "es. motore di ricerca, pagina sito web, ..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -313,4 +339,4 @@ msgstr "ok"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "or"
-msgstr "o"
+msgstr "/"

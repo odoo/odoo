@@ -257,10 +257,12 @@ odoo.define('website_slides.fullscreen', function (require) {
         _onClickTab: function (ev) {
             ev.stopPropagation();
             var $elem = $(ev.currentTarget);
-            var isQuiz = $elem.data('isQuiz');
-            var slideID = parseInt($elem.data('id'));
-            var slide = findSlide(this.slideEntries, {id: slideID, isQuiz: isQuiz});
-            this.set('slideEntry', slide);
+            if ($elem.data('canAccess') === 'True') {
+                var isQuiz = $elem.data('isQuiz');
+                var slideID = parseInt($elem.data('id'));
+                var slide = findSlide(this.slideEntries, {id: slideID, isQuiz: isQuiz});
+                this.set('slideEntry', slide);
+            }
         },
         /**
          * Actively changes the active tab in the sidebar so that it corresponds
@@ -710,7 +712,7 @@ odoo.define('website_slides.fullscreen', function (require) {
          * Creates slides objects from every slide-list-cells attributes
          */
         _getSlides: function (){
-            var $slides = this.$('.o_wslides_fs_sidebar_list_item');
+            var $slides = this.$('.o_wslides_fs_sidebar_list_item[data-can-access="True"]');
             var slideList = [];
             $slides.each(function () {
                 var slideData = $(this).data();

@@ -527,7 +527,7 @@ class SaleOrder(models.Model):
                     continue
                 if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final):
                     if pending_section:
-                        invoice_vals.append((0, 0, pending_section._prepare_invoice_line()))
+                        invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_invoice_line()))
                         pending_section = None
                 invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_invoice_line()))
 
@@ -1172,7 +1172,7 @@ class SaleOrderLine(models.Model):
     ], related='order_id.state', string='Order Status', readonly=True, copy=False, store=True, default='draft')
 
     customer_lead = fields.Float(
-        'Delivery Lead Time', required=True, default=0.0,
+        'Lead Time', required=True, default=0.0,
         help="Number of days between the order confirmation and the shipping of the products to the customer")
 
     display_type = fields.Selection([

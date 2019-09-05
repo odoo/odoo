@@ -57,6 +57,7 @@
         <field name="arch" type="xml">
           <xpath expr="//field[@name='mimetype']" position="after">
               <field name="priority" widget="priority"/>
+              <field name="company_id" groups="base.group_multi_company"/>
           </xpath>
         </field>
     </record>

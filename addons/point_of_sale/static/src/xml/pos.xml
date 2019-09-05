@@ -824,6 +824,9 @@
                                 </div>
                             </t>
                         </t>
+                        <div t-attf-class='button js_email #{widget.pos.get_client() ? "" : "oe_hidden"}'>
+                            <i class='fa fa-inbox' /> Email
+                        </div>
                         <t t-if='widget.pos.config.tip_product_id'>
                             <div class='button js_tip'>
                                 <i class='fa fa-heart' /> Tip

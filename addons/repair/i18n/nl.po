@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * repair
+# 	* repair
 # 
 # Translators:
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2018
-# Martin Trigaux, 2018
-# Cas Vissers <casvissers@brahoo.nl>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Martin Trigaux, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Thijs van Oers <thijsvanoers@yahoo.com>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +33,14 @@ msgstr "${(object.name or '').replace('/','_')}"
 #: model:mail.template,subject:repair.mail_template_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.partner_id.name} Reparatie orders (Ref ${object.name or 'n/a' })"
+"${object.partner_id.name} Reparatie orders (Ref ${object.name or 'n/b' })"
+
+#. module: repair
+#: model:ir.actions.report,print_report_name:repair.action_report_repair_order
+msgid ""
+"(                 object.state == 'draft' and 'Repair Quotation - %s' % "
+"(object.name) or                 'Repair Order - %s' % (object.name))"
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -55,7 +64,7 @@ msgid ""
 msgstr ""
 " * De 'Concept' status wordt gebruikt wanneer een gebruiker een nieuwe reparatieopdracht aan het ingeven is.\n"
 "* De 'Bevestigd' status wordt gebruikt wanneer een gebruiker de reparatieopdracht bevestigd.\n"
-"* De 'Gereed voor reparatie' status wordt gebruikt om te beginnen met het repareren. De gebruiker kan beginnen met de reparatie nadat reparatieopdracht is bevestigd.\n"
+"* De 'Gereed voor reparatie' status wordt gebruikt om te beginnen met het repareren. De gebruiker kan beginnen met de reparatie nadat de reparatieopdracht is bevestigd.\n"
 "* De 'Te factureren \" status wordt gebruikt om de factuur vóór of na de reparatie te genereren.\n"
 "* De 'Verwerkt' status wordt ingesteld als de reparatie is voltooid.\n"
 "* De 'Geannuleerd' status wordt gebruikt wanneer de gebruiker de reparatieopdracht annuleert."
@@ -116,6 +125,13 @@ msgstr ""
 "annuleren, maar zal niet de factuur annuleren. Wilt u doorgaan?</span>"
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid ""
+"<span class=\"o_stat_text\">1</span>\n"
+"                                <span class=\"o_stat_text\">Invoices</span>"
+msgstr ""
+
+#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
 msgstr "<strong>Partij/Serienummer:</strong>"
@@ -163,7 +179,7 @@ msgstr "<strong>Garantie:</strong>"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
 msgid "Action Needed"
-msgstr "Vereist actie"
+msgstr "Actie gevraagd"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
@@ -171,12 +187,17 @@ msgid "Activities"
 msgstr "Activiteiten"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
 msgid "Activity State"
 msgstr "Activiteitsfase"
 
 #. module: repair
-#: selection:repair.line,type:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__type__add
 msgid "Add"
 msgstr "Toevoegen"
 
@@ -191,7 +212,7 @@ msgid "Add quotation notes..."
 msgstr "Voeg offerte notities toe..."
 
 #. module: repair
-#: selection:repair.order,invoice_method:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
 msgid "After Repair"
 msgstr "Na reparatie"
 
@@ -201,7 +222,7 @@ msgid "Attachment Count"
 msgstr "Aantal bijlagen"
 
 #. module: repair
-#: selection:repair.order,invoice_method:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__b4repair
 msgid "Before Repair"
 msgstr "Voor reparatie"
 
@@ -224,15 +245,23 @@ msgid "Cancel Repair Order"
 msgstr "Reparatie order annuleren"
 
 #. module: repair
-#: selection:repair.line,state:0 selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__cancel
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__cancel
 msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:244
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Cannot cancel completed repairs."
 msgstr "Kan voltooide reparaties niet annuleren."
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_category_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_category_id
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom_category_id
+msgid "Category"
+msgstr "Categorie"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
@@ -244,10 +273,20 @@ msgstr ""
 " relatie vinden op naam, BTW nummer of interne referentie"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_tags__color
+msgid "Color Index"
+msgstr "Kleurindex"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Company"
 msgstr "Bedrijf"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_config
+msgid "Configuration"
+msgstr "Configuratie"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -255,14 +294,25 @@ msgid "Confirm Repair"
 msgstr "Bevestig reparatie"
 
 #. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__confirmed
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__confirmed
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-#: selection:repair.line,state:0 selection:repair.order,state:0
 msgid "Confirmed"
 msgstr "Bevestigd"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:607
-#: code:addons/repair/models/repair.py:667
+#: model:ir.model.fields,help:repair.field_repair_fee__product_uom_category_id
+#: model:ir.model.fields,help:repair.field_repair_line__product_uom_category_id
+#: model:ir.model.fields,help:repair.field_repair_order__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Conversie tussen maateenheden kan alleen plaatsvinden als deze behoren tot "
+"dezelfde categorie. De conversie wordt gemaakt op basis van ratio's."
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -272,7 +322,6 @@ msgstr ""
 "U dient ofwel het product, de hoeveelheid of de prijslijst te wijzigen."
 
 #. module: repair
-#: model:ir.actions.act_window,name:repair.act_repair_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
@@ -289,6 +338,12 @@ msgid "Create a new reparation order"
 msgstr "Maak een nieuw reparatie order aan"
 
 #. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
+msgid "Create a new tag"
+msgstr "Maak een nieuw label aan"
+
+#. module: repair
+#: model:ir.actions.act_window,name:repair.act_repair_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Create invoices"
 msgstr "Maak facturen"
@@ -299,6 +354,7 @@ msgstr "Maak facturen"
 #: model:ir.model.fields,field_description:repair.field_repair_line__create_uid
 #: model:ir.model.fields,field_description:repair.field_repair_order__create_uid
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__create_uid
+#: model:ir.model.fields,field_description:repair.field_repair_tags__create_uid
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
@@ -309,12 +365,14 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:repair.field_repair_line__create_date
 #: model:ir.model.fields,field_description:repair.field_repair_order__create_date
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__create_date
+#: model:ir.model.fields,field_description:repair.field_repair_tags__create_date
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_id
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Customer"
 msgstr "Klant"
 
@@ -346,9 +404,10 @@ msgstr "Best. Locatie"
 #: model:ir.model.fields,field_description:repair.field_repair_line__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__display_name
+#: model:ir.model.fields,field_description:repair.field_repair_tags__display_name
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -356,12 +415,12 @@ msgid "Do you really want to create the invoice(s)?"
 msgstr "Wilt u echt de factu(u)r(en) aanmaken?"
 
 #. module: repair
-#: selection:repair.line,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
 msgid "Done"
 msgstr "Gereed"
 
 #. module: repair
-#: selection:repair.line,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__draft
 msgid "Draft"
 msgstr "Concept"
 
@@ -376,6 +435,11 @@ msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
 "Zorg voor de traceerbaarheid van een product dat kan worden opgeslagen in uw"
 " magazijn."
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Exception Activities"
+msgstr "Uitzondering activiteiten"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -428,9 +492,20 @@ msgstr "Geschiedenis"
 #: model:ir.model.fields,field_description:repair.field_repair_line__id
 #: model:ir.model.fields,field_description:repair.field_repair_order__id
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__id
+#: model:ir.model.fields,field_description:repair.field_repair_tags__id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__id
 msgid "ID"
 msgstr "ID"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_icon
+msgid "Icon"
+msgstr "Icoon"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icoon om uitzondering op activiteit aan te geven."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread
@@ -444,6 +519,7 @@ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "indien aangevinkt hebben sommige leveringen een fout."
 
@@ -459,7 +535,7 @@ msgstr ""
 "besteed om de verschillende bewerkingen uit te voeren"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:210
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Insufficient Quantity"
 msgstr "Onvoldoende hoeveelheid"
@@ -476,12 +552,11 @@ msgstr "Voorraadverplaatsing"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Invoice"
 msgstr "Factuur"
 
 #. module: repair
-#: selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__invoice_except
 msgid "Invoice Exception"
 msgstr "Fouten in facturatie"
 
@@ -507,7 +582,7 @@ msgid "Invoice and shipping address:"
 msgstr "Factuur- en afleveradres"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:385
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Invoice created"
 msgstr "Factuur aangemaakt"
@@ -531,11 +606,22 @@ msgid "Is Follower"
 msgstr "Is een volger"
 
 #. module: repair
+#: model:ir.model,name:repair.model_account_move
+msgid "Journal Entries"
+msgstr "Boekingen"
+
+#. module: repair
+#: model:ir.model,name:repair.model_account_move_line
+msgid "Journal Item"
+msgstr "Boeking"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_fee____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_line____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_order____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice____last_update
+#: model:ir.model.fields,field_description:repair.field_repair_tags____last_update
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
@@ -546,6 +632,7 @@ msgstr "Laatst gewijzigd op"
 #: model:ir.model.fields,field_description:repair.field_repair_line__write_uid
 #: model:ir.model.fields,field_description:repair.field_repair_order__write_uid
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__write_uid
+#: model:ir.model.fields,field_description:repair.field_repair_tags__write_uid
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
@@ -556,6 +643,7 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:repair.field_repair_line__write_date
 #: model:ir.model.fields,field_description:repair.field_repair_order__write_date
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__write_date
+#: model:ir.model.fields,field_description:repair.field_repair_tags__write_date
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
@@ -580,7 +668,7 @@ msgstr "Partij/Serienummer"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Hoofd bijlage"
+msgstr "Hoofdbijlage"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
@@ -623,39 +711,30 @@ msgid "Next Activity Type"
 msgstr "Volgende activiteit type"
 
 #. module: repair
-#: selection:repair.order,invoice_method:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__none
 msgid "No Invoice"
 msgstr "Geen factuur"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:308
-#, python-format
-msgid "No account defined for partner \"%s\"."
-msgstr "Geen rekening voor partner \"%s\" gedefinieerd."
-
-#. module: repair
-#: code:addons/repair/models/repair.py:334
-#: code:addons/repair/models/repair.py:362
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Geen rekening gedefinieerd voor product \"%s\"."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:598
-#: code:addons/repair/models/repair.py:658
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
 msgstr "Geen prijslijst gevonden."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:355
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
 msgstr "Geen product gedefinieerd op kosten."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:605
-#: code:addons/repair/models/repair.py:665
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No valid pricelist line found."
 msgstr "Geen geldige prijslijst gevonden."
@@ -691,7 +770,7 @@ msgid "Number of unread messages"
 msgstr "Aantal ongelezen berichten"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:232
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Only draft repairs can be confirmed."
 msgstr "Alleen concept reparaties kunnen bevestigd worden."
@@ -703,25 +782,16 @@ msgid "Operations"
 msgstr "Bewerkingen"
 
 #. module: repair
-#: selection:repair.order,activity_state:0
-msgid "Overdue"
-msgstr "Vervallen"
-
-#. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-msgid "Partner"
-msgstr "Relatie"
-
-#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__operations
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
 msgstr "Onderdelen"
 
 #. module: repair
-#: selection:repair.order,activity_state:0
-msgid "Planned"
-msgstr "Gepland"
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "Please define an accounting sales journal for the company %s (%s)."
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -783,11 +853,12 @@ msgstr "Hvh"
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Quantity"
 msgstr "Hoeveelheid"
 
 #. module: repair
-#: selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__draft
 msgid "Quotation"
 msgstr "Offerte"
 
@@ -812,20 +883,26 @@ msgid "Ready To Repair"
 msgstr "Gereed voor reparatie"
 
 #. module: repair
-#: selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__ready
 msgid "Ready to Repair"
 msgstr "Gereed voor reparatie"
 
 #. module: repair
-#: selection:repair.line,type:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__type__remove
 msgid "Remove"
 msgstr "Verwijderen"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move__repair_ids
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__repair_id
 msgid "Repair"
 msgstr "Repareer"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
+msgid "Repair Fee"
+msgstr "Reperatiekost"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
@@ -833,7 +910,7 @@ msgid "Repair Fees"
 msgstr "Reparatiekosten"
 
 #. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model:ir.model.fields,field_description:repair.field_account_move_line__repair_line_ids
 msgid "Repair Line"
 msgstr "Reparatie regel"
 
@@ -845,6 +922,7 @@ msgstr "Reparatie regel (onderdelen)"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Repair Order"
 msgstr "Reparatieorder"
 
@@ -860,10 +938,17 @@ msgid "Repair Order Reference"
 msgstr "Reparatie orderreferentie"
 
 #. module: repair
+#: model:ir.actions.act_window,name:repair.action_repair_order_graph
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_graph
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
 msgid "Repair Orders"
 msgstr "Reparatieorders"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_tag
+msgid "Repair Orders Tags"
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -876,44 +961,51 @@ msgid "Repair Reference"
 msgstr "Reparatiereferentie"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:196
+#: model:ir.model,name:repair.model_repair_tags
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
+msgid "Repair Tags"
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
 msgstr ""
 "Reparatie moet geannuleerd worden om het terug te zetten naar concept."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:404
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
 msgstr "Reparatie moet bevestigd voor deze gestart kan worden."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:432
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr "Reparatie moet afgerond zijn om de voorraad mutaties te maken."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:415
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
 msgstr "Reparatie moet in reparatie zijn om de reparatie te eindigen."
 
 #. module: repair
-#: code:addons/repair/wizard/repair_cancel.py:20
+#: code:addons/repair/wizard/repair_cancel.py:0
 #, python-format
 msgid "Repair order is not invoiced."
 msgstr "Reparatieorder is niet gefactureerd."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
-#: selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
 msgid "Repaired"
 msgstr "Gerepareerd"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.menu_repair_order
+#: model:ir.ui.menu,name:repair.repair_menu
 msgid "Repairs"
 msgstr "Reparaties"
 
@@ -924,9 +1016,24 @@ msgid "Repairs order"
 msgstr "Reparatieorder"
 
 #. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_reporting
+msgid "Reporting"
+msgstr "Rapportages"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__user_id
+msgid "Responsible"
+msgstr "Verantwoordelijke"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
 msgid "Responsible User"
 msgstr "Verantwoordelijke gebruiker"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS Fout bij versturen"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -951,7 +1058,7 @@ msgid "Send Quotation"
 msgstr "Offerte versturen"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:545
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "Partijnummer is verplicht voor de regel met product '%s'"
@@ -1008,6 +1115,24 @@ msgid "Subtotal"
 msgstr "Subtotaal"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_tags__name
+msgid "Tag Name"
+msgstr "Label naam"
+
+#. module: repair
+#: model:ir.model.constraint,message:repair.constraint_repair_tags_name_uniq
+msgid "Tag name already exists!"
+msgstr "Label naam bestaat al!"
+
+#. module: repair
+#: model:ir.actions.act_window,name:repair.action_repair_order_tag
+#: model:ir.model.fields,field_description:repair.field_repair_order__tag_ids
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_search
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_tree
+msgid "Tags"
+msgstr "Labels"
+
+#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Tax"
 msgstr "BTW"
@@ -1021,12 +1146,12 @@ msgid "Taxes"
 msgstr "BTW"
 
 #. module: repair
-#: sql_constraint:repair.order:0
+#: model:ir.model.constraint,message:repair.constraint_repair_order_name
 msgid "The name of the Repair Order must be unique!"
 msgstr "De naam van de reparatieorder moet uniek zijn!"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:172
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
 "The product unit of measure you chose has a different category than the "
@@ -1036,7 +1161,7 @@ msgstr ""
 " productmaateenheid."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:246
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "The repair order is already invoiced."
 msgstr "De reparatieorder is al gefactureerd."
@@ -1067,14 +1192,9 @@ msgid "This is the location where the product to repair is located."
 msgstr "Dit is de locatie waar het te repareren product zich bevind."
 
 #. module: repair
-#: selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
 msgid "To be Invoiced"
 msgstr "Nog te factureren"
-
-#. module: repair
-#: selection:repair.order,activity_state:0
-msgid "Today"
-msgstr "Vandaag"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1099,15 +1219,20 @@ msgstr "Traceability rapport"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__tracking
 msgid "Tracking"
-msgstr "Tracering"
+msgstr "Traceren"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__type
 msgid "Type"
-msgstr "Type"
+msgstr "Soort"
 
 #. module: repair
-#: selection:repair.order,state:0
+#: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
 msgid "Under Repair"
 msgstr "In reparatie"
 
@@ -1120,6 +1245,7 @@ msgstr "Prijs"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Unit of Measure"
 msgstr "Maateenheid"
 
@@ -1136,7 +1262,7 @@ msgstr "Aantal ongelezen berichten"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Excl. BTW"
+msgstr "Onbelast bedrag"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1144,12 +1270,17 @@ msgid "Untaxed amount"
 msgstr "Excl. BTW"
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "UoM"
+msgstr "Maateenheid"
+
+#. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
 msgstr "Waarschuwing onvoldoende reparatiehoeveelheid"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:172
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
@@ -1176,8 +1307,7 @@ msgid "Yes"
 msgstr "Ja"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:600
-#: code:addons/repair/models/repair.py:660
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
@@ -1187,7 +1317,7 @@ msgstr ""
 "Stel een prijslijst in voordat u een product selecteert."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:296
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
 msgstr "U moet een factuuradres selecteren in het reparatie scherm."

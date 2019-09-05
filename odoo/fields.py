@@ -2200,6 +2200,7 @@ class _Relational(Field):
     _slots = {
         'domain': [],                   # domain for searching values
         'context': {},                  # context for searching values
+        'check_company': False,
     }
 
     def __get__(self, records, owner):
@@ -2239,6 +2240,8 @@ class _Relational(Field):
     _description_context = property(attrgetter('context'))
 
     def _description_domain(self, env):
+        if self.check_company and not self.domain:
+            return "['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
         return self.domain(env[self.model_name]) if callable(self.domain) else self.domain
 
     def null(self, record):
@@ -2265,6 +2268,10 @@ class Many2one(_Relational):
 
     :param delegate: set it to ``True`` to make fields of the target model
         accessible from the current model (corresponds to ``_inherits``)
+
+    :param check_company: add default domain ``['|', ('company_id', '=', False),
+        ('company_id', '=', company_id)]``. Mark the field to be verified in
+        ``_check_company``.
 
     The attribute ``comodel_name`` is mandatory except in the case of related
     fields or field extensions.
@@ -3032,6 +3039,10 @@ class Many2many(_RelationalMulti):
             handling that field (dictionary)
 
         :param limit: optional limit to use upon read (integer)
+
+        :param check_company: add default domain ``['|', ('company_id', '=', False),
+            ('company_id', '=', company_id)]``. Mark the field to be verified in
+            ``_check_company``.
 
     """
     type = 'many2many'

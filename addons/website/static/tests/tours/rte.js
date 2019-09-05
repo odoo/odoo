@@ -70,7 +70,7 @@ tour.register('rte_translator', {
 }, {
     content : "click language dropdown",
     trigger : '.js_language_selector .dropdown-toggle',
-    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor))',
+    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit"]',
 }, {
     content: "click on french version",
     trigger: '.js_language_selector a[data-url_code="fr_BE"]',
@@ -91,6 +91,7 @@ tour.register('rte_translator', {
         action_helper.text('translated french text');
         Wysiwyg.setRange(this.$anchor.contents()[0], 22);
         this.$anchor.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
+        this.$anchor.trigger('input');
     },
 }, {
     content: "translate text with special char",
@@ -100,6 +101,7 @@ tour.register('rte_translator', {
         this.$anchor.prepend('&lt;{translated}&gt;');
         Wysiwyg.setRange(this.$anchor.contents()[0], 0);
         this.$anchor.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
+        this.$anchor.trigger('input');
     },
 }, {
     content: "click on input",
@@ -120,6 +122,7 @@ tour.register('rte_translator', {
 }, {
     content: "check: content is translated",
     trigger: '#wrap p font:first:contains(translated french text)',
+    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit_master"]',
     run: function () {}, // it's a check
 }, {
     content: "check: content with special char is translated",
@@ -168,7 +171,7 @@ tour.register('rte_translator', {
     }, {
     content : "click language dropdown",
     trigger : '.js_language_selector .dropdown-toggle',
-    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor))',
+    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit"]',
 }, {
     content: "return in french",
     trigger : 'html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="fr_BE"]',

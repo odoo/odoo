@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auth_signup
+# 	* auth_signup
 # 
 # Translators:
-# Martin Trigaux, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# keecome <7017511@qq.com>, 2019
+# ChinaMaker <liuct@chinamaker.net>, 2019
+# Lisa Zhang <lzh@odoo.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgid ""
 msgstr "${object.create_uid.name} 来自 ${object.company_id.name} 邀请你连接到Odoo"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:126
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "%s connected"
 msgstr "%s 已连接"
@@ -42,7 +43,7 @@ msgstr "%s 已连接"
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr "<strong>此用户请求密码重置，已发送包含以下链接的电子邮件：</strong>"
+msgstr "<strong>此用户请求密码重置，已发送包含以下链接的EMail：</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -50,6 +51,50 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr "<strong>包含以下订阅链接的邀请函发出：</strong>"
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                 % set invited_users = ctx['invited_users']\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Pending Invitations\n"
+"                    </span><br/><br/>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dear ${object.name or ''},<br/> <br/>\n"
+"                        You added the following user(s) to your database but they haven't registered yet:\n"
+"                        <ul>\n"
+"                            % for invited_user in invited_users:\n"
+"                                <li>${invited_user}</li>\n"
+"                            % endfor\n"
+"                        </ul>\n"
+"                        Follow up with them so they can access your database and start working with you.\n"
+"                        <br/><br/>\n"
+"                        Have a nice day!<br/>\n"
+"                        --<br/>The ${object.company_id.name} Team\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -91,7 +136,7 @@ msgid ""
 "                        % set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')\n"
 "                        Your Odoo domain is: <b><a href=\"${website_url}\">${website_url}</a></b><br/>\n"
 "                        Your sign in email is: <b><a href=\"/web/login?login=${object.email}\" target=\"_blank\">${object.email}</a></b><br/><br/>\n"
-"                        Never heard of Odoo? It’s a all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.\n"
+"                        Never heard of Odoo? It’s an all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.\n"
 "                        <br/><br/>\n"
 "                        Have a look at the <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> to discover the tool.\n"
 "                        <br/><br/>\n"
@@ -139,90 +184,6 @@ msgid ""
 "</td></tr>\n"
 "</table>"
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Odoo欢迎您</span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                        ${object.name}\n"
-"                    </span>\n"
-"                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${object.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.company_id.name}\"/>\n"
-"                </td></tr>\n"
-"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- CONTENT -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <div>\n"
-"                        尊敬的 ${object.name},<br/><br/>\n"
-"                        您已经被邀请 ${object.create_uid.name} 由 ${object.company_id.name} 在Odoo上连接。\n"
-"                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                            <a href=\"${object.signup_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                               接受邀请\n"
-"                            </a>\n"
-"                        </div>\n"
-"                        % set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')\n"
-"                        您的Odoo链接是：<b><a href=\"${website_url}\">${website_url}</a></b><br/>\n"
-"                        您的账号是： <b><a href=\"/web/login?login=${object.email}\" target=\"_blank\">${object.email}</a></b><br/><br/>\n"
-"                        从没听说过Odoo？这是一款功能强大的商业软件，深受300多万用户的喜爱。这将大大提高您的工作效率，提升工作经验。\n"
-"                        <br/><br/>\n"
-"                        看一下 <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo视频中心</a> 参考相关工具。\n"
-"                        <br/><br/>\n"
-"                        享受Odoo！<br/>\n"
-"                        --<br/>${object.company_id.name} 团队\n"
-"                    </div>\n"
-"                </td></tr>\n"
-"                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    ${object.company_id.name}\n"
-"                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    ${object.company_id.phone}\n"
-"                    % if object.company_id.email\n"
-"                        | <a href=\"'mailto:%s' % ${object.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.company_id.email}</a>\n"
-"                    % endif\n"
-"                    % if object.company_id.website\n"
-"                        | <a href=\"'%s' % ${object.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                        ${object.company_id.website}\n"
-"                    </a>\n"
-"                    % endif\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
-"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        版权所有 <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
-"      </td></tr>\n"
-"    </table>\n"
-"</td></tr>\n"
-"</table>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email
@@ -558,19 +519,19 @@ msgid "Already have an account?"
 msgstr "已经拥有账户？"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr "一封包含验证证书以重置您的密码的电子邮件已经发送"
+msgstr "一封包含验证证书以重置您的密码的EMail已经发送"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:52
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "该邮件地址已经被其他用户注册了"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:137
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Authentication Failed."
 msgstr "身份验证失败"
@@ -581,7 +542,7 @@ msgid "Back to Login"
 msgstr "返回到登录页面"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:199
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr "无法发送邮件：用户 %s 邮件地址为空。"
@@ -594,7 +555,7 @@ msgstr "关闭"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置设定"
+msgstr "配置设置"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -607,7 +568,7 @@ msgid "Confirm Password"
 msgstr "确认密码"
 
 #. module: auth_signup
-#: selection:res.users,state:0
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__active
 msgid "Confirmed"
 msgstr "已确认"
 
@@ -617,13 +578,13 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:55
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Could not create a new account."
 msgstr "不能创建一个新账号"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:84
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Could not reset your password"
 msgstr "无法重置密码"
@@ -631,7 +592,7 @@ msgstr "无法重置密码"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
-msgstr "顾客账号"
+msgstr "客户账户"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -650,12 +611,17 @@ msgid "Enable password reset from Login page"
 msgstr "允许在登录页开启密码重置功能"
 
 #. module: auth_signup
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
+msgid "Free sign up"
+msgstr "免费注册 "
+
+#. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 路由"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:115
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Invalid signup token"
 msgstr "无效的注册令牌"
@@ -666,15 +632,20 @@ msgid "Let your customers log in to see their documents"
 msgstr "让你的客户登录查看他们的证件"
 
 #. module: auth_signup
-#: selection:res.users,state:0
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
 msgstr "从未连接"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:75
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "No login provided."
 msgstr "未提供登录账号。"
+
+#. module: auth_signup
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
+msgid "On invitation"
+msgstr "应邀"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -692,10 +663,15 @@ msgid "Password reset"
 msgstr "密码重置"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr "密码不匹配；请重新输入密码。"
+
+#. module: auth_signup
+#: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
+msgid "Reminder for unregistered users"
+msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -703,7 +679,7 @@ msgid "Reset Password"
 msgstr "重置密码"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:163
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr "重置密码: 用户名或密码无效"
@@ -711,7 +687,7 @@ msgstr "重置密码: 用户名或密码无效"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Reset Password Instructions"
-msgstr "发送密码重置指令"
+msgstr "重置密码"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -754,37 +730,37 @@ msgid "Signup URL"
 msgstr "注册网址"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:117
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup is not allowed for uninvited users"
 msgstr "不允许未经邀请的用户注册"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:149
+#: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is no longer valid"
 msgstr "注册令牌 '%s' 不再有效"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:145
+#: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is not valid"
 msgstr "注册令牌 '%s' 无效"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:138
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
 msgstr "登入: 无效用户模板"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:141
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no login given for new user"
 msgstr "注册：没有为新用户提供登录"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:143
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
 msgstr "注册：没有为新用户指定名称或合作伙伴"
@@ -792,7 +768,7 @@ msgstr "注册：没有为新用户指定名称或合作伙伴"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
 msgid "Status"
-msgstr "状态"
+msgstr "省份"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
@@ -800,13 +776,13 @@ msgid "Template user for new users created through signup"
 msgstr "用作通过注册创建的新用户的模版"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:123
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "The form was not properly filled in."
 msgstr "未正确填写表格。"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:127
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "This is his first connection. Wish him welcome"
 msgstr "这是他第一次联络。祝福他"
@@ -825,6 +801,13 @@ msgid "Users"
 msgstr "用户"
 
 #. module: auth_signup
+#: model:ir.actions.server,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder_ir_actions_server
+#: model:ir.cron,cron_name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
+#: model:ir.cron,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
+msgid "Users: Notify About Unregistered Users"
+msgstr ""
+
+#. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
 msgstr "欢迎访问 ${object.company_id.name}！"
@@ -833,12 +816,12 @@ msgstr "欢迎访问 ${object.company_id.name}！"
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "您的电子邮件"
+msgstr "你的EMail"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "你的姓名"
+msgstr "姓名"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

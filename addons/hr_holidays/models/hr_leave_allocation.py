@@ -386,8 +386,9 @@ class HolidaysAllocation(models.Model):
         return result
 
     def unlink(self):
+        state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
         for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
-            raise UserError(_('You cannot delete a time off which is in %s state.') % (holiday.state,))
+            raise UserError(_('You cannot delete an allocation request which is in %s state.') % (state_description_values.get(holiday.state),))
         return super(HolidaysAllocation, self).unlink()
 
     def copy_data(self, default=None):
@@ -422,7 +423,7 @@ class HolidaysAllocation(models.Model):
     def action_draft(self):
         for holiday in self:
             if holiday.state not in ['confirm', 'refuse']:
-                raise UserError(_('Time off request state must be "Refused" or "To Approve" in order to reset to Draft.'))
+                raise UserError(_('Allocation request state must be "Refused" or "To Approve" in order to reset to Draft.'))
             holiday.write({
                 'state': 'draft',
                 'first_approver_id': False,
@@ -437,7 +438,7 @@ class HolidaysAllocation(models.Model):
 
     def action_confirm(self):
         if self.filtered(lambda holiday: holiday.state != 'draft'):
-            raise UserError(_('Time off request must be in Draft state ("To Submit") in order to confirm it.'))
+            raise UserError(_('Allocation request must be in Draft state ("To Submit") in order to confirm it.'))
         res = self.write({'state': 'confirm'})
         self.activity_update()
         return res
@@ -446,7 +447,7 @@ class HolidaysAllocation(models.Model):
         # if validation_type == 'both': this method is the first approval approval
         # if validation_type != 'both': this method calls action_validate() below
         if any(holiday.state != 'confirm' for holiday in self):
-            raise UserError(_('Time off request must be confirmed ("To Approve") in order to approve it.'))
+            raise UserError(_('Allocation request must be confirmed ("To Approve") in order to approve it.'))
 
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
@@ -458,7 +459,7 @@ class HolidaysAllocation(models.Model):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate1']:
-                raise UserError(_('Time off request must be confirmed in order to approve it.'))
+                raise UserError(_('Allocation request must be confirmed in order to approve it.'))
 
             holiday.write({'state': 'validate'})
             if holiday.validation_type == 'both':
@@ -495,7 +496,7 @@ class HolidaysAllocation(models.Model):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1']:
-                raise UserError(_('Time off request must be confirmed or validated in order to refuse it.'))
+                raise UserError(_('Allocation request must be confirmed or validated in order to refuse it.'))
 
             if holiday.state == 'validate1':
                 holiday.write({'state': 'refuse', 'first_approver_id': current_employee.id})

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ==== Invoice Demo 1 ==== -->
+        <record id="demo_invoice_1" model="account.move">
+            <field name="type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'product_id': ref('product.consu_delivery_02'), 'price_unit': 642.0, 'quantity': 5}),
+                (0, 0, {'product_id': ref('product.consu_delivery_03'), 'price_unit': 280.0, 'quantity': 5}),
+            ]"/>
+        </record>
+
+        <!-- ==== Invoice Demo 2 ==== -->
+        <record id="demo_invoice_2" model="account.move">
+            <field name="type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-08'"/>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'product_id': ref('product.consu_delivery_03'), 'price_unit': 50.0, 'quantity': 5}),
+                (0, 0, {'product_id': ref('product.consu_delivery_01'), 'price_unit': 25.0, 'quantity': 20}),
+            ]"/>
+        </record>
+
+        <!-- ==== Invoice Demo 3 ==== -->
+        <record id="demo_invoice_3" model="account.move">
+            <field name="type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-08'"/>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'product_id': ref('product.consu_delivery_01'), 'price_unit': 90.0, 'quantity': 5}),
+                (0, 0, {'product_id': ref('product.consu_delivery_03'), 'price_unit': 15.0, 'quantity': 5}),
+            ]"/>
+        </record>
+
+        <!-- ==== Invoice Demo 4 - Create an invoice that will generate a followup ==== -->
+        <record id="demo_invoice_followup" model="account.move">
+            <field name="type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_immediate"/>
+            <field name="invoice_date" eval="(datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')"/>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'product_id': ref('product.consu_delivery_02'), 'price_unit': 642.0, 'quantity': 5}),
+                (0, 0, {'product_id': ref('product.consu_delivery_03'), 'price_unit': 280.0, 'quantity': 5}),
+            ]"/>
+        </record>
+
+        <!-- ==== Invoice Demo 5 - Draft Vendor Bill ==== -->
+        <record id="demo_invoice_0" model="account.move">
+            <field name="type">in_invoice</field>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'product_id': ref('product.product_delivery_01'), 'price_unit': 10.0, 'quantity': 1}),
+                (0, 0, {'product_id': ref('product.product_order_01'), 'price_unit': 4.0, 'quantity': 5}),
+            ]"/>
+        </record>
+
+        <!-- ==== Invoice Demo 6 - Draft Vendor Bill for OCR ==== -->
+        <record id="ir_attachment_in_invoice_draft" model="ir.attachment">
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/in_invoice_yourcompany_demo.pdf"/>
+            <field name="name">in_invoice_yourcompany_demo.pdf</field>
+            <field name="res_model">account.move</field>
+        </record>
+
+        <record id="demo_invoice_extract" model="account.move" context="{'type': 'in_invoice'}">
+            <field name="type">in_invoice</field>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="message_main_attachment_id" ref="ir_attachment_in_invoice_draft"/>
+        </record>
+
+        <record id="ir_attachment_in_invoice_draft" model="ir.attachment">
+            <field name="res_id" ref="demo_invoice_extract"/>
+        </record>
+
+        <record id="mail_message_in_invoice_0" model="mail.message">
+            <field name="model">account.move</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_extract"/>
+            <field name="body">Vendor Bill attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_in_invoice_draft')])]"/>
+        </record>
+
+        <!-- ==== Invoice Demo 7 - Posted vendor bill ==== -->
+        <record id="demo_invoice_equipment_purchase" model="account.move">
+            <field name="type">in_invoice</field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-15'"/>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'product_id': ref('product.product_product_6'), 'quantity': 1, 'price_unit': 4999.99, 'price_unit': 4999.99})
+            ]"/>
+        </record>
+
+        <function model="account.move" name="post">
+            <value eval="[
+                ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'),
+                ref('demo_invoice_followup'), ref('demo_invoice_equipment_purchase'),
+            ]"/>
+        </function>
+
+    </data>
+</odoo>

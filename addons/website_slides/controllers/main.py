@@ -2,19 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import itertools
+import json
 import logging
 import werkzeug
 import math
 
-from odoo import http, modules, tools, _
-from odoo.exceptions import AccessError, UserError
-from odoo.http import request
-from odoo.osv import expression
-
+from odoo import http, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.exceptions import AccessError, UserError
+from odoo.http import request
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -264,12 +263,9 @@ class WebsiteSlides(WebsiteProfile):
             ]).mapped('challenge_id')
 
         # fetch 'heroes of the week' for non logged people
-        if request.env.user._is_public():
-            users = request.env['res.users'].sudo().search([
-                ('karma', '>', 0),
-                ('website_published', '=', True)], limit=5, order='karma desc')
-        else:
-            users = None
+        users = request.env['res.users'].sudo().search([
+            ('karma', '>', 0),
+            ('website_published', '=', True)], limit=5, order='karma desc')
 
         values = self._prepare_user_values(**post)
         values.update({
@@ -422,18 +418,28 @@ class WebsiteSlides(WebsiteProfile):
             'enable_slide_upload': 'enable_slide_upload' in kw,
         }
         if not request.env.user._is_public():
-            last_message_values = request.env['mail.message'].search([
+            last_message = request.env['mail.message'].search([
                 ('model', '=', channel._name),
                 ('res_id', '=', channel.id),
                 ('author_id', '=', request.env.user.partner_id.id),
                 ('message_type', '=', 'comment'),
                 ('website_published', '=', True)
-            ], order='write_date DESC', limit=1).read(['body', 'rating_value'])
-            last_message_data = last_message_values[0] if last_message_values else {}
+            ], order='write_date DESC', limit=1)
+            if last_message:
+                last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
+                last_message_attachment_ids = last_message_values.pop('attachment_ids', [])
+                if last_message_attachment_ids:
+                    last_message_attachment_ids = json.dumps(request.env['ir.attachment'].browse(last_message_attachment_ids).read(
+                        ['id', 'name', 'mimetype', 'file_size', 'access_token']
+                    ))
+            else:
+                last_message_values = {}
+                last_message_attachment_ids = []
             values.update({
-                'last_message_id': last_message_data.get('id'),
-                'last_message': tools.html2plaintext(last_message_data.get('body', '')),
-                'last_rating_value': last_message_data.get('rating_value'),
+                'last_message_id': last_message_values.get('id'),
+                'last_message': tools.html2plaintext(last_message_values.get('body', '')),
+                'last_rating_value': last_message_values.get('rating_value'),
+                'last_message_attachment_ids': last_message_attachment_ids,
             })
             if channel.can_review:
                 values.update({
@@ -834,7 +840,10 @@ class WebsiteSlides(WebsiteProfile):
             else:
                 values.update({
                     'category_id': post['category_id'][0],
+                    'sequence': request.env['slide.slide'].browse(post['category_id'][0]).sequence + 1
                 })
+        else:
+            values['sequence'] = -1
 
         # create slide itself
         try:

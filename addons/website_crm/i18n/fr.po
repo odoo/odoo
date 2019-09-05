@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_crm
+# 	* website_crm
 # 
 # Translators:
-# Martin Trigaux, 2018
-# e2f <projects@e2f.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
-# Richard Mathot <rim@odoo.com>, 2018
-# Florian Hatat, 2018
-# Clo <clo@odoo.com>, 2018
-# Stephane DAGUET <stephane@darbtech.net>, 2018
-# Lucas Deliege <lud@odoo.com>, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
-# Bertrand LATOUR <divoir@gmail.com>, 2018
-# Marie Willemyns <mwi@odoo.com>, 2018
+# Cécile Collart <cco@odoo.com>, 2019
+# e2f <projects@e2f.com>, 2019
+# bb76cd9ac0cb7e20167a14728edb858b, 2019
+# Martin Trigaux, 2019
+# Richard Mathot <rim@odoo.com>, 2019
+# Florian Hatat, 2019
+# Clo <clo@odoo.com>, 2019
+# Stephane DAGUET <stephane@darbtech.net>, 2019
+# Lucas Deliege <lud@odoo.com>, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# Bertrand LATOUR <divoir@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Marie Willemyns <mwi@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Bertrand LATOUR <divoir@gmail.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,15 +30,28 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "&amp;times;"
-msgstr "&amp;times;"
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
+msgid "# Leads"
+msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Add a contact form in the"
 msgstr "Ajoutez un formulaire de contact sur la"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a sales channel."
+msgstr ""
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a salesperson."
+msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -90,7 +104,10 @@ msgstr ""
 "contact."
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Email"
 msgstr "Courriel"
 
@@ -100,6 +117,14 @@ msgid "Lead/Opportunity"
 msgstr "Piste/opportunité"
 
 #. module: website_crm
+#: model:ir.actions.act_window,name:website_crm.website_visitor_crm_lead_action
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_ids
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Leads"
+msgstr "Pistes"
+
+#. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "New messages are managed as leads or opportunities in your CRM app."
 msgstr ""
@@ -107,7 +132,15 @@ msgstr ""
 "votre application CRM."
 
 #. module: website_crm
+#: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
+msgid "No lead linked for this visitor"
+msgstr ""
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Phone Number"
 msgstr "Numéro de téléphone"
 
@@ -121,12 +154,22 @@ msgstr ""
 " pas suivre les évènements liés."
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Sales Channel"
+msgstr "Equipe de vente"
+
+#. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Sales Team"
 msgstr "Équipe commerciale"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Salesperson"
 msgstr "Vendeur"
 
@@ -136,21 +179,22 @@ msgid "Send"
 msgstr "Envoyer"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Subject"
 msgstr "Sujet"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Thanks!"
-msgstr "Merci !"
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Visitors"
+msgstr ""
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "We will get back to you shortly."
-msgstr "Nous reviendrons vers vous rapidement"
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_id
+msgid "Web Visitor"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
@@ -163,25 +207,33 @@ msgid "Website Contact Form"
 msgstr "Formulaire de Contact du Site Web"
 
 #. module: website_crm
+#: model:ir.model,name:website_crm.model_website_visitor
+msgid "Website Visitor"
+msgstr ""
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Company"
 msgstr "Votre société"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Name"
 msgstr "Votre Nom"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Question"
 msgstr "Votre question"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Your message has been sent successfully."
-msgstr "Votre message a été envoyé avec succès."
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form

@@ -25,6 +25,7 @@
                     <field name="active" invisible="1"/>
                     <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                     <field name="sequence_id" groups="base.group_no_one"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -41,10 +42,11 @@
                                 <field name="name"/>
                                 <field name="sequence_id" groups="base.group_no_one"/>
                                 <field name="sequence_code"/>
-                                <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+                                <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
                             </group>
                             <group>
                                 <field name="code"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                                 <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="return_picking_type_id"/>
                                 <field name="show_operations"/>
                                 <field name="show_reserved" attrs="{'invisible': [('code', '!=', 'incoming')]}"/>
@@ -98,6 +100,7 @@
                     <field name="warehouse_id"/>
                     <field name="code"/>
                     <field name="return_picking_type_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}"/>
                     <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
                 </tree>
@@ -267,10 +270,18 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="partner_id"/>
+                            <div class="o_td_label">
+                                <label for="partner_id" string="Delivery Address" style="font-weight:bold;"
+                                       attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                                <label for="partner_id" string="Receive From" style="font-weight:bold;"
+                                       attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
+                                <label for="partner_id" string="Contact" style="font-weight:bold;"
+                                       attrs="{'invisible': [('picking_type_code', 'in', ['incoming', 'outgoing'])]}"/>
+                            </div>
+                            <field name="partner_id" nolabel="1"/>
                             <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
-                            <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
+                            <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
@@ -287,21 +298,21 @@
                                     attrs="{'invisible': [('show_reserved', '=', True)],
                                         'readonly': ['|', '|', ('show_operations', '=', False), ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]
                                     }"
-                                   context="{'tree_view_ref': 'stock.view_stock_move_line_detailed_operation_tree', 'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}"/>
+                                   context="{'tree_view_ref': 'stock.view_stock_move_line_detailed_operation_tree', 'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
                             <field name="move_line_ids_without_package"
                                     attrs="{'invisible': [('show_reserved', '=', False)],
                                         'readonly': ['|', '|', ('show_operations', '=', False), ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]
                                     }"
-                                   context="{'tree_view_ref': 'stock.view_stock_move_line_detailed_operation_tree', 'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}"/>
-                            <field name="package_level_ids_details" context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id}" attrs="{'readonly': [('state', '=', 'done')], 'invisible': ['|', ('picking_type_entire_packs', '=', False), ('show_operations', '=', False)]}" />
+                                   context="{'tree_view_ref': 'stock.view_stock_move_line_detailed_operation_tree', 'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
+                            <field name="package_level_ids_details" context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}" attrs="{'readonly': [('state', '=', 'done')], 'invisible': ['|', ('picking_type_entire_packs', '=', False), ('show_operations', '=', False)]}" />
                             <button class="oe_highlight" name="put_in_pack" type="object" string="Put in Pack" attrs="{'invisible': [('state', 'in', ('draft', 'done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Operations">
                             <field name="id" invisible="1"/>
-                            <field name="move_ids_without_package" attrs="{'readonly': ['|', '&amp;', ('show_operations', '=', True), '|', ('is_locked', '=', True), ('state', '=', 'done'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref':'stock.view_move_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                            <field name="move_ids_without_package" attrs="{'readonly': ['|', '&amp;', ('show_operations', '=', True), '|', ('is_locked', '=', True), ('state', '=', 'done'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'default_company_id': company_id, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref':'stock.view_move_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                                 <tree decoration-danger="not parent.immediate_transfer and state != 'done' and quantity_done > reserved_availability and show_reserved_availability" decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
+                                    <field name="company_id" invisible="1"/>
                                     <field name="name" invisible="1"/>
-                                    <field name="date_expected" invisible="1"/>
                                     <field name="state" invisible="1" readonly="0"/>
                                     <field name="picking_type_id" invisible="1"/>
                                     <field name="location_id" invisible="1"/>
@@ -320,6 +331,7 @@
                                     <field name="display_assign_serial" invisible="1"/>
                                     <field name="product_id" required="1" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/>
                                     <field name="description_picking" string="Description" optional="hide"/>
+                                    <field name="date_expected" optional="hide"/>
                                     <field name="is_initial_demand_editable" invisible="1"/>
                                     <field name="is_quantity_done_editable" invisible="1"/>
                                     <field name="product_uom_qty" string="Initial Demand" attrs="{'column_invisible': [('parent.immediate_transfer', '=', True)], 'readonly': [('is_initial_demand_editable', '=', False)]}"/>
@@ -345,6 +357,7 @@
                                         <field name="product_uom_category_id" invisible="1"/>
                                         <field name="additional" invisible="1"/>
                                         <field name="has_move_lines" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
                                         <field name="product_id" required="1" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/>
                                         <field name="is_initial_demand_editable" invisible="1"/>
                                         <field name="is_quantity_done_editable" invisible="1"/>
@@ -356,7 +369,7 @@
                                     </group>
                                 </form>
                             </field>
-                            <field name="package_level_ids" context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id}" attrs="{'readonly': [('state', '=', 'done')], 'invisible': ['|', ('picking_type_entire_packs', '=', False), ('show_operations', '=', True)]}" />
+                            <field name="package_level_ids" context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}" attrs="{'readonly': [('state', '=', 'done')], 'invisible': ['|', ('picking_type_entire_packs', '=', False), ('show_operations', '=', True)]}" />
                             <button class="oe_highlight" name="put_in_pack" type="object" string="Put in Pack" attrs="{'invisible': [('state', 'in', ('draft', 'done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Additional Info" name="extra">
@@ -367,7 +380,7 @@
                                     <field name="priority" widget="priority"/>
                                     <field name="user_id"/>
                                     <field name="group_id" groups="base.group_no_one"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="1"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1"/>
                                 </group>
                             </group>
                         </page>
@@ -394,6 +407,7 @@
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="origin"/>
                     <field name="product_id"/>
+                    <field name="picking_type_id"/>
                     <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" help="Draft Moves"/>
@@ -447,7 +461,7 @@ action = action_values
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address'}</field>
+            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0]}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

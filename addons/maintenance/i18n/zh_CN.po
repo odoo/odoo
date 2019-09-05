@@ -1,30 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * maintenance
+# 	* maintenance
 # 
 # Translators:
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
-# 老窦 北京 <2662059195@qq.com>, 2018
-# Jackie Zhang <jzh@odoo.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# bower Guo <124358678@qq.com>, 2018
-# roye w <159820@qq.com>, 2018
-# p too <totopo@163.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
-# e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
-# Gary Wei <Gary.wei@elico-corp.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2019
+# 老窦 北京 <2662059195@qq.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# keecome <7017511@qq.com>, 2019
+# JZH-Odoo <jzh@odoo.com>, 2019
+# bower Guo <124358678@qq.com>, 2019
+# roye w <159820@qq.com>, 2019
+# 张宏奎 <zhanghongkui@inspur.com>, 2019
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Jeanphy <hzh0292@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:11+0000\n"
+"Last-Translator: Jeanphy <hzh0292@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +51,16 @@ msgid "<b>Serial Number:</b>"
 msgstr "<b>序列号:</b>"
 
 #. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
+msgstr "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+
+#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge badge-warning float-right\">Canceled</span>"
 msgstr "<span class=\"badge badge-warning float-right\">取消</span>"
@@ -70,7 +78,7 @@ msgstr "<span>报表</span>"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>View</span>"
-msgstr "<span>视图</span>"
+msgstr "<span>查看</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
@@ -87,13 +95,7 @@ msgstr "<strong>维护:</strong>"
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr "当创建别名的新记录时，一个Python字典被提供作为默认值"
-
-#. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_computer3
-#: model:maintenance.equipment,name:maintenance.equipment_computer5
-msgid "Acer Laptop"
-msgstr "宏基笔记本电脑"
+msgstr "Python字典在创建该别名的新记录时将提供默认值。"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
@@ -113,6 +115,12 @@ msgstr "有效"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_ids
 msgid "Activities"
 msgstr "活动"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_decoration
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "活动例外勋章"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_state
@@ -166,7 +174,7 @@ msgstr "别名"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_contact
 msgid "Alias Contact Security"
-msgstr "别名联系人安全"
+msgstr "安全联系人别名"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_name
@@ -176,12 +184,12 @@ msgstr "别名"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_domain
 msgid "Alias domain"
-msgstr "别名网域"
+msgstr "网域别名"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_model_id
 msgid "Aliased Model"
-msgstr "别名模型"
+msgstr "模型别名"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -189,14 +197,14 @@ msgid "All"
 msgstr "全部"
 
 #. module: maintenance
-#: sql_constraint:maintenance.equipment:0
+#: model:ir.model.constraint,message:maintenance.constraint_maintenance_equipment_serial_no
 msgid "Another asset already exists with this serial number!"
 msgstr "已经有资产用到该序列号"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__archive
 msgid "Archive"
-msgstr "归档"
+msgstr "存档"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -212,7 +220,6 @@ msgid "Assign To User"
 msgstr "指派给用户"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Assigned"
 msgstr "已指派"
@@ -223,6 +230,11 @@ msgid "Assigned Date"
 msgstr "分配日期"
 
 #. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Assigned to"
+msgstr "分派给"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_attachment_count
@@ -230,21 +242,16 @@ msgid "Attachment Count"
 msgstr "附件数量"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Available"
-msgstr "可用"
-
-#. module: maintenance
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__blocked
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-#: selection:maintenance.request,kanban_state:0
 msgid "Blocked"
 msgstr "阻塞"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Cancel"
-msgstr "取消"
+msgstr "取消日期"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__category_id
@@ -287,17 +294,12 @@ msgid "Company"
 msgstr "公司"
 
 #. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_computer
-msgid "Computers"
-msgstr "电脑"
-
-#. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_configuration
 msgid "Configuration"
-msgstr "配置"
+msgstr "基础配置"
 
 #. module: maintenance
-#: selection:maintenance.request,maintenance_type:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__maintenance_type__corrective
 msgid "Corrective"
 msgstr "纠正"
 
@@ -318,7 +320,7 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__create_uid
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__owner_user_id
@@ -405,7 +407,6 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Done"
 msgstr "完成"
@@ -419,12 +420,12 @@ msgstr "下拉菜单"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__duration
 msgid "Duration"
-msgstr "持续时间"
+msgstr "时长"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__duration
-msgid "Duration in minutes and seconds."
-msgstr "抓紧时间."
+msgid "Duration in hours."
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -435,24 +436,32 @@ msgstr "编辑..."
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__effective_date
 msgid "Effective Date"
-msgstr "实际日期"
+msgstr "生效日期"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Email Alias"
-msgstr "Email别名"
+msgstr "EMail别名"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_id
 msgid ""
 "Email alias for this equipment category. New emails will automatically "
-"create new maintenance request for this equipment category."
-msgstr "该设备类别的邮件别名。此邮件别名收到的邮件能自动的创建该设备种类的维护需求"
+"create a new equipment under this category."
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "Email cc"
+msgstr "邮件抄送"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__equipment_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__equipment_ids
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Equipment"
 msgstr "设备"
 
@@ -491,10 +500,15 @@ msgstr "设备名称"
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_action_from_category_form
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_ids
 #: model:ir.ui.menu,name:maintenance.menu_equipment_form
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipments"
 msgstr "设备"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "Exception Activities"
+msgstr "例外活动"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__fold
@@ -545,23 +559,17 @@ msgstr "未来活动"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Group by..."
-msgstr "分组 于"
+msgstr "分组"
 
 #. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_printer1
-msgid "HP Inkjet printer"
-msgstr "HP 喷墨打印机"
-
-#. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_computer11
-#: model:maintenance.equipment,name:maintenance.equipment_computer9
-msgid "HP Laptop"
-msgstr "HP笔记本电脑"
-
-#. module: maintenance
-#: selection:maintenance.request,priority:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__3
 msgid "High"
 msgstr "高"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "High-priority"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__id
@@ -580,30 +588,41 @@ msgid ""
 msgstr "上级记录ID支持别名(例如:项目支持任务创建别名)"
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_icon
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_exception_icon
+msgid "Icon"
+msgstr "图标"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_icon
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "表示一个例外活动的图标。"
+
+#. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_unread
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_unread
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_unread
 msgid "If checked new messages require your attention."
-msgstr "查看是否有需要你留意的新信息。"
+msgstr "查看是否有需要留意的新消息。"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "如果勾选此项，有新消息会提醒你。"
+msgstr "确认后, 出现提示消息."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "如果勾选此项， 某些信息将会产生传递错误。"
+msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__normal
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-#: selection:maintenance.request,kanban_state:0
 #: model:maintenance.stage,name:maintenance.stage_1
 msgid "In Progress"
 msgstr "进行中"
@@ -623,7 +642,7 @@ msgstr "内部提示……"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_is_follower
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_is_follower
 msgid "Is Follower"
-msgstr "是关注者"
+msgstr "关注者"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__kanban_state
@@ -637,7 +656,7 @@ msgstr "看板状态"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage____last_update
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后更改日"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__write_uid
@@ -646,7 +665,7 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__write_uid
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__write_date
@@ -655,18 +674,23 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__write_date
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "更新时间"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Late Activities"
-msgstr "逾期活动"
+msgstr "最近的活动"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__email_cc
+msgid "List of cc from incoming emails."
+msgstr "收到的邮件里的抄送列表。"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__location
 msgid "Location"
-msgstr "地点"
+msgstr "位置"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
@@ -674,7 +698,7 @@ msgid "Losses Analysis"
 msgstr "损失分析"
 
 #. module: maintenance
-#: selection:maintenance.request,priority:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__1
 msgid "Low"
 msgstr "低"
 
@@ -693,7 +717,7 @@ msgstr "附件"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Maintenance"
-msgstr "保养"
+msgstr "维护"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_request_calendar
@@ -720,7 +744,7 @@ msgstr "数小时的维护持续时间。"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment
 msgid "Maintenance Equipment"
-msgstr "保养设备"
+msgstr "设备保养"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
@@ -738,6 +762,11 @@ msgstr "保养请求"
 #: model:mail.message.subtype,name:maintenance.mt_cat_req_created
 msgid "Maintenance Request Created"
 msgstr "已创建维护请求"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Maintenance Request Search"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_tree
@@ -808,7 +837,7 @@ msgstr "维护：生成预防性维护请求"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error
 msgid "Message Delivery error"
-msgstr "消息递送错误"
+msgstr "消息传递错误"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_ids
@@ -818,19 +847,9 @@ msgid "Messages"
 msgstr "消息"
 
 #. module: maintenance
-#: model:maintenance.team,name:maintenance.equipment_team_metrology
-msgid "Metrology"
-msgstr "计量学"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__model
 msgid "Model"
-msgstr "型号"
-
-#. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_monitor
-msgid "Monitors"
-msgstr "显示器"
+msgstr "模型"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -845,14 +864,12 @@ msgstr "我的设备"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-msgid "My Requests"
-msgstr "我的请求"
+msgid "My Maintenances"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__name
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__name
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Name"
 msgstr "名称"
@@ -886,21 +903,21 @@ msgid "Next Preventive Maintenance"
 msgstr "下次预防保养"
 
 #. module: maintenance
-#: selection:maintenance.request,priority:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__2
 msgid "Normal"
 msgstr "一般"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__note
 msgid "Note"
-msgstr "笔记"
+msgstr "备注"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction_counter
 msgid "Number of Actions"
-msgstr "行动数量"
+msgstr "操作次数"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count
@@ -932,28 +949,28 @@ msgstr "高优先级的请求数量"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error_counter
 msgid "Number of error"
-msgstr "错误数"
+msgstr "错误个数"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "需要行动消息的数量"
+msgstr "需要操作消息数量"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "递送错误的消息数量"
+msgstr "递送错误消息数量"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_unread_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_unread_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_unread_counter
 msgid "Number of unread messages"
-msgstr "未读消息的数量"
+msgstr "未读消息数量"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_force_thread_id
@@ -961,18 +978,12 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "所有的进来的邮件都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置了，这个将完全阻止新记录的创建。"
+msgstr "无论是否回复，所有的接收的邮件都将附上一条线索（记录）选配的ID。如果设置了，这个将完全阻止新记录的创建。"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
 msgid "Overall Equipment Effectiveness (OEE)"
 msgstr "整体设备效率OEE"
-
-#. module: maintenance
-#: selection:maintenance.equipment,activity_state:0
-#: selection:maintenance.request,activity_state:0
-msgid "Overdue"
-msgstr "逾期"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__owner_user_id
@@ -991,7 +1002,7 @@ msgstr "上级模型"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "上级记录线程ID"
+msgstr "上级记录ID"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_model_id
@@ -1000,19 +1011,8 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"父级模型拥有别名。拥有别名参照的模型不必是alias_model_id给出的模型 (example: project(parent_model) and"
-" task (model))"
-
-#. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_phone
-msgid "Phones"
-msgstr "电话"
-
-#. module: maintenance
-#: selection:maintenance.equipment,activity_state:0
-#: selection:maintenance.request,activity_state:0
-msgid "Planned"
-msgstr "已安排"
+"父级模型拥有别名。拥有别名参考的模型不一定是alias_model_id给出的模型 (例如：project(parent_model) 和任务 "
+"(模型))"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
@@ -1022,18 +1022,18 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"策略是通过邮件网关在文档上提交一个消息\n"
+"政策是通过邮件网关在文档上提交一个消息\n"
 "- everyone: 任何人都可以提交\n"
 "- partners: 只有认证过的合作伙伴\n"
-"- followers: 只有相关文件或下列频道成员的跟随者\n"
+"- followers: 只有相关文档或下列频道成员的跟随者\n"
 
 #. module: maintenance
-#: selection:maintenance.request,maintenance_type:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__maintenance_type__preventive
 msgid "Preventive"
 msgstr "预防措施"
 
 #. module: maintenance
-#: code:addons/maintenance/models/maintenance.py:231
+#: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Preventive Maintenance - %s"
 msgstr "预防保养 - %s"
@@ -1042,11 +1042,6 @@ msgstr "预防保养 - %s"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Preventive Maintenance Frequency"
 msgstr "预防保养频次"
-
-#. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_printer
-msgid "Printers"
-msgstr "打印机"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__priority
@@ -1059,9 +1054,14 @@ msgid "Product Information"
 msgstr "产品信息"
 
 #. module: maintenance
-#: selection:maintenance.request,kanban_state:0
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Ready"
+msgstr "就绪"
+
+#. module: maintenance
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__done
 msgid "Ready for next stage"
-msgstr "准备好下一个阶段"
+msgstr "下一阶段就绪"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -1081,16 +1081,17 @@ msgstr "重开请求"
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_3
 msgid "Repaired"
-msgstr "已修理"
+msgstr "已维修"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.maintenance_reporting
 #: model:ir.ui.menu,name:maintenance.menu_m_reports
 msgid "Reporting"
-msgstr "报告"
+msgstr "报表"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__request_ids
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Request"
 msgstr "请求"
@@ -1106,12 +1107,13 @@ msgid "Request Date"
 msgstr "请求日期"
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__done
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__done
 msgid "Request Done"
 msgstr "请求完成"
 
 #. module: maintenance
-#: code:addons/maintenance/models/maintenance.py:375
+#: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Request planned for <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
 msgstr "计划请求 <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
@@ -1145,13 +1147,6 @@ msgid "Responsible User"
 msgstr "责任用户"
 
 #. module: maintenance
-#: model:maintenance.equipment,name:maintenance.equipment_monitor1
-#: model:maintenance.equipment,name:maintenance.equipment_monitor4
-#: model:maintenance.equipment,name:maintenance.equipment_monitor6
-msgid "Samsung Monitor 15\""
-msgstr "三星显示器15\""
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Scheduled"
 msgstr "安排"
@@ -1159,7 +1154,7 @@ msgstr "安排"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__schedule_date
 msgid "Scheduled Date"
-msgstr "计划日期"
+msgstr "安排的日期"
 
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_4
@@ -1181,7 +1176,7 @@ msgstr "搜索"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__sequence
 msgid "Sequence"
-msgstr "序号"
+msgstr "单号规则"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__serial_no
@@ -1203,21 +1198,16 @@ msgstr "设置"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records which has next action date is before today"
-msgstr "显示在今天之前的下一个行动日期的所有记录"
-
-#. module: maintenance
-#: model:maintenance.equipment.category,name:maintenance.equipment_software
-msgid "Software"
-msgstr "软件"
+msgstr "显示所有的在今天之前的下一个行动日期的记录"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__stage_id
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Stage"
 msgstr "阶段"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_stage_action
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Stages"
 msgstr "阶段"
 
@@ -1238,17 +1228,12 @@ msgstr ""
 "基于活动的状态 \n"
 " 逾期：已经超过截止日期 \n"
 " 现今：活动日期是当天 \n"
-" 计划：未来的活动。"
+" 计划：未来活动。"
 
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_status
 msgid "Status changed"
 msgstr "状态已变更"
-
-#. module: maintenance
-#: model:maintenance.team,name:maintenance.equipment_team_subcontractor
-msgid "Subcontractor"
-msgstr "分包商"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name
@@ -1257,6 +1242,7 @@ msgstr "主题"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__maintenance_team_id
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
 msgid "Team"
 msgstr "团队"
 
@@ -1266,6 +1252,7 @@ msgid "Team Members"
 msgstr "团队成员"
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__name
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Team Name"
 msgstr "团队名称"
@@ -1278,12 +1265,8 @@ msgstr "团队"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__technician_user_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__user_id
-msgid "Technician"
-msgstr "技术员"
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Technicians"
+msgid "Technician"
 msgstr "技术员"
 
 #. module: maintenance
@@ -1293,14 +1276,14 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"相应于这个别名对应的模型(Odoo单据种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
+"相应于这个别名对应的模型(Odoo文档种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的电子邮件,别名就要被设为：\"jobs\""
+msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的EMail,别名就要设为：\"jobs\""
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_user_id
@@ -1310,7 +1293,7 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"在收到此别名的电子邮件时创建记录的所有者。如果此字段未设置，系统将尝试根据发件人(发件人)地址查找正确的所有者，或者如果没有找到该地址的系统用户，将使用管理员帐户。"
+"基于此别名接收到的邮件，创建记录的所有人。若此字段没有设置，系统将试图根据发送者(From)地址来查找正确的所有者，如果对于那个地址没有系统用户被发现，将使用系统管理员账户。"
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -1318,20 +1301,15 @@ msgid "The user will be able to manage equipments."
 msgstr "用户将能够管理设备。"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
-msgid "To Do"
-msgstr "待办"
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "Title"
+msgstr "标题"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-msgid "To do"
-msgstr "待处理"
-
-#. module: maintenance
-#: selection:maintenance.equipment,activity_state:0
-#: selection:maintenance.request,activity_state:0
-msgid "Today"
-msgstr "今日"
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "To Do"
+msgstr "待办"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1340,7 +1318,6 @@ msgid "Today Activities"
 msgstr "今天的活动"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Top Priorities"
 msgstr "顶级优先级"
@@ -1354,6 +1331,17 @@ msgid ""
 msgstr ""
 "跟踪设备并将其链接到员工或部门\n"
 " 您将能够管理设备的分配，问题和维护。"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "记录的例外活动类型。"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "Unassigned"
+msgstr "未分派"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -1378,14 +1366,10 @@ msgid "Unread Messages Counter"
 msgstr "未读消息计数器"
 
 #. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Unscheduled"
 msgstr "未计划"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-msgid "Unscheduled Maintenance"
-msgstr "未安排的保养"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1404,7 +1388,7 @@ msgid "Vendor Reference"
 msgstr "供应商参考"
 
 #. module: maintenance
-#: selection:maintenance.request,priority:0
+#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__0
 msgid "Very Low"
 msgstr "非常低"
 
@@ -1414,7 +1398,7 @@ msgid "Warranty Expiration Date"
 msgstr "保修截止日期"
 
 #. module: maintenance
-#: code:addons/maintenance/models/maintenance.py:77
+#: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid ""
 "You cannot delete an equipment category containing equipments or maintenance"
@@ -1424,7 +1408,7 @@ msgstr "对于已经有相关设备或者修理请求的设备种类不能被删
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "days"
-msgstr "天"
+msgstr "天数"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1437,8 +1421,3 @@ msgstr "小时"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
 msgstr "保养请求"
-
-#. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-msgid "maintenance Request Search"
-msgstr "保养请求搜索"

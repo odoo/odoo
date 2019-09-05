@@ -1490,6 +1490,8 @@ class Form(object):
                 r.write(values)
         else:
             r = self._model.create(values)
+        self._model.flush()
+        self._model.invalidate_cache()
         [data] = r.read(list(self._view['fields']))
         # FIXME: process relational fields
         # alternative: iterate on record & read from it directly? pb: would
@@ -1559,6 +1561,8 @@ class Form(object):
 
         record = self._model.browse(self._values.get('id'))
         result = record.onchange(self._onchange_values(), fields, spec)
+        self._model.flush()
+        self._model.invalidate_cache()
         if result.get('warning'):
             _logger.getChild('onchange').warn("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})

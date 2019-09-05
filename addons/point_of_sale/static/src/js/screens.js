@@ -35,6 +35,7 @@ var rpc = require('web.rpc');
 var utils = require('web.utils');
 var field_utils = require('web.field_utils');
 var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
+var Printer = require('point_of_sale.Printer').Printer;
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -550,6 +551,7 @@ var OrderWidget = PosBaseWidget.extend({
                 selected_orderline.price_manually_set = true;
                 selected_orderline.set_unit_price(val);
             }
+            this.pos.send_current_order_to_customer_facing_display();
     	}
     },
     change_selected_order: function() {
@@ -1139,6 +1141,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
     init: function(parent, options){
         this._super(parent, options);
         this.partner_cache = new DomCache();
+        this.integer_client_details = ['country_id', 'state_id', 'property_product_pricelist'];
     },
 
     auto_back: true,
@@ -1339,29 +1342,34 @@ var ClientListScreenWidget = ScreenWidget.extend({
     // save was successfull.
     save_client_details: function(partner) {
         var self = this;
-        
+
         var fields = {};
         this.$('.client-details-contents .detail').each(function(idx,el){
-            fields[el.name] = el.value || false;
+            if (self.integer_client_details.includes(el.name)){
+                var parsed_value = parseInt(el.value, 10);
+                if (isNaN(parsed_value)){
+                    fields[el.name] = false;
+                }
+                else{
+                    fields[el.name] = parsed_value
+                }
+            }
+            else{
+                fields[el.name] = el.value || false;
+            }
         });
 
         if (!fields.name) {
             this.gui.show_popup('error',_t('A Customer Name Is Required'));
             return;
         }
-        
+
         if (this.uploaded_picture) {
-            fields.image = this.uploaded_picture;
+            fields.image_1920 = this.uploaded_picture;
         }
 
-        fields.id           = partner.id || false;
-        fields.country_id   = fields.country_id || false;
+        fields.id = partner.id || false;
 
-        if (fields.property_product_pricelist) {
-            fields.property_product_pricelist = parseInt(fields.property_product_pricelist, 10);
-        } else {
-            fields.property_product_pricelist = false;
-        }
         var contents = this.$(".client-details-contents");
         contents.off("click", ".button.save");
 
@@ -1373,11 +1381,11 @@ var ClientListScreenWidget = ScreenWidget.extend({
             })
             .then(function(partner_id){
                 self.saved_client_details(partner_id);
-            },function(err,ev){
-                ev.preventDefault();
+            }).catch(function(error){
+                error.event.preventDefault();
                 var error_body = _t('Your Internet connection is probably down.');
-                if (err.data) {
-                    var except = err.data;
+                if (error.message.data) {
+                    var except = error.message.data;
                     error_body = except.arguments && except.arguments[0] || except.message || error_body;
                 }
                 self.gui.show_popup('error',{
@@ -1623,7 +1631,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         this.handle_auto_print();
     },
     handle_auto_print: function() {
-        if (this.should_auto_print()) {
+        if (this.should_auto_print() && !this.pos.get_order().is_to_email()) {
             this.print();
             if (this.should_close_immediately()){
                 this.click_next();
@@ -2023,6 +2031,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                     line.set_amount(0);
                     line.set_payment_status('reversed');
                 } else {
+                    line.can_be_reversed = false;
                     line.set_payment_status('done');
                 }
                 self.render_paymentlines();
@@ -2112,6 +2121,11 @@ var PaymentScreenWidget = ScreenWidget.extend({
             this.$('.js_invoice').removeClass('highlight');
         }
     },
+    click_email: function(){
+        var order = this.pos.get_order();
+        order.set_to_email(!order.is_to_email());
+        this.$('.js_email').toggleClass('highlight', order.is_to_email());
+    },
     click_tip: function(){
         var self   = this;
         var order  = this.pos.get_order();
@@ -2132,9 +2146,14 @@ var PaymentScreenWidget = ScreenWidget.extend({
             }
         });
     },
+    toggle_email_button: function() {
+        var client = this.pos.get_client();
+        this.$('.js_email').removeClass('oe_hidden', client);
+    },
     customer_changed: function() {
         var client = this.pos.get_client();
-        this.$('.js_customer_name').text( client ? client.name : _t('Customer') ); 
+        this.$('.js_customer_name').text( client ? client.name : _t('Customer') );
+        this.toggle_email_button();
     },
     click_set_customer: function(){
         this.gui.show_screen('clientlist');
@@ -2172,7 +2191,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
         this.$('.js_invoice').click(function(){
             self.click_invoice();
         });
-
+        this.$('.js_email').click(function(){
+            self.click_email();
+        });
         this.$('.js_cashdrawer').click(function(){
             self.pos.proxy.printer.open_cashbox();
         });
@@ -2262,6 +2283,17 @@ var PaymentScreenWidget = ScreenWidget.extend({
             }
         }
 
+        if (order.get_client && order.is_to_email() && !order.get_client().email) {
+            this.gui.show_popup('confirm', {
+                'title': _t('Please fill the Customer Email'),
+                'body': _t('This customer does not have an email address, define one or do not send an email'),
+                confirm: function () {
+                    this.gui.show_screen('clientlist');
+                },
+            });
+            return false;
+        }
+
         // if the change is too large, it's probably an input error, make the user confirm.
         if (!force_validation && order.get_total_with_tax() > 0 && (order.get_total_with_tax() * 1000 < order.get_total_paid())) {
             this.gui.show_popup('confirm',{
@@ -2303,13 +2335,32 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             invoiced.catch(this._handleFailedPushForInvoice.bind(this, order, false));
 
-            invoiced.then(function () {
+            invoiced.then(function (value) {
                 self.invoicing = false;
+                self.send_receipt_to_customer(value || false);
                 self.gui.show_screen('receipt');
             });
         } else {
-            this.pos.push_order(order);
-            this.gui.show_screen('receipt');
+            if (order.is_to_email()){
+                var ordered = this.pos.push_order(order);
+                ordered.then(function() {
+                    self.send_receipt_to_customer(false);
+                    self.gui.show_screen('receipt');
+                });
+                ordered.catch(function(value) {
+                    order.set_to_email(false);
+                    self.gui.show_screen('receipt');
+                    self.gui.show_popup('error',{
+                        'title': "Error: no internet connection",
+                        'body':  "There is no internet connection, impossible to send the email.",
+                    });
+                });
+            }
+            else {
+              this.pos.push_order(order);
+              self.gui.show_screen('receipt');
+            }
+
         }
 
     },
@@ -2319,6 +2370,31 @@ var PaymentScreenWidget = ScreenWidget.extend({
     validate_order: function(force_validation) {
         if (this.order_is_valid(force_validation)) {
             this.finalize_validation();
+        }
+    },
+
+    send_receipt_to_customer: function(invoice_server_id) {
+        var order = this.pos.get_order();
+        if(order.is_to_email()){
+            var data = {
+                widget: this,
+                pos: order.pos,
+                order: order,
+                receipt: order.export_for_printing(),
+                orderlines: order.get_orderlines(),
+                paymentlines: order.get_paymentlines(),
+            }
+
+            var receipt = QWeb.render('OrderReceipt', data);
+            var printer = new Printer();
+
+            printer.htmlToImg(receipt).then(function(ticket) {
+                rpc.query({
+                    model: 'pos.order',
+                    method: 'action_receipt_to_customer',
+                    args: [order.get_name(), order.get_client(), ticket, invoice_server_id],
+                });
+            });
         }
     },
 });

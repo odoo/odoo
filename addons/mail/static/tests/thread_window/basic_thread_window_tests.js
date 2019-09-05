@@ -850,6 +850,59 @@ QUnit.test('receive 2 new DM messages in quick succession (no chat window initia
     parent.destroy();
 });
 
+QUnit.test('non-deletable message attachments', async function (assert) {
+    assert.expect(3);
+
+    this.data['mail.channel'].records = [{
+        id: 1,
+        name: "General",
+        channel_type: 'channel',
+    }];
+    this.data['mail.message'].records = [{
+        attachment_ids: [{
+            filename: "text.txt",
+            id: 250,
+            mimetype: 'text/plain',
+            name: "text.txt",
+        }, {
+            filename: "image.png",
+            id: 251,
+            mimetype: 'image/png',
+            name: "image.png",
+        }],
+        author_id: [5, "Demo User"],
+        body: "<p>test</p>",
+        channel_ids: [1],
+        id: 100,
+        model: 'mail.channel',
+        record_name: "general",
+        res_id: 1,
+    }];
+    const parent = this.createParent({
+        data: this.data,
+        services: this.services,
+    });
+    await testUtils.nextTick();
+    const channel = parent.call('mail_service', 'getChannel', 1);
+    channel.detach();
+    await testUtils.nextTick();
+    assert.containsOnce(
+        $,
+        '.o_thread_window',
+        "a thread window should be open");
+    assert.containsN(
+        $('.o_thread_window'),
+        '.o_attachment',
+        2,
+        "thread window should have 2 attachments");
+    assert.containsNone(
+        $('.o_thread_window .o_attachment'),
+        'o_attachment_delete_cross',
+        "attachments should not be deletable");
+
+    parent.destroy();
+});
+
 });
 });
 });

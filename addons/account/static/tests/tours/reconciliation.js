@@ -21,31 +21,31 @@ Tour.register('bank_statement_reconciliation', {
         // Make a partial reconciliation
 
         {
-            content: "open the last line in match_rp mode to test the partial reconciliation",
+            content: "open the 4th line in match_rp mode to test the partial reconciliation",
             extra_trigger: '.o_reconciliation_line:first[data-mode="match_rp"]',
-            trigger: '.o_reconciliation_line:last .cell_label:contains("First")'
+            trigger: '.o_reconciliation_line:nth-child(4) .cell_label:contains("First")'
         },
         {
             content: "click on partial reconcile",
-            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount',
+            trigger: '.o_reconciliation_line:nth-child(4) .accounting_view .edit_amount',
         },
         {
             content: "Edit amount",
-            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount_input:not(.d-none)',
+            trigger: '.o_reconciliation_line:nth-child(4) .accounting_view .edit_amount_input:not(.d-none)',
             run: 'text 2000'
         },
         {
             content: "Press enter to validate amount",
-            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount_input:not(.d-none)',
-            run: 'keydown 13'
+            trigger: '.o_reconciliation_line:nth-child(4) .accounting_view .edit_amount_input:not(.d-none)',
+            run: 'keydown 13'  // requires focus
         },
         {
             content: "Check that amount has changed",
-            trigger: '.o_reconciliation_line:last .accounting_view .line_amount:contains("2,000.00")'
+            trigger: '.o_reconciliation_line:nth-child(4) .accounting_view .line_amount:contains("2,000.00")'
         },
         {
             content: "reconcile the line",
-            trigger: '.o_reconciliation_line:last .o_reconcile:visible',
+            trigger: '.o_reconciliation_line:nth-child(4) .o_reconcile:visible',
         },
 
         // Reconciliation of 'Prepayment'
@@ -53,7 +53,7 @@ Tour.register('bank_statement_reconciliation', {
 
         {
             content: "change the partner of the second line",
-            trigger: '.o_reconciliation_line:nth-child(2) .o_field_many2one input',
+            trigger: '.o_reconciliation_line:nth-child(2) .o_field_many2one[name="partner_id"] input',
             run: 'text Deco'
         },
         {
@@ -68,6 +68,7 @@ Tour.register('bank_statement_reconciliation', {
         },
         {
             content: "select a line linked to Deco Addict ",
+            extra_trigger: ".o_reconciliation_line:nth-child(2) .match .line_info_button:last[data-content*='4,610']",
             trigger: ".o_reconciliation_line:nth-child(2) .match .line_info_button[data-content*='Deco Addict']"
         },
         {
@@ -79,7 +80,7 @@ Tour.register('bank_statement_reconciliation', {
         },
         {
             content: "create a write-off",
-            extra_trigger: '.o_reconciliation_line:nth-child(2) .accounting_view tbody:not(:has(.cell_label))',
+            extra_trigger: '.o_reconciliation_line:nth-child(2) .accounting_view tfoot .cell_left:visible:contains(32.58)',
             trigger: '.o_reconciliation_line:nth-child(2) .o_notebook .nav-link[href*="notebook_page_create"]'
         },
         {
@@ -89,7 +90,7 @@ Tour.register('bank_statement_reconciliation', {
         },
         {
             content: "select the first account",
-            trigger: '.ui-autocomplete:visible li:contains(100000)',
+            trigger: '.ui-autocomplete:visible li:last:contains(100000)',
         },
         {
             content: "reconcile the line with the write-off",
@@ -99,7 +100,7 @@ Tour.register('bank_statement_reconciliation', {
         // Be done
         {
             content: "check the number off validate lines",
-            trigger: '.o_control_panel .progress-reconciliation:contains(3 / 5)'
+            trigger: '.o_control_panel .progress-reconciliation:contains(3 / 6)'
         },
     ]
 );

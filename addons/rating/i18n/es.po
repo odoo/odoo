@@ -1,16 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * rating
+# 	* rating
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,13 @@ msgid ""
 msgstr ""
 "<br/>\n"
 " en nuestros servicios en \""
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid ""
+"<i class=\"fa fa-check-circle fa-5x text-success\" role=\"img\" aria-"
+"label=\"Thank you!\" title=\"Thank you!\"/>"
+msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
@@ -78,9 +86,10 @@ msgstr "Fecha"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre mostrado"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
@@ -118,13 +127,14 @@ msgid "Group By"
 msgstr "Agrupar por"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__highly_dissatisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Highly dissatisfied"
 msgstr "Altamente insatisfecho"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__id
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__id
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
 msgstr "ID"
@@ -141,6 +151,7 @@ msgstr "Imagen"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin____last_update
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin____last_update
 #: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
@@ -176,7 +187,7 @@ msgid "My Ratings"
 msgstr "Mis calificaciones"
 
 #. module: rating
-#: selection:rating.rating,rating_text:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__no_rating
 msgid "No Rating yet"
 msgstr "Sin valoración aun"
 
@@ -186,8 +197,8 @@ msgid "No rating yet"
 msgstr "Sin valoración aun"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__not_satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Not satisfied"
 msgstr "No Satisfecho"
 
@@ -217,6 +228,11 @@ msgid "Parent Related Document Model"
 msgstr "Modelo de documento matriz relacionado"
 
 #. module: rating
+#: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
+msgstr ""
+
+#. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated User"
 msgstr "Usuario valorado"
@@ -238,6 +254,7 @@ msgid "Rating"
 msgstr "Calificación"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Average"
@@ -246,17 +263,17 @@ msgstr "Calificación media"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Valoración del último comentario"
+msgstr "Clasificación del último comentario"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
 msgid "Rating Last Image"
-msgstr "Valoración de la última imagen"
+msgstr "Clasificación de la última imagen"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
 msgid "Rating Last Value"
-msgstr "Clasificar Último Valor"
+msgstr "Calificar Último Valor"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
@@ -269,7 +286,16 @@ msgid "Rating Number"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_value
+#: model:ir.model,name:rating.model_rating_parent_mixin
+msgid "Rating Parent Mixin"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
 msgid "Rating Value"
@@ -278,10 +304,10 @@ msgstr "Valoración del valor"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
 msgid "Rating count"
-msgstr "Clasificar conteo"
+msgstr "Cuenta de calificación"
 
 #. module: rating
-#: sql_constraint:rating.rating:0
+#: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
 msgid "Rating should be between 0 to 10"
 msgstr "La valoración ha de comprender entre 0 y 10"
 
@@ -291,6 +317,7 @@ msgid "Rating value: 0=Unhappy, 10=Happy"
 msgstr "Valor Calificación: 0=Descontento, 10=Feliz"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Ratings"
 msgstr "Valoraciones"
@@ -307,7 +334,6 @@ msgid "Related Document Model"
 msgstr "Modelo de documento relacionado"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
@@ -324,8 +350,8 @@ msgid "Resource name"
 msgstr "Nombre del recurso"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Satisfied"
 msgstr "Satisfecho"
 
@@ -387,13 +413,13 @@ msgid "for"
 msgstr "para"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:21
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "highly dissatisfied"
 msgstr "altamente insatisfecho"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:20
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "not satisfied"
 msgstr "no satisfecho"
@@ -404,7 +430,7 @@ msgid "on"
 msgstr "de"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:22
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "satisfied"
 msgstr "satisfecho"

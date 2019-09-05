@@ -20,7 +20,6 @@ var FormView = BasicView.extend({
     multi_record: false,
     withSearchBar: false,
     searchMenuTypes: [],
-    jsLibs: [],
     viewType: 'form',
     /**
      * @override
@@ -48,9 +47,6 @@ var FormView = BasicView.extend({
         this.controllerParams.mode = mode;
 
         this.rendererParams.mode = mode;
-        if (config.device.isMobile) {
-            this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
-        }
     },
 
     //--------------------------------------------------------------------------

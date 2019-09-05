@@ -4624,6 +4624,78 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('column progressbars: "false" bar is clickable', async function (assert) {
+        assert.expect(8);
+
+        this.data.partner.records.push({id: 5, bar: true, foo: false, product_id: 5, state: "ghi"});
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        assert.containsN(kanban, '.o_kanban_group', 2);
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "4");
+        assert.containsN(kanban, '.o_kanban_counter_progress:last .progress-bar', 4);
+        assert.containsOnce(kanban, '.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]',
+            "should have false kanban color");
+        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'bg-muted-full');
+
+        await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
+
+        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
+        assert.hasClass(kanban.$('.o_kanban_group:last'), 'o_kanban_group_show_muted');
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "1");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('column progressbars: "false" bar with sum_field', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records.push({id: 5, bar: true, foo: false, int_field: 15, product_id: 5, state: "ghi"});
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<field name="foo"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        assert.containsN(kanban, '.o_kanban_group', 2);
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "51");
+
+        await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
+
+        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "15");
+
+        kanban.destroy();
+    });
+
     QUnit.test('column progressbars should not crash in non grouped views', async function (assert) {
         assert.expect(3);
 
@@ -5782,6 +5854,44 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('click on image field in kanban with oe_kanban_global_click', async function (assert) {
+        assert.expect(2);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div class="oe_kanban_global_click">' +
+                                '<field name="image" widget="image"/>' +
+                            '</div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            mockRPC: function (route) {
+                if (route.startsWith('data:image')) {
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                switch_view: function (event) {
+                    assert.deepEqual(_.pick(event.data, 'mode', 'model', 'res_id', 'view_type'), {
+                        mode: 'readonly',
+                        model: 'partner',
+                        res_id: 1,
+                        view_type: 'form',
+                    }, "should trigger an event to open the clicked record in a form view");
+                },
+            },
+        });
+
+        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+
+        await testUtils.dom.click(kanban.$('.o_field_image').first());
+
+        kanban.destroy();
+    });
 });
 
 });

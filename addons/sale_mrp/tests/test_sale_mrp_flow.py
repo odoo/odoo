@@ -8,6 +8,8 @@ from odoo.exceptions import UserError
 from odoo.tools import mute_logger, float_compare
 
 
+# these tests create accounting entries, and therefore need a chart of accounts
+@common.tagged('post_install', '-at_install')
 class TestSaleMrpFlow(common.SavepointCase):
 
     @classmethod
@@ -572,7 +574,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.company.anglo_saxon_accounting = True
         self.partner = self.env.ref('base.res_partner_1')
         self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category','property_valuation': 'real_time', 'property_cost_method': 'fifo'})
-        account_type = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'other'})
+        account_type = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'other', 'internal_group': 'asset'})
         self.account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00' , 'user_type_id': account_type.id, 'reconcile': True})
         account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type.id, 'reconcile': True})
         account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type.id, 'reconcile': True})

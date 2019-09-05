@@ -11,10 +11,10 @@
                     <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
                 </div>
                 <div class="col-12 col-md-5" t-if="top3_users">
-                    <div class="ml-4">
+                    <div class="ml-4 ml-md-2 mt-3">
                         <t t-foreach="top3_users" t-as="user">
                             <img class="rounded-circle img-fluid shadow ml-n4"
-                                style="border: 6px solid white"
+                                style="border: 6px solid white; max-width: 40%"
                                 t-attf-src="/web/image/res.users/#{user['id']}/image_128"/>
                         </t>
                     </div>
@@ -115,6 +115,9 @@
                                     </div>
                                     <div class="col-12 col-sm-6 col-lg-12 d-flex align-items-center">
                                         <t t-call="website_slides.slides_home_user_achievements_small"/>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-12 pl-md-5 pl-lg-0 mt-lg-4">
+                                        <t t-call="website_slides.slides_home_users_small"/>
                                     </div>
                                 </div>
                             </div>
@@ -235,7 +238,7 @@
                                         t-esc="tag_group.name"/>
                                     <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
                                         <t t-foreach="tag_group.tag_ids" t-as="tag">
-                                            <a t-att-class="'dropdown-item %s' % ('active' if tag in search_tags else '')"
+                                            <a rel="nofollow" t-att-class="'dropdown-item %s' % ('active' if tag in search_tags else '')"
                                                 t-att-href="'/slides/all?%s' % keep_query('*', **{'channel_tag_group_id_%s' % tag_group.id: tag.id if tag not in search_tags else False})"
                                                 t-esc="tag.name"/>
                                         </t>
@@ -365,8 +368,13 @@
     </div>
 </template>
 
-<template id='slides_home_users_small' name="Latest Users">
+<template id='slides_home_users_small' name="Users">
     <div class="o_wslides_home_aside">
+    </div>
+</template>
+
+<template id="toggle_leaderboard" inherit_id="website_slides.slides_home_users_small" active="True" customize_show="True" name='Display Leaderboard'>
+    <xpath expr="//div[hasclass('o_wslides_home_aside')]" position="inside">
         <div class="row o_wslides_home_aside_title">
             <div class="col">
                 <a href="/profile/users" class="float-right">View all</a>
@@ -386,7 +394,7 @@
             </t>
             <t t-else=""><p class="col mt8">No leaderboard currently :(</p></t>
         </div>
-    </div>
+    </xpath>
 </template>
 
 <template id='user_quickkarma_card' name="User QuickKarma Card">

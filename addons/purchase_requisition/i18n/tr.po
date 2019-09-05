@@ -1,33 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase_requisition
+# 	* purchase_requisition
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2018
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
-# Martin Trigaux, 2018
-# Levent Karakaş <levent@mektup.at>, 2018
-# Murat Kaplan <muratk@projetgrup.com>, 2018
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
-# Mehmet Demirel <mdemirell@gmail.com>, 2018
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
-# Buket Şeker <buket_skr@hotmail.com>, 2018
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
+# Martin Trigaux, 2019
+# Levent Karakaş <levent@mektup.at>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2019
+# Mehmet Demirel <mdemirell@gmail.com>, 2019
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2019
+# Abdullah Onur Uğur <aonurugur@outlook.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# Buket Şeker <buket_skr@hotmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: purchase_requisition
+#: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
+msgid "'Tender - %s' % (object.name)"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -90,14 +97,29 @@ msgid "Action Needed"
 msgstr "Eylem Gerekiyor"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_ids
+msgid "Activities"
+msgstr "Aktiviteler"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
+msgid "Activity State"
+msgstr "Aktivite Durumu"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
+msgid "Agreement"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
 msgid "Agreement Deadline"
 msgstr "Sözleşme Bitiş Tarihi"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
-msgid "Agreement Reference"
-msgstr "Sözleşme Referansı"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__exclusive
@@ -132,8 +154,8 @@ msgid "Attachment Count"
 msgstr "Ek Sayısı"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__open
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__open
 msgid "Bid Selection"
 msgstr "Tedarikçi Seçimi"
 
@@ -141,11 +163,6 @@ msgstr "Tedarikçi Seçimi"
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
 msgstr "Kapsamlı Sipariş"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
-msgid "Blanket order"
-msgstr ""
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_multi
@@ -164,16 +181,21 @@ msgid "Cancel"
 msgstr "İptal"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__cancel
 msgid "Cancelled"
 msgstr "İptal Edildi"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:116
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr "Bu teklifle ilişkili anlaşma tarafından iptal edildi."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
+msgid "Category"
+msgstr "Kategori"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -181,8 +203,8 @@ msgid "Close"
 msgstr "Kapat"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__done
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__done
 msgid "Closed"
 msgstr "Kapanma"
 
@@ -198,14 +220,23 @@ msgid "Confirm"
 msgstr "Doğrula"
 
 #. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__in_progress
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__in_progress
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
 msgid "Confirmed"
 msgstr "Doğrulanmış"
 
 #. module: purchase_requisition
-#: selection:product.template,purchase_requisition:0
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Ölçü Birimleri arası dönüştürme yalnızca aynı kategoriye sahiplerse olur. "
+"Dönüşümler oranlara göre yapılacaktır."
+
+#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__rfq
 msgid "Create a draft purchase order"
 msgstr "Taslak alım siparişi oluştur"
 
@@ -261,37 +292,32 @@ msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,line_copy:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__none
 msgid "Do not create RfQ lines automatically"
 msgstr "Otomatik olarak Teklif Talebi satırı oluşturamazsınız."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Done"
-msgstr "Tamamlandı"
+msgstr "Biten"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__move_dest_id
-msgid "Downstream Move"
-msgstr "Satışa Dönük Hareket"
-
-#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__draft
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__draft
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
 msgid "Draft"
 msgstr "Taslak"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "End Date"
-msgstr "Bitiş Tarihi"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr "Satın alma anlaşma örnekleri teklif çağrısı ve açık sipariş içerir."
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Exception Activities"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
@@ -321,6 +347,11 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Future Activities"
+msgstr "Sonraki Aktiviteler"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
 msgstr "Grupla"
 
@@ -330,6 +361,16 @@ msgstr "Grupla"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__id
 msgid "ID"
 msgstr "ID"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_icon
+msgid "Icon"
+msgstr "İkon"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread
@@ -343,8 +384,9 @@ msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "İşaretliyse,bazı mesajlar gönderi hatası içermektedir."
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -391,6 +433,11 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Late Activities"
+msgstr "Geciken Aktiviteler"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__line_copy
 msgid "Lines"
 msgstr "Satırlar"
@@ -403,7 +450,7 @@ msgstr "Ana Ek"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "Message Delivery error"
-msgstr "Mesaj İletilme Hatası"
+msgstr "Mesaj Teslim hatası"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
@@ -431,6 +478,21 @@ msgid "New Quotation"
 msgstr "Yeni Teklif"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Sonraki Aktivite Zaman Sınırı"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sonraki Aktivite Özeti"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_id
+msgid "Next Activity Type"
+msgstr "Sonraki Aktivite Türü"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Eylemlerin Sayısı"
@@ -453,7 +515,7 @@ msgstr "Eylem gerektiren mesaj sayısı"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Teslimat hatası olan mesaj sayısı"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
@@ -461,15 +523,10 @@ msgid "Number of unread messages"
 msgstr "Okunmamış mesaj sayısı"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-#: selection:purchase.requisition,state_blanket_order:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__ongoing
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__ongoing
 msgid "Ongoing"
 msgstr "Süren"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__picking_type_id
-msgid "Operation Type"
-msgstr "Operasyon Türü"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__qty_ordered
@@ -489,12 +546,8 @@ msgid "Procurement"
 msgstr "Tedarik"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_group
-msgid "Procurement Group"
-msgstr "Tedarik Grubu"
-
-#. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_id
 msgid "Product"
 msgstr "Ürün"
@@ -521,7 +574,7 @@ msgid "Products to Purchase"
 msgstr "Satınalınacak Ürünler"
 
 #. module: purchase_requisition
-#: selection:product.template,purchase_requisition:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__tenders
 msgid "Propose a call for tenders"
 msgstr "Teklif Topla"
 
@@ -542,7 +595,6 @@ msgstr "Alım Sözleşme Türleri"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
@@ -572,7 +624,7 @@ msgstr "İstenmiş Satınalma Siparişleri"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Representative"
-msgstr ""
+msgstr "Satınalma Temsilcisi"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -613,6 +665,12 @@ msgid "RFQs/Orders"
 msgstr "Teklif ve Siparişler"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Reference"
+msgstr "Referans"
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
 msgid "Reordering"
 msgstr "Yeniden Tedarik"
@@ -638,19 +696,19 @@ msgid "Requisition"
 msgstr "İstek"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requisition_line_ids
-msgid "Requisition Line"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requistion_line_ids
-msgid "Requistion Line"
-msgstr ""
-
-#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
 msgstr "Taslağa Ayarla"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_user_id
+msgid "Responsible User"
+msgstr "Sorumlu Kullanıcı"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__schedule_date
@@ -663,12 +721,12 @@ msgid "Search Purchase Agreements"
 msgstr "Satınalma Sözleşmelerinde Ara"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,exclusive:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
 msgid "Select multiple RFQ"
 msgstr "Birden fazla teklif isteği seçilebilir"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,exclusive:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
 msgid "Select only one RFQ (exclusive)"
 msgstr "Sadece bir teklif isteği seçilebilir (özel)"
 
@@ -688,14 +746,14 @@ msgid "Sequence"
 msgstr "Sıra"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,quantity_copy:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
 msgid "Set quantities manually"
 msgstr "Miktarı manuel olarak ayarlayın"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Source"
-msgstr "Kaynak"
+msgid "Show all records which has next action date is before today"
+msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -719,14 +777,17 @@ msgid "Status"
 msgstr "Durumu"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_stock_move
-msgid "Stock Move"
-msgstr "Stok Hareketi"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_stock_rule
-msgid "Stock Rule"
-msgstr "Stok Kuralı"
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Etkinliklerdeki aşamalar\n"
+"Zamanı Geçmiş: Tarihi geçmiş \n"
+"Bugün: Etkinlik günü bugün\n"
+"Planlanan: Gelecek etkinlikler."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
@@ -750,7 +811,7 @@ msgid ""
 msgstr "Tüm ürünlerin alındığı beklenen ve planlanan teslimat tarihi ."
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:95
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
 "There is already an open blanket order for this supplier. We suggest you to "
@@ -759,18 +820,18 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Unassigned"
-msgstr "Atanmamış"
+msgid "Today Activities"
+msgstr "Bugünkü Aktiviteler"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Unassigned  Requisition"
-msgstr "Atanmamış İstek"
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_unit
 msgid "Unit Price"
-msgstr "Birim Maliyet"
+msgstr "Birim Fiyat"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread
@@ -783,12 +844,17 @@ msgid "Unread Messages Counter"
 msgstr "Okunmamış Mesaj Sayacı"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,line_copy:0
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "UoM"
+msgstr "Ölçü Birimi"
+
+#. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
 msgid "Use lines of agreement"
 msgstr "Anlaşma satırları kullan"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition.type,quantity_copy:0
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__copy
 msgid "Use quantities of agreement"
 msgstr "Anlaşma miktarı kullan"
 
@@ -803,12 +869,7 @@ msgid "Vendor"
 msgstr "Tedarikçi"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__warehouse_id
-msgid "Warehouse"
-msgstr "Depo"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:94
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Warning for %s"
 msgstr "%s için uyarı"
@@ -824,33 +885,33 @@ msgid "Website communication history"
 msgstr "Web Sitesi iletişim geçmişi"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:178
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You can only delete draft requisitions."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:123
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:127
-#: code:addons/purchase_requisition/models/purchase_requisition.py:220
-#: code:addons/purchase_requisition/models/purchase_requisition.py:228
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:129
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:156
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "

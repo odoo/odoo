@@ -745,6 +745,17 @@ var ListRenderer = BasicRenderer.extend({
         var isNodeSorted = order[0] && order[0].name === name;
         var field = this.state.fields[name];
         var $th = $('<th>');
+        if (name) {
+            $th.attr('data-name', name);
+        }
+        if (node.attrs.class) {
+            if (node.attrs.class.indexOf('oe_edit_only') !== -1) {
+                $th.addClass('oe_edit_only');
+            }
+            if (node.attrs.class.indexOf('oe_read_only') !== -1) {
+                $th.addClass('oe_read_only');
+            }
+        }
         if (!field) {
             return $th;
         }
@@ -756,7 +767,6 @@ var ListRenderer = BasicRenderer.extend({
             }
         }
         $th.text(description)
-            .attr('data-name', name)
             .attr('tabindex', -1)
             .toggleClass('o-sort-down', isNodeSorted ? !order[0].asc : false)
             .toggleClass('o-sort-up', isNodeSorted ? order[0].asc : false)

@@ -108,7 +108,9 @@ class PurchaseOrder(models.Model):
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product', readonly=False)
-    user_id = fields.Many2one('res.users', string='Purchase Representative', index=True, tracking=True, default=lambda self: self.env.user)
+    user_id = fields.Many2one(
+        'res.users', string='Purchase Representative', index=True, tracking=True,
+        default=lambda self: self.env.user, check_company=True)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.company.id)
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='Ratio between the purchase order currency and the company currency')
 
@@ -391,6 +393,7 @@ class PurchaseOrder(models.Model):
         # override the context to get rid of the default filtering
         result['context'] = {
             'default_type': 'in_invoice',
+            'default_company_id': self.company_id.id,
             'default_purchase_id': self.id,
         }
         if self.user_id:

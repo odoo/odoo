@@ -1,28 +1,44 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_expense
+# 	* sale_expense
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Martin Trigaux, 2019
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: UAB \"Draugiški sprendimai\" <transifex@draugiskisprendimai.lt>, 2017\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: sale_expense
-#: model:ir.model,name:sale_expense.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Analitinė eilutė"
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
+msgid "# of Expenses"
+msgstr "Išlaidų skaičius"
+
+#. module: sale_expense
+#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
+msgid "<strong style=\"font-size: 16px;\">Submit expenses by email</strong>"
+msgstr "<strong style=\"font-size: 16px;\">Pateikti išlaidas el. paštu</strong>"
+
+#. module: sale_expense
+#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
+msgid "Activate Expense Emails"
+msgstr "Aktyvuoti išlaidų el. paštus"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
+msgid "Can be reinvoiced"
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -30,11 +46,47 @@ msgid "Expense"
 msgstr "Išlaidos"
 
 #. module: sale_expense
-#: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
-msgid "Invoicing"
-msgstr "Sąskaitos išrašymas"
+#: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
+#: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
+msgid "Expenses"
+msgstr "Išlaidos"
 
 #. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sale_order_id
-msgid "Sale Order"
+#: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
+msgid ""
+"If the product has an expense policy, it will be reinvoiced on this sales "
+"order"
+msgstr ""
+
+#. module: sale_expense
+#: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
+msgid "Invoicing"
+msgstr "Apskaita"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move_line
+msgid "Journal Item"
+msgstr "Žurnalo įrašas"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_product_template
+msgid "Product Template"
+msgstr "Produkto šablonas"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
+msgid "Reinvoice Customer"
+msgstr ""
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_sale_order
+msgid "Sales Order"
 msgstr "Pardavimo užsakymas"
+
+#. module: sale_expense
+#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
+msgid ""
+"Take a snapshot of your expenses and submit your expenses by email.<br>"
+msgstr ""
+"Nufotografuokite savo išlaidas ir pateikite savo išlaidas el. paštu.<br>"

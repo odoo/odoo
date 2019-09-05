@@ -552,10 +552,11 @@ class HolidaysRequest(models.Model):
         if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
             return
 
+        is_leave_user = self.user_has_groups('hr_holidays.group_hr_holidays_user')
         if state == 'validate1':
-            if employee.leave_manager_id != self.env.user:
+            if employee.leave_manager_id != self.env.user and not is_leave_user:
                 raise AccessError(_('You cannot first approve a leave for %s, because you are not his leave manager' % (employee.name,)))
-        elif state == 'validate' and not self.user_has_groups('hr_holidays.group_hr_holidays_user'):
+        elif state == 'validate' and not is_leave_user:
             # Is probably handled via ir.rule
             raise AccessError(_('You don\'t have the rights to apply second approval on a leave request'))
 
@@ -647,13 +648,14 @@ class HolidaysRequest(models.Model):
 
     def unlink(self):
         error_message = _('You cannot delete a time off which is in %s state')
+        state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
 
         if not self.user_has_groups('hr_holidays.groups_hr_user'):
             if any(hol.state != 'draft' for hol in self):
-                raise UserError(error_message % self[:1].state)
+                raise UserError(error_message % state_description_values.get(self[:1].state))
         else:
             for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
-                raise UserError(_('You cannot delete a time off which is in %s state.') % (holiday.state,))
+                raise UserError(error_message % (state_description_values.get(holiday.state),))
         return super(HolidaysRequest, self).unlink()
 
     def copy_data(self, default=None):
