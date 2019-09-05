@@ -212,7 +212,7 @@ QUnit.module('widgets', {
     });
 
     QUnit.test('Export dialog UI test', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
         var list = await createView({
             View: ListView,
             model: 'partner',
@@ -269,6 +269,8 @@ QUnit.module('widgets', {
         // Add field
         await testUtils.dom.click($('.modal div:contains(Activities) .o_add_field'));
         assert.strictEqual($('.modal .o_fields_list li').length, 2, "There should be two fields in export field list.");
+        assert.strictEqual($('.modal .o_fields_list li:eq(1)').text(), "Activities",
+            "string of second field in export list should be 'Activities'");
         // Remove field
         await testUtils.dom.click($('.modal .o_fields_list li:first .o_remove_field'));
         assert.strictEqual($('.modal .o_fields_list li').length, 1, "There should be only one field in list");
