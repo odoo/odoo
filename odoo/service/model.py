@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from contextlib import closing
 from functools import wraps
 import logging
 from psycopg2 import IntegrityError, OperationalError, errorcodes
@@ -73,7 +74,7 @@ def check(f):
 
             # We open a *new* cursor here, one reason is that failed SQL
             # queries (as in IntegrityError) will invalidate the current one.
-            with odoo.sql_db.db_connect(dbname).cursor() as cr:
+            with closing(odoo.sql_db.db_connect(dbname).cursor()) as cr:
                 if ttype == 'sql_constraint':
                     res = translate_sql_constraint(cr, key=key, lang=lang)
                 else:
