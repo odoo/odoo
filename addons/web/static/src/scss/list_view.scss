@@ -201,7 +201,7 @@
                 right: 0;
                 top: 0;
                 width: 10px;
-                z-index: 10;
+                z-index: 1; // must be over the sort caret (::after pseudo-element)
             }
 
             .o_list_record_remove_header {
@@ -294,9 +294,11 @@
     }
 
     .o_optional_columns_dropdown_toggle {
+        cursor: pointer;
         width: 10px;
         text-align: center;
         line-height: 30px;
+        z-index: 1; // must be over the resize handle
     }
 
     .o_optional_columns {
