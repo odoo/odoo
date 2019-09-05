@@ -126,6 +126,7 @@ def dispatch_rpc(service_name, method, params):
 
         threading.current_thread().uid = None
         threading.current_thread().dbname = None
+        env = None
         if service_name == 'common':
             dispatch = odoo.service.common.dispatch
         elif service_name == 'db':
