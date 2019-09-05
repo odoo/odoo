@@ -23,7 +23,10 @@ class SMSTemplate(models.Model):
         help="The type of document this template can be used with")
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     body = fields.Char('Body', translate=True, required=True)
-    lang = fields.Char('Language', placeholder="${object.partner_id.lang}")
+    lang = fields.Char('Language', help="Use this field to either force a specific language (ISO code) or dynamically "
+                                        "detect the language of your recipient by a placeholder expression "
+                                        "(e.g. ${object.partner_id.lang})")
+    # Use to create contextual action (same as for email template)
     sidebar_action_id = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
                                         "of the related document model")
