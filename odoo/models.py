@@ -2414,6 +2414,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         cls._setup_done = True
 
+        # 5. determine and validate rec_name
+        if cls._rec_name:
+            assert cls._rec_name in cls._fields, \
+                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
+        elif 'name' in cls._fields:
+            cls._rec_name = 'name'
+        elif 'x_name' in cls._fields:
+            cls._rec_name = 'x_name'
+
     @api.model
     def _setup_fields(self):
         """ Setup the fields, except for recomputation triggers. """
@@ -2465,15 +2474,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # register constraints and onchange methods
         cls._init_constraints_onchanges()
-
-        # validate rec_name
-        if cls._rec_name:
-            assert cls._rec_name in cls._fields, \
-                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
-        elif 'name' in cls._fields:
-            cls._rec_name = 'name'
-        elif 'x_name' in cls._fields:
-            cls._rec_name = 'x_name'
 
         # make sure parent_order is set when necessary
         if cls._parent_store and not cls._parent_order:
