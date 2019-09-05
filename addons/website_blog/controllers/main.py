@@ -52,15 +52,12 @@ class WebsiteBlog(http.Controller):
 
         return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))
 
-    def _prepare_blog_values(self, blog=False, date_begin=False, date_end=False, tags=False, state=False, page=False):
+    def _prepare_blog_values(self, blogs, blog=False, date_begin=False, date_end=False, tags=False, state=False, page=False):
         """ Prepare all values to display the blogs index page or one specific blog"""
-
-        Blog = request.env['blog.blog']
         BlogPost = request.env['blog.post']
 
         # prepare domain
         domain = request.website.website_domain()
-        blogs = Blog.search(domain, order="create_date asc, id asc")
 
         if blog:
             domain += [('blog_id', '=', blog.id)]
@@ -143,12 +140,13 @@ class WebsiteBlog(http.Controller):
             raise werkzeug.exceptions.NotFound()
 
         blogs = Blog.search(request.website.website_domain(), order="create_date asc, id asc")
+
         if not blog and len(blogs) == 1:
             return werkzeug.utils.redirect('/blog/%s' % slug(blogs[0]), code=302)
 
         date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
 
-        values = self._prepare_blog_values(blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page)
+        values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page)
 
         if blog:
             values['main_object'] = blog
