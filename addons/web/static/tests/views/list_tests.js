@@ -1493,7 +1493,7 @@ QUnit.module('Views', {
                     '</tree>',
         });
 
-        assert.containsNone(list, 'o_resize', "There shouldn't be any resize handle if no data");
+        assert.containsNone(list, '.o_resize', "There shouldn't be any resize handle if no data");
         assertions.forEach(a => {
             assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
                 `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
@@ -1502,6 +1502,66 @@ QUnit.module('Views', {
             "Char field should occupy the remaining space");
 
         list.destroy();
+    });
+
+    QUnit.test('width of some fields should be hardcoded if no data, and list initially invisible', async function (assert) {
+        const assertions = [
+            { field: 'bar', expected: 40, type: 'Boolean' },
+            { field: 'int_field', expected: 74, type: 'Integer' },
+            { field: 'qux', expected: 92, type: 'Float' },
+            { field: 'date', expected: 92, type: 'Date' },
+            { field: 'datetime', expected: 146, type: 'Datetime' },
+            { field: 'amount', expected: 104, type: 'Monetary' },
+            { field: 'the_button', expected: 25, type: 'with custom width' },
+        ];
+        assert.expect(11);
+
+        this.data.foo.fields.foo_o2m = {string: "Foo O2M", type: "one2many", relation: "foo"};
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { mode: 'edit' },
+            arch: `<form>
+                    <sheet>
+                        <notebook>
+                            <page string="Page1"></page>
+                            <page string="Page2">
+                                <field name="foo_o2m">
+                                    <tree editable="bottom">
+                                        <field name="bar"/>
+                                        <field name="foo"/>
+                                        <field name="int_field"/>
+                                        <field name="qux"/>
+                                        <field name="date"/>
+                                        <field name="datetime"/>
+                                        <field name="amount"/>
+                                        <button name="the_button" width="25px"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+        });
+
+        assert.isNotVisible(form.$('.o_field_one2many'));
+
+        await testUtils.dom.click(form.$('.nav-item:last-child .nav-link'));
+
+        assert.isVisible(form.$('.o_field_one2many'));
+
+        assert.containsNone(form, '.o_field_one2many .o_resize',
+            "There shouldn't be any resize handle if no data");
+        assertions.forEach(a => {
+            assert.strictEqual(form.$(`.o_field_one2many th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
+                `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
+        });
+        assert.strictEqual(form.$('.o_field_one2many th[data-name="foo"]')[0].style.width, '100%',
+            "Char field should occupy the remaining space");
+
+        form.destroy();
     });
 
     QUnit.test('editable list: list view in an initially unselected notebook page', async function (assert) {
@@ -1803,7 +1863,7 @@ QUnit.module('Views', {
             groupBy: ['int_field'],
         });
 
-        assert.containsNone(list, 'o_resize', "There shouldn't be any resize handle if no data");
+        assert.containsNone(list, '.o_resize', "There shouldn't be any resize handle if no data");
         assertions.forEach(a => {
             assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
                 `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
