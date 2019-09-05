@@ -1268,8 +1268,10 @@ def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
     except Exception:
         localized_datetime = utc_datetime
 
-    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
-    locale = babel.Locale.parse(lang.code)
+    lang_code = lang_code or env.context.get('lang') or 'en_US'
+    lang = env['res.lang']._lang_get(lang_code)
+
+    locale = babel.Locale.parse(lang.code or lang_code)  # lang can be inactive, so `lang`is empty
     if not dt_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
         time_format = posix_to_ldml(lang.time_format, locale=locale)
