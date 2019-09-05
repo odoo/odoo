@@ -728,6 +728,7 @@ return AbstractModel.extend({
             r.allDay = true;
             r.start = date_start.format('YYYY-MM-DD');
             r.end = date_stop.startOf('day').format('YYYY-MM-DD');
+            r.showTime = true;
         }
 
         return r;
