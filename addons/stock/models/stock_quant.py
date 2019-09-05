@@ -23,6 +23,22 @@ class StockQuant(models.Model):
             return
         return [('usage', 'in', ['internal', 'transit'])]
 
+    def _domain_lot_id(self):
+        if not self._is_inventory_mode():
+            return
+        domain = [
+            "'|'",
+                "('company_id', '=', company_id)",
+                "('company_id', '=', False)"
+        ]
+        if self.env.context.get('active_model') == 'product.product':
+            domain.insert(0, "('product_id', '=', %s)" % self.env.context.get('active_id'))
+        if self.env.context.get('active_model') == 'product.template':
+            product_template = self.env['product.template'].browse(self.env.context.get('active_id'))
+            if product_template.exists():
+                domain.insert(0, "('product_id', 'in', %s)" % product_template.product_variant_ids.ids)
+        return '[' + ', '.join(domain) + ']'
+
     def _domain_product_id(self):
         if not self._is_inventory_mode():
             return
@@ -50,7 +66,8 @@ class StockQuant(models.Model):
         auto_join=True, ondelete='restrict', readonly=True, required=True, check_company=True)
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
-        ondelete='restrict', readonly=True, check_company=True)
+        ondelete='restrict', readonly=True, check_company=True,
+        domain=lambda self: self._domain_lot_id())
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
         domain="[('location_id', '=', location_id)]",
