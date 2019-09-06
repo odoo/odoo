@@ -103,7 +103,7 @@ odoo.define('payment.processing', function (require) {
                 return nbTx;
             }
             // if there's only one tx to manage
-            if(countTxInState(['tx_done', 'tx_error']) === 1) {
+            if(countTxInState(['tx_done', 'tx_error', 'tx_pending']) === 1) {
                 var tx = render_values['tx_done'][0] || render_values['tx_error'][0];
                 if (tx) {
                     window.location = tx.return_url;
