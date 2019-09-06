@@ -4590,6 +4590,78 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: clicking on "Discard changes" in multi edition', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+        list.$('.o_data_row:first() .o_data_cell:first() input').val("oof");
+
+        const $discardButton = list.$buttons.find('.o_list_button_discard');
+
+        // Simulates an actual click (event chain is: mousedown > change > blur > focus > mouseup > click)
+        await testUtils.dom.triggerEvents($discardButton, ['mousedown']);
+        await testUtils.dom.triggerEvents(list.$('.o_data_row:first() .o_data_cell:first() input'),
+            ['change', 'blur', 'focusout']);
+        await testUtils.dom.triggerEvents($discardButton, ['focus']);
+        $discardButton[0].dispatchEvent(new MouseEvent('mouseup'));
+        await testUtils.dom.click($discardButton);
+
+        assert.ok($('.modal').text().includes("Warning"), "Modal should ask to discard changes");
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.strictEqual(list.$('.o_data_row:first() .o_data_cell:first()').text(), "yop");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view (multi edition): mousedown on "Discard", but mouseup somewhere else', async function (assert) {
+        assert.expect(1);
+
+        const list = await createView({
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+        list.$('.o_data_row:first() .o_data_cell:first() input').val("oof");
+
+        // Simulates a pseudo drag and drop
+        await testUtils.dom.triggerEvents(list.$buttons.find('.o_list_button_discard'), ['mousedown']);
+        await testUtils.dom.triggerEvents(list.$('.o_data_row:first() .o_data_cell:first() input'),
+            ['change', 'blur', 'focusout']);
+        await testUtils.dom.triggerEvents($(document.body), ['focus']);
+        window.dispatchEvent(new MouseEvent('mouseup'));
+        await testUtils.nextTick();
+
+        assert.ok($('.modal').text().includes("Confirmation"), "Modal should ask to save changes");
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: multi edition with readonly modifiers', async function (assert) {
         assert.expect(5);
 
