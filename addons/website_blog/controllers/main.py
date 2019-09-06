@@ -86,7 +86,7 @@ class WebsiteBlog(http.Controller):
 
         # if blog, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
         offset = (page - 1) * self._blog_post_per_page
-        first_post = None
+        first_post = BlogPost
         if not blog:
             first_post = BlogPost.search(domain + [('website_published', '=', True)], order="post_date desc, id asc", limit=1)
             if use_cover and not fullwidth_cover:
@@ -106,16 +106,19 @@ class WebsiteBlog(http.Controller):
         tag_category = sorted(all_tags.mapped('category_id'), key=lambda category: category.name.upper())
         other_tags = sorted(all_tags.filtered(lambda x: not x.category_id), key=lambda tag: tag.name.upper())
 
+        # for performance prefetch the first post with the others
+        post_ids = (first_post | posts).ids
+
         return {
             'date_begin': date_begin,
             'date_end': date_end,
-            'first_post': first_post,
+            'first_post': first_post.with_prefetch(post_ids),
             'other_tags': other_tags,
             'tag_category': tag_category,
             'nav_list': self.nav_list(),
             'tags_list': self.tags_list,
             'pager': pager,
-            'posts': posts,
+            'posts': posts.with_prefetch(post_ids),
             'tag': tags,
             'active_tag_ids': active_tag_ids,
             'domain': domain,
