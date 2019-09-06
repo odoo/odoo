@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import uuid
 
 from odoo import fields, models, api, _
+from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.tools.misc import _format_time_ago
 from odoo.http import request
@@ -46,6 +47,7 @@ class WebsiteVisitor(models.Model):
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
     country_flag = fields.Binary(related="country_id.image", string="Country Flag")
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when visitor has been created")
+    timezone = fields.Selection(_tz_get, string='Timezone')
     email = fields.Char(string='Email', compute='_compute_email_phone')
     mobile = fields.Char(string='Mobile Phone', compute='_compute_email_phone')
 
