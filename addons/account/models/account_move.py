@@ -3103,26 +3103,31 @@ class AccountMoveLine(models.Model):
         ):
 
             exchange_move_id = False
+            missing_exchange_difference = False
             # Eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
             if to_balance and any([not float_is_zero(residual, precision_rounding=digits_rounding_precision) for aml, residual in to_balance.values()]):
-                exchange_move = self.env['account.move'].with_context(default_type='entry').create(
-                    self.env['account.full.reconcile']._prepare_exchange_diff_move(move_date=maxdate, company=amls[0].company_id))
-                part_reconcile = self.env['account.partial.reconcile']
-                for aml_to_balance, total in to_balance.values():
-                    if total:
-                        rate_diff_amls, rate_diff_partial_rec = part_reconcile.create_exchange_rate_entry(aml_to_balance, exchange_move)
-                        amls += rate_diff_amls
-                        partial_rec_ids += rate_diff_partial_rec.ids
-                    else:
-                        aml_to_balance.reconcile()
-                exchange_move.post()
-                exchange_move_id = exchange_move.id
-            #mark the reference of the full reconciliation on the exchange rate entries and on the entries
-            self.env['account.full.reconcile'].create({
-                'partial_reconcile_ids': [(6, 0, partial_rec_ids)],
-                'reconciled_line_ids': [(6, 0, amls.ids)],
-                'exchange_move_id': exchange_move_id,
-            })
+                if not self.env.context.get('no_exchange_difference'):
+                    exchange_move = self.env['account.move'].with_context(default_type='entry').create(
+                        self.env['account.full.reconcile']._prepare_exchange_diff_move(move_date=maxdate, company=amls[0].company_id))
+                    part_reconcile = self.env['account.partial.reconcile']
+                    for aml_to_balance, total in to_balance.values():
+                        if total:
+                            rate_diff_amls, rate_diff_partial_rec = part_reconcile.create_exchange_rate_entry(aml_to_balance, exchange_move)
+                            amls += rate_diff_amls
+                            partial_rec_ids += rate_diff_partial_rec.ids
+                        else:
+                            aml_to_balance.reconcile()
+                    exchange_move.post()
+                    exchange_move_id = exchange_move.id
+                else:
+                    missing_exchange_difference = True
+            if not missing_exchange_difference:
+                #mark the reference of the full reconciliation on the exchange rate entries and on the entries
+                self.env['account.full.reconcile'].create({
+                    'partial_reconcile_ids': [(6, 0, partial_rec_ids)],
+                    'reconciled_line_ids': [(6, 0, amls.ids)],
+                    'exchange_move_id': exchange_move_id,
+                })
 
     def _reconcile_lines(self, debit_moves, credit_moves, field):
         """ This function loops on the 2 recordsets given as parameter as long as it
