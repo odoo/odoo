@@ -165,7 +165,7 @@ class Mailing(models.Model):
             # options
             'composition_mode': 'mass',
             'mailing_id': self.id,
-            'mass_keep_log': False,
+            'mass_keep_log': self.keep_archives,
             'mass_sms_allow_unsubscribe': self.sms_allow_unsubscribe,
         }
 
