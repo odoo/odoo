@@ -263,27 +263,22 @@ class Slide(models.Model):
 
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.is_category')
     def _compute_slides_statistics(self):
-        # Do not use dict.fromkeys(self.ids, dict()) otherwise it will use the same dictionnary for all keys.
-        # Therefore, when updating the dict of one key, it updates the dict of all keys.
-        result = {_id: {} for _id in self.ids}
-
         res = self.env['slide.slide'].read_group(
             [('is_published', '=', True), ('category_id', 'in', self.ids), ('is_category', '=', False)],
             ['category_id', 'slide_type'], ['category_id', 'slide_type'],
             lazy=False)
 
         type_stats = self._compute_slides_statistics_type(res)
-        for cid, cdata in type_stats.items():
-            result[cid].update(cdata)
-
         for record in self:
-            record.update(result[record.id])
+            record.update(type_stats[record._origin.id or 'default_values'])
 
     def _compute_slides_statistics_type(self, read_group_res):
         """ Compute statistics based on all existing slide types """
         slide_types = self.env['slide.slide']._fields['slide_type'].get_values(self.env)
         keys = ['nbr_%s' % slide_type for slide_type in slide_types]
         result = dict((cid, dict((key, 0) for key in keys)) for cid in self.ids)
+        # Default values
+        result['default_values'] = dict((key, 0) for key in keys)
         for res_group in read_group_res:
             cid = res_group['category_id'][0]
             result[cid]['total_slides'] = 0
