@@ -15,7 +15,7 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails
 from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tests import tagged
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import email_split_and_format, mute_logger, pycompat
 
 
 @tagged('mail_gateway')
@@ -113,9 +113,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
             'message_id': '<123456-openerp-%s-mail.test.gateway@%s>' % (cls.test_record.id, socket.gethostname()),
         })
 
-        cls.env['ir.config_parameter'].set_param('mail.bounce.alias', 'bounce.test')
-        cls.env['ir.config_parameter'].set_param('mail.catchall.domain', 'test.com')
-        cls.env['ir.config_parameter'].set_param('mail.catchall.alias', 'catchall.test')
+        cls._init_mail_gateway()
 
     # --------------------------------------------------
     # Base low-level tests
@@ -748,3 +746,46 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(len(record), 1)
         self.assertEqual(record.name, 'Spammy')
         self.assertEqual(record._name, 'mail.test.gateway')
+
+
+class TestMailThreadCC(BaseFunctionalTest, MockEmails):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailThreadCC, cls).setUpClass()
+
+        cls.email_from = 'Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>'
+        cls.alias = cls.env['mail.alias'].create({
+            'alias_name': 'cc_record',
+            'alias_user_id': False,
+            'alias_model_id': cls.env['ir.model']._get('mail.test.cc').id,
+            'alias_contact': 'everyone'})
+
+        cls._init_mail_gateway()
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_cc_new(self):
+        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'cc_record@test.com',
+                                         cc='cc1@example.com, cc2@example.com', target_model='mail.test.cc')
+        cc = email_split_and_format(record.email_cc)
+        self.assertEqual(sorted(cc), ['cc1@example.com', 'cc2@example.com'])
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_cc_update_with_old(self):
+        record = self.env['mail.test.cc'].create({'email_cc': 'cc1 <cc1@example.com>, cc2@example.com'})
+        self.alias.write({'alias_force_thread_id': record.id})
+
+        self.format_and_process(MAIL_TEMPLATE, self.email_from, 'cc_record@test.com',
+                                cc='cc2 <cc2@example.com>, cc3@example.com', target_model='mail.test.cc')
+        cc = email_split_and_format(record.email_cc)
+        self.assertEqual(sorted(cc), ['cc1 <cc1@example.com>', 'cc2@example.com', 'cc3@example.com'], 'new cc should have been added on record (unique)')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_cc_update_no_old(self):
+        record = self.env['mail.test.cc'].create({})
+        self.alias.write({'alias_force_thread_id': record.id})
+
+        self.format_and_process(MAIL_TEMPLATE, self.email_from, 'cc_record@test.com',
+                                cc='cc2 <cc2@example.com>, cc3@example.com', target_model='mail.test.cc')
+        cc = email_split_and_format(record.email_cc)
+        self.assertEqual(sorted(cc), ['cc2 <cc2@example.com>', 'cc3@example.com'], 'new cc should have been added on record (unique)')
