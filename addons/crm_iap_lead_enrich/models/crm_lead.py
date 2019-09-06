@@ -68,7 +68,7 @@ class Lead(models.Model):
         :param iap_response: dict{lead_id: company data or False}
         """
         for lead in self.search([('id', 'in', list(iap_response.keys()))]):  # handle unlinked data by performing a search
-            iap_data = iap_response.get(lead.id)
+            iap_data = iap_response.get(str(lead.id))
             if not iap_data:
                 lead.message_post_with_view('crm_iap_lead_enrich.mail_message_lead_enrich_notfound', subtype_id=self.env.ref('mail.mt_note').id)
                 continue
