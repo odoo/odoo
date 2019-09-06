@@ -237,10 +237,6 @@ class StockMove(models.Model):
         keys = super(StockMove, self)._key_assign_picking()
         return keys + (self.created_production_id,)
 
-    def _search_picking_for_assignation_domain(self):
-        res = super(StockMove, self)._search_picking_for_assignation_domain()
-        res.append(('move_lines.created_production_id', '=', self.created_production_id.id))
-        return res
 
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
         """ Computes the quantity delivered or received when a kit is sold or purchased.
