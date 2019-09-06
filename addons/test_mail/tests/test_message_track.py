@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from email.utils import formataddr
+from unittest.mock import patch
 
 from odoo.addons.test_mail.tests import common
 
@@ -169,3 +170,37 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
             ('name', '=', 'email_from')])
         ir_model_field.with_context(_force_unlink=True).unlink()
         self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 0)
+
+    def test_create_partner_from_tracking_multicompany(self):
+        company1 = self.env['res.company'].create({'name': 'company1'})
+        self.env.user.write({'company_ids': [(4, company1.id, False)]})
+        self.assertNotEqual(self.env.company, company1)
+
+        email_new_partner = "diamonds@rust.com"
+        Partner = self.env['res.partner']
+        self.assertFalse(Partner.search([('email', '=', email_new_partner)]))
+
+        template = self.env['mail.template'].create({
+            'model_id': self.env['ir.model']._get('mail.test.track').id,
+            'name': 'AutoTemplate',
+            'subject': 'autoresponse',
+            'email_from': self.env.user.email_formatted,
+            'email_to': "${object.email_from}",
+            'body_html': "<div>A nice body</div>",
+        })
+
+        def patched_message_track_post_template(*args, **kwargs):
+            if args[0]._name == "mail.test.track":
+                args[0].message_post_with_template(template.id)
+            return True
+
+        with patch('odoo.addons.mail.models.mail_thread.MailThread._message_track_post_template', patched_message_track_post_template):
+            self.env['mail.test.track'].create({
+                'email_from': email_new_partner,
+                'company_id': company1.id,
+                'user_id': self.env.user.id, # trigger track template
+            })
+
+        new_partner = Partner.search([('email', '=', email_new_partner)])
+        self.assertTrue(new_partner)
+        self.assertEqual(new_partner.company_id, company1)

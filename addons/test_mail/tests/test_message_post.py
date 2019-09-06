@@ -250,3 +250,44 @@ class TestMessagePost(BaseFunctionalTest, TestRecipients, MockEmails):
         self.assertEqual(new_notification.notified_partner_ids, self.partner_1 | self.user_employee.partner_id)
         self.assertNotIn(new_notification, self.test_record.message_ids)
         # todo xdo add test message_notify on thread with followers and stuff
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_post_post_w_template(self):
+        test_record = self.env['mail.test.simple'].with_context(self._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        self.user_employee.write({
+            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
+        })
+        _attachments = [{
+            'name': 'first.txt',
+            'datas': base64.b64encode(b'My first attachment'),
+            'res_model': 'res.partner',
+            'res_id': self.user_admin.partner_id.id
+        }, {
+            'name': 'second.txt',
+            'datas': base64.b64encode(b'My second attachment'),
+            'res_model': 'res.partner',
+            'res_id': self.user_admin.partner_id.id
+        }]
+        email_1 = 'test1@example.com'
+        email_2 = 'test2@example.com'
+        email_3 = self.partner_1.email
+        self._create_template('mail.test.simple', {
+            'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])],
+            'partner_to': '%s,%s' % (self.partner_2.id, self.user_admin.partner_id.id),
+            'email_to': '%s, %s' % (email_1, email_2),
+            'email_cc': '%s' % email_3,
+        })
+        # admin should receive emails
+        self.user_admin.write({'notification_type': 'email'})
+        # Force the attachments of the template to be in the natural order.
+        self.email_template.invalidate_cache(['attachment_ids'], ids=self.email_template.ids)
+
+        test_record.with_user(self.user_employee).message_post_with_template(self.email_template.id, composition_mode='comment')
+
+        new_partners = self.env['res.partner'].search([('email', 'in', [email_1, email_2])])
+        self.assertEmails(
+            self.user_employee.partner_id,
+            [[self.partner_1], [self.partner_2], [new_partners[0]], [new_partners[1]], [self.partner_admin]],
+            subject='About %s' % test_record.name,
+            body_content=test_record.name,
+            attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
