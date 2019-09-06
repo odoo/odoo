@@ -344,10 +344,7 @@
                                             class="btn-sm btn-primary fa fa-plus-square-o"
                                             style="line-height: 1;"
                                             role="img" title="Assign Serial Numbers"
-                                            attrs="{'invisible': ['|', '|',
-                                                ('display_assign_serial', '=', False),
-                                                ('parent.show_reserved', '=', False),
-                                                ('parent.show_operations', '=', False)]}"/>
+                                            attrs="{'invisible': [('display_assign_serial', '=', False)]}"/>
                                 </tree>
                                 <form string="Stock Moves">
                                     <header>
