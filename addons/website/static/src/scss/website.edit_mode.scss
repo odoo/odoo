@@ -1,3 +1,22 @@
+$-editor-messages-margin-x: 2%;
+%o-editor-messages {
+    width: 100% - $-editor-messages-margin-x * 2; // Need to be forced here to avoid flickering
+    margin: 20px $-editor-messages-margin-x;
+    border: 2px dashed $o-we-color-text-normal;
+    padding: 112px 0px;
+    text-align: center;
+    color: $o-we-color-text-normal;
+
+    &:before {
+        content: attr(data-editor-message);
+        display: block;
+        font-size: 20px;
+    }
+    &:after {
+        content: attr(data-editor-sub-message);
+        display: block;
+    }
+}
 
 .o_editable {
     &:not(:empty), &[data-oe-type] {
@@ -27,19 +46,12 @@
 
     &.oe_structure.oe_empty, &[data-oe-type=html] {
         &:empty {
-            border: 2px dashed gray('400');
-            margin: 20px;
-            padding: 112px 0px;
-            text-align: center;
-            color: gray('400');
-            &:before {
-                content: attr(data-editor-message);
-                font-size: 20px;
-            }
-            &:after {
-                display: block;
-                content: attr(data-editor-sub-message);
-            }
+            @extend %o-editor-messages;
+        }
+        > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
+            @extend %o-editor-messages;
+            height: auto;
+            color: $o-brand-odoo;
         }
         > p:empty:only-child {
             color: #aaa;

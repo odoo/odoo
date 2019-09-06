@@ -180,6 +180,21 @@ snippetsEditor.Class.include({
         setTimeout(() => this._activateSnippet(false));
         this.$('#snippet_mega_menu').toggleClass('d-none', !show);
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _insertDropzone: function ($hook) {
+        var $hookParent = $hook.parent();
+        var $dropzone = this._super(...arguments);
+        $dropzone.attr('data-editor-message', $hookParent.attr('data-editor-message'));
+        $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
+        return $dropzone;
+    },
 });
 
 return WysiwygMultizone;
