@@ -120,3 +120,13 @@ class TestDiscuss(BaseFunctionalTest, TestRecipients, MockEmails):
         msg.toggle_message_starred()
         self.assertFalse(msg.starred)
         self.assertTrue(msg_emp.starred)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_cc_recipient_suggestion(self):
+        record = self.env['mail.test.cc'].create({'email_cc': 'cc1@example.com, cc2@example.com, cc3 <cc3@example.com>'})
+        suggestions = record._message_get_suggested_recipients()[record.id]
+        self.assertEqual(sorted(suggestions), [
+            (False, 'cc1@example.com', 'CC Email'),
+            (False, 'cc2@example.com', 'CC Email'),
+            (False, 'cc3 <cc3@example.com>', 'CC Email')
+        ], 'cc should be in suggestions')
