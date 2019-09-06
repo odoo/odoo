@@ -3,6 +3,7 @@
 
 from datetime import datetime, timedelta
 import uuid
+import pytz
 
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
@@ -46,6 +47,7 @@ class WebsiteVisitor(models.Model):
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
     country_flag = fields.Binary(related="country_id.image", string="Country Flag")
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when visitor has been created")
+    timezone = fields.Selection('_tz_get', string='Timezone')
     email = fields.Char(string='Email', compute='_compute_email_phone')
     mobile = fields.Char(string='Mobile Phone', compute='_compute_email_phone')
 
@@ -139,6 +141,10 @@ class WebsiteVisitor(models.Model):
                 'partner_ids': [self.user_partner_id.id],
             }
         return {}
+
+    @api.model
+    def _tz_get(self):
+        return [(x, x) for x in pytz.all_timezones]
 
     def action_send_mail(self):
         self.ensure_one()
