@@ -85,7 +85,14 @@ class AccountInvoice(models.Model):
             # Use the purchase uom by default
             self.uom_id = self.product_id.uom_po_id
         return domain
-
+    
+    def _compute_invoice_reference(self):
+        self.ensure_one()
+        vendor_ref = self.purchase_id.partner_ref
+        if vendor_ref and (not self.reference or (
+                vendor_ref + ", " not in self.reference and not self.reference.endswith(vendor_ref))):
+            self.reference = ", ".join([self.reference, vendor_ref]) if self.reference else vendor_ref
+            
     # Load all unsold PO lines
     @api.onchange('purchase_id')
     def purchase_order_change(self):
@@ -94,10 +101,7 @@ class AccountInvoice(models.Model):
         if not self.partner_id:
             self.partner_id = self.purchase_id.partner_id.id
 
-        vendor_ref = self.purchase_id.partner_ref
-        if vendor_ref and (not self.reference or (
-                vendor_ref + ", " not in self.reference and not self.reference.endswith(vendor_ref))):
-            self.reference = ", ".join([self.reference, vendor_ref]) if self.reference else vendor_ref
+        self._compute_invoice_reference()
 
         if not self.invoice_line_ids:
             #as there's no invoice line yet, we keep the currency of the PO
