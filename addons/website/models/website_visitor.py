@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 from hashlib import sha256
 import hmac
+import pytz
 
 from odoo import fields, models, api, _
 from odoo.tools.misc import _consteq, _format_time_ago
@@ -35,6 +36,7 @@ class WebsiteVisitor(models.Model):
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
     country_flag = fields.Binary(related="country_id.image", string="Country Flag")
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when visitor has been created")
+    timezone = fields.Selection('_tz_get', string='Timezone')
     visit_count = fields.Integer('Number of visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
     visitor_page_ids = fields.One2many('website.visitor.page', 'visitor_id', string='Visited Pages History', readonly=True)
     visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics")
@@ -70,6 +72,10 @@ class WebsiteVisitor(models.Model):
             last_connection_date = mapped_data[visitor.id]
             visitor.time_since_last_action = _format_time_ago(self.env, (datetime.now() - last_connection_date))
             visitor.is_connected = (datetime.now() - last_connection_date) < timedelta(minutes=5)
+
+    @api.model
+    def _tz_get(self):
+        return [(x, x) for x in pytz.all_timezones]
 
     def _get_visitor_sign(self):
         return {visitor.id: "%d-%s" % (visitor.id, self._get_visitor_hash(visitor.id)) for visitor in self}
