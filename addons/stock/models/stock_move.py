@@ -181,14 +181,16 @@ class StockMove(models.Model):
         if self.product_id:
             self.description_picking = self.product_id._get_description(self.picking_type_id)
 
-    @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots')
+    @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'picking_type_id.show_reserved', 'picking_type_id.show_operations')
     def _compute_display_assign_serial(self):
         for move in self:
             move.display_assign_serial = (
                 move.has_tracking == 'serial' and
+                move.state in ('partially_available', 'assigned') and
                 move.picking_type_id.use_create_lots and
-                not move.picking_type_id.show_reserved and
-                not move.picking_type_id.use_existing_lots
+                not move.picking_type_id.use_existing_lots and
+                move.picking_type_id.show_operations and
+                not move.picking_type_id.show_reserved
             )
 
     @api.depends('picking_id.is_locked')
