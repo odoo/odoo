@@ -161,31 +161,20 @@ def dispatch_rpc(service_name, method, params):
         raise
 
 def local_redirect(path, query=None, keep_hash=False, code=303):
+    # FIXME: drop the `keep_hash` param, now useless
     url = path
     if not query:
         query = {}
     if query:
         url += '?' + werkzeug.url_encode(query)
-    if keep_hash:
-        return redirect_with_hash(url, code)
-    else:
-        return werkzeug.utils.redirect(url, code)
+    return werkzeug.utils.redirect(url, code)
 
 def redirect_with_hash(url, code=303):
-    # Most IE and Safari versions decided not to preserve location.hash upon
-    # redirect. And even if IE10 pretends to support it, it still fails
-    # inexplicably in case of multiple redirects (and we do have some).
-    # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
-    if request.httprequest.user_agent.browser in ('firefox',):
-        return werkzeug.utils.redirect(url, code)
-    # FIXME: decide whether urls should be bytes or text, apparently
-    # addons/website/controllers/main.py:91 calls this with a bytes url
-    # but addons/web/controllers/main.py:481 uses text... (blows up on login)
-    url = pycompat.to_text(url).strip()
-    if urls.url_parse(url, scheme='http').scheme not in ('http', 'https'):
-        url = u'http://' + url
-    url = url.replace("'", "%27").replace("<", "%3C")
-    return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
+    # Section 7.1.2 of RFC 7231 requires preservation of URL fragment through redirects,
+    # so we don't need any special handling anymore. This function could be dropped in the future.
+    # seealso : http://www.rfc-editor.org/info/rfc7231
+    #           https://tools.ietf.org/html/rfc7231#section-7.1.2
+    return werkzeug.utils.redirect(url, code)
 
 class WebRequest(object):
     """ Parent class for all Odoo Web request types, mostly deals with
