@@ -40,12 +40,18 @@ odoo.define('web.ListModel', function (require) {
          * @param {string} referenceRecordId the record datapoint used to
          *  generate the changes to apply to recordIds
          * @param {string[]} recordIds a list of record datapoint ids
+         * @param {string} fieldName the field to write
          */
-        saveRecords: function (referenceRecordId, recordIds) {
+        saveRecords: function (referenceRecordId, recordIds, fieldName) {
             var self = this;
             var referenceRecord = this.localData[referenceRecordId];
             var list = this.localData[referenceRecord.parentID];
-            var changes = this._generateChanges(referenceRecord, {});
+            // generate all record values to ensure that we'll write something
+            // (e.g. 2 records selected, edit a many2one in the first one, but
+            // reset same value, we still want to save this value on the other
+            // record)
+            var allChanges = this._generateChanges(referenceRecord, {changesOnly: false});
+            var changes = _.pick(allChanges, fieldName);
             var records = recordIds.map(function (recordId) {
                 return self.localData[recordId];
             });

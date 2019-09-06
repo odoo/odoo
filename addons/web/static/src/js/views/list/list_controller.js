@@ -457,6 +457,7 @@ var ListController = BasicController.extend({
      */
     _saveMultipleRecords: function (recordId, node, changes) {
         var self = this;
+        var fieldName = Object.keys(changes)[0];
         var value = Object.values(changes)[0];
         var recordIds = _.union([recordId], this.selectedRecords);
         var validRecordIds = recordIds.reduce(function (result, nextRecordId) {
@@ -487,7 +488,7 @@ var ListController = BasicController.extend({
                 }
                 Dialog.confirm(this, message, {
                     confirm_callback: () => {
-                        this.model.saveRecords(recordId, validRecordIds)
+                        this.model.saveRecords(recordId, validRecordIds, fieldName)
                             .then(() => {
                                 this._updateButtons('readonly');
                                 const state = this.model.get(this.handle);
