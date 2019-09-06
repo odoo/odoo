@@ -27,15 +27,43 @@ class BaseFunctionalTest(common.SavepointCase):
     def setUpClass(cls):
         super(BaseFunctionalTest, cls).setUpClass()
 
-        cls.user_employee = mail_new_test_user(cls.env, login='ernest', groups='base.group_user', signature='--\nErnest', name='Ernest Employee')
+        cls.user_employee = mail_new_test_user(cls.env, login='employee', groups='base.group_user', signature='--\nErnest', name='Ernest Employee')
         cls.partner_employee = cls.user_employee.partner_id
 
         cls.user_admin = cls.env.ref('base.user_admin')
         cls.partner_admin = cls.env.ref('base.partner_admin')
 
+    @classmethod
+    def _create_channel_listener(cls):
         cls.channel_listen = cls.env['mail.channel'].with_context(cls._test_context).create({'name': 'Listener'})
 
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+    @classmethod
+    def _create_portal_user(cls):
+        cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
+        cls.partner_portal = cls.user_portal.partner_id
+
+    @classmethod
+    def _create_template(cls, model, template_values=None):
+        create_values = {
+            'name': 'TestTemplate',
+            'subject': 'About ${object.name}',
+            'body_html': '<p>Hello ${object.name}</p>',
+            'model_id': cls.env['ir.model']._get(model).id,
+            'user_signature': False,
+        }
+        if template_values:
+            create_values.update(template_values)
+        cls.email_template = cls.env['mail.template'].create(create_values)
+        return cls.email_template
+
+    @classmethod
+    def _init_mail_gateway(cls):
+        cls.alias_domain = 'test.com'
+        cls.alias_catchall = 'catchall.test'
+        cls.alias_bounce = 'bounce.test'
+        cls.env['ir.config_parameter'].set_param('mail.bounce.alias', cls.alias_bounce)
+        cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
+        cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
 
     @classmethod
     def _reset_mail_context(cls, record):
@@ -62,6 +90,8 @@ class BaseFunctionalTest(common.SavepointCase):
                     init[partner] = {
                         'na_counter': len([n for n in init_notifs if n.res_partner_id == partner and not n.is_read]),
                     }
+            if hasattr(self, '_init_mock_build_email'):
+                self._init_mock_build_email()
             yield
         finally:
             new_notifications = self.env['mail.notification'].sudo().search([
@@ -143,12 +173,27 @@ class BaseFunctionalTest(common.SavepointCase):
             else:
                 raise AssertionError('Keys %s not found (expected: %s - returned: %s)' % (not_found_keys, repr(expected), repr(notif_messages)))
 
+    def assertTracking(self, message, data):
+        tracking_values = message.sudo().tracking_value_ids
+        for field_name, value_type, old_value, new_value in data:
+            tracking = tracking_values.filtered(lambda track: track.field == field_name)
+            self.assertEqual(len(tracking), 1)
+            if value_type in ('char', 'integer'):
+                self.assertEqual(tracking.old_value_char, old_value)
+                self.assertEqual(tracking.new_value_char, new_value)
+            elif value_type in ('many2one'):
+                self.assertEqual(tracking.old_value_integer, old_value and old_value.id or False)
+                self.assertEqual(tracking.new_value_integer, new_value and new_value.id or False)
+                self.assertEqual(tracking.old_value_char, old_value and old_value.display_name or '')
+                self.assertEqual(tracking.new_value_char, new_value and new_value.display_name or '')
+            else:
+                self.assertEqual(1, 0)
+
     @contextmanager
     def sudo(self, login):
         old_uid = self.uid
         try:
             user = self.env['res.users'].sudo().search([('login', '=', login)])
-            self.test_record_old = self.test_record
             # switch user
             self.uid = user.id
             self.env = self.env(user=self.uid)
