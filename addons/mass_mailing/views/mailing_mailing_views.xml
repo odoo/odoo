@@ -385,6 +385,7 @@
                 'default_user_id': uid,
             }
             </field>
+            <field name="domain">[('mailing_type', '=', 'mail')]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new mailing
@@ -403,28 +404,6 @@
                 'search_default_assigned_to_me': 1,
                 'search_default_campaign_id': [active_id],
                 'default_campaign_id': active_id,
-                'default_user_id': uid,
-            }
-            </field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new mailing
-              </p><p>
-                You don't need to import your mailing lists, you can easily
-                send emails<br/> to any contact saved in other Odoo apps.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_create_ab_mass_mailings_from_campaign" model="ir.actions.act_window">
-            <field name="name">Mailings</field>
-            <field name="res_model">mailing.mailing</field>
-            <field name="view_mode">form,kanban,tree</field>
-            <field name="context">{
-                'search_default_assigned_to_me': 1,
-                'search_default_campaign_id': [active_id],
-                'default_campaign_id': active_id,
-                'default_contact_ab_pc': 10,
                 'default_user_id': uid,
             }
             </field>
