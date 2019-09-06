@@ -6,6 +6,7 @@ import json
 import os
 import re
 import logging
+import pytz
 import requests
 import werkzeug.utils
 import werkzeug.wrappers
@@ -396,6 +397,15 @@ class Website(Home):
         for id_or_xml_id in ids_or_xml_ids:
             res[id_or_xml_id] = View.render_template(id_or_xml_id, values)
         return res
+
+    @http.route(['/website/update_visitor_timezone'], type='json', auth="public", website=True)
+    def update_visitor_timezone(self, timezone):
+        visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+        if visitor_sudo:
+            if timezone in pytz.all_timezones:
+                visitor_sudo.write({'timezone': timezone})
+                return True
+        return False
 
     # ------------------------------------------------------
     # Server actions
