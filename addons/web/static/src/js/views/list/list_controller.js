@@ -108,6 +108,7 @@ var ListController = BasicController.extend({
         this.noLeaf = params.noLeaf;
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
+        this.fieldChangedPrevented = false;
         this.activeActions = _.extend({}, this.activeActions, {
             download: this.renderer.arch.attrs.download ? !!JSON.parse(this.renderer.arch.attrs.download) : true,
         });
@@ -195,6 +196,7 @@ var ListController = BasicController.extend({
                 },
                 trigger: 'manual',
             });
+            this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
             this.$buttons.appendTo($node);
         }
@@ -674,6 +676,28 @@ var ListController = BasicController.extend({
         this._discardChanges();
     },
     /**
+     * Used to detect if the discard button is about to be clicked.
+     * Some focusout events might occur and trigger a save which
+     * is not always wanted when clicking "Discard".
+     *
+     * @param {MouseEvent} ev
+     * @private
+     */
+    _onDiscardMousedown: function (ev) {
+        var self = this;
+        this.fieldChangedPrevented = true;
+        window.addEventListener('mouseup', function (mouseupEvent) {
+            var preventedEvent = self.fieldChangedPrevented;
+            self.fieldChangedPrevented = false;
+            // If the user starts clicking (mousedown) on the button and stops clicking
+            // (mouseup) outside of the button, we want to trigger the original onFieldChanged
+            // Event that was prevented in the meantime.
+            if (ev.target !== mouseupEvent.target && preventedEvent.constructor.name === 'OdooEvent') {
+                self._onFieldChanged(preventedEvent);
+            }
+        }, { capture: true, once: true });
+    },
+    /**
      * Called when the user asks to edit a row -> Updates the controller buttons
      *
      * @param {OdooEvent} ev
@@ -738,7 +762,9 @@ var ListController = BasicController.extend({
         ev.stopPropagation();
         const recordId = ev.data.dataPointID;
 
-        if (this.renderer.inMultipleRecordEdition(recordId)) {
+        if (this.fieldChangedPrevented) {
+            this.fieldChangedPrevented = ev;
+        } else if (this.renderer.inMultipleRecordEdition(recordId)) {
             // deal with edition of multiple lines
             const _onSuccess = ev.data.onSuccess;
             ev.data.onSuccess = () => {
