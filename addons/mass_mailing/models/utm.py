@@ -11,8 +11,9 @@ class UtmCampaign(models.Model):
         'mailing.mailing', 'campaign_id',
         string='Mass Mailings')
     mailing_clicks_ratio = fields.Integer(default=0, compute="_compute_mailing_clicks_ratio", string="Number of clicks")
-    mailing_items = fields.Integer(compute="_compute_mailing_items", string='Mailings')
+    mailing_items = fields.Integer(compute="_compute_mailing_items", string='Number of mails')
     mailing_clicked = fields.Integer(compute="_compute_mailing_items", string='Mailings Clicked')
+    mailings_count = fields.Integer(compute="_compute_mailings_count", string="Number of mailings")
     # stat fields
     total = fields.Integer(compute="_compute_statistics")
     scheduled = fields.Integer(compute="_compute_statistics")
@@ -28,14 +29,11 @@ class UtmCampaign(models.Model):
     replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
     bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
 
-    @api.depends('mailing_items', 'mailing_clicked')
-    def _compute_items_total(self):
+    def _compute_mailings_count(self):
         for campaign in self:
-            campaign.items_total += campaign.mailing_items
-            campaign.clicked_total += campaign.mailing_clicked
+            campaign.mailings_count = len(campaign.mailing_ids)
 
     def _compute_mailing_items(self):
-        super(UtmCampaign, self)._compute_clicks_ratio()
         query = """SELECT trace.campaign_id AS campaign_id, COUNT(DISTINCT(trace.id)) AS items_total, COUNT(DISTINCT(click.mailing_trace_id)) AS clicked_total
                     FROM mailing_trace AS trace
                     LEFT OUTER JOIN link_tracker_click as click ON click.mailing_trace_id = trace.id

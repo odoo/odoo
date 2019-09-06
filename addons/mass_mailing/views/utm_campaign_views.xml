@@ -5,35 +5,30 @@
         <field name="model">utm.campaign</field>
         <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position="before">
-                <header style="min-height:31px;">
-                    <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new Mailing"/>
-                    <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new A/B Testing Mailing"/>
-                    <span><field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/></span>
-                </header>
+            <xpath expr="//header" position="inside">
+                    <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" groups="mass_mailing.group_mass_mailing_campaign" string="Send new Mailing"/>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(action_view_mass_mailings_from_campaign)d"
-                    type="action" class="oe_stat_button order-11" icon="fa-envelope-o">
-                    <field name="mailing_items" widget="statinfo" string="Mailings"/>
+                    type="action" class="oe_stat_button order-9" icon="fa-envelope-o"
+                    attrs="{'invisible': [('mailings_count', '=', 0)]}" groups="mass_mailing.group_mass_mailing_campaign">
+                    <field name="mailings_count" widget="statinfo" string="Mailings"/>
                 </button>
             </xpath>
             <xpath expr="//notebook" position="inside">
-                <page string="Mailings" attrs="{}">
-                    <group groups="base.group_no_one">
-                        <field name="mailing_ids" readonly="1" nolabel="1">
-                            <tree>
-                                <field name="name"/>
-                                <field name="sent_date"/>
-                                <field name="state"/>
-                                <field name="delivered"/>
-                                <field name="opened"/>
-                                <field name="replied"/>
-                                <field name="bounced"/>
-                                <button name="action_duplicate" type="object" string="Duplicate"/>
-                            </tree>
-                        </field>
-                    </group>
+                <page string="Mailings" class="order-1" groups="mass_mailing.group_mass_mailing_campaign" attrs="{'invisible': [('mailings_count', '=', 0)]}">
+                    <field name="mailing_ids" readonly="1" nolabel="1">
+                        <tree>
+                            <field name="name"/>
+                            <field name="sent_date"/>
+                            <field name="state"/>
+                            <field name="delivered"/>
+                            <field name="opened"/>
+                            <field name="replied"/>
+                            <field name="bounced"/>
+                            <button name="action_duplicate" type="object" string="Duplicate"/>
+                        </tree>
+                    </field>
                     <div class="o_utm_campaign_mass_mailing_substats d-flex justify-content-end align-items-center">
                         <div class="d-flex justify-content-end align-items-center flex-column">
                             <label for="received_ratio" string="Delivered" class="m-0"/>
@@ -83,11 +78,11 @@
         <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='user_id']" position="after">
-                <field name="mailing_ids"/>
+                <field name="mailing_ids" groups="mass_mailing.group_mass_mailing_campaign"/>
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_record_headings')]">
                 <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
-                    class="oe_mailings o_kanban_record_subtitle d-inline-block">
+                    class="oe_mailings o_kanban_record_subtitle d-inline-block" groups="mass_mailing.group_mass_mailing_campaign">
                     <t t-raw="record.mailing_ids.raw_value.length"/> Mailings
                 </a>
             </xpath>
