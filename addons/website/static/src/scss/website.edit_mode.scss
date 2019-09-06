@@ -248,9 +248,9 @@
     }
 
     &.oe_structure.oe_empty, &[data-oe-type=html] {
-        &:empty {
+        margin: 20px;
+        &:empty, > div.oe_drop_zone:only-child {
             border: 2px dashed gray('400');
-            margin: 20px;
             padding: 112px 0px;
             text-align: center;
             color: gray('400');
@@ -261,6 +261,12 @@
             &:after {
                 display: block;
                 content: attr(data-editor-sub-message);
+            }
+        }
+        &:not(:empty) {
+            > div.oe_drop_zone:only-child {
+                border: 2px dashed $o-brand-odoo;
+                color: $o-brand-odoo;
             }
         }
         > p:empty:only-child {

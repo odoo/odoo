@@ -303,27 +303,22 @@ body.editor_enable.editor_has_snippets {
 }
 
 .note-editable .oe_drop_zone {
-    background-color: rgba($o-brand-odoo, 0.05);
+    background-color: lighten($o-brand-odoo, 35%);
     animation: dropZoneInsert 1s linear 0s infinite alternate;
 
     &.oe_insert {
         z-index: $o-wysiwyg-zindex - 1;
 
-        border: 2px dashed $o-wysiwyg-border-color;
-        border-top: none;
-        border-bottom: none;
+        animation: dropZoneInsert 1s linear 0s infinite alternate;
+        border: 2px dashed $o-brand-odoo;
 
         position: relative;
         width: 100%;
-        height: $o-wysiwyg-dropzone-size;
-        margin: (-$o-wysiwyg-dropzone-size/2) 0;
+        margin: 0;
 
         &:after {
-            content: "";
             display: block;
             width: 100%;
-            height: 50%;
-            border-bottom: 2px dashed $o-wysiwyg-border-color;
             box-sizing: content-box;
         }
 
@@ -340,7 +335,7 @@ body.editor_enable.editor_has_snippets {
                 width: 50%;
                 height: 100%;
                 border-bottom: none;
-                border-right: 2px dashed $o-wysiwyg-border-color;
+                border-right: 2px dashed $o-brand-odoo;
             }
         }
     }

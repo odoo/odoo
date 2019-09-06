@@ -224,14 +224,9 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 }
 
 // DROPZONES
-#wrapwrap .oe_drop_zone {
+#wrapwrap .oe_drop_zone:not(:only-child) {
     &.oe_insert {
         height: $o-we-dropzone-size;
-        margin: (-$o-we-dropzone-size/2) 0;
-
-        &:after {
-            border-bottom: $o-we-dropzone-border;
-        }
 
         &.oe_vertical {
             width: $o-we-dropzone-size;

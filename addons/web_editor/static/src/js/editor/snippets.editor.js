@@ -806,6 +806,7 @@ var SnippetsMenu = Widget.extend({
         var self = this;
         var zone_template = $('<div/>', {
             class: 'oe_drop_zone oe_insert',
+            'data-editor-message': _t('DRAG BUILDING BLOCKS HERE'),
         });
 
         function isFullWidth($elem) {
