@@ -79,48 +79,23 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
         self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 0,
                          "Creation message without tracking values should have been posted")
 
+    def test_cache_invalidation(self):
+        """ Test that creating a mail-thread record does not invalidate the whole cache. """
+        # make a new record in cache
+        record = self.env['res.partner'].new({'name': 'Brave New Partner'})
+        self.assertTrue(record.name)
 
-class TestNotifications(BaseFunctionalTest, TestRecipients, MockEmails):
+        # creating a mail-thread record should not invalidate the whole cache
+        self.env['res.partner'].create({'name': 'Actual Partner'})
+        self.assertTrue(record.name)
+
+
+class TestDiscuss(BaseFunctionalTest, TestRecipients, MockEmails):
 
     @classmethod
     def setUpClass(cls):
-        super(TestNotifications, cls).setUpClass()
-        cls._create_portal_user()
+        super(TestDiscuss, cls).setUpClass()
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
-
-        (cls.user_employee | cls.user_admin).write({'notification_type': 'inbox'})
-
-    @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_needaction(self):
-        with self.assertNotifications(partner_employee=(1, 'inbox', 'unread'), partner_admin=(0, '', '')):
-            self.test_record.message_post(
-                body='Test', message_type='comment', subtype='mail.mt_comment',
-                partner_ids=[self.user_employee.partner_id.id])
-
-        self.test_record.message_subscribe([self.partner_1.id])
-        with self.assertNotifications(partner_employee=(1, 'inbox', 'unread'), partner_admin=(0, '', ''), partner_1=(1, 'email', 'read')):
-            self.test_record.message_post(
-                body='Test', message_type='comment', subtype='mail.mt_comment',
-                partner_ids=[self.user_employee.partner_id.id])
-
-        with self.assertNotifications(partner_admin=(0, '', ''), partner_1=(1, 'email', 'read'), partner_portal=(1, 'email', 'read')):
-            self.test_record.message_post(
-                body='Test', message_type='comment', subtype='mail.mt_comment',
-                partner_ids=[self.partner_portal.id])
-
-    def test_inactive_follower(self):
-        # In some case odoobot is follower of a record.
-        # Even if it shouldn't be the case, we want to be sure that odoobot is not notified
-        self.test_record._message_subscribe(self.user_employee.partner_id.ids)
-        with self.assertNotifications(partner_employee=(1, 'inbox', 'unread')):
-            self.test_record.message_post(
-                body='Test', message_type='comment', subtype='mail.mt_comment')
-        self.user_employee.active = False
-        # at this point, partner is still active and would receive an email notification
-        self.user_employee.partner_id._write({'active': False})
-        with self.assertNotifications(partner_employee=(0, '', '')):
-            self.test_record.message_post(
-                body='Test', message_type='comment', subtype='mail.mt_comment')
 
     def test_set_message_done_user(self):
         with self.assertNotifications(partner_employee=(0, '', '')):
@@ -145,20 +120,3 @@ class TestNotifications(BaseFunctionalTest, TestRecipients, MockEmails):
         msg.toggle_message_starred()
         self.assertFalse(msg.starred)
         self.assertTrue(msg_emp.starred)
-
-
-class TestChatterMisc(BaseFunctionalTest):
-
-    def test_alias_setup(self):
-        alias = self.env['mail.alias'].with_context(alias_model_name='mail.test').create({'alias_name': 'b4r+_#_R3wl$$'})
-        self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
-
-    def test_cache_invalidation(self):
-        """ Test that creating a mail-thread record does not invalidate the whole cache. """
-        # make a new record in cache
-        record = self.env['res.partner'].new({'name': 'Brave New Partner'})
-        self.assertTrue(record.name)
-
-        # creating a mail-thread record should not invalidate the whole cache
-        self.env['res.partner'].create({'name': 'Actual Partner'})
-        self.assertTrue(record.name)

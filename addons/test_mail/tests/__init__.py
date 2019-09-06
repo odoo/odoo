@@ -12,8 +12,9 @@ from . import test_mail_channel
 from . import test_mail_gateway
 from . import test_mail_redirect
 from . import test_mail_template
-from . import test_message_compose
+from . import test_message_composerr
 from . import test_message_management
+from . import test_message_post
 from . import test_message_track
 from . import test_odoobot
 from . import test_performance

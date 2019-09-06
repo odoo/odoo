@@ -70,6 +70,14 @@ class TestEmailParsing(BaseFunctionalTest, MockEmails):
 
 
 @tagged('mail_gateway')
+class TestMailAlias(BaseFunctionalTest):
+
+    def test_alias_setup(self):
+        alias = self.env['mail.alias'].with_context(alias_model_name='mail.test').create({'alias_name': 'b4r+_#_R3wl$$'})
+        self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
+
+
+@tagged('mail_gateway')
 class TestMailgateway(BaseFunctionalTest, MockEmails):
 
     @classmethod
