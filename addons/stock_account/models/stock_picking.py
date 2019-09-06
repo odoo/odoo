@@ -16,6 +16,6 @@ class StockPicking(models.Model):
         action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
         context = literal_eval(action['context'])
         context.update(self.env.context)
-        context['not_at_date'] = True
+        context['no_at_date'] = True
         return dict(action, domain=domain, context=context)
 
