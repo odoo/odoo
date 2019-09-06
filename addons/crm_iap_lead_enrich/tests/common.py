@@ -41,9 +41,9 @@ class MockIAPEnrich(common.BaseCase):
                         raise exceptions.AccessError(
                             'The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was ' + local_endpoint
                         )
-                    result[lead_id] = dict(sim_result)
+                    result[str(lead_id)] = dict(sim_result)
                     if email_data and email_data.get(email):
-                        result[lead_id].update(email_data[email])
+                        result[str(lead_id)].update(email_data[email])
                 return result
 
         try:
