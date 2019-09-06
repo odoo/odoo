@@ -782,13 +782,7 @@ var BasicModel = AbstractModel.extend({
         if (data.type !== "record") {
             return false;
         }
-        var res_id = data.res_id;
-        if (typeof res_id === 'number') {
-            return false;
-        } else if (typeof res_id === 'string' && /^[0-9]+-/.test(res_id)) {
-            return false;
-        }
-        return true;
+        return this._isVirtual(data.res_id);
     },
     /**
      * Main entry point, the goal of this method is to fetch and process all
@@ -3377,6 +3371,25 @@ var BasicModel = AbstractModel.extend({
         }
     },
     /**
+     * Check if provided id represent a virtual id.
+     *
+     * Note: A virtual id is a character string composed of an integer and has
+     * a dash and other information.
+     * E.g: in calendar, the recursive event have virtual id linked to a real id
+     * virtual event id "23-20170418020000" is linked to the event id 23
+     *
+     * @param {string} id id for a resource
+     * @returns {boolean}
+     */
+    _isVirtual: function (id) {
+        if (typeof id === 'number') {
+            return false;
+        } else if (typeof id === 'string' && /^[0-9]+-/.test(id)) {
+            return false;
+        }
+        return true;
+    },
+    /**
      * Returns true iff value is considered to be set for the given field's type.
      *
      * @private
@@ -4266,7 +4279,7 @@ var BasicModel = AbstractModel.extend({
         if (list.res_ids.length > list.limit && list.orderedBy.length) {
             if (!list.orderedResIDs) {
                 var fieldNames = _.pluck(list.orderedBy, 'name');
-                def = this._readMissingFields(list, _.filter(list.res_ids, _.isNumber), fieldNames);
+                def = this._readMissingFields(list, _.reject(list.res_ids, self._isVirtual), fieldNames);
             }
             def.then(function () {
                 self._sortList(list);
@@ -4295,7 +4308,7 @@ var BasicModel = AbstractModel.extend({
             var fieldNames = list.getFieldNames();
             for (var i = list.offset; i < upperBound; i++) {
                 var resId = currentResIDs[i];
-                if (_.isNumber(resId)) {
+                if (!self._isVirtual(resId)) {
                     resIDs.push(resId);
                 }
             }
