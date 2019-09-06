@@ -311,3 +311,24 @@ class TestChannelModeration(common.Moderation):
         self.assertEqual(accepted_messages, msg_moderator | msg_email2 | msg_notif)
         self.assertFalse(msg_admin.channel_ids)
         self.assertEqual(msg_email2.channel_ids, self.channel_1)
+
+    def test_user_is_moderator(self):
+        self.assertTrue(self.user_employee.is_moderator)
+        self.assertFalse(self.user_admin.is_moderator)
+        self.assertTrue(self.user_employee_2.is_moderator)
+
+    def test_user_moderation_counter(self):
+        self._create_new_message(self.channel_1.id, status='pending_moderation', author=self.partner_admin)
+        self._create_new_message(self.channel_1.id, status='accepted', author=self.partner_admin)
+        self._create_new_message(self.channel_1.id, status='accepted', author=self.partner_employee)
+        self._create_new_message(self.channel_1.id, status='pending_moderation', author=self.partner_employee)
+        self._create_new_message(self.channel_1.id, status='accepted', author=self.partner_employee_2)
+
+        self.assertEqual(self.user_employee.moderation_counter, 2)
+        self.assertEqual(self.user_employee_2.moderation_counter, 0)
+        self.assertEqual(self.user_admin.moderation_counter, 0)
+
+        self.channel_1.write({'channel_partner_ids': [(4, self.partner_employee_2.id)], 'moderator_ids': [(4, self.user_employee_2.id)]})
+        self.assertEqual(self.user_employee.moderation_counter, 2)
+        self.assertEqual(self.user_employee_2.moderation_counter, 0)
+        self.assertEqual(self.user_admin.moderation_counter, 0)
