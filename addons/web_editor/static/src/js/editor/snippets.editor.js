@@ -902,9 +902,6 @@ var SnippetsMenu = Widget.extend({
      */
     _activateInsertionZones: function ($selectorSiblings, $selectorChildren) {
         var self = this;
-        var zoneTemplate = $('<div/>', {
-            class: 'oe_drop_zone oe_insert',
-        });
 
         function isFullWidth($elem) {
             return $elem.parent().width() === $elem.outerWidth(true);
@@ -913,49 +910,50 @@ var SnippetsMenu = Widget.extend({
         if ($selectorChildren) {
             $selectorChildren.each(function () {
                 var $zone = $(this);
+                var style;
+                var vertical;
+                var node;
                 var css = self.window.getComputedStyle(this);
                 var parentCss = self.window.getComputedStyle($zone.parent()[0]);
                 var float = css.float || css.cssFloat;
                 var parentDisplay = parentCss.display;
                 var parentFlex = parentCss.flexDirection;
-                var $drop = zoneTemplate.clone();
 
-                $zone.append($drop);
-                var node = $drop[0].previousSibling;
+                style = {};
+                vertical = false;
+                node = $zone[0].lastChild;
                 var test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) || node.tagName === 'BR'));
                 if (test) {
-                    $drop.addClass('oe_vertical').css({
-                        height: parseInt(self.window.getComputedStyle($zone[0]).lineHeight),
-                        float: 'none',
-                        display: 'inline-block',
-                    });
+                    vertical = true;
+                    style['float'] = 'none';
+                    style['height'] = parseInt(self.window.getComputedStyle($zone[0]).lineHeight) + 'px';
+                    style['display'] = 'inline-block';
                 } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                    $drop.css('float', float);
+                    style['float'] = float;
                     if (!isFullWidth($zone)) {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
+                        vertical = true;
+                        style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
                     }
                 }
+                self._insertDropzone($('<we-hook/>').appendTo($zone), vertical, style);
 
-                $drop = $drop.clone();
-
-                $zone.prepend($drop);
-                node = $drop[0].nextSibling;
+                style = {};
+                vertical = false;
+                node = $zone[0].firstChild;
                 test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) || node.tagName === 'BR'));
                 if (test) {
-                    $drop.addClass('oe_vertical').css({
-                        height: parseInt(self.window.getComputedStyle($zone[0]).lineHeight),
-                        float: 'none',
-                        display: 'inline-block'
-                    });
+                    vertical = true;
+                    style['float'] = 'none';
+                    style['height'] = parseInt(self.window.getComputedStyle($zone[0]).lineHeight) + 'px';
+                    style['display'] = 'inline-block';
                 } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                    $drop.css('float', float);
+                    style['float'] = float;
                     if (!isFullWidth($zone)) {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
+                        vertical = true;
+                        style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
                     }
                 }
-                if (test) {
-                    $drop.css({'float': 'none', 'display': 'inline-block'});
-                }
+                self._insertDropzone($('<we-hook/>').prependTo($zone), vertical, style);
             });
 
             // add children near drop zone
@@ -965,7 +963,8 @@ var SnippetsMenu = Widget.extend({
         if ($selectorSiblings) {
             $selectorSiblings.filter(':not(.oe_drop_zone):not(.oe_drop_clone)').each(function () {
                 var $zone = $(this);
-                var $drop;
+                var style;
+                var vertical;
                 var css = self.window.getComputedStyle(this);
                 var parentCss = self.window.getComputedStyle($zone.parent()[0]);
                 var float = css.float || css.cssFloat;
@@ -973,24 +972,28 @@ var SnippetsMenu = Widget.extend({
                 var parentFlex = parentCss.flexDirection;
 
                 if ($zone.prev('.oe_drop_zone:visible').length === 0) {
-                    $drop = zoneTemplate.clone();
+                    style = {};
+                    vertical = false;
                     if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                        $drop.css('float', float);
+                        style['float'] = float;
                         if (!isFullWidth($zone)) {
-                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
+                            vertical = true;
+                            style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
                         }
                     }
-                    $zone.before($drop);
+                    self._insertDropzone($('<we-hook/>').insertBefore($zone), vertical, style);
                 }
                 if ($zone.next('.oe_drop_zone:visible').length === 0) {
-                    $drop = zoneTemplate.clone();
+                    style = {};
+                    vertical = false;
                     if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                        $drop.css('float', float);
+                        style['float'] = float;
                         if (!isFullWidth($zone)) {
-                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
+                            vertical = true;
+                            style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
                         }
                     }
-                    $zone.after($drop);
+                    self._insertDropzone($('<we-hook/>').insertAfter($zone), vertical, style);
                 }
             });
         }
@@ -1409,6 +1412,26 @@ var SnippetsMenu = Widget.extend({
 
             $snippet.toggleClass('o_disabled', !check);
         });
+    },
+    /**
+     * Creates a dropzone element and inserts it by replacing the given jQuery
+     * location. This allows to add data on the dropzone depending on the hook
+     * environment.
+     *
+     * @private
+     * @param {jQuery} $hook
+     * @param {boolean} [vertical=false]
+     * @param {Object} [style]
+     */
+    _insertDropzone: function ($hook, vertical, style) {
+        var $dropzone = $('<div/>', {
+            'class': 'oe_drop_zone oe_insert' + (vertical ? ' oe_vertical' : ''),
+        });
+        if (style) {
+            $dropzone.css(style);
+        }
+        $hook.replaceWith($dropzone);
+        return $dropzone;
     },
     /**
      * Make given snippets be draggable/droppable thanks to their thumbnail.
