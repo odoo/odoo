@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import api, fields, models
 from odoo.tools import float_is_zero
 
@@ -72,5 +74,8 @@ class MrpProduction(models.Model):
         self.ensure_one()
         domain = [('id', 'in', (self.move_raw_ids + self.move_finished_ids + self.scrap_ids.move_id).stock_valuation_layer_ids.ids)]
         action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
-        return dict(action, domain=domain)
+        context = literal_eval(action['context'])
+        context.update(self.env.context)
+        context['no_at_date'] = True
+        return dict(action, domain=domain, context=context)
 
