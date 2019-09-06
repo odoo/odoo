@@ -4552,6 +4552,44 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: multi edition of many2one: set same value', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="foo"/>' +
+                        '<field name="m2o"/>' +
+                    '</tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args, [[1, 2, 3, 4], { m2o: 1 }],
+                        "should force write value on all selected records");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(list.$('.o_list_many2one').text(), "Value 1Value 2Value 1Value 1");
+
+        // select all records (the first one has value 1 for m2o)
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        // set m2o to 1 in first record
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.fields.many2one.searchAndClickItem('m2o', {search: 'Value 1'});
+
+        assert.containsOnce(document.body, '.modal');
+
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+        assert.strictEqual(list.$('.o_list_many2one').text(), "Value 1Value 1Value 1Value 1");
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: multi edition with readonly modifiers', async function (assert) {
         assert.expect(5);
 
