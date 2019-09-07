@@ -1054,6 +1054,7 @@ class AccountJournal(models.Model):
             'res_model': 'account.move',
             'views': [[False, "tree"], [False, "form"]],
             'type': 'ir.actions.act_window',
+            'context': self._context
         }
         if len(invoices) == 1:
             action_vals.update({'res_id': invoices[0].id, 'view_mode': 'form'})

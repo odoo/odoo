@@ -66,6 +66,8 @@ class StockScrap(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
+            if self.tracking == 'serial':
+                self.scrap_qty = 1
             self.product_uom_id = self.product_id.uom_id.id
             # Check if we can get a more precise location instead of
             # the default location (a location corresponding to where the

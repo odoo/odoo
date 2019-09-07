@@ -1,6 +1,7 @@
 odoo.define('web.basic_fields_tests', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
@@ -12,7 +13,6 @@ var session = require('web.session');
 var testUtils = require('web.test_utils');
 var field_registry = require('web.field_registry');
 
-var createView = testUtils.createView;
 var createView = testUtils.createView;
 var DebouncedField = basicFields.DebouncedField;
 var JournalDashboardGraph = basicFields.JournalDashboardGraph;
@@ -5817,7 +5817,11 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.module('FieldColor');
+    QUnit.module('FieldColor', {
+        before: function () {
+            return ajax.loadXML('/web/static/src/xml/colorpicker_dialog.xml', core.qweb);
+        },
+    });
 
     QUnit.test('Field Color: default widget state', async function (assert) {
         assert.expect(3);
@@ -5837,7 +5841,6 @@ QUnit.module('basic_fields', {
         });
 
         await testUtils.dom.click(form.$('.o_field_color'));
-        await testUtils.nextTick();
         assert.containsOnce($, '.modal');
         assert.containsNone($('.modal'), '.o_opacity_slider',
             "Opacity slider should not be present");
