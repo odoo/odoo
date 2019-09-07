@@ -29,6 +29,8 @@
 # Paolo Valier, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2019
+# Federico Zanuttini <fza@odoo.com>, 2019
+# Davide Speranza <dsp@odoo.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
@@ -88,7 +90,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Fattura (Ref ${object.name or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -118,7 +120,7 @@ msgstr "%s (copia)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%s (rounding)"
-msgstr ""
+msgstr "%s (arrotondamento)"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -160,7 +162,7 @@ msgstr "60 giorni"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
-msgstr ""
+msgstr "21 Giorni"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
@@ -4451,7 +4453,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Exception Activities"
-msgstr ""
+msgstr "Eccezioni "
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -8792,7 +8794,7 @@ msgstr "Codice QR SEPA"
 #: model:ir.model.fields,field_description:account.field_account_move__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Errore di invio SMS"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9654,7 +9656,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.cash_box_out_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "Take Money In/Out"
-msgstr ""
+msgstr "Immetti/Preleva denaro"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__target_move
