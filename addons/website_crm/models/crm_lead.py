@@ -10,9 +10,9 @@ class Lead(models.Model):
     visitor_id = fields.Many2one('website.visitor', "Web Visitor")
 
     def website_form_input_filter(self, request, values):
-        values['medium_id'] = values.get('medium_id') or \
-                              self.default_get(['medium_id']).get('medium_id') or \
-                              self.sudo().env.ref('utm.utm_medium_website').id
+        # values['medium_id'] = values.get('medium_id') or \
+        #                       self.default_get(['medium_id']).get('medium_id') or \
+        #                       self.sudo().env.ref('utm.utm_medium_website').id
         values['team_id'] = values.get('team_id') or \
                             request.website.crm_default_team_id.id
         values['user_id'] = values.get('user_id') or \
