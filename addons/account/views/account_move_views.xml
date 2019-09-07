@@ -137,12 +137,12 @@
                     <field name="name" optional="show"/>
                     <field name="ref" optional="show"/>
                     <field name="statement_id" invisible="1"/>
-                    <field name="partner_id" optional="show"/>
+                    <field name="partner_id" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_user" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="analytic_account_id" groups="account.group_account_user" optional="show"/>
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="reconciled" invisible="1"/>
-                    <field name="full_reconcile_id" optional="show"/>
+                    <field name="full_reconcile_id" optional="show" string="Matched" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
