@@ -60,12 +60,12 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge badge-warning float-right\">Canceled</span>"
-msgstr ""
+msgstr "<span class=\"badge badge-warning float-right\">Cancel·lat</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"ml8\">hours</span>"
-msgstr ""
+msgstr "<span class=\"ml8\">hores</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -80,12 +80,12 @@ msgstr "<span>Vista</span>"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Equipments:</strong>"
-msgstr ""
+msgstr "<strong>Equips:</strong>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Maintenance:</strong>"
-msgstr ""
+msgstr "<strong>Manteniment:</strong>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_defaults
@@ -137,12 +137,12 @@ msgstr "Tipus d'activitats"
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid "Add a new equipment"
-msgstr ""
+msgstr "Afegir un nou equip"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_category_action
 msgid "Add a new equipment category"
-msgstr ""
+msgstr "Afegir una nova categoria d'equips"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action
@@ -152,18 +152,18 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_todo_request_action_from_dashboard
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
 msgid "Add a new maintenance request"
-msgstr ""
+msgstr "Afegir una nova petició de manteniment"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_stage_action
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_dashboard_action
 msgid "Add a new stage in the maintenance request"
-msgstr ""
+msgstr "Afegir una nova etapa en la petició de manteniment"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_team_action_settings
 msgid "Add a team in the maintenance request"
-msgstr ""
+msgstr "Afegir un equip en la petició de manteniment"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_id
@@ -330,7 +330,7 @@ msgstr "Creat per"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__owner_user_id
 msgid "Created by User"
-msgstr ""
+msgstr "Creat per Usuari"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__create_date
@@ -357,6 +357,8 @@ msgid ""
 "Date at which the equipment became effective. This date will be used to "
 "compute the Mean Time Between Failure."
 msgstr ""
+"Data en la que l'equipament. Aquesta data s'utilitzarà el temps mtjà entre "
+"fracàs"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__next_action_date
@@ -433,7 +435,7 @@ msgstr "Durada"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__duration
 msgid "Duration in hours and minutes."
-msgstr ""
+msgstr "Duració en hores i minuts"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -457,6 +459,8 @@ msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create a new equipment under this category."
 msgstr ""
+"Envia per correu electrònic aquesta categoria d’equip. Els nous correus "
+"electrònics crearan automàticament un nou equip en aquesta categoria."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_count
@@ -623,7 +627,7 @@ msgstr "En curs"
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_maintenance
 msgid "Internal Maintenance"
-msgstr ""
+msgstr "Manteniment Intern"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -716,7 +720,7 @@ msgstr "Calendari de manteniment"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__maintenance_count
 msgid "Maintenance Count"
-msgstr ""
+msgstr "Comptador de manteniment"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_duration
@@ -727,7 +731,7 @@ msgstr "Duració del manteniment"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__maintenance_duration
 msgid "Maintenance Duration in hours."
-msgstr ""
+msgstr "Duració del manteniment en hores"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment
@@ -737,7 +741,7 @@ msgstr "Equip de manteniment"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
 msgid "Maintenance Equipment Category"
-msgstr ""
+msgstr "Categoria d'equips de manteniment "
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
@@ -813,7 +817,7 @@ msgstr "Tipus de manteniment"
 #: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
 #: model:ir.cron,name:maintenance.maintenance_requests_cron
 msgid "Maintenance: generate preventive maintenance requests"
-msgstr ""
+msgstr "Manteniment: Generar peticions de manteniment preventiu"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error
@@ -832,7 +836,7 @@ msgstr "Missatges"
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_metrology
 msgid "Metrology"
-msgstr ""
+msgstr "Metrologia"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__model
@@ -917,27 +921,27 @@ msgstr "Nombre d'accions"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count
 msgid "Number of Requests"
-msgstr ""
+msgstr "Nombre de peticions"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count_block
 msgid "Number of Requests Blocked"
-msgstr ""
+msgstr "Nombre de peticions bloquejades"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count_date
 msgid "Number of Requests Scheduled"
-msgstr ""
+msgstr "Nombre de peticions programades"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count_unscheduled
 msgid "Number of Requests Unscheduled"
-msgstr ""
+msgstr "Nombre de peticions no programades"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count_high_priority
 msgid "Number of Requests in High Priority"
-msgstr ""
+msgstr "Nombre de peticions en Altra Prioritat"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error_counter
@@ -1082,7 +1086,7 @@ msgstr "Preparat per propera etapa"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Record Colour"
-msgstr ""
+msgstr "Color del registre"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_force_thread_id
@@ -1131,6 +1135,8 @@ msgstr "Sol·licitud feta"
 #, python-format
 msgid "Request planned for <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
 msgstr ""
+"Sol·licitud prevista per<a href=\"#\" data-oe-model=\"%s\" data-oe-"
+"id=\"%s\">%s</a>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1140,12 +1146,12 @@ msgstr "Sol·licitat per"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "Requested by :"
-msgstr ""
+msgstr "Sol·licitat per:"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_ids
 msgid "Requests"
-msgstr ""
+msgstr "Peticions"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__technician_user_id
@@ -1267,7 +1273,7 @@ msgstr "Estat canviat"
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_subcontractor
 msgid "Subcontractor"
-msgstr ""
+msgstr "Subcontractista "
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name
@@ -1287,7 +1293,7 @@ msgstr "Membres de l'equip"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Team Name"
-msgstr ""
+msgstr "Nom d'equip"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_team_action_settings
@@ -1379,6 +1385,8 @@ msgid ""
 "Track equipments and link it to an employee or department.\n"
 "                You will be able to manage allocations, issues and maintenance of your equipment."
 msgstr ""
+"Realitzar el seguiment d'equips i enllaçar-lo amb un empleat o departament.\n"
+"                 Podreu gestionar assignacions, problemes i manteniment del vostre equip."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -1405,7 +1413,7 @@ msgstr "Comptador de missatges no llegits"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Unscheduled"
-msgstr ""
+msgstr "No programat"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1436,7 +1444,7 @@ msgstr "Molt baixa"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
 msgid "Warranty Expiration Date"
-msgstr ""
+msgstr "Data de venciment de la garantía"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__website_message_ids

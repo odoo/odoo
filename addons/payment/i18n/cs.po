@@ -1221,7 +1221,7 @@ msgstr "Název partnera"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr ""
+msgstr "Platba přes PayPal"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
@@ -1231,7 +1231,7 @@ msgstr "Platit jiným příjemcem plateb"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr ""
+msgstr "Platba kreditní kartou (přes Stripe)"
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1539,7 +1539,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Uložit kartu"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1748,12 +1748,16 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
+"V tomto poli je obrázek použitý pro tuto ikonu platby omezen na 1024 x 1024 "
+"pixelů"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
 msgstr ""
+"Toto pole obsahuje obrázek použitý pro tohoto poskytovatele, omezený na 1024"
+" x 1024 pixelů"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__save_token
@@ -1763,6 +1767,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Tato možnost umožňuje zákazníkům uložit kreditní kartu jako token platby a "
+"znovu ji použít pro pozdější nákup. Pokud spravujete předplatné (opakující "
+"se fakturace), musíte ji při vystavení faktury automaticky účtovat "
+"zákazníkovi."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1933,13 +1941,13 @@ msgstr "Čekáme na platbu příjemce, aby platbu potvrdil."
 #: code:addons/payment/static/src/js/payment_form.js:191
 #, python-format
 msgid "We're unable to process your payment."
-msgstr ""
+msgstr "Nemůžeme zpracovat vaši platbu."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "bankovní převod"
 
 #. module: payment
 #. openerp-web

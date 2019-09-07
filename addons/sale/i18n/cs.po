@@ -114,6 +114,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        Vážený pane ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Zde je\n"
+"        % if ctx.get('proforma')\n"
+"            v příloze vaše proforma faktura\n"
+"        % else\n"
+"            the ${doc_name} <strong>${object.name}</strong>\n"
+"        % endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin} )\n"
+"        % endif\n"
+"        ve výši <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>\n"
+"        od ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        V případě jakýchkoli dotazů nás neváhejte kontaktovat.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -216,7 +240,7 @@ msgstr "<small><b class=\"text-muted\">Platnost této nabídky končí</b></smal
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr ""
+msgstr "<small><b class=\"text-muted\">Vaše výhoda</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -224,6 +248,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Číslo objednávky</span>\n"
+"                            <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -257,6 +283,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Částka</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Celková cena</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1329,7 +1357,7 @@ msgstr "Předplatba (procentem)"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "Záloha ve výši %s%%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -1337,6 +1365,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"Zálohy se provádějí při vytváření faktur z prodejní objednávky. Při "
+"kopírování prodejní objednávky nejsou kopírovány."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1489,7 +1519,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product__hide_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__hide_expense_policy
 msgid "Hide Expense Policy"
-msgstr ""
+msgstr "Skrýt zásady výdajů"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
@@ -1792,23 +1822,23 @@ msgstr "je Sledující"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
 msgid "Is a down payment"
-msgstr ""
+msgstr "Je záloha"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__is_custom
 msgid "Is custom value"
-msgstr ""
+msgstr "Je vlastní hodnota"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
 msgid "Is expense"
-msgstr ""
+msgstr "Je výdaj"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
 msgid "Is expired"
-msgstr ""
+msgstr "vypršela platnost"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
@@ -1825,12 +1855,14 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Je zakázáno měnit následující pole v uzamčené objednávce:\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:667
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "Není dovoleno potvrzovat objednávku v následujících stavech: %s"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -1924,7 +1956,7 @@ msgstr "Hlavní příloha"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage delivery dates from sales orders"
-msgstr ""
+msgstr "Správa dodacích termínů z prodejních objednávek"
 
 #. module: sale
 #: model:res.groups,name:sale.group_sale_order_dates
@@ -2307,7 +2339,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr ""
+msgstr "Objednané množství"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1057
@@ -2422,7 +2454,7 @@ msgstr "Zaplať s"
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr ""
+msgstr "Platba přes PayPal"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
@@ -2433,7 +2465,7 @@ msgstr "Platit jiným příjemcem plateb"
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr ""
+msgstr "Platba kreditní kartou (přes Stripe)"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
@@ -2468,7 +2500,7 @@ msgstr "Způsob platby"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "reference platby"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
@@ -2504,7 +2536,7 @@ msgstr "Plánováno"
 #: code:addons/sale/models/sale.py:450
 #, python-format
 msgid "Please define an accounting sales journal for this company."
-msgstr ""
+msgstr "Definujte prosím účetní deník pro tuto společnost."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1318
@@ -3720,6 +3752,9 @@ msgid ""
 "product deliveries on your own: expected date, commitment date, effective "
 "date."
 msgstr ""
+"Tato možnost zavádí do prodejní objednávky další pole, která snadno "
+"naplánují dodávky produktů podle vašich potřeb: očekávané datum, datum "
+"závazku, datum účinnosti."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
@@ -4077,7 +4112,7 @@ msgstr "Co si přejete fakturovat?"
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "bankovní převod"
 
 #. module: sale
 #. openerp-web
@@ -4135,6 +4170,9 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"Zde můžete nastavit typ komunikace, který se objeví na prodejních "
+"objednávkách. Komunikace bude zákazníkovi poskytnuta při výběru způsobu "
+"platby."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1115

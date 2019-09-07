@@ -30,13 +30,13 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:43
 #, python-format
 msgid "%d days overdue"
-msgstr "연체 된 %d 일"
+msgstr "%d일 연체"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:277
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr ""
+msgstr "%s는 보고서의 참조가 아닙니다"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -46,7 +46,7 @@ msgstr "<b>로그인</b>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right\"/> Back to edit mode"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> 편집 모드로 돌아가기"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -54,36 +54,38 @@ msgid ""
 "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil\"/> 편집"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Filter By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">필터 :</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">그룹 :</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">정렬 :</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "<strong>Open </strong>"
-msgstr ""
+msgstr "<strong>개봉 </strong>"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
@@ -171,13 +173,95 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">귀하의 계정</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.user_id.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        ${object.user_id.name or ''}님 안녕하세요.<br/> <br/>\n"
+"                        귀하는 ${object.user_id.company_id.name} 포털에 입장하실 수 있습니다.<br/>\n"
+"                        귀하의 로그인 계정 :\n"
+"                        <ul>\n"
+"                            <li>사용자명 : ${object.user_id.login or ''}</li>\n"
+"                            <li>포탈 : <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                            <li>데이터베이스 : ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                        </ul>\n"
+"                        다음 url을 이용해서 귀하의 비밀번호를 변경하거나 설정할 수 있습니다. :\n"
+"                        <ul>\n"
+"                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                        </ul>\n"
+"                        ${object.wizard_id.welcome_message or ''}\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${object.user_id.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${object.user_id.company_id.phone}\n"
+"                    % if object.user_id.company_id.email\n"
+"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if object.user_id.company_id.website\n"
+"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        ${object.user_id.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        저작권 : <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_signature.xml:19
 #, python-format
 msgid "Accept & Sign"
-msgstr ""
+msgstr "승인 & 사인"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
@@ -193,12 +277,12 @@ msgstr "노트 추가"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add contacts to share the document..."
-msgstr ""
+msgstr "문서를 공유할 연락처 추가..."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
-msgstr ""
+msgstr "이메일에 표시할 추가 콘텐츠 만들기"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -208,7 +292,7 @@ msgstr "적용"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_archive_groups
 msgid "Archives"
-msgstr "보관 메시지"
+msgstr "보관"
 
 #. module: portal
 #. openerp-web
@@ -229,14 +313,14 @@ msgstr "취소"
 msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
-msgstr ""
+msgstr "계정에 대한 문서가 발급되면 VAT 번호를 변경할 수 없습니다. 이 경우 당사에 직접 연락해 주십시오."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
-msgstr ""
+msgstr "귀하의 계정에 대한 문서가 발급되면 회사 이름을 변경할 수 없습니다. 이 경우 당사에 직접 연락해 주십시오."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -255,13 +339,13 @@ msgstr "제거"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "문서를 보려면 여기를 클릭하세요."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Close"
-msgstr "마감"
+msgstr "닫기"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -274,6 +358,8 @@ msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"확인\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
@@ -318,7 +404,7 @@ msgstr "고객 포털 URL"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "Dear"
-msgstr "....에게"
+msgstr "친애하는"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
@@ -333,7 +419,7 @@ msgstr "제목"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr ""
+msgstr "서명을 그립니다."
 
 #. module: portal
 #. openerp-web
@@ -347,7 +433,7 @@ msgstr "%d일에 만기"
 #: code:addons/portal/static/src/js/portal_sidebar.js:39
 #, python-format
 msgid "Due today"
-msgstr ""
+msgstr "오늘까지"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
@@ -365,7 +451,7 @@ msgstr "이메일 스레드"
 #: model:ir.model,name:portal.model_portal_wizard
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Portal Access"
-msgstr ""
+msgstr "포털 접근 권한 부여"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -400,7 +486,7 @@ msgstr "이메일이 잘못되었습니다! 유효한 이메일 주소를 입력
 #: code:addons/portal/controllers/portal.py:272
 #, python-format
 msgid "Invalid report type: %s"
-msgstr ""
+msgstr "잘못된 보고서 유형 : %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -413,7 +499,7 @@ msgstr "초대 메시지"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -427,14 +513,14 @@ msgstr "최근 갱신한 사람"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신일"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "Leave a comment"
-msgstr ""
+msgstr "의견을 남겨주세요"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
@@ -444,7 +530,7 @@ msgstr "링크"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
 msgid "Login User"
-msgstr ""
+msgstr "접속 유저"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
@@ -472,7 +558,7 @@ msgstr "다음"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
 msgid "Note"
-msgstr "메모"
+msgstr "노트"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
@@ -489,7 +575,7 @@ msgstr "Odoo 로고"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:39
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
+msgstr "오, 이런! 뭔가 잘못됐어요. 페이지를 다시 불러오고 재접속하세요."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

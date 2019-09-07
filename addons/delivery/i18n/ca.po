@@ -9,6 +9,7 @@
 # Sandra Franch <sandra.franch@upc.edu>, 2018
 # Manel Fernandez <manelfera@outlook.com>, 2018
 # M Palau <mpalau@tda.ad>, 2019
+# Arnau Ros, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: M Palau <mpalau@tda.ad>, 2019\n"
+"Last-Translator: Arnau Ros, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +35,7 @@ msgstr "${(object.name or '').replace('/','_')}"
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} Ordre de lliurament (Ref ${object.name or 'n/a' })"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
@@ -62,16 +64,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hola ${object.partner_id.name},<br/><br/>\n"
+"        Ens complau informar-te que s'ha enviat la vostra comanda.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            La referència de seguiment és\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Si us plau troba la teva comanda d'entrega adjunta per més detalls.<br/><br/>\n"
+"        Gràcies,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Add to order"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Afegir a la comanda"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Rebre tarifa"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -81,6 +106,10 @@ msgid ""
 "attrs=\"{'invisible':['|','|',('carrier_id','=',False),('state','not "
 "in',('draft','sent')),('delivery_rating_success','=',False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-success\" role=\"img\" aria-label=\"Rating OK\" "
+"title=\"Rating OK\" "
+"attrs=\"{'invisible':['|','|',('carrier_id','=',False),('state','not "
+"in',('draft','sent')),('delivery_rating_success','=',False)]}\"/>"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:77
@@ -90,6 +119,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Compra Odoo Enterprise ara per obtenir més proveïdors.\n"
+"                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -100,12 +132,12 @@ msgstr "<strong>Transport</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Shipping Weight</strong>"
-msgstr ""
+msgstr "<strong>Pes de l'enviament</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Número de seguiment</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
@@ -144,7 +176,7 @@ msgstr "Arxivat"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "Transportistes disponibles"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -213,12 +245,12 @@ msgstr "Creat el"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr ""
+msgstr "Registre de depuració"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr ""
+msgstr "Defineix un nou mètode de lliurament"
 
 #. module: delivery
 #: model:product.category,name:delivery.product_category_deliveries
@@ -238,7 +270,7 @@ msgstr "Transportista"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
-msgstr ""
+msgstr "Cost d'entrega"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -248,7 +280,7 @@ msgstr "Informació d'entrega"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "Missatge de lliurament"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
@@ -270,14 +302,14 @@ msgstr "Mètodes lliurament"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr ""
+msgstr "Assistent de selecció del paquet de lliurament"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
-msgstr ""
+msgstr "Paquets d'entrega"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
@@ -298,12 +330,12 @@ msgstr "Producte d'enviament"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
 msgid "Delivery Rating Success"
-msgstr ""
+msgstr "Èxit de qualificació d'entrega"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
-msgstr ""
+msgstr "Disponibilitat de destinació"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
@@ -325,7 +357,7 @@ msgstr "Mostrar Nom"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr ""
+msgstr "Mostrar enllaços de seguiment"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -349,6 +381,7 @@ msgstr "Entorn"
 #, python-format
 msgid "Error: this delivery method is not available for this address."
 msgstr ""
+"Error: Aquest mètode d'entrega no està disponible per aquesta direcció."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
@@ -385,7 +418,7 @@ msgstr "Entrega gratuïta"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "Gratuït si l'import de la comanda és superior a"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -425,6 +458,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
+"Si l'import total de la comanda (excloent-hi l'enviament) és superior o "
+"igual a aquest valor, el client es beneficia amb un enviament gratuït. "
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:126
@@ -434,6 +469,9 @@ msgid ""
 "The shipping is free because the order amount exceeds %.2f.\n"
 "(The actual shipping cost is: %.2f)"
 msgstr ""
+"Info:\n"
+"L'enviament és gratuït perquè l'import de la comanda és superior a%.2f\n"
+"(El cost d'enviament actual és: %.2f)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -489,7 +527,7 @@ msgstr "La longitud ha de ser positiva"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr ""
+msgstr "Sol·licituds de registre per facilitar la depuració"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -504,7 +542,7 @@ msgstr "El marge no pot ser inferior a -100%"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr ""
+msgstr "Margin on Rate"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__max_weight
@@ -548,6 +586,8 @@ msgstr "No hi ha transportista establert per aquesta ordre."
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
+"Cap regla de preus que coincideixi amb aquesta comanda; no es pot calcular "
+"el cost de lliurament."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
@@ -587,7 +627,7 @@ msgstr "Detalls del paquet"
 #: code:addons/delivery/wizard/choose_delivery_package.py:52
 #, python-format
 msgid "Package too heavy!"
-msgstr ""
+msgstr "Paquet massa pesat"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -598,7 +638,7 @@ msgstr "Paquets"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__stock_quant_package_id
 msgid "Physical Package"
-msgstr ""
+msgstr "Paquet físic"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:82
@@ -607,6 +647,8 @@ msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
 msgstr ""
+"Si us plau \"comprova el preu\" per tal de calcular un preu d'enviament per "
+"a aquesta cotització."
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -633,7 +675,7 @@ msgstr "Normes per posar preus."
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Moviment del producte (línia de moviment d'estoc)"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
@@ -687,7 +729,7 @@ msgstr "Desar"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send Confirmation Email"
-msgstr ""
+msgstr "Enviar correu electrònic de confirmació"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -714,6 +756,8 @@ msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
+"Enviament enviat al transportista %s per enviar amb el número de seguiment "
+"%s<br/> Cost:%.2f%s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -730,7 +774,7 @@ msgstr "Pes de l'enviament"
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr ""
+msgstr "Pes de l'enviament "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -756,12 +800,14 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"El pes del teu paquet és major que el pes màxim autoritzat per aquest tipus "
+"de paquets. Si us plau, selecciona un altre tipus de paquet. "
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:111
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr ""
+msgstr "No hi ha cap regla de lliurament que coincideixi."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -790,7 +836,7 @@ msgstr "Aquest percentatge s'agregarà al preu de l'enviament."
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr ""
+msgstr "URL de seguiment"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -805,7 +851,7 @@ msgstr "Referència del seguiment"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "URL de seguiment"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -868,7 +914,7 @@ msgstr "Pes * Volum"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
 msgid "Weight computed based on the sum of the weights of the products."
-msgstr ""
+msgstr "Pes calculat en base a la suma de pesos dels productes"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
@@ -878,18 +924,18 @@ msgstr "Pes per enviament"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Unitat de pes de l'etiqueta de mesura"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Weight used to compute the price of the delivery (if applicable)."
-msgstr ""
+msgstr "Pes utilitzar per calcular el preu de l'entrega (si aplica)."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Weight:"
-msgstr ""
+msgstr "Pes:"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__width
@@ -915,12 +961,12 @@ msgstr ""
 #: code:addons/delivery/models/sale_order.py:78
 #, python-format
 msgid "You can add delivery price only on unconfirmed quotations."
-msgstr ""
+msgstr "Pots afegir preu d'entrega només en pressupostos no confirmats."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr ""
+msgstr "Tens múltiples enllaços de seguiment, estan disponibles al xat"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:185
