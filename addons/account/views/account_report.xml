@@ -2,81 +2,39 @@
 <odoo>
     <data>
         <!-- QWeb Reports -->
-        <report 
+        <report
             id="account_invoices"
-            model="account.invoice"
+            model="account.move"
             string="Invoices"
+            report_type="qweb-pdf"
+            name="account.report_invoice_with_payments"
+            file="account.report_invoice_with_payments"
+            attachment="(object.state == 'posted') and ('INV'+(object.name or '').replace('/','')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
+            groups="account.group_account_invoice"
+        />
+
+        <report
+            id="action_account_original_vendor_bill"
+            model="account.move"
+            string="Original vendor bills"
+            report_type="qweb-pdf"
+            name="account.report_original_vendor_bill"
+            file="account.report_original_vendor_bill"
+            attachment="'original_vendor_bill.pdf'"
+            attachment_use="True"
+        />
+
+        <report
+            id="account_invoices_without_payment"
+            model="account.move"
+            string="Invoices without Payment"
             report_type="qweb-pdf"
             name="account.report_invoice"
             file="account.report_invoice"
-            attachment_use="True"
-            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
-            print_report_name="(
-                object.type == 'out_invoice' and object.state == 'draft' and 'Draft Invoice' or
-                object.type == 'out_invoice' and object.state in ('open','paid') and 'Invoice - %s' % (object.number) or
-                object.type == 'out_refund' and object.state == 'draft' and 'Credit Note' or
-                object.type == 'out_refund' and 'Credit Note - %s' % (object.number) or
-                object.type == 'in_invoice' and object.state == 'draft' and 'Vendor Bill' or
-                object.type == 'in_invoice' and object.state in ('open','paid') and 'Vendor Bill - %s' % (object.number) or
-                object.type == 'in_refund' and object.state == 'draft' and 'Vendor Credit Note' or
-                object.type == 'in_refund' and 'Vendor Credit Note - %s' % (object.number))"
+            attachment="(object.state == 'posted') and ('INV'+(object.name or '').replace('/','')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
         />
-
-        <report 
-            id="account_invoice_action_report_duplicate"
-            model="account.invoice"
-            string="Duplicates"
-            report_type="qweb-pdf"
-            name="account.account_invoice_report_duplicate_main"
-            file="account.report_invoice_duplicate"
-            attachment_use="False"
-            print_report_name="(
-                object.type == 'out_invoice' and object.state == 'draft' and 'Duplicate Invoice' or
-                object.type == 'out_invoice' and object.state in ('open','paid') and 'Duplicate Invoice - %s' % (object.number) or
-                object.type == 'out_refund' and object.state == 'draft' and 'Duplicate Credit Note' or
-                object.type == 'out_refund' and 'Duplicate Credit Note - %s' % (object.number) or
-                object.type == 'in_invoice' and object.state == 'draft' and 'Duplicate Vendor Bill' or
-                object.type == 'in_invoice' and object.state in ('open','paid') and 'Duplicate Vendor Bill - %s' % (object.number) or
-                object.type == 'in_refund' and object.state == 'draft' and 'Duplicate Vendor Credit Note' or
-                object.type == 'in_refund' and 'Duplicate Vendor Credit Note - %s' % (object.number))"
-        />
-
-        <report 
-            id="action_report_print_overdue"
-            model="res.partner"
-            report_type="qweb-pdf"
-            string="Due Payments"
-            name="account.report_overdue"
-            file="account.report_overdue"
-            print_report_name="'Due Payments - %s' % (object.name)"
-        />
-
-        <report 
-            id="action_report_general_ledger"
-            model="account.report.general.ledger"
-            string="General Ledger"
-            report_type="qweb-pdf"
-            name="account.report_generalledger"
-            file="account.report_generalledger"
-            />
-
-        <report 
-            id="action_report_trial_balance"
-            model="account.balance.report"
-            string="Trial Balance"
-            report_type="qweb-pdf"
-            name="account.report_trialbalance"
-            file="account.report_trialbalance"
-            />
-
-        <report 
-            id="action_report_financial"
-            model="account.financial.report"
-            string="Financial report"
-            report_type="qweb-pdf"
-            name="account.report_financial"
-            file="account.report_financial"
-            />
 
         <report
             id="action_report_aged_partner_balance"
@@ -88,32 +46,32 @@
             file="account.report_agedpartnerbalance"
         />
 
-        <report 
+        <report
             id="action_report_journal"
-            model="account.report.journal"
-            string="Sale/Purchase Journal"
+            model="account.common.journal.report"
+            string="Journals Audit"
             report_type="qweb-pdf"
             name="account.report_journal"
             file="account.report_journal"
             />
 
-        <report 
-            id="action_report_partnerledger"
-            model="account.report_partnerledger"
-            string="Partner Ledger"
-            report_type="qweb-pdf"
-            name="account.report_partnerledger"
-            file="account.report_partnerledger"
-            />
-
         <report
             id="action_report_payment_receipt"
             model="account.payment"
-            string="Print Receipt"
+            string="Payment Receipt"
             report_type="qweb-pdf"
             name="account.report_payment_receipt"
             file="account.report_payment_receipt"
-            menu="False"
+            menu="True"
+        />
+
+        <report
+            id="action_report_account_statement" 
+            model="account.bank.statement"
+            string="Statement"
+            name="account.report_statement"
+            file="account.report_statement"
+            report_type="qweb-pdf"
         />
 
     </data>

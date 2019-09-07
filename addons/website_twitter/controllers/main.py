@@ -8,11 +8,11 @@ from odoo.http import request
 
 
 class Twitter(http.Controller):
-    @http.route(['/twitter_reload'], type='json', auth="user", website=True)
+    @http.route(['/website_twitter/reload'], type='json', auth="user", website=True)
     def twitter_reload(self):
         return request.website.fetch_favorite_tweets()
 
-    @http.route(['/get_favorites'], type='json', auth="public", website=True)
+    @http.route(['/website_twitter/get_favorites'], type='json', auth="public", website=True)
     def get_tweets(self, limit=20):
         key = request.website.twitter_api_key
         secret = request.website.twitter_api_secret

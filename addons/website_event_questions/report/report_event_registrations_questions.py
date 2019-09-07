@@ -7,13 +7,13 @@ from odoo import api, fields, models, tools
 class ReportEventRegistrationQuestions(models.Model):
     _name = "event.question.report"
     _auto = False
+    _description = 'Event Question Report'
 
     attendee_id = fields.Many2one(comodel_name='event.registration', string='Registration')
     question_id = fields.Many2one(comodel_name='event.question', string='Question')
     answer_id = fields.Many2one(comodel_name='event.answer', string='Answer')
     event_id = fields.Many2one(comodel_name='event.event', string='Event')
 
-    @api.model_cr
     def init(self):
         """ Event Question main report """
         tools.drop_view_if_exists(self._cr, 'event_question_report')

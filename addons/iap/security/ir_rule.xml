@@ -1,0 +1,11 @@
+<odoo>
+   <data>
+    <record id="user_iap_account" model="ir.rule">
+      <field name="name">User IAP Account</field>
+      <field name="model_id" ref="model_iap_account"/>
+      <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+      <!-- partners can CUD services linked to themselves -->
+      <field name="domain_force">['|', ('company_ids', '=', False), ('company_ids', 'in', company_ids)]</field>
+    </record>
+  </data>
+</odoo>

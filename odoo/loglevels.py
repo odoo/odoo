@@ -37,13 +37,16 @@ def get_encodings(hint_encoding='utf-8'):
         if prefenc:
             yield prefenc
 
+# not using pycompat to avoid circular import: pycompat is in tools much of
+# which comes back to import loglevels
+text_type = type(u'')
 def ustr(value, hint_encoding='utf-8', errors='strict'):
     """This method is similar to the builtin `unicode`, except
     that it may try multiple encodings to find one that works
     for decoding `value`, and defaults to 'utf-8' first.
 
-    :param: value: the value to convert
-    :param: hint_encoding: an optional encoding that was detecte
+    :param value: the value to convert
+    :param hint_encoding: an optional encoding that was detecte
         upstream and should be tried first to decode ``value``.
     :param str errors: optional `errors` flag to pass to the unicode
         built-in to indicate how illegal character values should be
@@ -60,24 +63,24 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
     # cases faster (isinstance/issubclass are significantly slower)
     ttype = type(value)
 
-    if ttype is unicode:
+    if ttype is text_type:
         return value
 
     # special short-circuit for str, as we still needs to support
     # str subclasses such as `odoo.tools.unquote`
-    if ttype is str or issubclass(ttype, str):
+    if ttype is bytes or issubclass(ttype, bytes):
 
         # try hint_encoding first, avoids call to get_encoding()
         # for the most common case
         try:
-            return unicode(value, hint_encoding, errors=errors)
+            return value.decode(hint_encoding, errors=errors)
         except Exception:
             pass
 
         # rare: no luck with hint_encoding, attempt other ones
         for ln in get_encodings(hint_encoding):
             try:
-                return unicode(value, ln, errors=errors)
+                return value.decode(ln, errors=errors)
             except Exception:
                 pass
 
@@ -86,15 +89,15 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
 
     # fallback for non-string values
     try:
-        return unicode(value)
+        return text_type(value)
     except Exception:
         raise UnicodeError('unable to convert %r' % (value,))
 
 
 def exception_to_unicode(e):
-    if hasattr(e, 'args'):
+    if getattr(e, 'args', ()):
         return "\n".join((ustr(a) for a in e.args))
     try:
-        return unicode(e)
+        return text_type(e)
     except Exception:
         return u"Unknown message"

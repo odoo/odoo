@@ -4,9 +4,16 @@
 Python 3 compatibility/conversions
 ==================================
 
-Goal (notsure?): for v11 to provide an alpha/beta Python 3 compatibility, for
-v12 to provide official Python 3 support and drop Python 2 in either v12 or
-v13.
+Official compatibility: Odoo 11 will be the first LTS release to introduce
+Python 3 compatibility, starting with Python 3.5. It will also be the first
+LTS release to drop official support for Python 2.
+
+Rationale: Python 3 has been around since 2008, and all Python libraries
+used by the official Odoo distribution have been ported and are considered
+stable. Most supported platforms have a Python 3.5 package, or a similar
+way to deploy it. Preserving dual compatibility is therefore considered
+unnecessary, and would represent a significant overhead in testing for the
+lifetime of Odoo 11.
 
 Python 2 and Python 3 are somewhat different language, but following
 backports, forward ports and cross-compatibility library it is possible to
@@ -55,11 +62,6 @@ features whereas:
 * Python 3.2 made ``range`` views more list-like (backported to 2.7)and
   reintroduced ``callable``
 
-.. warning::
-
-    While Python 3 adds plenty of great features (keyword-only parameters,
-    generator delegation, pathlib, ...), you must *not *use them in Odoo
-    until Python 2 support is dropped
 
 Semantics changes
 =================
@@ -228,10 +230,7 @@ methods or functions having been *removed entirely*:
   .. important::
 
       When possible, use comprehensions (list, generator, ...) rather than
-      ``map`` or ``filter``, otherwise use the cross-version ``pycompat``
-      versions (``pycompat.imap``, ``pycompat.ifilter`` and
-      ``pycompat.izip``). The ``pycompat`` versions all return *iterators* and
-      may need to be wrapped in a ``list()`` call to yield a list.
+      ``map`` or ``filter``.
 
 * In Python 3, ``dict.keys``, ``dict.values`` and ``dict.items`` return
   *views* rather than lists, and the ``iter*`` and ``view*`` methods have
@@ -239,11 +238,9 @@ methods or functions having been *removed entirely*:
 
   .. important::
 
-      Prefer using :func:`odoo.tools.pycompat.keys`,
-      :func:`odoo.tools.pycompat.values` and :func:`odoo.tools.pycompat.items`
-      return cross-version iterators. When needing actual lists (e.g. to
-      modify a dictionary during iteration), wrap one of the calls above in a
-      ``list()``.
+      When the result of the above methods is used for more than a one-shot
+      loop (e.g. to be included in returned value), or when the dict needs
+      to be modified during iteration, wrap the calls in a ``list()``.
 
 builtins
 --------
@@ -292,8 +289,6 @@ under the single ``int`` type.
 
     * the ``L`` suffix for integer literals must be removed
     * calls to ``long`` must be replaced by calls to ``int``
-    * ``(int, long)`` for type-checking purposes must be replaced by
-      :py:data:`odoo.tools.pycompat.integer_types`
 
 
 * the ``L`` suffix on numbers is unsupported in Python 3, and unnecessary in
@@ -303,18 +298,6 @@ under the single ``int`` type.
 * type-testing is the last and bigger issue as in Python 2 ``long`` is not a
   subtype of ``int`` (nor the reverse), and ``isinstance(value, (int, long))``
   is thus generally necessary to catch all integrals.
-
-  For that case, Odoo 11 now provides a compatibility module with an
-  :py:data:`~odoo.tools.pycompat.integer_types` definition which can be used
-  for type-testing.
-
-  It is a tuple of types so when used with ``isinstance`` it can be provided
-  directly or inside an other tuple alongside other types e.g.
-  ``isinstance(value, (BaseModel, integer_types))``.
-
-  However when used with ``type`` directly (which should be avoided) you
-  should use the ``in`` operator, and if you need other types you need to
-  concatenate ``integer_types`` to an other tuple.
 
 ``reduce``
 ##########
@@ -331,7 +314,7 @@ code by replacing it with some other method altogether.
 ``xrange``
 ##########
 
-In Python 3, ``range()`` behaves the same as Python 3's ``xrange``.
+In Python 3, ``range()`` behaves the same as Python 2's ``xrange``.
 
 For cross-version code, you can just use ``range()`` everywhere: while this
 will incur a slight allocation cost on Python 2, Python 3's ``range`` supports
@@ -369,8 +352,109 @@ Minor syntax changes
   error, octal literals now follow the hexadecimal convention with a ``0o``
   prefix.
 
+.. _changed-strings:
+
+Bytes/String/Text: The Big One
+==============================
+
+The most impactful Python 3 change by far is to the text model: for historical
+reasons the distinction Python 2's bytestrings (``bytes``/``str``) and text
+strings (``unicode``) is fuzzy and it will try to implicitly convert between
+one and the other using the ASCII encoding.
+
+Python 3 changes this, it removes the implicit conversions, removes APIs which
+contribute to the fuzz and tends to strictly segregate other to work on either
+bytes or text.
+
+This is fundamentally good and mostly sensible, but it means lots of breakage:
+
+the builtins
+------------
+
+Python 3 removes both ``unicode`` and ``basestring``, and ``str`` now
+corresponds to *text* strings (the old ``unicode``) with ``bytes`` being
+bytestrings in both languages [#bytes]_.
+
+Both versions have the following prefixes for string literals:
+
+* ``b'foo'`` is a bytestring (``bytes`` object).
+
+* ``'foo'`` is that version's ``str`` type, which may be either a bytestring
+  or a text string [#native-string]_.
+
+* ``u'foo'`` is that version's text string.
+
+For best cross-version compatibility you should avoid unprefixed string
+literals unless you *specifically* need a "native string" [#native-string]_.
+
+``open``
+--------
+
+.. important::
+
+    the ``open`` builtin should always be explicitly used in binary mode
+    (``rb``, ``wb``, ...)
+
+    To read *text* files, use ``io.open``.
+
+On both P2 and P3, ``open`` defaults to returning *native strings* in default
+("text") mode, however in P3 that means it actually decodes the file's bytes
+using whatever encoding was set up (default: UTF-8) while on Python 2 it has
+no concept of encoding.
+
+Using ``open`` in binary mode provides bytestrings on both versions and works
+fine. To read *text* files, use ``io.open`` and provide an explicit encoding.
+
+base64
+------
+
+base64 is a bytes->bytes conversion. bytes->bytes codecs were removed from the
+"native" encoding/decoding system which is now exclusively for bytes<->text
+conversions: text is *encoded* to bytes and bytes are *decoded* to text.
+
+.. important::
+
+    both ``bytes.encode('base64')`` and ``bytes.decode('base64')`` must be
+    migrated to using ``base64.b64encode`` and ``base64.b64decode``
+    respectively.
+
+csv
+---
+
+``csv`` is a fairly vicious one: not only is it not a very good format, the
+Python 2 and Python 3 versions of the library are text-model incompatible in
+significant ways:
+
+* Python 2's CSV only works on *ascii-compatible byte streams* (it has no
+  encoding support at all) and extracts bytestring values
+* Python 3's CSV only works on *text streams* and extract text values
+* And ``io`` doesn't provide "native string" streaming facilities.
+
+However with respect to Odoo it turns out most or all uses of ``csv`` fit
+inside a model of *byte stream to and from text values*.
+
+The latter is thus a model implemented by cross-version wrappers
+:func:`odoo.tools.pycompat.csv_reader` and
+:func:`odoo.tools.pycompat.csv_writer`: they take a *UTF-8 byte stream* and
+read or write *text* values.
+
 .. _hash randomisation: http://bugs.python.org/issue13703
 
 .. _requests: http://docs.python-requests.org/
 
 .. _werkzeug: http://werkzeug.pocoo.org/docs/urls/
+
+.. [#bytes]
+
+    with the caveat that Python 3 makes them less text-y and more byte-y e.g.
+    in Python 2 ``b"foo"[0]`` is ``b"f"``, but in Python 3 it's ``102`` (the
+    value of the first byte), you'll want to *slice* bytestrings for
+    compatibility.
+
+.. [#native-string]
+
+    this is important because some API/contexts take a *native string* rather
+    than either bytes or text. The ``csv`` module of the standard library is
+    one such problematic API (it is also notoriously problematic for its
+    terrible support of non-ascii-compatible encodings in Python 2).
+    ``email.message_from_string`` is an other one.

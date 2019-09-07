@@ -3,13 +3,15 @@ odoo.define('web.mixins', function (require) {
 
 var Class = require('web.Class');
 var utils = require('web.utils');
-var AbstractService = require('web.AbstractService');
 
 /**
  * Mixin to structure objects' life-cycles folowing a parent-children
  * relationship. Each object can a have a parent and multiple children.
  * When an object is destroyed, all its children are destroyed too releasing
  * any resource they could have reserved before.
+ *
+ * @name ParentedMixin
+ * @mixin
  */
 var ParentedMixin = {
     __parentedMixin : true,
@@ -57,48 +59,47 @@ var ParentedMixin = {
         return this.__parentedDestroyed;
     },
     /**
-        Utility method to only execute asynchronous actions if the current
-        object has not been destroyed.
-
-        @param {$.Deferred} promise The promise representing the asynchronous
-                                    action.
-        @param {bool} [reject=false] If true, the returned promise will be
-                                     rejected with no arguments if the current
-                                     object is destroyed. If false, the
-                                     returned promise will never be resolved
-                                     or rejected.
-        @returns {$.Deferred} A promise that will mirror the given promise if
-                              everything goes fine but will either be rejected
-                              with no arguments or never resolved if the
-                              current object is destroyed.
-    */
-    alive: function (promise, reject) {
+     * Utility method to only execute asynchronous actions if the current
+     * object has not been destroyed.
+     *
+     * @param {Promise} promise The promise representing the asynchronous
+     *                             action.
+     * @param {bool} [shouldReject=false] If true, the returned promise will be
+     *                              rejected with no arguments if the current
+     *                              object is destroyed. If false, the
+     *                              returned promise will never be resolved
+     *                              or rejected.
+     * @returns {Promise} A promise that will mirror the given promise if
+     *                       everything goes fine but will either be rejected
+     *                       with no arguments or never resolved if the
+     *                       current object is destroyed.
+     */
+    alive: function (promise, shouldReject) {
         var self = this;
-        return $.Deferred(function (def) {
-            promise.then(function () {
+
+        return new Promise(function (resolve, reject) {
+            promise.then(function (result) {
                 if (!self.isDestroyed()) {
-                    def.resolve.apply(def, arguments);
+                    resolve(result);
+                } else if (shouldReject) {
+                    reject();
                 }
-            }, function () {
+            }).guardedCatch(function (reason) {
                 if (!self.isDestroyed()) {
-                    def.reject.apply(def, arguments);
+                    reject(reason);
+                } else if (shouldReject) {
+                    reject();
                 }
-            }).always(function () {
-                if (reject) {
-                    // noop if def already resolved or rejected
-                    def.reject();
-                }
-                // otherwise leave promise in limbo
             });
-        }).promise();
+        });
     },
     /**
      * Inform the object it should destroy itself, releasing any
      * resource it could have reserved.
      */
     destroy : function () {
-        _.each(this.getChildren(), function (el) {
-            el.destroy();
+        this.getChildren().forEach(function (child) {
+            child.destroy();
         });
         this.setParent(undefined);
         this.__parentedDestroyed = true;
@@ -228,13 +229,16 @@ var Events = Class.extend({
 });
 
 /**
-    Mixin containing an event system. Events are also registered by specifying the target object
-    (the object which will receive the event when it is raised). Both the event-emitting object
-    and the target object store or reference to each other. This is used to correctly remove all
-    reference to the event handler when any of the object is destroyed (when the destroy() method
-    from ParentedMixin is called). Removing those references is necessary to avoid memory leak
-    and phantom events (events which are raised and sent to a previously destroyed object).
-*/
+ * Mixin containing an event system. Events are also registered by specifying the target object
+ * (the object which will receive the event when it is raised). Both the event-emitting object
+ * and the target object store or reference to each other. This is used to correctly remove all
+ * reference to the event handler when any of the object is destroyed (when the destroy() method
+ * from ParentedMixin is called). Removing those references is necessary to avoid memory leak
+ * and phantom events (events which are raised and sent to a previously destroyed object).
+ *
+ * @name EventDispatcherMixin
+ * @mixin
+ */
 var EventDispatcherMixin = _.extend({}, ParentedMixin, {
     __eventDispatcherMixin: true,
     custom_events: {},
@@ -326,7 +330,9 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
     },
     trigger_up: function (name, info) {
         var event = new OdooEvent(this, name, info);
+        //console.info('event: ', name, info);
         this._trigger_up(event);
+        return event;
     },
     _trigger_up: function (event) {
         var parent;
@@ -349,6 +355,10 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
     }
 });
 
+/**
+ * @name PropertiesMixin
+ * @mixin
+ */
 var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
     init: function () {
         EventDispatcherMixin.init.call(this);
@@ -399,130 +409,10 @@ var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
     }
 });
 
-var ServiceProvider = {
-    services: {},
-    init: function () {
-        var self = this;
-        _.each(AbstractService.prototype.Services, function (Service) {
-            var service = new Service();
-            self.services[service.name] = service;
-        });
-        this.custom_events = _.clone(this.custom_events);
-        this.custom_events.call_service = this._call_service.bind(this);
-    },
-    _call_service: function (event) {
-        var service = this.services[event.data.service];
-        var args = event.data.args.concat(event.target);
-        var result = service[event.data.method].apply(service, args);
-        event.data.callback(result);
-    },
-};
-
 return {
     ParentedMixin: ParentedMixin,
     EventDispatcherMixin: EventDispatcherMixin,
     PropertiesMixin: PropertiesMixin,
-    ServiceProvider: ServiceProvider,
 };
-
-});
-
-odoo.define('web.ServicesMixin', function (require) {
-"use strict";
-
-var rpc = require('web.rpc');
-
-var ServicesMixin = {
-    call: function (service, method) {
-        var args = Array.prototype.slice.call(arguments, 2);
-        var result;
-        this.trigger_up('call_service', {
-            service: service,
-            method: method,
-            args: args,
-            callback: function (r) {
-                result = r;
-            },
-        });
-        return result;
-    },
-    /**
-     * Builds and executes RPC query. Returns a deferred's promise resolved with
-     * the RPC result.
-     *
-     * @param {string} arg1 either a route or a model
-     * @param {string} method if a model is given, this argument is a method
-     * @returns {Deferred's Promise}
-     */
-    _rpc: function (params, options) {
-        var query = rpc.buildQuery(params);
-        var def = this.call('ajax', 'rpc', query.route, query.params, options);
-        return def ? def.promise() : $.Deferred().promise();
-    },
-    loadFieldView: function (dataset, view_id, view_type, options) {
-        return this.loadViews(dataset.model, dataset.get_context(), [[view_id, view_type]], options).then(function (result) {
-            return result[view_type];
-        });
-    },
-    loadViews: function (modelName, context, views, options) {
-        var def = $.Deferred();
-        this.trigger_up('load_views', {
-            modelName: modelName,
-            context: context,
-            views: views,
-            options: options,
-            on_success: def.resolve.bind(def),
-        });
-        return def;
-    },
-    loadFilters: function (dataset, action_id) {
-        var def = $.Deferred();
-        this.trigger_up('load_filters', {
-            dataset: dataset,
-            action_id: action_id,
-            on_success: def.resolve.bind(def),
-        });
-        return def;
-    },
-    // Session stuff
-    getSession: function () {
-        var session;
-        this.trigger_up('get_session', {
-            callback: function (result) {
-                session = result;
-            }
-        });
-        return session;
-    },
-    /**
-     * Informs the action manager to do an action. This supposes that the action
-     * manager can be found amongst the ancestors of the current widget.
-     * If that's not the case this method will simply return an unresolved
-     * deferred.
-     *
-     * @param {any} action
-     * @param {any} options
-     * @returns {Deferred}
-     */
-    do_action: function (action, options) {
-        var def = $.Deferred();
-
-        this.trigger_up('do_action', {
-            action: action,
-            options: options,
-            on_success: function (result) { def.resolve(result); },
-            on_fail: function (result) { def.reject(result); },
-        });
-        return def;
-    },
-    do_notify: function (title, message, sticky, className) {
-        this.trigger_up('notification', {title: title, message: message, sticky: sticky, className: className});
-    },
-    do_warn: function (title, message, sticky, className) {
-        this.trigger_up('warning', {title: title, message: message, sticky: sticky, className: className});
-    },
-};
-
-return ServicesMixin;
 
 });

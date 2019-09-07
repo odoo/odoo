@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="portal_share_wizard" model="ir.ui.view">
+        <field name="name">portal.share.wizard</field>
+        <field name="model">portal.share</field>
+        <field name="arch" type="xml">
+            <form string="Share Document">
+                <p class="alert alert-warning" attrs="{'invisible': [('access_warning', '=', '')]}" role="alert"><field name="access_warning"/></p>
+                <group name="share_link">
+                    <field name="res_model" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
+                    <field name="share_link" widget="CopyClipboardChar" options="{'string': 'Copy Link'}"/>
+                </group>
+                <group>
+                    <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to share the document..."/>
+                </group>
+                <group>
+                    <field name="note" placeholder="Add a note"/>
+                </group>
+                <footer>
+                    <button string="Send" name="action_send_mail" attrs="{'invisible': [('access_warning', '!=', '')]}" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="portal_share_action" model="ir.actions.act_window">
+        <field name="name">Share Document</field>
+        <field name="res_model">portal.share</field>
+        <field name="binding_model_id" ref="model_portal_share"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

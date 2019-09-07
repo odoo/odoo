@@ -2,12 +2,136 @@
 <templates id="template" xml:space="preserve">
     <div t-name="website.homepage_editor_welcome_message" class="container text-center o_homepage_editor_welcome_message">
         <h2 class="mt0">Welcome to your <b>Homepage</b>!</h2>
-        <p class="lead hidden-xs">Let's start designing.</p>
-        <div class="o_tooltip_container hidden-xs">Follow all the <div class="o_tooltip bottom"/> signs to get your website ready in no time.</div>
+        <p class="lead d-none d-md-block">Let's start designing.</p>
+        <div class="o_tooltip_container d-none d-md-inline-flex fade">Follow all the <div class="o_tooltip bottom"/> signs to get your website ready in no time.</div>
     </div>
-
     <div t-name="website.leaving_current_page_edition">
         <p>What do you want to do?</p>
         <p class="text-muted">Your current changes will be saved automatically.</p>
+    </div>
+
+    <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
+    <t t-name="website.editorbar">
+        <div id="web_editor-top-edit">
+            <form class="navbar-form text-muted">
+                <button type="button" class="btn btn-secondary" data-action="cancel"><i class="fa fa-times"/> Discard</button>
+                <button type="button" class="btn btn-primary" data-action="save"><i class="fa fa-floppy-o"/> Save</button>
+            </form>
+        </div>
+    </t>
+    <!-- Custom checkbox (material-design-like toggle) -->
+    <t t-name="website.components.switch">
+        <label class="o_switch" t-att-for="id">
+            <input type="checkbox" t-att-id="id" t-att-checked="checked ? 'checked' : undefined"/>
+            <span/>
+            <div t-if="label"><t t-esc="label"/></div>
+        </label>
+    </t>
+
+    <div t-name="website.theme_customize_modal_layout" class="d-flex align-items-start">
+        <ul class="nav flex-column flex-shrink-0 w-25"/>
+        <div class="tab-content pl-3 pb-2 flex-grow-1"/>
+    </div>
+    <div t-name="website.theme_customize_modal_content" t-att-id="id" class="tab-pane">
+        <h5 class="mt-0"><t t-esc="title"/></h5>
+        <div class="form-row justify-content-between o_options_container"/>
+    </div>
+    <t t-name="website.theme_customize_modal_option">
+        <div t-attf-class="o_theme_customize_option my-1 flex-grow-0 #{font ? 'o_theme_customize_option_font_' + font : ''} #{widget and widget != 'auto' ? 'o_theme_customize_with_widget' : ''}">
+            <img t-if="icon" t-att-src="icon"/>
+
+            <t t-set="label" t-value="font ? '' : string"/>
+            <t t-if="alone and (!widget or widget == 'auto')" t-call="website.components.switch"/>
+            <label t-else="">
+                <input t-att-id="id" t-att-name="name" type="radio" t-att-checked="checked ? 'checked' : undefined"/>
+                <span><t t-esc="label"/></span>
+            </label>
+        </div>
+    </t>
+    <t t-name="website.theme_customize_delete_font">
+        <t t-set="delete_font_title">Delete this font</t>
+        <button type="button"
+            class="btn btn-link d-flex align-items-center text-danger fa fa-trash-o o_theme_customize_delete_google_font"
+            t-att-aria-label="delete_font_title"
+            t-att-title="delete_font_title"
+            t-att-data-font-index="index"/>
+    </t>
+    <t t-name="website.theme_customize_add_google_font_option">
+        <a class="dropdown-item p-2 o_theme_customize_add_google_font" t-att-data-variable="variable" href="#">
+            <i class="fa fa-plus"/> Add a Google Font
+        </a>
+    </t>
+    <t t-name="website.theme_customize_dropdown_option">
+        <div t-attf-class="dropdown o_theme_customize_dropdown">
+            <div class="dropdown-menu rounded-0 o_theme_customize_selection" role="menu"/>
+        </div>
+    </t>
+    <t t-name="website.theme_customize_widget_color">
+        <div t-attf-class="o_theme_customize_color o_theme_customize_color_#{color}"
+            t-att-data-color="color"
+            t-att-data-color-type="colorType"/>
+    </t>
+    <t t-name="website.theme_customize_widget_input">
+        <div class="o_theme_customize_input"
+            t-att-data-variable="variable"
+            t-att-data-unit="unit">
+            <i class="fa fa-edit"/>
+            <span/>
+        </div>
+    </t>
+    <t t-name="website.theme_customize_widget_auto">
+        <div class="o_theme_customize_auto"
+            t-att-data-variable="variable"
+            t-att-data-value="value"/>
+    </t>
+    <t t-name="website.theme_customize_active_input">
+        <div class="input-group input-group-sm align-items-center o_theme_customize_active_input">
+            <input type="text" class="form-control" t-att-value="widget.value"/>
+            <div class="input-group-append">
+                <div t-if="widget.unit" class="input-group-text"><t t-esc="widget.unit"/></div>
+                <button type="button" class="btn btn-secondary fa fa-undo" title="Reset"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-extend="wysiwyg.widgets.link">
+        <t t-jquery="#o_link_dialog_url_input" t-operation="after">
+            <small class="form-text text-muted">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
+        </t>
+        <t t-jquery="div.o_url_input" t-operation="after">
+            <div class="form-group row o_link_dialog_page_anchor d-none">
+                <label class="col-form-label col-md-3" for="o_link_dialog_anchor_input">Page Anchor</label>
+                <div class="col-md-9">
+                    <select name="link_anchor" class="form-control link-style"></select>
+                    <small class="form-text font-weight-bold o_anchors_loading">Loading...</small>
+                </div>
+            </div>
+        </t>
+    </t>
+    <!-- Anchor Name option dialog -->
+    <div t-name="website.dialog.anchorName">
+        <div class="form-group row">
+            <label class="col-form-label col-md-3" for="anchorName">Choose an anchor name</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control o_input_anchor_name" id="anchorName" t-attf-value="#{currentAnchor}" placeholder="Anchor name"/>
+                <div class="invalid-feedback">
+                    <p class="d-none o_anchor_not_valid">The chosen name is not valid (use only a-Z A-Z 0-9 - _)</p>
+                    <p class="d-none o_anchor_already_exists">The chosen name already exists</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add a Google Font option dialog -->
+    <div t-name="website.dialog.addGoogleFont">
+        <div class="form-group row">
+            <label class="col-form-label col-md-3" for="google_font_html">Google Font HTML</label>
+            <div class="col-md-9">
+                <textarea id="google_font_html" class="form-control o_input_google_font"
+                    placeholder="&lt;link href='https://fonts.googleapis.com/css?family=Bonbon&amp;display=swap' rel='stylesheet'&gt;" style="height: 100px;"/>
+                <span class="float-right text-muted">
+                    Select one font on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a> and copy paste the embed code here.
+                </span>
+            </div>
+        </div>
     </div>
 </templates>

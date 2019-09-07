@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <!-- Assets -->
+<template id="_assets_primary_variables" inherit_id="portal._assets_primary_variables">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/primary_variables.scss"/>
+
+        <!-- Those files will be automatically edited by users -->
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/user_values.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_color_palette.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_theme_color_palette.scss"/>
+    </xpath>
+</template>
+<template id="_assets_secondary_variables" inherit_id="web_editor._assets_secondary_variables">
+    <xpath expr="//link" position="before">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/secondary_variables.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_tests" name="Website Assets Tests" inherit_id="web.assets_tests">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website/static/tests/tours/reset_password.js"></script>
+        <script type="text/javascript" src="/website/static/tests/tours/rte.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/html_editor.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/restricted_editor.js"/>
+    </xpath>
+</template>
+
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.backend.scss"/>
+    </xpath>
     <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/js/website.backend.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.backendDashboard.js"></script>
-        <link rel="stylesheet" href="/website/static/src/less/website.backendDashboard.less"/>
+        <script type="text/javascript" src="/website/static/src/js/backend/button.js"/>
+        <script type="text/javascript" src="/website/static/src/js/backend/dashboard.js"/>
     </xpath>
 </template>
 
@@ -16,71 +42,124 @@
     </xpath>
 </template>
 
-<template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Assets">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.components.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.wrapwrap.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.snippets.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.zoomodoo.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/bootstrap.extend.less"/>
-    </xpath>
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.share.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.zoomodoo.js"></script>
+<template id="_assets_frontend_helpers" inherit_id="portal._assets_frontend_helpers">
+    <xpath expr="//link" position="before">
+        <!-- Custom empty file for user custom bootstrap override -->
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/user_custom_bootstrap_overridden.scss"/>
+
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/bootstrap_overridden.scss"/>
     </xpath>
 </template>
 
+<template id="assets_frontend" inherit_id="portal.assets_frontend" name="Website Assets">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.ui.scss"/>
+
+        <!-- Custom empty file for user custom rules -->
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/user_custom_rules.scss"/>
+    </xpath>
+    <xpath expr="//script[@src='/web/static/src/js/public/public_root_instance.js']" position="replace">
+        <script type="text/javascript" src="/website/static/src/js/content/website_root_instance.js"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/src/js/utils.js"/>
+
+        <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/compatibility.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/lazy_template_call.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/menu.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/snippets.animation.js"/>
+
+        <script type="text/javascript" src="/website/static/src/js/menu/navbar.js"/>
+
+        <!-- Custom empty file for user javascript -->
+        <script type="text/javascript" src="/website/static/src/js/user_custom_javascript.js"/>
+    </xpath>
+</template>
+
+<template id="assets_frontend_compatibility_for_12_0" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/compatibility/bs3_for_12_0.scss"/>
+    </xpath>
+</template>
+
+<template id="website.compiled_assets_wysiwyg" name="Website Editor Assets (used in website editor)">
+    <t t-call-assets="website.assets_wysiwyg"/>
+</template>
+
+<template id="website.assets_wysiwyg" name="Website Editor Assets (used in website editor)">
+    <t t-call="web._assets_helpers">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_variables.scss"/>
+    </t>
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.wysiwyg.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.editor.ui.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.edit_mode.scss"/>
+
+    <script type="text/javascript" src="/website/static/src/js/editor/editor.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/rte.summernote.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/snippets.options.js"/>
+
+    <script type="text/javascript" src="/website/static/src/js/editor/wysiwyg_multizone.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/wysiwyg_multizone_translate.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/widget_link.js"/>
+</template>
+
 <template id="website.assets_editor" name="Website Editor Assets (used in website editor)">
-    <t t-call="web.less_helpers"/>
+    <t t-call="web._assets_helpers"/>
 
-    <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.edit_mode.less"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/editor_menu.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/editor_menu_translate.js"/>
 
-    <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/menu/content.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/customize.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/debug_manager.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/edit.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/mobile_view.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/new_content.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/seo.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/translate.js"/>
 
-    <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-    <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/web_planner_website.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.contentMenu.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/tours/banner.js"/>
+    <script type="text/javascript" src="/website/static/src/js/tours/customize.js"/>
 
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/widgets/ace.js"/>
+    <script type="text/javascript" src="/website/static/src/js/widgets/theme.js"/>
 </template>
 
 <!-- Layout -->
 <template id="submenu" name="Submenu">
-    <li t-if="not submenu.child_id" t-att-class="
-        'active' if submenu.url and submenu.url != '/' and unslug_url(request.httprequest.path) == unslug_url(submenu.url.replace('/page/website.', '/page/')) else None
-        ">
-        <a t-att-href="(website.menu_id.child_id[0] == submenu) and '/' or submenu.url" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
+    <t t-set="has_visible_submenu" t-value="submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
+    <li t-if="submenu.is_visible and not has_visible_submenu" t-attf-class="#{item_class or ''}">
+        <a t-att-href="submenu.clean_url()"
+            t-attf-class="#{link_class or ''} #{'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else ''}"
+            role="menuitem"
+            t-ignore="true"
+            t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="submenu.child_id" t-attf-class="dropdown #{
-        (submenu.url and submenu.url != '/' and any([request.httprequest.path == child.url.replace('/page/website.', '/page/') for child in submenu.child_id if child.url]) or
-         (submenu.url and request.httprequest.path == submenu.url.replace('/page/website.', '/page/'))) and 'active'
+    <li t-if="has_visible_submenu" t-attf-class="#{item_class or ''} dropdown #{
+        (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
+         (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         }">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
+        <a t-attf-class="#{link_class or ''} dropdown-toggle" data-toggle="dropdown" href="#">
+            <span t-field="submenu.name"/>
         </a>
         <ul class="dropdown-menu" role="menu">
             <t t-foreach="submenu.child_id" t-as="submenu">
-                <t t-call="website.submenu"/>
+                <t t-call="website.submenu">
+                    <t t-set="item_class" t-value="None"/>
+                    <t t-set="link_class" t-value="'dropdown-item'"/>
+                </t>
             </t>
         </ul>
     </li>
 </template>
 
-<template id="layout" name="Main layout">
-    <t t-call="web.layout">
+<template id="layout" name="Main layout" inherit_id="portal.frontend_layout">
+    <xpath expr="//html" position="before">
         <t t-set="html_data" t-value="{
             'lang': lang and lang.replace('_', '-'),
             'data-website-id': website.id if website else None,
@@ -88,112 +167,111 @@
             'data-translatable': '1' if translatable else None,
             'data-edit_translations': '1' if edit_translations else None,
             'data-view-xmlid': xmlid if editable or translatable else None,
+            'data-viewid': viewid if editable or translatable else None,
             'data-main-object': repr(main_object) if editable or translatable else None,
-            'data-oe-company-name': res_company.name
+            'data-seo-object': repr(seo_object) if seo_object else None,
+            'data-oe-company-name': res_company.name,
         }"/>
+    </xpath>
+    <xpath expr="//head" position="before">
         <t t-if="not title">
             <t t-if="not additional_title and main_object and 'name' in main_object">
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
-            <t t-if="main_object and 'website_meta_title' in main_object and main_object.website_meta_title">
-                <t t-set="title" t-value="main_object.website_meta_title"/>
+            <t t-set="default_title"> <t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-raw="(website or res_company).name"/> </t>
+            <t t-set="seo_object" t-value="seo_object or main_object"/>
+            <t t-if="seo_object and 'website_meta_title' in seo_object and seo_object.website_meta_title">
+                <t t-set="title" t-value="seo_object.website_meta_title"/>
             </t>
             <t t-else="">
-                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-raw="(website or res_company).name"/></t>
+                <t t-set="title" t-value="default_title"></t>
             </t>
         </t>
-        <t t-set="x_icon" t-value="'/web/image/website/%s/favicon/' % website.id"/>
-        <t t-set="head_website">
-            <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
-                and main_object.website_meta_description or website_meta_description"/>
-            <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
-                and main_object.website_meta_keywords or website_meta_keywords"/>
-            <meta name="generator" content="Odoo"/>
-
+        <t t-set="x_icon" t-value="website.image_url(website, 'favicon')"/>
+    </xpath>
+    <xpath expr="//head/meta[last()]" position="after">
+        <meta name="generator" content="Odoo"/>
+        <t t-set="website_meta" t-value="seo_object and seo_object.get_website_meta() or {}"/>
+        <meta name="default_title" t-att-content="default_title" groups="website.group_website_designer"/>
+        <meta t-if="main_object and 'website_indexed' in main_object
+            and not main_object.website_indexed" name="robots" content="noindex"/>
+            <t t-set="seo_object" t-value="seo_object or main_object"/>
+            <t t-set="meta_description" t-value="seo_object and 'website_meta_description' in seo_object
+                and seo_object.website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
+            <t t-set="meta_keywords" t-value="seo_object and 'website_meta_keywords' in seo_object
+                and seo_object.website_meta_keywords or website_meta_keywords"/>
+        <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
+        <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
+        <t t-if="seo_object">
+            <meta name="default_description" t-att-content="website_meta_description or website_meta.get('meta_description')" groups="website.group_website_designer"/>
             <!-- OpenGraph tags for Facebook sharing -->
-            <meta property="og:title" t-att-content="additional_title" />
-            <meta property="og:site_name" t-att-content="res_company.name" />
-            <t t-if="main_object and 'plain_content' in main_object and main_object.plain_content">
-                <t t-set="og_description" t-value="main_object.plain_content[0:500]"/>
-                <meta property="og:description" t-att-content="og_description" />
-                <meta property='og:image' t-att-content="request.httprequest.url_root+'logo.png'"/>
-                <meta property='og:url' t-att-content="request.httprequest.url_root+request.httprequest.path[1:end]"/>
-            </t>
-
-            <t t-set="languages" t-value="website.get_languages() if website else None"/>
-            <t t-if="request and request.website_multilang and website">
-                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lg">
-                    <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
+            <t t-set="opengraph_meta" t-value="website_meta.get('opengraph_meta')"/>
+            <t t-if="opengraph_meta">
+                <t t-foreach="opengraph_meta" t-as="property">
+                    <t t-if="isinstance(opengraph_meta[property], list)">
+                        <t t-foreach="opengraph_meta[property]" t-as="meta_content">
+                            <meta t-att-property="property" t-att-content="meta_content"/>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <meta t-att-property="property" t-att-content="opengraph_meta[property]"/>
+                    </t>
                 </t>
             </t>
-
-            <script type="text/javascript">
-                odoo.session_info = {
-                    is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
-                    is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
-                    is_frontend: true,
-                    is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
-                    user_id: <t t-esc="json.dumps(request.env.user.id)" />
-                };
-            </script>
-
-            <t t-call-assets="web.assets_common" t-js="false"/>
-            <t t-call-assets="web.assets_frontend" t-js="false"/>
-            <t t-call-assets="web_editor.summernote" t-js="false" groups="website.group_website_publisher"/>
-            <t t-call-assets="web_editor.assets_editor" t-js="false" groups="website.group_website_publisher"/>
-            <t t-call-assets="website.assets_editor" t-js="false" groups="website.group_website_publisher"/>
-
-            <t t-call-assets="web.assets_common" t-css="false"/>
-            <t t-call-assets="web.assets_frontend" t-css="false"/>
-            <t t-call-assets="web_editor.summernote" t-css="false" groups="website.group_website_publisher"/>
-            <t t-call-assets="web_editor.assets_editor" t-css="false" groups="website.group_website_publisher"/>
-            <t t-call-assets="website.assets_editor" t-css="false" groups="website.group_website_publisher"/>
+            <!-- Twitter tags for sharing -->
+            <t t-set="twitter_meta" t-value="website_meta.get('twitter_meta')"/>
+            <t t-if="opengraph_meta">
+                <t t-foreach="twitter_meta" t-as="t_meta">
+                    <meta t-att-name="t_meta" t-att-content="twitter_meta[t_meta]"/>
+                </t>
+            </t>
         </t>
-        <t t-set="head" t-value="head_website + (head or '')"/>
 
-        <div id="wrapwrap" t-att-class="pageName or ''">
-            <header>
-                <div class="navbar navbar-default navbar-static-top">
-                    <div class="container">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                            <a class="navbar-brand" href="/" t-if="website" t-field="website.name">My Website</a>
-                        </div>
-                        <div class="collapse navbar-collapse navbar-top-collapse">
-                            <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                <t t-foreach="website.menu_id.child_id" t-as="submenu">
-                                    <t t-call="website.submenu"/>
-                                </t>
-                                <li class="divider" t-ignore="true" t-if="website.user_id != user_id"/>
-                                <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <b>
-                                            <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') or user_id.name"/>
-                                            <span class="caret"></span>
-                                        </b>
-                                    </a>
-                                    <ul class="dropdown-menu js_usermenu" role="menu">
-                                        <li id="o_logout"><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </header>
-            <main>
-                <t t-raw="0"/>
-            </main>
-            <footer >
-                <div id="footer">
-                </div>
-            </footer>
-        </div>
+        <t t-set="languages" t-value="website.get_languages() if website else None"/>
+        <t t-if="request and request.is_frontend_multilang and website">
+            <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lg">
+                <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
+            </t>
+        </t>
+    </xpath>
+
+    <xpath expr="//head/t[@t-js='false'][last()]" position="after">
+        <t t-call-assets="website.assets_editor" t-js="false" groups="website.group_website_publisher"/>
+    </xpath>
+    <xpath expr="//head/t[@t-css='false'][last()]" position="after">
+        <t t-call-assets="website.assets_editor" t-css="false" groups="website.group_website_publisher" lazy_load="True"/>
+    </xpath>
+
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
+        <a class="navbar-brand" href="/" t-if="website" t-field="website.name">My Website</a>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']" position="attributes">
+        <attribute name="class" separator=" " add="o_menu_loading"/>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']/li[hasclass('divider')]" position="attributes">
+        <attribute name="t-if">website.user_id != user_id</attribute>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']/li[hasclass('dropdown')]" position="attributes">
+        <attribute name="t-if">website.user_id != user_id</attribute>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']/li[hasclass('divider')]" position="before">
+        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+            <t t-call="website.submenu">
+                <t t-set="item_class" t-value="'nav-item'"/>
+                <t t-set="link_class" t-value="'nav-link'"/>
+            </t>
+        </t>
+    </xpath>
+
+    <xpath expr="//div[hasclass('o_footer_copyright')]//span[@t-field='res_company.name']" position="after">
+        <t t-call="website.language_selector"/>
+    </xpath>
+    <xpath expr="//t[@t-call='web.brand_promotion']/.." position="attributes">
+        <attribute name="class" add="o_not_editable" separator=" "/>
+        <attribute name="t-if">not editable</attribute>
+    </xpath>
+
+    <xpath expr="//div[@id='wrapwrap']" position="after">
         <script id='tracking_code' t-if="website and website.google_analytics_key and not editable">
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -203,33 +281,57 @@
             ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
             ga('send','pageview');
         </script>
-    </t>
-</template>
+    </xpath>
 
-<template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
-    <xpath expr="//footer" position="inside">
-        <div class="container mt16 mb8">
-            <div class="pull-right" t-ignore="true" t-if="not editable">
-                Create a <a target="_blank" href="http://www.odoo.com/page/website-builder">free website</a> with
-                <a target="_blank" class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
-            </div>
-            <div class="pull-left text-muted" itemscope="itemscope" itemtype="http://schema.org/Organization">
-                Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
-            </div>
-        </div>
+    <!-- Page options -->
+    <xpath expr="//div[@id='wrapwrap']" position="before">
+        <t groups="website.group_website_publisher">
+            <t t-foreach="['header_overlay', 'header_color']" t-as="optionName">
+                <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" t-att-name="optionName" t-att-value="main_object[optionName]"/>
+            </t>
+        </t>
+    </xpath>
+    <xpath expr="//div[@id='wrapwrap']" position="attributes">
+        <attribute name="t-attf-class" add="#{'o_header_overlay' if 'header_overlay' in main_object and main_object.header_overlay else ''}" separator=" "/>
+    </xpath>
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="#{main_object.header_color if 'header_color' in main_object else ''}" separator=" "/>
     </xpath>
 </template>
 
-<template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
-    <xpath expr="//header//a[@class='navbar-brand']" position="replace">
+<template id="brand_promotion" inherit_id="web.brand_promotion" name="Brand Promotion">
+    <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
+        <t t-call="web.brand_promotion_message">
+            <t t-set="_message">
+                Create a <a target="_blank" href="http://www.odoo.com/page/website-builder?utm_source=db&amp;utm_medium=website">free website</a>
+            </t>
+            <t t-set="_utm_medium">website</t>
+        </t>
+    </xpath>
+</template>
+
+<template id="layout_logo_show" inherit_id="website.layout" name="Show Logo">
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a href="/" class="navbar-brand logo">
-            <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
+            <span t-field="website.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name" />
         </a>
     </xpath>
 </template>
 
+<template id="affix_top_menu" inherit_id="website.layout" name="Fixed Top Menu">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="#{'o_affix_enabled'}" separator=" "/>
+    </xpath>
+</template>
+
+<template id="no_autohide_menu" inherit_id="website.layout" active="False">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="#{'o_no_autohide_menu'}" separator=" "/>
+    </xpath>
+</template>
+
 <!-- Features template -->
-<template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">
+<template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t" position="replace">
         <t t-call="website.layout">
             <div class="oe_website_login_container" t-raw="0"/>
@@ -237,39 +339,48 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In">
-    <xpath expr="//ul[@id='top_menu']" position="inside">
-        <li class="divider" groups="base.group_public"/>
-        <li groups="base.group_public">
-            <a t-attf-href="/web/login">
-                <b>Sign in</b>
-            </a>
-        </li>
-    </xpath>
-</template>
-
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div class="oe_structure" id="footer" t-if='not no_footer'>
-            <section>
+        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+            <section class="s_text_block pt16 pb8">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-4">
-                            <h4 class="mt16">Subtitle</h4>
+                        <div class="col-lg-4">
+                            <h5>Our Products &amp; Services</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="/">Home</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4" id="connect">
+                            <h5>Connect with us</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="/contactus">Contact us</a></li>
+                                <li><i class="fa fa-phone"/> <span t-field="res_company.phone"/></li>
+                                <li><i class="fa fa-envelope"/>  <span t-field="res_company.email"/></li>
+                            </ul>
                             <p>
-                                <a href="/">Homepage</a>
+                                <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="btn btn-sm btn-link"><i class="fa fa-2x fa-facebook-square"/></a>
+                                <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="btn btn-sm btn-link"><i class="fa fa-2x fa-twitter"/></a>
+                                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" class="btn btn-sm btn-link"><i class="fa fa-2x fa-linkedin"/></a>
+                                <a t-if="website.social_youtube" t-att-href="website.social_youtube" class="btn btn-sm btn-link"><i class="fa fa-2x fa-youtube-play"/></a>
+                                <a t-if="website.social_googleplus" t-att-href="website.social_googleplus" class="btn btn-sm btn-link" rel="publisher"><i class="fa fa-2x fa-google-plus-square"/></a>
+                                <a t-if="website.social_github" t-att-href="website.social_github" class="btn btn-sm btn-link"><i class="fa fa-2x fa-github"/></a>
+                                <a t-if="website.social_instagram" t-att-href="website.social_instagram" class="btn btn-sm btn-link"><i class="fa fa-2x fa-instagram"/></a>
                             </p>
                         </div>
-                        <div class="col-md-4">
-                            <h4 class="mt16">Subtitle 2</h4>
+                        <div class="col-lg-4">
+                            <h5>
+                                <span t-field="res_company.name"/>
+                                <small> - <a href="/aboutus">About us</a></small>
+                            </h5>
                             <p>
-                                ...
+                                We are a team of passionate people whose goal is to improve everyone's
+                                life through disruptive products. We build great products to solve your
+                                business problems.
                             </p>
-                        </div>
-                        <div class="col-md-4">
-                            <h4 class="mt16">Subtitle 3</h4>
                             <p>
-                                ...
+                                Our products are designed for small to medium size companies willing to optimize
+                                their performance.
                             </p>
                         </div>
                     </div>
@@ -280,20 +391,28 @@
 </template>
 
 <template id="language_selector">
-    <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
-        <li t-foreach="languages" t-as="lg">
-          <a
-            t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
-            t-att-data-default-lang="(editable or translatable) and 'true' if website and lg[0] == website.default_lang_code else None"
-            t-att-data-lang="lg[0]"
-            class="js_change_lang"
-          >
-            <t t-esc="lg[1].split('/').pop()"/>
-          </a>
+    <ul class="js_language_selector mb0 list-inline" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
+        <li class="list-inline-item">
+            <div class="dropup">
+                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][1].split('/').pop()"/>
+                    <span class="caret ml4"/>
+                </button>
+                <div class="dropdown-menu" role="menu">
+                    <t t-foreach="languages" t-as="lg">
+                        <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+                           class="dropdown-item js_change_lang"
+                           t-att-data-default-lang="(editable or translatable) and 'true' if website and lg[0] == website.default_lang_code else None"
+                           t-att-data-lang="lg[0]">
+                            <t t-esc="lg[1].split('/').pop()"/>
+                        </a>
+                    </t>
+                </div>
+            </div>
         </li>
-        <li groups="website.group_website_publisher">
-            <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
-            <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
+        <li groups="website.group_website_publisher" class="list-inline-item">
+            <t t-set="url_return" t-value="quote_plus(url_for('', '[lang]') + '?' + keep_query())"/>
+            <a class="d-none d-sm-block" t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
                 <i class="fa fa-plus-circle"/>
                 Add a language...
             </a>
@@ -301,136 +420,182 @@
     </ul>
 </template>
 
-<template id="footer_default" inherit_id="website.footer_custom" customize_show="True" name="Automatic Footer">
-    <xpath expr="//div[@id='footer']" position="replace" >
-        <div id="footer" class="container hidden-print" t-if='not no_footer'>
-            <div class="row">
-                <div class="col-md-4 col-lg-3">
-                    <h4>Our Products &amp; Services</h4>
-                    <ul class="list-unstyled" id="products">
-                        <li><a href="/">Home</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4  col-lg-3" id="info">
-                    <h4>Connect with us</h4>
-                    <ul class="list-unstyled">
-                        <li><a href="/page/website.contactus">Contact us</a></li>
-                    </ul>
-                    <ul class="list-unstyled">
-                        <li t-ignore="true"><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
-                        <li t-ignore="true"><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
-                    </ul>
-                    <h2>
-                        <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
-                        <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
-                        <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
-                        <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
-                        <a t-att-href="website.social_googleplus" t-if="website.social_googleplus" rel="publisher"><i class="fa fa-google-plus-square"/></a>
-                        <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
-                    </h2>
-                </div>
-                <div class="col-md-4 col-lg-5 col-lg-offset-1">
-                    <h4>
-                        <span t-field="res_company.name" />
-                        <small> - <a href="/page/website.aboutus">About us</a></small>
-                    </h4>
-                    <div>
-                        <p>
-                            We are a team of passionate people whose goal is to improve everyone's
-                            life through disruptive products. We build great products to solve your
-                            business problems.
-                        </p>
-                        <p>
-                            Our products are designed for small to medium size companies willing to optimize
-                            their performance.
-                        </p>
-                    </div>
-                    <t t-call="website.language_selector"/>
-                </div>
-            </div>
-        </div>
-    </xpath>
-</template>
-
 <!-- Util template -->
 <template id="publish_management">
-    <div groups="website.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or None">
+    <div groups="website.group_website_publisher" t-ignore="true" class="float-right css_editable_mode_hidden" t-att-style="style or None">
         <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
-            <button type="button" t-attf-class="btn btn-default dropdown-toggle" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown">
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
+            <button type="button" t-attf-class="btn btn-default dropdown-toggle dropdown-toggle-split" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown"/>
+            <div class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                 <t t-raw="0"/>
-                <li t-if="publish_edit">
-                    <a t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
-                    title='Edit in backend'>Edit</a>
-                </li>
-            </ul>
+                <a role="menuitem" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}&amp;menu_id=#{menu or object.env.ref('website.menu_website_configuration').id}"
+                    title='Edit in backend' class="dropdown-item" t-if="publish_edit">Edit</a>
+            </div>
         </div>
     </div>
 </template>
 
 <template id="publish_short">
     <t groups="website.group_website_publisher" t-ignore="true">
-        <div t-attf-class="pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+        <div t-attf-class="float-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
         </div>
     </t>
 </template>
 
-<template id="pager" name="Pager">
-    <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or None">
-        <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else None ">
-            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None">Prev</a>
-        </li>
-        <t t-foreach="pager['pages']" t-as="page">
-            <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else None "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
-        </t>
-        <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else None ">
-            <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None">Next</a>
-        </li>
-    </ul>
+<template id="pager" name="Pager" inherit_id="portal.pager">
 </template>
 
 <!--
-    Customize Themes
+    XML template to be processed for theme customization modal.
 
-    Use INPUT type 'checkbox' or 'radio' or use OPTION in select box
-    'data-xmlid' (optional) xml id of the template to add if the input is checked.
-        You can set a list of xml id separate by comma (all template is enable or
-        disable in same time)
-    'data-enable' (optional) to checked one or more HTML ids, or list separate by comma
-    'data-disable' (optional) to unchecked one or more HTML ids, or list separate by comma
-    'data-reload="/"' (optional) force the reloading of the page if the url match with
-        the string ( = regexp).
-        Otherwise, only the '/web/content/web.assets_frontend' is reloaded
+    Allowed tags in the root <div/> elements:
 
-    For the sets (data-enable and/or data-disable without data-xmlid), the set is
-    automatically checked if:
-    - all related fields are enabled for data-enable
-    - all related fields are disabled for data-disable
-    else unchecked
+    <content>: Declares a new set of options (a tab pane in the dialog)
+        -> string = tab's nav text
+        -> title = tab's heading
 
-    HTML apply classes:
-    - 'checked': on the parent label when input is checked
-    - 'in': on the container (e.g.: bootstrap modal) after added in DOM (removed together
-       out is added)
-    - 'out': on the container 1 second before removed from ths DOM
-    - 'loading': on the container/modal when the new css is loading
+    In the <content/> elements:
+
+    <opt>: Declares a new toggle option
+        -> id (optional) = an ID to associate to the option
+
+        -> string (optional) = option's text
+        -> data-icon (optional) = an image URL to set as option's background
+        -> data-font (optional) = indicates which fonts to use to style the
+                option and adds default sample text if no 'string' is specified
+                (see $o-theme-fonts in scss)
+        -> data-col (optional, default 6) = bootstrap column size for the option
+                (ignored for options in a <list/>)
+
+        -> data-xmlid (optional) = template(s) to enable if the input is
+                checked (list of comma-separated xml ids)
+        -> data-enable (optional) = enable other options (list of
+                comma-separated option ids)
+        -> data-disable (optional) = disable other options (list of
+                comma-separated option ids)
+        -> data-reload (optional) = force the reloading of the page if the url
+                matches the value. Otherwise, only the main assets are reloaded
+
+        -> data-widget (optional) = indicates which widget to use (available
+                widgets are: color_palette)
+
+    <list>: Declares a subset of options showed as a list
+        -> string = list's title
+        -> data-col (optional, default 6) = bootstrap column size for the list
+
+    <selection>: Declares a subset of options showed as a selection (dropdown)
+        -> data-col (optional, default 6) = bootstrap column size for the option
+                (ignored for options in a <list/>)
+
+    Other elements will be ignored and their children will be processed as if
+    that element was omitted, except that those children will be considered as
+    in a new set of option. That allows to wrap an option in a fake element to
+    indicate it is a standalone option for example.
+
+    Note: if an option is the only one of its group, a toggle element will be
+    rendered.
 -->
-<template id="website.theme_customize" name="Theme Modal for Customization">
-  <div id="theme_customize_modal" class="modal fade">
-      <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header text-center">
-                <h4 class="modal-title">Please install a theme in order to customize your website.</h4>
-            </div>
-          </div>
-      </div>
-  </div>
+<template id="theme_customize">
+    <div>
+        <!-- Color options -->
+        <content id="theme_customize_content_colors" string="Colors" title="Choose the theme colors">
+            <list string="Main">
+                <opt data-widget="color" data-color-type="theme" data-color="primary" string="Primary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="secondary" string="Secondary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="alpha" string="Primary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="beta" string="Secondary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="gamma" string="Extra Color"/>
+                <opt data-widget="color" data-color-type="theme" data-color="delta" string="Extra Color"/>
+                <opt data-widget="color" data-color-type="theme" data-color="epsilon" string="Extra Color"/>
+            </list>
+            <list string="Status">
+                <opt data-widget="color" data-color-type="theme" data-color="success" string="Success"/>
+                <opt data-widget="color" data-color-type="theme" data-color="info" string="Info"/>
+                <opt data-widget="color" data-color-type="theme" data-color="warning" string="Warning"/>
+                <opt data-widget="color" data-color-type="theme" data-color="danger" string="Error"/>
+            </list>
+            <list string="Text">
+                <opt data-widget="color" data-color="text" string="Text"/>
+                <opt data-widget="color" data-color="h1" string="Headings 1"/>
+                <opt data-widget="color" data-color="h2" string="Headings 2"/>
+                <opt data-widget="color" data-color="h3" string="Headings 3"/>
+                <opt data-widget="color" data-color="h4" string="Headings 4"/>
+                <opt data-widget="color" data-color="h5" string="Headings 5"/>
+                <opt data-widget="color" data-color="h6" string="Headings 6"/>
+            </list>
+            <list string="Background">
+                <opt data-widget="color" data-color="body" string="Body"/>
+                <opt data-widget="color" data-color="menu" string="Menus"/>
+                <opt data-widget="color" data-color="footer" string="Footer"/>
+            </list>
+        </content>
+
+        <!-- Menu options -->
+        <content id="theme_customize_content_navbar" string="Navbar" title="Choose your navbar">
+            <list string="Main Layout">
+                <checkbox><opt data-xmlid="website.affix_top_menu" data-reload="/"/></checkbox>
+                <checkbox><opt data-xmlid="portal.portal_show_sign_in" data-reload="/"/></checkbox>
+                <opt data-widget="input" data-unit="rem" data-variable="header-font-size" string="Font Size"/>
+            </list>
+            <list string="Logo">
+                <checkbox><opt data-xmlid="website.layout_logo_show" data-reload="/"/></checkbox>
+                <opt data-widget="input" data-unit="rem" data-variable="logo-height" string="Logo Height"/>
+            </list>
+        </content>
+
+        <!-- Layout Options -->
+        <content id="theme_customize_content_layout" string="Layout" title="Choose your layout">
+            <list string="Body">
+                <opt string="Full" data-xmlid="" data-icon="/website/static/src/img/options/layout-full.png"/>
+                <opt id="option_layout_boxed" string="Boxed" data-xmlid="website.option_layout_boxed_variables" data-icon="/website/static/src/img/options/layout-boxed.png"/>
+            </list>
+            <list string="Background">
+                <opt id="option_no_background" string="None" data-xmlid=""/>
+                <opt string="Choose an image" data-xmlid="website.option_custom_body_image"/>
+                <opt string="Choose a pattern" data-xmlid="website.option_custom_body_image, website.option_custom_body_pattern"/>
+            </list>
+        </content>
+
+        <!-- Font options -->
+        <content id="theme_customize_content_fonts" string="Fonts" title="Choose your fonts">
+            <list string="Title">
+                <fontselection data-variable="headings-font-number"/>
+            </list>
+            <list string="Body">
+                <fontselection data-variable="font-number"/>
+            </list>
+            <list string="Button">
+                <fontselection data-variable="buttons-font-number"/>
+            </list>
+            <list string="Navbar">
+                <fontselection data-variable="navbar-font-number"/>
+            </list>
+        </content>
+    </div>
+</template>
+
+<!-- Layout options -->
+<template id="option_layout_boxed_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/layout/option_layout_boxed_variables.scss"/>
+    </xpath>
+</template>
+
+<template id="option_custom_body_image" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <style>
+            <!-- Patched by JS option -->
+        </style>
+    </xpath>
+</template>
+
+<template id="option_custom_body_pattern" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/layout/option_custom_body_pattern.scss"/>
+    </xpath>
 </template>
 
 <template id="kanban">
@@ -465,7 +630,7 @@
                             <t t-call="#{ template }"></t>
                         </t>
                         <!-- pager -->
-                        <div t-if="1 != obj['page_end']" class="pagination pagination-centered">
+                        <div t-if="1 != obj['page_end']" class="pagination pagination-centered"><!-- FIXME -->
                             <ul>
                                 <li t-attf-class="prev #{'active' if obj['page'] == 1 else '' }">
                                     <a t-att-href=" '%s,%s-%s' % (obj['kanban_url'], obj['column_id'].id, (obj['page'] &gt; 1 and obj['page']-1 or 1)) ">Prev</a></li>
@@ -506,8 +671,8 @@
                     Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
                 </p>
 
-                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher">
-                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher" role="status">
+                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                    <p>
                      Note: To hide this page, uncheck it from the top Customize menu.
                    </p>
@@ -558,12 +723,47 @@
     </t>
 </template>
 
+<template id="default_js">
+    <script type="text/javascript">
+        if (0 &gt; 1) {
+            let it_cant_be = false;
+        }
+    </script>
+</template>
+<template id="default_xml">
+    &lt;?xml version="1.0" encoding="utf-8"?&gt;
+</template>
+<template id="default_css">
+    <style type="text/css">
+        div#wrap div &gt; h1{
+            color: #875A7B;
+        }
+    </style>
+</template>
+<template id="default_less">
+    <style type="text/less">
+        div#wrap div &gt; h1 {
+            color: @o-brand-odoo;
+        }
+    </style>
+</template>
+<template id="default_scss">
+    <style type="text/scss">
+        div#wrap div &gt; h1 {
+            color: $o-brand-odoo;
+        }
+    </style>
+</template>
+<template id="default_csv">
+    1,2,3
+</template>
+
 <template id="page_404">
     <t t-call="website.404">
         <div class="container">
-            <div class="well mt32">
-                <p>This page does not exists, but you can create it as you are administrator of this site.</p>
-                <a class="btn btn-primary" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
+            <div class="alert alert-info mt32">
+                <p>This page does not exist, but you can create it as you are administrator of this site.</p>
+                <a role="button" class="btn btn-primary js_disable_on_click" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
             </div>
             <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
         </div>
@@ -577,67 +777,55 @@
             <div class="oe_structure">
                 <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
             </div>
-            <t t-if="editable or request.debug">
+            <t t-if="editable or debug">
                 <t t-call="website.http_error_debug"/>
             </t>
         </div>
     </t>
 </template>
 
+<template id="error_message">
+    <p t-if="error_message">
+        <strong>Error message:</strong>
+        <pre t-esc="error_message"/>
+    </p>
+</template>
+
 <template id="http_error_debug">
-    <div class="container panel-group mb32 mt32" id="debug_infos">
-        <div class="panel panel-default" t-if="exception">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#debug_infos" href="#error_main">
-                        Error
-                    </a>
-                </h4>
+    <div class="container accordion mb32 mt32" id="debug_infos">
+        <div class="card" t-if="error_message">
+            <h4 class="card-header">
+                <a data-toggle="collapse" href="#error_main">Error</a>
+            </h4>
+            <div id="error_main" class="collapse show">
+                <div class="card-body">
+                    <t t-call="website.error_message"/>
+                </div>
             </div>
-            <div id="error_main" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
-                    <p>
+        </div>
+        <div class="card" t-if="qweb_exception">
+            <h4 class="card-header">
+                <a data-toggle="collapse" href="#error_qweb">QWeb</a>
+            </h4>
+            <div id="error_qweb" class="collapse show">
+                <div class="card-body">
+                    <p t-if="exception.message">
                         <strong>Error message:</strong>
-                        <pre t-esc="exception"/>
+                        <pre t-esc="exception.message"/>
+                    </p>
+                    <p>
+                        The error occured while rendering the template <code t-esc="qweb_exception.name"/>
+                        <t t-if="qweb_exception.html">and evaluating the following expression: <code t-esc="qweb_exception.html"/></t>
                     </p>
                 </div>
             </div>
         </div>
-        <div class="panel panel-default" t-if="qweb_exception">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">
-                        QWeb
-                    </a>
-                </h4>
-            </div>
-            <div id="error_qweb" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <p t-if="exception.qweb.get('message')">
-                        <strong>Error message:</strong>
-                        <pre t-esc="exception.qweb.get('message')"/>
-                    </p>
-                    <p>
-                        The error occured while rendering the template <code t-esc="qweb_exception.qweb.get('template')"/>
-                        <t t-if="'expression' in qweb_exception.qweb">and evaluating the following expression: <code t-esc="qweb_exception.qweb['expression']"/></t>
-                    </p>
-                    <t t-if="'node' in qweb_exception.qweb">
-                        <pre id="exception_node" t-esc="qweb_exception.pretty_xml()"/>
-                    </t>
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-default" t-if="traceback">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_traceback">
-                        Traceback
-                    </a>
-                </h4>
-            </div>
-            <div id="error_traceback" class="panel-collapse collapse">
-                <div class="panel-body">
+        <div class="card" t-if="traceback">
+            <h4 class="card-header">
+                <a data-toggle="collapse" href="#error_traceback">Traceback</a>
+            </h4>
+            <div id="error_traceback" t-attf-class="collapse #{not error_message and not qweb_exception and 'show'}">
+                <div class="card-body">
                     <pre id="exception_traceback" t-esc="traceback"/>
                 </div>
             </div>
@@ -645,21 +833,40 @@
     </div>
 </template>
 
+<template id="400">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="container">
+                <h1 class="mt-5">Something went wrong.</h1>
+                <p>Take a look at the error message below.</p>
+            </div>
+            <t t-if="editable or request.session.debug">
+                <t t-call="website.http_error_debug"/>
+            </t>
+            <t t-else="">
+                <div class="container">
+                    <t t-call="website.error_message"/>
+                </div>
+            </t>
+    </div>
+    </t>
+</template>
+
 <template id="403">
     <t t-call="website.layout">
         <div id="wrap">
             <div class="container">
-                <h1 class="mt32">403: Forbidden</h1>
+                <h1 class="mt-5">403: Forbidden</h1>
                 <p>The page you were looking for could not be authorized.</p>
-                <p>Maybe you were looking for one of these popular pages ?</p>
-                <ul>
-                    <li><a href="/">Homepage</a></li>
-                    <li><a href="/page/website.contactus/">Contact Us</a></li>
-                </ul>
             </div>
-            <t t-if="editable or request.debug">
-                <t t-call="website.http_error_debug"/>
-            </t>
+                <t t-if="editable or request.session.debug">
+                    <t t-call="website.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="website.error_message"/>
+                    </div>
+                </t>
         </div>
     </t>
 </template>
@@ -670,7 +877,7 @@
             <t t-raw="0"/>
             <div class="oe_structure oe_empty">
                 <div class="container">
-                    <h1 class="mt32">404: Page not found!</h1>
+                    <h1 class="mt-5">404: Page not found!</h1>
                     <p>
                         The page you were looking for could not be found; it is possible you have
                         typed the address incorrectly, but it has most probably been removed due
@@ -679,87 +886,103 @@
                     <p>Maybe you were looking for one of these popular pages ?</p>
                     <ul>
                         <li><a href="/">Homepage</a></li>
-                        <li><a href="/page/website.contactus/">Contact Us</a></li>
+                        <li><a href="/contactus">Contact Us</a></li>
                     </ul>
                 </div>
             </div>
-
-            <t t-if="request.debug">
-                <t t-call="website.http_error_debug"/>
-            </t>
         </div>
     </t>
 </template>
 
 <template id="500">
-    <!-- This template should not use any variable except those provided by website.ir_http._handle_exception -->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!-- This template should not use any variable except those provided by website.ir_http._handle_exception  -->
+    <!--    no request.crsf_token, no theme style, no assets, ... cursor can be broken during rendering !      -->
+    <!--    see test_05_reset_specific_view_controller_broken_request                                          -->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <html>
         <head>
             <title t-esc="status_message">Internal Server Error</title>
             <t t-set="debug" t-value="True"/>
-            <t t-call-assets="web.assets_common" t-js="false"/>
-            <t t-call-assets="web.assets_frontend" t-js="false"/>
-            <t t-call-assets="web.assets_common" t-css="false"/>
-            <t t-call-assets="web.assets_frontend" t-css="false"/>
-            <script>
-                $(document).ready(function() {
-                    var button = $('#reset_templates_button');
-                    button.click(function() {
-                        var dialog = $('#reset_template_confirmation').modal('show');
-                        var input = dialog.find('input[type="text"]').val('').focus();
-                        var dialog_form = dialog.find('form');
-                        dialog_form.submit(function() {
-                            if (input.val() == dialog.find('.confirm_word').text()) {
-                                dialog.modal('hide');
-                                button.prop('disabled', true).text('Working...');
-                                $('#reset_templates_form').trigger('submit');
-                            } else {
-                                input.val('').focus();
-                            }
+
+            <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+            <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/util.js"/>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/collapse.js"/>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/modal.js"/>
+            <style>
+                html {
+                    font-size: 14px;
+                }
+            </style>
+
+            <t t-if='view'>
+                <script>
+                    $(document).ready(function() {
+                        var button = $('.reset_templates_button');
+                        button.click(function() {
+                            $('#reset_templates_mode').val($(this).data('mode'));
+                            var dialog = $('#reset_template_confirmation').modal('show');
+                            var input = dialog.find('input[type="text"]').val('').focus();
+                            var dialog_form = dialog.find('form');
+                            dialog_form.submit(function() {
+                                if (input.val() == dialog.find('.confirm_word').text()) {
+                                    dialog.modal('hide');
+                                    button.prop('disabled', true).text('Working...');
+                                    $('#reset_templates_form').attr('action', '/website/reset_template');
+                                    $('#reset_templates_form').trigger('submit');
+                                } else {
+                                    input.val('').focus();
+                                }
+                                return false;
+                            });
                             return false;
                         });
-                        return false;
                     });
-                });
-            </script>
+                </script>
+            </t>
         </head>
         <body>
-            <div id="reset_template_confirmation" class="modal" tabindex="-1" role="dialog" aria-hidden="true" t-ignore="true">
+            <div t-if="view" role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" t-ignore="true">
                 <div class="modal-dialog">
-                    <form class="form-horizontal" role="form">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h3 class="modal-title">Reset templates</h3>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group mb0">
-                                <label for="page-name" class="col-sm-9">
-                                    <p>The selected templates will be reset to their factory settings.</p>
-                                    <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
-                                </label>
-                                <div class="col-sm-3 mt16">
-                                    <input type="text" class="form-control" required="required" placeholder="yes"/>
+                    <form role="form">
+                        <div class="modal-content">
+                            <header class="modal-header">
+                                <h4 class="modal-title">Reset templates</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                            </header>
+                            <main class="modal-body">
+                                <div class="form-group row mb0">
+                                    <label for="page-name" class="col-md-12 col-form-label">
+                                        <p>The selected templates will be reset to their factory settings.</p>
+                                    </label>
                                 </div>
-                            </div>
+                                <div class="form-group row mb0">
+                                    <label for="page-name" class="col-md-9 col-form-label">
+                                        <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
+                                    </label>
+                                    <div class="col-md-3 mt16">
+                                        <input type="text" id="page-name" class="form-control" required="required" placeholder="yes"/>
+                                    </div>
+                                </div>
+                            </main>
+                            <footer class="modal-footer">
+                                <button type="button" class="btn" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                                <input type="submit" value="Confirm" class="btn btn-primary"/>
+                            </footer>
                         </div>
-                        <div class="modal-footer">
-                            <input type="submit" value="Confirm" class="btn btn-primary"/>
-                            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                        </div>
-                    </div>
                     </form>
                 </div>
             </div>
 
             <div id="wrapwrap">
                 <header>
-                    <div class="navbar navbar-default navbar-static-top">
+                    <div class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
                             <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="javascript: window.history.back()">Back</a></li>
+                                <ul class="navbar-nav ml-auto" id="top_menu">
+                                    <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                                    <li class="nav-item"><a href="javascript: window.history.back()" class="nav-link">Back</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -767,30 +990,31 @@
                 </header>
                 <main>
                     <div class="oe_structure">
-                        <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
+                        <h2 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h2>
                     </div>
-                    <div class="container" t-if="views">
-                        <div class="alert alert-danger" t-if="qweb_exception and editable">
+                    <div class="container" t-if="view and editable">
+                        <div class="alert alert-danger" t-if="debug" role="alert">
                             <h4>Template fallback</h4>
-                            <p>An error occured while rendering the template <code t-esc="qweb_exception.qweb['template']"/>.</p>
-                            <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
-                            <form action="/website/reset_templates" method="post" id="reset_templates_form">
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <ul class="oe_template_fallback">
-                                    <li t-foreach="views" t-as="view">
+                            <p>An error occured while rendering the template <code t-esc="qweb_exception.name"/>.</p>
+                            <p>If this error is caused by a change of yours in the templates, you have the possibility to reset the template to its <strong>factory settings</strong>.</p>
+                            <form action="#" method="post" id="reset_templates_form">
+                                <ul>
+                                    <li>
                                         <label>
-                                            <input type="checkbox" name="templates" t-att-value="view.id" t-att-checked="'checked' if view_first else None"/>
                                             <t t-esc="view.name"/>
                                         </label>
                                     </li>
                                 </ul>
                                 <input type="hidden" name="redirect" t-att-value="request.httprequest.path"/>
-                                <button id="reset_templates_button">Reset selected templates</button>
+                                <input type="hidden" id="reset_templates_view_id" name="view_id" t-att-value="view.id"/>
+                                <input type="hidden" id="reset_templates_mode" name="mode"/>
+                                <button data-mode="soft" class="reset_templates_button btn btn-info">Restore previous version (soft reset).</button>
+                                <button t-if="view.arch_fs" data-mode="hard" class="reset_templates_button btn btn-outline-danger">Reset to initial version (hard reset).</button>
                             </form>
                         </div>
                     </div>
 
-                    <t t-if="editable or request.debug">
+                    <t t-if="editable or debug">
                         <t t-call="website.http_error_debug"/>
                     </t>
                 </main>
@@ -827,110 +1051,145 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </sitemapindex>
 </template>
 
-<!-- Actual pages -->
-<template id="homepage" name="Homepage" page="True" priority="29">
-    <t t-call="website.layout">
-        <t t-set="pageName" t-value="'homepage'"/>
-        <div id="wrap" class="oe_structure oe_empty"/>
-    </t>
-</template>
-
 <template id="company_description" name="Company Description">
     <address itemscope="itemscope" itemtype="http://schema.org/Organization">
         <!-- TODO widget contact must add itemprop attributes -->
         <div t-field="res_company.partner_id" t-options='{
                 "widget": "contact",
-                "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
+                "fields": ["name", "address", "phone", "mobile", "email"]}'/>
         <t t-if="not res_company.google_map_img()">
-            <span class="fa fa-map-marker fa-fw mt16"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
+            <span class="fa fa-map-marker fa-fw mt16" role="img" aria-label="Address" title="Address"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
         </t>
     </address>
     <t t-if="res_company.google_map_img()">
         <a t-att-href="res_company.google_map_link()" target="_BLANK">
-           <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
+           <img class="img-fluid" t-att-src="res_company.google_map_img()" alt="Google Maps"/>
         </a>
-    </t>
-</template>
-
-<template id="contactus" name="Contact us" page="True">
-    <t t-call="website.layout">
-      <div id="wrap">
-        <div class="oe_structure"/>
-        <div class="container">
-            <h1>Contact us</h1>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="oe_structure">
-                        <div>
-                            <p>Contact us about anything related to our company or services.</p>
-                            <p>We'll do our best to get back to you as soon as possible.</p>
-                        </div>
-                    </div>
-                    <div class="text-center mt64" name="mail_button">
-                        <a t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary" id="o_contact_mail">Send us an email</a>
-                    </div>
-                </div>
-                <div class="col-md-4 mb32">
-                    <t t-call="website.company_description"/>
-                </div>
-            </div>
-        </div>
-        <div class="oe_structure"/>
-      </div>
-    </t>
-</template>
-
-<template id="aboutus" name="About us" page="True">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <div class="oe_structure">
-
-                <section>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h1 class="text-center">About us</h1>
-                                <h3 class="text-muted text-center">Great products for great people</h3>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-6 mt32">
-                                <p>
-                                      We are a team of passionate people whose goal is to improve everyone's
-                                      life through disruptive products. We build great products to solve your
-                                      business problems.
-                                </p>
-                                <p>
-                                      Our products are designed for small to medium size companies willing to optimize
-                                      their performance.
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-md-offset-2 mt16 mb16">
-                                <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Our Team"/>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-            </div>
-            <div class="oe_structure"></div>
-        </div>
     </t>
 </template>
 
 <template id="website_search_box" name="Website Searchbox">
     <div class="input-group">
-        <div class="oe_search">
-            <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search" />
+        <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search"/>
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary oe_search_button" aria-label="Search" title="Search"><i class="fa fa-search"/></button>
         </div>
-        <span class="input-group-btn">
-           <button type="submit" class="btn btn-default oe_search_button"><i class="fa fa-search"/></button>
-        </span>
     </div>
 </template>
+
+<template id="index_management">
+    <t groups="website.group_website_publisher" t-ignore="true">
+        <div t-attf-class="float-right js_index_management #{object.website_indexed and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name">
+            <button class="btn btn-danger js_index_btn">Unindexed</button>
+            <button class="btn btn-success js_index_btn">Indexed</button>
+        </div>
+    </t>
+</template>
+
+<template id="list_website_pages" name="Website Pages Management">
+  <t t-call="website.layout">
+    <div id="wrap">
+      <div class="container" id="list_website_pages">
+          <form class="mt8 float-right" role="search" t-attf-action="/website/pages" method="get">
+              <t t-call="website.website_search_box"/>
+          </form>
+          <div t-if="searchbar_sortings" class="dropdown float-right mt8 mr8">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+                  <span class="fa fa-sort fa-lg" role="img" aria-label="Sort" title="Sort"/>
+                  <span class="d-none d-xl-inline" t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="portal_searchbar_sortby" role="menu">
+                  <t t-foreach="searchbar_sortings" t-as="option">
+                      <a role="menuitem"
+                         t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)"
+                         t-attf-class="dropdown-item#{sortby == option and ' active' or ''}">
+                          <span t-esc="searchbar_sortings[option].get('label')"/>
+                      </a>
+                  </t>
+              </div>
+          </div>
+          <h3 class="mt16">Manage Your Pages</h3>
+          <t t-if="not pages">
+              <div t-if="search" class="alert alert-warning mt8" role="alert">
+                  Your search '<t t-esc="search" />' did not match any pages.
+              </div>
+              <div t-else="" class="alert alert-warning mt8" role="alert">
+                  There are currently no pages for your website.
+              </div>
+          </t>
+          <div t-if="pages" class="table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Url</th>
+                      <th class="text-center"><i title="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
+                      <th class="text-center"><i title="Is the page published?" class="fa fa-eye"></i></th>
+                      <th class="text-center"><i title="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
+                      <th class="text-center"><i title="Is the page SEO optimized?" class="fa fa-search"></i></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <t t-set='prev_page' t-value='False' />
+                  <t t-set='page' t-value='pages[0]' />
+                  <t t-foreach="pages[1:]" t-as="next_page">
+                    <t t-call='website.one_page_line'/>
+                    <t t-set='prev_page' t-value='page' />
+                    <t t-set='page' t-value='next_page' />
+                  </t>
+
+                  <t t-set='next_page' t-value='False'/>
+                  <t t-call='website.one_page_line' />
+              </table>
+          </div>
+          <div t-if="pager" class="o_portal_pager text-center">
+              <t t-call="website.pager"/>
+          </div>
+      </div>
+    </div>
+  </t>
+</template>
+
+<template id="one_page_line">
+    <t t-set='specific_page' t-value="page.website_id"/>
+    <t t-set='final_page' t-value="(next_page and page.url != next_page.url) or not next_page or specific_page"/>
+    <tr t-att-style='not final_page and "color:#999"'>
+        <td>
+            <t groups="website.group_multi_website">
+                <i t-if='specific_page and prev_page and prev_page.url == page.url and not prev_page.website_id' class="fa fa-level-up fa-rotate-90 ml32 mr4"/>
+                <i t-else="1" class="fa fa-globe mr4" t-att-style="'visibility:hidden;' if specific_page else ''"/>
+            </t>
+            <i t-if="page.is_homepage" class="fa fa-home" title="Home"/> <span t-esc="page.name"/>
+        </td>
+        <td>
+            <a t-if='final_page' t-att-href="page.url"><t t-esc="page.url"/></a>
+        </td>
+        <td class="text-center">
+            <i t-if="page.menu_ids" class="fa fa-check" title="In main menu"/>
+            <i t-else="" class="fa fa-times text-muted" title="Not in main menu"/>
+        </td>
+        <td class="text-center">
+            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
+            <i t-if="page.is_visible" class="fa fa-check" title="Visible"/>
+            <i t-elif="page.website_published" class="fa fa-eye-slash" t-attf-title="This page will be visible on {{ date_formatted }}"/>
+            <i t-else="" class="fa fa-times text-muted" title="Not visible"/>
+        </td>
+        <td class="text-center">
+            <i t-if="page.website_indexed" class="fa fa-check" title="Indexed"/>
+            <i t-else="" class="fa fa-times text-muted" title="Not indexed"/>
+        </td>
+        <td class="text-center">
+            <i t-if="page.is_seo_optimized" class="fa fa-check" title="SEO optimized"/>
+            <i t-else="" class="fa fa-times text-muted" title="Not SEO optimized"/>
+        </td>
+        <td class="text-right" style="white-space:nowrap;">
+            <a class="mr4 fa fa-cog js_page_properties" href="#" t-att-data-id="page.id" title="Manage this page"/>
+            <a class="mr4 fa fa-search" t-attf-href="{{ page.url}}?enable_seo" title="Optimize SEO of this page"/>
+            <a groups="base.group_no_one" class="mr4 fa fa-bug" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"/>
+            <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"/>
+            <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"/>
+        </td>
+    </tr>
+</template>
+
 </odoo>

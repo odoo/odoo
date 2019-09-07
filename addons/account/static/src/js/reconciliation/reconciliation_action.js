@@ -1,19 +1,19 @@
 odoo.define('account.ReconciliationClientAction', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var ReconciliationModel = require('account.ReconciliationModel');
 var ReconciliationRenderer = require('account.ReconciliationRenderer');
-var ControlPanelMixin = require('web.ControlPanelMixin');
-var Widget = require('web.Widget');
 var core = require('web.core');
 
 
 /**
  * Widget used as action for 'account.bank.statement' reconciliation
  */
-var StatementAction = Widget.extend(ControlPanelMixin, {
-    title: core._t('Bank reconciliation'),
-    template: 'reconciliation',
+var StatementAction = AbstractAction.extend({
+    hasControlPanel: true,
+    title: core._t('Bank Reconciliation'),
+    contentTemplate: 'reconciliation',
     custom_events: {
         change_mode: '_onAction',
         change_filter: '_onAction',
@@ -23,21 +23,32 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         remove_proposition: '_onAction',
         update_proposition: '_onAction',
         create_proposition: '_onAction',
+        getPartialAmount: '_onActionPartialAmount',
         quick_create_proposition: '_onAction',
-        toggle_partial_reconcile: '_onAction',
-        auto_reconciliation: '_onValidate',
+        partial_reconcile: '_onAction',
         validate: '_onValidate',
-        validate_all_balanced: '_onValidate',
         change_name: '_onChangeName',
+        close_statement: '_onCloseStatement',
+        load_more: '_onLoadMore',
+        reload: 'reload',
     },
-    config: {
-        // used to instanciate the model
+    events: {
+        'change .reconciliation_search_input': '_onSearch',
+    },
+    config: _.extend({}, AbstractAction.prototype.config, {
+        // used to instantiate the model
         Model: ReconciliationModel.StatementModel,
-        // used to instanciate the action interface
+        // used to instantiate the action interface
         ActionRenderer: ReconciliationRenderer.StatementRenderer,
-        // used to instanciate each widget line
-        LineRenderer: ReconciliationRenderer.LineRenderer
-    },
+        // used to instantiate each widget line
+        LineRenderer: ReconciliationRenderer.LineRenderer,
+        // used context params
+        params: ['statement_line_ids'],
+        // number of statements/partners/accounts to display
+        defaultDisplayQty: 10,
+        // number of moves lines displayed in 'match' mode
+        limitMoveLines: 15,
+    }),
 
     /**
      * @override
@@ -49,11 +60,23 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         this._super.apply(this, arguments);
         this.action_manager = parent;
         this.params = params;
-        this.model = new this.config.Model(this, {modelName: "account.bank.statement.line"});
+        this.model = new this.config.Model(this, {
+            modelName: "account.reconciliation.widget",
+            defaultDisplayQty: params.params && params.params.defaultDisplayQty || this.config.defaultDisplayQty,
+            limitMoveLines: params.params && params.params.limitMoveLines || this.config.limitMoveLines,
+        });
         this.widgets = [];
-        if (!this.action_manager) {
-            this.set_cp_bus(new Widget());
-        }
+        // Adding values from the context is necessary to put this information in the url via the action manager so that
+        // you can retrieve it if the person shares his url or presses f5
+        _.each(params.params, function (value, name) {
+            params.context[name] = name.indexOf('_ids') !== -1 ? _.map((value+'').split(','), parseFloat) : value;
+        });
+        params.params = {};
+        _.each(this.config.params, function (name) {
+            if (params.context[name]) {
+                params.params[name] = params.context[name];
+            }
+        });
     },
 
     /**
@@ -65,13 +88,30 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         var self = this;
         var def = this.model.load(this.params.context).then(this._super.bind(this));
         return def.then(function () {
-                self.title = self.model.bank_statement_id ? self.model.bank_statement_id.display_name : self.title;
+                var title = self.model.bank_statement_id  && self.model.bank_statement_id.display_name;
+                self._setTitle(title);
                 self.renderer = new self.config.ActionRenderer(self, self.model, {
                     'bank_statement_id': self.model.bank_statement_id,
                     'valuenow': self.model.valuenow,
                     'valuemax': self.model.valuemax,
-                    'title': self.title,
+                    'defaultDisplayQty': self.model.defaultDisplayQty,
+                    'title': title,
                 });
+            });
+    },
+
+    reload: function() {
+        // On reload destroy all rendered line widget, reload data and then rerender widget
+        var self = this;
+        _.each(this.widgets, function(widget) {
+            widget.destroy();
+        });
+        this.widgets = [];
+        this.model.reload()
+            .then(function() {
+                self.$('.o_reconciliation_lines').html('');
+                self._renderLines();
+                self._openFirstLine();
             });
     },
 
@@ -82,19 +122,26 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
      */
     start: function () {
         var self = this;
+        var args = arguments;
+        var sup = this._super;
 
-        this.set("title", this.title);
-        var breadcrumbs = this.action_manager && this.action_manager.get_breadcrumbs() || [{ title: this.title, action: this }];
-        this.update_control_panel({breadcrumbs: breadcrumbs, search_view_hidden: true}, {clear: true});
+        return this.renderer.prependTo(self.$('.o_form_sheet')).then(function() {
+            return self._renderLines().then(function() {
+                // No more lines to reconcile, trigger the rainbowman.
+                var initialState = self.renderer._initialState;
+                if(initialState.valuenow === initialState.valuemax){
+                    initialState.context = self.model.getContext();
+                    self.renderer.showRainbowMan(initialState);
+                }else{
+                    // Create a notification if some lines has been reconciled automatically.
+                    if(initialState.valuenow > 0)
+                        self.renderer._renderNotifications(self.model.statement.notifications);
+                    self._openFirstLine();
+                }
 
-        this.renderer.prependTo(self.$('.o_form_sheet'));
-        _.each(this.model.lines, function (line, handle) {
-            var widget = new self.config.LineRenderer(self, self.model, line);
-            widget.handle = handle;
-            self.widgets.push(widget);
-            widget.appendTo(self.$('.o_reconciliation_lines'));
+                return sup.apply(self, args);
+            });
         });
-        this._openFirstLine();
     },
 
     /**
@@ -105,18 +152,11 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
     do_show: function () {
         this._super.apply(this, arguments);
         if (this.action_manager) {
-            var breadcrumbs = this.action_manager && this.action_manager.get_breadcrumbs() || [{ title: this.title, action: this }];
-            while (breadcrumbs.length) {
-                if (breadcrumbs[breadcrumbs.length-1].action.widget === this) {
-                    break;
-                }
-                breadcrumbs.pop();
-            }
-            this.update_control_panel({breadcrumbs: breadcrumbs, search_view_hidden: true}, {clear: true});
+            this.updateControlPanel({clear: true});
             this.action_manager.do_push_state({
                 action: this.params.tag,
                 active_id: this.params.res_id,
-            });   
+            });
         }
     },
 
@@ -134,6 +174,15 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
     },
 
     /**
+     *
+     */
+    _loadMore: function(qty) {
+        var self = this;
+        return this.model.loadMore(qty).then(function () {
+            return self._renderLines();
+        });
+    },
+    /**
      * sitch to 'match' the first available line
      *
      * @private
@@ -146,11 +195,36 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
             }))[0];
         if (handle) {
             var line = this.model.getLine(handle);
-            this.model.changeMode(handle, 'match').always(function () {
+            this.model.changeMode(handle, 'match').then(function () {
+                self._getWidget(handle).update(line);
+            }).guardedCatch(function(){
                 self._getWidget(handle).update(line);
             });
         }
         return handle;
+    },
+    /**
+     * render line widget and append to view
+     *
+     * @private
+     */
+    _renderLines: function () {
+        var self = this;
+        var linesToDisplay = this.model.getStatementLines();
+        var linePromises = [];
+        _.each(linesToDisplay, function (line, handle) {
+            var widget = new self.config.LineRenderer(self, self.model, line);
+            widget.handle = handle;
+            self.widgets.push(widget);
+            linePromises.push(widget.appendTo(self.$('.o_reconciliation_lines')));
+        });
+        if (this.model.hasMoreLines() === false) {
+            this.renderer.hideLoadMoreButton(true);
+        }
+        else {
+            this.renderer.hideLoadMoreButton(false);
+        }
+        return Promise.all(linePromises);
     },
 
     //--------------------------------------------------------------------------
@@ -170,17 +244,38 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         var handle = event.target.handle;
         var line = this.model.getLine(handle);
         var mode = line.mode;
-        this.model[_.str.camelize(event.name)](handle, event.data.data).always(function () {
+        this.model[_.str.camelize(event.name)](handle, event.data.data).then(function () {
             self._getWidget(handle).update(line);
             if (mode === 'inactive' && line.mode !== 'inactive') {
                 _.each(self.model.lines, function (line, _handle) {
                     if (line.mode !== 'inactive' && _handle !== handle) {
                         self.model.changeMode(_handle, 'inactive');
-                        self._getWidget(_handle).update(line);
+                        var widget = self._getWidget(_handle);
+                        if (widget) {
+                            widget.update(line);
+                        }
                     }
                 });
             }
         });
+    },
+
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSearch: function (ev) {
+        var self = this;
+        ev.stopPropagation();
+        this.reload();
+    },
+
+    _onActionPartialAmount: function(event) {
+        var self = this;
+        var handle = event.target.handle;
+        var line = this.model.getLine(handle);
+        var amount = this.model.getPartialReconcileAmount(handle, event.data);
+        self._getWidget(handle).updatePartialAmount(event.data.data, amount);
     },
 
     /**
@@ -202,10 +297,36 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
             });
         });
     },
-
     /**
-     * call 'validate' or 'autoReconciliation' model method then destroy the
-     * validated lines and update the action renderer with the new status bar 
+     * call 'closeStatement' model method
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onCloseStatement: function (event) {
+        var self = this;
+        return this.model.closeStatement().then(function (result) {
+            self.do_action({
+                name: 'Bank Statements',
+                res_model: 'account.bank.statement.line',
+                res_id: result,
+                views: [[false, 'form']],
+                type: 'ir.actions.act_window',
+                view_mode: 'form',
+            });
+        });
+    },
+    /**
+     * Load more statement and render them
+     *
+     * @param {OdooEvent} event
+     */
+    _onLoadMore: function (event) {
+        return this._loadMore(this.model.defaultDisplayQty);
+    },
+    /**
+     * call 'validate' model method then destroy the
+     * validated lines and update the action renderer with the new status bar
      * values and notifications then open the first available line
      *
      * @private
@@ -214,18 +335,29 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
     _onValidate: function (event) {
         var self = this;
         var handle = event.target.handle;
-        var method = event.name.indexOf('auto_reconciliation') === -1 ? 'validate' : 'autoReconciliation';
-        this.model[method](handle).then(function (result) {
+        this.model.validate(handle).then(function (result) {
             self.renderer.update({
                 'valuenow': self.model.valuenow,
                 'valuemax': self.model.valuemax,
                 'title': self.title,
                 'time': Date.now()-self.time,
                 'notifications': result.notifications,
+                'context': self.model.getContext(),
             });
             _.each(result.handles, function (handle) {
-                self._getWidget(handle).destroy();
+                var widget = self._getWidget(handle);
+                if (widget) {
+                    widget.destroy();
+                    var index = _.findIndex(self.widgets, function (widget) {return widget.handle===handle;});
+                    self.widgets.splice(index, 1);
+                }
             });
+            // Get number of widget and if less than constant and if there are more to laod, load until constant
+            if (self.widgets.length < self.model.defaultDisplayQty
+                && self.model.valuemax - self.model.valuenow >= self.model.defaultDisplayQty) {
+                var toLoad = self.model.defaultDisplayQty - self.widgets.length;
+                self._loadMore(toLoad);
+            }
             self._openFirstLine();
         });
     },
@@ -238,13 +370,21 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
  */
 var ManualAction = StatementAction.extend({
     title: core._t('Journal Items to Reconcile'),
-    config: {
+    config: _.extend({}, StatementAction.prototype.config, {
         Model: ReconciliationModel.ManualModel,
         ActionRenderer: ReconciliationRenderer.ManualRenderer,
-        LineRenderer: ReconciliationRenderer.ManualLineRenderer
-    },
+        LineRenderer: ReconciliationRenderer.ManualLineRenderer,
+        params: ['company_ids', 'mode', 'partner_ids', 'account_ids'],
+        defaultDisplayQty: 30,
+        limitMoveLines: 15,
+    }),
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
-     * call 'validate' or 'autoReconciliation' model method then destroy the
+     * call 'validate' model method then destroy the
      * reconcilied lines, update the not reconcilied and update the action
      * renderer with the new status bar  values and notifications then open the
      * first available line
@@ -255,7 +395,7 @@ var ManualAction = StatementAction.extend({
     _onValidate: function (event) {
         var self = this;
         var handle = event.target.handle;
-        var method = event.name.indexOf('auto_reconciliation') === -1 ? 'validate' : 'autoReconciliation';
+        var method = 'validate';
         this.model[method](handle).then(function (result) {
             _.each(result.reconciled, function (handle) {
                 self._getWidget(handle).destroy();
@@ -269,7 +409,11 @@ var ManualAction = StatementAction.extend({
                 title: self.title,
                 time: Date.now()-self.time,
             });
-            self._openFirstLine();
+            if(!_.any(result.updated, function (handle) {
+                return self.model.getLine(handle).mode !== 'inactive';
+            })) {
+                self._openFirstLine();
+            }
         });
     },
 });

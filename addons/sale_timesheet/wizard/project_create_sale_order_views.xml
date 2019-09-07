@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="project_create_sale_order_view_form" model="ir.ui.view">
+        <field name="name">project.create.sale.order.wizard.form</field>
+        <field name="model">project.create.sale.order</field>
+        <field name="arch" type="xml">
+            <form string="Create a Sales Order">
+                <group>
+                    <group>
+                        <field name="project_id" readonly="1"/>
+                        <field name="partner_id"/>
+                    </group>
+                    <group>
+                        <field name="billable_type" widget="radio"/>
+                    </group>
+                </group>
+                <group attrs="{'invisible': [('billable_type', '=', 'employee_rate')]}">
+                    <group>
+                        <field name="product_id" options="{'no_create_edit': True, 'no_create': True}" attrs="{'required': [('billable_type', '=', 'project_rate')]}"/>
+                    </group>
+                    <group>
+                        <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'required': [('billable_type', '=', 'project_rate')]}"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </group>
+                <group attrs="{'invisible': [('billable_type', '=', 'project_rate')]}">
+                    <field name="line_ids" nolabel="1" attrs="{'required': [('billable_type', '=', 'employee_rate')]}">
+                        <tree editable="bottom">
+                            <field name="employee_id" options="{'no_create_edit': True, 'no_create': True}"/>
+                            <field name="product_id" options="{'no_create_edit': True, 'no_create': True}"/>
+                            <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            <field name="currency_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Create Sales Order" type="object" name="action_create_sale_order" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel" type="object" class="btn btn-secondary oe_inline"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_project_action_multi_create_sale_order" model="ir.actions.act_window">
+        <field name="name">Create a Sales Order</field>
+        <field name="res_model">project.create.sale.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_create_sale_order_view_form"/>
+        <field name="target">new</field>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+</odoo>

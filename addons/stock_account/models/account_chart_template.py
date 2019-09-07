@@ -12,10 +12,9 @@ class AccountChartTemplate(models.Model):
 
     @api.model
     def generate_journals(self, acc_template_ref, company, journals_dict=None):
-        journal_to_add = [{'name': _('Stock Journal'), 'type': 'general', 'code': 'STJ', 'favorite': False, 'sequence': 8}]
+        journal_to_add = [{'name': _('Inventory Valuation'), 'type': 'general', 'code': 'STJ', 'favorite': False, 'sequence': 8}]
         return super(AccountChartTemplate, self).generate_journals(acc_template_ref=acc_template_ref, company=company, journals_dict=journal_to_add)
 
-    @api.multi
     def generate_properties(self, acc_template_ref, company, property_list=None):
         res = super(AccountChartTemplate, self).generate_properties(acc_template_ref=acc_template_ref, company=company)
         PropertyObj = self.env['ir.property']  # Property Stock Journal
@@ -52,12 +51,12 @@ class AccountChartTemplate(models.Model):
                     'fields_id': field.id,
                     'value': value,
                 }
-                properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id)])
-                if properties:
-                    # the property exist: modify it
-                    properties.write(vals)
-                else:
+                properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id)], limit=1)
+                if not properties:
                     # create the property
                     PropertyObj.create(vals)
+                elif not properties.value_reference:
+                    # update the property if False
+                    properties.write(vals)
 
         return res

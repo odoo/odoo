@@ -32,6 +32,7 @@
                                 <field name="email_from"/>
                                 <field name="author_id"/>
                                 <field name="record_name"/>
+                                <field name="moderator_id"/>
                             </group>
                             <group>
                                 <field name="parent_id"/>
@@ -39,6 +40,7 @@
                                 <field name="res_id"/>
                                 <field name="message_type"/>
                                 <field name="subtype_id"/>
+                                <field name="moderation_status"/>
                             </group>
                         </group>
                         <notebook>
@@ -64,7 +66,7 @@
                                         <field name="channel_ids" widget="many2many_tags"/>
                                     </group>
                                     <group>
-                                        <field name="needaction_partner_ids" widget="many2many_tags"/>
+                                        <field name="notified_partner_ids" widget="many2many_tags"/>
                                         <field name="starred_partner_ids" widget="many2many_tags"/>
                                     </group>
                                 </group>
@@ -73,8 +75,8 @@
                                         <tree>
                                             <field name="res_partner_id"/>
                                             <field name="is_read"/>
-                                            <field name="is_email"/>
-                                            <field name="email_status"/>
+                                            <field name="notification_type"/>
+                                            <field name="notification_status"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -111,9 +113,6 @@
                             name="message_needaction" help="Unread messages"
                             domain="[('needaction', '=', True)]"/>
                     <separator/>
-                    <filter string="Has attachments"
-                            name="attachments"
-                            domain="[('attachment_ids', '!=', False)]"/>
                 </search>
             </field>
         </record>
@@ -121,11 +120,10 @@
         <record id="action_view_mail_message" model="ir.actions.act_window">
             <field name="name">Messages</field>
             <field name="res_model">mail.message</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_message_search"/>
         </record>
-        
+
         <!-- Add menu entry in Settings/Email -->
         <menuitem name="Messages" id="menu_mail_message" parent="base.menu_email" action="action_view_mail_message"/>
 
@@ -133,28 +131,56 @@
             <field name="name">ir.attachment kanban</field>
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban edit="false" import="false">
                     <field name="id"/>
                     <field name="mimetype"/>
                     <field name="type"/>
-                    <field name="datas_fname"/>
+                    <field name="create_uid"/>
+                    <field name="url"/>
+                    <field name="type"/>
+                    <field name="create_date"/>
                     <field name="name"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click">
-                                <div class="oe_kanban_vignette">
-                                    <div class="oe_attachment">
-                                        <div class="oe_name">
-                                            <field name="name"/>
-                                        </div>
-                                        <div t-if="record.type.raw_value == 'binary'">
-                                            <a t-attf-href="/web/content/#{record.id.value}?download=1">
-                                                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
-                                                <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
-                                                <div t-if="webimage" class="o_attachment_image">
-                                                    <img t-attf-src="/web/image/#{record.id.value}?download=1"/>
-                                                </div>
+                            <div class="oe_kanban_global_area oe_kanban_global_click o_kanban_attachment">
+                                <div class="row">
+                                    <div class="offset-10">
+                                        <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                            <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                                <span class="fa fa-ellipsis-v"/>
                                             </a>
+                                            <div class="dropdown-menu" role="menu">
+                                                <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_image">
+                                    <div class="o_kanban_image_wrapper">
+                                        <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                        <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted"/>
+                                        <img t-elif="webimage" t-attf-src="/web/image/#{record.id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
+                                        <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_details">
+                                    <div class="o_kanban_details_wrapper">
+                                        <div t-att-title="record.name.raw_value" class="o_kanban_record_title">
+                                            <field name="name" class="o_text_overflow"/>
+                                        </div>
+                                        <div class="o_kanban_record_body">
+                                            <t t-if="record.type.raw_value == 'url'">
+                                                <span class="o_document_url"><i class="fa fa-globe"/> <field name="url" widget="url"/></span>
+                                            </t>
+                                            <samp t-else="" class="text-muted"> </samp>
+                                        </div>
+                                        <div class="o_kanban_record_bottom">
+                                            <time class="oe_kanban_bottom_left">
+                                                <field name="create_date" widget="date"/>
+                                            </time>
+                                            <div class="oe_kanban_bottom_right">
+                                                <img t-att-src="kanban_image('res.users', 'image_64', record.create_uid.raw_value)" t-att-data-member_id="record.create_uid.raw_value" t-att-alt="record.create_uid.raw_value" width="32" height="32" class="oe_kanban_avatar"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -167,8 +193,8 @@
         <record id="base.action_attachment" model="ir.actions.act_window">
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to attach a new document.
+              <p class="o_view_nocontent_smiling_face">
+                Attach a new document
               </p>
             </field>
         </record>

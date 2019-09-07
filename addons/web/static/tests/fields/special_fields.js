@@ -141,7 +141,7 @@ QUnit.module('special_fields', {
 
     QUnit.module('FieldTimezoneMismatch');
 
-    QUnit.test('widget timezone_mismatch in a list view', function (assert) {
+    QUnit.test('widget timezone_mismatch in a list view', async function (assert) {
         assert.expect(5);
 
         this.data.partner.fields.tz_offset = {
@@ -158,7 +158,7 @@ QUnit.module('special_fields', {
             }
         };
 
-        var list = createView({
+        var list = await createView({
             View: ListView,
             model: 'partner',
             data: this.data,
@@ -170,22 +170,22 @@ QUnit.module('special_fields', {
 
         assert.strictEqual(list.$('td:contains(Red)').length, 3,
             "should have 3 rows with correct value");
-        list.$('td:contains(Red):first').click();
+        await testUtils.dom.click(list.$('td:contains(Red):first'));
 
         var $td = list.$('tbody tr.o_selected_row td:not(.o_list_record_selector)');
 
         assert.strictEqual($td.find('select').length, 1, "td should have a child 'select'");
         assert.strictEqual($td.contents().length, 1, "select tag should be only child of td");
 
-        $td.find('select').val('"black"').trigger('change');
+        await testUtils.fields.editSelect($td.find('select'), '"black"');
 
         assert.strictEqual($td.find('.o_tz_warning').length, 1, "Should display icon alert");
         assert.ok($td.find('select option:selected').text().match(/Black\s+\([0-9]+\/[0-9]+\/[0-9]+ [0-9]+:[0-9]+:[0-9]+\)/), "Should display the datetime in the selected timezone");
         list.destroy();
     });
 
-    QUnit.test('widget timezone_mismatch in a form view', function (assert) {
-        assert.expect(1);
+    QUnit.test('widget timezone_mismatch in a form view', async function (assert) {
+        assert.expect(2);
 
         this.data.partner.fields.tz_offset = {
             string: "tz_offset",
@@ -198,7 +198,7 @@ QUnit.module('special_fields', {
         this.data.partner.records[0].tz = false;
         this.data.partner.records[0].tz_offset = '+4800';
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'partner',
             res_id: 1,
@@ -208,11 +208,106 @@ QUnit.module('special_fields', {
                     '<field name="tz" widget="timezone_mismatch"/>' +
                 '</form>',
         });
-        form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('select').length, 1, "should have the select field");
+        await testUtils.form.clickEdit(form);
+        assert.containsOnce(form, 'select[name=tz]');
+
+        var $timezoneMismatch = form.$('.o_tz_warning');
+        assert.strictEqual($timezoneMismatch.length, 1, "warning class should be there.");
+
         form.destroy();
     });
 
+    QUnit.test('widget timezone_mismatch in a form view edit mode with mismatch', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.tz_offset = {
+            string: "tz_offset",
+            type: "char"
+        };
+        this.data.partner.fields.tz = {
+            type: "selection",
+            selection: [['Europe/Brussels', "Europe/Brussels"], ['America/Los_Angeles', "America/Los_Angeles"]],
+        };
+        this.data.partner.records[0].tz = 'America/Los_Angeles';
+        this.data.partner.records[0].tz_offset = '+4800';
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            res_id: 1,
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="tz_offset" invisible="True"/>' +
+                    '<field name="tz" widget="timezone_mismatch" options="{\'tz_offset_field\': \'tz_offset\'}"/>' +
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        var $timezoneEl = form.$('select[name="tz"]');
+        assert.strictEqual($timezoneEl.children().length, 3,
+            'The select element should have 3 children');
+
+        var $timezoneMismatch = form.$('.o_tz_warning');
+        assert.strictEqual($timezoneMismatch.length, 1,
+            'timezone mismatch is present');
+
+        assert.notOk($timezoneMismatch.children().length,
+            'The mismatch element should not have children');
+        form.destroy();
+    });
+
+    QUnit.module('FieldReportLayout');
+
+    QUnit.test('report_layout widget in form view', async function (assert) {
+        assert.expect(3);
+
+        this.data['report.layout'] = {
+            fields: {
+                view_id: {string: "Document Template", type: "many2one", relation: "product"},
+                image: {string: "Preview image src", type: "char"},
+                pdf: {string: "Preview pdf src", type: "char"}
+            },
+            records: [{
+                id: 1,
+                view_id: 37,
+                image: "/web/static/toto.png",
+                pdf: "/web/static/toto.pdf",
+            }, {
+                id: 2,
+                view_id: 41,
+                image: "/web/static/tata.png",
+                pdf: "/web/static/tata.pdf",
+            }],
+        };
+        this.data.partner.records[1].product_id = false;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="product_id" widget="report_layout"/> '+
+                  '</form>',
+            res_id: 2,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.img.img-fluid').length, 2,
+            "Two images should be rendered");
+        assert.strictEqual(form.$('.img.btn-info').length, 0,
+            "No image should be selected");
+
+        // select first image
+        await testUtils.dom.click(form.$(".img.img-fluid:first"));
+        assert.ok(form.$(".img.img-fluid:first").hasClass('btn-info'),
+            "First image should be selected");
+
+        form.destroy();
+    });
 });
 });
 });

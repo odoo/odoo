@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import functools
+import collections
 import imp
 import importlib
 import inspect
@@ -128,29 +128,29 @@ def initialize_sys_path():
     global ad_paths
     global hooked
 
-    dd = tools.config.addons_data_dir
+    dd = os.path.normcase(tools.config.addons_data_dir)
     if os.access(dd, os.R_OK) and dd not in ad_paths:
         ad_paths.append(dd)
 
     for ad in tools.config['addons_path'].split(','):
-        ad = os.path.abspath(tools.ustr(ad.strip()))
+        ad = os.path.normcase(os.path.abspath(tools.ustr(ad.strip())))
         if ad not in ad_paths:
             ad_paths.append(ad)
 
     # add base module path
-    base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
-    if base_path not in ad_paths:
+    base_path = os.path.normcase(os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons')))
+    if base_path not in ad_paths and os.path.isdir(base_path):
         ad_paths.append(base_path)
 
     # add odoo.addons.__path__
     for ad in __import__('odoo.addons').addons.__path__:
         ad = os.path.abspath(ad)
-        if ad not in ad_paths:
+        if ad not in ad_paths and os.path.isdir(ad):
             ad_paths.append(ad)
 
     if not hooked:
-        sys.meta_path.append(AddonsHook())
-        sys.meta_path.append(OdooHook())
+        sys.meta_path.insert(0, OdooHook())
+        sys.meta_path.insert(0, AddonsHook())
         hooked = True
 
 def get_module_path(module, downloaded=False, display_warning=True):
@@ -272,7 +272,7 @@ def module_manifest(path):
 
 def get_module_root(path):
     """
-    Get closest module's root begining from path
+    Get closest module's root beginning from path
 
         # Given:
         # /foo/bar/module_dir/static/src/...
@@ -320,17 +320,17 @@ def load_information_from_description_file(module, mod_path=None):
             'post_load': None,
             'version': '1.0',
             'web': False,
-            'website': 'https://www.odoo.com',
             'sequence': 100,
             'summary': '',
+            'website': '',
         }
-        info.update(pycompat.izip(
+        info.update(zip(
             'depends data demo test init_xml update_xml demo_xml'.split(),
             iter(list, None)))
 
-        f = tools.file_open(manifest_file)
+        f = tools.file_open(manifest_file, mode='rb')
         try:
-            info.update(ast.literal_eval(f.read()))
+            info.update(ast.literal_eval(pycompat.to_text(f.read())))
         finally:
             f.close()
 
@@ -341,9 +341,23 @@ def load_information_from_description_file(module, mod_path=None):
                 readme_text = tools.file_open(readme_path[0]).read()
                 info['description'] = readme_text
 
-        if 'active' in info:
-            # 'active' has been renamed 'auto_install'
-            info['auto_install'] = info['active']
+        # auto_install is set to `False` if disabled, and a set of
+        # auto_install dependencies otherwise. That way, we can set
+        # auto_install: [] to always auto_install a module regardless of its
+        # dependencies
+        auto_install = info.get('auto_install', info.get('active', False))
+        if isinstance(auto_install, collections.Iterable):
+            info['auto_install'] = set(auto_install)
+            non_dependencies = info['auto_install'].difference(info['depends'])
+            assert not non_dependencies,\
+                "auto_install triggers must be dependencies, found " \
+                "non-dependencies [%s] for module %s" % (
+                    ', '.join(non_dependencies), module
+                )
+        elif auto_install:
+            info['auto_install'] = set(info['depends'])
+        else:
+            info['auto_install'] = False
 
         info['version'] = adapt_version(info['version'])
         return info
@@ -432,12 +446,15 @@ def get_test_modules(module):
     modpath = 'odoo.addons.' + module
     try:
         mod = importlib.import_module('.tests', modpath)
-    except Exception as e:
-        # If module has no `tests` sub-module, no problem.
-        if str(e) != 'No module named tests':
-            _logger.exception('Can not `import %s`.', module)
+    except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6
+        # Hide ImportErrors on `tests` sub-module, but display other exceptions
+        if e.name == modpath + '.tests' and e.msg.startswith('No module named'):
+            return []
+        _logger.exception('Can not `import %s`.', module)
         return []
-
+    except Exception as e:
+        _logger.exception('Can not `import %s`.', module)
+        return []
     if hasattr(mod, 'fast_suite') or hasattr(mod, 'checks'):
         _logger.warn(
             "Found deprecated fast_suite or checks attribute in test module "
@@ -448,62 +465,143 @@ def get_test_modules(module):
               if name.startswith('test_')]
     return result
 
-# Use a custom stream object to log the test executions.
-class TestStream(object):
-    def __init__(self, logger_name='odoo.tests'):
-        self.logger = logging.getLogger(logger_name)
-        self.r = re.compile(r'^-*$|^ *... *$|^ok$')
-    def flush(self):
-        pass
-    def write(self, s):
-        if self.r.match(s):
+
+class OdooTestResult(unittest.result.TestResult):
+    """
+    This class in inspired from TextTestResult (https://github.com/python/cpython/blob/master/Lib/unittest/runner.py)
+    Instead of using a stream, we are using the logger,
+    but replacing the "findCaller" in order to give the information we
+    have based on the test object that is running.
+    """
+
+    def log(self, level, msg, *args, test=None, exc_info=None, extra=None, stack_info=False, caller_infos=None):
+        """
+        ``test`` is the running test case, ``caller_infos`` is
+        (fn, lno, func, sinfo) (logger.findCaller format), see logger.log for
+        the other parameters.
+        """
+        logger = logging.getLogger((test or self).__module__)  # test should be always set
+        try:
+            caller_infos = caller_infos or logger.findCaller(stack_info)
+        except ValueError:
+            caller_infos = "(unknown file)", 0, "(unknown function)", None
+        (fn, lno, func, sinfo) = caller_infos
+        # using logger.log makes it difficult to spot-replace findCaller in
+        # order to provide useful location information (the problematic spot
+        # inside the test function), so use lower-level functions instead
+        record = logger.makeRecord(logger.name, level, fn, lno, msg, args, exc_info, func, extra, sinfo)
+        logger.handle(record)
+
+    def getDescription(self, test):
+        if isinstance(test, unittest.TestCase):
+            # since we have the module name in the logger, this will avoid to duplicate module info in log line
+            # we only apply this for TestCase since we can receive error handler or other special case
+            return "%s.%s" % (test.__class__.__qualname__, test._testMethodName)
+        return str(test)
+
+    def startTest(self, test):
+        super().startTest(test)
+        self.log(logging.INFO, 'Starting %s ...', self.getDescription(test), test=test)
+
+    def addError(self, test, err):
+        super().addError(test, err)
+        self.logError("ERROR", test, err)
+
+    def addFailure(self, test, err):
+        super().addFailure(test, err)
+        self.logError("FAIL", test, err)
+
+    def addSubTest(self, test, subtest, err):
+        # since addSubTest is not making a call to addFailure or addError we need to manage it too
+        # https://github.com/python/cpython/blob/3.7/Lib/unittest/result.py#L136
+        if err is not None:
+            if issubclass(err[0], test.failureException):
+                flavour = "FAIL"
+            else:
+                flavour = "ERROR"
+            self.logError(flavour, subtest, err)
+        super().addSubTest(test, subtest, err)
+
+    def addSkip(self, test, reason):
+        super().addSkip(test, reason)
+        self.log(logging.INFO, 'skipped %s', self.getDescription(test), test=test)
+
+    def addUnexpectedSuccess(self, test):
+        super().addUnexpectedSuccess(test)
+        self.log(logging.ERROR, 'unexpected success for %s', self.getDescription(test), test=test)
+
+    def logError(self, flavour, test, error):
+        err = self._exc_info_to_string(error, test)
+        caller_infos = self.getErrorCallerInfo(error, test)
+        self.log(logging.INFO, '=' * 70, test=test, caller_infos=caller_infos)  # keep this as info !!!!!!
+        self.log(logging.ERROR, "%s: %s\n%s", flavour, self.getDescription(test), err, test=test, caller_infos=caller_infos)
+
+    def getErrorCallerInfo(self, error, test):
+        """
+        :param error: A tuple (exctype, value, tb) as returned by sys.exc_info().
+        :param test: A TestCase that created this error.
+        :returns: a tuple (fn, lno, func, sinfo) matching the logger findCaller format or None
+        """
+
+        # only test case should be executed in odoo, this is only a safe guard
+        if not isinstance(test, unittest.TestCase):
+            _logger.warning('%r is not a TestCase' % test)
             return
-        first = True
-        level = logging.ERROR if s.startswith(('ERROR', 'FAIL', 'Traceback')) else logging.INFO
-        for c in s.splitlines():
-            if not first:
-                c = '` ' + c
-            first = False
-            self.logger.log(level, c)
+        _, _, error_traceback = error
+
+        while error_traceback:
+            code = error_traceback.tb_frame.f_code
+            if code.co_name == test._testMethodName:
+                lineno = error_traceback.tb_lineno
+                filename = code.co_filename
+                method = test._testMethodName
+                infos = (filename, lineno, method, None)
+                return infos
+            error_traceback = error_traceback.tb_next
+
+
+class OdooTestRunner(object):
+    """A test runner class that displays results in in logger.
+    Simplified verison of TextTestRunner(
+    """
+
+    def run(self, test):
+        result = OdooTestResult()
+
+        start_time = time.perf_counter()
+        test(result)
+        time_taken = time.perf_counter() - start_time
+
+        logger = logging.getLogger(test.__module__)
+        run = result.testsRun
+        logger.info("Ran %d test%s in %.3fs", run, run != 1 and "s" or "", time_taken)
+        return result
 
 current_test = None
 
-def runs_at(test, hook, default):
-    # by default, tests do not run post install
-    test_runs = getattr(test, hook, default)
-
-    # for a test suite, we're done
-    if not isinstance(test, unittest.TestCase):
-        return test_runs
-
-    # otherwise check the current test method to see it's been set to a
-    # different state
-    method = getattr(test, test._testMethodName)
-    return getattr(method, hook, test_runs)
-
-runs_at_install = functools.partial(runs_at, hook='at_install', default=True)
-runs_post_install = functools.partial(runs_at, hook='post_install', default=False)
-
-def run_unit_tests(module_name, dbname, position=runs_at_install):
+def run_unit_tests(module_name, position='at_install'):
     """
     :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
               if any of them failed.
     :rtype: bool
     """
     global current_test
+    from odoo.tests.common import TagsSelector # Avoid import loop
     current_test = module_name
     mods = get_test_modules(module_name)
     threading.currentThread().testing = True
+    config_tags = TagsSelector(tools.config['test_tags'])
+    position_tag = TagsSelector(position)
     r = True
     for m in mods:
         tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
-        suite = unittest.TestSuite(t for t in tests if position(t))
+        suite = unittest.TestSuite(t for t in tests if position_tag.check(t) and config_tags.check(t))
 
         if suite.countTestCases():
             t0 = time.time()
             t0_sql = odoo.sql_db.sql_counter
             _logger.info('%s running tests.', m.__name__)
-            result = unittest.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
+            result = OdooTestRunner().run(suite)
             if time.time() - t0 > 5:
                 _logger.log(25, "%s tested in %.2fs, %s queries", m.__name__, time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
             if not result.wasSuccessful():

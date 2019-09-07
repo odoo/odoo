@@ -46,8 +46,8 @@ html {
 }
 
 table {
-    border-spacing: 0px;
-    border-collapse: collapse;
+    border-spacing: 0px 10px;
+    border-collapse: inherit;
 }
 td {
     padding: 0px;
@@ -110,6 +110,7 @@ td {
 }
 
 .pos {
+    direction: ltr;
     padding: 0;
     margin: 0;
     background-color: #f0eeee;
@@ -332,8 +333,8 @@ td {
 }
 .pos .pos-logo {
     height: 35px;
-    margin-left: 7px;
-    margin-top: 2px;
+    margin-left: 10px;
+    margin-top: 5px;
     vertical-align:middle;
 } 
 .pos .pos-branding .username{
@@ -436,6 +437,8 @@ td {
     display: flex;
     -webkit-flex: 1;
     flex: 1;
+    max-width: -moz-available;
+    max-width: -webkit-fill-available;
 }
 .pos .orders {
     display: -webkit-flex;
@@ -728,7 +731,7 @@ td {
     border-top-right-radius: 4px;
 }
 .pos .numpad button {
-    float: left;
+    float: left/*rtl:ignore*/; /* rtlcss forced to keep ltr */
     height: 54px;
     width: 54px;
     font-weight: bold;
@@ -879,8 +882,8 @@ td {
     border: 1px solid #cecbcb;
     padding: 10px 20px;
     padding-left: 38px;
+    padding-right: 33px;
     margin: 6px;
-    background: url("../img/search.png") no-repeat 15px;
     background-color: white;
     border-radius: 20px;
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
@@ -891,12 +894,25 @@ td {
     box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
     color: rgb(153, 153, 255);
 }
+
 .pos .search-clear {
     position: absolute;
+    top: 9px;
     width: 30px;
     height: 30px;
-    top: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-clear.left {
     left: 11px;
+    color: #808080;
+}
+
+.search-clear.right {
+    left: 145px;
+    color: #808080;
     cursor: pointer;
 }
 
@@ -1431,37 +1447,21 @@ td {
 .pos .pos-receipt-container {
     font-size: 0.75em;
     text-align: center;
+    direction: ltr;
 }
 
-.pos .pos-sale-ticket {
+.pos .pos-receipt-container > div {
     text-align: left;
     width: 300px;
     background-color: white;
     margin: 20px;
     padding: 15px;
-    font-size: 14px;
+    font-size: 16px;
     padding-bottom:30px;
     display: inline-block;
-    font-family: "Inconsolata";
     border: solid 1px rgb(220,220,220);
     border-radius: 3px;
     overflow: hidden;
-}
-.pos .pos-sale-ticket pre{
-    font-family: "Inconsolata";
-}
-.pos .pos-sale-ticket .emph{
-    font-size: 20px;
-    margin:5px;
-}
-.pos .pos-sale-ticket table {
-    width: 100%;
-    border: 0;
-    table-layout: fixed;
-}
-.pos .pos-sale-ticket table td {
-    border: 0;
-    word-wrap: break-word;
 }
 
 @page {
@@ -1475,6 +1475,8 @@ td {
     body {
         margin: 0;
         color: white !important;
+        /* avoid black background if backgrounds are printed */
+        background: initial;
     }
     .oe_leftbar,
     .oe_loading,
@@ -1525,13 +1527,16 @@ td {
         box-shadow: none !important;
         background: transparent !important;
     }
-    .pos .pos-sale-ticket{
+    .pos .pos-receipt{
         margin: 0;
         margin-left: auto !important;
         margin-right: auto !important;
         border: none !important;
         font-size: 13px !important;
         width: 266px !important;
+    }
+    .pos .pos-receipts{
+        display: none !important;
     }
     .o_debug_manager {
         display: none !important;
@@ -2285,7 +2290,7 @@ td {
     width: auto;
     line-height: 50px;
     margin-top: -1px;
-    border-top: solid 3px #6EC89B;
+    border-top: solid 3px rgba(60,60,60,0.1);
     
 }
 .pos .popup.popup-selection .selection-item {
@@ -2295,8 +2300,11 @@ td {
     text-align: left;
     padding: 0px 16px;
 }
-.pos .popup.popup-selection .selection-item:nth-child(even) {
+.pos .popup.popup-selection .selection-item:nth-child(odd) {
     background: rgb(247,247,247);
+}
+.pos .popup.popup-selection .selection-item.selected {
+    background: #6EC89B;
 }
 .pos .popup.popup-number {
     width: 300px;
@@ -2312,6 +2320,7 @@ td {
     margin-right: 3px;
 }
 .pos .popup-numpad {
+    direction: ltr/*rtl:ignore*/; /* rtlcss forced to keep ltr */
     margin: 12px auto;
     text-align: center;
     width: 254px;
@@ -2352,7 +2361,6 @@ td {
 }
 .pos .popup-password .popup-input {
     width: 70%;
-    -webkit-text-security: disc;
  }
 
 .pos .popup .body ul,

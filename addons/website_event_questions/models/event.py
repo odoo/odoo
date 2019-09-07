@@ -33,10 +33,6 @@ class EventEvent(models.Model):
                     'title': question.title,
                     'sequence': question.sequence,
                     'is_individual': question.is_individual,
-                    'answer_ids': [(0, 0, {
-                        'name': answer.name,
-                        'sequence': answer.sequence,
-                    }) for answer in question.answer_ids]
                 })
                 for question in self.event_type_id.question_ids
             ]
@@ -50,6 +46,7 @@ class EventRegistrationAnswer(models.Model):
 
     _name = 'event.registration.answer'
     _table = 'event_registration_answer'
+    _description = 'Event Registration Answer'
 
     event_answer_id = fields.Many2one('event.answer', required=True, ondelete='cascade')
     event_registration_id = fields.Many2one('event.registration', required=True, ondelete='cascade')
@@ -66,6 +63,7 @@ class EventQuestion(models.Model):
     _name = 'event.question'
     _rec_name = 'title'
     _order = 'sequence,id'
+    _description = 'Event Question'
 
     title = fields.Char(required=True, translate=True)
     event_type_id = fields.Many2one('event.type', 'Event Type', ondelete='cascade')
@@ -79,12 +77,25 @@ class EventQuestion(models.Model):
     @api.constrains('event_type_id', 'event_id')
     def _constrains_event(self):
         if any(question.event_type_id and question.event_id for question in self):
-            raise UserError(_('Question should belong to either event category or event but not both'))
+            raise UserError(_('Question cannot belong to both the event category and itself.'))
+
+    @api.model
+    def create(self, vals):
+        event_id = vals.get('event_id', False)
+        if event_id:
+            event = self.env['event.event'].browse([event_id])
+            if event.event_type_id.use_questions and event.event_type_id.question_ids:
+                vals['answer_ids'] = vals.get('answer_ids', []) + [(0, 0, {
+                    'name': answer.name,
+                    'sequence': answer.sequence,
+                }) for answer in event.event_type_id.question_ids.filtered(lambda question: question.title == vals.get('title')).mapped('answer_ids')]
+        return super(EventQuestion, self).create(vals)
 
 
 class EventAnswer(models.Model):
     _name = 'event.answer'
     _order = 'sequence,id'
+    _description = 'Event Answer'
 
     name = fields.Char('Answer', required=True, translate=True)
     question_id = fields.Many2one('event.question', required=True, ondelete='cascade')

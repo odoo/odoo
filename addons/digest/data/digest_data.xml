@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data noupdate="1">
+        <record id="digest_digest_default" model="digest.digest">
+            <field name="name">Weekly Stats in Odoo</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="next_run_date" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d')"/>
+            <field name="kpi_res_users_connected">True</field>
+            <field name="kpi_mail_message_total">True</field>
+        </record>
+    </data>
+
+    <data>
+        <record id="digest_tip_mail_0" model="digest.tip">
+            <field name="sequence">1</field>
+            <field name="tip_description" type="html">
+<div>
+    % set users = object.env['res.users'].search([('share', '=' , False)], limit=10, order='id desc')
+    % set channel_id = object.env.ref('mail.channel_all_employees').id
+    <strong style="font-size: 16px;">Did you know...?</strong>
+    <div style="font-size: 14px;">You can ping colleagues by tagging them in your messages using "@". They will be instantly notified.<br/>
+        <div>
+            <center>
+                <img src="/digest/static/src/img/notification.png" width="70%" height="100%"/><br/>
+            </center>
+            ${', '.join(users.mapped('name'))} signed up. Say hello in the <a href="/web#action=mail.action_discuss&amp;active_id=${channel_id}" style="color: #006d6b;">company's discussion channel.</a>
+        </div>
+    </div>
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_mail_1" model="digest.tip">
+            <field name="sequence">7</field>
+            <field name="tip_description" type="html">
+<div>
+    <strong style="font-size: 16px;">Get things done with activities</strong>
+    <div style="font-size: 14px;">You don't have any activity scheduled. Use activities on any business document to schedule meetings, calls and todos.</div>
+    <center>
+        <img src="/digest/static/src/img/activity.png" width="70%" height="100%"/><br/>
+    </center>
+</div>
+            </field>
+        </record>
+
+        <record id="digest_tip_mail_2" model="digest.tip">
+            <field name="group_id" ref='base.group_system'/>
+            <field name="sequence">0</field>
+            <field name="tip_description" type="html">
+<div style="font-size: 14px;">
+    To reach your full potential with Odoo, have a look at our <a href="https://www.odoo.com/page/tour">apps videos</a> and discover new tools to work better and faster.
+</div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

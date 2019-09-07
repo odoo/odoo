@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="matrix">
+          <t t-foreach="order.get_report_matrixes()" t-as="grid">
+              <table class="o_view_grid o_product_variant_grid table table-sm table-striped table-bordered">
+                  <thead>
+                      <tr>
+                          <th t-foreach="grid['header']" t-as="column_header" class="o_grid_title_header text-center">
+                              <span t-esc="column_header['name']"/>
+                              <t t-call="product_matrix.extra_price">
+                                  <t t-set="price" t-value="column_header.get('price', False)"/>
+                              </t>
+                          </th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr t-foreach="grid['matrix']" t-as="row">
+                          <t t-foreach="row" t-as="cell">
+                              <td t-if="cell.get('name', False)" class="text-left">
+                                  <strong t-esc="cell['name']"/>
+                                  <t t-call="product_matrix.extra_price">
+                                      <t t-set="price" t-value="cell.get('price', False)"/>
+                                  </t>
+                              </td>
+                              <td t-else="" class="text-right">
+                                  <span t-esc="cell.get('qty', 0)" class="o_grid_cell_container"/>
+                              </td>
+                          </t>
+                      </tr>
+                  </tbody>
+              </table>
+          </t>
+    </template>
+
+    <template id="extra_price">
+      <span t-if="price" class="badge badge-pill badge-secondary">
+              <!--
+                  price_extra is displayed as catalog price instead of
+                  price after pricelist because it is impossible to
+                  compute. Indeed, the pricelist rule might depend on the
+                  selected variant, so the price_extra will be different
+                  depending on the selected combination. The price of an
+                  attribute is therefore variable and it's not very
+                  accurate to display it.
+                  -->
+              <span class="variant_price_extra" style="white-space: nowrap;">
+                  <t t-raw="price"/>
+              </span>
+          </span>
+    </template>
+</odoo>

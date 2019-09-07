@@ -2,37 +2,86 @@ odoo.define('website_forum.editor', function (require) {
 "use strict";
 
 var core = require('web.core');
-var contentMenu = require('website.contentMenu');
-var website = require('website.website');
+var WebsiteNewMenu = require('website.newMenu');
+var Dialog = require('web.Dialog');
 
 var _t = core._t;
 
-contentMenu.TopBar.include({
-    new_forum: function() {
-        website.prompt({
-            id: "editor_new_forum",
-            window_title: _t("New Forum"),
-            input: "Forum Name",init: function () {
-                var $group = this.$dialog.find("div.form-group");
-                $group.removeClass("mb0");
+var ForumCreateDialog = Dialog.extend({
+    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
+        ['/website_forum/static/src/xml/website_forum_templates.xml']
+    ),
+    template: 'website_forum.add_new_forum',
 
-                var $add = $(
-                    '<div class="form-group mb0">'+
-                        '<label class="col-sm-offset-3 col-sm-9 text-left">'+
-                        '    <input type="checkbox" required="required"/> '+
-                        '</label>'+
-                    '</div>');
-                $add.find('label').append(_t("Add page in menu"));
-                $group.after($add);
-            }
-        }).then(function (forum_name, field, $dialog) {
-            var add_menu = ($dialog.find('input[type="checkbox"]').is(':checked'));
-            website.form('/forum/new', 'POST', {
-                forum_name: forum_name,
-                add_menu: add_menu || ""
-            });
+    /**
+     * @override
+     * @param {Object} parent
+     * @param {Object} options
+     */
+    init: function (parent, options) {
+        options = _.defaults(options || {}, {
+            title: _t("New Forum"),
+            size: 'medium',
+            buttons: [
+                {
+                    text: _t("Create"),
+                    classes: 'btn-primary',
+                    click: this.onCreateClick.bind(this),
+                },
+                {
+                    text: _t("Discard"),
+                    close: true
+                },
+            ]
+        });
+        this._super(parent, options);
+    },
+    onCreateClick: function () {
+        var $dialog = this.$el;
+        var forumName = $dialog.find('input[name=forum_name]').val();;
+        if (!forumName) {
+            return;
+        }
+        var addMenu = ($dialog.find('input[type="checkbox"]').is(':checked'));
+        var forumMode = $dialog.find('input[type="radio"]:checked').val();
+        return this._rpc({
+            route: '/forum/new',
+            params: {
+                forum_name: forumName,
+                forum_mode: forumMode,
+                add_menu: addMenu || "",
+            },
+        }).then(function (url) {
+            window.location.href = url;
+            return new Promise(function () {});
         });
     },
 });
 
+WebsiteNewMenu.include({
+    actions: _.extend({}, WebsiteNewMenu.prototype.actions || {}, {
+        new_forum: '_createNewForum',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Actions
+    //--------------------------------------------------------------------------
+
+    /**
+     * Asks the user information about a new forum to create, then creates it
+     * and redirects the user to this new forum.
+     *
+     * @private
+     * @returns {Promise} Unresolved if there is a redirection
+     */
+    _createNewForum: function () {
+        var self = this;
+        var def = new Promise(function (resolve) {
+            var dialog = new ForumCreateDialog(self, {});
+            dialog.open();
+            dialog.on('closed', self, resolve);
+        });
+        return def;
+    },
+});
 });

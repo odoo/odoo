@@ -4,39 +4,18 @@
 {
     'name': 'Point of Sale',
     'version': '1.0.1',
-    'category': 'Point Of Sale',
+    'category': 'Sales/Point Of Sale',
     'sequence': 20,
-    'summary': 'Touchscreen Interface for Shops',
-    'description': """
-Quick and Easy sale process
-===========================
-
-This module allows you to manage your shop sales very easily with a fully web based touchscreen interface.
-It is compatible with all PC tablets and the iPad, offering multiple payment methods.
-
-Product selection can be done in several ways:
-
-* Using a barcode reader
-* Browsing through categories of products or via a text search.
-
-Main Features
--------------
-* Fast encoding of the sale
-* Choose one payment method (the quick way) or split the payment between several payment methods
-* Computation of the amount of money to return
-* Create and confirm the picking list automatically
-* Allows the user to create an invoice automatically
-* Refund previous sales
-    """,
-    'depends': ['stock_account', 'barcodes', 'web_editor'],
+    'summary': 'User-friendly PoS interface for shops and restaurants',
+    'description': "",
+    'depends': ['stock_account', 'barcodes', 'web_editor', 'digest'],
     'data': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
         'data/default_barcode_patterns.xml',
+        'data/digest_data.xml',
         'wizard/pos_box.xml',
         'wizard/pos_details.xml',
-        'wizard/pos_discount.xml',
-        'wizard/pos_open_statement.xml',
         'wizard/pos_payment.xml',
         'views/pos_templates.xml',
         'views/point_of_sale_template.xml',
@@ -46,6 +25,8 @@ Main Features
         'views/pos_category_view.xml',
         'views/product_view.xml',
         'views/account_journal_view.xml',
+        'views/pos_payment_method_views.xml',
+        'views/pos_payment_views.xml',
         'views/pos_config_view.xml',
         'views/pos_session_view.xml',
         'views/point_of_sale_sequence.xml',
@@ -53,11 +34,9 @@ Main Features
         'data/point_of_sale_data.xml',
         'views/pos_order_report_view.xml',
         'views/account_statement_view.xml',
-        'views/account_statement_report.xml',
-        'views/res_users_view.xml',
+        'views/res_config_settings_views.xml',
+        'views/digest_views.xml',
         'views/res_partner_view.xml',
-        'views/res_config_view.xml',
-        'views/report_statement.xml',
         'views/report_userlabel.xml',
         'views/report_saledetails.xml',
         'views/point_of_sale_dashboard.xml',
@@ -68,5 +47,5 @@ Main Features
     'installable': True,
     'application': True,
     'qweb': ['static/src/xml/pos.xml'],
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }

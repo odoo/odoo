@@ -27,7 +27,6 @@ class ResCompany(models.Model):
         product_property.sudo().write({'company_id': new_company.id})
         return new_company
 
-    @api.multi
     def write(self, values):
         # When we modify the currency of the company, we reflect the change on the list0 pricelist, if
         # that pricelist is not used by another company. Otherwise, we create a new pricelist for the

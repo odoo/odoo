@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.auth.oauth</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <div id="msg_module_auth_oauth" position="replace">
+                    <div class="content-group" attrs="{'invisible': [('module_auth_oauth','=',False)]}">
+                        <div class="mt8">
+                            <button type="action" name="%(auth_oauth.action_oauth_provider)d" string="OAuth Providers" icon="fa-arrow-right" class="btn-link"/>
+                        </div>
+                    </div>
+                </div>
+                <div id="module_auth_oauth" position="after">
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('module_auth_oauth','=',False)]}">
+                        <div class="o_setting_left_pane">
+                            <field name="auth_oauth_google_enabled"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label string="Google Authentication" for="auth_oauth_google_enabled"/>
+                            <div class="text-muted">
+                                Allow users to sign in with their Google account
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('auth_oauth_google_enabled','=',False)]}">
+                                <div class="row mt16">
+                                    <label for="auth_oauth_google_client_id" string="Client ID:" class="col-lg-3 o_light_label"/>
+                                    <field name="auth_oauth_google_client_id" placeholder="e.g. 1234-xyz.apps.googleusercontent.com"/>
+                                </div>
+                                <a href="https://www.odoo.com/documentation/user/online/general/auth/google.html" target="_blank"><i class="fa fa-fw fa-arrow-right"/>Tutorial</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+</odoo>

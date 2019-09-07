@@ -1,0 +1,67 @@
+
+.o_kanban_group .note_text_line_through {
+    text-decoration: line-through;
+}
+
+.o_note_form_view.o_form_view {
+    .o_form_statusbar {
+        margin-bottom: 0;
+    }
+    .oe_form_field.oe_memo {
+        margin: 0 ($input-btn-padding-x-lg * -1);
+        padding: 0;
+        min-height: 200px;
+
+        .note-editor {
+            border: none;
+        }
+    }
+    &.o_form_readonly {
+        .oe_memo {
+            padding: $input-btn-padding-x-lg;
+            border-bottom: 1px solid gray('300');
+        }
+    }
+}
+
+// Quick create notes from systray
+.o_note.o_mail_preview {
+    background-color: white;
+    .o_preview_info {
+        .o_preview_title {
+            .o_preview_name {
+                flex: 1 1 100%;
+            }
+        }
+        .o_note_input_box {
+            display: flex;
+            p {
+                flex: 1 1 auto;
+                margin-bottom: 0px;
+            }
+        }
+        .o_note_save {
+            font-size: 11px;
+            font-weight: bold;
+        }
+    }
+    .o_note_input {
+        border: none;
+    }
+    .o_note_datetime {
+        .o_datepicker {
+            .o_datepicker_input {
+                float: right;
+                text-align: right;
+                border: none;
+                font-size: 11px;
+            }
+            .o_datepicker_button {
+                display: none;
+            }
+        }
+    }
+    .o_note_set_datetime {
+        color: $text-muted;
+    }
+}

@@ -4,179 +4,329 @@
 import json
 import logging
 import werkzeug
+
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from math import ceil
 
-from odoo import fields, http, SUPERUSER_ID
-from odoo.http import request
+from odoo import fields, http, _
+from odoo.addons.base.models.ir_ui_view import keep_query
+from odoo.exceptions import UserError
+from odoo.http import request, content_disposition
 from odoo.tools import ustr
 
 _logger = logging.getLogger(__name__)
 
 
-class WebsiteSurvey(http.Controller):
-    # HELPER METHODS #
+class Survey(http.Controller):
 
-    def _check_bad_cases(self, survey, token=None):
-        # In case of bad survey, redirect to surveys list
-        if not survey.sudo().exists():
-            return werkzeug.utils.redirect("/survey/")
-
-        # In case of auth required, block public user
-        if survey.auth_required and request.env.user == request.website.user_id:
-            return request.render("survey.auth_required", {'survey': survey, 'token': token})
-
-        # In case of non open surveys
-        if survey.stage_id.closed:
-            return request.render("survey.notopen")
-
-        # If there is no pages
-        if not survey.page_ids:
-            return request.render("survey.nopages")
-
-        # Everything seems to be ok
-        return None
-
-    def _check_deadline(self, user_input):
-        '''Prevent opening of the survey if the deadline has turned out
-
-        ! This will NOT disallow access to users who have already partially filled the survey !'''
-        deadline = user_input.deadline
-        if deadline:
-            dt_deadline = fields.Datetime.from_string(deadline)
-            dt_now = datetime.now()
-            if dt_now > dt_deadline:  # survey is not open anymore
-                return request.render("survey.notopen")
-        return None
-
-    ## ROUTES HANDLERS ##
-
-    # Survey start
-    @http.route(['/survey/start/<model("survey.survey"):survey>',
-                 '/survey/start/<model("survey.survey"):survey>/<string:token>'],
-                type='http', auth='public', website=True)
-    def start_survey(self, survey, token=None, **post):
-        UserInput = request.env['survey.user_input']
-
-        # Test mode
-        if token and token == "phantom":
-            _logger.info("[survey] Phantom mode")
-            user_input = UserInput.create({'survey_id': survey.id, 'test_entry': True})
-            data = {'survey': survey, 'page': None, 'token': user_input.token}
-            return request.render('survey.survey_init', data)
-        # END Test mode
-
-        # Controls if the survey can be displayed
-        errpage = self._check_bad_cases(survey, token=token)
-        if errpage:
-            return errpage
-
-        # Manual surveying
-        if not token:
-            vals = {'survey_id': survey.id}
-            if request.website.user_id != request.env.user:
-                vals['partner_id'] = request.env.user.partner_id.id
-            user_input = UserInput.create(vals)
+    def _fetch_from_access_token(self, survey_token, answer_token):
+        """ Check that given token matches an answer from the given survey_id.
+        Returns a sudo-ed browse record of survey in order to avoid access rights
+        issues now that access is granted through token. """
+        survey_sudo = request.env['survey.survey'].with_context(active_test=False).sudo().search([('access_token', '=', survey_token)])
+        if not answer_token:
+            answer_sudo = request.env['survey.user_input'].sudo()
         else:
-            user_input = UserInput.sudo().search([('token', '=', token)], limit=1)
-            if not user_input:
-                return request.render("website.403")
+            answer_sudo = request.env['survey.user_input'].sudo().search([
+                ('survey_id', '=', survey_sudo.id),
+                ('token', '=', answer_token)
+            ], limit=1)
+        return survey_sudo, answer_sudo
 
-        # Do not open expired survey
-        errpage = self._check_deadline(user_input)
-        if errpage:
-            return errpage
+    def _check_validity(self, survey_token, answer_token, ensure_token=True):
+        """ Check survey is open and can be taken. This does not checks for
+        security rules, only functional / business rules. It returns a string key
+        allowing further manipulation of validity issues
 
-        # Select the right page
-        if user_input.state == 'new':  # Intro page
-            data = {'survey': survey, 'page': None, 'token': user_input.token}
-            return request.render('survey.survey_init', data)
-        else:
-            return request.redirect('/survey/fill/%s/%s' % (survey.id, user_input.token))
+         * survey_wrong: survey does not exist;
+         * survey_auth: authentication is required;
+         * survey_closed: survey is closed and does not accept input anymore;
+         * survey_void: survey is void and should not be taken;
+         * token_wrong: given token not recognized;
+         * token_required: no token given although it is necessary to access the
+           survey;
+         * answer_done: token linked to a finished answer;
+         * answer_deadline: token linked to an expired answer;
 
-    # Survey displaying
-    @http.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>',
-                 '/survey/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'],
-                type='http', auth='public', website=True)
-    def fill_survey(self, survey, token, prev=None, **post):
-        '''Display and validates a survey'''
-        Survey = request.env['survey.survey']
-        UserInput = request.env['survey.user_input']
+        :param ensure_token: whether user input existence based on given access token
+          should be enforced or not, depending on the route requesting a token or
+          allowing external world calls;
+        """
+        survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
 
-        # Controls if the survey can be displayed
-        errpage = self._check_bad_cases(survey)
-        if errpage:
-            return errpage
+        if not survey_sudo.exists():
+            return 'survey_wrong'
 
-        # Load the user_input
+        if answer_token and not answer_sudo:
+            return 'token_wrong'
+
+        if not answer_sudo and ensure_token:
+            return 'token_required'
+        if not answer_sudo and survey_sudo.access_mode == 'token':
+            return 'token_required'
+
+        if survey_sudo.users_login_required and request.env.user._is_public():
+            return 'survey_auth'
+
+        if (survey_sudo.state == 'closed' or survey_sudo.state == 'draft' or not survey_sudo.active) and (not answer_sudo or not answer_sudo.test_entry):
+            return 'survey_closed'
+
+        if (not survey_sudo.page_ids and survey_sudo.questions_layout == 'page_per_section') or not survey_sudo.question_ids:
+            return 'survey_void'
+
+        if answer_sudo and answer_sudo.state == 'done':
+            return 'answer_done'
+
+        if answer_sudo and answer_sudo.deadline and answer_sudo.deadline < datetime.now():
+            return 'answer_deadline'
+
+        return True
+
+    def _get_access_data(self, survey_token, answer_token, ensure_token=True):
+        """ Get back data related to survey and user input, given the ID and access
+        token provided by the route.
+
+         : param ensure_token: whether user input existence should be enforced or not(see ``_check_validity``)
+        """
+        survey_sudo, answer_sudo = request.env['survey.survey'].sudo(), request.env['survey.user_input'].sudo()
+        has_survey_access, can_answer = False, False
+
+        validity_code = self._check_validity(survey_token, answer_token, ensure_token=ensure_token)
+        if validity_code != 'survey_wrong':
+            survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
+            try:
+                survey_user = survey_sudo.with_user(request.env.user)
+                survey_user.check_access_rights(self, 'read', raise_exception=True)
+                survey_user.check_access_rule(self, 'read')
+            except:
+                pass
+            else:
+                has_survey_access = True
+            can_answer = bool(answer_sudo)
+            if not can_answer:
+                can_answer = survey_sudo.access_mode == 'public'
+
+        return {
+            'survey_sudo': survey_sudo,
+            'answer_sudo': answer_sudo,
+            'has_survey_access': has_survey_access,
+            'can_answer': can_answer,
+            'validity_code': validity_code,
+        }
+
+    def _redirect_with_error(self, access_data, error_key):
+        survey_sudo = access_data['survey_sudo']
+        answer_sudo = access_data['answer_sudo']
+
+        if error_key == 'survey_void' and access_data['can_answer']:
+            return request.render("survey.survey_void", {'survey': survey_sudo, 'answer': answer_sudo})
+        elif error_key == 'survey_closed' and access_data['can_answer']:
+            return request.render("survey.survey_expired", {'survey': survey_sudo})
+        elif error_key == 'survey_auth' and answer_sudo.token:
+            if answer_sudo.partner_id and (answer_sudo.partner_id.user_ids or survey_sudo.users_can_signup):
+                if answer_sudo.partner_id.user_ids:
+                    answer_sudo.partner_id.signup_cancel()
+                else:
+                    answer_sudo.partner_id.signup_prepare(expiration=fields.Datetime.now() + relativedelta(days=1))
+                redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))[answer_sudo.partner_id.id]
+            else:
+                redirect_url = '/web/login?redirect=%s' % ('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))
+            return request.render("survey.auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
+        elif error_key == 'answer_deadline' and answer_sudo.token:
+            return request.render("survey.survey_expired", {'survey': survey_sudo})
+        elif error_key == 'answer_done' and answer_sudo.token:
+            return request.render("survey.sfinished", self._prepare_survey_finished_values(survey_sudo, answer_sudo, token=answer_sudo.token))
+
+        return werkzeug.utils.redirect("/")
+
+    @http.route('/survey/test/<string:survey_token>', type='http', auth='user', website=True)
+    def survey_test(self, survey_token, **kwargs):
+        """ Test mode for surveys: create a test answer, only for managers or officers
+        testing their surveys """
+        survey_sudo, dummy = self._fetch_from_access_token(survey_token, False)
         try:
-            user_input = UserInput.sudo().search([('token', '=', token)], limit=1)
-        except IndexError:  # Invalid token
-            return request.render("website.403")
+            answer_sudo = survey_sudo._create_answer(user=request.env.user, test_entry=True)
+        except:
+            return werkzeug.utils.redirect('/')
+        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.token)))
 
-        # Do not display expired survey (even if some pages have already been
-        # displayed -- There's a time for everything!)
-        errpage = self._check_deadline(user_input)
-        if errpage:
-            return errpage
+    @http.route('/survey/retry/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
+    def survey_retry(self, survey_token, answer_token, **post):
+        """ This route is called whenever the user has attempts left and hits the 'Retry' button
+        after failing the survey."""
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
+        if access_data['validity_code'] is not True and access_data['validity_code'] != 'answer_done':
+            return self._redirect_with_error(access_data, access_data['validity_code'])
+
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+        if not answer_sudo:
+            # attempts to 'retry' without having tried first
+            return werkzeug.utils.redirect("/")
+
+        try:
+            retry_answer_sudo = survey_sudo._create_answer(
+                user=request.env.user,
+                partner=answer_sudo.partner_id,
+                email=answer_sudo.email,
+                invite_token=answer_sudo.invite_token,
+                **self._prepare_retry_additional_values(answer_sudo)
+            )
+        except:
+            return werkzeug.utils.redirect("/")
+        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=retry_answer_sudo.token)))
+
+    def _prepare_retry_additional_values(self, answer):
+        return {
+            'input_type': answer.input_type,
+            'deadline': answer.deadline,
+        }
+
+    @http.route('/survey/start/<string:survey_token>', type='http', auth='public', website=True)
+    def survey_start(self, survey_token, answer_token=None, email=False, **post):
+        """ Start a survey by providing
+         * a token linked to a survey;
+         * a token linked to an answer or generate a new token if access is allowed;
+        """
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
+        if access_data['validity_code'] is not True:
+            return self._redirect_with_error(access_data, access_data['validity_code'])
+
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+        if not answer_sudo:
+            try:
+                answer_sudo = survey_sudo._create_answer(user=request.env.user, email=email)
+            except UserError:
+                answer_sudo = False
+
+        if not answer_sudo:
+            try:
+                survey_sudo.with_user(request.env.user).check_access_rights('read')
+                survey_sudo.with_user(request.env.user).check_access_rule('read')
+            except:
+                return werkzeug.utils.redirect("/")
+            else:
+                return request.render("survey.403", {'survey': survey_sudo})
 
         # Select the right page
-        if user_input.state == 'new':  # First page
-            page, page_nr, last = Survey.next_page(user_input, 0, go_back=False)
-            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
+        if answer_sudo.state == 'new':  # Intro page
+            data = {'survey': survey_sudo, 'answer': answer_sudo, 'page': 0}
+            return request.render('survey.survey_init', data)
+        else:
+            return request.redirect('/survey/fill/%s/%s' % (survey_sudo.access_token, answer_sudo.token))
+
+    # Survey direct link to a specific page
+    @http.route('/survey/page/<string:survey_token>/<string:answer_token>/<int:page_id>',
+                type='http', auth='public', website=True)
+    def survey_change_page(self, survey_token, answer_token, page_id, **post):
+        """ Method called when the user switches from one page to another using the breadcrumbs links
+        in the survey layout.
+        TODO: Right now, the answers that are not submitted are LOST when changing from one page to another
+        using this method.
+
+        The survey "submit" mechanism needs to be refactored entirely to make this more user-friendly."""
+        # Controls if the survey can be displayed
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
+        if access_data['validity_code'] is not True:
+            return self._redirect_with_error(access_data, access_data['validity_code'])
+
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+
+        return request.render('survey.survey', {
+            'survey': survey_sudo,
+            'page': request.env['survey.question'].sudo().browse(page_id),
+            'answer': answer_sudo
+        })
+
+    @http.route('/survey/fill/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
+    def survey_display_page(self, survey_token, answer_token, prev=None, **post):
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
+        if access_data['validity_code'] is not True:
+            return self._redirect_with_error(access_data, access_data['validity_code'])
+
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+
+        if survey_sudo.is_time_limited and not answer_sudo.start_datetime:
+            # init start date when user starts filling in the survey
+            answer_sudo.write({
+                'start_datetime': fields.Datetime.now()
+            })
+
+        page_or_question_key = 'question' if survey_sudo.questions_layout == 'page_per_question' else 'page'
+        # Select the right page
+        if answer_sudo.state == 'new':  # First page
+            page_or_question_id, last = survey_sudo.next_page_or_question(answer_sudo, 0, go_back=False)
+            data = {
+                'survey': survey_sudo,
+                page_or_question_key: page_or_question_id,
+                'answer': answer_sudo
+            }
             if last:
                 data.update({'last': True})
             return request.render('survey.survey', data)
-        elif user_input.state == 'done':  # Display success message
-            return request.render('survey.sfinished', {'survey': survey,
-                                                               'token': token,
-                                                               'user_input': user_input})
-        elif user_input.state == 'skip':
+        elif answer_sudo.state == 'done':  # Display success message
+            return request.render('survey.sfinished', self._prepare_survey_finished_values(survey_sudo, answer_sudo))
+        elif answer_sudo.state == 'skip':
             flag = (True if prev and prev == 'prev' else False)
-            page, page_nr, last = Survey.next_page(user_input, user_input.last_displayed_page_id.id, go_back=flag)
+            page_or_question_id, last = survey_sudo.next_page_or_question(answer_sudo, answer_sudo.last_displayed_page_id.id, go_back=flag)
 
             #special case if you click "previous" from the last page, then leave the survey, then reopen it from the URL, avoid crash
-            if not page:
-                page, page_nr, last = Survey.next_page(user_input, user_input.last_displayed_page_id.id, go_back=True)
+            if not page_or_question_id:
+                page_or_question_id, last = survey_sudo.next_page_or_question(answer_sudo, answer_sudo.last_displayed_page_id.id, go_back=True)
 
-            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
+            data = {
+                'survey': survey_sudo,
+                page_or_question_key: page_or_question_id,
+                'answer': answer_sudo
+            }
             if last:
                 data.update({'last': True})
+
             return request.render('survey.survey', data)
         else:
-            return request.render("website.403")
+            return request.render("survey.403", {'survey': survey_sudo})
 
-    # AJAX prefilling of a survey
-    @http.route(['/survey/prefill/<model("survey.survey"):survey>/<string:token>',
-                 '/survey/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'],
-                type='http', auth='public', website=True)
-    def prefill(self, survey, token, page=None, **post):
-        UserInputLine = request.env['survey.user_input_line']
-        ret = {}
+    @http.route('/survey/prefill/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
+    def survey_get_answers(self, survey_token, answer_token, page_or_question_id=None, **post):
+        """ TDE NOTE: original comment: # AJAX prefilling of a survey -> AJAX / http ?? """
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
+        if access_data['validity_code'] is not True and access_data['validity_code'] != 'answer_done':
+            return {}
+
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+        try:
+            page_or_question_id = int(page_or_question_id)
+        except:
+            page_or_question_id = None
 
         # Fetch previous answers
-        if page:
-            previous_answers = UserInputLine.sudo().search([('user_input_id.token', '=', token), ('page_id', '=', page.id)])
+        if survey_sudo.questions_layout == 'one_page' or not page_or_question_id:
+            previous_answers = answer_sudo.user_input_line_ids
+        elif survey_sudo.questions_layout == 'page_per_section':
+            previous_answers = answer_sudo.user_input_line_ids.filtered(lambda line: line.page_id.id == page_or_question_id)
         else:
-            previous_answers = UserInputLine.sudo().search([('user_input_id.token', '=', token)])
+            previous_answers = answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id.id == page_or_question_id)
 
         # Return non empty answers in a JSON compatible format
+        ret = {}
         for answer in previous_answers:
             if not answer.skipped:
-                answer_tag = '%s_%s_%s' % (answer.survey_id.id, answer.page_id.id, answer.question_id.id)
+                answer_tag = '%s_%s' % (answer.survey_id.id, answer.question_id.id)
                 answer_value = None
                 if answer.answer_type == 'free_text':
                     answer_value = answer.value_free_text
-                elif answer.answer_type == 'text' and answer.question_id.type == 'textbox':
+                elif answer.answer_type == 'text' and answer.question_id.question_type == 'textbox':
                     answer_value = answer.value_text
-                elif answer.answer_type == 'text' and answer.question_id.type != 'textbox':
+                elif answer.answer_type == 'text' and answer.question_id.question_type != 'textbox':
                     # here come comment answers for matrices, simple choice and multiple choice
                     answer_tag = "%s_%s" % (answer_tag, 'comment')
                     answer_value = answer.value_text
                 elif answer.answer_type == 'number':
-                    answer_value = answer.value_number.__str__()
+                    answer_value = str(answer.value_number)
                 elif answer.answer_type == 'date':
-                    answer_value = answer.value_date
+                    answer_value = fields.Datetime.to_string(answer.value_date)
+                elif answer.answer_type == 'datetime':
+                    answer_value = fields.Datetime.to_string(answer.value_datetime)
                 elif answer.answer_type == 'suggestion' and not answer.value_suggested_row:
                     answer_value = answer.value_suggested.id
                 elif answer.answer_type == 'suggestion' and answer.value_suggested_row:
@@ -186,99 +336,135 @@ class WebsiteSurvey(http.Controller):
                     ret.setdefault(answer_tag, []).append(answer_value)
                 else:
                     _logger.warning("[survey] No answer has been found for question %s marked as non skipped" % answer_tag)
-        return json.dumps(ret)
+        return json.dumps(ret, default=str)
 
-    # AJAX scores loading for quiz correction mode
-    @http.route(['/survey/scores/<model("survey.survey"):survey>/<string:token>'],
-                type='http', auth='public', website=True)
-    def get_scores(self, survey, token, page=None, **post):
-        ret = {}
+    @http.route('/survey/scores/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
+    def survey_get_scores(self, survey_id, answer_token, page_id=None, **post):
+        """ TDE NOTE: original comment: # AJAX scores loading for quiz correction mode -> AJAX / http ?? """
+        access_data = self._get_access_data(survey_id, answer_token, ensure_token=True)
+        if access_data['validity_code'] is not True:
+            return {}
 
-        # Fetch answers
-        previous_answers = request.env['survey.user_input_line'].sudo().search([('user_input_id.token', '=', token)])
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
         # Compute score for each question
-        for answer in previous_answers:
+        ret = {}
+        for answer in answer_sudo.user_input_line_ids:
             tmp_score = ret.get(answer.question_id.id, 0.0)
-            ret.update({answer.question_id.id: tmp_score + answer.quizz_mark})
+            ret.update({answer.question_id.id: tmp_score + answer.answer_score})
         return json.dumps(ret)
 
-    # AJAX submission of a page
-    @http.route(['/survey/submit/<model("survey.survey"):survey>'], type='http', methods=['POST'], auth='public', website=True)
-    def submit(self, survey, **post):
-        _logger.debug('Incoming data: %s', post)
-        page_id = int(post['page_id'])
-        questions = request.env['survey.question'].search([('page_id', '=', page_id)])
+    @http.route('/survey/submit/<string:survey_token>/<string:answer_token>', type='http', methods=['POST'], auth='public', website=True)
+    def survey_submit(self, survey_token, answer_token, **post):
+        """ Submit a page from the survey.
+        This will take into account the validation errors and store the answers to the questions.
+        If the time limit is reached, errors will be skipped, answers wil be ignored and
+        survey state will be forced to 'done'
 
-        # Answer validation
+        TDE NOTE: original comment: # AJAX submission of a page -> AJAX / http ?? """
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
+        if access_data['validity_code'] is not True:
+            return {}
+
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+        if not answer_sudo.test_entry and not survey_sudo._has_attempts_left(answer_sudo.partner_id, answer_sudo.email, answer_sudo.invite_token):
+            # prevent cheating with users creating multiple 'user_input' before their last attempt
+            return {}
+
+        if survey_sudo.questions_layout == 'page_per_section':
+            page_id = int(post['page_id'])
+            questions = request.env['survey.question'].sudo().search([('survey_id', '=', survey_sudo.id), ('page_id', '=', page_id)])
+            # we need the intersection of the questions of this page AND the questions prepared for that user_input
+            # (because randomized surveys do not use all the questions of every page)
+            questions = questions & answer_sudo.question_ids
+            page_or_question_id = page_id
+        elif survey_sudo.questions_layout == 'page_per_question':
+            question_id = int(post['question_id'])
+            questions = request.env['survey.question'].sudo().browse(question_id)
+            page_or_question_id = question_id
+        else:
+            questions = survey_sudo.question_ids
+            questions = questions & answer_sudo.question_ids
+
         errors = {}
-        for question in questions:
-            answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
-            errors.update(question.validate_question(post, answer_tag))
+        # Answer validation
+        if not answer_sudo.is_time_limit_reached:
+            for question in questions:
+                answer_tag = "%s_%s" % (survey_sudo.id, question.id)
+                errors.update(question.validate_question(post, answer_tag))
 
         ret = {}
         if len(errors):
             # Return errors messages to webpage
             ret['errors'] = errors
         else:
-            # Store answers into database
-            try:
-                user_input = request.env['survey.user_input'].sudo().search([('token', '=', post['token'])], limit=1)
-            except KeyError:  # Invalid token
-                return request.render("website.403")
-            user_id = request.env.user.id if user_input.type != 'link' else SUPERUSER_ID
+            if not answer_sudo.is_time_limit_reached:
+                for question in questions:
+                    answer_tag = "%s_%s" % (survey_sudo.id, question.id)
+                    request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, post, answer_tag)
 
-            for question in questions:
-                answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
-                request.env['survey.user_input_line'].sudo(user=user_id).save_lines(user_input.id, question, post, answer_tag)
-
-            go_back = post['button_submit'] == 'previous'
-            next_page, _, last = request.env['survey.survey'].next_page(user_input, page_id, go_back=go_back)
-            vals = {'last_displayed_page_id': page_id}
-            if next_page is None and not go_back:
-                vals.update({'state': 'done'})
+            if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
+                go_back = False
+                answer_sudo._mark_done()
             else:
-                vals.update({'state': 'skip'})
-            user_input.sudo(user=user_id).write(vals)
-            ret['redirect'] = '/survey/fill/%s/%s' % (survey.id, post['token'])
+                go_back = post['button_submit'] == 'previous'
+                next_page, last = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id, go_back=go_back)
+                vals = {'last_displayed_page_id': page_or_question_id}
+
+                if next_page is None and not go_back:
+                    answer_sudo._mark_done()
+                else:
+                    vals.update({'state': 'skip'})
+                answer_sudo.write(vals)
+
+            ret['redirect'] = '/survey/fill/%s/%s' % (survey_sudo.access_token, answer_token)
             if go_back:
-                ret['redirect'] += '/prev'
+                ret['redirect'] += '?prev=prev'
+
         return json.dumps(ret)
 
-    # Printing routes
-    @http.route(['/survey/print/<model("survey.survey"):survey>',
-                 '/survey/print/<model("survey.survey"):survey>/<string:token>'],
-                type='http', auth='public', website=True)
-    def print_survey(self, survey, token=None, **post):
-        '''Display an survey in printable view; if <token> is set, it will
-        grab the answers of the user_input_id that has <token>.'''
-        return request.render('survey.survey_print',
-                                      {'survey': survey,
-                                       'token': token,
-                                       'page_nr': 0,
-                                       'quizz_correction': True if survey.quizz_mode and token else False})
+    @http.route('/survey/print/<string:survey_token>', type='http', auth='public', website=True)
+    def survey_print(self, survey_token, review=False, answer_token=None, **post):
+        '''Display an survey in printable view; if <answer_token> is set, it will
+        grab the answers of the user_input_id that has <answer_token>.'''
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
+        if access_data['validity_code'] is not True and (
+                access_data['has_survey_access'] or
+                access_data['validity_code'] not in ['token_required', 'survey_closed', 'survey_void', 'answer_done']):
+            return self._redirect_with_error(access_data, access_data['validity_code'])
 
-    @http.route(['/survey/results/<model("survey.survey"):survey>'],
-                type='http', auth='user', website=True)
-    def survey_reporting(self, survey, token=None, **post):
+        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+
+        if survey_sudo.scoring_type == 'scoring_without_answers':
+            return request.render("survey.403", {'survey': survey_sudo})
+
+        return request.render('survey.survey_print', {
+            'review': review,
+            'survey': survey_sudo,
+            'answer': answer_sudo,
+            'page_nr': 0,
+            'quizz_correction': survey_sudo.scoring_type != 'scoring_without_answers' and answer_sudo})
+
+    @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
+    def survey_report(self, survey, answer_token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
         result_template = 'survey.result'
         current_filters = []
         filter_display_data = []
         filter_finish = False
 
-        if not survey.user_input_ids or not [input_id.id for input_id in survey.user_input_ids if input_id.state != 'new']:
-            result_template = 'survey.no_result'
+        answers = survey.user_input_ids.filtered(lambda answer: answer.state != 'new' and not answer.test_entry)
         if 'finished' in post:
             post.pop('finished')
             filter_finish = True
         if post or filter_finish:
-            filter_data = self.get_filter_data(post)
+            filter_data = self._get_filter_data(post)
             current_filters = survey.filter_input_ids(filter_data, filter_finish)
             filter_display_data = survey.get_filter_display_data(filter_data)
         return request.render(result_template,
                                       {'survey': survey,
-                                       'survey_dict': self.prepare_result_dict(survey, current_filters),
+                                       'answers': answers,
+                                       'survey_dict': self._prepare_result_dict(survey, current_filters),
                                        'page_range': self.page_range,
                                        'current_filters': current_filters,
                                        'filter_display_data': filter_display_data,
@@ -322,7 +508,38 @@ class WebsiteSurvey(http.Controller):
         #     filter_finish: boolean => only finished surveys or not
         #
 
-    def prepare_result_dict(self, survey, current_filters=None):
+    @http.route(['/survey/<int:survey_id>/get_certification'], type='http', auth='user', methods=['GET'], website=True)
+    def survey_get_certification(self, survey_id, **kwargs):
+        """ The certification document can be downloaded as long as the user has succeeded the certification """
+        survey = request.env['survey.survey'].sudo().search([
+            ('id', '=', survey_id),
+            ('certificate', '=', True)
+        ])
+
+        if not survey:
+            # no certification found
+            return werkzeug.utils.redirect("/")
+
+        succeeded_attempt = request.env['survey.user_input'].sudo().search([
+            ('partner_id', '=', request.env.user.partner_id.id),
+            ('survey_id', '=', survey_id),
+            ('quizz_passed', '=', True)
+        ], limit=1)
+
+        if not succeeded_attempt:
+            raise UserError(_("The user has not succeeded the certification"))
+
+        report_sudo = request.env.ref('survey.certification_report').sudo()
+
+        report = report_sudo.render_qweb_pdf([succeeded_attempt.id], data={'report_type': 'pdf'})[0]
+        reporthttpheaders = [
+            ('Content-Type', 'application/pdf'),
+            ('Content-Length', len(report)),
+        ]
+        reporthttpheaders.append(('Content-Disposition', content_disposition('Certification.pdf')))
+        return request.make_response(report, headers=reporthttpheaders)
+
+    def _prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
         current_filters = current_filters if current_filters else []
         Survey = request.env['survey.survey']
@@ -334,14 +551,20 @@ class WebsiteSurvey(http.Controller):
                     'question': question,
                     'input_summary': Survey.get_input_summary(question, current_filters),
                     'prepare_result': Survey.prepare_result(question, current_filters),
-                    'graph_data': self.get_graph_data(question, current_filters),
+                    'graph_data': self._get_graph_data(question, current_filters),
                 }
 
                 page_dict['question_ids'].append(question_dict)
             result['page_ids'].append(page_dict)
+
+        if survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers']:
+            scoring_data = self._get_scoring_data(survey)
+            result['success_rate'] = scoring_data['success_rate']
+            result['scoring_graph_data'] = json.dumps(scoring_data['graph_data'])
+
         return result
 
-    def get_filter_data(self, post):
+    def _get_filter_data(self, post):
         """Returns data used for filtering the result"""
         filters = []
         for ids in post:
@@ -358,19 +581,19 @@ class WebsiteSurvey(http.Controller):
         total = ceil(total_record / float(limit))
         return range(1, int(total + 1))
 
-    def get_graph_data(self, question, current_filters=None):
+    def _get_graph_data(self, question, current_filters=None):
         '''Returns formatted data required by graph library on basis of filter'''
-        # TODO refactor this terrible method and merge it with prepare_result_dict
+        # TODO refactor this terrible method and merge it with _prepare_result_dict
         current_filters = current_filters if current_filters else []
         Survey = request.env['survey.survey']
         result = []
-        if question.type == 'multiple_choice':
+        if question.question_type == 'multiple_choice':
             result.append({'key': ustr(question.question),
                            'values': Survey.prepare_result(question, current_filters)['answers']
                            })
-        if question.type == 'simple_choice':
+        if question.question_type == 'simple_choice':
             result = Survey.prepare_result(question, current_filters)['answers']
-        if question.type == 'matrix':
+        if question.question_type == 'matrix':
             data = Survey.prepare_result(question, current_filters)
             for answer in data['answers']:
                 values = []
@@ -378,3 +601,42 @@ class WebsiteSurvey(http.Controller):
                     values.append({'text': data['rows'].get(row), 'count': data['result'].get((row, answer))})
                 result.append({'key': data['answers'].get(answer), 'values': values})
         return json.dumps(result)
+
+    def _get_scoring_data(self, survey):
+        """Performs a read_group to fetch the count of failed/passed tests in a single query."""
+
+        count_data = request.env['survey.user_input'].read_group(
+            [('survey_id', '=', survey.id), ('state', '=', 'done'), ('test_entry', '=', False)],
+            ['quizz_passed', 'id:count_distinct'],
+            ['quizz_passed']
+        )
+
+        quizz_passed_count = 0
+        quizz_failed_count = 0
+        for count_data_item in count_data:
+            if count_data_item['quizz_passed']:
+                quizz_passed_count = count_data_item['quizz_passed_count']
+            else:
+                quizz_failed_count = count_data_item['quizz_passed_count']
+
+        graph_data = [{
+            'text': _('Passed'),
+            'count': quizz_passed_count,
+            'color': '#2E7D32'
+        }, {
+            'text': _('Missed'),
+            'count': quizz_failed_count,
+            'color': '#C62828'
+        }]
+
+        total_quizz_passed = quizz_passed_count + quizz_failed_count
+        return {
+            'success_rate': round((quizz_passed_count / total_quizz_passed) * 100, 1) if total_quizz_passed > 0 else 0,
+            'graph_data': graph_data
+        }
+
+    def _prepare_survey_finished_values(self, survey, answer, token=False):
+        values = {'survey': survey, 'answer': answer}
+        if token:
+            values['token'] = token
+        return values

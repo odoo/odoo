@@ -41,13 +41,11 @@ class Board(models.AbstractModel):
                 if child.tag == 'action' and child.get('invisible'):
                     node.remove(child)
                 else:
-                    child = remove_unauthorized_children(child)
+                    remove_unauthorized_children(child)
             return node
 
-        def encode(s):
-            if isinstance(s, unicode):
-                return s.encode('utf8')
-            return s
-
-        archnode = etree.fromstring(encode(arch))
-        return etree.tostring(remove_unauthorized_children(archnode), pretty_print=True)
+        archnode = etree.fromstring(arch)
+        # add the js_class 'board' on the fly to force the webclient to
+        # instantiate a BoardView instead of FormView
+        archnode.set('js_class', 'board')
+        return etree.tostring(remove_unauthorized_children(archnode), pretty_print=True, encoding='unicode')

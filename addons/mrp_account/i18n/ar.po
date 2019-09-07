@@ -1,0 +1,62 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_bom_cost
+# 
+# Translators:
+# Mohammed Albasha <m.albasha.ma@gmail.com>, 2018
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: mrp_bom_cost
+#: model:ir.actions.server,name:mrp_bom_cost.action_compute_price_bom_product
+#: model:ir.actions.server,name:mrp_bom_cost.action_compute_price_bom_template
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_ext_form_view2
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_view_form_normal_inherit_extended
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_variant_easy_edit_view_bom_inherit
+msgid "Compute Price from BoM"
+msgstr "احتساب السعر من قائمة المواد"
+
+#. module: mrp_bom_cost
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_ext_form_view2
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_view_form_normal_inherit_extended
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_variant_easy_edit_view_bom_inherit
+msgid ""
+"Compute the price of the product using products and operations of related "
+"bill of materials, for manufactured products only."
+msgstr ""
+"يحتسب سعر المنتج باستخدام المنتجات والعمليات في قائمة المواد ذات الصلة، "
+"للمنتجات المصنعة فقط."
+
+#. module: mrp_bom_cost
+#: model:ir.model,name:mrp_bom_cost.model_product_product
+msgid "Product"
+msgstr "المنتج"
+
+#. module: mrp_bom_cost
+#: model:ir.model,name:mrp_bom_cost.model_product_template
+msgid "Product Template"
+msgstr "قالب المنتج"
+
+#. module: mrp_bom_cost
+#: code:addons/mrp_bom_cost/models/product.py:40
+#, python-format
+msgid ""
+"The inventory valuation of some products %s is automated. You can only "
+"update their cost from the product form."
+msgstr ""
+"تمت أتمتة تقييم المخزون لبعض المنتجات %s. لا يمكنك تحديث تكلفتهم إلا من خلال"
+" نموذج المنتج."

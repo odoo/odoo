@@ -10,6 +10,7 @@ class BarcodeEventsMixin(models.AbstractModel):
     """
 
     _name = 'barcodes.barcode_events_mixin'
+    _description = 'Barcode Event Mixin'
 
     _barcode_scanned = fields.Char("Barcode Scanned", help="Value of the last barcode scanned.", store=False)
 

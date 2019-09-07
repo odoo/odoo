@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'Membership Management',
+    'name': 'Members',
     'version': '1.0',
     'category': 'Sales',
     'description': """
@@ -20,7 +20,7 @@ It supports different kind of members:
 It is integrated with sales and accounting to allow you to automatically
 invoice and send propositions for membership renewal.
     """,
-    'depends': ['base', 'product', 'account'],
+    'depends': ['account'],
     'data': [
         'security/ir.model.access.csv',
         'wizard/membership_invoice_views.xml',
@@ -28,9 +28,6 @@ invoice and send propositions for membership renewal.
         'views/product_views.xml',
         'views/partner_views.xml',
         'report/report_membership_views.xml',
-    ],
-    'demo': [
-        'data/membership_demo.xml',
     ],
     'website': 'https://www.odoo.com/page/community-builder',
     'test': [

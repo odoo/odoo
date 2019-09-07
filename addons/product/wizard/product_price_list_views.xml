@@ -17,17 +17,17 @@
                     </group>
                     <footer>
                         <button name="print_report" string="Print"  type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
               </field>
         </record>
 
         <act_window id="action_product_price_list"
-            key2="client_print_multi"
             name="Price List"
             res_model="product.price_list"
-            src_model="product.product"
-            groups="product.group_sale_pricelist"
-            view_mode="form" target="new" view_type="form" />
+            binding_model="product.product"
+            binding_type="report"
+            groups="product.group_product_pricelist"
+            view_mode="form" target="new" />
 </odoo>

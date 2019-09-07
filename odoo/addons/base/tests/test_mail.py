@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import unittest
 
+from odoo.tests.common import BaseCase
 from odoo.tools import html_sanitize, append_content_to_html, plaintext2html, email_split, misc
 from . import test_mail_examples
 
 
-class TestSanitizer(unittest.TestCase):
+class TestSanitizer(BaseCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
 
     def test_basic_sanitizer(self):
@@ -90,16 +90,6 @@ class TestSanitizer(unittest.TestCase):
         for attr in ['javascript']:
             self.assertNotIn(attr, sanitized_html, 'html_sanitize did not remove enough unwanted attributes')
 
-    def test_sanitize_escape_emails(self):
-        emails = [
-            "Charles <charles.bidule@truc.fr>",
-            "Dupuis <'tr/-: ${dupuis#$'@truc.baz.fr>",
-            "Technical <service/technical+2@open.com>",
-            "Div nico <div-nico@open.com>"
-        ]
-        for email in emails:
-            self.assertIn(misc.html_escape(email), html_sanitize(email), 'html_sanitize stripped emails of original html')
-
     def test_sanitize_unescape_emails(self):
         not_emails = [
             '<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com" type="cite">cat</blockquote>',
@@ -114,7 +104,7 @@ class TestSanitizer(unittest.TestCase):
         test_data = [
             (
                 '<span style="position: fixed; top: 0px; left: 50px; width: 40%; height: 50%; background-color: red;">Coin coin </span>',
-                ['background-color: red', 'Coin coin'],
+                ['background-color:red', 'Coin coin'],
                 ['position', 'top', 'left']
             ), (
                 """<div style='before: "Email Address; coincoin cheval: lapin";  
@@ -122,7 +112,7 @@ class TestSanitizer(unittest.TestCase):
     
           this; means: anything ?#ùµ"
     ; some-property: 2px; top: 3'>youplaboum</div>""",
-                ['font-size: 30px', 'youplaboum'],
+                ['font-size:30px', 'youplaboum'],
                 ['some-property', 'top', 'cheval']
             ), (
                 '<span style="width">Coincoin</span>',
@@ -171,14 +161,14 @@ class TestSanitizer(unittest.TestCase):
         for ext in test_mail_examples.QUOTE_BLOCKQUOTE_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.QUOTE_BLOCKQUOTE_OUT:
-            self.assertIn('<span data-o-mail-quote="1">%s' % misc.html_escape(ext.decode('utf-8')), html)
+            self.assertIn(u'<span data-o-mail-quote="1">%s' % misc.html_escape(ext), html)
 
     def test_quote_thunderbird(self):
         html = html_sanitize(test_mail_examples.QUOTE_THUNDERBIRD_1)
         for ext in test_mail_examples.QUOTE_THUNDERBIRD_1_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.QUOTE_THUNDERBIRD_1_OUT:
-            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext.decode('utf-8')), html)
+            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_quote_hotmail_html(self):
         html = html_sanitize(test_mail_examples.QUOTE_HOTMAIL_HTML)
@@ -225,7 +215,7 @@ class TestSanitizer(unittest.TestCase):
             for text in in_lst:
                 self.assertIn(text, new_html)
             for text in out_lst:
-                self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(text), new_html)
+                self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(text), new_html)
 
     def test_quote_signature(self):
         test_data = [
@@ -244,27 +234,27 @@ class TestSanitizer(unittest.TestCase):
         for ext in test_mail_examples.GMAIL_1_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.GMAIL_1_OUT:
-            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_quote_text(self):
         html = html_sanitize(test_mail_examples.TEXT_1)
         for ext in test_mail_examples.TEXT_1_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.TEXT_1_OUT:
-            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
         html = html_sanitize(test_mail_examples.TEXT_2)
         for ext in test_mail_examples.TEXT_2_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.TEXT_2_OUT:
-            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_quote_bugs(self):
         html = html_sanitize(test_mail_examples.BUG1)
         for ext in test_mail_examples.BUG_1_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.BUG_1_OUT:
-            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext.decode('utf-8')), html)
+            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_misc(self):
         # False / void should not crash
@@ -279,6 +269,11 @@ class TestSanitizer(unittest.TestCase):
         self.assertNotIn('<title>404 - Not Found</title>', html)
         self.assertIn('<h1>404 - Not Found</h1>', html)
 
+    def test_cid_with_at(self):
+        img_tag = '<img src="@">'
+        sanitized = html_sanitize(img_tag, sanitize_tags=False, strip_classes=True)
+        self.assertEqual(img_tag, sanitized, "img with can have cid containing @ and shouldn't be escaped")
+
     # ms office is currently not supported, have to find a way to support it
     # def test_30_email_msoffice(self):
     #     new_html = html_sanitize(test_mail_examples.MSOFFICE_1, remove=True)
@@ -288,7 +283,7 @@ class TestSanitizer(unittest.TestCase):
     #         self.assertNotIn(ext, new_html)
 
 
-class TestHtmlTools(unittest.TestCase):
+class TestHtmlTools(BaseCase):
     """ Test some of our generic utility functions about html """
 
     def test_plaintext2html(self):
@@ -315,7 +310,7 @@ class TestHtmlTools(unittest.TestCase):
             self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag), expected, 'append_content_to_html is broken')
 
 
-class TestEmailTools(unittest.TestCase):
+class TestEmailTools(BaseCase):
     """ Test some of our generic utility functions for emails """
 
     def test_email_split(self):

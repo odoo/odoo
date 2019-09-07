@@ -1,0 +1,16 @@
+<odoo>
+    <template id="assets_backend" inherit_id="web.assets_backend"
+              name="Password Policy Backend Assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/auth_password_policy/static/src/js/password_field.js"></script>
+            <script type="text/javascript" src="/auth_password_policy/static/src/js/change_password.js"></script>
+        </xpath>
+    </template>
+    <template id="assets_common" inherit_id="web.assets_common"
+              name="Password Policy Common Assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/auth_password_policy/static/src/js/password_gauge.js"></script>
+            <link rel="stylesheet" type="text/css" href="/auth_password_policy/static/src/css/password_field.css"/>
+        </xpath>
+    </template>
+</odoo>

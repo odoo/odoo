@@ -10,7 +10,9 @@
     'data': [
         'ir.model.access.csv',
         'views.xml',
+        'assets.xml',
+    ],
+    'demo': [
         'demo_data.xml',
-        'template.xml',
     ],
 }

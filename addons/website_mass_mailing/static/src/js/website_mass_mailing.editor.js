@@ -1,107 +1,151 @@
 odoo.define('website_mass_mailing.editor', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var core = require('web.core');
 var rpc = require('web.rpc');
-var base = require('web_editor.base');
-var web_editor = require('web_editor.editor');
+var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
 var options = require('web_editor.snippets.options');
-var website = require('website.website');
+var wUtils = require('website.utils');
 var _t = core._t;
 
-var mass_mailing_common = options.Class.extend({
+
+options.registry.mailing_list_subscribe = options.Class.extend({
     popup_template_id: "editor_new_mailing_list_subscribe_button",
     popup_title: _t("Add a Newsletter Subscribe Button"),
-    select_mailing_list: function (type, value) {
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allows to select mailing list.
+     *
+     * @see this.selectClass for parameters
+     */
+    select_mailing_list: function (previewMode, value) {
         var self = this;
-        if (type !== "click") return;
-        var def = website.prompt({
+        var def = wUtils.prompt({
             'id': this.popup_template_id,
             'window_title': this.popup_title,
             'select': _t("Newsletter"),
-            'init': function (field) {
+            'init': function (field, dialog) {
                 return rpc.query({
-                        model: 'mail.mass_mailing.list',
-                        method: 'name_search',
-                        args: ['', []],
-                        context: base.get_context(),
-                    });
+                    model: 'mailing.list',
+                    method: 'name_search',
+                    args: ['', [['is_public', '=', true]]],
+                    context: self.options.recordInfo.context,
+                }).then(function (data) {
+                    $(dialog).find('.btn-primary').prop('disabled', !data.length);
+                    return data;
+                });
             },
         });
-        def.then(function (mailing_list_id) {
-            self.$target.attr("data-list-id", mailing_list_id);
+        def.then(function (result) {
+            self.$target.attr("data-list-id", result.val);
         });
         return def;
     },
-    drop_and_build_snippet: function() {
+    /**
+     * @override
+     */
+    onBuilt: function () {
         var self = this;
         this._super();
-        this.select_mailing_list('click').fail(function () {
-            self.editor.on_remove($.Event( "click" ));
+        this.select_mailing_list('click').guardedCatch(function () {
+            self.getParent()._onRemoveClick($.Event( "click" ));
         });
     },
 });
 
-options.registry.mailing_list_subscribe = mass_mailing_common.extend({
-    clean_for_save: function () {
-        this.$target.addClass("hidden");
-    },
-});
-
-options.registry.newsletter_popup = mass_mailing_common.extend({
+options.registry.newsletter_popup = options.registry.mailing_list_subscribe.extend({
     popup_template_id: "editor_new_mailing_list_subscribe_popup",
     popup_title: _t("Add a Newsletter Subscribe Popup"),
-    select_mailing_list: function (type, value) {
+
+    /**
+     * @override
+     */
+    start: function () {
         var self = this;
-        if (type !== "click") return;
-        return this._super(type, value).then(function (mailing_list_id) {
-            ajax.jsonRpc('/web/dataset/call', 'call', {
-                model: 'mail.mass_mailing.list',
-                method: 'read',
-                args: [[parseInt(mailing_list_id)], ['popup_content'], base.get_context()],
-            }).then(function (data) {
-                self.$target.find(".o_popup_content_dev").empty();
-                if (data && data[0].popup_content) {
-                    $(data[0].popup_content).appendTo(self.$target.find(".o_popup_content_dev"));
-                }
+        this.$target.on('click.newsletter_popup_option', '.o_edit_popup', function (ev) {
+            // So that the snippet is not enabled again by the editor
+            ev.stopPropagation();
+            self.$target.data('quick-open', true);
+            self._refreshPublicWidgets();
+        });
+        this.$target.on('shown.bs.modal.newsletter_popup_option hide.bs.modal.newsletter_popup_option', function () {
+            self.$target.closest('.o_editable').trigger('content_changed');
+            self.trigger_up('deactivate_snippet');
+        });
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    cleanForSave: function () {
+        var self = this;
+        var content = this.$target.data('content');
+        if (content) {
+            this.trigger_up('get_clean_html', {
+                $layout: $('<div/>').html(content),
+                callback: function (html) {
+                    self.$target.data('content', html);
+                },
             });
+        }
+        this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this.$target.off('.newsletter_popup_option');
+        this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    select_mailing_list: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.$target.data('quick-open', true);
+            self.$target.removeData('content');
+            self._refreshPublicWidgets();
         });
     },
 });
 
-web_editor.Class.include({
-    start: function () {
-        $('body').on('click','#edit_dialog',_.bind(this.edit_dialog, this.rte.editor));
-        return this._super();
-    },
-    save : function() {
-        var $target = $('#wrapwrap').find('#o_newsletter_popup');
-        if ($target && $target.length) {
-            $target.modal('hide');
-            $target.css("display", "none");
-            $('.o_popup_bounce_small').show();
-            if (!$target.find('.o_popup_content_dev').length) {
-                $target.find('.o_popup_modal_body').prepend($('<div class="o_popup_content_dev" data-oe-placeholder="' + _t("Type Here ...") + '"></div>'));
+WysiwygMultizone.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _saveElement: function (outerHTML, recordInfo, editable) {
+        var self = this;
+        var defs = [this._super.apply(this, arguments)];
+        var $popups = $(editable).find('.o_newsletter_popup');
+        _.each($popups, function (popup) {
+            var $popup = $(popup);
+            var content = $popup.data('content');
+            if (content) {
+                defs.push(self._rpc({
+                    route: '/website_mass_mailing/set_content',
+                    params: {
+                        'newsletter_id': parseInt($popup.attr('data-list-id')),
+                        'content': content,
+                    },
+                }));
             }
-            var content = $('#wrapwrap .o_popup_content_dev').html();
-            var newsletter_id = $target.parent().attr('data-list-id');
-            ajax.jsonRpc('/web/dataset/call', 'call', {
-                model: 'mail.mass_mailing.list',
-                method: 'write',
-                args: [
-                    parseInt(newsletter_id),
-                    {'popup_content':content},
-                    base.get_context()
-                ],
-            });
-        }
-        return this._super();
-    },
-    edit_dialog : function() {
-        $('#wrapwrap').find('#o_newsletter_popup').modal('show');
-        $('.o_popup_bounce_small').hide();
-        $('.modal-backdrop').css("z-index", "0");
+        });
+        return Promise.all(defs);
     },
 });
 });

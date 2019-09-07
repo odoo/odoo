@@ -8,19 +8,22 @@ from odoo.addons.stock.tests.common2 import TestStockCommon
 
 
 class TestVirtualAvailable(TestStockCommon):
-
     def setUp(self):
         super(TestVirtualAvailable, self).setUp()
 
-        self.env['stock.quant'].create({
-            'product_id': self.product_3.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'qty': 30.0})
+        # Make `product3` a storable product for this test. Indeed, creating quants
+        # and playing with owners is not possible for consumables.
+        self.product_3.type = 'product'
 
         self.env['stock.quant'].create({
             'product_id': self.product_3.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
-            'qty': 10.0,
+            'quantity': 30.0})
+
+        self.env['stock.quant'].create({
+            'product_id': self.product_3.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'quantity': 10.0,
             'owner_id': self.user_stock_user.partner_id.id})
 
         self.picking_out = self.env['stock.picking'].create({
@@ -62,3 +65,19 @@ class TestVirtualAvailable(TestStockCommon):
         self.picking_out.action_assign()
         self.picking_out_2.action_assign()
         self.assertAlmostEqual(5.0, prod_context.virtual_available)
+
+    def test_free_quantity(self):
+        """ Test the value of product.free_qty. Free_qty = qty_on_hand - qty_reserved"""
+        self.assertAlmostEqual(40.0, self.product_3.free_qty)
+        self.picking_out.action_confirm()
+        self.picking_out_2.action_confirm()
+        # No reservation so free_qty is unchanged
+        self.assertAlmostEqual(40.0, self.product_3.free_qty)
+        self.picking_out.action_assign()
+        self.picking_out_2.action_assign()
+        # 8 units are now reserved
+        self.assertAlmostEqual(32.0, self.product_3.free_qty)
+        self.picking_out.do_unreserve()
+        self.picking_out_2.do_unreserve()
+        # 8 units are available again
+        self.assertAlmostEqual(40.0, self.product_3.free_qty)

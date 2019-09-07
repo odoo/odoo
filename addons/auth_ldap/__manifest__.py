@@ -8,9 +8,9 @@
     'data' : [
         'views/ldap_installer_views.xml',
         'security/ir.model.access.csv',
-        'views/auth_ldap_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'external_dependencies' : {
-        'python' : ['ldap'],
+        'python' : ['pyldap'],
     }
 }

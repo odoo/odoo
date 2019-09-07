@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_confirm_stock_sms" model="ir.ui.view">
+        <field name="name">stock_confirm_sms</field>
+        <field name="model">confirm.stock.sms</field>
+        <field name="arch" type="xml">
+            <form string="SMS">
+                <field name="iap_account" invisible="1"/>
+                You are about to confirm this Delivery Order by SMS Text Message.<br/>
+                This feature can easily be disabled from the Settings of Inventory or by clicking on "Disable SMS".<br/>
+                <br/>
+                <p attrs="{'invisible': [('iap_account', '=', True)]}">
+                When confirming the sending of the SMS Text Message, you will be granted free trial credits.<br/>
+                By buying a pack and using the IAP service, you accept the <a href="https://iap.odoo.com/privacy#sms" target="_blank">Privacy Policy</a> of the service provider
+                and the <a href="https://www.odoo.com/privacy" target="_blank">Odoo Privacy Policy</a>.
+                </p>
+                <group invisible="1">
+                    <field name="picking_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="send_sms" type="object"
+                            string="Confirm" class="oe_highlight"/>
+                    <button name="dont_send_sms" type="object"
+                            string="Disable SMS" class="oe_highlight"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

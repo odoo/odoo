@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_report_pos_order_search_inherit" model="ir.ui.view">
+        <field name="name">report.pos.order.search.inherit</field>
+        <field name="model">report.pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_report_pos_order_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='User']" position='after'>
+                <filter string="Employee" name="employee_id" domain="[]" context="{'group_by':'employee_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

@@ -23,14 +23,14 @@ class TestRecruitmentProcess(common.TransactionCase):
         # In Order to test process of Recruitment so giving HR officer's rights
         with open(get_module_resource('hr_recruitment', 'tests', 'resume.eml'), 'rb') as request_file:
             request_message = request_file.read()
-        self.env['mail.thread'].sudo(self.res_users_hr_recruitment_officer.id).message_process(
+        self.env['mail.thread'].with_user(self.res_users_hr_recruitment_officer).message_process(
             'hr.applicant', request_message, custom_values={"job_id": self.env.ref('hr.job_developer').id})
 
         # After getting the mail, I check the details of the new applicant.
-        applicant = self.env['hr.applicant'].search([('email_from', '=', 'Mr. Richard Anderson <Richard_Anderson@yahoo.com>')], limit=1)
+        applicant = self.env['hr.applicant'].search([('email_from', 'ilike', 'Richard_Anderson@yahoo.com')], limit=1)
         self.assertTrue(applicant, "Applicant is not created after getting the mail")
         resume_ids = self.env['ir.attachment'].search([
-            ('datas_fname', '=', 'resume.pdf'),
+            ('name', '=', 'resume.pdf'),
             ('res_model', '=', self.env['hr.applicant']._name),
             ('res_id', '=', applicant.id)])
         self.assertEquals(applicant.name, 'Application for the post of Jr.application Programmer.', 'Applicant name does not match.')

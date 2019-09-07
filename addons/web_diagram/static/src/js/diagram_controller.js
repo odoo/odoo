@@ -72,7 +72,7 @@ var DiagramController = AbstractController.extend({
             context: this.context,
             title: _.str.sprintf("%s %s", _t("Create:"), _t('Activity')),
             disable_multiple_selection: true,
-            on_saved: this.reload.bind(this),
+            on_saved: this.reload.bind(this, {}),
         }).open();
 
         // manually trigger a 'field_changed' on the dialog's form_view to set
@@ -126,7 +126,7 @@ var DiagramController = AbstractController.extend({
                 changes: changes,
             });
         });
-        pop.on('closed', this, this.reload.bind(this));
+        pop.on('closed', this, this.reload.bind(this, {}));
     },
     /**
      * Custom event handler that opens a popup to edit an edge given its id
@@ -141,7 +141,7 @@ var DiagramController = AbstractController.extend({
             res_id: parseInt(event.data.id, 10),
             context: this.context,
             title: _.str.sprintf("%s %s", _t("Open:"), _t('Transition')),
-            on_saved: this.reload.bind(this),
+            on_saved: this.reload.bind(this, {}),
         }).open();
     },
     /**
@@ -158,7 +158,7 @@ var DiagramController = AbstractController.extend({
             res_id: event.data.id,
             context: this.context,
             title: _.str.sprintf("%s %s", _t("Open:"), _t('Activity')),
-            on_saved: this.reload.bind(this),
+            on_saved: this.reload.bind(this, {}),
         }).open();
     },
     /**
@@ -177,7 +177,7 @@ var DiagramController = AbstractController.extend({
                         method: 'unlink',
                         args: [event.data.id],
                     })
-                    .then(self.reload.bind(self));
+                    .then(self.reload.bind(self, {}));
             },
         });
     },
@@ -198,7 +198,7 @@ var DiagramController = AbstractController.extend({
                         method: 'unlink',
                         args: [event.data.id],
                     })
-                    .then(self.reload.bind(self));
+                    .then(self.reload.bind(self, {}));
             },
         });
     },

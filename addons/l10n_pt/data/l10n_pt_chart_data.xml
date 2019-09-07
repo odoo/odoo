@@ -2,23 +2,12 @@
 <odoo>
     <data noupdate="1">
 
-    <record id="chart_15" model="account.account.template">
-       <field name="name">Contas de transferência</field>
-       <field name="code">15</field>
-       <field name="reconcile" eval="True"/>
-       <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-   </record>
-
     <record id="pt_chart_template" model="account.chart.template">
         <field name="name">Portugal - Template do Plano de Contas SNC</field>
         <field name="cash_account_code_prefix">11</field>
         <field name="bank_account_code_prefix">12</field>
+        <field name="transfer_account_code_prefix">15</field>
         <field name="currency_id" ref="base.EUR"/>
-        <field name="transfer_account_id" ref="chart_15"/>
-    </record>
-
-    <record id="chart_15" model="account.account.template">
-      <field name="chart_template_id" ref="pt_chart_template"/>
     </record>
 
     <record id="chart_13" model="account.account.template">
@@ -110,6 +99,14 @@
       <field name="code">2116</field>
       <field name="name">Clientes outras partes relacionadas</field>
       <field name="user_type_id" ref="account.data_account_type_current_assets" />
+      <field name="chart_template_id" ref="pt_chart_template"/>
+    </record>
+
+    <record id="chart_2117" model="account.account.template">
+      <field name="code">2117</field>
+      <field name="name">Clientes gerais (PoS)</field>
+      <field name="reconcile" eval="True"/>
+      <field name="user_type_id" ref="account.data_account_type_receivable" />
       <field name="chart_template_id" ref="pt_chart_template"/>
     </record>
 

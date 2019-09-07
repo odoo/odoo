@@ -1,0 +1,23 @@
+.o_newsletter_modal {
+
+    .modal-header {
+        padding: 0;
+        border: none;
+    }
+    .modal-title {
+        display: none;
+    }
+    .close {
+        @include o-position-absolute(0, 0);
+        font-size: $font-size-sm;
+        width: 2 * $font-size-sm;
+        height: 2 * $font-size-sm;
+        padding: 0;
+        margin: (-$font-size-sm) (-$font-size-sm) 0 0;
+        opacity: 1;
+        background-color: $white;
+        z-index: 1;
+        border-radius: $font-size-sm;
+        box-shadow: $box-shadow-sm;
+    }
+}

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_expense_sheet">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Expenses Report</h2>
+
+                        <div class="row mt32 mb32">
+                            <div class="col-2">
+                                <strong>Employee:</strong>
+                                <p t-field="o.employee_id.name"/>
+                            </div>
+                            <div class="col-2">
+                                <strong>Date:</strong>
+                                <p t-field="o.accounting_date"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Description:</strong>
+                                <p t-field="o.name"/>
+                            </div>
+                            <div class="col-2">
+                                <strong>Validated By:</strong>
+                                <p t-field="o.user_id"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Payment By:</strong>
+                                <p t-field="o.payment_mode"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th class="text-center">Ref.</th>
+                                    <th>Unit Price</th>
+                                    <th>Taxes</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-right">Price</th>
+                                    <th t-if="o.is_multiple_currency" class="text-right">Price in Company Currency</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.expense_line_ids" t-as="line">
+                                    <td><span t-field="line.date"/></td>
+                                    <td>
+                                        <span t-field="line.name"/>
+                                        <span t-field="line.description"/><br/>
+                                        <span t-field="line.analytic_account_id.name"/>
+                                    </td>
+                                    <td style="text-center">
+                                        <span t-field="line.reference"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.unit_amount"/>
+                                    </td>
+                                    <td>
+                                        <t t-foreach="line.tax_ids" t-as="tax">
+                                          <t t-if="tax.description">
+                                            <span t-field="tax.description"/>
+                                          </t>
+                                          <t t-if="not tax.description">
+                                            <span t-field="tax.name"/>
+                                          </t>
+                                        </t>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.quantity"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.total_amount"
+                                            t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                    </td>
+                                    <td t-if="o.is_multiple_currency" class="text-right">
+                                        <span t-field="line.total_amount_company"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row justify-content-end">
+                            <div class="col-4">
+                                <table class="table table-sm">
+                                    <tr class="border-black">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.total_amount"
+                                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <p>Certified honest and conform,<br/>(Date and signature).<br/><br/></p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report
+        id="action_report_hr_expense_sheet"
+        string="Expenses Report"
+        model="hr.expense.sheet"
+        report_type="qweb-pdf"
+        name="hr_expense.report_expense_sheet"
+        file="hr_expense.report_expense_sheet"
+        print_report_name="'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', ''))"
+    />
+
+</odoo>

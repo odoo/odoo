@@ -5,7 +5,7 @@
         <t t-jquery=".info-list" t-operation="append">
             <t t-if="line.get_note()">
                 <li class="info orderline-note">
-                    <i class='fa fa-tag'/><t t-esc="line.get_note()" />
+                    <i class='fa fa-tag' role="img" aria-label="Note" title="Note"/><t t-esc="line.get_note()" />
                 </li>
             </t>
         </t>

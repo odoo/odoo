@@ -10,11 +10,12 @@
                 <form string="Change Product Qty">
                     <group>
                         <field name="product_qty"/>
+                        <field name="mo_id" invisible="1"/>
                     </group>
                     <footer>
                         <button name="change_prod_qty" string="Approve"
                             colspan="1" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
             </field>
@@ -24,7 +25,6 @@
             <field name="name">Change Quantity To Produce</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">change.production.qty</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>

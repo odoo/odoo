@@ -72,7 +72,7 @@ And Much More...
 -   Calendar of Events
 -   Publish related documents
 -   Ressources allocation
--   Automate purchases (cathering...)
+-   Automate purchases (catering...)
 -   Multiple locations and organizers
 -   Mobile Interface
 

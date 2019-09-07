@@ -7,6 +7,8 @@ from odoo import fields, models
 class Lead(models.Model):
     _inherit = 'crm.lead'
 
+    visitor_id = fields.Many2one('website.visitor', "Web Visitor")
+
     def website_form_input_filter(self, request, values):
         values['medium_id'] = values.get('medium_id') or \
                               self.default_get(['medium_id']).get('medium_id') or \
@@ -22,16 +24,15 @@ class Website(models.Model):
     _inherit = 'website'
 
     def _get_crm_default_team_domain(self):
-        if self.env.user.has_group('crm.group_use_lead'):
-            return [('use_leads', '=', True)]
-        else:
+        if not self.env.user.has_group('crm.group_use_lead'):
             return [('use_opportunities', '=', True)]
+        return [('use_leads', '=', True)]
 
     crm_default_team_id = fields.Many2one(
-        'crm.team', string='Default Sales Channels',
+        'crm.team', string='Default Sales Teams',
         default=lambda self: self.env['crm.team'].search([], limit=1),
         domain=lambda self: self._get_crm_default_team_domain(),
-        help='Default sales channel for new leads created through the Contact Us form.')
+        help='Default Sales Team for new leads created through the Contact Us form.')
     crm_default_user_id = fields.Many2one(
         'res.users', string='Default Salesperson', domain=[('share', '=', False)],
         help='Default salesperson for new leads created through the Contact Us form.')

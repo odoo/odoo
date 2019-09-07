@@ -1,12 +1,5 @@
 {% extends "basic/layout.html" %}
 
-{% set script_files = script_files + [
-'_static/jquery.min.js',
-'_static/bootstrap.js',
-'_static/doc.js',
-'_static/jquery.noconflict.js',
-] %}
-
 {% set classes = [] %}
 {% if pagename == master_doc %}
   {% set classes = classes + ['index'] %}
@@ -22,6 +15,7 @@
 {%- block htmltitle -%}
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Work+Sans:500,600" rel="stylesheet">
   {{ super() }}
 {%- endblock -%}
 
@@ -101,8 +95,8 @@
                     <div>It's all about efficiency</div>
                   </div>
                   <ul>
-                    <li><a href="https://www.odoo.com/page/accounting/">Accounting</a></li>
-                    <li><a href="https://www.odoo.com/page/project-management/">Project</a></li>
+                    <li><a href="https://www.odoo.com/page/accounting">Accounting</a></li>
+                    <li><a href="https://www.odoo.com/page/project-management">Project</a></li>
                     <li class="dropdown">
                       <a href="#0" class="dropdown-toggle">Human Resources</a>
                       <ul>
@@ -226,10 +220,9 @@
     {% else %}
     {% set container = 'container' %}
     {% endif %}
-    <div class="{{ container}} {{ ' '.join(classes) }}">
-      <main class="container-fluid {{ ' '.join(classes) }}">
+      <main class="container {{ ' '.join(classes) }}">
         {% if pagename != master_doc %}
-        <div class="row">
+        <div class="o_content row">
           {% if 'has-toc' not in meta and not (pagename in toc) %}
           <aside>
             <div class="navbar-aside text-center">
@@ -250,7 +243,6 @@
         {% endif %}
         <div id="mask"></div>
       </main>
-    </div>
   </div>
 
   <div class="floating_action_container">
@@ -290,29 +282,33 @@
             <div class="col-xs-6 col-sm-4">
               <span class="menu_title">Services</span>
               <ul>
-                <li><a href="http://www.odoo.com/pricing">Editions</a></li>
-                <li><a href="http://www.odoo.com/pricing-online">Cloud Pricing</a></li>
-                <li><a href="http://www.odoo.com/page/upgrade">Upgrade</a></li>
+                <li><a href="https://www.odoo.sh">Odoo Cloud Platform</a></li>
+                <li class="divider"></li>
+                <li><a href="http://www.odoo.com/help">Support</a></li>
+                <li><a href="https://upgrade.odoo.com">Upgrade</a></li>
                 <li class="divider"></li>
                 <li><a href="http://www.odoo.com/partners">Find a partner</a></li>
                 <li><a href="http://www.odoo.com/page/become-a-partner">Become a partner</a></li>
                 <li class="divider"></li>
+                <li><a href="http://training.odoo.com/courses/odoo-functional">Training Center</a></li>
                 <li><a href="http://www.odoo.com/page/education-program">Education</a></li>
                 <li class="divider"></li>
                 <li><a href="http://www.odoo.com/page/security">Security</a></li>
               </ul>
             </div>
-            <div class="col-sm-4 mb64">
+            <div class="col-xs-12 col-sm-4 mb64">
               <span class="menu_title">About us</span>
               <ul>
                 <li><a href="http://www.odoo.com/page/about-us">Our company</a></li>
                 <li><a href="http://www.odoo.com/page/contactus">Contact</a></li>
                 <li class="divider" />
                 <li><a href="http://www.odoo.com/event">Events</a></li>
-                <li><a href="http://www.odoo.com/blog/">Blog</a></li>
+                <li><a href="http://www.odoo.com/blog">Blog</a></li>
                 <li><a href="http://www.odoo.com/blog/6">Customers</a></li>
                 <li class="divider" />
                 <li><a href="http://www.odoo.com/jobs">Jobs</a></li>
+                <li class="divider" />
+                <li><a href="http://www.odoo.com/page/legal">Legal</a> | <a href="http://www.odoo.com/privacy">Privacy</a></li>
               </ul>
             </div>
           </div>

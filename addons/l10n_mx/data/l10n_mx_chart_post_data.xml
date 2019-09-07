@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        CoA setting accounts
+    -->
+    <record id="mx_coa" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="cuenta105_01"/>
+        <field name="property_account_payable_id" ref="cuenta201_01"/>
+        <field name="property_account_expense_categ_id" ref="cuenta601_84"/>
+        <field name="property_account_income_categ_id" ref="cuenta401_01"/>
+        <field name="property_stock_account_input_categ_id" ref="cuenta205_06_01"/>
+        <field name="property_stock_account_output_categ_id" ref="cuenta107_05_01"/>
+        <field name="property_stock_valuation_account_id" ref="cuenta115_01"/>
+        <field name="income_currency_exchange_account_id" ref="cuenta702_01"/>
+        <field name="expense_currency_exchange_account_id" ref="cuenta701_01"/>
+        <field name="default_pos_receivable_account_id" ref="cuenta105_02" />
+    </record>
+</odoo>

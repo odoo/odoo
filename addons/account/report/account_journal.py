@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import time
-from odoo import api, models
+from odoo import api, models, _
+from odoo.exceptions import UserError
 
 
 class ReportJournal(models.AbstractModel):
     _name = 'report.account.report_journal'
+    _description = 'Account Journal Report'
 
     def lines(self, target_move, journal_ids, sort_selection, data):
         if isinstance(journal_ids, int):
@@ -94,7 +96,10 @@ class ReportJournal(models.AbstractModel):
         return self.env['account.move.line'].with_context(data['form'].get('used_context', {}))._query_get()
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
+        if not data.get('form'):
+            raise UserError(_("Form content is missing, this report cannot be printed."))
+
         target_move = data['form'].get('target_move', 'all')
         sort_selection = data['form'].get('sort_selection', 'date')
 
@@ -111,4 +116,6 @@ class ReportJournal(models.AbstractModel):
             'sum_credit': self._sum_credit,
             'sum_debit': self._sum_debit,
             'get_taxes': self._get_taxes,
+            'company_id': self.env['res.company'].browse(
+                data['form']['company_id'][0]),
         }

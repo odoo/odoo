@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="track_po_line_template">
+        <div>
+            <strong>The ordered quantity has been updated.</strong>
+            <ul>
+                <li><t t-esc="line.product_id.display_name"/>:</li>
+                Ordered Quantity: <t t-esc="line.product_qty" /> -&gt; <t t-esc="float(product_qty)"/><br/>
+                <t t-if='line.order_id.product_id.type in ("consu", "product")'>
+                    Received Quantity: <t t-esc="line.qty_received" /><br/>
+                </t>
+                Billed Quantity: <t t-esc="line.qty_invoiced"/>
+            </ul>
+        </div>
+    </template>
+
+</odoo>

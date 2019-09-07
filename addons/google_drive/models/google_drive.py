@@ -22,7 +22,6 @@ class GoogleDrive(models.Model):
     _name = 'google.drive.config'
     _description = "Google Drive templates config"
 
-    @api.multi
     def get_google_drive_url(self, res_id, template_id):
         self.ensure_one()
         self = self.sudo()
@@ -38,7 +37,7 @@ class GoogleDrive(models.Model):
         try:
             name_gdocs = name_gdocs % record
         except:
-            raise UserError(_("At least one key cannot be found in your Google Drive name pattern"))
+            raise UserError(_("At least one key cannot be found in your Google Drive name pattern."))
 
         attachments = self.env["ir.attachment"].search([('res_model', '=', model.model), ('name', '=', name_gdocs), ('res_id', '=', res_id)])
         url = False
@@ -52,11 +51,11 @@ class GoogleDrive(models.Model):
     def get_access_token(self, scope=None):
         Config = self.env['ir.config_parameter'].sudo()
         google_drive_refresh_token = Config.get_param('google_drive_refresh_token')
-        user_is_admin = self.env['res.users'].browse(self.env.user.id)._is_admin()
+        user_is_admin = self.env.is_admin()
         if not google_drive_refresh_token:
             if user_is_admin:
                 dummy, action_id = self.env['ir.model.data'].get_object_reference('base_setup', 'action_general_configuration')
-                msg = _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it .")
+                msg = _("There is no refresh code set for Google Drive. You can set it up from the configuration panel.")
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
                 raise UserError(_("Google Drive is not yet configured. Please contact your administrator."))
@@ -91,7 +90,7 @@ class GoogleDrive(models.Model):
         request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (template_id, access_token)
         headers = {"Content-type": "application/x-www-form-urlencoded"}
         try:
-            req = requests.post(request_url, headers=headers, timeout=TIMEOUT)
+            req = requests.get(request_url, headers=headers, timeout=TIMEOUT)
             req.raise_for_status()
             parents_dict = req.json()
         except requests.HTTPError:
@@ -153,12 +152,15 @@ class GoogleDrive(models.Model):
             a length of 1 element only (batch processing is not supported in the code, though nothing really prevent it)
           :return: the config id and config name
         '''
+        # TO DO in master: fix my signature and my model
+        if isinstance(res_model, str):
+            res_model = self.env['ir.model'].search([('model', '=', res_model)]).id
         if not res_id:
             raise UserError(_("Creating google drive may only be done by one at a time."))
         # check if a model is configured with a template
         configs = self.search([('model_id', '=', res_model)])
         config_values = []
-        for config in configs:
+        for config in configs.sudo():
             if config.filter_id:
                 if config.filter_id.user_id and config.filter_id.user_id.id != self.env.user.id:
                     #Private
@@ -173,7 +175,7 @@ class GoogleDrive(models.Model):
         return config_values
 
     name = fields.Char('Template Name', required=True)
-    model_id = fields.Many2one('ir.model', 'Model', ondelete='set null', required=True)
+    model_id = fields.Many2one('ir.model', 'Model', required=True)
     model = fields.Char('Related Model', related='model_id.model', readonly=True)
     filter_id = fields.Many2one('ir.filters', 'Filter', domain="[('model_id', '=', model)]")
     google_drive_template_url = fields.Char('Template URL', required=True)
@@ -188,7 +190,6 @@ class GoogleDrive(models.Model):
             return word.group(2)
         return None
 
-    @api.multi
     def _compute_ressource_id(self):
         result = {}
         for record in self:
@@ -199,7 +200,6 @@ class GoogleDrive(models.Model):
                 raise UserError(_("Please enter a valid Google Document URL."))
         return result
 
-    @api.multi
     def _compute_client_id(self):
         google_drive_client_id = self.env['ir.config_parameter'].sudo().get_param('google_drive_client_id')
         for record in self:

@@ -2,7 +2,6 @@
 # taken from http://code.activestate.com/recipes/252524-length-limited-o1-lru-cache-implementation/
 import threading
 
-from odoo.tools import pycompat
 from .func import synchronized
 
 __all__ = ['LRU']
@@ -110,12 +109,11 @@ class LRU(object):
 
     @synchronized()
     def itervalues(self):
-        for i,j in pycompat.items(self):
-            yield j
+        return iter(self.d.values())
 
     @synchronized()
     def keys(self):
-        return list(pycompat.keys(self.d))
+        return list(self.d)
 
     @synchronized()
     def pop(self,key):

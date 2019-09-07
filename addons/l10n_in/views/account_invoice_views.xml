@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='other_tab']/group[@id='other_tab_group']/group[@name='payments_info_group']" position="after">
+                <group string="Import/Export India">
+                    <field name="l10n_in_import_export" invisible="1"/>
+                    <field name="l10n_in_export_type"
+                           attrs="{'invisible': [('l10n_in_import_export', '!=', True), ('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
+                    <field name="l10n_in_shipping_bill_number"
+                           attrs="{'invisible': [('l10n_in_import_export', '!=', True), ('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
+                    <field name="l10n_in_shipping_bill_date"
+                           attrs="{'invisible': [('l10n_in_import_export', '!=', True), ('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
+                    <field name="l10n_in_shipping_port_code_id"
+                           attrs="{'invisible': [('l10n_in_import_export', '!=', True), ('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="l10n_in_reseller_partner_id"
+                       groups="l10n_in.group_l10n_in_reseller"
+                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"
+                       />
+            </xpath>
+        </field>
+    </record>
+</odoo>

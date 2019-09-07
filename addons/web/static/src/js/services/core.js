@@ -2,29 +2,32 @@ odoo.define('web.core', function (require) {
 "use strict";
 
 var Bus = require('web.Bus');
+var config = require('web.config');
 var Class = require('web.Class');
 var QWeb = require('web.QWeb');
 var Registry = require('web.Registry');
 var translation = require('web.translation');
 
-var debug = $.deparam($.param.querystring()).debug !== undefined;
+/**
+ * Whether the client is currently in "debug" mode
+ *
+ * @type Boolean
+ */
+var bus = new Bus();
 
-var bus = new Bus ();
-
-_.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
-    $('html').on(evtype, function(ev) {
+_.each('click,dblclick,keydown,keypress,keyup'.split(','), function (evtype) {
+    $('html').on(evtype, function (ev) {
         bus.trigger(evtype, ev);
     });
 });
-_.each('resize,scroll'.split(','), function(evtype) {
-    $(window).on(evtype, function(ev) {
+_.each('resize,scroll'.split(','), function (evtype) {
+    $(window).on(evtype, function (ev) {
         bus.trigger(evtype, ev);
     });
 });
 
 return {
-    debug: debug,
-    qweb: new QWeb(debug),
+    qweb: new QWeb(config.isDebug()),
 
     // core classes and functions
     Class: Class,
@@ -34,16 +37,12 @@ return {
     _lt: translation._lt,
 
     // registries
-    action_registry : new Registry(),
+    action_registry: new Registry(),
     crash_registry: new Registry(),
-    form_custom_registry: new Registry(),
-    form_tag_registry: new Registry(),
-    form_widget_registry: new Registry(),
-    list_widget_registry: new Registry(),
-    one2many_view_registry: new Registry(),
-    search_filters_registry: new Registry(),
-    search_widgets_registry: new Registry(),
-
+    serviceRegistry: new Registry(),
+    /**
+     * @type {String}
+     */
     csrf_token: odoo.csrf_token,
 };
 

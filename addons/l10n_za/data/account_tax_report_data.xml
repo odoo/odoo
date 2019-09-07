@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="total_vat_payable" model="account.tax.report.line">
+        <field name="name">[20] VAT PAYABLE/REFUNDABLE (Total A - Total B)</field>
+        <field name="formula"> (VAT4 + VAT4A + (SEC6 * 60/100 + SEC7) + VAT11 + VAT12) - (VAT14 + VAT14A + VAT15 + VAT16 + VAT17 + VAT18)</field>
+        <field name="country_id" ref="base.za"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="total_output_tax" model="account.tax.report.line">
+        <field name="name">[13] Total A: TOTAL OUTPUT TAX (4 + 4A + 9 + 11 + 12)</field>
+        <field name="sequence" eval="1"/>
+        <field name="formula">VAT4 + VAT4A + (SEC6 * 60/100 + SEC7) + VAT11 + VAT12</field>
+        <field name="parent_id" ref='total_vat_payable'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="total_input_tax" model="account.tax.report.line">
+        <field name="name">[19] Total B: TOTAL INPUT TAX (14 + 14A + 15 + 16 + 17 + 18)</field>
+        <field name="sequence" eval="2"/>
+        <field name="formula">VAT14 + VAT14A + VAT15 + VAT16 + VAT17 + VAT18</field>
+        <field name="parent_id" ref='total_vat_payable'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="standard_rate_exclude_capital_goods_service" model="account.tax.report.line">
+        <field name="name">[1] Standard Rate (Excluding Capital goods and/or services and accomodation)</field>
+        <field name="tag_name">[1] Standard Rate (Excluding Capital goods and/or services and accomodation)</field>
+        <field name="code">VAT1</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="vat_on_standard_rate_exclude_capital_goods_service" model="account.tax.report.line">
+        <field name="name">[4] x 15/ (100 + 15)</field>
+        <field name="tag_name">[4] x 15/ (100 + 15)</field>
+        <field name="code">VAT4</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="standard_rate_only_capital_goods_service" model="account.tax.report.line">
+        <field name="name">[1A] Standard Rate (Only Capital goods and/or services)</field>
+        <field name="tag_name">[1A] Standard Rate (Only Capital goods and/or services)</field>
+        <field name="code">VAT1A</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="vat_on_standard_rate_only_capital_goods_service" model="account.tax.report.line">
+        <field name="name">[4A] x 15/ (100 + 15)</field>
+        <field name="tag_name">[4A] x 15/ (100 + 15)</field>
+        <field name="code">VAT4A</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="zero_rate_exclude_goods_exported" model="account.tax.report.line">
+        <field name="name">[2] Zero Rate (excluding goods exported)</field>
+        <field name="tag_name">[2] Zero Rate (excluding goods exported)</field>
+        <field name="code">VAT2</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="zero_rate_only_goods_exported" model="account.tax.report.line">
+        <field name="name">[2A] Zero Rate (Only goods exported)</field>
+        <field name="tag_name">[2A] Zero Rate (Only goods exported)</field>
+        <field name="code">VAT2A</field>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="exempt_and_non_supplies" model="account.tax.report.line">
+        <field name="name">[3] Exempt and Non supplies</field>
+        <field name="tag_name">[3] Exempt and Non supplies</field>
+        <field name="code">VAT3</field>
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="accomodation_exceeding_28_days" model="account.tax.report.line">
+        <field name="name">[5] Accomodation exceeding 28 days</field>
+        <field name="tag_name">[5] Accomodation exceeding 28 days</field>
+        <field name="code">VAT5</field>
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="accomodation_exceeding_28_days_60_percent" model="account.tax.report.line">
+        <field name="name">[6] x 60%</field>
+        <field name="sequence" eval="11"/>
+        <field name="formula"> VAT5 * 60 / 100</field>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="accomodation_under_28_days" model="account.tax.report.line">
+        <field name="name">[7] Accomodation under 28 days</field>
+        <field name="tag_name">[7] Accomodation under 28 days</field>
+        <field name="code">VAT7</field>
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="accomodation_28_days" model="account.tax.report.line">
+        <field name="name">[8] Total (6 + 7)</field>
+        <field name="sequence" eval="14"/>
+        <field name="formula">(VAT5 * 60 / 100) + VAT7</field>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="vat_on_accomodation_28_days" model="account.tax.report.line">
+        <field name="name">[9] x 15 / (100 ??) </field>
+        <field name="sequence" eval="15"/>
+        <field name="formula"> SEC6 * 60/100 + SEC7 </field>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="vat_on_accomodation_exceeding_28_days" model="account.tax.report.line">
+        <field name="name">VAT on Accomodation exceeding 28 days</field>
+        <field name="tag_name">VAT on Accomodation exceeding 28 days</field>
+        <field name="code">SEC6</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='vat_on_accomodation_28_days'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="vat_on_accomodation_under_28_days" model="account.tax.report.line">
+        <field name="name">VAT on Accomodation under 28 days</field>
+        <field name="tag_name">VAT on Accomodation under 28 days</field>
+        <field name="code">SEC7</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref='vat_on_accomodation_28_days'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="vat_plus_base_of_second_hand_goods_export" model="account.tax.report.line">
+        <field name="name">[10] Change in use and export of second-hand goods</field>
+        <field name="sequence" eval="17"/>
+        <field name="formula"> VAT10a + VAT11</field>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="second_hand_goods_export" model="account.tax.report.line">
+        <field name="name">[10] Base Amount: Change in use and export of second-hand goods</field>
+        <field name="tag_name">[10] Change in use and export of second-hand goods</field>
+        <field name="code">VAT10a</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref='vat_plus_base_of_second_hand_goods_export'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="vat_on_second_hand_goods_export" model="account.tax.report.line">
+        <field name="name">[11] x 15 / (100 + 15)</field>
+        <field name="tag_name">[11] x 15 / (100 + 15)</field>
+        <field name="code">VAT11</field>
+        <field name="sequence" eval="18"/>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="other_imported_services" model="account.tax.report.line">
+        <field name="name">[12] Other and imported services</field>
+        <field name="tag_name">[12] Other and imported services</field>
+        <field name="code">VAT12</field>
+        <field name="sequence" eval="19"/>
+        <field name="parent_id" ref='total_output_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="capital_goods_services_supplied" model="account.tax.report.line">
+        <field name="name">[14] Capital Goods and/or services supplied to you</field>
+        <field name="tag_name">[14] Capital Goods and/or services supplied to you</field>
+        <field name="code">VAT14</field>
+        <field name="sequence" eval="21"/>
+        <field name="parent_id" ref='total_input_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="capital_goods_imported" model="account.tax.report.line">
+        <field name="name">[14A] Capital Goods imported by you</field>
+        <field name="tag_name">[14A] Capital Goods imported by you</field>
+        <field name="code">VAT14A</field>
+        <field name="sequence" eval="22"/>
+        <field name="parent_id" ref='total_input_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="other_goods_services_supplied" model="account.tax.report.line">
+        <field name="name">[15] Other goods and/or services supplied to you (not Capital Goods)</field>
+        <field name="tag_name">[15] Other goods and/or services supplied to you (not Capital Goods)</field>
+        <field name="code">VAT15</field>
+        <field name="sequence" eval="23"/>
+        <field name="parent_id" ref='total_input_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="other_goods_imported" model="account.tax.report.line">
+        <field name="name">[15A] Other goods imported by you (not Capital Goods)</field>
+        <field name="tag_name">[15A] Other goods imported by you (not Capital Goods)</field>
+        <field name="code">VAT15A</field>
+        <field name="sequence" eval="24"/>
+        <field name="parent_id" ref='total_input_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="change_in_use" model="account.tax.report.line">
+        <field name="name">[16] Change in Use</field>
+        <field name="tag_name">[16] Change in Use</field>
+        <field name="code">VAT16</field>
+        <field name="sequence" eval="25"/>
+        <field name="parent_id" ref='total_input_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="bad_debts" model="account.tax.report.line">
+        <field name="name">[17] Bad Debts</field>
+        <field name="tag_name">[17] Bad Debts</field>
+        <field name="code">VAT17</field>
+        <field name="sequence" eval="26"/>
+        <field name="parent_id" ref='total_input_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+    <record id="others" model="account.tax.report.line">
+        <field name="name">[18] Other</field>
+        <field name="tag_name">[18] Other</field>
+        <field name="code">VAT18</field>
+        <field name="sequence" eval="27"/>
+        <field name="parent_id" ref='total_input_tax'/>
+        <field name="country_id" ref="base.za"/>
+    </record>
+
+</odoo>

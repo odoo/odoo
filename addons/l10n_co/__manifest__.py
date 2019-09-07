@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# Copyright (C) David Arnold (devCO).
-# Author        David Arnold (devCO), dar@devco.co
+# Copyright (C) David Arnold (XOE Solutions).
+# Author        David Arnold (XOE Solutions), dar@xoe.solutions
 # Co-Authors    Juan Pablo Aries (devCO), jpa@devco.co
 #               Hector Ivan Valencia Muñoz (TIX SAS)
 #               Nhomar Hernandez (Vauxoo)
@@ -13,17 +13,18 @@
     'version': '0.8',
     'category': 'Localization',
     'description': 'Colombian Accounting and Tax Preconfiguration',
-    'author': 'David Arnold BA HSG (devCO)',
+    'author': 'David Arnold (XOE Solutions)',
+    'website': 'https://xoe.solutions',
     'depends': [
         'account',
     ],
     'data': [
-        'data/account.account.tag.csv',
         'data/l10n_co_chart_data.xml',
         'data/account.account.template.csv',
         'data/account_chart_template_data.xml',
-        'data/account.tax.template.csv',
-        'data/account_tax_group_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account.tax.group.csv',
+        'data/account_tax_template.xml',
+        'data/account_chart_template_configure_data.xml',
+        'views/res_partner.xml',
     ],
 }

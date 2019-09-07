@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.slides</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='google_maps_setting']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="slides_install_setting">
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Slides</span>
+                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                        <div class="text-muted">
+                            Google Drive API Key
+                        </div>
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="website_slide_google_app_key" class="col-lg-3 o_light_label" string="API Key"/>
+                                <field name="website_slide_google_app_key" class="oe_inline"/>
+                            </div>
+                            <div class="oe_link">
+                                <a href="https://console.developers.google.com/flows/enableapi?apiid=drive,youtube"><span class="fa fa-arrow-right"/>
+                                    Create a Google Project and Get a Key
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="eLearning" string="eLearning" data-key="website_slides">
+                    <h2>eLearning</h2>
+                    <div class="row mt16 o_settings_container" id="elearning_selection_settings">
+                        <div class="col-12 col-lg-6 o_setting_box" id="elearning_install_forum">
+                            <div class="o_setting_left_pane">
+                                <field name="module_website_slides_forum"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_website_slides_forum"/>
+                                <div class="text-muted">
+                                    Create a community and let the members help each others
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6"></div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="website_slides_install_mass_mailing_slides">
+                            <div class="o_setting_left_pane">
+                                <field name="module_mass_mailing_slides"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_mass_mailing_slides"/>
+                                <div class="text-muted">
+                                    Contact all the members of a course via mass mailing
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6"></div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="elearning_install_certif">
+                            <div class="o_setting_left_pane">
+                                <field name="module_website_slides_survey"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_website_slides_survey"/>
+                                <div class="text-muted">
+                                    Evaluate your students and certify them
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6"></div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="elearning_install_sell">
+                            <div class="o_setting_left_pane">
+                                <field name="module_website_sale_slides"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_website_sale_slides"/>
+                                <div class="text-muted">
+                                    Generate revenues thanks to your courses
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_slides_action_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'website_slides'}</field>
+    </record>
+</odoo>

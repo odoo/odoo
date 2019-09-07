@@ -13,7 +13,8 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
                         "time_format": '%H:%M:%S',
                         "grouping": [],
                         "decimal_point": ".",
-                        "thousands_sep": ","};
+                        "thousands_sep": ",",
+                        "code": "en_US"};
     },
     set_bundle: function(translation_bundle) {
         var self = this;
@@ -57,19 +58,33 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         it will default to all the modules installed in the current database.
         @param {Object} [lang] lang The language. If not specified it will default to the language
         of the current user.
-        @returns {jQuery.Deferred}
+        @param {string} [url='/web/webclient/translations']
+        @returns {Promise}
     */
-    load_translations: function(session, modules, lang) {
+    load_translations: function(session, modules, lang, url) {
         var self = this;
-        return session.rpc('/web/webclient/translations', {
-            "mods": modules || null,
-            "lang": lang || null
-        }).done(function(trans) {
+        var cacheId = session.cache_hashes && session.cache_hashes.translations;
+        url = url || '/web/webclient/translations';
+        url += '/' + (cacheId ? cacheId : Date.now());
+        return $.get(url, {
+            mods: modules ? modules.join(',') : null,
+            lang: lang || null,
+        }).then(function (trans) {
             self.set_bundle(trans);
         });
     }
 });
 
+/**
+ * Eager translation function, performs translation immediately at call
+ * site. Beware using this outside of method bodies (before the
+ * translation database is loaded), you probably want :func:`_lt`
+ * instead.
+ *
+ * @function _t
+ * @param {String} source string to translate
+ * @returns {String} source translated into the current locale
+ */
 var _t = new TranslationDataBase().build_translation_function();
 /**
  * Lazy translation function, only performs the translation when actually

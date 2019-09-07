@@ -2,7 +2,8 @@ odoo.define("web.Domain", function (require) {
 "use strict";
 
 var collections = require("web.collections");
-var pyeval = require("web.pyeval");
+var pyUtils = require("web.py_utils");
+var py = window.py; // look py.js
 
 /**
  * The Domain Class allows to work with a domain as a tree and provides tools
@@ -51,13 +52,30 @@ var Domain = collections.Tree.extend({
         } else if (_.isArray(this._data)) {
             // The domain is a [name, operator, value] entity
             // First check if we have the field value in the field values set
-            if (!(this._data[0] in values)) {
+            // and if the first part of the domain contains 'parent.field'
+            // get the value from the parent record.
+            var isParentField = false;
+            var fieldName = this._data[0];
+            // We split the domain first part and check if it's a match
+            // for the syntax 'parent.field'.
+            var parentField = this._data[0].split('.');
+            if ('parent' in values && parentField.length === 2) {
+                fieldName = parentField[1];
+                isParentField = parentField[0] === 'parent' &&
+                    fieldName in values.parent;
+            }
+            if (!(this._data[0] in values) && !(isParentField)) {
                 throw new Error(_.str.sprintf(
                     "Unknown field %s in domain",
                     this._data[0]
                 ));
             }
-            var fieldValue = values[this._data[0]];
+            var fieldValue;
+            if (!isParentField) {
+                fieldValue = values[fieldName];
+            } else {
+                fieldValue = values.parent[fieldName];
+            }
 
             switch (this._data[1]) {
                 case "=":
@@ -86,8 +104,13 @@ var Domain = collections.Tree.extend({
                     );
                 case "like":
                     return (fieldValue.toLowerCase().indexOf(this._data[2].toLowerCase()) >= 0);
+                case "=like":
+                    var regExp = new RegExp(this._data[2].toLowerCase().replace(/([.\[\]\{\}\+\*])/g, '\\\$1').replace(/%/g, '.*'));
+                    return regExp.test(fieldValue.toLowerCase());
                 case "ilike":
                     return (fieldValue.indexOf(this._data[2]) >= 0);
+                case "=ilike":
+                    return new RegExp(this._data[2].replace(/%/g, '.*'), 'i').test(fieldValue);
                 default:
                     throw new Error(_.str.sprintf(
                         "Domain %s uses an unsupported operator",
@@ -211,6 +234,132 @@ var Domain = collections.Tree.extend({
             .replace(/false/g, "False")
             .replace(/true/g, "True");
     },
+    /*
+     * @param {string} fieldName
+     * @param {string} period
+     * @param {string} type ('date' or 'datetime')
+     * @param {string} comparisonPeriod
+     * @returns {string} a domain in string form
+     */
+    constructDomain: function (fieldName, period, type, comparisonPeriod) {
+        var leftBoundaryParams, rightBoundaryParams;
+        var offsetPeriodParams;
+        function makeInterval () {
+            switch (comparisonPeriod) {
+                case 'previous_period':
+                    _.each(offsetPeriodParams, function (value, key) {
+                        if (!leftBoundaryParams[key] ||_.isNumber(leftBoundaryParams[key])) {
+                            leftBoundaryParams[key] = value + (leftBoundaryParams[key] || 0);
+                        } else {
+                            leftBoundaryParams[key] = value + ' + ' + leftBoundaryParams[key];
+                        }
+                        if (!rightBoundaryParams[key] || _.isNumber(rightBoundaryParams[key])) {
+                            rightBoundaryParams[key] = value + (rightBoundaryParams[key] || 0);
+                        } else {
+                            rightBoundaryParams[key] = value + ' + ' + rightBoundaryParams[key];
+                        }
+                    });
+                    break;
+                case 'previous_year':
+                    leftBoundaryParams.years = leftBoundaryParams.years ? leftBoundaryParams.years - 1 : -1;
+                    rightBoundaryParams.years = rightBoundaryParams.years ? rightBoundaryParams.years - 1 : -1;
+                  break;
+            }
+
+            var stringifyParams = function (value, key) {
+                return key + '=' + value;
+            };
+            var leftBoundaryStringifyParams = _.map(leftBoundaryParams, stringifyParams).join(', ');
+            var rightBoundaryStringifyParams = _.map(rightBoundaryParams, stringifyParams).join(', ');
+
+            if (type === 'date') {
+                return "['&'," +
+                    "('" + fieldName + "', '>=', (context_today() + relativedelta(" + leftBoundaryStringifyParams + ")).strftime('%Y-%m-%d'))," +
+                    "('" + fieldName + "', '<', (context_today() + relativedelta(" + rightBoundaryStringifyParams + ")).strftime('%Y-%m-%d'))"+
+                    "]";
+            }
+            else {
+                return "['&'," +
+                    "('" + fieldName + "', '>=', " +
+                    "(datetime.datetime.combine(context_today() + relativedelta(" + leftBoundaryStringifyParams + "), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))," +
+                    "('" + fieldName + "', '<', " +
+                    "(datetime.datetime.combine(context_today() + relativedelta(" + rightBoundaryStringifyParams + "), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))"+
+                    "]";
+            }
+        }
+        switch (period) {
+            case 'today':
+                leftBoundaryParams = {};
+                rightBoundaryParams = {days: 1};
+                offsetPeriodParams = {days: -1};
+                return makeInterval();
+            case 'this_week':
+                leftBoundaryParams = {weeks: -1, days: 1, weekday: 0};
+                rightBoundaryParams = {days: 1, weekday: 0};
+                offsetPeriodParams = {weeks: -1};
+                return makeInterval();
+            case 'this_month':
+                leftBoundaryParams = {day: 1};
+                rightBoundaryParams = {day: 1, months: 1};
+                offsetPeriodParams = {months: -1};
+                return makeInterval();
+            case 'this_quarter':
+                leftBoundaryParams = {months: '- (context_today().month - 1) % 3', day: 1};
+                rightBoundaryParams = {months: '3 - (context_today().month - 1) % 3', day: 1};
+                offsetPeriodParams = {months: -3};
+                return makeInterval();
+            case 'this_year':
+                leftBoundaryParams = {month: 1, day: 1};
+                rightBoundaryParams = {month: 1, day: 1, years: 1};
+                offsetPeriodParams = {years: -1};
+                return makeInterval();
+            case 'yesterday':
+                leftBoundaryParams = {days: -1};
+                rightBoundaryParams = {};
+                offsetPeriodParams = {days: -1};
+                return makeInterval();
+            case 'last_week':
+                leftBoundaryParams = {weeks: -2, days: 1, weekday: 0};
+                rightBoundaryParams = {weeks: -1, days: 1, weekday: 0};
+                offsetPeriodParams = {weeks: -1};
+                return makeInterval();
+            case 'last_month':
+                leftBoundaryParams = {months: -1, day: 1};
+                rightBoundaryParams = {day: 1};
+                offsetPeriodParams = {months: -1};
+                return makeInterval();
+            case 'last_quarter':
+                leftBoundaryParams = {months: '- 3 - (context_today().month - 1) % 3', day: 1};
+                rightBoundaryParams = {months: '- (context_today().month - 1) % 3', day: 1};
+                offsetPeriodParams = {months: -3};
+                return makeInterval();
+            case 'last_year':
+                leftBoundaryParams = {month: 1, day: 1, years: -1};
+                rightBoundaryParams = {month: 1, day: 1};
+                offsetPeriodParams = {years: -1};
+                return makeInterval();
+            case 'last_7_days':
+                leftBoundaryParams = {days: -7};
+                rightBoundaryParams = {};
+                offsetPeriodParams = {days: -7};
+                return makeInterval();
+            case 'last_30_days':
+                leftBoundaryParams = {days: -30};
+                rightBoundaryParams = {};
+                offsetPeriodParams = {days: -30};
+                return makeInterval();
+            case 'last_365_days':
+                leftBoundaryParams = {days: -365};
+                rightBoundaryParams = {};
+                offsetPeriodParams = {days: -365};
+                return makeInterval();
+            case 'last_5_years':
+                leftBoundaryParams = {years: -5};
+                rightBoundaryParams = {};
+                offsetPeriodParams = {years: -5};
+                return makeInterval();
+        }
+    },
     /**
      * Converts a string representation of the Python prefix-array
      * representation of a domain to a JS prefix-array representation of this
@@ -223,7 +372,7 @@ var Domain = collections.Tree.extend({
      */
     stringToArray: function (domain, evalContext) {
         if (!_.isString(domain)) return _.clone(domain);
-        return pyeval.eval("domain", domain || "[]", evalContext);
+        return pyUtils.eval("domain", domain ? domain.replace(/%%/g, '%') : "[]", evalContext);
     },
     /**
      * Makes implicit "&" operators explicit in the given JS prefix-array
@@ -248,6 +397,117 @@ var Domain = collections.Tree.extend({
             domain.unshift.apply(domain, _.times(Math.abs(expected), _.constant("&")));
         }
         return domain;
+    },
+    /**
+     * Converts JS prefix-array representation of a domain to a python condition
+     *
+     * @static
+     * @param {Array} domain
+     * @returns {string}
+     */
+    domainToCondition: function (domain) {
+        if (!domain.length) {
+            return 'True';
+        }
+        var self = this;
+        function consume(stack) {
+            var len = stack.length;
+            if (len <= 1) {
+                return stack;
+            } else if (stack[len-1] === '|' || stack[len-1] === '&' || stack[len-2] === '|' || stack[len-2] === '&') {
+                return stack;
+            } else if (len == 2) {
+                stack.splice(-2, 2, stack[len-2] + ' and ' + stack[len-1]);
+            } else if (stack[len-3] == '|') {
+                if (len === 3) {
+                    stack.splice(-3, 3, stack[len-2] + ' or ' + stack[len-1]);
+                } else {
+                    stack.splice(-3, 3, '(' + stack[len-2] + ' or ' + stack[len-1] + ')');
+                }
+            } else {
+                stack.splice(-3, 3, stack[len-2] + ' and ' + stack[len-1]);
+            }
+            consume(stack);
+        }
+
+        var stack = [];
+        _.each(domain, function (dom) {
+            if (dom === '|' || dom === '&') {
+                stack.push(dom);
+            } else {
+                var operator = dom[1] === '=' ? '==' : dom[1];
+                if (!operator) {
+                    throw new Error('Wrong operator for this domain');
+                }
+                if (operator === '!=' && dom[2] === false) { // the field is set
+                    stack.push(dom[0]);
+                } else if (dom[2] === null || dom[2] === true || dom[2] === false) {
+                    stack.push(dom[0] + ' ' + (operator === '!=' ? 'is not ' : 'is ') + (dom[2] === null ? 'None' : (dom[2] ? 'True' : 'False')));
+                } else {
+                    stack.push(dom[0] + ' ' + operator + ' ' + JSON.stringify(dom[2]));
+                }
+                consume(stack);
+            }
+        });
+
+        if (stack.length !== 1) {
+            throw new Error('Wrong domain');
+        }
+
+        return stack[0];
+    },
+    /**
+     * Converts python condition to a JS prefix-array representation of a domain
+     *
+     * @static
+     * @param {string} condition
+     * @returns {Array}
+     */
+    conditionToDomain: function (condition) {
+        if (!condition || condition.match(/^\s*(True)?\s*$/)) {
+            return [];
+        }
+
+        var ast = py.parse(py.tokenize(condition));
+
+
+        function astToStackValue (node) {
+            switch (node.id) {
+                case '(name)': return node.value;
+                case '.': return astToStackValue(node.first) + '.' + astToStackValue(node.second);
+                case '(string)': return node.value;
+                case '(number)': return node.value;
+                case '(constant)': return node.value === 'None' ? null : node.value === 'True' ? true : false;
+                case '[': return _.map(node.first, function (node) {return astToStackValue(node);});
+            }
+        }
+        function astToStack (node) {
+            switch (node.id) {
+                case '(name)': return [[astToStackValue(node), '!=', false]];
+                case '.': return [[astToStackValue(node.first) + '.' + astToStackValue(node.second), '!=', false]];
+                case 'not': return [[astToStackValue(node.first), '=', false]];
+
+                case 'or': return ['|'].concat(astToStack(node.first)).concat(astToStack(node.second));
+                case 'and': return ['&'].concat(astToStack(node.first)).concat(astToStack(node.second));
+                case '(comparator)':
+                    if (node.operators.length !== 1) {
+                        throw new Error('Wrong condition to convert in domain');
+                    }
+                    var right = astToStackValue(node.expressions[0]);
+                    var left = astToStackValue(node.expressions[1]);
+                    var operator = node.operators[0];
+                    switch (operator) {
+                        case 'is': operator = '='; break;
+                        case 'is not': operator = '!='; break;
+                        case '==': operator = '='; break;
+                    }
+                    return [[right, operator, left]];
+                default:
+                    throw "Condition cannot be transformed into domain";
+            }
+        }
+
+        return astToStack(ast);
     },
 });
 

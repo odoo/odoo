@@ -9,7 +9,7 @@ class MrpRouting(models.Model):
     _name = 'mrp.routing'
     _description = 'Routings'
 
-    name = fields.Char('Routing Name', required=True)
+    name = fields.Char('Routing', required=True)
     active = fields.Boolean(
         'Active', default=True,
         help="If the active field is set to False, it will allow you to hide the routing without removing it.")
@@ -19,15 +19,10 @@ class MrpRouting(models.Model):
     note = fields.Text('Description')
     operation_ids = fields.One2many(
         'mrp.routing.workcenter', 'routing_id', 'Operations',
-        copy=True, oldname='workcenter_lines')
-    location_id = fields.Many2one(
-        'stock.location', 'Production Location',
-        help="Keep empty if you produce at the location where you find the raw materials."
-             "Set a location if you produce at a fixed location. This can be a partner location "
-             "if you subcontract the manufacturing operations.")
+        copy=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('mrp.routing'))
+        default=lambda self: self.env.company)
 
     @api.model
     def create(self, vals):
@@ -49,17 +44,23 @@ class MrpRoutingWorkcenter(models.Model):
     routing_id = fields.Many2one(
         'mrp.routing', 'Parent Routing',
         index=True, ondelete='cascade', required=True,
-        help="The routing contains all the Work Centers used and for how long. This will create work orders afterwards"
-        "which alters the execution of the manufacturing order. ")
+        help="The routing contains all the Work Centers used and for how long. This will create work orders afterwards "
+        "which alters the execution of the manufacturing order.")
     note = fields.Text('Description')
     company_id = fields.Many2one(
         'res.company', 'Company',
         readonly=True, related='routing_id.company_id', store=True)
-    worksheet = fields.Binary('worksheet')
+    worksheet = fields.Binary('PDF', help="Upload your PDF file.")
+    worksheet_type = fields.Selection([
+        ('pdf', 'PDF'), ('google_slide', 'Google Slide')],
+        string="Work Sheet", default="pdf",
+        help="Defines if you want to use a PDF or a Google Slide as work sheet."
+    )
+    worksheet_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.")
     time_mode = fields.Selection([
         ('auto', 'Compute based on real time'),
         ('manual', 'Set duration manually')], string='Duration Computation',
-        default='auto')
+        default='manual')
     time_mode_batch = fields.Integer('Based on', default=10)
     time_cycle_manual = fields.Float(
         'Manual Duration', default=60,
@@ -68,13 +69,11 @@ class MrpRoutingWorkcenter(models.Model):
     workorder_count = fields.Integer("# Work Orders", compute="_compute_workorder_count")
     batch = fields.Selection([
         ('no',  'Once all products are processed'),
-        ('yes', 'Once a minimum number of products is processed')], string='Next Operation',
-        help="""Will determine if the next work order will be planned after the previous one or after the first Quantity To Process of the previous one.""",
+        ('yes', 'Once some products are processed')], string='Start Next Operation',
         default='no', required=True)
     batch_size = fields.Float('Quantity to Process', default=1.0)
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")
 
-    @api.multi
     @api.depends('time_cycle_manual', 'time_mode', 'workorder_ids')
     def _compute_time_cycle(self):
         manual_ops = self.filtered(lambda operation: operation.time_mode == 'manual')
@@ -91,7 +90,6 @@ class MrpRoutingWorkcenter(models.Model):
             else:
                 operation.time_cycle = operation.time_cycle_manual
 
-    @api.multi
     def _compute_workorder_count(self):
         data = self.env['mrp.workorder'].read_group([
             ('operation_id', 'in', self.ids),

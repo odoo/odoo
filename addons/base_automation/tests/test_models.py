@@ -7,7 +7,7 @@ from odoo import fields, models, api
 
 class LeadTest(models.Model):
     _name = "base.automation.lead.test"
-    _description = "Action Rule Test"
+    _description = "Automated Rule Test"
 
     name = fields.Char(string='Subject', required=True, index=True)
     user_id = fields.Many2one('res.users', string='Responsible')
@@ -17,7 +17,7 @@ class LeadTest(models.Model):
     active = fields.Boolean(default=True)
     partner_id = fields.Many2one('res.partner', string='Partner')
     date_action_last = fields.Datetime(string='Last Action', readonly=True)
-    customer = fields.Boolean(related='partner_id.customer', readonly=True, store=True)
+    employee = fields.Boolean(related='partner_id.employee', readonly=True, store=True)
     line_ids = fields.One2many('base.automation.line.test', 'lead_id')
 
     priority = fields.Boolean()
@@ -34,7 +34,7 @@ class LeadTest(models.Model):
 
 class LineTest(models.Model):
     _name = "base.automation.line.test"
-    _description = "Action Rule Line Test"
+    _description = "Automated Rule Line Test"
 
     name = fields.Char()
     lead_id = fields.Many2one('base.automation.lead.test', ondelete='cascade')

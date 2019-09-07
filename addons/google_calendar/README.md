@@ -1,7 +1,7 @@
 Google Calendar
 ---------------
 
-Get your meetings, yours holidays, ... Get your calendar anywhere and never
+Get your meetings, your leaves... Get your calendar anywhere and never
 forget an event, fully synchronized with the Odoo <a href="https://www.odoo.com/page/crm">Open Source CRM</a>.
 
 Keep an eye on your events
@@ -48,5 +48,5 @@ a notification in you Odoo which ever the page you are.
 Google Calendar
 ---------------
 
-With the plugin Google\_calendar, you can synchronize your Odoo calendar with Google Calendar.
+With this plugin, you can synchronize your Odoo calendar with Google Calendar.
 

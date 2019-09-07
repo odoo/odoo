@@ -44,6 +44,49 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(intersperse("12345678", [3,0], '.'), '12.345.678');
     });
 
+    QUnit.test('is_bin_size', function (assert) {
+        assert.expect(3);
+
+        var is_bin_size = utils.is_bin_size;
+
+        assert.strictEqual(is_bin_size('Cg=='), false);
+        assert.strictEqual(is_bin_size('2.5 Mb'), true);
+        // should also work for non-latin languages (e.g. russian)
+        assert.strictEqual(is_bin_size('64.2 Кб'), true);
+    });
+
+    QUnit.test('unaccent', function (assert) {
+        assert.expect(3);
+
+        var singleCharacters = utils.unaccent("ⱮɀꝾƶⱵȥ");
+        var doubledCharacters = utils.unaccent("ǱǄꝎꜩꝡƕ");
+        var caseSensetiveCharacters = utils.unaccent("ⱮɀꝾƶⱵȥ", true);
+
+        assert.strictEqual("mzgzhz", singleCharacters);
+        assert.strictEqual("dzdzootzvyhv", doubledCharacters);
+        assert.strictEqual("MzGzHz", caseSensetiveCharacters);
+    });
+
+    QUnit.test('human_number', function (assert) {
+        assert.expect(13);
+
+        var human_number = utils.human_number;
+
+        assert.strictEqual(human_number(1020, 2, 1), '1.02k');
+        assert.strictEqual(human_number(1020000, 2, 2), '1020k');
+        assert.strictEqual(human_number(10200000, 2, 2), '10.2M');
+        assert.strictEqual(human_number(1020, 2, 1), '1.02k');
+        assert.strictEqual(human_number(1002, 2, 1), '1k');
+        assert.strictEqual(human_number(101, 2, 1), '101');
+        assert.strictEqual(human_number(64.2, 2, 1), '64');
+        assert.strictEqual(human_number(1e+18), '1E');
+        assert.strictEqual(human_number(1e+21, 2, 1), '1e+21');
+        assert.strictEqual(human_number(1.0045e+22, 2, 1), '1e+22');
+        assert.strictEqual(human_number(1.0045e+22, 3, 1), '1.005e+22');
+        assert.strictEqual(human_number(1.012e+43, 2, 1), '1.01e+43');
+        assert.strictEqual(human_number(1.012e+43, 2, 2), '1.01e+43');
+    });
+
 });
 
 });

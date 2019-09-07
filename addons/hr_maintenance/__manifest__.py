@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'HR - Equipments',
+    'name': 'Maintenance - HR',
     'version': '1.0',
     'sequence': 125,
     'description': """
@@ -11,8 +11,9 @@
     'data': [
         'security/equipment.xml',
         'views/maintenance_views.xml',
+        'views/hr_views.xml',
     ],
     'demo': [],
     'installable': True,
-    'auto-install': True,
+    'auto_install': True,
 }

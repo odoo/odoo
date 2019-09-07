@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import unittest
-
 from odoo.osv.query import Query
+from odoo.tests.common import BaseCase
 
 
-class QueryTestCase(unittest.TestCase):
+class QueryTestCase(BaseCase):
 
     def test_basic_query(self):
         query = Query()

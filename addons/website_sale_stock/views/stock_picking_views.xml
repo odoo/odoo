@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_website_sale_stock" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.website.sale.stock</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="website_id" groups="website.group_multi_website" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_saleorder_document_inherit_sale_management" inherit_id="sale.report_saleorder_document">
+    <xpath expr="//div[@name='signature']" position="after">
+        <div t-if="doc.sale_order_option_ids and doc.state in ['draft', 'sent']">
+            <t t-set="has_option_discount" t-value="any(doc.sale_order_option_ids.filtered(lambda o: o.discount != 0.0))" />
+            <h4>
+                <span>Options</span>
+            </h4>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th class="text-left">Description</th>
+                        <th t-if="has_option_discount" groups="product.group_discount_per_so_line" class="text-left">Disc.%</th>
+                        <th class="text-right">Unit Price</th>
+                    </tr>
+                </thead>
+                <tbody class="sale_tbody">
+                    <tr t-foreach="doc.sale_order_option_ids" t-as="option">
+                        <td>
+                            <span t-field="option.name"/>
+                        </td>
+                        <td t-if="has_option_discount" groups="product.group_discount_per_so_line">
+                            <strong t-if="option.discount != 0.0" class="text-info">
+                                <t t-esc="((option.discount % 1) and '%s' or '%d') % option.discount"/>%
+                            </strong>
+                        </td>
+                        <td>
+                            <strong class="text-right">
+                                <div t-field="option.price_unit"
+                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'
+                                    t-att-style="option.discount and 'text-decoration: line-through' or None"
+                                    t-att-class="option.discount and 'text-danger' or None"/>
+                                <div t-if="option.discount">
+                                    <t t-esc="'%.2f' % ((1-option.discount / 100.0) * option.price_unit)"/>
+                                </div>
+                            </strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </xpath>
+</template>
+</odoo>

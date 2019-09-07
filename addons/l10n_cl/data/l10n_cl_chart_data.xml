@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="account_reports_cl_statements_menu" name="Chilean Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
+    <menuitem id="account_reports_cl_statements_menu" name="Chile" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
     <!-- Account Types -->
 
@@ -8,25 +8,15 @@
         <field name="name">Cuentas No Clasificadas</field>
     </record>
 
-    <record id="117" model="account.account.template">
-        <field name="name">Cuenta de Transferencia</field>
-        <field name="code">117</field>
-        <field name="reconcile" eval="True"/>
-        <field ref="account.data_account_type_current_assets" name="user_type_id"/>
-    </record>
-
     <record id="cl_chart_template" model="account.chart.template">
       <field name="name">Chile - Plan de Cuentas</field>
       <field name="bank_account_code_prefix">114</field>
       <field name="cash_account_code_prefix">111</field>
+      <field name="transfer_account_code_prefix">117</field>
       <field name="code_digits">6</field>
       <field name="currency_id" ref="base.CLP"/>
-      <field name="transfer_account_id" ref="117"/>
     </record>
 
-    <record id="117" model="account.account.template">
-        <field name="chart_template_id" ref="cl_chart_template"/>
-    </record>
     <!-- Account Templates -->
 
     <record id="113_001" model="account.account.template">
@@ -56,6 +46,15 @@
     <record id="121" model="account.account.template">
         <field name="name">Documentos por Cobrar / Deudores por Ventas</field>
         <field name="code">121</field>
+        <field name="reconcile" eval="True"/>
+        <field ref="account.data_account_type_receivable" name="user_type_id"/>
+        <field name="reconcile">1</field>
+        <field name="chart_template_id" ref="cl_chart_template"/>
+    </record>
+
+    <record id="121_01" model="account.account.template">
+        <field name="name">Documentos por Cobrar / Deudores por Ventas (PoS)</field>
+        <field name="code">121.01</field>
         <field name="reconcile" eval="True"/>
         <field ref="account.data_account_type_receivable" name="user_type_id"/>
         <field name="reconcile">1</field>
@@ -944,5 +943,6 @@
         <field name="property_account_income_categ_id" ref="411_01"/>
         <field name="income_currency_exchange_account_id" ref="426"/>
         <field name="expense_currency_exchange_account_id" ref="524"/>
+        <field name="default_pos_receivable_account_id" ref="121_01" />
     </record>
 </odoo>

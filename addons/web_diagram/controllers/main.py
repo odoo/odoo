@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.http as http
-from odoo.tools import pycompat
 
 from odoo.tools.safe_eval import safe_eval
 
@@ -46,7 +45,7 @@ class DiagramView(http.Controller):
             isolate_nodes[blnk_node['id']] = blnk_node
         y = [
             t['y']
-            for t in pycompat.values(nodes)
+            for t in nodes.values()
             if t['x'] == 20
             if t['y']
         ]
@@ -99,11 +98,11 @@ class DiagramView(http.Controller):
                 color='white',
                 options={}
             )
-            for color, expr in pycompat.items(bgcolors):
+            for color, expr in bgcolors.items():
                 if safe_eval(expr, act):
                     n['color'] = color
 
-            for shape, expr in pycompat.items(shapes):
+            for shape, expr in shapes.items():
                 if safe_eval(expr, act):
                     n['shape'] = shape
 

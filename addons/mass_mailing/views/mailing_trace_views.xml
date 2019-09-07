@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  MAILING TRACE !-->
+    <record model="ir.ui.view" id="mailing_trace_view_search">
+        <field name="name">mailing.trace.search</field>
+        <field name="model">mailing.trace</field>
+        <field name="arch" type="xml">
+           <search string="Mail Statistics">
+                <field name="mail_mail_id_int"/>
+                <field name="message_id"/>
+                <field name="email"/>
+                <field name="mass_mailing_id"/>
+                <filter string="Scheduled" name="filter_scheduled" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '=', False), ('ignored', '=', False), ('bounced', '=', False)]"/>
+                <filter string="Ignored" name="filter_ignored" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '=', False), ('ignored', '!=', False)]"/>
+                <filter string="Sent" name="filter_sent" domain="[('sent', '!=', False)]"/>
+                <filter string="Delivered" name="filter_delivered" domain="[('sent', '!=', False), ('exception', '=', False), ('bounced', '=', False)]"/>
+                <separator/>
+                <filter string="Opened" name="filter_opened" domain="[('opened', '!=', False)]"/>
+                <filter string="Clicked" name="filter_clicked" domain="[('clicked', '!=', False)]"/>
+                <filter string="Replied" name="filter_replied" domain="[('replied', '!=', False)]"/>
+                <filter string="Bounced" name="filter_bounced" domain="[('bounced', '!=', False)]"/>
+                <filter string="Failed" name="filter_failed" domain="[('exception', '!=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Open Date" name="group_open_date" context="{'group_by': 'opened:day'}"/>
+                    <filter string="Reply Date" name="group_reply_date" context="{'group_by': 'replied:day'}"/>
+                    <filter string="Last State Update" name="state_update" domain="[]" context="{'group_by':'state_update'}"/>
+                    <filter string="Mass Mailing"  name="mass_mailing" domain="[]" context="{'group_by':'mass_mailing_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_trace_view_tree">
+        <field name="name">mailing.trace.tree</field>
+        <field name="model">mailing.trace</field>
+        <field name="arch" type="xml">
+            <tree string="Mail Statistics" create="0">
+                <field name="mass_mailing_id"/>
+                <field name="email"/>
+                <field name="state"/>
+                <field name="message_id"/>
+                <field name="scheduled"/>
+                <field name="sent"/>
+                <field name="exception"/>
+                <field name="opened"/>
+                <field name="clicked"/>
+                <field name="replied"/>
+                <field name="bounced"/>
+                <field name="ignored"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_trace_view_form">
+        <field name="name">mailing.trace.form</field>
+        <field name="model">mailing.trace</field>
+        <field name="arch" type="xml">
+            <form string="Mail Statistics" create="0">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info text-center" role="alert" name="alert_mail_exception"
+                        attrs="{'invisible': [('exception', '=', False), ('bounced', '=', False)]}">
+                        <p>
+                            <strong><span name="trace_type_name_mail">This email</span>
+                            <span attrs="{'invisible': [('exception', '=', False)]}"> could not be sent</span>
+                            <span attrs="{'invisible': [('bounced', '=', False)]}"> appears to be invalid</span>
+                            </strong>
+                        </p>
+                    </div>
+                    <group>
+                        <group string="Recipient">
+                            <field name="trace_type" invisible="1"/>
+                            <field name="email"/>
+                            <field name="mail_mail_id_int"/>
+                            <field name="message_id"/>
+                        </group>
+                        <group string="Document">
+                            <field name="model"/>
+                            <field name="res_id"/>
+                            <field name="state_update"/>
+                        </group>
+                    </group>
+                    <group string="Marketing">
+                        <group>
+                            <field name="mass_mailing_id"/>
+                            <field name="campaign_id"/>
+                            <field name="sent"/>
+                            <field name="opened"/>
+                            <field name="clicked"/>
+                            <field name="replied"/>
+                        </group>
+                        <group>
+                            <field name="exception"/>
+                            <field name="ignored"/>
+                            <field name="bounced"/>
+                            <field name="failure_type"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_mail_mail_statistics_graph" model="ir.ui.view">
+        <field name="name">Mail Statistics Graph</field>
+        <field name="model">mailing.trace</field>
+        <field name="arch" type="xml">
+            <graph string="Mail Statistics" type="bar" stacked="True" interval="day">
+                <field name="state_update" type="row" interval="day"/>
+                <field name="state" type="row"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="mailing_trace_action" model="ir.actions.act_window">
+        <field name="name">Mailing Traces</field>
+        <field name="res_model">mailing.trace</field>
+        <field name="view_mode">tree,form,graph,pivot</field>
+        <field name="domain">[]</field>
+    </record>
+
+    <record id="action_view_mail_mail_statistics_mailing" model="ir.actions.act_window">
+        <field name="name">Mail Statistics</field>
+        <field name="res_model">mailing.trace</field>
+        <field name="view_mode">graph,tree,form,pivot</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_mass_mailing_id': active_id}</field>
+    </record>
+
+    <!-- Add in Technical/Email -->
+    <menuitem id="menu_email_statistics"
+        name="Mailing Traces"
+        parent="mass_mailing.mailing_mailing_menu_technical" sequence="2"
+        action="mailing_trace_action"/>
+</odoo>

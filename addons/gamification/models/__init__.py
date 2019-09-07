@@ -4,3 +4,5 @@
 from . import goal
 from . import challenge
 from . import badge
+from . import gamification_karma_rank
+from . import res_users

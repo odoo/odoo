@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ActivityViewHeader">
+    <thead>
+        <tr>
+            <th></th>
+            <th t-foreach="types" t-as="type" class="o_activity_type_cell" t-att-data-activity-type-id="type[0]" t-attf-width="#{100/types.length}%">
+                <div>
+                    <span><t t-esc="type[1]"/></span>
+                    <span t-if="type[2].length > 0" class="dropdown pull-right">
+                        <i class="fa fa-ellipsis-v fa-fw" data-toggle="dropdown"/>
+                        <div class="dropdown-menu">
+                            <div t-foreach="type[2]" t-as="template" title="This action will send an email." class="o_template_element o_send_mail_template" t-att-data-template-id="template.id">
+                                <i class="fa fa-envelope fa-fw"/> <t t-esc="template.name"/>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+                <div t-if="activityTypeIDs.length and !_.contains(activityTypeIDs, type[0])" class="mt24"/>
+            </th>
+        </tr>
+    </thead>
+</t>
+
+<t t-name="mail.ActivityViewRow">
+    <td t-att-data-res-id="resId" t-att-data-activity-type-id="activityTypeId"
+        t-attf-class="o_activity_summary_cell #{activityGroup.state ? activityGroup.state : 'o_activity_empty_cell'} #{_.contains(widget.filteredResIDs, resId) ? 'o_activity_filter_' + widget.activeFilter : ''}">
+        <i t-if="!activityGroup.state" title="Create" class="text-center fa fa-plus"/>
+    </td>
+</t>
+
+<t t-name="mail.ActivityViewFooter">
+    <tfoot>
+        <tr class="o_data_row">
+            <td class="o_record_selector p-3">
+                <span class="fa fa-plus pr-2"/><span>Schedule activity</span>
+            </td>
+        </tr>
+    </tfoot>
+</t>
+
+<t t-name="mail.ActivityView">
+    <div t-if="isEmpty" class="o_view_nocontent" role="alert">
+        <div class="o_nocontent_help">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p>
+        </div>
+    </div>
+    <table t-else="" class="table-bordered mb-5"/>
+</t>
+
+</templates>

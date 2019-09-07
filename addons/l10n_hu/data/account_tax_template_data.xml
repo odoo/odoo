@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="F27" model="account.tax.template">
+        <field name="description">27%</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Fizetendő - 27%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">27</field>
+        <field name="sequence">1</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_27"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_fiz_afa_27')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_467'),
+                'plus_report_line_ids': [ref('tax_report_fizetndo_27')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_fiz_afa_27')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_467'),
+                'minus_report_line_ids': [ref('tax_report_fizetndo_27')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="F18" model="account.tax.template">
+        <field name="description">18%</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Fizetendő – 18%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">18</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_18"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_fiz_afa_18')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_467'),
+                'plus_report_line_ids': [ref('tax_report_fizetndo_18')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_fiz_afa_18')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_467'),
+                'minus_report_line_ids': [ref('tax_report_fizetndo_18')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="F5" model="account.tax.template">
+        <field name="description">5%</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Fizetendő – 5%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_fiz_afa_5')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_467'),
+                'plus_report_line_ids': [ref('tax_report_fizetndo_5')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_fiz_afa_5')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_467'),
+                'minus_report_line_ids': [ref('tax_report_fizetndo_5')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="FA" model="account.tax.template">
+        <field name="description">AAM</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Fizetendő – Alanyi Adómentes</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_fiz_alanyi')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_fiz_alanyi')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="FT" model="account.tax.template">
+        <field name="description">TAM</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Fizetendő – Tárgyi Adómentes</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_fiz_targyi')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_fiz_targyi')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="FF" model="account.tax.template">
+        <field name="description">FORD</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Fizetendő – Fordított ÁFA</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_forditott')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_forditott')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="FEUO" model="account.tax.template">
+        <field name="description">Export</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Fizetendő – Export</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_fiz_export')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_fiz_export')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="FEU" model="account.tax.template">
+        <field name="description">EU</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Fizetendő – EU</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_fiz_eu')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_fiz_eu')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="V18" model="account.tax.template">
+        <field name="description">18%</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Visszaigényelhető – 18%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">18</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_18"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_viss_18')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_466'),
+                'plus_report_line_ids': [ref('tax_report_fizetndo_viss_18')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_viss_18')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_466'),
+                'minus_report_line_ids': [ref('tax_report_fizetndo_viss_18')]
+            }),
+        ]"/>
+    </record>
+
+    <record id="V27" model="account.tax.template">
+        <field name="description">27%</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Visszaigényelhető – 27%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">27</field>
+        <field name="sequence">1</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_27"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_viss_27')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_466'),
+                'plus_report_line_ids': [ref('tax_report_fizetndo_viss_27')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_viss_27')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_466'),
+                'minus_report_line_ids': [ref('tax_report_fizetndo_viss_27')]
+            }),
+        ]"/>
+    </record>
+
+    <record id="V5" model="account.tax.template">
+        <field name="description">5%</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Visszaigényelhető – 5%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_viss_5')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_466'),
+                'plus_report_line_ids': [ref('tax_report_fizetndo_viss_5')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_viss_5')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart_hu_466'),
+                'minus_report_line_ids': [ref('tax_report_fizetndo_viss_5')]
+            }),
+        ]"/>
+    </record>
+
+    <record id="VA" model="account.tax.template">
+        <field name="description">AAM</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Visszaigényelhető – Alanyi Adómentes</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_viss_alanyi')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_viss_alanyi')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="VT" model="account.tax.template">
+        <field name="description">TAM</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Visszaigényelhető – Tárgyi Adómentes</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_viss_targyi')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_viss_targyi')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="VAHT" model="account.tax.template">
+        <field name="description">ÁHT</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Visszaigényelhető – ÁFA hatályán kívüli</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="VEU" model="account.tax.template">
+        <field name="description">EU</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Visszaigényelhető – EU</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_viss')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_viss')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="VEUO" model="account.tax.template">
+        <field name="description">Import</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Visszaigényelhető – Import</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_import')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_import')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="VF" model="account.tax.template">
+        <field name="description">FORD</field>
+        <field name="chart_template_id" ref="hungarian_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Visszaigényelhető – Fordított ÁFA</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="sequence">2</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_afa_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_alap_forditott')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_alap_forditott')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+</odoo>

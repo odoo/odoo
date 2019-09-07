@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         self.ensure_one()
         lines = super(SaleOrder, self)._cart_find_product_line(product_id, line_id)
@@ -18,7 +17,6 @@ class SaleOrder(models.Model):
             domain.append(('event_ticket_id', '=', self.env.context.get("event_ticket_id")))
         return self.env['sale.order.line'].sudo().search(domain)
 
-    @api.multi
     def _website_product_id_change(self, order_id, product_id, qty=0):
         order = self.env['sale.order'].sudo().browse(order_id)
         if self._context.get('pricelist') != order.pricelist_id.id:
@@ -41,15 +39,14 @@ class SaleOrder(models.Model):
             values['product_id'] = ticket.product_id.id
             values['event_id'] = ticket.event_id.id
             values['event_ticket_id'] = ticket.id
-            values['price_unit'] = ticket.price_reduce or ticket.price
-            values['name'] = "%s\n%s" % (ticket.event_id.display_name, ticket.name)
+            values['price_unit'] = ticket.price_reduce
+            values['name'] = ticket.get_ticket_multiline_description_sale()
 
         # avoid writing related values that end up locking the product record
         values.pop('event_ok', None)
 
         return values
 
-    @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         OrderLine = self.env['sale.order.line']
 
@@ -96,3 +93,17 @@ class SaleOrder(models.Model):
             # add in return values the registrations, to display them on website (or not)
             values['attendee_ids'] = self.env['event.registration'].search([('sale_order_line_id', '=', line.id), ('state', '!=', 'cancel')]).ids
         return values
+
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    @api.depends('product_id.display_name', 'event_ticket_id.display_name')
+    def _compute_name_short(self):
+        """ If the sale order line concerns a ticket, we don't want the product name, but the ticket name instead.
+        """
+        super(SaleOrderLine, self)._compute_name_short()
+
+        for record in self:
+            if record.event_ticket_id:
+                record.name_short = record.event_ticket_id.display_name

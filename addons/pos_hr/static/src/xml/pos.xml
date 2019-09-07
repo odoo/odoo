@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="LoginScreenWidget">
+        <div class="login-overlay">
+            <div class="screen-login">
+                <div class="login-title"><small>Log in to </small><t t-esc="widget.pos.config.name"/></div>
+                <div class="login-body">
+                    <span class="login-element">
+                        <img class="login-barcode-img" src="/point_of_sale/static/img/barcode.png"/>
+                        <div class="login-barcode-text">Scan your badge</div>
+                    </span>
+                    <span class="login-or">or</span>
+                    <span class="login-element">
+                        <button class="login-button select-employee">Select Cashier</button>
+                    </span>
+                </div>
+                 <div class="login-footer">
+                     <small>
+                         <button class="login-button close-session">Close session</button>
+                     </small>
+                 </div>
+            </div>
+        </div>
+    </t>
+</templates>

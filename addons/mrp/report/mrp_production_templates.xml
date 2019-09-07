@@ -7,110 +7,92 @@
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row">
-                        <div class="col-xs-7">
-                            <h2>Production Order # : <span t-field="o.name"/></h2>
+                        <div class="col-7">
+                            <h2><span t-field="o.name"/></h2>
                         </div>
-                        <div class="col-xs-5">
+                        <div class="col-5">
                             <span class="text-right">
                                 <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:350px;height:60px"/>
                             </span>
                         </div>
                     </div>
                     <div class="row mt32 mb32">
-                        <div class="col-xs-3">
+                        <div class="col-3" t-if="o.origin">
                             <strong>Source Document:</strong><br/>
                             <span t-field="o.origin"/>
                         </div>
-                        <div class="col-xs-3">
-                            <strong>Product:</strong><br/>
-                            <span t-field="o.product_id.code"/>
-                            <span t-field="o.product_id.name"/>
-                        </div>
-                        <div class="col-xs-3">
-                            <strong>Quantity:</strong><br/>
-                            <span t-field="o.product_qty"/>
-                            <span t-field="o.product_uom_id.name" groups="product.group_uom"/>
+                        <div class="col-3">
+                            <strong>Responsible:</strong><br/>
+                            <span t-field="o.user_id"/>
                         </div>
                     </div>
 
                     <div class="row mt32 mb32">
-                        <div class="col-xs-3">
-                            <strong>Scheduled Date:</strong><br/>
-                            <span t-field="o.date_planned_start"/><span t-if="o.date_planned_finished"> - <span t-field="o.date_planned_finished"/></span>
+                        <div class="col-3">
+                            <strong>Finished Product:</strong><br/>
+                            <span t-field="o.product_id"/>
                         </div>
-                        <div class="col-xs-3">
-                            <strong>Printing date:</strong><br/>
-                            <span t-esc="time.strftime('%Y-%m-%d')"
-                                  t-options='{"widget": "date"}'/>
-                        </div>
-                        <div class="col-xs-3" t-if="'sale_ref' in o">
-                            <strong>Partner Ref:</strong><br/>
-                            <span t-esc="'sale_ref' in o and o.sale_ref"/>
-                        </div>
-                        <div class="col-xs-3" t-if="'sale_name' in o">
-                            <strong>SO Number:</strong><br/>
-                            <span t-esc="'sale_name' in o and o.sale_name"/>
+                        <div class="col-3">
+                            <strong>Quantity to Produce:</strong><br/>
+                            <span t-field="o.product_qty"/>
+                            <span t-field="o.product_uom_id.name" groups="uom.group_uom"/>
                         </div>
                     </div>
 
                     <div t-if="o.workorder_ids">
-                        <strong>Work Orders</strong>
-                        <table class="table table-condensed">
+                        <h3>
+                            <t t-if="o.state == 'done'">Operations Done</t>
+                            <t t-else="">Operations Planned</t>
+                        </h3>
+                        <table class="table table-sm">
                             <tr>
-                                <td class="text-center"><strong>Name</strong></td>
-                                <td class="text-center"><strong>WorkCenter</strong></td>
-                                <td class="text-center"><strong>No. Of Minutes</strong></td>
+                                <th><strong>Operation</strong></th>
+                                <th><strong>WorkCenter</strong></th>
+                                <th><strong>No. Of Minutes</strong></th>
                             </tr>
                             <tr t-foreach="o.workorder_ids" t-as="line2">
-                                <td class="text-center"><span t-field="line2.name"/></td>
-                                <td class="text-center"><span t-field="line2.workcenter_id.name"/></td>
-                                <td class="text-center"><span t-field="line2.duration_expected"/></td>
+                                <td><span t-field="line2.name"/></td>
+                                <td><span t-field="line2.workcenter_id.name"/></td>
+                                <td>
+                                    <span t-if="o.state != 'done'" t-field="line2.duration_expected"/>
+                                    <span t-if="o.state == 'done'" t-field="line2.duration"/>
+                                </td>
                             </tr>
                         </table>
                     </div>
 
-                    <h3 t-if="o.move_raw_ids">Bill Of Material</h3>
+                    <h3 t-if="o.move_raw_ids">
+                        <t t-if="o.state == 'done'">
+                            Consumed Products
+                        </t>
+                        <t t-else="">
+                            Products to Consume
+                        </t>
+                    </h3>
 
-                    <table class="table table-condensed" t-if="o.move_raw_ids">
+                    <table class="table table-sm" t-if="o.move_raw_ids">
+                        <t t-set="has_product_barcode" t-value="any(o.move_raw_ids.filtered(lambda x: x.product_id.barcode))"/>
                         <thead>
                             <tr>
-                                <th><strong>Product</strong></th>
-                                <th class="text-right"><strong>Quantity</strong></th>
-                                <th class="text-center" groups="stock.group_stock_multi_locations">
-                                    <strong>Source Location</strong>
-                                </th>
-                                <th class="text-center" groups="stock.group_stock_multi_locations">
-                                    <strong>Destination Location</strong>
-                                </th>
-                                <th class="text-center">
-                                    <strong>Barcode</strong>
-                                </th>
+                                <th>Product</th>
+                                <th t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">Quantity</th>
+                                <th t-if="has_product_barcode" width="15%" class="text-center">Barcode</th>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-if="o.move_raw_ids">
-                                <tr>
-                                    <td colspan="4"><strong>Products to Consume</strong></td>
-                                </tr>
-                                <tr t-foreach="o.move_raw_ids" t-as="line">
+                                <tr t-foreach="o.move_raw_ids" t-as="raw_line">
                                     <td>
-                                        <span t-field="line.product_id.code"/>
-                                        <span t-field="line.product_id.name"/>
+                                        <span t-field="raw_line.product_id"/>
                                     </td>
-                                    <td class="text-right">
-                                        <span t-field="line.product_uom_qty"/>
-                                        <span t-field="line.product_uom.name" groups="product.group_uom"/>
+                                    <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">
+                                        <span t-esc="raw_line.product_uom_qty"/>
+                                        <span t-field="raw_line.product_uom" groups="uom.group_uom"/>
                                     </td>
-                                    <td class="text-center" groups="stock.group_stock_multi_locations">
-                                        <span t-field="line.location_id.name"/>
-                                    </td>
-                                    <td class="text-center" groups="stock.group_stock_multi_locations">
-                                        <span t-field="line.location_dest_id.name"/>
-                                    </td>
-                                    <td class="text-center">
-                                        <span t-if="line.product_id.barcode">
-                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', line.product_id.barcode, 600, 100)" style="width:300px;height:50px"/>
-                                        </span>
+                                    <td t-if="has_product_barcode" width="15%" class="text-center">
+                                        <t t-if="raw_line.product_id.barcode">
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', raw_line.product_id.barcode, 600, 100)" style="width:100%;height:35px" alt="Barcode"/>
+                                        </t>
                                     </td>
                                 </tr>
                             </t>
@@ -121,5 +103,72 @@
             </t>
         </t>
     </t>
+</template>
+
+<template id="label_production_view_pdf">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="o">
+            <div class="page">
+                <table class="table table-condensed" style="border-bottom: 0px solid white !important;width: 3in;" t-if="o.move_finished_ids">
+                    <t t-set="lines" t-value="o.move_finished_ids"/>
+                    <t t-foreach="lines" t-as="line">
+                        <t t-set="move_lines" t-value="line.move_line_ids.filtered(lambda x: x.state != 'done' and x.product_qty)"/>
+                        <t t-if="o.state == 'done'">
+                            <t t-set="move_lines" t-value="line.move_line_ids.filtered(lambda x: x.state == 'done' and x.qty_done)"/>
+                        </t>
+                        <t t-foreach="move_lines" t-as="ml">
+                            <tr>
+                                <th style="text-align: left;">
+                                    <span t-field="line.product_id"/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Quantity:
+                                    <span t-esc="ml.product_uom_qty" t-if="ml.state !='done'"/>
+                                    <span t-esc="ml.qty_done"  t-if="ml.state =='done'"/>
+                                    <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; vertical-align: middle;" class="col-5">
+                                    <t t-if="ml.lot_id">
+                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', ml.lot_id.name, 600, 100)" style="width:100%;height:35px" alt="Barcode"/>
+                                        <span t-field="ml.lot_id.name"/>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; vertical-align: middle;" class="col-5">
+                                    <t t-if="line.product_id.barcode and not ml.lot_id">
+                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', line.product_id.barcode, 600, 100)" style="width:100%;height:20%;" alt="Barcode"/>
+                                        <span t-field="line.product_id.barcode"/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </table>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </t>
+</template>
+
+<template id="production_message">
+    <t t-if="move.move_id.raw_material_production_id">
+        <t t-set="message">Consumed</t>
+    </t>
+    <t t-if="move.move_id.production_id">
+        <t t-set="message">Produced</t>
+    </t>
+    <strong><t t-esc="message"/> quantity has been updated.</strong>
+</template>
+
+<template id="track_production_move_template">
+    <div>
+        <t t-call="mrp.production_message"/>
+        <t t-call="stock.message_body"/>
+    </div>
 </template>
 </odoo>

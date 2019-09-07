@@ -21,16 +21,16 @@ Wizards provided by this module:
 --------------------------------
     * Partner VAT Intra: Enlist the partners with their related VAT and invoiced
       amounts. Prepares an XML file format.
-      
+
         **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Partner VAT Intra
     * Periodical VAT Declaration: Prepares an XML file for Vat Declaration of
       the Main company of the User currently Logged in.
-      
+
         **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Periodical VAT Declaration
     * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat
       Declaration of the Main company of the User currently Logged in Based on
       Fiscal year.
-      
+
         **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
@@ -38,24 +38,25 @@ Wizards provided by this module:
     'depends': [
         'account',
         'base_iban',
+        'base_vat',
         'l10n_multilang',
     ],
     'data': [
         'data/account_chart_template_data.xml',
+        'data/account.account.template.csv',
         'data/account_pcmn_belgium_data.xml',
+        'data/account_data.xml',
+        'data/account_tax_report_data.xml',
         'data/account_tax_template_data.xml',
         'data/l10n_be_sequence_data.xml',
         'data/fiscal_templates_data.xml',
         'data/account_fiscal_position_tax_template_data.xml',
         'data/account_reconcile_model_template.xml',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_configure_data.xml',
         'data/menuitem_data.xml',
     ],
     'demo': [
-        'demo/l10n_be_demo.yml',
-        '../account/demo/account_bank_statement.yml',
-        '../account/demo/account_invoice_demo.yml',
+        'demo/l10n_be_demo.xml',
     ],
-    'website': 'https://www.odoo.com/page/accounting',
     'post_init_hook': 'load_translations',
 }

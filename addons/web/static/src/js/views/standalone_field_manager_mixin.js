@@ -1,13 +1,19 @@
 odoo.define('web.StandaloneFieldManagerMixin', function (require) {
 "use strict";
 
-/**
- * The StandaloneFieldManagerMixin is a mixin, designed to be used by a widget
- * that instanciates its own field widgets.
- */
 
 var FieldManagerMixin = require('web.FieldManagerMixin');
 
+/**
+ * The StandaloneFieldManagerMixin is a mixin, designed to be used by a widget
+ * that instanciates its own field widgets.
+ *
+ * @mixin
+ * @name StandaloneFieldManagerMixin
+ * @mixes FieldManagerMixin
+ * @property {Function} _confirmChange
+ * @property {Function} _registerWidget
+ */
 var StandaloneFieldManagerMixin = _.extend({}, FieldManagerMixin, {
 
     /**
@@ -32,7 +38,7 @@ var StandaloneFieldManagerMixin = _.extend({}, FieldManagerMixin, {
      * @param {string} id basicModel Id for the changed record
      * @param {string[]} fields the fields (names) that have been changed
      * @param {OdooEvent} event the event that triggered the change
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _confirmChange: function (id, fields, event) {
         var result = FieldManagerMixin._confirmChange.apply(this, arguments);

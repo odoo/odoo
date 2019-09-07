@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.stock.account</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <div id="production_lot_info" position="after">
+                    <h2>Valuation</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Affect landed costs on reception operations and split them among products to update their cost price.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_stock_landed_costs"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_stock_landed_costs"/>
+                                <div class="text-muted">
+                                    Add additional cost (transport, customs, ...) in the value of the product.
+                                </div>
+                                <div class="content-group">
+                                    <div name="landed_cost_info"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

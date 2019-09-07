@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_tax_report_line_tree" model="ir.ui.view">
+            <field name="name">account.tax.report.line.tree</field>
+            <field name="model">account.tax.report.line</field>
+            <field name="arch" type="xml">
+                <tree create="1" delete="1">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_tax_report_line_form" model="ir.ui.view">
+            <field name="name">account.tax.report.line.form</field>
+            <field name="model">account.tax.report.line</field>
+            <field name="arch" type="xml">
+                <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="country_id" invisible="1"/>
+                            <field name="sequence" invisible="1"/>
+                            <field name="name"/>
+                            <field name="tag_name"/>
+                        </group>
+                        <group>
+                            <field name="parent_id" domain="[('country_id','=',country_id)]"/>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="formula"/>
+                    </group>
+                    <group string="Sublines">
+                        <field name="children_line_ids" context="{'default_country_id': country_id}">
+                            <form>
+                                <group>
+                                    <group>
+                                        <field name="country_id" invisible="1"/>
+                                        <field name="sequence" invisible="1"/>
+                                        <field name="name"/>
+                                        <field name="tag_name"/>
+                                    </group>
+                                    <group>
+                                        <field name="code"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="formula"/>
+                                </group>
+                                <group string="Sublines">
+                                    <field name="children_line_ids" context="{'form_view_ref': 'account.account_tax_report_line_form', 'default_country_id': country_id}"/>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_tax_report_line_search" model="ir.ui.view">
+            <field name="name">account.tax.report.line.search</field>
+            <field name="model">account.tax.report.line</field>
+            <field name="arch" type="xml">
+                <search>
+                    <group expand="0" string="Group By">
+                        <filter string="Country" name="groupby_country" context="{'group_by': 'country_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_configure_tax_report" model="ir.actions.act_window">
+            <field name="name">Configure Tax Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.tax.report.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="account_tax_report_line_tree"/>
+            <field name="context">{'search_default_groupby_country': True}</field>
+        </record>
+
+
+        <menuitem id="menu_configure_tax_report" name="Tax Report" parent="account.account_management_menu" action="account.action_configure_tax_report" groups="base.group_no_one"/>
+
+    </data>
+</odoo>

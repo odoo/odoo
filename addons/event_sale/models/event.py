@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
-from odoo.addons import decimal_precision as dp
+from odoo.tools import float_is_zero
 
 
 class EventType(models.Model):
@@ -53,6 +53,13 @@ class Event(models.Model):
                 })
                 for ticket in self.event_type_id.event_ticket_ids]
 
+    def _is_event_registrable(self):
+        if super(Event, self)._is_event_registrable():
+            self.ensure_one()
+            return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
+        else:
+            return False
+
 
 class EventTicket(models.Model):
     _name = 'event.event.ticket'
@@ -64,15 +71,16 @@ class EventTicket(models.Model):
     name = fields.Char(string='Name', required=True, translate=True)
     event_type_id = fields.Many2one('event.type', string='Event Category', ondelete='cascade')
     event_id = fields.Many2one('event.event', string="Event", ondelete='cascade')
+    company_id = fields.Many2one('res.company', related='event_id.company_id')
     product_id = fields.Many2one('product.product', string='Product',
         required=True, domain=[("event_ok", "=", True)],
         default=_default_product_id)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
-    price = fields.Float(string='Price', digits=dp.get_precision('Product Price'))
+    price = fields.Float(string='Price', digits='Product Price')
     deadline = fields.Date(string="Sales End")
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
 
-    price_reduce = fields.Float(string="Price Reduce", compute="_compute_price_reduce", digits=dp.get_precision('Product Price'))
+    price_reduce = fields.Float(string="Price Reduce", compute="_compute_price_reduce", digits='Product Price')
     price_reduce_taxinc = fields.Float(compute='_get_price_reduce_tax', string='Price Reduce Tax inc')
     # seats fields
     seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')],
@@ -85,7 +93,6 @@ class EventTicket(models.Model):
     seats_unconfirmed = fields.Integer(string='Unconfirmed Seat Reservations', compute='_compute_seats', store=True)
     seats_used = fields.Integer(compute='_compute_seats', store=True)
 
-    @api.multi
     def _compute_is_expired(self):
         for record in self:
             if record.deadline:
@@ -94,7 +101,6 @@ class EventTicket(models.Model):
             else:
                 record.is_expired = False
 
-    @api.multi
     def _compute_price_reduce(self):
         for record in self:
             product = record.product_id
@@ -108,7 +114,6 @@ class EventTicket(models.Model):
             taxes = tax_ids.compute_all(record.price_reduce, record.event_id.company_id.currency_id, 1.0, product=record.product_id)
             record.price_reduce_taxinc = taxes['total_included']
 
-    @api.multi
     @api.depends('seats_max', 'registration_ids.state')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
@@ -137,41 +142,67 @@ class EventTicket(models.Model):
             if ticket.seats_max > 0:
                 ticket.seats_available = ticket.seats_max - (ticket.seats_reserved + ticket.seats_used)
 
-    @api.multi
     @api.constrains('registration_ids', 'seats_max')
     def _check_seats_limit(self):
         for record in self:
             if record.seats_max and record.seats_available < 0:
-                raise ValidationError(_('No more available seats for the ticket'))
+                raise ValidationError(_('No more available seats for this ticket type.'))
 
     @api.constrains('event_type_id', 'event_id')
     def _constrains_event(self):
         if any(ticket.event_type_id and ticket.event_id for ticket in self):
-            raise UserError(_('Ticket should belong to either event category or event but not both'))
+            raise UserError(_('Ticket cannot belong to both the event category and the event itself.'))
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
         self.price = self.product_id.list_price or 0
 
+    def get_ticket_multiline_description_sale(self):
+        """ Compute a multiline description of this ticket, in the context of sales.
+            It will often be used as the default description of a sales order line referencing this ticket.
+
+        1. the first line is the ticket name
+        2. the second line is the event name (if it exists, which should be the case with a normal workflow) or the product name (if it exists)
+
+        We decided to ignore entirely the product name and the product description_sale because they are considered to be replaced by the ticket name and event name.
+            -> the workflow of creating a new event also does not lead to filling them correctly, as the product is created through the event interface
+        """
+
+        name = self.display_name
+
+        if self.event_id:
+            name += '\n' + self.event_id.display_name
+        elif self.product_id:
+            name += '\n' + self.product_id.display_name
+
+        return name
+
 
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
 
-    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
+    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', readonly=True, states={'draft': [('readonly', False)]})
     # in addition to origin generic fields, add real relational fields to correctly
     # handle attendees linked to sales orders and their lines
     # TDE FIXME: maybe add an onchange on sale_order_id + origin
     sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade')
+    campaign_id = fields.Many2one('utm.campaign', 'Campaign', related="sale_order_id.campaign_id", store=True)
+    source_id = fields.Many2one('utm.source', 'Source', related="sale_order_id.source_id", store=True)
+    medium_id = fields.Many2one('utm.medium', 'Medium', related="sale_order_id.medium_id", store=True)
 
-    @api.multi
+    @api.onchange('event_id')
+    def _onchange_event_id(self):
+        # We reset the ticket when keeping it would lead to an inconstitent state.
+        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
+            self.event_ticket_id = None
+
     @api.constrains('event_ticket_id', 'state')
     def _check_ticket_seats_limit(self):
         for record in self:
             if record.event_ticket_id.seats_max and record.event_ticket_id.seats_available < 0:
                 raise ValidationError(_('No more available seats for this ticket'))
 
-    @api.multi
     def _check_auto_confirmation(self):
         res = super(EventRegistration, self)._check_auto_confirmation()
         if res:
@@ -206,3 +237,22 @@ class EventRegistration(models.Model):
                 'sale_order_line_id': line_id.id,
             })
         return att_data
+
+    def summary(self):
+        res = super(EventRegistration, self).summary()
+        if self.event_ticket_id.product_id.image_128:
+            res['image'] = '/web/image/product.product/%s/image_128' % self.event_ticket_id.product_id.id
+        information = res.setdefault('information', {})
+        information.append((_('Name'), self.name))
+        information.append((_('Ticket'), self.event_ticket_id.name or _('None')))
+        order = self.sale_order_id.sudo()
+        order_line = self.sale_order_line_id.sudo()
+        if not order or float_is_zero(order_line.price_total, precision_digits=order.currency_id.rounding):
+            payment_status = _('Free')
+        elif not order.invoice_ids or any(invoice.state != 'paid' for invoice in order.invoice_ids):
+            payment_status = _('To pay')
+            res['alert'] = _('The registration must be paid')
+        else:
+            payment_status = _('Paid')
+        information.append((_('Payment'), payment_status))
+        return res

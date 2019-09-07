@@ -1,0 +1,35 @@
+//
+// Color system
+//
+
+// Bootstrap default for $yiq-text-light and $yiq-text-dark are $white and
+// $gray-900. What we want to do is use the user text color as light or dark
+// depending on its contrast. Themes should be careful if they decide to
+// override those values. This would be simplified by giving the user the choice
+// for its dark *and* light text colors.
+$-light: if(palette-gray('white') != null, palette-gray('white'), #FFFFFF);
+$-dark: if(palette-gray('900') != null, palette-gray('900'), #212529);
+$-text: if(palette-color('text') != null, palette-color('text'), $-dark);
+$-is-light: (o-get-most-contrast($-text, $-light, $-dark, palette-color('body'), $cross-mix: false) == $-dark);
+$yiq-text-light: if($-is-light, palette-color('text'), null) !default;
+$yiq-text-dark: if($-is-light, null, palette-color('text')) !default;
+
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-bg: palette-color('body') !default;
+$body-color: palette-color('text') !default;
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$font-family-sans-serif: $o-theme-font !default;
+
+$headings-font-family: $o-theme-headings-font !default;
+$headings-color: palette-color('h1') !default;
+
+// Jumbotron
+
+$jumbotron-bg: transparent !default;

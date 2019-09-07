@@ -5,45 +5,35 @@ import time
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.exceptions import ValidationError
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class ISRTest(AccountingTestCase):
 
     def create_invoice(self, currency_to_use='base.CHF'):
         """ Generates a test invoice """
-        account_receivable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
-        currency = self.env.ref(currency_to_use)
-        partner_agrolait = self.env.ref("base.res_partner_2")
-        product = self.env.ref("product.product_product_4")
-        account_revenue = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1)
-
-        invoice = self.env['account.invoice'].create({
-            'partner_id': partner_agrolait.id,
-            'reference_type': 'none',
-            'currency_id': currency.id,
-            'name': 'invoice to client',
-            'account_id': account_receivable.id,
+        invoice = self.env['account.move'].with_context(default_type='out_invoice').create({
             'type': 'out_invoice',
-            'date_invoice': time.strftime('%Y') + '-12-22',
+            'partner_id': self.env.ref("base.res_partner_2").id,
+            'currency_id': self.env.ref(currency_to_use).id,
+            'invoice_date': time.strftime('%Y') + '-12-22',
+            'invoice_line_ids': [
+                (0, 0, {
+                    'product_id': self.env.ref("product.product_product_4").id,
+                    'quantity': 1,
+                    'price_unit': 42,
+                }),
+            ],
         })
-
-        self.env['account.invoice.line'].create({
-            'product_id': product.id,
-            'quantity': 1,
-            'price_unit': 42,
-            'invoice_id': invoice.id,
-            'name': 'something',
-            'account_id': account_revenue.id,
-        })
-
-        invoice.action_invoice_open()
+        invoice.post()
 
         return invoice
 
     def create_account(self, number):
         """ Generates a test res.partner.bank. """
         return self.env['res.partner.bank'].create({
-            'acc_number': number
+            'acc_number': number,
         })
 
     def print_isr(self, invoice):

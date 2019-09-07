@@ -3,20 +3,17 @@
 # * hr_recruitment_survey
 # 
 # Translators:
-# fausthuang <faust_huang@hotmail.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# xiangye xiao <xiangye.xiao@gmail.com>, 2016
+# Martin Trigaux, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: xiangye xiao <xiangye.xiao@gmail.com>, 2016\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,18 +62,22 @@ msgid "71+"
 msgstr "71+"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid ""
 "<span class=\"o_stat_text\">Print</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">打印</span>\n"
+"                        <span class=\"o_stat_text\">面谈</span>"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid ""
 "<span class=\"o_stat_text\">Start</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">开始</span>\n"
+"                        <span class=\"o_stat_text\">面谈</span>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.recruitment_2_4
@@ -84,7 +85,7 @@ msgid "Activities"
 msgstr "活动"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid "Answer related job question"
 msgstr "回答有关就业问题"
 
@@ -99,8 +100,8 @@ msgid "Basic information"
 msgstr "基本信息"
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant_survey_id
-#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job_survey_id
+#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
+#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
 msgid ""
 "Choose an interview form for this job position and you will be able to "
 "print/answer this interview from all applicants who apply for this job"
@@ -112,8 +113,8 @@ msgid "Desk space"
 msgstr "桌面空间"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
 msgstr "显示面试界面"
 
@@ -150,7 +151,7 @@ msgstr "免费的东西，例如茶、咖啡和文具"
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.recruitment_1_1
 msgid "From which university will you graduate?"
-msgstr "从该大学将毕业了吗？"
+msgstr "是从哪所大学毕业"
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_2
@@ -195,15 +196,15 @@ msgid "Important"
 msgstr "重要"
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job_survey_id
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interview Form"
 msgstr "面试表单"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_config_settings_view_form_inherit_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
 msgid "Interview Forms"
-msgstr ""
+msgstr "面试表单"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
@@ -226,7 +227,7 @@ msgid "Most important"
 msgstr "最重要的"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "No Interview Form"
 msgstr "没有面试表格"
 
@@ -256,9 +257,9 @@ msgid "Perks such as free parking, gym passes"
 msgstr "福利如：免费停车场、健身房"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid "Print interview report"
-msgstr "打印面试报告"
+msgstr "打印面试表单"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.recruitment_3_1
@@ -276,7 +277,7 @@ msgid "Regular meetings"
 msgstr "定期会议"
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant_response_id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_id
 msgid "Response"
 msgstr "回复"
 
@@ -291,7 +292,7 @@ msgid "State of the art technology"
 msgstr "最先进的技术状态"
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant_survey_id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
 msgstr "问卷"
 
@@ -308,7 +309,7 @@ msgid "The answer you entered has an invalid format."
 msgstr "您输入的答案格式不正确。"
 
 #. module: hr_recruitment_survey
-#: model:survey.survey,description:hr_recruitment_survey.recruitment_form
+#: model_terms:survey.survey,description:hr_recruitment_survey.recruitment_form
 msgid ""
 "This form is intended to help the responsible of a recruitment interview."
 msgstr "此界面是为了帮助招聘面试的负责人"
@@ -338,4 +339,4 @@ msgstr "你属于哪个年龄段？"
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.recruitment_1_2
 msgid "What is your gender?"
-msgstr "您的性别是？"
+msgstr "您的性别是"

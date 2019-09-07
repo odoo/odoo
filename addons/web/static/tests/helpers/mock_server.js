@@ -2,21 +2,23 @@ odoo.define('web.MockServer', function (require) {
 "use strict";
 
 var Class = require('web.Class');
-var data_manager = require('web.data_manager');
 var Domain = require('web.Domain');
-var pyeval = require('web.pyeval');
-var utils = require('web.utils');
+var pyUtils = require('web.py_utils');
 
 var MockServer = Class.extend({
     /**
      * @constructor
      * @param {Object} data
      * @param {Object} options
-     * @param {integer} [options.logLevel=0]
+     * @param {Object[]} [options.actions=[]]
+     * @param {Object} [options.archs={}] dict of archs with keys being strings like
+     *    'model,id,viewType'
+     * @param {boolean} [options.debug=false] logs RPCs if set to true
      * @param {string} [options.currentDate] formatted string, default to
      *   current day
      */
     init: function (data, options) {
+        options = options || {};
         this.data = data;
         for (var modelName in this.data) {
             var model = this.data[modelName];
@@ -26,11 +28,11 @@ var MockServer = Class.extend({
             if (!('display_name' in model.fields)) {
                 model.fields.display_name = {string: "Display Name", type: "char"};
             }
+            if (!('__last_update' in model.fields)) {
+                model.fields.__last_update = {string: "Last Modified on", type: "datetime"};
+            }
             if (!('name' in model.fields)) {
                 model.fields.name = {string: "Name", type: "char", default: "name"};
-            }
-            for (var fieldName in model.onchanges) {
-                model.fields[fieldName].onChange = "1";
             }
             model.records = model.records || [];
 
@@ -40,12 +42,12 @@ var MockServer = Class.extend({
             }
         }
 
-        // 0 is for no log
-        // 1 is for short
-        // 2 is for detailed
-        this.logLevel = (options && options.logLevel) || 0;
+        this.debug = options.debug;
 
         this.currentDate = options.currentDate || moment().format("YYYY-MM-DD");
+
+        this.actions = options.actions || [];
+        this.archs = options.archs || {};
     },
 
     //--------------------------------------------------------------------------
@@ -53,27 +55,44 @@ var MockServer = Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Mocks a fields_get RPC for a given model.
+     *
+     * @param {string} model
+     * @returns {Object}
+     */
+    fieldsGet: function (model) {
+        return this.data[model].fields;
+    },
+    /**
      * helper: read a string describing an arch, and returns a simulated
      * 'field_view_get' call to the server. Calls processViews() of data_manager
      * to mimick the real behavior of a call to loadViews().
      *
-     * @param {string|Object} arch a string OR a parsed xml document
-     * @param {string} model a model name (that should be in this.data)
+     * @param {Object} params
+     * @param {string|Object} params.arch a string OR a parsed xml document
+     * @param {Number} [params.view_id] the id of the arch's view
+     * @param {string} params.model a model name (that should be in this.data)
+     * @param {Object} params.toolbar the actions possible in the toolbar
+     * @param {Object} [params.viewOptions] the view options set in the test (optional)
      * @returns {Object} an object with 2 keys: arch and fields
      */
-    fieldsViewGet: function (arch, model, toolbar) {
+    fieldsViewGet: function (params) {
+        var model = params.model;
+        var toolbar = params.toolbar;
+        var viewId = params.view_id;
+        var viewOptions = params.viewOptions || {};
         if (!(model in this.data)) {
             throw new Error('Model ' + model + ' was not defined in mock server data');
         }
         var fields = $.extend(true, {}, this.data[model].fields);
-        var fvg = this._fieldsViewGet(arch, model, fields);
-        var fields_views = {};
-        fields_views[fvg.type] = fvg;
-        data_manager.processViews(fields_views, fields);
+        var fvg = this._fieldsViewGet(params.arch, model, fields, viewOptions.context);
         if (toolbar) {
             fvg.toolbar = toolbar;
         }
-        return fields_views[fvg.type];
+        if (viewId) {
+            fvg.view_id = viewId;
+        }
+        return fvg;
     },
     /**
      * Simulate a complete RPC call. This is the main method for this class.
@@ -84,26 +103,47 @@ var MockServer = Class.extend({
      *
      * @param {string} route
      * @param {Object} args
-     * @returns {Deferred<any>}
+     * @returns {Promise<any>}
      *          Resolved with the result of the RPC, stringified then parsed.
-     *          If the RPC should fail, the deferred will be rejected with the
+     *          If the RPC should fail, the promise will be rejected with the
      *          error object, stringified then parsed.
      */
     performRpc: function (route, args) {
-        var logLevel = this.logLevel;
+        var debug = this.debug;
         args = JSON.parse(JSON.stringify(args));
-        if (logLevel === 2) {
+        if (debug) {
             console.log('%c[rpc] request ' + route, 'color: blue; font-weight: bold;', args);
+            args = JSON.parse(JSON.stringify(args));
         }
-        return this._performRpc(route, args).then(function (result) {
+        var def = this._performRpc(route, args);
+
+        var abort = def.abort || def.reject;
+        if (abort) {
+            abort = abort.bind(def);
+        } else {
+            abort = function () {
+                throw new Error("Can't abort this request");
+            };
+        }
+
+        def = def.then(function (result) {
             var resultString = JSON.stringify(result || false);
-            if (logLevel === 1) {
-                console.log('Mock: ' + route, JSON.parse(resultString));
-            } else if (logLevel === 2) {
+            if (debug) {
                 console.log('%c[rpc] response' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
             }
             return JSON.parse(resultString);
+        }, function (result) {
+            var message = result && result.message;
+            var event = result && result.event;
+            var errorString = JSON.stringify(message || false);
+            if (debug) {
+                console.log('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
+            }
+            return Promise.reject({message: errorString, event: event || $.Event()});
         });
+
+        def.abort = abort;
+        return def;
     },
 
     //--------------------------------------------------------------------------
@@ -151,41 +191,47 @@ var MockServer = Class.extend({
      * 'fields_view_get' call to the server.
      *
      * @private
-     * @param {string|Object} arch a string OR a parsed xml document
+     * @param {string} arch a string OR a parsed xml document
      * @param {string} model a model name (that should be in this.data)
      * @param {Object} fields
+     * @param {Object} context
      * @returns {Object} an object with 2 keys: arch and fields (the fields
      *   appearing in the views)
      */
-    _fieldsViewGet: function (arch, model, fields) {
+    _fieldsViewGet: function (arch, model, fields, context) {
         var self = this;
         var modifiersNames = ['invisible', 'readonly', 'required'];
         var onchanges = this.data[model].onchanges || {};
         var fieldNodes = {};
+        var groupbyNodes = {};
 
+        var doc;
         if (typeof arch === 'string') {
-            var doc = $.parseXML(arch).documentElement;
-            arch = utils.xml_to_json(doc, true);
+            doc = $.parseXML(arch).documentElement;
+        } else {
+            doc = arch;
         }
 
-        var inTreeView = (arch.tag === 'tree');
+        var inTreeView = (doc.tagName === 'tree');
 
-        this._traverse(arch, function (node) {
-            if (typeof node === "string") {
+        this._traverse(doc, function (node) {
+            if (node.nodeType === Node.TEXT_NODE) {
                 return false;
             }
             var modifiers = {};
 
-            var isField = (node.tag === 'field');
+            var isField = (node.tagName === 'field');
+            var isGroupby = (node.tagName === 'groupby');
 
             if (isField) {
-                fieldNodes[node.attrs.name] = node;
+                var fieldName = node.getAttribute('name');
+                fieldNodes[fieldName] = node;
 
                 // 'transfer_field_to_modifiers' simulation
-                var field = fields[node.attrs.name];
+                var field = fields[fieldName];
 
                 if (!field) {
-                    throw new Error("Field " + node.attrs.name + " does not exist");
+                    throw new Error("Field " + fieldName + " does not exist");
                 }
                 var defaultValues = {};
                 var stateExceptions = {};
@@ -193,7 +239,7 @@ var MockServer = Class.extend({
                     stateExceptions[attr] = [];
                     defaultValues[attr] = !!field[attr];
                 });
-                _.each(field['states'] || {}, function (modifs, state) {
+                _.each(field.states || {}, function (modifs, state) {
                     _.each(modifs, function (modif) {
                         if (defaultValues[modif[0]] !== modif[1]) {
                             stateExceptions[modif[0]].append(state);
@@ -207,38 +253,52 @@ var MockServer = Class.extend({
                         modifiers[attr] = defaultValue;
                     }
                 });
+            } else if (isGroupby && !node._isProcessed) {
+                var groupbyName = node.getAttribute('name');
+                fieldNodes[groupbyName] = node;
+                groupbyNodes[groupbyName] = node;
             }
 
             // 'transfer_node_to_modifiers' simulation
-            if (node.attrs.attrs) {
-                var attrs = pyeval.py_eval(node.attrs.attrs);
+            var attrs = node.getAttribute('attrs');
+            if (attrs) {
+                attrs = pyUtils.py_eval(attrs);
                 _.extend(modifiers, attrs);
-                delete node.attrs.attrs;
             }
-            if (node.attrs.states) {
+
+            var states = node.getAttribute('states');
+            if (states) {
                 if (!modifiers.invisible) {
                     modifiers.invisible = [];
                 }
-                modifiers.invisible.push(["state", "not in", node.attrs.states.split(",")]);
+                modifiers.invisible.push(["state", "not in", states.split(",")]);
             }
             _.each(modifiersNames, function (a) {
-                if (node.attrs[a]) {
-                    var v = pyeval.py_eval(node.attrs[a]) ? true: false;
+                var mod = node.getAttribute(a);
+                if (mod) {
+                    var pyevalContext = window.py.dict.fromJSON(context || {});
+                    var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true: false;
                     if (inTreeView && a === 'invisible') {
-                        modifiers['tree_invisible'] = v;
+                        modifiers.column_invisible = v;
                     } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
                         modifiers[a] = v;
                     }
                 }
             });
 
-            // 'transfer_modifiers_to_node' simulation
             _.each(modifiersNames, function (a) {
                 if (a in modifiers && (!!modifiers[a] === false || (_.isArray(modifiers[a]) && !modifiers[a].length))) {
                     delete modifiers[a];
                 }
             });
-            node.attrs.modifiers = JSON.stringify(modifiers);
+
+            if (Object.keys(modifiers).length) {
+                node.setAttribute('modifiers', JSON.stringify(modifiers));
+            }
+
+            if (isGroupby && !node._isProcessed) {
+                return false;
+            }
 
             return !isField;
         });
@@ -246,25 +306,50 @@ var MockServer = Class.extend({
         var relModel, relFields;
         _.each(fieldNodes, function (node, name) {
             var field = fields[name];
+            if (field.type === "many2one" || field.type === "many2many") {
+                var canCreate = node.getAttribute('can_create');
+                node.setAttribute('can_create', canCreate || "true");
+                var canWrite = node.getAttribute('can_write');
+                node.setAttribute('can_write', canWrite || "true");
+            }
             if (field.type === "one2many" || field.type === "many2many") {
                 field.views = {};
-                _.each(node.children, function (children) {
+                _.each(node.childNodes, function (children) {
                     relModel = field.relation;
                     relFields = $.extend(true, {}, self.data[relModel].fields);
-                    field.views[children.tag] = self._fieldsViewGet(children, relModel, relFields);
+                    field.views[children.tagName] = self._fieldsViewGet(children, relModel,
+                        relFields, context);
                 });
             }
 
             // add onchanges
             if (name in onchanges) {
-                field.onChange="1";
+                node.setAttribute('on_change', "1");
             }
         });
+        _.each(groupbyNodes, function (node, name) {
+            var field = fields[name];
+            if (field.type !== 'many2one') {
+                throw new Error('groupby can only target many2one');
+            }
+            field.views = {};
+            relModel = field.relation;
+            relFields = $.extend(true, {}, self.data[relModel].fields);
+            node._isProcessed = true;
+            // postprocess simulation
+            field.views.groupby = self._fieldsViewGet(node, relModel, relFields, context);
+            node.childNodes.forEach(function (child) {
+                node.removeChild(child);
+            });
+        });
+
+        var xmlSerializer = new XMLSerializer();
+        var processedArch = xmlSerializer.serializeToString(doc);
         return {
-            arch: arch,
+            arch: processedArch,
             fields: _.pick(fields, _.keys(fieldNodes)),
             model: model,
-            type: arch.tag === 'tree' ? 'list' : arch.tag,
+            type: doc.tagName === 'tree' ? 'list' : doc.tagName,
         };
     },
     /**
@@ -292,11 +377,29 @@ var MockServer = Class.extend({
                 activeInDomain = activeInDomain || subdomain[0] === 'active';
             });
             if (!activeInDomain) {
-                domain.unshift(['active', '=', true]);
+                domain = [['active', '=', true]].concat(domain);
             }
         }
 
         if (domain.length) {
+            // 'child_of' operator isn't supported by domain.js, so we replace
+            // in by the 'in' operator (with the ids of children)
+            domain = domain.map(function (criterion) {
+                if (criterion[1] === 'child_of') {
+                    var oldLength = 0;
+                    var childIDs = [criterion[2]];
+                    while (childIDs.length > oldLength) {
+                        oldLength = childIDs.length;
+                        _.each(records, function (r) {
+                            if (childIDs.indexOf(r.parent_id) >= 0) {
+                                childIDs.push(r.id);
+                            }
+                        });
+                    }
+                    criterion = [criterion[0], 'in', childIDs];
+                }
+                return criterion;
+            });
             records = _.filter(records, function (record) {
                 var fieldValues = _.mapObject(record, function (value) {
                     return value instanceof Array ? value[0] : value;
@@ -390,7 +493,7 @@ var MockServer = Class.extend({
         return result;
     },
     /**
-     * Simulate a 'field_get' operation
+     * Simulate a 'fields_get' operation
      *
      * @private
      * @param {string} modelName
@@ -410,6 +513,179 @@ var MockServer = Class.extend({
             });
         }
         return modelFields;
+    },
+    /**
+     * Simulate a call to the 'search_panel_select_range' method.
+     *
+     * Note that the implementation assumes that 'parent_id' is the field that
+     * encodes the parent relationship.
+     *
+     * @private
+     * @param {string} model
+     * @param {Array} args
+     * @returns {Object}
+     */
+    _mockSearchPanelSelectRange: function (model, args) {
+        var fieldName = args[0];
+        var field = this.data[model].fields[fieldName];
+
+        if (field.type !== 'many2one') {
+            throw new Error('Only fields of type many2one are handled');
+        }
+
+        var fields = ['display_name'];
+        var parentField = this.data[field.relation].fields.parent_id;
+        if (parentField) {
+            fields.push('parent_id');
+        }
+        return {
+            parent_field: parentField ? 'parent_id' : false,
+            values: this._mockSearchRead(field.relation, [[], fields], {}),
+        };
+    },
+    /**
+     * Simulate a call to the 'search_panel_select_multi_range' method.
+     *
+     * Note that only the many2one and selection cases are handled by this
+     * function.
+     *
+     * @param {string} model
+     * @param {Array} args
+     * @param {Object} kwargs
+     * @returns {Object}
+     */
+    _mockSearchPanelSelectMultiRange: function (model, args, kwargs) {
+        var fieldName = args[0];
+        var field = this.data[model].fields[fieldName];
+        var comodelDomain = kwargs.comodel_domain || [];
+
+        if (!_.contains(['many2one', 'selection'], field.type)) {
+            throw new Error('Only fields of type many2one and selection are handled');
+        }
+
+        var modelDomain;
+        var disableCounters = kwargs.disable_counters || false;
+        modelDomain = [[fieldName, '!=', false]]
+                            .concat(kwargs.category_domain)
+                            .concat(kwargs.filter_domain)
+                            .concat(kwargs.search_domain);
+        var groupBy = kwargs.group_by || false;
+        var comodel = field.relation || false;
+        var groupByField = groupBy && this.data[comodel].fields[groupBy];
+
+        // get counters
+        var groups;
+        var counters = {};
+        if (!disableCounters) {
+            groups = this._mockReadGroup(model, {
+                domain: modelDomain,
+                fields: [fieldName],
+                groupby: [fieldName],
+            });
+            groups.forEach(function (group) {
+                var groupId = field.type === 'many2one' ? group[fieldName][0] : group[fieldName];
+                counters[groupId] = group[fieldName + '_count'];
+            });
+        }
+
+        // get filter values
+        var filterValues = [];
+        if (field.type === 'many2one') {
+            var fields = groupBy ? ['display_name', groupBy] : ['display_name'];
+            var records = this._mockSearchRead(comodel, [comodelDomain, fields], {});
+            records.forEach(function (record) {
+                var filterValue = {
+                    count: counters[record.id] || 0,
+                    id: record.id,
+                    name: record.display_name,
+                };
+                if (groupBy) {
+                    var id = record[groupBy];
+                    var name = record[groupBy];
+                    if (groupByField.type === 'many2one') {
+                        name = id[1];
+                        id = id[0];
+                    } else if (groupByField.type === 'selection') {
+                        name = _.find(field.selection, function (option) {
+                            return option[0] === id;
+                        })[1];
+                    }
+                    filterValue.group_id = id;
+                    filterValue.group_name = name;
+                }
+                filterValues.push(filterValue);
+            });
+        } else if (field.type === 'selection') {
+            field.selection.forEach(function (option) {
+                filterValues.push({
+                    count: counters[option[0]] || 0,
+                    id: option[0],
+                    name: option[1],
+                });
+            });
+        }
+
+        return filterValues;
+    },
+    /**
+     * Simulate a call to the '/web/action/load' route
+     *
+     * @private
+     * @param {Object} kwargs
+     * @param {integer} kwargs.action_id
+     * @returns {Object}
+     */
+    _mockLoadAction: function (kwargs) {
+        var action = _.findWhere(this.actions, {id: parseInt(kwargs.action_id)});
+        if (!action) {
+            // when the action doesn't exist, the real server doesn't crash, it
+            // simply returns false
+            console.warn("No action found for ID " + kwargs.action_id);
+        }
+        return action || false;
+    },
+    /**
+     * Simulate a 'load_views' operation
+     *
+     * @param {string} model
+     * @param {Array} args
+     * @param {Object} kwargs
+     * @param {Array} kwargs.views
+     * @param {Object} kwargs.options
+     * @param {Object} kwargs.context
+     * @returns {Object}
+     */
+    _mockLoadViews: function (model, kwargs) {
+        var self = this;
+        var views = {};
+        _.each(kwargs.views, function (view_descr) {
+            var viewID = view_descr[0] || false;
+            var viewType = view_descr[1];
+            if (!viewID) {
+                var contextKey = (viewType === 'list' ? 'tree' : viewType) + '_view_ref';
+                if (contextKey in kwargs.context) {
+                    viewID = kwargs.context[contextKey];
+                }
+            }
+            var key = [model, viewID, viewType].join(',');
+            var arch = self.archs[key] || _.find(self.archs, function (_v, k) {
+                var ka = k.split(',');
+                viewID = parseInt(ka[1], 10);
+                return ka[0] === model && ka[2] === viewType;
+            });
+            if (!arch) {
+                throw new Error('No arch found for key ' + key);
+            }
+            views[viewType] = {
+                arch: arch,
+                view_id: viewID,
+                model: model,
+                viewOptions: {
+                    context: kwargs.context,
+                },
+            };
+        });
+        return views;
     },
     /**
      * Simulate a 'name_get' operation
@@ -464,33 +740,19 @@ var MockServer = Class.extend({
     _mockNameSearch: function (model, args, _kwargs) {
         var str = args && typeof args[0] === 'string' ? args[0] : _kwargs.name;
         var domain = (args && args[1]) || _kwargs.args || [];
-        var dom = domain[0];
-        var records = this.data[model].records;
-        if (dom) {
-            records = _.filter(records, function (record) {
-                var value = record[dom[0]];
-                if (value instanceof Array) {
-                    value = value[0];
-                }
-                if (dom[1] === 'not in') {
-                    return !_.contains(dom[2], value);
-                } else if (dom[1] === 'in') {
-                    return _.contains(dom[2], value);
-                } else if (dom[1] === '==') {
-                    return dom[2] == value;
-                } else if (dom[1] === '!=') {
-                    return dom[2] != value;
-                }
-            });
-        }
+        var records = this._getRecords(model, domain);
         if (str.length) {
             records = _.filter(records, function (record) {
                 return record.display_name.indexOf(str) !== -1;
             });
         }
-        return _.map(records, function (record) {
+        var result = _.map(records, function (record) {
             return [record.id, record.display_name];
         });
+        if (_kwargs.limit) {
+            return result.slice(0, _kwargs.limit);
+        }
+        return result;
     },
     /**
      * Simulate an 'onchange' rpc
@@ -537,11 +799,14 @@ var MockServer = Class.extend({
             ids = [ids];
         }
         var fields = args[1] && args[1].length ? _.uniq(args[1].concat(['id'])) : Object.keys(this.data[model].fields);
-        var results = _.map(ids, function (id) {
-            var record = _.findWhere(self.data[model].records, {id: id});
-            if (!record) {
-                throw "mock read: id does not exist...";
+        var records = _.reduce(ids, function (records, id) {
+            if (!id) {
+                throw "mock read: falsy value given as id, would result in an access error in actual server !";
             }
+            var record =  _.findWhere(self.data[model].records, {id: id});
+            return record ? records.concat(record) : records;
+        }, []);
+        var results = _.map(records, function (record) {
             var result = {};
             for (var i = 0; i < fields.length; i++) {
                 var field = self.data[model].fields[fields[i]];
@@ -549,7 +814,12 @@ var MockServer = Class.extend({
                     // the field doens't exist on the model, so skip it
                     continue;
                 }
-                if (field.type === 'many2one') {
+                if (field.type === 'float' ||
+                    field.type === 'integer' ||
+                    field.type === 'monetary') {
+                    // read should return 0 for unset numeric fields
+                    result[fields[i]] = record[fields[i]] || 0;
+                } else if (field.type === 'many2one') {
                     var relatedRecord = _.findWhere(self.data[field.relation].records, {
                         id: record[fields[i]]
                     });
@@ -559,8 +829,10 @@ var MockServer = Class.extend({
                     } else {
                         result[fields[i]] = false;
                     }
+                } else if (field.type === 'one2many' || field.type === 'many2many') {
+                    result[fields[i]] = record[fields[i]] || [];
                 } else {
-                    result[fields[i]] = record[fields[i]];
+                    result[fields[i]] = record[fields[i]] || false;
                 }
             }
             return result;
@@ -579,7 +851,8 @@ var MockServer = Class.extend({
      * @param {string[]} kwargs.fields fields that we are aggregating
      * @param {Array} kwargs.domain the domain used for the read_group
      * @param {boolean} kwargs.lazy still mostly ignored
-     * @param {integer} kwargs.limit ignored as well
+     * @param {integer} [kwargs.limit]
+     * @param {integer} [kwargs.offset]
      * @returns {Object[]}
      */
     _mockReadGroup: function (model, kwargs) {
@@ -588,7 +861,19 @@ var MockServer = Class.extend({
         }
         var self = this;
         var fields = this.data[model].fields;
-        var aggregatedFields = _.clone(kwargs.fields);
+        var aggregatedFields = [];
+        _.each(kwargs.fields, function (field) {
+            var split = field.split(":");
+            var fieldName = split[0];
+            if (kwargs.groupby.indexOf(fieldName) > 0) {
+                // grouped fields are not aggregated
+                return;
+            }
+            if (fields[fieldName] && (fields[fieldName].type === 'many2one') && split[1] !== 'count_distinct') {
+                return;
+            }
+            aggregatedFields.push(fieldName);
+        });
         var groupBy = [];
         if (kwargs.groupby.length) {
             groupBy = kwargs.lazy ? [kwargs.groupby[0]] : kwargs.groupby;
@@ -596,13 +881,17 @@ var MockServer = Class.extend({
         var records = this._getRecords(model, kwargs.domain);
 
         // if no fields have been given, the server picks all stored fields
-        if (aggregatedFields.length === 0) {
+        if (kwargs.fields.length === 0) {
             aggregatedFields = _.keys(this.data[model].fields);
         }
 
+        var groupByFieldNames = _.map(groupBy, function (groupByField) {
+            return groupByField.split(":")[0];
+        });
+
         // filter out non existing fields
         aggregatedFields = _.filter(aggregatedFields, function (name) {
-            return name in self.data[model].fields;
+            return name in self.data[model].fields && !(_.contains(groupByFieldNames,name));
         });
 
         function aggregateFields(group, records) {
@@ -610,10 +899,15 @@ var MockServer = Class.extend({
             for (var i = 0; i < aggregatedFields.length; i++) {
                 type = fields[aggregatedFields[i]].type;
                 if (type === 'float' || type === 'integer') {
-                    group[aggregatedFields[i]] = 0;
+                    group[aggregatedFields[i]] = null;
                     for (var j = 0; j < records.length; j++) {
-                        group[aggregatedFields[i]] += records[j][aggregatedFields[i]];
+                        var value = group[aggregatedFields[i]] || 0;
+                        group[aggregatedFields[i]] = value + records[j][aggregatedFields[i]];
                     }
+                }
+                if (type === 'many2one') {
+                    var ids = _.pluck(records, aggregatedFields[i]);
+                    group[aggregatedFields[i]] = _.uniq(ids).length || null;
                 }
             }
         }
@@ -621,8 +915,16 @@ var MockServer = Class.extend({
             var fieldName = groupByField.split(':')[0];
             var aggregateFunction = groupByField.split(':')[1] || 'month';
             if (fields[fieldName].type === 'date') {
-                if (aggregateFunction === 'day') {
+                if (!val) {
+                    return false;
+                } else if (aggregateFunction === 'day') {
                     return moment(val).format('YYYY-MM-DD');
+                } else if (aggregateFunction === 'week') {
+                    return moment(val).format('ww YYYY');
+                } else if (aggregateFunction === 'quarter') {
+                    return 'Q' + moment(val).format('Q YYYY');
+                } else if (aggregateFunction === 'year') {
+                    return moment(val).format('Y');
                 } else {
                     return moment(val).format('MMMM YYYY');
                 }
@@ -636,14 +938,9 @@ var MockServer = Class.extend({
                 value = (value ? value + ',' : value) + groupByField + '#';
                 var fieldName = groupByField.split(':')[0];
                 if (fields[fieldName].type === 'date') {
-                    var aggregateFunction = groupByField.split(':')[1] || 'month';
-                    if (aggregateFunction === 'day') {
-                        value += moment(record[fieldName]).format('YYYY-MM-DD');
-                    } else {
-                        value += moment(record[fieldName]).format('MMMM YYYY');
-                    }
+                    value += formatValue(groupByField, record[fieldName]);
                 } else {
-                    value += record[groupByField];
+                    value += JSON.stringify(record[groupByField]);
                 }
             });
             return value;
@@ -676,7 +973,28 @@ var MockServer = Class.extend({
                 } else {
                     res[groupByField] = val;
                 }
-                res.__domain = [[fieldName, "=", val]].concat(res.__domain);
+
+                if (field.type === 'date' && val) {
+                    var aggregateFunction = groupByField.split(':')[1];
+                    var startDate, endDate;
+                    if (aggregateFunction === 'day') {
+                        startDate = moment(val, 'YYYY-MM-DD');
+                        endDate = startDate.clone().add(1, 'days');
+                    } else if (aggregateFunction === 'week') {
+                        startDate = moment(val, 'ww YYYY');
+                        endDate = startDate.clone().add(1, 'weeks');
+                    } else if (aggregateFunction === 'year') {
+                        startDate = moment(val, 'Y');
+                        endDate = startDate.clone().add(1, 'years');
+                    } else {
+                        startDate = moment(val, 'MMMM YYYY');
+                        endDate = startDate.clone().add(1, 'months');
+                    }
+                    res.__domain = [[fieldName, '>=', startDate.format('YYYY-MM-DD')], [fieldName, '<', endDate.format('YYYY-MM-DD')]].concat(res.__domain);
+                } else {
+                    res.__domain = [[fieldName, '=', val]].concat(res.__domain);
+                }
+
             });
 
             // compute count key to match dumb server logic...
@@ -691,7 +1009,84 @@ var MockServer = Class.extend({
 
             return res;
         });
+
+        if (kwargs.orderby) {
+            // only consider first sorting level
+            kwargs.orderby = kwargs.orderby.split(',')[0];
+            var fieldName = kwargs.orderby.split(' ')[0];
+            var order = kwargs.orderby.split(' ')[1];
+            result.sort(function (g1, g2) {
+                if (g1[fieldName] < g2[fieldName]) {
+                    return order === 'ASC' ? -1 : 1;
+                }
+                if (g1[fieldName] > g2[fieldName]) {
+                    return order === 'ASC' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+
+        if (kwargs.limit) {
+            var offset = kwargs.offset || 0;
+            result = result.slice(offset, kwargs.limit + offset);
+        }
+
         return result;
+    },
+    /**
+     * Simulates a 'read_progress_bar' operation
+     *
+     * @private
+     * @param {string} model
+     * @param {Object} kwargs
+     * @returns {Object[][]}
+     */
+    _mockReadProgressBar: function (model, kwargs) {
+        var domain = kwargs.domain;
+        var groupBy = kwargs.group_by;
+        var progress_bar = kwargs.progress_bar;
+
+        var records = this._getRecords(model, domain || []);
+
+        var data = {};
+        _.each(records, function (record) {
+            var groupByValue = record[groupBy]; // always technical value here
+
+            if (!(groupByValue in data)) {
+                data[groupByValue] = {};
+                _.each(progress_bar.colors, function (val, key) {
+                    data[groupByValue][key] = 0;
+                });
+            }
+
+            var fieldValue = record[progress_bar.field];
+            if (fieldValue in data[groupByValue]) {
+                data[groupByValue][fieldValue]++;
+            }
+        });
+
+        return data;
+    },
+    /**
+     * Simulates a 'resequence' operation
+     *
+     * @private
+     * @param {string} model
+     * @param {string} field
+     * @param {Array} ids
+     */
+    _mockResequence: function (args) {
+        var offset = args.offset ? Number(args.offset) : 0;
+        var field = args.field ? args.field : 'sequence';
+        var records = this.data[args.model].records;
+        if (!(field in this.data[args.model].fields)) {
+            return false;
+        }
+        for (var i in args.ids) {
+            var record = _.findWhere(records, {id: args.ids[i]});
+            record[field] = Number(i) + offset;
+        }
+        return true;
     },
     /**
      * Simulate a 'search_count' operation
@@ -721,7 +1116,7 @@ var MockServer = Class.extend({
         var result = this._mockSearchReadController({
             model: model,
             domain: kwargs.domain || args[0],
-            fields: kwargs.fields || args[1],
+            fields: kwargs.fields || args[1],
             offset: kwargs.offset || args[2],
             limit: kwargs.limit || args[3],
             order: kwargs.order || args[4],
@@ -819,6 +1214,51 @@ var MockServer = Class.extend({
         return true;
     },
     /**
+     * Simulate a 'web_read_group' call to the server.
+     *
+     * Note: some keys in kwargs are still ignored
+     *
+     * @private
+     * @param {string} model a string describing an existing model
+     * @param {Object} kwargs various options supported by read_group
+     * @param {string[]} kwargs.groupby fields that we are grouping
+     * @param {string[]} kwargs.fields fields that we are aggregating
+     * @param {Array} kwargs.domain the domain used for the read_group
+     * @param {boolean} kwargs.lazy still mostly ignored
+     * @param {integer} [kwargs.limit]
+     * @param {integer} [kwargs.offset]
+     * @param {boolean} [kwargs.expand=false] if true, read records inside each
+     *   group
+     * @param {integer} [kwargs.expand_limit]
+     * @param {integer} [kwargs.expand_orderby]
+     * @returns {Object[]}
+     */
+    _mockWebReadGroup: function (model, kwargs) {
+        var self = this;
+        var groups = this._mockReadGroup(model, kwargs);
+        if (kwargs.expand && kwargs.groupby.length === 1) {
+            groups.forEach(function (group) {
+                group.__data = self._mockSearchReadController({
+                    domain: group.__domain,
+                    model: model,
+                    fields: kwargs.fields,
+                    limit: kwargs.expand_limit,
+                    order: kwargs.expand_orderby,
+                });
+            });
+        }
+        var allGroups = this._mockReadGroup(model, {
+            domain: kwargs.domain,
+            fields: ['display_name'],
+            groupby: kwargs.groupby,
+            lazy: kwargs.lazy,
+        });
+        return {
+            groups: groups,
+            length: allGroups.length,
+        };
+    },
+    /**
      * Simulate a 'write' operation
      *
      * @private
@@ -838,72 +1278,89 @@ var MockServer = Class.extend({
      * @private
      * @param {string} route
      * @param {Object} args
-     * @returns {Deferred<any>}
+     * @returns {Promise<any>}
      *          Resolved with the result of the RPC. If the RPC should fail, the
-     *          deferred should either be rejected or the call should throw an
+     *          promise should either be rejected or the call should throw an
      *          exception (@see performRpc for error handling).
      */
     _performRpc: function (route, args) {
         switch (route) {
             case '/web/action/load':
-                return $.when(this._mockLoadAction(args));
+                return Promise.resolve(this._mockLoadAction(args.kwargs));
 
             case '/web/dataset/search_read':
-                return $.when(this._mockSearchReadController(args));
+                return Promise.resolve(this._mockSearchReadController(args));
+
+            case '/web/dataset/resequence':
+                return Promise.resolve(this._mockResequence(args));
         }
-        if (route.indexOf('/web/image/') === 0) {
-            return $.when();
+        if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
+            return Promise.resolve();
         }
         switch (args.method) {
             case 'copy':
-                return $.when(this._mockCopy(args.model, args.args[0]));
+                return Promise.resolve(this._mockCopy(args.model, args.args[0]));
 
             case 'create':
-                return $.when(this._mockCreate(args.model, args.args[0]));
+                return Promise.resolve(this._mockCreate(args.model, args.args[0]));
 
             case 'default_get':
-                return $.when(this._mockDefaultGet(args.model, args.args, args.kwargs));
+                return Promise.resolve(this._mockDefaultGet(args.model, args.args, args.kwargs));
 
             case 'fields_get':
-                return $.when(this._mockFieldsGet(args.model, args.args));
+                return Promise.resolve(this._mockFieldsGet(args.model, args.args));
+
+            case 'search_panel_select_range':
+                return Promise.resolve(this._mockSearchPanelSelectRange(args.model, args.args, args.kwargs));
+
+            case 'search_panel_select_multi_range':
+                return Promise.resolve(this._mockSearchPanelSelectMultiRange(args.model, args.args, args.kwargs));
+
+            case 'load_views':
+                return Promise.resolve(this._mockLoadViews(args.model, args.kwargs));
 
             case 'name_get':
-                return $.when(this._mockNameGet(args.model, args.args));
+                return Promise.resolve(this._mockNameGet(args.model, args.args));
 
             case 'name_create':
-                return $.when(this._mockNameCreate(args.model, args.args));
+                return Promise.resolve(this._mockNameCreate(args.model, args.args));
 
             case 'name_search':
-                return $.when(this._mockNameSearch(args.model, args.args, args.kwargs));
+                return Promise.resolve(this._mockNameSearch(args.model, args.args, args.kwargs));
 
             case 'onchange':
-                return $.when(this._mockOnchange(args.model, args.args));
+                return Promise.resolve(this._mockOnchange(args.model, args.args));
 
             case 'read':
-                return $.when(this._mockRead(args.model, args.args, args.kwargs));
+                return Promise.resolve(this._mockRead(args.model, args.args, args.kwargs));
 
             case 'read_group':
-                return $.when(this._mockReadGroup(args.model, args.kwargs));
+                return Promise.resolve(this._mockReadGroup(args.model, args.kwargs));
+
+            case 'web_read_group':
+                return Promise.resolve(this._mockWebReadGroup(args.model, args.kwargs));
+
+            case 'read_progress_bar':
+                return Promise.resolve(this._mockReadProgressBar(args.model, args.kwargs));
 
             case 'search_count':
-                return $.when(this._mockSearchCount(args.model, args.args));
+                return Promise.resolve(this._mockSearchCount(args.model, args.args));
 
             case 'search_read':
-                return $.when(this._mockSearchRead(args.model, args.args, args.kwargs));
+                return Promise.resolve(this._mockSearchRead(args.model, args.args, args.kwargs));
 
             case 'unlink':
-                return $.when(this._mockUnlink(args.model, args.args));
+                return Promise.resolve(this._mockUnlink(args.model, args.args));
 
             case 'write':
-                return $.when(this._mockWrite(args.model, args.args));
+                return Promise.resolve(this._mockWrite(args.model, args.args));
         }
         var model = this.data[args.model];
         if (model && typeof model[args.method] === 'function') {
-            return $.when(this.data[args.model][args.method](args.args, args.kwargs));
+            return Promise.resolve(this.data[args.model][args.method](args.args, args.kwargs));
         }
 
-        console.error("Unimplemented route", route, args);
-        return $.when();
+        throw new Error("Unimplemented route: " + route);
     },
     /**
      * helper function: traverse a tree and apply the function f to each of its
@@ -919,7 +1376,7 @@ var MockServer = Class.extend({
     _traverse: function (tree, f) {
         var self = this;
         if (f(tree)) {
-            _.each(tree.children, function (c) { self._traverse(c, f); });
+            _.each(tree.childNodes, function (c) { self._traverse(c, f); });
         }
     },
     /**
@@ -951,6 +1408,8 @@ var MockServer = Class.extend({
                     } else if (command[0] === 1) { // UPDATE
                         self._mockWrite(field.relation, [[command[1]], command[2]]);
                     } else if (command[0] === 2) { // DELETE
+                        ids = _.without(ids, command[1]);
+                    } else if (command[0] === 3) { // FORGET
                         ids = _.without(ids, command[1]);
                     } else if (command[0] === 4) { // LINK_TO
                         if (!_.contains(ids, command[1])) {

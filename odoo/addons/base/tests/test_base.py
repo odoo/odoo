@@ -2,15 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import unittest
 
-from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo import SUPERUSER_ID
+from odoo.exceptions import UserError, ValidationError
+from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, const_eval
 
 
-class TestSafeEval(unittest.TestCase):
+class TestSafeEval(BaseCase):
+    def test_const(self):
+        # NB: True and False are names in Python 2 not consts
+        expected = (1, {"a": {2.5}}, [None, u"foo"])
+        actual = const_eval('(1, {"a": {2.5}}, [None, u"foo"])')
+        self.assertEqual(actual, expected)
 
     def test_01_safe_eval(self):
         """ Try a few common expressions to verify they work with safe_eval """
@@ -245,6 +250,41 @@ class TestBase(TransactionCase):
         self.assertEqual(leaf111.address_get([]),
                         {'contact': branch11.id}, 'Invalid address resolution, branch11 should now be contact')
 
+    def test_commercial_partner_nullcompany(self):
+        """ The commercial partner is the first/nearest ancestor-or-self which
+        is a company or doesn't have a parent
+        """
+        P = self.env['res.partner']
+        p0 = P.create({'name': '0', 'email': '0'})
+        self.assertEqual(p0.commercial_partner_id, p0, "partner without a parent is their own commercial partner")
+
+        p1 = P.create({'name': '1', 'email': '1', 'parent_id': p0.id})
+        self.assertEqual(p1.commercial_partner_id, p0, "partner's parent is their commercial partner")
+        p12 = P.create({'name': '12', 'email': '12', 'parent_id': p1.id})
+        self.assertEqual(p12.commercial_partner_id, p0, "partner's GP is their commercial partner")
+
+        p2 = P.create({'name': '2', 'email': '2', 'parent_id': p0.id, 'is_company': True})
+        self.assertEqual(p2.commercial_partner_id, p2, "partner flagged as company is their own commercial partner")
+        p21 = P.create({'name': '21', 'email': '21', 'parent_id': p2.id})
+        self.assertEqual(p21.commercial_partner_id, p2, "commercial partner is closest ancestor with themselves as commercial partner")
+
+        p3 = P.create({'name': '3', 'email': '3', 'is_company': True})
+        self.assertEqual(p3.commercial_partner_id, p3, "being both parent-less and company should be the same as either")
+
+        notcompanies = p0 | p1 | p12 | p21
+        self.env.cr.execute('update res_partner set is_company=null where id = any(%s)', [notcompanies.ids])
+        for parent in notcompanies:
+            p = P.create({
+                'name': parent.name + '_sub',
+                'email': parent.email + '_sub',
+                'parent_id': parent.id,
+            })
+            self.assertEqual(
+                p.commercial_partner_id,
+                parent.commercial_partner_id,
+                "check that is_company=null is properly handled when looking for ancestor"
+            )
+
     def test_50_res_partner_commercial_sync(self):
         res_partner = self.env['res.partner']
         p0 = res_partner.create({'name': 'Sigurd Sunknife',
@@ -390,6 +430,27 @@ class TestBase(TransactionCase):
         self.assertEqual([2, 4], [g['title_count'] for g in groups_data], 'Incorrect number of results')
         self.assertEqual([-1, 10], [g['color'] for g in groups_data], 'Incorrect aggregation of int column')
 
+    def test_70_archive_internal_partners(self):
+        test_partner = self.env['res.partner'].create({'name':'test partner'})
+        test_user = self.env['res.users'].create({
+                                'login': 'test@odoo.com',
+                                'partner_id': test_partner.id,
+                                })
+        # Cannot archive the partner
+        with self.assertRaises(ValidationError):
+            test_partner.toggle_active()
+
+        # Can archive the user but the partner stays active
+        test_user.toggle_active()
+        self.assertTrue(test_partner.active, 'Parter related to user should remain active')
+
+        # Now we can archive the partner
+        test_partner.toggle_active()
+
+        # Activate the user should reactivate the partner
+        test_user.toggle_active()
+        self.assertTrue(test_partner.active, 'Activating user must active related partner')
+
 
 class TestPartnerRecursion(TransactionCase):
 
@@ -436,8 +497,6 @@ class TestParentStore(TransactionCase):
 
     def setUp(self):
         super(TestParentStore, self).setUp()
-        # pretend the pool has finished loading to avoid deferring parent_store computation
-        self.patch(self.registry, '_init', False)
 
         # force res_partner_category.copy() to copy children
         category = self.env['res.partner.category']
@@ -526,3 +585,17 @@ class TestGroups(TransactionCase):
         # create a cycle and check
         a.implied_ids = d
         self.assertFalse(a._check_m2m_recursion('implied_ids'))
+
+    def test_res_group_copy(self):
+        a = self.env['res.groups'].with_context(lang='en_US').create({'name': 'A'})
+        b = a.copy()
+        self.assertFalse(a.name == b.name)
+
+
+class TestUsers(TransactionCase):
+    def test_superuser(self):
+        """ The superuser is inactive and must remain as such. """
+        user = self.env['res.users'].browse(SUPERUSER_ID)
+        self.assertFalse(user.active)
+        with self.assertRaises(UserError):
+            user.write({'active': True})

@@ -10,48 +10,60 @@ Mobile JavaScript
 Introduction
 ============
 
-In Odoo 10.0 we released a mobile app, allows you to access all **Odoo apps** (even your customized modules). 
+In Odoo 10.0 we released a mobile app which allows you to access all **Odoo apps**
+(even your customized modules). 
 
-The application is a combination of **Odoo Web** and **Native Mobile components**, in other words it is a Odoo Web instance loaded inside native WebView container of mobile.
+The application is a combination of **Odoo Web** and **Native Mobile
+components**. In other words it is a Odoo Web instance loaded inside a native, mobile, WebView container.
 
-This page documents how you can access mobile native components like Camera, Vibration, Notification, Toast through Odoo Web (via JavaScript). For this, you do not need to be a mobile developer, if you know Odoo JavaScript API you can access all available mobile features.
+This page documents how you can access mobile native components like Camera,
+Vibration, Notification and Toast through Odoo Web (via JavaScript). For this, you
+do not need to be a mobile developer, if you know Odoo JavaScript API you can
+access all available mobile features.
 
-.. warning:: This features works with **Odoo Enterprise 10.0+** only
+.. warning:: These features work with **Odoo Enterprise 10.0+** only
 
 How does it work? 
 =================
 
-Internal working of Mobile application:
+Internal workings of the mobile application:
 
 .. image:: images/mobile_working.jpg
-    :align: left
 
-Of course, it is a web page that loads on a Mobile Native Web container. But it is integrated in such a way that you can access native resources from your web JavaScript.
+Of course, it is a web page that loads on a Mobile Native Web container. But it
+is integrated in such a way that you can access native resources from your web
+JavaScript.
 
-WebPages (Odoo Web) is on the top of each layer, where second layer is a Bridge between Odoo Web (JS) and Native component of mobile.
+WebPages (Odoo Web) is on the top of each layer, where the second layer is a Bridge
+between Odoo Web (JS) and the native mobile components.
 
-When any call from JavaScript triggered it passes through Bridge and Bridge pass it to native invoker to perform that action.
+When any call from JavaScript is triggered it passes through Bridge and Bridge
+passes it to the native invoker to perform that action.
 
-When the native component has done their work, it again is passed to Bridge and you get the output in JavaScript.
+When the native component has done its work, it is passed to the Bridge again and
+you get the output in JavaScript.
 
-Process time taken by the Native component depends on what you are requesting from Native resources. Like Camera or GPS Location.
+Process time taken by the Native component depends on what you are requesting
+from the Native resources. For example the Camera or GPS Location.
 
 How to use it?
 ==============
 
-As Odoo Web Framework, Mobile api can be used anywhere by getting object of **web_mobile.rpc**
+Just like the Odoo Web Framework, the Mobile API can be used anywhere by getting the object from
+**web_mobile.rpc**
 
 .. image:: images/odoo_mobile_api.png
-    :align: left
 
-Mobile rpc object provide list of methods available (Works only with Mobile App). 
+The mobile RPC object provides a list of methods that are available (this only works with the mobile
+app). 
 
-Just check for method availability and execute it.
+Check if the method is available and then execute it.
 
 Methods
 -------
 
-.. note:: Each of the methods returns JQuery Deffered object with returning data JSON dictionary
+.. note:: Each of the methods returns a JQuery Deffered object which returns
+   a data JSON dictionary
 
 Show Toast in device
 .....................
@@ -60,7 +72,9 @@ Show Toast in device
 
 	:param object args: **message** text to display
 
-A toast provides simple feedback about an operation in a small popup. It only fills the amount of space required for the message and the current activity remains visible and interactive
+A toast provides simple feedback about an operation in a small popup. It only
+fills the amount of space required for the message and the current activity
+remains visible and interactive.
 
 .. code-block:: javascript
 
@@ -75,7 +89,8 @@ Vibrating device
 
 .. js:function:: vibrate
 
-	:param object args: Vibrates constantly for the specified period of time (in milliseconds).
+	:param object args: Vibrates constantly for the specified period of time
+	       (in milliseconds).
 
 Vibrate mobile device with given duration.
 
@@ -89,9 +104,12 @@ Show snackbar with action
 .. js:function:: showSnackBar
 
 	:param object args: (*required*) **Message** to show in snackbar and action **button label** in Snackbar (optional)
-	:returns:  ``True`` if User click on Action button, ``False`` if SnackBar auto dismissed after some time
+	:returns:  ``True`` if the user clicks on the Action button, ``False`` if SnackBar auto dismissed after some time.
 
-Snackbars provide lightweight feedback about an operation. They show a brief message at the bottom of the screen on mobile and lower left on larger devices. Snackbars appear above all other elements on screen and only one can be displayed at a time.
+Snackbars provide lightweight feedback about an operation. They show a brief
+message at the bottom of the screen on mobile or in the lower left corner on larger devices.
+Snackbars appear above all the other elements on the screen and only one can be
+displayed at a time.
 
 .. code-block:: javascript
 
@@ -112,11 +130,16 @@ Showing notification
 
 	:param object args: **title** (first row) of the notification, **message** (second row) of the notification, in a standard notification.
 
-A notification is a message you can display to the user outside of your application's normal UI. When you tell the system to issue a notification, it first appears as an icon in the notification area. To see the details of the notification, the user opens the notification drawer. Both the notification area and the notification drawer are system-controlled areas that the user can view at any time.
+A notification is a message you can display to the user outside of your
+application's normal UI. When you tell the system to issue a notification, it
+first appears as an icon in the notification area. To see the details of the
+notification, the user opens the notification drawer. Both the notification
+area and the notification drawer are system-controlled areas that the user can
+view at any time.
 
 .. code-block:: javascript
 	
-	mobile.showNotification({'title': 'Simple Notification', 'message': 'This is test of simple notification'})
+	mobile.showNotification({'title': 'Simple Notification', 'message': 'This is a test for a simple notification'})
 
 .. image:: images/mobile_notification.png
 
@@ -128,7 +151,7 @@ Create contact in device
 
 	:param object args: Dictionary with contact details. Possible keys (name, mobile, phone, fax, email, website, street, street2, country_id, state_id, city, zip, parent_id, function and image)
 
-Create device contact with given contact details.
+Create a new device contact with the given contact details.
 
 .. code-block:: javascript
 	
@@ -159,11 +182,11 @@ Scanning barcodes
 
 .. js:function:: scanBarcode
 
-	:returns: Scanned ``code`` from any barcodes
+	:returns: Scanned ``code`` from any barcode
 
-The Barcode API detects barcodes in real-time, on device, in any orientation.
+The barcode API detects barcodes in real-time, on the device, in any orientation.
 
-It reads the following barcode formats:
+The barcode API can read the following barcode formats:
 
 * 1D barcodes: EAN-13, EAN-8, UPC-A, UPC-E, Code-39, Code-93, Code-128, ITF, Codabar
 * 2D barcodes: QR Code, Data Matrix, PDF-417, AZTEC
@@ -172,7 +195,7 @@ It reads the following barcode formats:
 
 	mobile.methods.scanBarcode().then(function(code){
 		if(code){
-			// Perform operation with code scanned
+			// Perform operation with the scanned code
 		}
 	});
 
@@ -181,7 +204,7 @@ Switching account in device
 
 .. js:function:: switchAccount
 
-Use to switch device account.
+Use switchAccount to switch from one account to another on the device.
 
 .. code-block:: javascript
 	

@@ -1,160 +1,197 @@
 odoo.define('mass_mailing.website_integration', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
+var config = require('web.config');
+var core = require('web.core');
+var Dialog = require('web.Dialog');
 var utils = require('web.utils');
-var animation = require('web_editor.snippets.animation');
-require('web_editor.base');
+var publicWidget = require('web.public.widget');
 
-animation.registry.subscribe = animation.Class.extend({
+var _t = core._t;
+
+publicWidget.registry.subscribe = publicWidget.Widget.extend({
     selector: ".js_subscribe",
-    start: function (editable_mode) {
-        var self = this;
-
-        // set value and display button
-        self.$target.find("input").removeClass("hidden");
-        ajax.jsonRpc('/website_mass_mailing/is_subscriber', 'call', {
-            list_id: this.$target.data('list-id'),
-        }).always(function (data) {
-            self.$target.find('input.js_subscribe_email')
-                .val(data.email ? data.email : "")
-                .attr("disabled", data.is_subscriber && data.email.length ? "disabled" : false);
-            self.$target.attr("data-subscribe", data.is_subscriber ? 'on' : 'off');
-            self.$target.find('a.js_subscribe_btn')
-                .attr("disabled", data.is_subscriber && data.email.length ? "disabled" : false);
-            self.$target.removeClass("hidden");
-            self.$target.find('.js_subscribe_btn').toggleClass('hidden', !!data.is_subscriber);
-            self.$target.find('.js_subscribed_btn').toggleClass('hidden', !data.is_subscriber);
-        });
-
-        // not if editable mode to allow designer to edit alert field
-        if (!editable_mode) {
-            $('.js_subscribe > .alert').addClass("hidden");
-            $('.js_subscribe > .input-group-btn.hidden').removeClass("hidden");
-            this.$target.find('.js_subscribe_btn').on('click', function (event) {
-                event.preventDefault();
-                self.on_click();
-            });
-        }
+    disabledInEditableMode: false,
+    read_events: {
+        'click .js_subscribe_btn': '_onSubscribeClick',
     },
-    on_click: function () {
+
+    /**
+     * @override
+     */
+    start: function () {
         var self = this;
-        var $email = this.$target.find(".js_subscribe_email:visible");
+        var def = this._super.apply(this, arguments);
+        this.$popup = this.$target.closest('.o_newsletter_modal');
+        if (this.$popup.length) {
+            // No need to check whether the user subscribed or not if the input
+            // is in a popup as the popup won't open if he did subscribe.
+            return def;
+        }
+
+        var always = function (data) {
+            var isSubscriber = data.is_subscriber;
+            self.$('.js_subscribe_btn').prop('disabled', isSubscriber);
+            self.$('input.js_subscribe_email')
+                .val(data.email || "")
+                .prop('disabled', isSubscriber);
+            self.$target.removeClass('d-none');
+            self.$('.js_subscribe_btn').toggleClass('d-none', !!isSubscriber);
+            self.$('.js_subscribed_btn').toggleClass('d-none', !isSubscriber);
+        };
+        return Promise.all([def, this._rpc({
+            route: '/website_mass_mailing/is_subscriber',
+            params: {
+                'list_id': this.$target.data('list-id'),
+            },
+        }).then(always).guardedCatch(always)]);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this.$target.addClass('d-none');
+        this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onSubscribeClick: function () {
+        var self = this;
+        var $email = this.$(".js_subscribe_email:visible");
 
         if ($email.length && !$email.val().match(/.+@.+/)) {
-            this.$target.addClass('has-error');
+            this.$target.addClass('o_has_error').find('.form-control').addClass('is-invalid');
             return false;
         }
-        this.$target.removeClass('has-error');
-
-        ajax.jsonRpc('/website_mass_mailing/subscribe', 'call', {
-            'list_id': this.$target.data('list-id'),
-            'email': $email.length ? $email.val() : false,
-        }).then(function (subscribe) {
-            self.$target.find(".js_subscribe_email, .input-group-btn").addClass("hidden");
-            self.$target.find(".alert").removeClass("hidden");
-            self.$target.find('input.js_subscribe_email').attr("disabled", subscribe ? "disabled" : false);
-            self.$target.attr("data-subscribe", subscribe ? 'on' : 'off');
+        this.$target.removeClass('o_has_error').find('.form-control').removeClass('is-invalid');
+        this._rpc({
+            route: '/website_mass_mailing/subscribe',
+            params: {
+                'list_id': this.$target.data('list-id'),
+                'email': $email.length ? $email.val() : false,
+            },
+        }).then(function (result) {
+            self.$(".js_subscribe_btn").addClass('d-none');
+            self.$(".js_subscribed_btn").removeClass('d-none');
+            self.$('input.js_subscribe_email').prop('disabled', !!result);
+            if (self.$popup.length) {
+                self.$popup.modal('hide');
+            }
+            self.displayNotification(_t("Success"), result.toast_content, 'success', true);
         });
     },
 });
 
-animation.registry.newsletter_popup = animation.Class.extend({
+publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
     selector: ".o_newsletter_popup",
-    start: function (editable_mode) {
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start: function () {
         var self = this;
-        var popupcontent = self.$target.find(".o_popup_content_dev").empty();
-        if (!self.$target.data('list-id')) return;
-
-        ajax.jsonRpc('/website_mass_mailing/get_content', 'call', {
-            newsletter_id: self.$target.data('list-id')
-        }).then(function (data) {
-            if (data.content) {
-                $('<div></div>').append(data.content).appendTo(popupcontent);
-            }
-            self.$target.find('input.popup_subscribe_email').val(data.email || "");
-            self.redirect_url = data.redirect_url;
-            if (!editable_mode && !data.is_subscriber) {
-                $(document).on('mouseleave', _.bind(self.show_banner, self));
-
-                self.$target.find('.popup_subscribe_btn').on('click', function (event) {
-                    event.preventDefault();
-                    self.on_click_subscribe();
-                });
-            } else { $(document).off('mouseleave'); }
-        });
-    },
-    on_click_subscribe: function () {
-        var self = this;
-        var $email = self.$target.find(".popup_subscribe_email:visible");
-
-        if ($email.length && !$email.val().match(/.+@.+/)) {
-            self.$target.addClass('has-error');
-            return false;
+        var defs = [this._super.apply(this, arguments)];
+        this.websiteID = this._getContext().website_id;
+        this.listID = parseInt(this.$target.attr('data-list-id'));
+        if (!this.listID || (utils.get_cookie(_.str.sprintf("newsletter-popup-%s-%s", this.listID, this.websiteID)) && !self.editableMode)) {
+            return Promise.all(defs);
         }
-        self.$target.removeClass('has-error');
-
-        ajax.jsonRpc('/website_mass_mailing/subscribe', 'call', {
-            'list_id': self.$target.data('list-id'),
-            'email': $email.length ? $email.val() : false
-        }).then(function (subscribe) {
-            self.$target.find('#o_newsletter_popup').modal('hide');
-            $(document).off('mouseleave');
-            if (self.redirect_url) {
-                if (_.contains(self.redirect_url.split('/'), window.location.host) || self.redirect_url.indexOf('/') === 0) {
-                    window.location.href = self.redirect_url;
+        if (this.$target.data('content') && this.editableMode) {
+            // To avoid losing user changes.
+            this._dialogInit(this.$target.data('content'));
+            this.$target.removeData('quick-open');
+            this.massMailingPopup.open();
+        } else {
+            defs.push(this._rpc({
+                route: '/website_mass_mailing/get_content',
+                params: {
+                    newsletter_id: self.listID,
+                },
+            }).then(function (data) {
+                self._dialogInit(data.popup_content, data.email || '');
+                if (!self.editableMode && !data.is_subscriber) {
+                    if (config.device.isMobile) {
+                        setTimeout(function () {
+                            self._showBanner();
+                        }, 5000);
+                    } else {
+                        $(document).on('mouseleave.open_popup_event', self._showBanner.bind(self));
+                    }
                 } else {
-                    window.open(self.redirect_url, '_blank');
+                    $(document).off('mouseleave.open_popup_event');
                 }
+                // show popup after choosing a newsletter
+                if (self.$target.data('quick-open')) {
+                    self.massMailingPopup.open();
+                    self.$target.removeData('quick-open');
+                }
+            }));
+        }
+
+        return Promise.all(defs);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this.massMailingPopup) {
+            this.massMailingPopup.close();
+        }
+        this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @param {string} content
+     * @private
+     */
+    _dialogInit: function (content, email) {
+        var self = this;
+        this.massMailingPopup = new Dialog(this, {
+            technical: false,
+            $content: $('<div/>').html(content),
+            $parentNode: this.$target,
+            backdrop: !this.editableMode,
+            dialogClass: 'p-0' + (this.editableMode ? ' o_editable oe_structure oe_empty' : ''),
+            renderFooter: false,
+            size: 'medium',
+        });
+        this.massMailingPopup.opened().then(function () {
+            var $modal = self.massMailingPopup.$modal;
+            $modal.addClass('o_newsletter_modal');
+            $modal.find('.oe_structure').attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+            $modal.find('.modal-dialog').addClass('modal-dialog-centered');
+            $modal.find('.js_subscribe').data('list-id', self.listID)
+                  .find('input.js_subscribe_email').val(email);
+            self.trigger_up('widgets_start_request', {
+                editableMode: self.editableMode,
+                $target: $modal,
+            });
+        });
+        this.massMailingPopup.on('closed', this, function () {
+            var $modal = self.massMailingPopup.$modal;
+            if ($modal) { // The dialog might have never been opened
+                self.$el.data('content', $modal.find('.modal-body').html());
             }
         });
     },
-    show_banner: function() {
-        var self = this;
-        if (!utils.get_cookie("newsletter-popup-"+ self.$target.data('list-id')) && self.$target) {
-           $('#o_newsletter_popup:first').modal('show').css({
-                'margin-top': '70px',
-                'position': 'fixed'
-            });
-             document.cookie = "newsletter-popup-"+ self.$target.data('list-id') +"=" + true + ";path=/";
-        }
-    }
+    /**
+     * @private
+     */
+    _showBanner: function () {
+        this.massMailingPopup.open();
+        utils.set_cookie(_.str.sprintf("newsletter-popup-%s-%s", this.listID, this.websiteID), true);
+        $(document).off('mouseleave.open_popup_event');
+    },
 });
-});
-
-odoo.define('mass_mailing.unsubscribe', function (require) {
-    var ajax = require('web.ajax');
-    var core = require('web.core');
-    require('web_editor.base'); // wait for implicit dependencies to load
-
-    var _t = core._t;
-
-    if (!$('.o_unsubscribe_form').length) {
-        return $.Deferred().reject("DOM doesn't contain '.o_unsubscribe_form'");
-    }
-
-    $('#unsubscribe_form').on('submit', function(e) {
-        e.preventDefault();
-
-        var email = $("input[name='email']").val();
-        var mailing_id = parseInt($("input[name='mailing_id']").val());
-
-        var checked_ids = [];
-        $("input[type='checkbox']:checked").each(function(i){
-          checked_ids[i] = parseInt($(this).val());
-        });
-
-        var unchecked_ids = [];
-        $("input[type='checkbox']:not(:checked)").each(function(i){
-          unchecked_ids[i] = parseInt($(this).val());
-        });
-
-        ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id})
-            .then(function(result) {
-                $('.alert-info').html(_t('Your changes have been saved.')).removeClass('alert-info').addClass('alert-success');
-            })
-            .fail(function() {
-                $('.alert-info').html(_t('Your changes have not been saved, try again later.')).removeClass('alert-info').addClass('alert-warning');
-            });
-    });
 });

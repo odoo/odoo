@@ -20,18 +20,12 @@ class AcquirerPaypal(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(selection_add=[('paypal', 'Paypal')])
-    paypal_email_account = fields.Char('Paypal Email ID', required_if_provider='paypal', groups='base.group_user')
+    paypal_email_account = fields.Char('Email', required_if_provider='paypal', groups='base.group_user')
     paypal_seller_account = fields.Char(
-        'Paypal Merchant ID', groups='base.group_user',
+        'Merchant Account ID', groups='base.group_user',
         help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.')
     paypal_use_ipn = fields.Boolean('Use IPN', default=True, help='Paypal Instant Payment Notification', groups='base.group_user')
-    paypal_pdt_token = fields.Char(string='Paypal PDT Token', required_if_provider='paypal', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
-    # Server 2 server
-    paypal_api_enabled = fields.Boolean('Use Rest API', default=False)
-    paypal_api_username = fields.Char('Rest API Username', groups='base.group_user')
-    paypal_api_password = fields.Char('Rest API Password', groups='base.group_user')
-    paypal_api_access_token = fields.Char('Access Token', groups='base.group_user')
-    paypal_api_access_token_validity = fields.Datetime('Access Token Validity', groups='base.group_user')
+    paypal_pdt_token = fields.Char(string='PDT Identity Token', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
     # Default paypal fees
     fees_dom_fixed = fields.Float(default=0.35)
     fees_dom_var = fields.Float(default=3.4)
@@ -67,7 +61,6 @@ class AcquirerPaypal(models.Model):
                 'paypal_rest_url': 'https://api.sandbox.paypal.com/v1/oauth2/token',
             }
 
-    @api.multi
     def paypal_compute_fees(self, amount, currency_id, country_id):
         """ Compute paypal fees.
 
@@ -86,10 +79,9 @@ class AcquirerPaypal(models.Model):
         else:
             percentage = self.fees_int_var
             fixed = self.fees_int_fixed
-        fees = (percentage / 100.0 * amount + fixed) / (1 - percentage / 100.0)
+        fees = (percentage / 100.0 * amount) + fixed / (1 - percentage / 100.0)
         return fees
 
-    @api.multi
     def paypal_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
@@ -117,9 +109,10 @@ class AcquirerPaypal(models.Model):
         })
         return paypal_tx_values
 
-    @api.multi
     def paypal_get_form_action_url(self):
-        return self._get_paypal_urls(self.environment)['paypal_form_url']
+        self.ensure_one()
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_paypal_urls(environment)['paypal_form_url']
 
 
 class TxPaypal(models.Model):
@@ -151,7 +144,6 @@ class TxPaypal(models.Model):
             raise ValidationError(error_msg)
         return txs[0]
 
-    @api.multi
     def _paypal_form_get_invalid_parameters(self, data):
         invalid_parameters = []
         _logger.info('Received a notification from Paypal with IPN version %s', data.get('notify_version'))
@@ -183,18 +175,34 @@ class TxPaypal(models.Model):
             # different than the business email. Therefore, if you want such a configuration in your Paypal, you are then obliged to fill
             # the Merchant ID in the Paypal payment acquirer in Odoo, so the check is performed on this variable instead of the receiver_email.
             # At least one of the two checks must be done, to avoid fraudsters.
-            if data.get('receiver_email') != self.acquirer_id.paypal_email_account:
+            if data.get('receiver_email') and data.get('receiver_email') != self.acquirer_id.paypal_email_account:
                 invalid_parameters.append(('receiver_email', data.get('receiver_email'), self.acquirer_id.paypal_email_account))
+            if data.get('business') and data.get('business') != self.acquirer_id.paypal_email_account:
+                invalid_parameters.append(('business', data.get('business'), self.acquirer_id.paypal_email_account))
 
         return invalid_parameters
 
-    @api.multi
     def _paypal_form_validate(self, data):
         status = data.get('payment_status')
         res = {
             'acquirer_reference': data.get('txn_id'),
             'paypal_txn_type': data.get('payment_type'),
         }
+        if not self.acquirer_id.paypal_pdt_token and not self.acquirer_id.paypal_seller_account and status in ['Completed', 'Processed', 'Pending']:
+            template = self.env.ref('payment_paypal.mail_template_paypal_invite_user_to_configure', False)
+            if template:
+                render_template = template.render({
+                    'acquirer': self.acquirer_id,
+                }, engine='ir.qweb')
+                mail_body = self.env['mail.thread']._replace_local_links(render_template)
+                mail_values = {
+                    'body_html': mail_body,
+                    'subject': _('Add your Paypal account to Odoo'),
+                    'email_to': self.acquirer_id.paypal_email_account,
+                    'email_from': self.acquirer_id.create_uid.email
+                }
+                self.env['mail.mail'].sudo().create(mail_values).send()
+
         if status in ['Completed', 'Processed']:
             _logger.info('Validated Paypal payment for tx %s: set as done' % (self.reference))
             try:
@@ -203,17 +211,20 @@ class TxPaypal(models.Model):
                     'PST': -8 * 3600,
                     'PDT': -7 * 3600,
                 }
-                date_validate = dateutil.parser.parse(data.get('payment_date'), tzinfos=tzinfos).astimezone(pytz.utc)
+                date = dateutil.parser.parse(data.get('payment_date'), tzinfos=tzinfos).astimezone(pytz.utc)
             except:
-                date_validate = fields.Datetime.now()
-            res.update(state='done', date_validate=date_validate)
+                date = fields.Datetime.now()
+            res.update(date=date)
+            self._set_transaction_done()
             return self.write(res)
         elif status in ['Pending', 'Expired']:
             _logger.info('Received notification for Paypal payment %s: set as pending' % (self.reference))
-            res.update(state='pending', state_message=data.get('pending_reason', ''))
+            res.update(state_message=data.get('pending_reason', ''))
+            self._set_transaction_pending()
             return self.write(res)
         else:
             error = 'Received unrecognized status for Paypal payment %s: %s, set as error' % (self.reference, status)
             _logger.info(error)
-            res.update(state='error', state_message=error)
+            res.update(state_message=error)
+            self._set_transaction_cancel()
             return self.write(res)

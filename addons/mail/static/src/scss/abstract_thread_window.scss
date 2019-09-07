@@ -1,0 +1,194 @@
+$o-mail-thread-window-zindex: $zindex-modal + 1 !default;
+
+.o_thread_window {
+    direction: ltr;
+    display: flex;
+    flex-flow: column nowrap;
+    position: fixed;
+    width: $o-mail-thread-window-width;
+    max-width: 100%;
+    height: 400px;
+    max-height: 100%;
+    font-size: 12px;
+    background-color: $o-mail-thread-window-bg;
+    border-radius: 6px 6px 0 0;
+    z-index: $o-mail-thread-window-zindex;
+    box-shadow: -5px -5px 10px rgba(black, 0.18);
+
+    @include media-breakpoint-down(sm) {
+        width: 100%;
+        height: 100%!important;
+        box-shadow: none;
+        &.o_folded {
+            display: none;
+        }
+    }
+
+    @media print {
+        display: none;
+    }
+
+    .o_thread_window_header {
+        display: flex;
+        flex: 0 0 auto;
+        color: white;
+        padding: $o-mail-chatter-gap*0.5 $o-mail-chatter-gap;
+        border-radius: 3px 3px 0 0;
+        border-bottom: 1px solid gray('300');
+        background-color: $o-brand-odoo;
+        padding: 8px;
+
+        @include media-breakpoint-down(sm) {
+            align-items: center;
+            height: $o-mail-chat-header-height;
+            padding: 0;
+            border-radius: 0px;
+            .o_thread_window_title {
+                font-size: 16px;
+                margin-left: 10px;
+            }
+
+            .o_thread_window_close {
+                $o-close-font-size: 17px;
+                padding: (($o-mail-chat-header-height - $o-close-font-size) / 2);
+                font-size: $o-close-font-size;
+                color: white;
+            }
+        }
+
+        .o_thread_window_title {
+            cursor: pointer;
+            flex: 1 1 auto;
+            @include o-text-overflow;
+
+            .o_mail_thread_typing_icon {
+                padding-left: 2px;
+
+                .o_mail_thread_typing_icon_dot {
+                    background: gray('300');
+                }
+            }
+        }
+
+        .o_thread_window_buttons {
+            flex: 0 0 auto;
+            .o_thread_window_close, .o_thread_window_expand {
+                color: white;
+                padding: 3px;
+                margin-left: 5px;
+                @include o-hover-opacity(0.7, 1);
+            }
+        }
+
+    }
+
+    .o_out_of_office {
+        background-color: #9dd0e8;
+        padding:8px;
+
+        .o_out_of_office_info {
+            font-weight: bold;
+        }
+        .o_out_of_office_text {
+            word-wrap: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .o_text_wrap {
+            white-space: nowrap;
+        }
+        .o_out_of_office_read_more_less_button {
+            display: none;
+        }
+    }
+
+    .o_mail_thread {
+        flex: 1 1 100%;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch; // smooth scrolling in iOS app (Safari)
+
+        .o_thread_date_separator {
+            margin: 0px 0px 15px 0px;
+            .o_thread_date {
+                background-color: $o-mail-thread-window-bg;
+            }
+        }
+        .o_thread_message {
+            padding: 4px 5px;
+            .o_thread_message_sidebar {
+                margin-right: 5px;
+            }
+            .o_attachment {
+                @include media-breakpoint-up(md) {
+                    width: percentage(1/3);
+                }
+            }
+        }
+    }
+
+    .o_thread_composer input {
+        width: 100%;
+    }
+}
+
+.o_thread_window_dropdown {
+    width: auto;
+    height: 28px;
+    color: white;
+    background-color: gray('900');
+    cursor: pointer;
+    box-shadow: none;
+
+    @include media-breakpoint-down(sm) {
+        display: none;
+    }
+
+    .o_thread_window_header {
+        border-radius: 0;
+    }
+
+    .o_thread_window_dropdown_toggler {
+        padding: 5px;
+
+        .o_total_unread_counter {
+            @include o-position-absolute(-10px, 0, auto, auto);
+            background-color: $o-brand-primary;
+            padding: 0 2px;
+            font-size: smaller;
+        }
+    }
+    &.show .o_thread_window_dropdown_toggler .o_total_unread_counter, .o_thread_window_expand {
+        display: none;
+    }
+
+    > ul {
+        max-width: $o-mail-thread-window-width;
+        padding: 0;
+
+        > li.o_thread_window_header {
+            font-size: 12px;
+            padding: 3px 5px;
+            &~li.o_thread_window_header {
+                border-top: 1px solid white;
+            }
+            &:hover {
+                background-color: darken($o-brand-odoo, 10%);
+            }
+        }
+    }
+}
+
+.o_ui_blocked .o_thread_window {
+    // We cannot put the z-index of thread windows directly to be greater than
+    // blockUI's as ui-autocomplete dropdowns (which are below blockUI) would
+    // appear under the thread windows (and ui-autocomplete is used to choose the
+    // person you want to chat with). So we only raise the z-index value when
+    // the ui is really blocked (in that case, the ui-autocomplete dropdowns
+    // will disappear under the thread windows but this is not really an issue as
+    // there should not be any at that time).
+    z-index: 1101; // blockUI's z-index is 1100
+}
+
+.o_no_thread_window .o_thread_window {
+    display: none;
+}

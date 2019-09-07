@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.mass.mailing</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="60"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Email Marketing" string="Email Marketing" data-key="mass_mailing" groups="mass_mailing.group_mass_mailing_user">
+                      <h2>Email Marketing</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-lg-6 o_setting_box col-12" title="This tool is advised if your marketing campaign is composed of several emails.">
+                                <div class="o_setting_left_pane" title="This is useful if your marketing campaigns are composed of several emails.">
+                                    <field name="group_mass_mailing_campaign"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_mass_mailing_campaign"/>
+                                    <div class="text-muted">
+                                        Manage mass mailing campaigns
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 o_setting_box col-12">
+                                <div class="o_setting_left_pane" title="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.">
+                                    <field name="mass_mailing_outgoing_mail_server"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="mass_mailing_outgoing_mail_server"/>
+                                    <div class="text-muted">
+                                        Use a dedicated server for mailings
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('mass_mailing_outgoing_mail_server', '=', False)]}">
+                                        <div class="mt16">
+                                            <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"/>
+                                        </div>
+                                        <div class="mt8">
+                                            <button type="action" name="base.action_ir_mail_server_list" string="Configure Email Server" icon="fa-arrow-right" class="oe_link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 o_setting_box col-xs-12">
+                                <div class="o_setting_left_pane" title="Allow the recipient to manage himself his state in the blacklist via the unsubscription page.
+                                If the option is active, the 'Blacklist Me' button is hidden on the unsubscription page.  
+                                The 'come Back' button will always be visible in any case to allow leads and partners to re-subscribe.">
+                                    <field name="show_blacklist_buttons"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="show_blacklist_buttons"/>
+                                    <div class="text-muted">
+                                        Allow recipients to blacklist themselves
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_mass_mailing_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'mass_mailing'}</field>
+        </record>
+
+        <menuitem id="menu_mass_mailing_global_settings" name="Settings"
+            parent="mass_mailing_configuration" sequence="0" action="action_mass_mailing_configuration" groups="base.group_system"/>
+</odoo>

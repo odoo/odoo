@@ -30,7 +30,7 @@ var DiagramModel = AbstractModel.extend({
     /**
      * @override
      * @param {Object} params
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     load: function (params) {
         this.modelName = params.modelName;
@@ -58,7 +58,7 @@ var DiagramModel = AbstractModel.extend({
     /**
      * @private
      * @param {any} record
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _fetchDiagramInfo: function () {
         var self = this;

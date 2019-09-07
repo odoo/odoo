@@ -6,14 +6,14 @@
         </record>
         <record id="fleet_group_user" model="res.groups">
             <field name="name">User</field>
-            <field name="category_id" ref="module_fleet_category"/>
+            <field name="category_id" ref="base.module_category_human_resources_fleet"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
         <record id="fleet_group_manager" model="res.groups">
-            <field name="name">Manager</field>
+            <field name="name">Administrator</field>
             <field name="implied_ids" eval="[(4, ref('fleet_group_user'))]"/>
-            <field name="category_id" ref="module_fleet_category"/>
-            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="base.module_category_human_resources_fleet"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
     <data noupdate="1">
@@ -81,34 +81,40 @@
             <field name="domain_force">[('driver_id','=',user.partner_id.id)]</field>
         </record>
         <record id="fleet_rule_contract_visibility_manager" model="ir.rule">
-            <field name="name">Manager has all rights on vehicle's contracts</field>
+            <field name="name">Administrator has all rights on vehicle's contracts</field>
             <field name="model_id" ref="model_fleet_vehicle_log_contract"/>
             <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
         </record>
         <record id="fleet_rule_cost_visibility_manager" model="ir.rule">
-            <field name="name">Manager has all rights on vehicle's costs</field>
+            <field name="name">Administrator has all rights on vehicle's costs</field>
             <field name="model_id" ref="model_fleet_vehicle_cost"/>
             <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
         </record>
         <record id="fleet_rule_service_visibility_manager" model="ir.rule">
-            <field name="name">Manager has all rights on vehicle's services</field>
+            <field name="name">Administrator has all rights on vehicle's services</field>
             <field name="model_id" ref="model_fleet_vehicle_log_services"/>
             <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
         </record>
         <record id="fleet_rule_odometer_visibility_manager" model="ir.rule">
-            <field name="name">Manager has all rights on vehicle's vehicle's odometer</field>
+            <field name="name">Administrator has all rights on vehicle's vehicle's odometer</field>
             <field name="model_id" ref="model_fleet_vehicle_odometer"/>
             <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
         </record>
         <record id="fleet_rule_fuel_log_visibility_manager" model="ir.rule">
-            <field name="name">Manager has all rights on vehicle's fuel log</field>
+            <field name="name">Administrator has all rights on vehicle's fuel log</field>
             <field name="model_id" ref="model_fleet_vehicle_log_fuel"/>
             <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
         </record>
         <record id="fleet_rule_vehicle_visibility_manager" model="ir.rule">
-            <field name="name">Manager has all rights on vehicle</field>
+            <field name="name">Administrator has all rights on vehicle</field>
             <field name="model_id" ref="model_fleet_vehicle"/>
             <field name="groups" eval="[(4, ref('fleet_group_manager'))]"/>
+        </record>
+        <record id="ir_rule_fleet_vehicle" model="ir.rule">
+            <field name="name">Fleet vehicle: Multi Company</field>
+            <field name="model_id" ref="model_fleet_vehicle"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
         </record>
     </data>
 </odoo>

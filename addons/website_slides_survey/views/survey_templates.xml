@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="survey_templates_inherit_website_slides" inherit_id="survey.sfinished">
+            <xpath expr="//div[hasclass('jumbotron')]/div[last()]" position="after">
+                <div t-if="channel_url" class="mt16">
+                    <a role="button"
+                        class="btn btn-primary btn-lg"
+                        t-att-href="channel_url">
+                        Go back to course
+                    </a>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="o_wss_certification_icon">
+            <t t-set="icon_url" t-value="icon_url if icon_url else '/website_slides_survey/static/src/img/certification.svg'"/>
+            <t t-set="icon_classes" t-value="icon_classes if icon_classes else 'o_wss_certification_icon'"/>
+            <img t-att-class="icon_classes" t-att-src="icon_url" alt="Certification icon"/>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<odoo><data>
+    <!--Private profile-->
+    <template id="private_profile" inherit_id="website_profile.private_profile">
+        <xpath expr="//div[@id='private_profile_return_link_container']" position="inside">
+            <t t-if="request.params.get('channel_id')">
+                <p><a t-attf-href="/slides/course-#{request.params.get('channel_id')}">Return to the course.</a></p>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="user_profile_content" inherit_id="website_profile.user_profile_content">
+        <xpath expr="//div[@id='profile_about_badge']" position="before">
+            <t t-if="channel">
+                <div class="mb32">
+                    <h5 class="border-bottom pb-1">Completed Courses</h5>
+                    <t t-if="courses_completed" t-call="website_slides.display_course">
+                        <t t-set="courses" t-value="courses_completed"></t>
+                    </t>
+                    <p t-else="" class="text-muted">No completed course yet</p>
+                </div>
+                <div class="mb32">
+                    <h5 class="border-bottom pb-1">Followed Courses</h5>
+                    <t t-if="courses_ongoing" t-call="website_slides.display_course">
+                        <t t-set="courses" t-value="courses_ongoing"></t>
+                    </t>
+                    <p t-else="" class="text-muted">No followed course yet</p>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="display_course">
+        <div class="row">
+            <div class="col-12 col-lg-6" t-foreach="courses" t-as="course">
+                <!-- We cannot use the course.channel_id.completion here since the slide.channel.partners are fetched in sudo mode, recompute it -->
+                <t t-set="channel_completion" t-value="round(100.0 * course.completion / (course.channel_id.total_slides or 1))" />
+                <div class="card mb-2">
+                    <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex"
+                        t-attf-onclick="location.href='/slides/#{slug(course.channel_id)}';">
+
+                        <div t-if="course.channel_id.image_1024" class="pl-5 pr-4 rounded-left" t-attf-style="background-image: url(#{website.image_url(course.channel_id, 'image_1024')}); background-size: cover; background-position: center"/>
+                        <div t-else="" class="o_wslides_gradient pl-5 pr-4 rounded-left position-relative" style="opacity: 0.8">
+                            <i class="fa fa-graduation-cap fa-fw mr-2 mt-3 position-absolute text-white-75" style="right:0; top: 0"/>
+                        </div>
+
+                        <div class="p-2 w-100">
+                            <h5 class="mt-0 mb-1" t-field="course.channel_id.name"/>
+
+                            <div class="overflow-hidden mb-1" style="height:24px">
+                                <t t-foreach="course.channel_id.tag_ids" t-as="tag">
+                                    <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
+                                </t>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <div class="progress flex-grow-1" style="height:0.5em">
+                                    <div class="progress-bar bg-primary" t-att-style="'width: '+ str(channel_completion)+'%'"/>
+                                </div>
+                                <small class="font-weight-bold pl-2"><span t-esc="channel_completion"/> %</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</data></odoo>

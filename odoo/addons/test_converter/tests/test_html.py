@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import datetime
 import os
 
@@ -73,7 +73,7 @@ class TestFloatExport(TestBasicExport):
         converter = self.get_converter('float')
 
         value = converter(-42.0)
-        self.assertEqual(value, u"\u201142.0")
+        self.assertEqual(value, u"-\N{ZERO WIDTH NO-BREAK SPACE}42.0")
 
         value = converter(42.0100)
         self.assertEqual(value, "42.01")
@@ -120,10 +120,10 @@ class TestCurrencyExport(TestExport):
         converted = self.convert(obj, dest=currency)
 
         self.assertEqual(
-            converted, u'<span class="oe_currency_value">\u20110.12</span>'
+            converted, u'<span class="oe_currency_value">-\N{ZERO WIDTH NO-BREAK SPACE}0.12</span>'
                        u'\N{NO-BREAK SPACE}{symbol}'.format(
                 obj=obj,
-                symbol=currency.symbol.encode('utf-8')
+                symbol=currency.symbol
             ),)
 
     def test_currency_pre(self):
@@ -136,9 +136,9 @@ class TestCurrencyExport(TestExport):
         self.assertEqual(
             converted,
                       u'{symbol}\N{NO-BREAK SPACE}'
-                      '<span class="oe_currency_value">0.12</span>'.format(
+                      u'<span class="oe_currency_value">0.12</span>'.format(
                 obj=obj,
-                symbol=currency.symbol.encode('utf-8')
+                symbol=currency.symbol
             ),)
 
     def test_currency_precision(self):
@@ -151,10 +151,10 @@ class TestCurrencyExport(TestExport):
 
         self.assertEqual(
             converted,
-                      '<span class="oe_currency_value">0.12</span>'
+                      u'<span class="oe_currency_value">0.12</span>'
                       u'\N{NO-BREAK SPACE}{symbol}'.format(
                 obj=obj,
-                symbol=currency.symbol.encode('utf-8')
+                symbol=currency.symbol
             ),)
 
 
@@ -213,33 +213,27 @@ class TestBinaryExport(TestBasicExport):
         with open(os.path.join(directory, 'test_vectors', 'image'), 'rb') as f:
             content = f.read()
 
-        encoded_content = content.encode('base64')
+        encoded_content = base64.b64encode(content)
         value = converter.value_to_html(encoded_content, {})
 
         self.assertEqual(
-            value, '<img src="data:image/jpeg;base64,%s">' % (
-                encoded_content
-            ))
+            value, u'<img src="data:image/jpeg;base64,%s">' % encoded_content.decode('ascii'))
 
         with open(os.path.join(directory, 'test_vectors', 'pdf'), 'rb') as f:
             content = f.read()
 
         with self.assertRaises(ValueError):
-            converter.value_to_html(content.encode('base64'), {})
+            converter.value_to_html(base64.b64encode(content), {})
 
         with open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
             content = f.read()
 
         with self.assertRaises(ValueError):
-            converter.value_to_html(content.encode('base64'), {})
+            converter.value_to_html(base64.b64encode(content), {})
 
 
 class TestSelectionExport(TestBasicExport):
     def test_selection(self):
-        converter = self.get_converter('selection')
-        value = converter(4)
-        self.assertEqual(value, e(u"réponse <D>"))
-
         converter = self.get_converter('selection_str')
         value = converter('C')
         self.assertEqual(value, u"Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?")
@@ -299,17 +293,18 @@ class TestDurationExport(TestBasicExport):
         # needs to have lang installed otherwise falls back on en_US
         self.env['res.lang'].load_lang('fr_FR')
 
+    def test_default_unit(self):
+        converter = self.get_converter('float', 'duration')
+        self.assertEqual(converter(4), u'4 seconds')
+
     def test_negative(self):
         converter = self.get_converter('float', 'duration')
+        self.assertEqual(converter(-4), u'- 4 seconds')
 
-        with self.assertRaises(ValueError):
-            converter(-4)
-
-    def test_missing_unit(self):
+    def test_negative_with_round(self):
         converter = self.get_converter('float', 'duration')
-
-        with self.assertRaises(ValueError):
-            converter(4)
+        result = converter(-4.678, {'unit': 'year', 'round': 'hour'}, {'lang': 'fr_FR'})
+        self.assertEqual(result, u'- 4 ans 8 mois 1 semaine 11 heures')
 
     def test_basic(self):
         converter = self.get_converter('float', 'duration')

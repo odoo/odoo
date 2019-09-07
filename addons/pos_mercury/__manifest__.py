@@ -22,7 +22,6 @@ following:
 * Supported cards: Visa, MasterCard, American Express, Discover
     """,
     'depends': ['web', 'barcodes', 'point_of_sale'],
-    'website': '',
     'data': [
         'data/pos_mercury_data.xml',
         'security/ir.model.access.csv',
@@ -30,6 +29,7 @@ following:
         'views/pos_mercury_views.xml',
         'views/pos_mercury_transaction_templates.xml',
         'views/pos_config_setting_views.xml',
+        'views/pos_config_views.xml',
     ],
     'demo': [
         'data/pos_mercury_demo.xml',

@@ -21,11 +21,22 @@ _CONFDELTYPES = {
     'SET DEFAULT': 'd',
 }
 
+def existing_tables(cr, tablenames):
+    """ Return the names of existing tables among ``tablenames``. """
+    query = """
+        SELECT c.relname
+          FROM pg_class c
+          JOIN pg_namespace n ON (n.oid = c.relnamespace)
+         WHERE c.relname IN %s
+           AND c.relkind IN ('r', 'v', 'm')
+           AND n.nspname = 'public'
+    """
+    cr.execute(query, [tuple(tablenames)])
+    return [row[0] for row in cr.fetchall()]
+
 def table_exists(cr, tablename):
     """ Return whether the given table exists. """
-    query = "SELECT 1 FROM information_schema.tables WHERE table_name=%s"
-    cr.execute(query, (tablename,))
-    return cr.rowcount
+    return len(existing_tables(cr, {tablename})) == 1
 
 def table_kind(cr, tablename):
     """ Return the kind of a table: ``'r'`` (regular table), ``'v'`` (view),
@@ -46,7 +57,11 @@ def table_columns(cr, tablename):
     """ Return a dict mapping column names to their configuration. The latter is
         a dict with the data from the table ``information_schema.columns``.
     """
-    query = 'SELECT * FROM information_schema.columns WHERE table_name=%s'
+    # Do not select the field `character_octet_length` from `information_schema.columns`
+    # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
+    # might prevent a postgres user to read this field.
+    query = '''SELECT column_name, udt_name, character_maximum_length, is_nullable
+               FROM information_schema.columns WHERE table_name=%s'''
     cr.execute(query, (tablename,))
     return {row['column_name']: row for row in cr.dictfetchall()}
 
@@ -59,7 +74,8 @@ def column_exists(cr, tablename, columnname):
 
 def create_column(cr, tablename, columnname, columntype, comment=None):
     """ Create a column with the given type. """
-    cr.execute('ALTER TABLE "{}" ADD COLUMN "{}" {}'.format(tablename, columnname, columntype))
+    coldefault = (columntype.upper()=='BOOLEAN') and 'DEFAULT false' or ''
+    cr.execute('ALTER TABLE "{}" ADD COLUMN "{}" {} {}'.format(tablename, columnname, columntype, coldefault))
     if comment:
         cr.execute('COMMENT ON COLUMN "{}"."{}" IS %s'.format(tablename, columnname), (comment,))
     _schema.debug("Table %r: added column %r of type %s", tablename, columnname, columntype)
@@ -103,22 +119,30 @@ def drop_not_null(cr, tablename, columnname):
     cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" DROP NOT NULL'.format(tablename, columnname))
     _schema.debug("Table %r: column %r: dropped constraint NOT NULL", tablename, columnname)
 
-def constraint_definition(cr, constraintname):
+def constraint_definition(cr, tablename, constraintname):
     """ Return the given constraint's definition. """
-    cr.execute("SELECT pg_get_constraintdef(oid) FROM pg_constraint WHERE conname=%s", (constraintname,))
+    query = """
+        SELECT COALESCE(d.description, pg_get_constraintdef(c.oid))
+        FROM pg_constraint c
+        JOIN pg_class t ON t.oid = c.conrelid
+        LEFT JOIN pg_description d ON c.oid = d.objoid
+        WHERE t.relname = %s AND conname = %s;"""
+    cr.execute(query, (tablename, constraintname))
     return cr.fetchone()[0] if cr.rowcount else None
 
 def add_constraint(cr, tablename, constraintname, definition):
     """ Add a constraint on the given table. """
-    query = 'ALTER TABLE "{}" ADD CONSTRAINT "{}" {}'.format(tablename, constraintname, definition)
+    query1 = 'ALTER TABLE "{}" ADD CONSTRAINT "{}" {}'.format(tablename, constraintname, definition)
+    query2 = 'COMMENT ON CONSTRAINT "{}" ON "{}" IS %s'.format(constraintname, tablename)
     try:
         with cr.savepoint():
-            cr.execute(query)
+            cr.execute(query1)
+            cr.execute(query2, (definition,))
             _schema.debug("Table %r: added constraint %r as %s", tablename, constraintname, definition)
     except Exception:
         msg = "Table %r: unable to add constraint %r!\n" \
               "If you want to have it, you should update the records and execute manually:\n%s"
-        _schema.warning(msg, tablename, constraintname, query, exc_info=True)
+        _schema.warning(msg, tablename, constraintname, query1, exc_info=True)
 
 def drop_constraint(cr, tablename, constraintname):
     """ drop the given constraint. """

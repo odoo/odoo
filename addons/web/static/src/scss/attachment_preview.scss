@@ -1,0 +1,113 @@
+// Attachment Icons (common for many2many_binary widget and chat thread and chat composer)
+// ------------------------------------------------------------------
+$o-attachment-image-size: 38px;
+$o-attachment-margin: 5px;
+
+.o_attachment {
+    position: relative;
+    width: 100%;
+    padding: $o-attachment-margin;
+
+    @include media-breakpoint-up(md) {
+        width: 50%;
+    }
+    @include media-breakpoint-up(lg) {
+        width: 25%;
+    }
+    // many2many_binary widget for send mail with attachment
+    &.o_attachment_many2many {
+        @include media-breakpoint-up(md) {
+            width: 50%;
+        }
+        @include media-breakpoint-up(lg) {
+            width: 62%;
+        }
+    }
+
+    .o_attachment_wrap {
+        overflow: hidden;
+        position: relative;
+        border-bottom: 1px solid rgba(black, 0.1);
+        border-radius: 2px;
+        padding: 4px 6px 0 4px;
+        background-color: rgba(black, 0.05);
+
+        .o_attachment_delete_cross {
+            float: right;
+            cursor: pointer;
+        }
+    }
+
+    &.o_attachment_editable .o_attachment_wrap  {
+        padding-right: 40px;
+    }
+
+    .o_image {
+        width: $o-attachment-image-size;
+        height: $o-attachment-image-size;
+        image-orientation: from-image; // Only supported in Firefox
+        &.o_hover {
+            @include o-hover-opacity($default-opacity: 1, $hover-opacity: 0.7);
+        }
+    }
+
+    .o_attachment_view {
+        cursor: zoom-in;
+    }
+
+    .caption {
+        @include o-text-overflow(block);
+
+        a {
+            @include o-hover-text-color($default-color: $o-main-text-color, $hover-color: $headings-color);
+        }
+    }
+
+    .o_attachment_progress_bar {
+        display: none;
+    }
+
+    .o_attachment_uploaded, .o_attachment_delete {
+        @include o-position-absolute(0, 0, 0, $left: auto);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+    }
+
+    .o_attachment_delete {
+        background: desaturate(theme-color('primary'), 50%);
+        color: white;
+        cursor: pointer;
+        font-size: 20px;
+        transform: translateX(100%);
+        transition: all 0.3s ease 0s;
+
+        &:hover {
+            background: theme-color('primary');
+        }
+    }
+
+    &.o_attachment_uploading {
+        .o_attachment_progress_bar {
+            display: inline-block;
+            margin: 0 0 0 8px;
+            border-radius: 2px;
+            vertical-align: bottom;
+
+            > div {
+                font-size: 11px;
+                padding: 0 7px;
+            }
+        }
+
+        .o_attachment_delete, .o_attachment_uploaded {
+            display: none;
+        }
+    }
+
+    &:hover .o_attachment_delete {
+        transition: all 0.1s ease 0s;
+        transform: translateX(0);
+    }
+}

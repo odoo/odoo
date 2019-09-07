@@ -1,72 +1,112 @@
 odoo.define('website_forum.share', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var core = require('web.core');
-var base = require('web_editor.base');
-var SocialShare = require('website.share');
-var website = require('website.website');
+var publicWidget = require('web.public.widget');
+
 var qweb = core.qweb;
-var tmpl = ajax.loadXML('/website_forum/static/src/xml/website_forum_share_templates.xml', qweb);
 
+// FIXME There is no reason to inherit from socialShare here
+var ForumShare = publicWidget.registry.socialShare.extend({
+    selector: '',
+    xmlDependencies: publicWidget.registry.socialShare.prototype.xmlDependencies
+        .concat(['/website_forum/static/src/xml/website_forum_share_templates.xml']),
+    events: {},
 
-if(!$('.website_forum').length) {
-    return $.Deferred().reject("DOM doesn't contain '.website_forum'");
-}
-
-
-var ForumShare = SocialShare.extend({
-    init: function (parent, target_type) {
-        this.target_type = target_type;
-        this._super(parent);
-    },
-    bind_events: function () {
+    /**
+     * @override
+     * @param {Object} parent
+     * @param {Object} options
+     * @param {string} targetType
+     */
+    init: function (parent, options, targetType) {
         this._super.apply(this, arguments);
-        $('.oe_share_bump').click($.proxy(this.post_bump, this));
+        this.targetType = targetType;
     },
-    renderElement: function () {
-        if (! this.target_type) {
-            this._super();
-        }
-        else if (this.target_type == 'social-alert') {
-            $('.row .question').before(qweb.render('website.social_alert', {medias: this.social_list}));
-        }
-        else {
-            this.template = 'website.social_modal';
-            $('body').append(qweb.render(this.template, {medias: this.social_list, target_type: this.target_type}));
+    /**
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        this._onMouseEnter();
+        return def;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _bindSocialEvent: function () {
+        this._super.apply(this, arguments);
+        $('.oe_share_bump').click($.proxy(this._postBump, this));
+    },
+    /**
+     * @private
+     */
+    _render: function () {
+        if (!this.targetType) {
+            this._super.apply(this, arguments);
+        } else if (this.targetType === 'social-alert') {
+            $('.row .question').before(qweb.render('website.social_alert', {medias: this.socialList}));
+        } else {
+            $('body').append(qweb.render('website.social_modal', {medias: this.socialList, target_type: this.targetType}));
             $('#oe_social_share_modal').modal('show');
         }
     },
-    post_bump: function () {
-        ajax.jsonRpc('/forum/post/bump', 'call', {
-            'post_id': this.element.data('id'),
+    /**
+     * @private
+     */
+    _postBump: function () {
+        this._rpc({ // FIXME
+            route: '/forum/post/bump',
+            params: {
+                post_id: this.element.data('id'),
+            },
         });
-    }
+    },
 });
 
-$.when(base.ready(), tmpl).done(function() {
+publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
+    selector: '.website_forum',
+    events: {
+        'click :not(.karma_required).oe_social_share_call': '_onShareCallClick',
+    },
 
-    // Store social share data to display modal on next page
-    $(document.body).on('click', ':not(.karma_required).oe_social_share_call', function() {
-        var social_data = {};
-        social_data['target_type'] = $(this).data('social-target-type');
-        sessionStorage.setItem('social_share', JSON.stringify(social_data));
-    });
+    /**
+     * @override
+     */
+    start: function () {
+        // Retrieve stored social data
+        if (sessionStorage.getItem('social_share')) {
+            var socialData = JSON.parse(sessionStorage.getItem('social_share'));
+            (new ForumShare(this, false, socialData.targetType)).attachTo($(document.body));
+            sessionStorage.removeItem('social_share');
+        }
+        // Display an alert if post has no reply and is older than 10 days
+        var $questionContainer = $('.oe_js_bump');
+        if ($questionContainer.length) {
+            new ForumShare(this, false, 'social-alert').attachTo($questionContainer);
+        }
 
-    // Retrieve stored social data
-    if(sessionStorage.getItem('social_share')){
-        var social_data = JSON.parse(sessionStorage.getItem('social_share'));
-        new ForumShare($(this), social_data['target_type']);
-        sessionStorage.removeItem('social_share');
-    }
+        return this._super.apply(this, arguments);
+    },
 
-    // Display an alert if post has no reply and is older than 10 days
-    if ($('.oe_js_bump').length) {
-        var $question_container = $('.oe_js_bump');
-        new ForumShare($question_container, 'social-alert');
-    }
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
+    /**
+     * Stores social share data to display modal on next page.
+     *
+     * @private
+     */
+    _onShareCallClick: function (ev) {
+        sessionStorage.setItem('social_share', JSON.stringify({
+            targetType: $(ev.currentTarget).data('social-target-type'),
+        }));
+    },
 });
-return {};
-
 });

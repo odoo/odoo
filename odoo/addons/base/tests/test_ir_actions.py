@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2 import IntegrityError
+from psycopg2 import IntegrityError, ProgrammingError
 
 import odoo
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import mute_logger
 from odoo.tests import common
 
@@ -38,9 +38,13 @@ class TestServerActionsBase(common.TransactionCase):
         self.res_partner_city_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'city')])
         self.res_partner_country_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'country_id')])
         self.res_partner_parent_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'parent_id')])
+        self.res_partner_children_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'child_ids')])
+        self.res_partner_category_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'category_id')])
         self.res_country_model = Model.search([('model', '=', 'res.country')])
         self.res_country_name_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'name')])
         self.res_country_code_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'code')])
+        self.res_partner_category_model = Model.search([('model', '=', 'res.partner.category')])
+        self.res_partner_category_name_field = Fields.search([('model', '=', 'res.partner.category'), ('name', '=', 'name')])
 
         # create server action to
         self.action = self.env['ir.actions.server'].create({
@@ -60,19 +64,11 @@ class TestServerActions(TestServerActionsBase):
 
         # Do: create contextual action
         self.action.create_action()
-
-        # Test: ir_values created
-        ir_values = self.env['ir.values'].search([('name', '=', 'Run TestAction')])
-        self.assertEqual(len(ir_values), 1, 'ir_actions_server: create_action should have created an entry in ir_values')
-        self.assertEqual(ir_values.value, 'ir.actions.server,%s' % self.action.id, 'ir_actions_server: created ir_values should reference the server action')
-        self.assertEqual(ir_values.model, 'res.partner', 'ir_actions_server: created ir_values should be linked to the action base model')
+        self.assertEqual(self.action.binding_model_id.model, 'res.partner')
 
         # Do: remove contextual action
         self.action.unlink_action()
-
-        # Test: ir_values removed
-        ir_values = self.env['ir.values'].search([('name', '=', 'Run TestAction')])
-        self.assertEqual(len(ir_values), 0, 'ir_actions_server: unlink_action should remove the ir_values record')
+        self.assertFalse(self.action.binding_model_id)
 
     def test_10_code(self):
         self.action.write({
@@ -87,10 +83,27 @@ class TestServerActions(TestServerActionsBase):
         self.assertEqual(len(partners), 1, 'ir_actions_server: 1 new partner should have been created')
 
     def test_20_crud_create(self):
+        # Do: create a new record in another model
+        self.action.write({
+            'state': 'object_create',
+            'crud_model_id': self.res_country_model.id,
+            'link_field_id': False,
+            'fields_lines': [(5,),
+                             (0, 0, {'col1': self.res_country_name_field.id, 'value': 'record.name', 'evaluation_type': 'equation'}),
+                             (0, 0, {'col1': self.res_country_code_field.id, 'value': 'record.name[0:2]', 'evaluation_type': 'equation'})],
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
+        # Test: new country created
+        country = self.test_country.search([('name', 'ilike', 'TestingPartner')])
+        self.assertEqual(len(country), 1, 'ir_actions_server: TODO')
+        self.assertEqual(country.code, 'TE', 'ir_actions_server: TODO')
+
+    def test_20_crud_create_link_many2one(self):
         _city = 'TestCity'
         _name = 'TestNew'
 
-        # Do: create a new record in the same model and link it
+        # Do: create a new record in the same model and link it with a many2one
         self.action.write({
             'state': 'object_create',
             'crud_model_id': self.action.model_id.id,
@@ -107,21 +120,39 @@ class TestServerActions(TestServerActionsBase):
         # Test: new partner linked
         self.assertEqual(self.test_partner.parent_id, partner, 'ir_actions_server: TODO')
 
-        # Do: create a new record in another model
+    def test_20_crud_create_link_one2many(self):
+        _name = 'TestNew'
+
+        # Do: create a new record in the same model and link it with a one2many
         self.action.write({
             'state': 'object_create',
-            'crud_model_id': self.res_country_model.id,
-            'link_field_id': False,
-            'fields_lines': [(5,),
-                             (0, 0, {'col1': self.res_country_name_field.id, 'value': 'record.name', 'type': 'equation'}),
-                             (0, 0, {'col1': self.res_country_code_field.id, 'value': 'record.name[0:2]', 'type': 'equation'})],
+            'crud_model_id': self.action.model_id.id,
+            'link_field_id': self.res_partner_children_field.id,
+            'fields_lines': [(0, 0, {'col1': self.res_partner_name_field.id, 'value': _name})],
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
-        # Test: new country created
-        country = self.test_country.search([('name', 'ilike', 'TestingPartner')])
-        self.assertEqual(len(country), 1, 'ir_actions_server: TODO')
-        self.assertEqual(country.code, 'TE', 'ir_actions_server: TODO')
+        # Test: new partner created
+        partner = self.test_partner.search([('name', 'ilike', _name)])
+        self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
+        self.assertEqual(partner.name, _name, 'ir_actions_server: TODO')
+        # Test: new partner linked
+        self.assertIn(partner, self.test_partner.child_ids, 'ir_actions_server: TODO')
+
+    def test_20_crud_create_link_many2many(self):
+        # Do: create a new record in another model
+        self.action.write({
+            'state': 'object_create',
+            'crud_model_id': self.res_partner_category_model.id,
+            'link_field_id': self.res_partner_category_field.id,
+            'fields_lines': [(0, 0, {'col1': self.res_partner_category_name_field.id, 'value': 'record.name', 'evaluation_type': 'equation'})],
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
+        # Test: new category created
+        category = self.env['res.partner.category'].search([('name', 'ilike', 'TestingPartner')])
+        self.assertEqual(len(category), 1, 'ir_actions_server: TODO')
+        self.assertIn(category, self.test_partner.category_id)
 
     def test_30_crud_write(self):
         _name = 'TestNew'
@@ -138,7 +169,7 @@ class TestServerActions(TestServerActionsBase):
         self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, 'OrigCity', 'ir_actions_server: TODO')
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_40_multi(self):
         # Data: 2 server actions that will be nested
         action1 = self.action.create({
@@ -185,9 +216,48 @@ class TestServerActions(TestServerActionsBase):
                 'child_ids': [(6, 0, [self.action.id])]
             })
 
+    def test_50_groups(self):
+        """ check the action is returned only for groups dedicated to user """
+        Actions = self.env['ir.actions.actions']
+
+        group0 = self.env['res.groups'].create({'name': 'country group'})
+
+        self.context = {
+            'active_model': 'res.country',
+            'active_id': self.test_country.id,
+        }
+
+        # Do: update model and group
+        self.action.write({
+            'model_id': self.res_country_model.id,
+            'binding_model_id': self.res_country_model.id,
+            'groups_id': [(4, group0.id, 0)],
+            'code': 'record.write({"vat_label": "VatFromTest"})',
+        })
+
+        # Test: action is not returned
+        bindings = Actions.get_bindings('res.country')
+        self.assertFalse(bindings)
+
+        with self.assertRaises(AccessError):
+            self.action.with_context(self.context).run()
+        self.assertFalse(self.test_country.vat_label)
+
+        # add group to the user, and test again
+        self.env.user.write({'groups_id': [(4, group0.id)]})
+
+        bindings = Actions.get_bindings('res.country')
+        self.assertItemsEqual(bindings.get('action'), self.action.read())
+
+        self.action.with_context(self.context).run()
+        self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
+
+
+
 
 class TestCustomFields(common.TransactionCase):
     MODEL = 'res.partner'
+    COMODEL = 'res.users'
 
     def setUp(self):
         # check that the registry is properly reset
@@ -200,20 +270,17 @@ class TestCustomFields(common.TransactionCase):
         super(TestCustomFields, self).setUp()
 
         # use a test cursor instead of a real cursor
-        self.registry.enter_test_mode()
+        self.registry.enter_test_mode(self.cr)
         self.addCleanup(self.registry.leave_test_mode)
 
-        # do not reload the registry after removing a field
-        self.env = self.env(context={'_force_unlink': True})
-
-    def create_field(self, name):
+    def create_field(self, name, *, field_type='char'):
         """ create a custom field and return it """
         model = self.env['ir.model'].search([('model', '=', self.MODEL)])
         field = self.env['ir.model.fields'].create({
             'model_id': model.id,
             'name': name,
             'field_description': name,
-            'ttype': 'char',
+            'ttype': field_type,
         })
         self.assertIn(name, self.env[self.MODEL]._fields)
         return field
@@ -251,14 +318,14 @@ class TestCustomFields(common.TransactionCase):
     def test_create_unique(self):
         """ one cannot create two fields with the same name on a given model """
         self.create_field('x_foo')
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
             self.create_field('x_foo')
 
     def test_rename_unique(self):
         """ one cannot create two fields with the same name on a given model """
         field1 = self.create_field('x_foo')
         field2 = self.create_field('x_bar')
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
             field2.name = field1.name
 
     def test_remove_without_view(self):
@@ -271,6 +338,7 @@ class TestCustomFields(common.TransactionCase):
         field = self.create_field('x_foo')
         field.name = 'x_bar'
 
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_remove_with_view(self):
         """ try removing a custom field that occurs in a view """
         field = self.create_field('x_foo')
@@ -281,6 +349,7 @@ class TestCustomFields(common.TransactionCase):
             field.unlink()
         self.assertIn('x_foo', self.env[self.MODEL]._fields)
 
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_rename_with_view(self):
         """ try renaming a custom field that occurs in a view """
         field = self.create_field('x_foo')
@@ -290,3 +359,120 @@ class TestCustomFields(common.TransactionCase):
         with self.assertRaises(UserError):
             field.name = 'x_bar'
         self.assertIn('x_foo', self.env[self.MODEL]._fields)
+
+    def test_unlink_with_inverse(self):
+        """ create a custom o2m and then delete its m2o inverse """
+        model = self.env['ir.model']._get(self.MODEL)
+        comodel = self.env['ir.model']._get(self.COMODEL)
+
+        m2o_field = self.env['ir.model.fields'].create({
+            'model_id': comodel.id,
+            'name': 'x_my_m2o',
+            'field_description': 'my_m2o',
+            'ttype': 'many2one',
+            'relation': self.MODEL,
+        })
+
+        o2m_field = self.env['ir.model.fields'].create({
+            'model_id': model.id,
+            'name': 'x_my_o2m',
+            'field_description': 'my_o2m',
+            'ttype': 'one2many',
+            'relation': self.COMODEL,
+            'relation_field': m2o_field.name,
+        })
+
+        # normal mode: you cannot break dependencies
+        with self.assertRaises(UserError):
+            m2o_field.unlink()
+
+        # uninstall mode: unlink dependant fields
+        m2o_field.with_context(_force_unlink=True).unlink()
+        self.assertFalse(o2m_field.exists())
+
+    def test_unlink_with_dependant(self):
+        """ create a computed field, then delete its dependency """
+        # Also applies to compute fields
+        comodel = self.env['ir.model'].search([('model', '=', self.COMODEL)])
+
+        field = self.create_field('x_my_char')
+
+        dependant = self.env['ir.model.fields'].create({
+            'model_id': comodel.id,
+            'name': 'x_oh_boy',
+            'field_description': 'x_oh_boy',
+            'ttype': 'char',
+            'related': 'partner_id.x_my_char',
+        })
+
+        # normal mode: you cannot break dependencies
+        with self.assertRaises(UserError):
+            field.unlink()
+
+        # uninstall mode: unlink dependant fields
+        field.with_context(_force_unlink=True).unlink()
+        self.assertFalse(dependant.exists())
+
+    def test_create_binary(self):
+        """ binary custom fields should be created as attachment=True to avoid
+        bloating the DB when creating e.g. image fields via studio
+        """
+        self.create_field('x_image', field_type='binary')
+        custom_binary = self.env[self.MODEL]._fields['x_image']
+
+        self.assertTrue(custom_binary.attachment)
+
+    def test_selection(self):
+        """ custom selection field """
+        Model = self.env[self.MODEL]
+        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
+        field = self.env['ir.model.fields'].create({
+            'model_id': model.id,
+            'name': 'x_sel',
+            'field_description': "Custom Selection",
+            'ttype': 'selection',
+            'selection_ids': [
+                (0, 0, {'value': 'foo', 'name': 'Foo', 'sequence': 0}),
+                (0, 0, {'value': 'bar', 'name': 'Bar', 'sequence': 1}),
+            ],
+        })
+
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar')])
+
+        # add selection value 'baz'
+        field.selection_ids.create({
+            'field_id': field.id, 'value': 'baz', 'name': 'Baz', 'sequence': 2,
+        })
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')])
+
+        # assign values to records
+        rec1 = Model.create({'name': 'Rec1', 'x_sel': 'foo'})
+        rec2 = Model.create({'name': 'Rec2', 'x_sel': 'bar'})
+        rec3 = Model.create({'name': 'Rec3', 'x_sel': 'baz'})
+        self.assertEqual(rec1.x_sel, 'foo')
+        self.assertEqual(rec2.x_sel, 'bar')
+        self.assertEqual(rec3.x_sel, 'baz')
+
+        # remove selection value 'foo'
+        field.selection_ids[0].unlink()
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('bar', 'Bar'), ('baz', 'Baz')])
+
+        self.assertEqual(rec1.x_sel, False)
+        self.assertEqual(rec2.x_sel, 'bar')
+        self.assertEqual(rec3.x_sel, 'baz')
+
+        # update selection value 'bar'
+        field.selection_ids[0].value = 'quux'
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('quux', 'Bar'), ('baz', 'Baz')])
+
+        self.assertEqual(rec1.x_sel, False)
+        self.assertEqual(rec2.x_sel, 'quux')
+        self.assertEqual(rec3.x_sel, 'baz')

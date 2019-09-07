@@ -34,7 +34,7 @@
     <record id="hr_department_public" model="ir.rule">
         <field name="name">Job department: Public</field>
         <field name="model_id" ref="hr.model_hr_department"/>
-        <field name="domain_force">[('jobs_ids.website_published', '=', True)]</field>
+        <field name="domain_force">['|', ('jobs_ids.website_published', '=', True), ('child_ids', 'not in', [])]</field>
         <field name="groups" eval="[(4, ref('base.group_public'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>

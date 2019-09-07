@@ -5,13 +5,16 @@ import ldap
 import logging
 from ldap.filter import filter_format
 
-from odoo import api, fields, models, tools
+from odoo import _, api, fields, models, tools
+from odoo.exceptions import AccessDenied
+from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
 
 
 class CompanyLDAP(models.Model):
     _name = 'res.company.ldap'
+    _description = 'Company LDAP configuration'
     _order = 'sequence'
     _rec_name = 'ldap_server'
 
@@ -35,8 +38,7 @@ class CompanyLDAP(models.Model):
              "This option requires a server with STARTTLS enabled, "
              "otherwise all authentication attempts will fail.")
 
-    @api.multi
-    def get_ldap_dicts(self):
+    def _get_ldap_dicts(self):
         """
         Retrieve res_company_ldap resources from the database in dictionary
         format.
@@ -60,7 +62,7 @@ class CompanyLDAP(models.Model):
         ])
         return res
 
-    def connect(self, conf):
+    def _connect(self, conf):
         """
         Connect to an LDAP server specified by an ldap
         configuration dictionary.
@@ -76,7 +78,7 @@ class CompanyLDAP(models.Model):
             connection.start_tls_s()
         return connection
 
-    def authenticate(self, conf, login, password):
+    def _authenticate(self, conf, login, password):
         """
         Authenticate a user against the specified LDAP server.
 
@@ -100,14 +102,14 @@ class CompanyLDAP(models.Model):
             _logger.warning('Could not format LDAP filter. Your filter should contain one \'%s\'.')
             return False
         try:
-            results = self.query(conf, tools.ustr(filter))
+            results = self._query(conf, tools.ustr(filter))
 
             # Get rid of (None, attrs) for searchResultReference replies
             results = [i for i in results if i[0]]
             if len(results) == 1:
                 dn = results[0][0]
-                conn = self.connect(conf)
-                conn.simple_bind_s(dn, password.encode('utf-8'))
+                conn = self._connect(conf)
+                conn.simple_bind_s(dn, to_text(password))
                 conn.unbind()
                 entry = results[0]
         except ldap.INVALID_CREDENTIALS:
@@ -116,7 +118,7 @@ class CompanyLDAP(models.Model):
             _logger.error('An LDAP exception occurred: %s', e)
         return entry
 
-    def query(self, conf, filter, retrieve_attributes=None):
+    def _query(self, conf, filter, retrieve_attributes=None):
         """
         Query an LDAP server with the filter argument and scope subtree.
 
@@ -141,11 +143,11 @@ class CompanyLDAP(models.Model):
 
         results = []
         try:
-            conn = self.connect(conf)
+            conn = self._connect(conf)
             ldap_password = conf['ldap_password'] or ''
             ldap_binddn = conf['ldap_binddn'] or ''
-            conn.simple_bind_s(ldap_binddn.encode('utf-8'), ldap_password.encode('utf-8'))
-            results = conn.search_st(conf['ldap_base'].encode('utf-8'), ldap.SCOPE_SUBTREE, filter, retrieve_attributes, timeout=60)
+            conn.simple_bind_s(to_text(ldap_binddn), to_text(ldap_password))
+            results = conn.search_st(to_text(conf['ldap_base']), ldap.SCOPE_SUBTREE, filter, retrieve_attributes, timeout=60)
             conn.unbind()
         except ldap.INVALID_CREDENTIALS:
             _logger.error('LDAP bind failed.')
@@ -153,7 +155,7 @@ class CompanyLDAP(models.Model):
             _logger.error('An LDAP exception occurred: %s', e)
         return results
 
-    def map_ldap_attributes(self, conf, login, ldap_entry):
+    def _map_ldap_attributes(self, conf, login, ldap_entry):
         """
         Compose values for a new resource of model res_users,
         based upon the retrieved ldap entry and the LDAP settings.
@@ -170,8 +172,7 @@ class CompanyLDAP(models.Model):
             'company_id': conf['company'][0]
         }
 
-    @api.model
-    def get_or_create_user(self, conf, login, ldap_entry):
+    def _get_or_create_user(self, conf, login, ldap_entry):
         """
         Retrieve an active resource of model res_users with the specified
         login. Create the user if it is not initially found.
@@ -182,21 +183,20 @@ class CompanyLDAP(models.Model):
         :return: res_users id
         :rtype: int
         """
-
-        user_id = False
         login = tools.ustr(login.lower().strip())
         self.env.cr.execute("SELECT id, active FROM res_users WHERE lower(login)=%s", (login,))
         res = self.env.cr.fetchone()
         if res:
             if res[1]:
-                user_id = res[0]
+                return res[0]
         elif conf['create_user']:
             _logger.debug("Creating new Odoo user \"%s\" from LDAP" % login)
-            values = self.map_ldap_attributes(conf, login, ldap_entry)
-            SudoUser = self.env['res.users'].sudo()
+            values = self._map_ldap_attributes(conf, login, ldap_entry)
+            SudoUser = self.env['res.users'].sudo().with_context(no_reset_password=True)
             if conf['user']:
                 values['active'] = True
-                user_id = SudoUser.browse(conf['user'][0]).copy(default=values).id
+                return SudoUser.browse(conf['user'][0]).copy(default=values).id
             else:
-                user_id = SudoUser.create(values).id
-        return user_id
+                return SudoUser.create(values).id
+
+        raise AccessDenied(_("No local user found for LDAP login and not configured to create one"))

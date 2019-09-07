@@ -32,10 +32,10 @@ class GoogleDrive(models.Model):
         for node in doc.xpath("//field"):
             if node.get('modifiers'):
                 modifiers = json.loads(node.get('modifiers'))
-                if not modifiers.get('invisible') and not modifiers.get('tree_invisible'):
+                if not modifiers.get('invisible') and not modifiers.get('column_invisible'):
                     display_fields.append(node.get('name'))
         fields = " ".join(display_fields)
-        domain = domain.replace("'", r"\'").replace('"', "'")
+        domain = domain.replace("'", r"\'").replace('"', "'").replace('True', 'true').replace('False', 'false')
         if groupbys:
             fields = "%s %s" % (groupbys, fields)
             formula = '=oe_read_group("%s";"%s";"%s";"%s")' % (model, fields, groupbys, domain)
@@ -80,7 +80,7 @@ class GoogleDrive(models.Model):
                 timeout=TIMEOUT,
             )
         except IOError:
-            _logger.warning("An error occured while writting the formula on the Google Spreadsheet.")
+            _logger.warning("An error occured while writing the formula on the Google Spreadsheet.")
 
         description = '''
         formula: %s

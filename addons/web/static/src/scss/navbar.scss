@@ -1,0 +1,168 @@
+body.o_is_superuser .o_menu_systray {
+    background: repeating-linear-gradient(
+        135deg,
+        #d9b904, #d9b904 10px,
+        #373435 10px, #373435 20px
+    );
+    border-bottom-left-radius: 20px;
+
+    > li {
+        > a, > label {
+            &:hover {
+                background-color: fade_out($o-navbar-inverse-link-hover-bg, 0.5);
+            }
+        }
+    }
+
+    .show .dropdown-toggle {
+        background-color: fade_out($o-navbar-inverse-link-hover-bg, 0.5);
+    }
+}
+.o_main_navbar {
+    position: relative;
+    height: $o-navbar-height;
+    border-bottom: 1px solid $o-navbar-inverse-link-hover-bg;
+    background-color: $o-brand-odoo;
+    color: white;
+
+    > a, > button {
+        float: left;
+        height: $o-navbar-height;
+        border: none;
+        padding: 0 $o-horizontal-padding - 4px 0 $o-horizontal-padding;
+        line-height: $o-navbar-height;
+        background-color: transparent;
+        text-align: center;
+        color: inherit;
+
+        font-size: 18px;
+        user-select: none;
+
+        &:hover, &:focus {
+            background-color: $o-navbar-inverse-link-hover-bg;
+            color: inherit;
+        }
+        &:focus, &:active, &:focus:active {
+            outline: none;
+        }
+    }
+
+    .o_app {
+        cursor: pointer;
+    }
+
+    > .o_menu_brand {
+        display: block;
+        float: left;
+        margin-right: 35px;
+        user-select: none;
+        color: white;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: $o-navbar-height;
+        cursor: pointer;
+    }
+
+    > .o_menu_toggle {
+        margin-right: 5px;
+    }
+
+    > ul {
+        display: block;
+        float: left;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        > li {
+            position: relative;
+            display: block;
+            float: left;
+
+            > a {
+                display: block;
+
+                &:focus, &:active, &:focus:active {
+                    outline: none;
+                }
+            }
+
+            > a, > label {
+                height: $o-navbar-height;
+                padding: 0 10px;
+                color: white;
+                line-height: $o-navbar-height;
+
+                &:hover {
+                    background-color: $o-navbar-inverse-link-hover-bg;
+                }
+            }
+
+            &.o_extra_menu_items {
+                > a {
+                    width: $o-navbar-height;
+                    text-align: center;
+                }
+                &.show > ul {
+                    padding: 0;
+
+                    > li {
+                        > a {
+                            background-color: $o-brand-odoo;
+                            color: white;
+                            border-bottom: 1px solid $o-brand-lightsecondary;
+
+                            &.dropdown-toggle {
+                                background-color: lighten($o-brand-odoo, 15%);
+                                pointer-events: none; // hack to prevent clicking on it because dropdown always opened
+                            }
+                        }
+                        > .dropdown-menu { // remove dropdown-menu default style as it is nested in another one
+                            position: static;
+                            float: none;
+                            display: block;
+                            border: none;
+                            box-shadow: none;
+                            max-height: none;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.o_menu_systray {
+            float: right;
+        }
+    }
+
+    .dropdown-menu.show {
+        max-height: 90vh; // the dropdown should not overstep the viewport
+        min-width: 100%;
+        overflow: auto;
+        margin-top: 0;
+
+        @for $index from 3 through 5 {
+            .o_menu_header_lvl_#{$index}, .o_menu_entry_lvl_#{$index} {
+                padding-left: $o-dropdown-hpadding + ($index - 2)*12px;
+            }
+        }
+    }
+
+    .show .dropdown-toggle {
+        background-color: $o-navbar-inverse-link-hover-bg;
+    }
+    .o_user_menu {
+        margin-left: 6px;
+
+        > a {
+            padding-right: $o-horizontal-padding;
+        }
+
+        .oe_topbar_avatar {
+            height: 26px;
+            width: 26px;
+            object-fit: cover;
+            transform: translateY(-2px);
+        }
+    }
+}

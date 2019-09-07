@@ -6,12 +6,12 @@
         <field name="model">event.type</field>
         <field name="inherit_id" ref="website_event.event_type_view_form_inherit_website"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='event_type_visibility_website']/div[@class='o_setting_right_pane']" position='inside'>
+            <xpath expr="//div[@name='event_type_visibility_website']/div[hasclass('o_setting_right_pane')]" position='inside'>
                 <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
-                    <label class="col-md-4" for="website_track"/> <field name="website_track"/>
+                    <label class="col-lg-4" for="website_track"/> <field name="website_track"/>
                 </div>
                 <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
-                    <label class="col-md-4" for="website_track_proposal"/> <field name="website_track_proposal"/>
+                    <label class="col-lg-4" for="website_track_proposal"/> <field name="website_track_proposal"/>
                 </div>
             </xpath>
         </field>
@@ -23,20 +23,20 @@
             <field name="inherit_id" ref="website_event.event_event_view_form_inherit_website"/>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <button name="website_publish_button" position="before">
+                <field name="is_published" position="before">
                     <button name="%(action_event_track_from_event)d"
                             type="action"
                             class="oe_stat_button"
                             icon="fa-inbox">
-                        <field name="track_count" widget="statinfo"/>
+                        <field name="track_count" string="Tracks" widget="statinfo"/>
                     </button>
                     <button name="%(action_event_sponsor_from_event)d"
                             type="action"
                             class="oe_stat_button"
                             icon="fa-users">
-                        <field name="sponsor_count" widget="statinfo"/>
+                        <field name="sponsor_count" string="Sponsors" widget="statinfo"/>
                     </button>
-                </button>
+                </field>
                 <label for="website_menu" position="after">
                     <field name="website_track" attrs="{'invisible': [('website_menu', '=', False)]}"/>
                     <label for="website_track" string="Tracks on Website" attrs="{'invisible': [('website_menu', '=', False)]}"/>

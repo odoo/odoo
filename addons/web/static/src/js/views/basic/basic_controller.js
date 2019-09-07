@@ -8,7 +8,6 @@ odoo.define('web.BasicController', function (require) {
  */
 
 var AbstractController = require('web.AbstractController');
-var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var FieldManagerMixin = require('web.FieldManagerMixin');
@@ -19,8 +18,11 @@ var _t = core._t;
 var BasicController = AbstractController.extend(FieldManagerMixin, {
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         discard_changes: '_onDiscardChanges',
-        mutexify: '_onMutexify',
         reload: '_onReload',
+        resequence_records: '_onResequenceRecords',
+        set_dirty: '_onSetDirty',
+        load_optional_fields: '_onLoadOptionalFields',
+        save_optional_fields: '_onSaveOptionalFields',
         sidebar_data_asked: '_onSidebarDataAsked',
         translate: '_onTranslate',
     }),
@@ -37,13 +39,17 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.confirmOnDelete = params.confirmOnDelete;
         this.hasButtons = params.hasButtons;
         FieldManagerMixin.init.call(this, this.model);
-        this.handle = params.initialState.id;
         this.mode = params.mode || 'readonly';
-        this.mutex = new concurrency.Mutex();
+        this.handle = this.initialState.id;
+        // savingDef is used to ensure that we always wait for pending save
+        // operations to complete before checking if there are changes to
+        // discard when discardChanges is called
+        this.savingDef = Promise.resolve();
+        this.viewId = params.viewId;
     },
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         // add classname to reflect the (absence of) access rights (used to
@@ -64,24 +70,27 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @override
      * @param {string} [recordID] - default to main recordID
-     * @returns {Deferred<boolean>}
+     * @returns {Promise<boolean>}
      *          resolved if can be discarded, a boolean value is given to tells
      *          if there is something to discard or not
      *          rejected otherwise
      */
     canBeDiscarded: function (recordID) {
-        if (!this.model.isDirty(recordID || this.handle)) {
-            return $.when(false);
+        var self = this;
+        if (!this.isDirty(recordID)) {
+            return Promise.resolve(false);
         }
 
-        var message = _t("The record has been modified, your changes will be discarded. Are you sure you want to ?");
-        var def = $.Deferred();
-        var dialog = Dialog.confirm(this, message, {
-            title: _t("Warning"),
-            confirm_callback: def.resolve.bind(def, true),
-            cancel_callback: def.reject.bind(def),
+        var message = _t("The record has been modified, your changes will be discarded. Do you want to proceed?");
+        var def;
+        def = new Promise(function (resolve, reject) {
+            var dialog = Dialog.confirm(self, message, {
+                title: _t("Warning"),
+                confirm_callback: resolve.bind(self, true),
+                cancel_callback: reject,
+            });
+            dialog.on('closed', def, reject);
         });
-        dialog.on('closed', def, def.reject);
         return def;
     },
     /**
@@ -104,101 +113,109 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         return true;
     },
     /**
-     * Discards the changes made to the record whose ID is given, if necessary.
-     * Automatically leaves to default mode for the given record.
+     * Waits for the mutex to be unlocked and for changes to be saved, then
+     * calls _.discardChanges.
+     * This ensures that the confirm dialog isn't displayed directly if there is
+     * a pending 'write' rpc.
      *
-     * @param {string} [recordID] - default to main recordID
-     * @param {Object} [options]
-     * @param {boolean} [options.readonlyIfRealDiscard=false]
-     *        After discarding record changes, the usual option is to make the
-     *        record readonly. However, the view manager calls this function
-     *        at inappropriate times in the current code and in that case, we
-     *        don't want to go back to readonly if there is nothing to discard
-     *        (e.g. when switching record in edit mode in form view, we expect
-     *        the new record to be in edit mode too, but the view manager calls
-     *        this function as the URL changes...) @todo get rid of this when
-     *        the view manager is improved.
-     * @returns {Deferred}
+     * @see _.discardChanges
      */
     discardChanges: function (recordID, options) {
-        var self = this;
-        recordID = recordID || this.handle;
-        return this.canBeDiscarded(recordID).then(function (needDiscard) {
-            if (options && options.readonlyIfRealDiscard && !needDiscard) {
-                return;
-            }
-
-            if (needDiscard) { // Just some optimization
-                self.model.discardChanges(recordID);
-            }
-            if (self.model.isNew(recordID)) {
-                self._abandonRecord(recordID);
-                return;
-            }
-            return self._confirmSave(recordID);
-        });
+        return Promise.all([this.mutex.getUnlockedDef(), this.savingDef])
+            .then(this._discardChanges.bind(this, recordID || this.handle, options));
     },
     /**
-     * Method that will be overriden by the views with the ability to have selected ids
+     * Method that will be overridden by the views with the ability to have selected ids
      *
-     * @returns []
+     * @returns {Array}
      */
     getSelectedIds: function () {
         return [];
     },
     /**
+     * Gives the focus to the renderer
+     */
+    giveFocus:function() {
+        this.renderer.giveFocus();
+    },
+    /**
+     * Returns true iff the given recordID (or the main recordID) is dirty.
+     *
+     * @param {string} [recordID] - default to main recordID
+     * @returns {boolean}
+     */
+    isDirty: function (recordID) {
+        return this.model.isDirty(recordID || this.handle);
+    },
+    /**
      * @override
      */
     renderPager: function ($node, options) {
-        var data = this.model.get(this.handle, {raw: true});
-        this.pager = new Pager(this, data.count, data.offset + 1, data.limit, options);
+        var self = this;
+        var params = this._getPagerParams();
+        this.pager = new Pager(this, params.size, params.current_min, params.limit, options);
 
         this.pager.on('pager_changed', this, function (newState) {
-            var self = this;
             this.pager.disable();
+            var data = this.model.get(this.handle, {raw: true});
             var limitChanged = (data.limit !== newState.limit);
-            this.reload({limit: newState.limit, offset: newState.current_min - 1})
-                .then(function () {
-                    // Reset the scroll position to the top on page changed only
-                    if (!limitChanged) {
-                        self.trigger_up('scrollTo', {offset: 0});
-                    }
-                })
-                .then(this.pager.enable.bind(this.pager));
+            var reloadParams;
+            if (data.groupedBy && data.groupedBy.length) {
+                reloadParams = {groupsLimit: newState.limit, groupsOffset: newState.current_min - 1};
+            } else {
+                reloadParams = {limit: newState.limit, offset: newState.current_min - 1};
+            }
+            this.reload(reloadParams).then(function () {
+                // reset the scroll position to the top on page changed only
+                if (!limitChanged) {
+                    self.trigger_up('scrollTo', {top: 0});
+                }
+            }).then(this.pager.enable.bind(this.pager));
         });
-        this.pager.appendTo($node);
-        this._updatePager();  // to force proper visibility
+        return this.pager.appendTo($node).then(function () {
+            self._updatePager(); // to force proper visibility
+        });
     },
     /**
      * Saves the record whose ID is given if necessary (@see _saveRecord).
      *
      * @param {string} [recordID] - default to main recordID
      * @param {Object} [options]
-     * @returns {Deferred}
+     * @returns {Promise}
      *        Resolved with the list of field names (whose value has been modified)
      *        Rejected if the record can't be saved
      */
     saveRecord: function (recordID, options) {
+        var self = this;
         // Some field widgets can't detect (all) their changes immediately or
         // may have to validate them before notifying them, so we ask them to
         // commit their current value before saving. This has to be done outside
         // of the mutex protection of saving because commitChanges will trigger
-        // changes and these are also protected. So the actual saving has to be
+        // changes and these are also protected. However, we must wait for the
+        // mutex to be idle to ensure that onchange RPCs returned before asking
+        // field widgets to commit their value (and validate it, for instance
+        // for one2many with required fields). So the actual saving has to be
         // done after these changes. Also the commitChanges operation might not
         // be synchronous for other reason (e.g. the x2m fields will ask the
         // user if some discarding has to be made). This operation must also be
         // mutex-protected as commitChanges function of x2m has to be aware of
         // all final changes made to a row.
-        var self = this;
-        return this.mutex
-            .exec(this.renderer.commitChanges.bind(this.renderer, recordID || this.handle))
+        var unlockedMutex = this.mutex.getUnlockedDef()
+            .then(function () {
+                return self.renderer.commitChanges(recordID || self.handle);
+            })
             .then(function () {
                 return self.mutex.exec(self._saveRecord.bind(self, recordID, options));
             });
+        this.savingDef = new Promise(function (resolve) {
+            unlockedMutex.then(resolve).guardedCatch(resolve);
+        });
+
+        return unlockedMutex;
     },
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     update: function (params, options) {
         var self = this;
@@ -207,6 +224,18 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             self._updateEnv();
             self._updatePager();
         });
+    },
+    /**
+     * @override
+     */
+    reload: function (params) {
+        if (params && params.controllerState) {
+            if (params.controllerState.currentId) {
+                params.currentId = params.controllerState.currentId;
+            }
+            params.ids = params.controllerState.resIds;
+        }
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -226,7 +255,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     _abandonRecord: function (recordID) {
         recordID = recordID || this.handle;
         if (recordID === this.handle) {
-            this.trigger_up('switch_to_previous_view');
+            this.trigger_up('history_back');
         } else {
             this.model.removeLine(recordID);
         }
@@ -250,33 +279,32 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @private
      * @param {Object} attrs the attrs of the button clicked
      * @param {Object} [record] the current state of the view
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _callButtonAction: function (attrs, record) {
         var self = this;
-        var def = $.Deferred();
-        var reload = function () {
-            return self.isDestroyed() ? $.when() : self.reload();
-        };
-        record = record || this.model.get(this.handle);
-        var recordID = record.data.id;
-        this.trigger_up('execute_action', {
-            action_data: _.extend({}, attrs, {
-                context: record.getContext({additionalContext: attrs.context}),
-            }),
-            model: record.model,
-            res_ids: [recordID],
-            on_closed: function (reason) {
-                if (!_.isObject(reason)) {
-                    reload(reason);
-                }
-            },
-            on_fail: function (reason) {
-                reload().always(function() {
-                    def.reject(reason);
-                })
-            },
-            on_success: def.resolve.bind(def),
+        var def = new Promise(function (resolve, reject) {
+            var reload = function () {
+                return self.isDestroyed() ? Promise.resolve() : self.reload();
+            };
+            record = record || self.model.get(self.handle);
+
+            self.trigger_up('execute_action', {
+                action_data: _.extend({}, attrs, {
+                    context: record.getContext({additionalContext: attrs.context || {}}),
+                }),
+                env: {
+                    context: record.getContext(),
+                    currentID: record.data.id,
+                    model: record.model,
+                    resIDs: record.res_ids,
+                },
+                on_success: resolve,
+                on_fail: function () {
+                    self.update({}, { reload: false }).then(reject).guardedCatch(reject);
+                },
+                on_closed: reload,
+            });
         });
         return this.alive(def);
     },
@@ -290,9 +318,16 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {string} id - the id of one of the view's records
      * @param {string[]} fields - the changed fields
      * @param {OdooEvent} e - the event that triggered the change
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _confirmChange: function (id, fields, e) {
+        if (e.name === 'discard_changes' && e.target.reset) {
+            // the target of the discard event is a field widget.  In that
+            // case, we simply want to reset the specific field widget,
+            // not the full view
+            return  e.target.reset(this.model.get(e.target.dataPointID), e, true);
+        }
+
         var state = this.model.get(this.handle);
         return this.renderer.confirmChange(state, id, fields, e);
     },
@@ -321,20 +356,129 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @private
      */
-    _disableButtons: function () {
+    _disableButtons: function () {
         if (this.$buttons) {
             this.$buttons.find('button').attr('disabled', true);
         }
+    },
+    /**
+     * Discards the changes made to the record whose ID is given, if necessary.
+     * Automatically leaves to default mode for the given record.
+     *
+     * @private
+     * @param {string} [recordID] - default to main recordID
+     * @param {Object} [options]
+     * @param {boolean} [options.readonlyIfRealDiscard=false]
+     *        After discarding record changes, the usual option is to make the
+     *        record readonly. However, the action manager calls this function
+     *        at inappropriate times in the current code and in that case, we
+     *        don't want to go back to readonly if there is nothing to discard
+     *        (e.g. when switching record in edit mode in form view, we expect
+     *        the new record to be in edit mode too, but the view manager calls
+     *        this function as the URL changes...) @todo get rid of this when
+     *        the webclient/action_manager's hashchange mechanism is improved.
+     * @param {boolean} [options.noAbandon=false]
+     * @returns {Promise}
+     */
+    _discardChanges: function (recordID, options) {
+        var self = this;
+        recordID = recordID || this.handle;
+        options = options || {};
+        return this.canBeDiscarded(recordID)
+            .then(function (needDiscard) {
+                if (options.noAbandon || (options.readonlyIfRealDiscard && !needDiscard)) {
+                    return;
+                }
+                self.model.discardChanges(recordID);
+                if (self.model.canBeAbandoned(recordID)) {
+                    self._abandonRecord(recordID);
+                    return;
+                }
+                return self._confirmSave(recordID);
+            });
     },
     /**
      * Enables buttons so they can be clicked again.
      *
      * @private
      */
-    _enableButtons: function () {
+    _enableButtons: function () {
         if (this.$buttons) {
             this.$buttons.find('button').removeAttr('disabled');
         }
+    },
+    /**
+     * Override to add the current record ID (currentId) and the list of ids
+     * (resIds) in the current dataPoint to the exported state.
+     *
+     * @override
+     */
+    exportState: function () {
+        var state = this._super.apply(this, arguments);
+        var env = this.model.get(this.handle, {env: true});
+        return _.extend(state, {
+            currentId: env.currentId,
+            resIds: env.ids,
+        });
+    },
+    /**
+     * Compute the optional fields local storage key using the given parts.
+     *
+     * @param {Object} keyParts
+     * @param {string} keyParts.viewType view type
+     * @param {string} [keyParts.relationalField] name of the field with subview
+     * @param {integer} [keyParts.subViewId] subview id
+     * @param {string} [keyParts.subViewType] type of the subview
+     * @param {Object} keyParts.fields fields
+     * @param {string} keyParts.fields.name field name
+     * @param {string} keyParts.fields.type field type
+     * @returns {string} local storage key for optional fields in this view
+     * @private
+     */
+    _getOptionalFieldsLocalStorageKey: function (keyParts) {
+        keyParts.model = this.modelName;
+        keyParts.viewType = this.viewType;
+        keyParts.viewId = this.viewId;
+
+        var parts = [
+            'model',
+            'viewType',
+            'viewId',
+            'relationalField',
+            'subViewType',
+            'subViewId',
+        ];
+
+        var viewIdentifier = parts.reduce(function (identifier, partName) {
+            if (partName in keyParts) {
+                return identifier + ',' + keyParts[partName];
+            }
+            return identifier;
+        }, 'optional_fields');
+
+        viewIdentifier =
+            keyParts.fields.sort(this._nameSortComparer)
+                           .reduce(function (identifier, field) {
+                                return identifier + ',' + field.name;
+                            }, viewIdentifier);
+
+        return viewIdentifier;
+    },
+    /**
+     * Return the params (current_min, limit and size) to pass to the pager,
+     * according to the current state.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getPagerParams: function () {
+        var state = this.model.get(this.handle, {raw: true});
+        var isGrouped = state.groupedBy && state.groupedBy.length;
+        return {
+            current_min: (isGrouped ? state.groupsOffset : state.offset) + 1,
+            limit: isGrouped ? state.groupsLimit : state.limit,
+            size: isGrouped ? state.groupsCount : state.count,
+        };
     },
     /**
      * Returns the new sidebar env
@@ -350,15 +494,24 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         };
     },
     /**
-     * Used by list and kanban views to determine whether or not to display
-     * the no content helper (if there is no data in the state to display)
+     * Determine whether or not the pager must be displayed (probably depending
+     * on the current state). Controllers must override this to implement their
+     * own logic.
      *
      * @private
-     * @param {Object} state
-     * @returns {boolean}
      */
-    _hasContent: function (state) {
-        return state.count !== 0;
+    _isPagerVisible: function () {
+        return true;
+    },
+    /**
+     *  Sort function used to sort the fields by names, to compute the optional fields keys
+     *
+     *  @param {Object} left
+     *  @param {Object} right
+     *  @private
+      */
+    _nameSortComparer: function(left, right) {
+        return left.name < right.name ? -1 : 1;
     },
     /**
      * Helper function to display a warning that some fields have an invalid
@@ -400,7 +553,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {boolean} [options.savePoint=false]
      *        if true, the record will only be 'locally' saved: its changes
      *        will move from the _changes key to the data key
-     * @returns {Deferred}
+     * @returns {Promise}
      *        Resolved with the list of field names (whose value has been modified)
      *        Rejected if the record can't be saved
      */
@@ -423,7 +576,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             });
             if (!options.stayInEdit) {
                 saveDef = saveDef.then(function (fieldNames) {
-                    var def = fieldNames.length ? self._confirmSave(recordID) : self._setMode('readonly');
+                    var def = fieldNames.length ? self._confirmSave(recordID) : self._setMode('readonly', recordID);
                     return def.then(function () {
                         return fieldNames;
                     });
@@ -431,7 +584,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             }
             return saveDef;
         } else {
-            return $.Deferred().reject(); // Cannot be saved
+            return Promise.reject("SaveRecord: this.canBeSave is false"); // Cannot be saved
         }
     },
     /**
@@ -442,13 +595,17 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @private
      * @param {string} mode - 'readonly' or 'edit'
      * @param {string} [recordID]
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _setMode: function (mode, recordID) {
         if ((recordID || this.handle) === this.handle) {
-            return this.update({mode: mode}, {reload: false});
+            return this.update({mode: mode}, {reload: false}).then(function () {
+                // necessary to allow all sub widgets to use their dimensions in
+                // layout related activities, such as autoresize on fieldtexts
+                core.bus.trigger('DOM_updated');
+            });
         }
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Helper method, to get the current environment variables from the model
@@ -462,26 +619,16 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             var sidebarEnv = this._getSidebarEnv();
             this.sidebar.updateEnv(sidebarEnv);
         }
-        this.trigger_up('env_updated', env);
     },
     /**
-     * Helper method, to make sure the information displayed by the pager is up
-     * to date.
+     * Update the pager with the current state.
+     *
+     * @private
      */
     _updatePager: function () {
         if (this.pager) {
-            var data = this.model.get(this.handle, {raw: true});
-            this.pager.updateState({
-                current_min: data.offset + 1,
-                size: data.count,
-            });
-            var isRecord = data.type === 'record';
-            var hasData = !!data.count;
-            var isGrouped = data.groupedBy ? !!data.groupedBy.length : false;
-            var isNew = this.model.isNew(this.handle);
-            var isPagerVisible = isRecord ? !isNew : (hasData && !isGrouped);
-
-            this.pager.do_toggle(isPagerVisible);
+            this.pager.updateState(this._getPagerParams());
+            this.pager.do_toggle(this._isPagerVisible());
         }
     },
 
@@ -501,18 +648,15 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var self = this;
         ev.stopPropagation();
         var recordID = ev.data.recordID;
-        this.discardChanges(recordID)
-            .done(function () {
-                if (self.model.isNew(recordID)) {
-                    self._abandonRecord(recordID);
-                }
+        this._discardChanges(recordID)
+            .then(function () {
                 // TODO this will tell the renderer to rerender the widget that
                 // asked for the discard but will unfortunately lose the click
                 // made on another row if any
-                self._confirmChange(self.handle, [ev.data.fieldName], ev)
-                    .always(ev.data.onSuccess);
+                self._confirmChange(recordID, [ev.data.fieldName], ev)
+                    .then(ev.data.onSuccess).guardedCatch(ev.data.onSuccess);
             })
-            .fail(ev.data.onFailure);
+            .guardedCatch(ev.data.onFailure);
     },
     /**
      * Forces to save directly the changes if the controller is in readonly,
@@ -520,7 +664,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * in readonly (e.g. Priority).
      *
      * @private
-     * @param {OdooEvent}
+     * @param {OdooEvent} ev
      */
     _onFieldChanged: function (ev) {
         if (this.mode === 'readonly') {
@@ -529,64 +673,144 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         FieldManagerMixin._onFieldChanged.apply(this, arguments);
     },
     /**
-     * @private
-     * @param {OdooEvent} ev
-     * @param {function} ev.data.action the function to execute in the mutex
-     */
-    _onMutexify: function (ev) {
-        this.mutex.exec(ev.data.action);
-    },
-    /**
      * When a reload event triggers up, we need to reload the full view.
      * For example, after a form view dialog saved some data.
      *
      * @todo: rename db_id into handle
      *
-     * @param {OdooEvent} event
-     * @param {Object} event.data
-     * @param {string} [event.data.db_id] handle of the data to reload and
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data
+     * @param {string} [ev.data.db_id] handle of the data to reload and
      *   re-render (reload the whole form by default)
-     * @param {string[]} [event.data.fieldNames] list of the record's fields to
+     * @param {string[]} [ev.data.fieldNames] list of the record's fields to
      *   reload
      */
-    _onReload: function (event) {
-        var data = event && event.data || {};
+    _onReload: function (ev) {
+        ev.stopPropagation(); // prevent other controllers from handling this request
+        var data = ev && ev.data || {};
         var handle = data.db_id;
         if (handle) {
             // reload the relational field given its db_id
             this.model.reload(handle).then(this._confirmSave.bind(this, handle));
         } else {
             // no db_id given, so reload the main record
-            this.reload({fieldNames: data.fieldNames});
+            this.reload({
+                fieldNames: data.fieldNames,
+                keepChanges: data.keepChanges || false,
+            });
         }
+    },
+    /**
+     * Resequence records in the given order.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {string[]} ev.data.recordIds
+     * @param {integer} ev.data.offset
+     * @param {string} ev.data.handleField
+     */
+    _onResequenceRecords: function (ev) {
+        var self = this;
+
+        this.trigger_up('mutexify', {
+            action: function () {
+                var state = self.model.get(self.handle);
+                var resIDs = _.map(ev.data.recordIds, function (recordID) {
+                    return _.findWhere(state.data, {id: recordID}).res_id;
+                });
+                var options = {
+                    offset: ev.data.offset,
+                    field: ev.data.handleField,
+                };
+                return self.model.resequence(self.modelName, resIDs, self.handle, options)
+                    .then(function () {
+                        self._updateEnv();
+                        state = self.model.get(self.handle);
+                        return self.renderer.updateState(state, {noRender: true});
+                    });
+            },
+        });
+    },
+    /**
+     * Load the optional columns settings in local storage for this view
+     *
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data.keyParts see _getLocalStorageKey
+     * @param {function} ev.data.callback function to call with the result
+     * @private
+     */
+    _onLoadOptionalFields: function (ev) {
+        var res = this.call(
+            'local_storage',
+            'getItem',
+            this._getOptionalFieldsLocalStorageKey(ev.data.keyParts)
+        );
+        ev.data.callback(res);
+    },
+    /**
+     * Save the optional columns settings in local storage for this view
+     *
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data.keyParts see _getLocalStorageKey
+     * @param {Array<string>} ev.data.optionalColumnsEnabled list of optional
+     *   field names that have been enabled
+     * @private
+     */
+    _onSaveOptionalFields: function (ev) {
+        this.call(
+            'local_storage',
+            'setItem',
+            this._getOptionalFieldsLocalStorageKey(ev.data.keyParts),
+            ev.data.optionalColumnsEnabled
+        );
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSetDirty: function (ev) {
+        ev.stopPropagation(); // prevent other controllers from handling this request
+        this.model.setDirty(ev.data.dataPointID);
     },
     /**
      * Handler used to get all the data necessary when a custom action is
      * performed through the sidebar.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onSidebarDataAsked: function (event) {
+    _onSidebarDataAsked: function (ev) {
         var sidebarEnv = this._getSidebarEnv();
-        event.data.callback(sidebarEnv);
+        ev.data.callback(sidebarEnv);
     },
     /**
      * open the translation view for the current field
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onTranslate: function (event) {
-        var record = this.model.get(event.data.id, {raw: true});
+    _onTranslate: function (ev) {
+        ev.stopPropagation();
+        var self = this;
+        var record = this.model.get(ev.data.id, {raw: true});
         this._rpc({
             route: '/web/dataset/call_button',
             params: {
                 model: 'ir.translation',
                 method: 'translate_fields',
-                args: [record.model, record.res_id, event.data.fieldName, record.getContext()],
+                args: [record.model, record.res_id, ev.data.fieldName],
+                kwargs: {context: record.getContext()},
             }
-        }).then(this.do_action.bind(this));
+        }).then(function (result) {
+            self.do_action(result, {
+                on_reverse_breadcrumb: function () {
+                    if (!_.isEmpty(self.renderer.alertFields)) {
+                        self.renderer.displayTranslationAlert();
+                    }
+                    return false;
+                },
+            });
+        });
     },
 });
 

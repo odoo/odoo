@@ -2,9 +2,9 @@
 
 .. _reference/cmdline:
 
-===============================
+================================
 Command-line interface: odoo-bin
-===============================
+================================
 
 .. _reference/cmdline/server:
 
@@ -15,7 +15,9 @@ Running the server
 
 .. option:: -d <database>, --database <database>
 
-    database used when installing or updating modules.
+    database(s) used when installing or updating modules.
+    Providing a comma-separated list restrict access to databases provided in
+    list.
 
 .. option:: -i <modules>, --init <modules>
 
@@ -54,7 +56,7 @@ Running the server
         Maximum allowed virtual memory per worker. If the limit is exceeded,
         the worker is killed and recycled at the end of the current request.
 
-        Defaults to 640MB.
+        Defaults to 2048MiB.
 
     .. option:: --limit-memory-hard <limit>
 
@@ -62,7 +64,7 @@ Running the server
         immediately killed without waiting for the end of the current request
         processing.
 
-        Defaults to 768MB.
+        Defaults to 2560MiB.
 
     .. option:: --limit-time-cpu <limit>
 
@@ -110,6 +112,24 @@ Running the server
 .. option:: --test-enable
 
     runs tests after installing modules
+
+.. option:: --test-tags 'tag_1,tag_2,...,-tag_n'
+
+    select the tests to run by using tags.
+
+.. option:: --screenshots
+
+    Specify directory where to write screenshots when an HttpCase.browser_js test
+    fails. It defaults to :file:`/tmp/odoo_tests/{db_name}/screenshots`
+
+.. option:: --screencasts
+
+    Enable screencasts and specify directory where to write screencasts files.
+    The ``ffmpeg`` utility needs to be installed to encode frames into a video
+    file. Otherwise frames will be kept instead of the video file.
+    
+    ``1``, ``t`` or ``true`` can be used to use the same directory as the above
+    mentioned ``--screenshots`` option.
 
 .. option:: --dev <feature,feature,...,feature>
 
@@ -159,17 +179,109 @@ database
     - ``%h`` is replaced by the whole hostname the request is made on.
     - ``%d`` is replaced by the subdomain the request is made on, with the
       exception of ``www`` (so domain ``odoo.com`` and ``www.odoo.com`` both
-      match the database ``odoo``)
+      match the database ``odoo``).
 
+      These operations are case sensitive. Add option ``(?i)`` to match all
+      databases (so domain ``odoo.com`` using ``(?i)%d`` matches the database
+      ``Odoo``).
+
+    Since version 11, it's also possible to restrict access to a given database
+    listen by using the --database parameter and specifying a comma-separated
+    list of databases
+
+    When combining the two parameters, db-filter superseed the comma-separated
+    database list for restricting database list, while the comma-separated list
+    is used for performing requested operations like upgrade of modules.
+    
+    .. code-block:: bash
+
+        odoo-bin --db-filter ^11.*$
+
+    Restrict access to databases whose name starts with 11
+
+    .. code-block:: bash
+
+        odoo-bin --database 11firstdatabase,11seconddatabase
+
+    Restrict access to only two databases, 11firstdatabase and 11seconddatabase
+    
+    .. code-block:: bash
+
+        odoo-bin --database 11firstdatabase,11seconddatabase -u base
+
+    Restrict access to only two databases, 11firstdatabase and 11seconddatabase,
+    and update base module on one database: 11firstdatabase
+    If database 11seconddatabase doesn't exist, the database is created and base modules
+    is installed
+    
+    .. code-block:: bash
+
+        odoo-bin --db-filter ^11.*$ --database 11firstdatabase,11seconddatabase -u base
+        
+    Restrict access to databases whose name starts with 11,
+    and update base module on one database: 11firstdatabase
+    If database 11seconddatabase doesn't exist, the database is created and base modules
+    is installed
+    
 .. option:: --db-template <template>
 
     when creating new databases from the database-management screens, use the
-    specified `template database`_. Defaults to ``template1``.
+    specified `template database`_. Defaults to ``template0``.
+
+.. option:: --no-database-list
+
+    Suppresses the ability to list databases available on the system
+    
+.. option:: --db_sslmode
+
+    Control the SSL security of the connection between Odoo and PostgreSQL.
+    Value should bve one of 'disable', 'allow', 'prefer', 'require',
+    'verify-ca' or 'verify-full'
+    Default value is 'prefer'
+
+.. _reference/cmdline/server/internationalisation:
+
+Internationalisation
+--------------------
+
+Use these options to translate Odoo to another language. See i18n section of
+the user manual. Option '-d' is mandatory. Option '-l' is mandatory in case
+of importation
+
+.. option:: --load-language <languages>
+
+    specifies the languages (separated by commas) for the translations you
+    want to be loaded
+
+.. option:: -l, --language <language>
+
+    specify the language of the translation file. Use it with --i18n-export
+    or --i18n-import
+
+.. option:: --i18n-export <filename>
+
+    export all sentences to be translated to a CSV file, a PO file or a TGZ
+    archive and exit.
+
+.. option:: --i18n-import <filename>
+
+    import a CSV or a PO file with translations and exit. The '-l' option is
+    required.
+
+.. option:: --i18n-overwrite
+
+    overwrites existing translation terms on updating a module or importing
+    a CSV or a PO file.
+
+.. option:: --modules
+
+    specify modules to export. Use in combination with --i18n-export
+
 
 built-in HTTP
 -------------
 
-.. option:: --no-xmlrpc
+.. option:: --no-http
 
     do not start the HTTP or long-polling workers (may still start cron
     workers)
@@ -177,12 +289,12 @@ built-in HTTP
     .. warning:: has no effect if :option:`--test-enable` is set, as tests
                  require an accessible HTTP server
 
-.. option:: --xmlrpc-interface <interface>
+.. option:: --http-interface <interface>
 
     TCP/IP address on which the HTTP server listens, defaults to ``0.0.0.0``
     (all addresses)
 
-.. option:: --xmlrpc-port <port>
+.. option:: --http-port <port>
 
     Port on which the HTTP server listens, defaults to 8069.
 
@@ -205,12 +317,6 @@ customize the amount of logging output
     file `can be managed by external log rotation programs
     <https://docs.python.org/2/library/logging.handlers.html#watchedfilehandler>`_
     and will automatically be reopened when replaced
-
-.. option:: --logrotate
-
-    enables `log rotation <https://docs.python.org/2/library/logging.handlers.html#timedrotatingfilehandler>`_
-    daily, keeping 30 backups. Log rotation frequency and number of backups is
-    not configurable.
 
 .. option:: --syslog
 
@@ -290,6 +396,31 @@ customize the amount of logging output
         In case of conflict between :option:`--log-level` and
         :option:`--log-handler`, the latter is used
 
+emails
+------
+
+.. option:: --email-from <address>
+
+    Email address used as <FROM> when Odoo needs to send mails
+
+.. option:: --smtp <server>
+
+    Address of the SMTP server to connect to in order to send mails
+
+.. option:: --smtp-port <port>
+
+.. option:: --smtp-ssl
+
+    If set, odoo should use SSL/STARTSSL SMTP connections
+
+.. option:: --smtp-user <name>
+
+    Username to connect to the SMTP server
+
+.. option:: --smtp-password <password>
+
+    Password to connect to the SMTP server
+
 
 .. _reference/cmdline/scaffold:
 
@@ -325,6 +456,8 @@ Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
 Configuration file
 ==================
 
+.. program:: odoo-bin
+
 Most of the command-line options can also be specified via a configuration
 file. Most of the time, they use similar names with the prefix ``-`` removed
 and other ``-`` are replaced by ``_`` e.g. :option:`--db-template` becomes
@@ -333,13 +466,12 @@ and other ``-`` are replaced by ``_`` e.g. :option:`--db-template` becomes
 Some conversions don't match the pattern:
 
 * :option:`--db-filter` becomes ``dbfilter``
-* :option:`--no-xmlrpc` corresponds to the ``xmlrpc`` boolean
+* :option:`--no-http` corresponds to the ``http_enable`` boolean
 * logging presets (all options starting with ``--log-`` except for
   :option:`--log-handler` and :option:`--log-db`) just add content to
   ``log_handler``, use that directly in the configuration file
 * :option:`--smtp` is stored as ``smtp_server``
 * :option:`--database` is stored as ``db_name``
-* :option:`--debug` is stored as ``debug_mode`` (a boolean)
 * :option:`--i18n-import` and :option:`--i18n-export` aren't available at all
   from configuration files
 

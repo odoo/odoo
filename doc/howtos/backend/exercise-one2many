@@ -3,9 +3,9 @@
 
 Index: addons/openacademy/models.py
 ===================================================================
---- addons.orig/openacademy/models.py	2014-08-27 14:18:59.091111685 +0200
-+++ addons/openacademy/models.py	2014-08-27 14:19:03.259111624 +0200
-@@ -10,6 +10,8 @@
+--- addons.orig/openacademy/models.py
++++ addons/openacademy/models.py
+@@ -11,6 +11,8 @@
  
      responsible_id = fields.Many2one('res.users',
          ondelete='set null', string="Responsible", index=True)
@@ -16,8 +16,8 @@ Index: addons/openacademy/models.py
  class Session(models.Model):
 Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-27 14:18:59.091111685 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-27 14:18:59.083111686 +0200
+--- addons.orig/openacademy/views/openacademy.xml
++++ addons/openacademy/views/openacademy.xml
 @@ -15,8 +15,13 @@
                              <page string="Description">
                                  <field name="description"/>

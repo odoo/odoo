@@ -109,7 +109,7 @@
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Author" name="author" context="{'group_by':'author_id'}"/>
                         <filter string="Thread" name="thread" domain="[]" context="{'group_by':'message_id'}"/>
-                        <filter string="Month" name="month" help="Creation Month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Date" name="month" help="Creation Date" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
             </field>
@@ -118,7 +118,6 @@
         <record id="action_view_mail_mail" model="ir.actions.act_window">
             <field name="name">Emails</field>
             <field name="res_model">mail.mail</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_mail_search"/>

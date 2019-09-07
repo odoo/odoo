@@ -1,20 +1,63 @@
 # -*- coding: utf-8 -*-
 
+from odoo.tests import Form
 from odoo.addons.stock.tests import common2
 
 
 class TestMrpCommon(common2.TestStockCommon):
 
     @classmethod
+    def generate_mo(self, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1):
+        """ This function generate a manufacturing order with one final
+        product and two consumed product. Arguments allows to choose
+        the tracking/qty for each different products. It returns the
+        MO, used bom and the tree products.
+        """
+        product_to_build = self.env['product.product'].create({
+            'name': 'Young Tom',
+            'type': 'product',
+            'tracking': tracking_final,
+        })
+        product_to_use_1 = self.env['product.product'].create({
+            'name': 'Botox',
+            'type': 'product',
+            'tracking': tracking_base_1,
+        })
+        product_to_use_2 = self.env['product.product'].create({
+            'name': 'Old Tom',
+            'type': 'product',
+            'tracking': tracking_base_2,
+        })
+        bom_1 = self.env['mrp.bom'].create({
+            'product_id': product_to_build.id,
+            'product_tmpl_id': product_to_build.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
+                (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1})
+            ]})
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_to_build
+        mo_form.bom_id = bom_1
+        mo_form.product_qty = qty_final
+        mo = mo_form.save()
+        mo.action_confirm()
+        return mo, bom_1, product_to_build, product_to_use_1, product_to_use_2
+
+    @classmethod
     def setUpClass(cls):
         super(TestMrpCommon, cls).setUpClass()
 
         # Fetch mrp-related user groups
+        user_group_stock_user = cls.env.ref('stock.group_stock_user')
         user_group_mrp_user = cls.env.ref('mrp.group_mrp_user')
         user_group_mrp_manager = cls.env.ref('mrp.group_mrp_manager')
+        user_group_mrp_byproducts = cls.env.ref('mrp.group_mrp_byproducts')
 
         # Update demo products
-        (cls.product_2 | cls.product_3 | cls.product_4 | cls.product_5 | cls.product_6 | cls.product_7 | cls.product_8).write({
+        (cls.product_2 | cls.product_3 | cls.product_4 | cls.product_5 | cls.product_6 | cls.product_7_3 | cls.product_8).write({
             'type': 'product',
         })
 
@@ -25,13 +68,21 @@ class TestMrpCommon(common2.TestStockCommon):
             'login': 'hilda',
             'email': 'h.h@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [user_group_mrp_user.id])]})
+            'groups_id': [(6, 0, [
+                user_group_mrp_user.id,
+                user_group_stock_user.id,
+                user_group_mrp_byproducts.id
+            ])]})
         cls.user_mrp_manager = Users.create({
             'name': 'Gary Youngwomen',
             'login': 'gary',
             'email': 'g.g@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [user_group_mrp_manager.id])]})
+            'groups_id': [(6, 0, [
+                user_group_mrp_manager.id,
+                user_group_stock_user.id,
+                user_group_mrp_byproducts.id
+            ])]})
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter',

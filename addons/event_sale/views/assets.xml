@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="assets_backend" inherit_id="web.assets_backend" name="event_sale assets backend">
+    <xpath expr="script[last()]" position="after">
+        <script type="text/javascript" src="/event_sale/static/src/js/event_configurator_controller.js"></script>
+        <script type="text/javascript" src="/event_sale/static/src/js/event_configurator_view.js"></script>
+        <script type="text/javascript" src="/event_sale/static/src/js/event_configurator_widget.js"></script>
+    </xpath>
+</template>
+<template id="assets_tests" name="Event Sale Assets Tests" inherit_id="web.assets_tests">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/event_sale/static/tests/tours/event_configurator_ui.js"></script>
+    </xpath>
+</template>
+<template id="qunit_suite" inherit_id="web.qunit_suite" name="event_sale_tests">
+    <xpath expr="//t[@t-set='head']" position="inside">
+        <script type="text/javascript" src="/event_sale/static/tests/event_configurator.test.js"></script>
+    </xpath>
+</template>
+</odoo>

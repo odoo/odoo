@@ -28,7 +28,7 @@ var Pager = Widget.extend({
      * @param {boolean} [options.can_edit] editable feature of the pager
      * @param {boolean} [options.single_page_hidden] (not) to display the pager
      *   if only one page
-     * @param {function} [options.validate] callback returning a Deferred to
+     * @param {function} [options.validate] callback returning a Promise to
      *   validate changes
      */
     init: function (parent, size, current_min, limit, options) {
@@ -46,7 +46,7 @@ var Pager = Widget.extend({
             can_edit: true, // editable
             single_page_hidden: false, // displayed even if there is a single page
             validate: function() {
-                return $.Deferred().resolve();
+                return Promise.resolve();
             },
             withAccessKey: true,  // can be disabled, for example, for x2m widgets
         });
@@ -55,7 +55,7 @@ var Pager = Widget.extend({
     /**
      * Renders the pager
      *
-     * @returns {jQuery.Deferred}
+     * @returns {Promise}
      */
     start: function () {
         this.$value = this.$('.o_pager_value');
@@ -97,10 +97,16 @@ var Pager = Widget.extend({
     /**
      * Sets the state of the pager and renders it
      * @param {Object} [state] the values to update (size, current_min and limit)
+     * @param {Object} [options]
+     * @param {boolean} [options.notifyChange] set to true to make the pager
+     *   notify the environment that its state changed
      */
-    updateState: function (state) {
+    updateState: function (state, options) {
         _.extend(this.state, state);
         this._render();
+        if (options && options.notifyChange) {
+            this.trigger('pager_changed', _.clone(this.state));
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -144,7 +150,7 @@ var Pager = Widget.extend({
     _edit: function () {
         if (this.options.can_edit) {
             var self = this;
-            var $input = $('<input>', {type: 'text', value: this.$value.html()});
+            var $input = $('<input>', {class: 'o_input', type: 'text', value: this.$value.html()});
 
             this.$value.html($input);
             $input.focus();
@@ -210,7 +216,6 @@ var Pager = Widget.extend({
                 }
                 self.trigger('pager_changed', _.clone(self.state));
             }
-        }).always(function() {
             // Render the pager's new state (removes the input)
             self._render();
         });

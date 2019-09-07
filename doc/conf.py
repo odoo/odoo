@@ -6,11 +6,11 @@ import sphinx
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 DIR = os.path.dirname(__file__)
-sys.path.append(
+sys.path.insert(0,
     os.path.abspath(
         os.path.join(DIR, '_extensions')))
-# autodoc
-sys.path.append(os.path.abspath(os.path.join(DIR, '..')))
+# put current odoo's source on PYTHONPATH for autodoc
+sys.path.insert(0, os.path.abspath(os.path.join(DIR, '..')))
 
 # -- General configuration -----------------------------------------------------
 
@@ -25,6 +25,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.linkcode',
+    # 'autojsdoc.ext',
     'github_link',
     'odoo_ext',
     'html_domain',
@@ -53,9 +54,9 @@ copyright = u'Odoo S.A.'
 # built documents.
 #
 # The short X.Y version.
-version = '10.0'
+version = '12.0'
 # The full version, including alpha/beta/rc tags.
-release = '10.0'
+release = '12.0'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -67,8 +68,9 @@ today_fmt = '%B %d, %Y'
 # directories to ignore when looking for source files.
 exclude_patterns = ['_build']
 
-# The reST default role (used for this markup: `text`) to use for all documents.
-#default_role = None
+# markdown compatibility: make `foo` behave like ``foo``, the rst default is
+# title-reference which is never what people are looking for
+default_role = 'literal'
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 add_function_parentheses = True
@@ -94,11 +96,6 @@ pygments_style = 'odoo'
 html_theme = 'odoo_ext'
 
 odoo_cover_default = 'banners/installing_odoo.jpg'
-odoo_cover_external = {
-    'https://odoo.com/documentation/functional/accounting.html'   : 'banners/m_accounting.jpg',
-    'https://odoo.com/documentation/functional/double-entry.html' : 'banners/m_1.jpg',
-    'https://odoo.com/documentation/functional/valuation.html'    : 'banners/m_2.jpg',
-}
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -181,10 +178,8 @@ latex_elements = {
 todo_include_todos = False
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/2/', None),
+    'python': ('https://docs.python.org/3/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
-    'sqlalchemy': ('http://docs.sqlalchemy.org/en/rel_0_9/', None),
-    'django': ('https://django.readthedocs.org/en/latest/', None),
 }
 
 github_user = 'odoo'

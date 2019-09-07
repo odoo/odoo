@@ -7,6 +7,9 @@ var DomainSelector = require("web.DomainSelector");
 
 var _t = core._t;
 
+/**
+ * @class DomainSelectorDialog
+ */
 return Dialog.extend({
     init: function (parent, model, domain, options) {
         this.model = model;
@@ -37,11 +40,15 @@ return Dialog.extend({
         this.domainSelector = new DomainSelector(this, model, domain, options);
     },
     start: function () {
-        this.$el.css("overflow", "visible").closest(".modal-dialog").css("height", "auto"); // This restores default modal height (bootstrap) and allows field selector to overflow
-        return $.when(
+        var self = this;
+        this.opened().then(function () {
+            // this restores default modal height (bootstrap) and allows field selector to overflow
+            self.$el.css('overflow', 'visible').closest('.modal-dialog').css('height', 'auto');
+        });
+        return Promise.all([
             this._super.apply(this, arguments),
             this.domainSelector.appendTo(this.$el)
-        );
+        ]);
     },
 });
 });

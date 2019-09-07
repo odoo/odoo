@@ -19,15 +19,16 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
     'depends': [
         'account',
         'base_iban',
+        'base_vat',
     ],
     'data': [
         'data/l10n_uk_chart_data.xml',
         'data/account.account.template.csv',
         'data/account.chart.template.csv',
-        'data/account.account.tag.csv',
-        'data/account.tax.template.csv',
-        'data/res.country.state.csv',
-        'data/account_chart_template_data.yml',
+        'data/account.tax.group.csv',
+        'data/account_tax_report_data.xml',
+        'data/account_tax_data.xml',
+        'data/account_chart_template_data.xml',
     ],
     'demo' : ['demo/l10n_uk_demo.xml'],
 }

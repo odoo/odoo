@@ -2,13 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from cStringIO import StringIO
+import io
 from werkzeug.utils import redirect
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.website_portal_sale.controllers.main import website_account
+from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+
 
 class WebsiteSaleDigitalConfirmation(WebsiteSale):
     @http.route([
@@ -22,19 +23,23 @@ class WebsiteSaleDigitalConfirmation(WebsiteSale):
         return response
 
 
-class WebsiteSaleDigital(website_account):
+class WebsiteSaleDigital(CustomerPortal):
     orders_page = '/my/orders'
 
     @http.route([
-        '/my/orders/<int:order>',
-    ], type='http', auth='user', website=True)
-    def orders_followup(self, order=None, **post):
-        response = super(WebsiteSaleDigital, self).orders_followup(order=order, **post)
-        if not 'order' in response.qcontext:
+        '/my/orders/<int:order_id>',
+    ], type='http', auth='public', website=True)
+    def portal_order_page(self, order_id=None, **post):
+        response = super(WebsiteSaleDigital, self).portal_order_page(order_id=order_id, **post)
+        if not 'sale_order' in response.qcontext:
             return response
-        order = response.qcontext['order']
-        invoiced_lines = request.env['account.invoice.line'].sudo().search([('invoice_id', 'in', order.invoice_ids.ids), ('invoice_id.state', '=', 'paid')])
+        order = response.qcontext['sale_order']
+        invoiced_lines = request.env['account.move.line'].sudo().search([('move_id', 'in', order.invoice_ids.ids), ('move_id.invoice_payment_state', '=', 'paid')])
         products = invoiced_lines.mapped('product_id') | order.order_line.filtered(lambda r: not r.price_subtotal).mapped('product_id')
+        if not order.amount_total:
+            # in that case, we should add all download links to the products
+            # since there is nothing to pay, so we shouldn't wait for an invoice
+            products = order.order_line.mapped('product_id')
 
         purchased_products_attachments = {}
         for product in products:
@@ -43,7 +48,7 @@ class WebsiteSaleDigital(website_account):
             product_id = product.id
             template = product.product_tmpl_id
             att = Attachment.search_read(
-                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), '&', ('res_id', '=', template.id), ('product_downloadable', '=', True)],
+                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id), ('product_downloadable', '=', True)],
                 fields=['name', 'write_date'],
                 order='write_date desc',
             )
@@ -77,7 +82,7 @@ class WebsiteSaleDigital(website_account):
         # Check if the user has bought the associated product
         res_model = attachment['res_model']
         res_id = attachment['res_id']
-        purchased_products = request.env['account.invoice.line'].get_digital_purchases()
+        purchased_products = request.env['account.move.line'].get_digital_purchases()
 
         if res_model == 'product.product':
             if res_id not in purchased_products:
@@ -85,7 +90,7 @@ class WebsiteSaleDigital(website_account):
 
         # Also check for attachments in the product templates
         elif res_model == 'product.template':
-            template_ids = request.env['product.product'].browse(purchased_products).mapped('product_tmpl_id').ids
+            template_ids = request.env['product.product'].sudo().browse(purchased_products).mapped('product_tmpl_id').ids
             if res_id not in template_ids:
                 return redirect(self.orders_page)
 
@@ -99,7 +104,7 @@ class WebsiteSaleDigital(website_account):
             else:
                 return request.not_found()
         elif attachment["datas"]:
-            data = StringIO(base64.standard_b64decode(attachment["datas"]))
+            data = io.BytesIO(base64.standard_b64decode(attachment["datas"]))
             return http.send_file(data, filename=attachment['name'], as_attachment=True)
         else:
             return request.not_found()

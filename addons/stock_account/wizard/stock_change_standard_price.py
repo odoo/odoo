@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.addons import decimal_precision as dp
 
 
 class StockChangeStandardPrice(models.TransientModel):
@@ -10,7 +9,7 @@ class StockChangeStandardPrice(models.TransientModel):
     _description = "Change Standard Price"
 
     new_price = fields.Float(
-        'Price', digits=dp.get_precision('Product Price'),  required=True,
+        'Price', digits='Product Price',  required=True,
         help="If cost price is increased, stock variation account will be debited "
              "and stock output account will be credited with the value = (difference of amount * quantity available).\n"
              "If cost price is decreased, stock variation account will be creadited and stock input account will be debited.")
@@ -31,7 +30,6 @@ class StockChangeStandardPrice(models.TransientModel):
         res['counterpart_account_id_required'] = bool(product_or_template.valuation == 'real_time')
         return res
 
-    @api.multi
     def change_price(self):
         """ Changes the Standard Price of Product and creates an account move accordingly. """
         self.ensure_one()
@@ -40,5 +38,5 @@ class StockChangeStandardPrice(models.TransientModel):
         else:
             products = self.env['product.product'].browse(self._context['active_id'])
 
-        products.do_change_standard_price(self.new_price, self.counterpart_account_id.id)
+        products._change_standard_price(self.new_price, counterpart_account_id=self.counterpart_account_id.id)
         return {'type': 'ir.actions.act_window_close'}

@@ -3,8 +3,9 @@
 
     <template id="assets_backend" name="hr assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/hr/static/src/less/hr.less"/>
+            <link rel="stylesheet" type="text/scss" href="/hr/static/src/scss/hr.scss"/>
+            <script type="text/javascript" src="/hr/static/src/js/chat.js"></script>
+            <script type="text/javascript" src="/hr/static/src/js/language.js"></script>
         </xpath>
     </template>
-
 </odoo>

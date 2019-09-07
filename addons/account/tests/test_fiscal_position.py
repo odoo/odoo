@@ -119,9 +119,33 @@ class TestFiscalPosition(common.TransactionCase):
         self.fr_b2b_state = self.fr_b2b.copy(dict(state_ids=[(4, self.state_fr.id)], sequence=70))
         george.state_id = self.state_fr
         assert_fp(george, self.fr_b2b_zip100, "FR-B2B with zip should have precedence over states")
-        george.zip = 0
+        george.zip = False
         assert_fp(george, self.fr_b2b_state, "FR-B2B with states should have precedence")
 
         # Dedicated position has max precedence
         george.property_account_position_id = self.be_nat
         assert_fp(george, self.be_nat, "Forced position has max precedence")
+
+
+    def test_20_fp_one_tax_2m(self):
+
+        self.src_tax = self.env['account.tax'].create({'name': "SRC", 'amount': 0.0})
+        self.dst1_tax = self.env['account.tax'].create({'name': "DST1", 'amount': 0.0})
+        self.dst2_tax = self.env['account.tax'].create({'name': "DST2", 'amount': 0.0})
+
+        self.fp2m = self.fp.create({
+            'name': "FP-TAX2TAXES",
+            'tax_ids': [
+                (0,0,{
+                    'tax_src_id': self.src_tax.id,
+                    'tax_dest_id': self.dst1_tax.id
+                }),
+                (0,0,{
+                    'tax_src_id': self.src_tax.id,
+                    'tax_dest_id': self.dst2_tax.id
+                })
+            ]
+        })
+        mapped_taxes = self.fp2m.map_tax(self.src_tax)
+
+        self.assertEqual(mapped_taxes, self.dst1_tax | self.dst2_tax)

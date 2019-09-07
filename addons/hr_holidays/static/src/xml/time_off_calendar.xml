@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="hr_holidays.dashboard_calendar_header">
+        <div class="o_timeoff_container d-flex">
+            <div t-foreach="timeoffs" t-as="timeoff" t-attf-class="o_timeoff_card flex-grow-1 d-flex flex-column {{ timeoff_last ? 'o_timeoff_card_last' : '' }}">
+                <t t-set="need_allocation" t-value="timeoff[2] !== 'no'"/>
+                <t t-set="cl" t-value="'text-muted'"/>
+
+                <t t-if="need_allocation &amp;&amp; timeoff[1]['virtual_remaining_leaves'] &gt; 0">
+                    <t t-set="cl" t-value="'o_timeoff_green'"/>
+                </t>
+
+                <div class="mt-2">
+                    <t t-if="need_allocation">
+                        <span t-esc="timeoff[1]['leaves_taken']" class="o_timeoff_big o_timeoff_purple"/> / <span t-esc="timeoff[1]['max_leaves']"/> <t t-if="timeoff[1]['request_unit'] == 'hour'">Hours</t><t t-else="">Days</t>
+                    </t>
+                    <t t-else="">
+                        <span t-esc="timeoff[1]['leaves_taken']" class="o_timeoff_big o_timeoff_purple"/> <t t-if="timeoff[1]['request_unit'] == 'hour'">Hours</t><t t-else="">Days</t>
+                    </t>
+                </div>
+
+                <b><span t-esc="timeoff[0]" class="o_timeoff_name"/></b>
+
+                <span class="mb-4" t-if="need_allocation"><span t-attf-class="mr-1 font-weight-bold {{ cl }}" t-esc="timeoff[1]['remaining_leaves']"/><span>remaining</span></span>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="hr_holidays.dashboard.calendar.button">
+        <button class="btn btn-primary btn-time-off" type="button">
+            <t t-esc="time_off"/>
+        </button>
+        <button class="btn btn-secondary btn-allocation" type="button">
+            <t t-esc="request"/>
+        </button>
+    </t>
+</templates>

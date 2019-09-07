@@ -46,7 +46,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
             k.index = v;
             k.amount = field_utils.format.float(k.amount, {digits: k.digits});
             if (k.date){
-                k.date = field_utils.format.date(field_utils.parse.date(k.date, {isUTC: true}));
+                k.date = field_utils.format.date(field_utils.parse.date(k.date, {}, {isUTC: true}));
             }
         });
         this.$el.html(QWeb.render('ShowPaymentInfo', {
@@ -68,6 +68,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
                         payment_id: content.payment_id,
                         move_id: content.move_id,
                         ref: content.ref,
+                        account_payment_id: content.account_payment_id,
                     }));
                     $content.filter('.js_unreconcile_payment').on('click', self._onRemoveMoveReconcile.bind(self));
                     $content.filter('.js_open_payment').on('click', self._onOpenPayment.bind(self));
@@ -78,6 +79,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
                 title: 'Payment Information',
                 trigger: 'focus',
                 delay: { "show": 0, "hide": 100 },
+                container: $(k).parent(), // FIXME Ugly, should use the default body container but system & tests to adapt to properly destroy the popover
             };
             $(k).popover(options);
         });
@@ -93,13 +95,23 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onOpenPayment: function (event) {
+        var paymentId = parseInt($(event.target).attr('payment-id'));
         var moveId = parseInt($(event.target).attr('move-id'));
-        if (moveId !== undefined && !isNaN(moveId)){
-            //Open form view of account.move with id = move_id
+        var res_model;
+        var id;
+        if (paymentId !== undefined && !isNaN(paymentId)){
+            res_model = "account.payment";
+            id = paymentId;
+        } else if (moveId !== undefined && !isNaN(moveId)){
+            res_model = "account.move";
+            id = moveId;
+        }
+        //Open form view of account.move with id = move_id
+        if (res_model && id) {
             this.do_action({
                 type: 'ir.actions.act_window',
-                res_model: 'account.move',
-                res_id: moveId,
+                res_model: res_model,
+                res_id: id,
                 views: [[false, 'form']],
                 target: 'current'
             });
@@ -111,12 +123,14 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onOutstandingCreditAssign: function (event) {
+        event.stopPropagation();
+        event.preventDefault();
         var self = this;
         var id = $(event.target).data('id') || false;
         this._rpc({
-                model: 'account.invoice',
-                method: 'assign_outstanding_credit',
-                args: [JSON.parse(this.value).invoice_id, id],
+                model: 'account.move',
+                method: 'js_assign_outstanding_line',
+                args: [JSON.parse(this.value).move_id, id],
             }).then(function () {
                 self.trigger_up('reload');
             });
@@ -133,7 +147,8 @@ var ShowPaymentLineWidget = AbstractField.extend({
             this._rpc({
                 model: 'account.move.line',
                 method: 'remove_move_reconcile',
-                args: [paymentId, {'invoice_id': this.res_id}]
+                args: [paymentId],
+                context: {'move_id': this.res_id},
             }).then(function () {
                 self.trigger_up('reload');
             });
@@ -143,4 +158,8 @@ var ShowPaymentLineWidget = AbstractField.extend({
 
 field_registry.add('payment', ShowPaymentLineWidget);
 
+return {
+    ShowPaymentLineWidget: ShowPaymentLineWidget
+};
+    
 });

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        @param {mail.ThreadWindow} widget
+    -->
+    <t t-name="mail.ThreadWindow" t-extend="mail.AbstractThreadWindow">
+        <t t-jquery=".o_thread_window_header" t-operation="after">
+            <t t-call="mail.thread_window.OutOfOffice" t-if="widget.getOutOfOfficeInfo() or widget.getOutOfOfficeMessage()"/>
+            <div t-if="!widget.hasThread()" class="o_thread_search_input">
+                <span> To: </span>
+                <input type="text" placeholder="User name"/>
+            </div>
+        </t>
+    </t>
+
+    <!--
+        @param {mail.ThreadWindow} widget
+    -->
+    <div class="o_out_of_office" t-name="mail.thread_window.OutOfOffice">
+        <div class="o_out_of_office_info" t-if="widget.getOutOfOfficeInfo()" t-esc="widget.getOutOfOfficeInfo()"/>
+        <div class="o_out_of_office_text o_text_wrap" t-if="widget.getOutOfOfficeMessage()">
+            <t t-esc="widget.getOutOfOfficeMessage()"/>
+            <a href="#" class="o_out_of_office_read_more_less_button">Read more</a>
+        </div>
+    </div>
+
+    <!--
+        @param {string} expandTitle text to display on mouse hover (title attribute)
+    -->
+    <t t-extend="mail.AbstractThreadWindow.HeaderContent">
+        <t t-jquery=".o_thread_window_buttons" t-operation="prepend">
+            <a href="#" class="o_thread_window_expand fa fa-expand" t-att-title="expandTitle" t-att-aria-label="expandTitle"/>
+        </t>
+    </t>
+
+</templates>

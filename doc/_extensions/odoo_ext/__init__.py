@@ -5,13 +5,25 @@ from . import switcher
 from . import translator
 
 import sphinx.environment
+try:
+    from sphinx.environment.adapters import toctree
+except ImportError:
+    toctree = None
+
 import sphinx.builders.html
 from docutils import nodes
 def setup(app):
-    if getattr(app.config, 'html_translator_class', None):
-        app.warn("Overriding the explicitly set  html_translator_class setting",
-                 location="odoo extension")
-    app.config.html_translator_class = 'odoo_ext.translator.BootstrapTranslator'
+    if hasattr(app, 'set_translator'):
+        app.set_translator('html', translator.BootstrapTranslator)
+    else:
+        if getattr(app.config, 'html_translator_class', None):
+            app.warn("Overriding the explicitly set  html_translator_class setting",
+                     location="odoo extension")
+        app.config.html_translator_class = 'odoo_ext.translator.BootstrapTranslator'
+
+    add_js_file = getattr(app, 'add_js_file', None) or app.add_javascript
+    for f in ['jquery.min.js', 'bootstrap.js', 'doc.js', 'jquery.noconflict.js']:
+        add_js_file(f)
 
     switcher.setup(app)
     app.add_config_value('odoo_cover_default', None, 'env')
@@ -20,7 +32,9 @@ def setup(app):
     app.connect('html-page-context', update_meta)
 
 def update_meta(app, pagename, templatename, context, doctree):
-    meta = context.setdefault('meta', {})
+    meta = context.get('meta')
+    if meta is None:
+        meta = context['meta'] = {}
     meta.setdefault('banner', app.config.odoo_cover_default)
 
 def navbarify(node, navbar=None):
@@ -90,6 +104,14 @@ class monkey(object):
         old = getattr(self.obj, name)
         setattr(self.obj, name, lambda self_, *args, **kwargs: \
                 fn(old, self_, *args, **kwargs))
+if toctree:
+    # 1.6 and above use a new toctree adapter object for processing rather
+    # than functions on the BuildEnv & al
+    @monkey(toctree.TocTree)
+    def resolve(old_resolve, tree, docname, *args, **kwargs):
+        if docname == tree.env.config.master_doc:
+            return resolve_content_toctree(tree.env, docname, *args, **kwargs)
+        return old_resolve(tree, docname, *args, **kwargs)
 
 @monkey(sphinx.environment.BuildEnvironment)
 def resolve_toctree(old_resolve, self, docname, *args, **kwargs):

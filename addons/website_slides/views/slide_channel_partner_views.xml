@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="slide_channel_partner_view_search" model="ir.ui.view">
+            <field name="name">slide.channel.partner.search</field>
+            <field name="model">slide.channel.partner</field>
+            <field name="arch" type="xml">
+                <search string="Channel Member">
+                    <field name="partner_id"/>
+                    <field name="partner_email"/>
+                    <field name="channel_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="slide_channel_partner_action" model="ir.actions.act_window">
+            <field name="name">Attendees</field>
+            <field name="res_model">slide.channel.partner</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="website_slides.slide_channel_partner_view_search"/>
+        </record>
+
+        <record id="slide_channel_partner_view_tree" model="ir.ui.view">
+            <field name="name">slide.channel.partner.tree</field>
+            <field name="model">slide.channel.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Attendees" editable="top">
+                    <field name="create_date"/>
+                    <field name="partner_id" string="Contact"/>
+                    <field name="partner_email"/>
+                    <field name="channel_id" string="Channel" invisible="context.get('default_channel_id',False)" />
+                    <button name="unlink" class="text-danger" string="Remove" 
+                            icon="fa-times-circle" type="object"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="slide_channel_partner_action" model="ir.actions.act_window">
+            <field name="name">Attendees</field>
+            <field name="res_model">slide.channel.partner</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

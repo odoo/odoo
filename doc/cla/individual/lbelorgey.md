@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Laurent Bélorgey lb@lalieutenante.com https://github.com/lbelorgey
+Laurent BÃ©lorgey lb@lalieutenante.com https://github.com/lbelorgey

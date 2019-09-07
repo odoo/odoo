@@ -17,7 +17,7 @@
                         </group>
                         <group string="Login Information">
                               <field name="ldap_binddn"/>
-                              <field name="ldap_password"/>
+                              <field name="ldap_password" password="True"/>
                         </group>
                         <group string="Process Parameter">
                              <field name="ldap_base"/>
@@ -50,7 +50,6 @@
              <field name="name">Setup your LDAP Server</field>
              <field name="type">ir.actions.act_window</field>
              <field name="res_model">res.company.ldap</field>
-             <field name="view_type">form</field>
              <field name="view_mode">tree,form</field>
         </record>
 

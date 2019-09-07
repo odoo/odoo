@@ -45,8 +45,8 @@ var ReprintButton = screens.ActionButtonWidget.extend({
 screens.define_action_button({
     'name': 'reprint',
     'widget': ReprintButton,
-    'condition': function() {
-        return this.pos.config.iface_reprint;
+    'condition': function(){
+        return this.pos.config.iface_print_via_proxy;
     },
 });
 

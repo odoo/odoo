@@ -4,6 +4,8 @@
 
 import json
 import logging
+import re
+import time
 from hashlib import sha256
 
 from werkzeug import urls
@@ -40,16 +42,11 @@ class AcquirerSips(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(selection_add=[('sips', 'Sips')])
-    sips_merchant_id = fields.Char('SIPS API User Password', required_if_provider='sips', groups='base.group_user')
-    sips_secret = fields.Char('SIPS Secret', size=64, required_if_provider='sips', groups='base.group_user')
-
-    def _get_sips_urls(self, environment):
-        """ Worldline SIPS URLS """
-        url = {
-            'prod': 'https://payment-webinit.sips-atos.com/paymentInit',
-            'test': 'https://payment-webinit.simu.sips-atos.com/paymentInit', }
-
-        return {'sips_form_url': url.get(environment, url['test']), }
+    sips_merchant_id = fields.Char('Merchant ID', help="Used for production only", required_if_provider='sips', groups='base.group_user')
+    sips_secret = fields.Char('Secret Key', size=64, required_if_provider='sips', groups='base.group_user')
+    sips_test_url = fields.Char("Test url", required_if_provider='sips', groups='base.group_no_one', default='https://payment-webinit.sips-atos.com/paymentInit')
+    sips_prod_url = fields.Char("Production url", required_if_provider='sips', groups='base.group_no_one', default='https://payment-webinit.simu.sips-atos.com/paymentInit')
+    sips_version = fields.Char("Interface Version", required_if_provider='sips', groups='base.group_no_one', default='HP_2.3')
 
     def _sips_generate_shasign(self, values):
         """ Generate the shasign for incoming or outgoing communications.
@@ -63,13 +60,12 @@ class AcquirerSips(models.Model):
         # Test key provided by Worldine
         key = u'002001000000001_KEY1'
 
-        if self.environment == 'prod':
+        if self.state == 'enabled':
             key = getattr(self, 'sips_secret')
 
-        shasign = sha256(data + key)
+        shasign = sha256((data + key).encode('utf-8'))
         return shasign.hexdigest()
 
-    @api.multi
     def sips_form_generate_values(self, values):
         self.ensure_one()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -78,10 +74,10 @@ class AcquirerSips(models.Model):
         if not currency_code:
             raise ValidationError(_('Currency not supported by Wordline'))
         amount = int(values['amount'] * 100)
-        if self.environment == 'prod':
+        if self.state == 'enabled':
             # For production environment, key version 2 is required
             merchant_id = getattr(self, 'sips_merchant_id')
-            key_version = '2'
+            key_version = self.env['ir.config_parameter'].sudo().get_param('sips.key_version', '2')
         else:
             # Test key provided by Atos Wordline works only with version 1
             merchant_id = '002001000000001'
@@ -97,12 +93,12 @@ class AcquirerSips(models.Model):
                     u'transactionReference=%s|' % values['reference'] +
                     u'statementReference=%s|' % values['reference'] +
                     u'keyVersion=%s' % key_version,
-            'InterfaceVersion': 'HP_2.3',
+            'InterfaceVersion': self.sips_version,
         })
 
         return_context = {}
         if sips_tx_values.get('return_url'):
-            return_context[u'return_url'] = u'%s' % sips_tx_values.pop('return_url')
+            return_context[u'return_url'] = u'%s' % urls.url_quote(sips_tx_values.pop('return_url'))
         return_context[u'reference'] = u'%s' % sips_tx_values['reference']
         sips_tx_values['Data'] += u'|returnContext=%s' % (json.dumps(return_context))
 
@@ -110,10 +106,9 @@ class AcquirerSips(models.Model):
         sips_tx_values['Seal'] = shasign
         return sips_tx_values
 
-    @api.multi
     def sips_get_form_action_url(self):
         self.ensure_one()
-        return self._get_sips_urls(self.environment)['sips_form_url']
+        return self.state == 'enabled' and self.sips_prod_url or self.sips_test_url
 
 
 class TxSips(models.Model):
@@ -125,6 +120,14 @@ class TxSips(models.Model):
     _sips_error_tx_status = ['03', '12', '24', '25', '30', '40', '51', '63', '94']
     _sips_pending_tx_status = ['60']
     _sips_cancel_tx_status = ['17']
+
+    @api.model
+    def _compute_reference(self, values=None, prefix=None):
+        res = super(TxSips, self)._compute_reference(values=values, prefix=prefix)
+        acquirer = self.env['payment.acquirer'].browse(values.get('acquirer_id'))
+        if acquirer and acquirer.provider == 'sips':
+            return re.sub(r'[^0-9a-zA-Z]+', 'x', res) + 'x' + str(int(time.time()))
+        return res
 
     # --------------------------------------------------
     # FORM RELATED METHODS
@@ -160,7 +163,6 @@ class TxSips(models.Model):
             raise ValidationError(error_msg)
         return payment_tx
 
-    @api.multi
     def _sips_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
@@ -172,19 +174,16 @@ class TxSips(models.Model):
         # check what is bought
         if float_compare(float(data.get('amount', '0.0')) / 100, self.amount, 2) != 0:
             invalid_parameters.append(('amount', data.get('amount'), '%.2f' % self.amount))
-        if self.partner_reference and data.get('customerId') != self.partner_reference:
-            invalid_parameters.append(('customerId', data.get('customerId'), self.partner_reference))
 
         return invalid_parameters
 
-    @api.multi
     def _sips_form_validate(self, data):
         data = self._sips_data_to_object(data.get('Data'))
         status = data.get('responseCode')
         data = {
             'acquirer_reference': data.get('transactionReference'),
             'partner_reference': data.get('customerId'),
-            'date_validate': data.get('transactionDateTime',
+            'date': data.get('transactionDateTime',
                                       fields.Datetime.now())
         }
         res = False
@@ -192,33 +191,46 @@ class TxSips(models.Model):
             msg = 'Payment for tx ref: %s, got response [%s], set as done.' % \
                   (self.reference, status)
             _logger.info(msg)
-            data.update(state='done', state_message=msg)
+            data.update(state_message=msg)
+            self.write(data)
+            self._set_transaction_done()
             res = True
         elif status in self._sips_error_tx_status:
             msg = 'Payment for tx ref: %s, got response [%s], set as ' \
                   'error.' % (self.reference, status)
-            data.update(state='error', state_message=msg)
+            data.update(state_message=msg)
+            self.write(data)
+            self._set_transaction_cancel()
         elif status in self._sips_wait_tx_status:
             msg = 'Received wait status for payment ref: %s, got response ' \
                   '[%s], set as error.' % (self.reference, status)
-            data.update(state='error', state_message=msg)
+            data.update(state_message=msg)
+            self.write(data)
+            self._set_transaction_cancel()
         elif status in self._sips_refused_tx_status:
             msg = 'Received refused status for payment ref: %s, got response' \
                   ' [%s], set as error.' % (self.reference, status)
-            data.update(state='error', state_message=msg)
+            data.update(state_message=msg)
+            self.write(data)
+            self._set_transaction_cancel()
         elif status in self._sips_pending_tx_status:
             msg = 'Payment ref: %s, got response [%s] set as pending.' \
                   % (self.reference, status)
-            data.update(state='pending', state_message=msg)
+            data.update(state_message=msg)
+            self.write(data)
+            self._set_transaction_pending()
         elif status in self._sips_cancel_tx_status:
             msg = 'Received notification for payment ref: %s, got response ' \
                   '[%s], set as cancel.' % (self.reference, status)
-            data.update(state='cancel', state_message=msg)
+            data.update(state_message=msg)
+            self.write(data)
+            self._set_transaction_cancel()
         else:
             msg = 'Received unrecognized status for payment ref: %s, got ' \
                   'response [%s], set as error.' % (self.reference, status)
-            data.update(state='error', state_message=msg)
+            data.update(state_message=msg)
+            self.write(data)
+            self._set_transaction_cancel()
 
         _logger.info(msg)
-        self.write(data)
         return res

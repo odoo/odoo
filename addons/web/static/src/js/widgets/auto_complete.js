@@ -19,7 +19,7 @@ return Widget.extend({
     //      to obtain the current search string.
     init: function (parent, options) {
         this._super(parent);
-        this.$input = parent.$el;
+        this.$input = options.$input;
         this.source = options.source;
         this.select = options.select;
         this.get_search_string = options.get_search_string;
@@ -55,7 +55,10 @@ return Widget.extend({
             }
         });
         this.$input.on('keypress', function (ev) {
-            self.search_string = self.search_string + String.fromCharCode(ev.which);
+            if (ev.which > 31 && ev.which !== 127) {
+                // we filter control character out of the search string
+                self.search_string = self.search_string + String.fromCharCode(ev.which);
+            }
             if (self.search_string.length) {
                 self.searching = true;
                 var search_string = self.search_string;
@@ -87,14 +90,24 @@ return Widget.extend({
                     ev.preventDefault();
                     break;
                 case $.ui.keyCode.RIGHT:
+                    if(self.$input[0].selectionStart < self.search_string.length) {
+                        ev.stopPropagation();
+                        return;
+                    }
                     self.searching = false;
                     var current = self.current_result;
                     if (current && current.expand && !current.expanded) {
                         self.expand();
                         self.searching = true;
+                        ev.stopPropagation();
                     }
                     ev.preventDefault();
                     break;
+                case $.ui.keyCode.LEFT:
+                     if(self.$input[0].selectionStart > 0) {
+                        ev.stopPropagation();
+                     }
+                     break;
                 case $.ui.keyCode.ESCAPE:
                     self.close();
                     self.searching = false;
@@ -188,10 +201,8 @@ return Widget.extend({
         this.current_result = $li.data('result');
     },
     select_item: function (ev) {
-        if (this.current_result.facet) {
-            this.select(ev, {item: {facet: this.current_result.facet}});
-            this.close();
-        }
+        this.select(ev, {item: {facet: this.current_result.facet}});
+        this.close();
     },
     show: function () {
         this.$el.show();
@@ -216,5 +227,8 @@ return Widget.extend({
     is_expandable: function () {
         return !!this.$('.o-selection-focus .o-expand').length;
     },
+    is_expanded: function() {
+        return this.$el[0].style.display === "block";
+    }
 });
 });

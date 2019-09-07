@@ -1,17 +1,33 @@
 odoo.define('website_event.geolocation', function (require) {
-"use strict";
+'use strict';
 
-var animation = require('web_editor.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-animation.registry.visitor = animation.Class.extend({
-    selector: ".oe_country_events",
+publicWidget.registry.visitor = publicWidget.Widget.extend({
+    selector: ".oe_country_events, .country_events",
+
+    /**
+     * @override
+     */
     start: function () {
-        $.get("/event/get_country_event_list").then(function( data ) {
-            if(data){
-                $( ".country_events_list" ).replaceWith( data );
+        var defs = [this._super.apply(this, arguments)];
+        var self = this;
+        var $eventList = this.$('.country_events_list');
+        this._originalContent = $eventList[0].outerHTML;
+        defs.push(this._rpc({route: '/event/get_country_event_list'}).then(function (data) {
+            if (data) {
+                self._$loadedContent = $(data);
+                $eventList.replaceWith(self._$loadedContent);
             }
-        });
-    }
+        }));
+        return Promise.all(defs);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        this._$loadedContent.replaceWith(this._originalContent);
+    },
 });
-
 });

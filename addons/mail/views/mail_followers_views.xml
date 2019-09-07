@@ -9,7 +9,7 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Followers">
-                    <field name="res_model_id"/>
+                    <field name="res_model"/>
                     <field name="res_id"/>
                     <field name="partner_id"/>
                 </tree>
@@ -24,7 +24,7 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="res_model_id"/>
+                                <field name="res_model"/>
                                 <field name="partner_id"/>
                             </group>
                             <group>
@@ -40,7 +40,6 @@
         <record id="action_view_followers" model="ir.actions.act_window">
             <field name="name">Followers</field>
             <field name="res_model">mail.followers</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 

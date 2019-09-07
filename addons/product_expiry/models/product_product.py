@@ -10,7 +10,7 @@ class ProductTemplate(models.Model):
     life_time = fields.Integer(string='Product Life Time',
         help='Number of days before the goods may become dangerous and must not be consumed. It will be computed on the lot/serial number.')
     use_time = fields.Integer(string='Product Use Time',
-        help='Number of days before the goods starts deteriorating, without being dangerous yet. It will be computed on the lot/serial number.')
+        help='Number of days before the goods starts deteriorating, without being dangerous yet. It will be computed using the lot/serial number.')
     removal_time = fields.Integer(string='Product Removal Time',
         help='Number of days before the goods should be removed from the stock. It will be computed on the lot/serial number.')
     alert_time = fields.Integer(string='Product Alert Time',

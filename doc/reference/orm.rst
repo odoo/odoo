@@ -45,14 +45,20 @@ Field access
 ------------
 
 Recordsets provide an "Active Record" interface: model fields can be read and
-written directly from the record, but only on singletons (single-record
-recordsets). Setting a field's value triggers an update to the database::
+written directly from the record as attributes, but only on singletons
+(single-record recordsets).
+Field values can also be accessed like dict items, which is more elegant and
+safer than ``getattr()`` for dynamic field names.
+Setting a field's value triggers an update to the database::
 
     >>> record.name
     Example Name
     >>> record.company_id.name
     Company Name
     >>> record.name = "Bob"
+    >>> field = "name"
+    >>> record[field]
+    Bob
 
 Trying to read or write a field on multiple records will raise an error.
 
@@ -272,12 +278,18 @@ Common ORM methods
    .. tip:: to just check if any record matches a domain, or count the number
              of records which do, use
              :meth:`~odoo.models.Model.search_count`
-:meth:`~odoo.models.Model.create`
-    Takes a number of field values, and returns a recordset containing the
-    record created::
 
-        >>> self.create({'name': "New Name"})
+:meth:`~odoo.models.Model.create`
+    Takes a dictionary of field values, or a list of such dictionaries, and
+    returns a recordset containing the records created::
+
+        >>> self.create({'name': "Joe"})
         res.partner(78)
+        >>> self.create([{'name': "Jack"}, {'name': "William"}, {'name': "Averell"}])
+        res.partner(79, 80, 81)
+
+    See :ref:`how to define method \`create\` with one API or the other
+    <reference/orm/oldapi>`.
 
 :meth:`~odoo.models.Model.write`
     Takes a number of field values, writes them to all the records in its
@@ -470,6 +482,11 @@ added.
     ``onchange`` methods work on virtual records assignment on these records
     is not written to the database, just used to know which value to send back
     to the client
+    
+.. warning::
+
+    It is not possible for a ``one2many`` or ``many2many`` field to modify 
+    itself via onchange. This is a webclient limitation - see `#2693 <https://github.com/odoo/odoo/issues/2693>`_.
 
 Low-level SQL
 -------------
@@ -488,8 +505,8 @@ necessary to clear caches when using ``CREATE``, ``UPDATE`` or ``DELETE`` in
 SQL, but not ``SELECT`` (which simply reads the database).
 
 Clearing caches can be performed using the
-:meth:`~odoo.api.Environment.invalidate_all` method of the
-:class:`~odoo.api.Environment` object.
+:meth:`~odoo.models.BaseModel.invalidate_cache` method of the
+:class:`~odoo.models.BaseModel` object.
 
 
 .. _reference/orm/oldapi:
@@ -548,15 +565,18 @@ Two decorators can expose a new-style method to the old API:
         # can be called as
         old_style_model.some_method(cr, uid, a_value, context=context)
 
-:func:`~odoo.api.multi`
-    the method is exposed as taking a list of ids (possibly empty), its
-    "old API" signature is ``cr, uid, ids, *arguments, context``::
+Note that a method `create` decorated with :func:`~odoo.api.model` will always
+be called with a single dictionary. A method `create` decorated with the variant
+:func:`~odoo.api.model_create_multi` will always be called with a list of dicts.
+The decorators take care of converting the argument to one form or the other::
 
-        @api.multi
-        def some_method(self, a_value):
-            pass
-        # can be called as
-        old_style_model.some_method(cr, uid, [id1, id2], a_value, context=context)
+    @api.model
+    def create(self, vals):
+        ...
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        ...
 
 Because new-style APIs tend to return recordsets and old-style APIs tend to
 return lists of ids, there is also a decorator managing this:
@@ -568,8 +588,7 @@ return lists of ids, there is also a decorator managing this:
     No effect if the method is called in new API style, but transforms the
     recordset into a list of ids when called from the old API style::
 
-        >>> @api.multi
-        ... @api.returns('self')
+        >>> @api.returns('self')
         ... def some_method(self):
         ...     return self
         >>> new_style_model = env['a.model'].browse(1, 2, 3)
@@ -624,6 +643,9 @@ Model Reference
 
         If set to ``False``, override :meth:`.init` to create the database
         table
+        
+     .. tip:: To create a model without any table, inherit
+              from ``odoo.models.AbstractModel``
 
     .. attribute:: _table
 
@@ -667,9 +689,10 @@ Model Reference
 
     .. attribute:: _parent_store
 
-        Alongside :attr:`~.parent_left` and :attr:`~.parent_right`, sets up a
-        `nested set <http://en.wikipedia.org/wiki/Nested_set_model>`_  to
-        enable fast hierarchical queries on the records of the current model
+        Alongside a :attr:`~.parent_path` field, sets up an indexed storage
+        of the tree structure of records, to enable faster hierarchical queries
+        on the records of the current model using the ``child_of`` and
+        ``parent_of`` domain operators.
         (default: ``False``)
 
         :type: bool
@@ -792,17 +815,17 @@ Model Reference
     .. attribute:: parent_id
 
         used to order records in a tree structure and enables the ``child_of``
-        operator in domains
+        and ``parent_of`` operators in domains
 
         :type: :class:`~odoo.fields.Many2one`
 
-    .. attribute:: parent_left
+    .. attribute:: parent_path
 
-        used with :attr:`~._parent_store`, allows faster tree structure access
+        used to store an index of the tree structure when :attr:`~._parent_store`
+        is set to True - must be declared with ``index=True`` for proper operation.
 
-    .. attribute:: parent_right
+        :type: :class:`~odoo.fields.Char`
 
-        see :attr:`~.parent_left`
 
 .. _reference/orm/decorators:
 
@@ -810,8 +833,7 @@ Method decorators
 =================
 
 .. automodule:: odoo.api
-    :members: multi, model, depends, constrains, onchange, returns,
-              one, v7, v8
+    :members: model, depends, constrains, onchange, returns,
 
 .. _reference/orm/fields:
 
@@ -852,13 +874,57 @@ Basic fields
 .. autoclass:: odoo.fields.Html
     :show-inheritance:
 
+.. _reference/orm/fields/date_datetime:
+
+Date and Datetime fields
+------------------------
+
+Dates and Datetimes are very important fields in any kind of business
+application, they are heavily used in many popular Odoo applications such as
+logistics or accounting and their misuse can create invisible yet painful
+bugs, this excerpt aims to provide Odoo developers with the knowledge required
+to avoid misusing these fields.
+
+When assigning a value to a Date/Datetime field, the following options are valid:
+    * A string in the proper server format **(YYYY-MM-DD)** for Date fields,
+      **(YYYY-MM-DD HH:MM:SS)** for Datetime fields.
+    * A `date` or `datetime` object.
+    * `False` or `None`.
+
+If not sure of the type of the value being assigned to a Date/Datetime object,
+the best course of action is to pass the value to
+:func:`~odoo.fields.Date.to_date` or :func:`~odoo.fields.Datetime.to_datetime`
+which will attempt to convert the value to a date or datetime object
+respectively, which can then be assigned to the field in question.
+
+.. admonition:: Example
+
+    To parse date/datetimes coming from external sources::
+
+        fields.Date.to_date(self._context.get('date_from'))
+
+Date / Datetime comparison best practices:
+    * Date fields can **only** be compared to date objects.
+    * Datetime fields can **only** be compared to datetime objects.
+
+    .. warning:: Strings representing dates and datetimes can be compared
+                 between each other, however the result may not be the expected
+                 result, as a datetime string will always be greater than a
+                 date string, therefore this practice is **heavily**
+                 discouraged.
+
+Common operations with dates and datetimes such as addition, substraction or
+fetching the start/end of a period are exposed through both
+:class:`~odoo.fields.Date` and :class:`~odoo.fields.Datetime`.
+These helpers are also available by importing `odoo.tools.date_utils`.
+
 .. autoclass:: odoo.fields.Date
     :show-inheritance:
-    :members: today, context_today, from_string, to_string
+    :members: today, context_today, to_date, to_string, start_of, end_of, add, subtract
 
 .. autoclass:: odoo.fields.Datetime
     :show-inheritance:
-    :members: now, context_timestamp, from_string, to_string
+    :members: now, today, context_timestamp, to_datetime, to_string, start_of, end_of, add, subtract
 
 .. _reference/orm/fields/relational:
 
@@ -910,13 +976,13 @@ and using them:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_inheritance.py
     :language: python
-    :lines: 8,12,9,19
+    :lines: 10,11,14,19
 
 will yield:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_inheritance.py
     :language: text
-    :lines: 15,22
+    :lines: 16,21
 
 the second model has inherited from the first model's ``check`` method and its
 ``name`` field, but overridden the ``call`` method, as when using standard
@@ -933,17 +999,17 @@ them (e.g. to change their default sort order):
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/extension.py
     :language: python
-    :lines: 5-
+    :lines: 7-
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_extension.py
     :language: python
-    :lines: 8,13
+    :lines: 10,15
 
 will yield:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_extension.py
     :language: text
-    :lines: 11
+    :lines: 13
 
 .. note:: it will also yield the various :ref:`automatic fields
           <reference/orm/model/automatic>` unless they've been disabled
@@ -956,7 +1022,9 @@ at runtime) but less power: using the :attr:`~odoo.models.Model._inherits`
 a model *delegates* the lookup of any field not found on the current model
 to "children" models. The delegation is performed via
 :class:`~odoo.fields.Reference` fields automatically set up on the parent
-model:
+model. The main difference is in the meaning. When using Delegation, the model
+**has one** instead of **is one**, turning the relationship in a composition
+instead of inheritance:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/delegation.py
     :language: python
@@ -964,19 +1032,19 @@ model:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_delegation.py
     :language: python
-    :lines: 9-12,21,26
+    :lines: 11-14,23,28
 
 will result in:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_delegation.py
     :language: text
-    :lines: 23,28
+    :lines: 25,30
 
 and it's possible to write directly on the delegated field:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_delegation.py
     :language: python
-    :lines: 47
+    :lines: 45
 
 .. warning:: when using delegation inheritance, methods are *not* inherited,
              only fields
@@ -1096,9 +1164,9 @@ Porting from the old API to the new API
 * **remove** all ``onchange`` methods on computed fields. Computed fields are
   automatically re-computed when one of their dependencies is changed, and
   that is used to auto-generate ``onchange`` by the client
-* the decorators :func:`~odoo.api.model` and :func:`~odoo.api.multi` are
+* the decorator :func:`~odoo.api.model` is
   for bridging *when calling from the old API context*, for internal or pure
-  new-api (e.g. compute) they are useless
+  new-api (e.g. compute) it is useless
 * remove :attr:`~odoo.models.Model._default`, replace by ``default=``
   parameter on corresponding fields
 * if a field's ``string=`` is the titlecased version of the field name::
@@ -1117,28 +1185,12 @@ Porting from the old API to the new API
 * the normal new-api import is ``from odoo import fields, models``. If
   compatibility decorators are necessary, use ``from odoo import api,
   fields, models``
-* avoid the :func:`~odoo.api.one` decorator, it probably does not do what
-  you expect
 * remove explicit definition of :attr:`~odoo.models.Model.create_uid`,
   :attr:`~odoo.models.Model.create_date`,
   :attr:`~odoo.models.Model.write_uid` and
   :attr:`~odoo.models.Model.write_date` fields: they are now created as
   regular "legitimate" fields, and can be read and written like any other
   field out-of-the-box
-* when straight conversion is impossible (semantics can not be bridged) or the
-  "old API" version is not desirable and could be improved for the new API, it
-  is possible to use completely different "old API" and "new API"
-  implementations for the same method name using :func:`~odoo.api.v7` and
-  :func:`~odoo.api.v8`. The method should first be defined using the
-  old-API style and decorated with :func:`~odoo.api.v7`, it should then be
-  re-defined using the exact same name but the new-API style and decorated
-  with :func:`~odoo.api.v8`. Calls from an old-API context will be
-  dispatched to the first implementation and calls from a new-API context will
-  be dispatched to the second implementation. One implementation can call (and
-  frequently does) call the other by switching context.
-
-  .. danger:: using these decorators makes methods extremely difficult to
-              override and harder to understand and document
 * uses of :attr:`~odoo.models.Model._columns` or
   :attr:`~odoo.models.Model._all_columns` should be replaced by
   :attr:`~odoo.models.Model._fields`, which provides access to instances of
@@ -1190,35 +1242,3 @@ automatically fill matched parameters from the current
 :attr:`~odoo.api.Environment.user` and
 :attr:`~odoo.api.Environment.context`) or the current recordset (for ``id``
 and ``ids``).
-
-In the rare cases where it is necessary, the bridging can be customized by
-decorating the old-style method:
-
-* disabling it entirely, by decorating a method with
-  :func:`~odoo.api.noguess` there will be no bridging and methods will be
-  called the exact same way from the new and old API styles
-* defining the bridge explicitly, this is mostly for methods which are matched
-  incorrectly (because parameters are named in unexpected ways):
-
-  :func:`~odoo.api.cr`
-     will automatically prepend the current cursor to explicitly provided
-     parameters, positionally
-  :func:`~odoo.api.cr_uid`
-     will automatically prepend the current cursor and user's id to explictly
-     provided parameters
-  :func:`~odoo.api.cr_uid_ids`
-     will automatically prepend the current cursor, user's id and recordset's
-     ids to explicitly provided parameters
-  :func:`~odoo.api.cr_uid_id`
-     will loop over the current recordset and call the method once for each
-     record, prepending the current cursor, user's id and record's id to
-     explicitly provided parameters.
-
-     .. danger:: the result of this wrapper is *always a list* when calling
-                 from a new-API context
-
-  All of these methods have a ``_context``-suffixed version
-  (e.g. :func:`~odoo.api.cr_uid_context`) which also passes the current
-  context *by keyword*.
-* dual implementations using :func:`~odoo.api.v7` and
-  :func:`~odoo.api.v8` will be ignored as they provide their own "bridging"

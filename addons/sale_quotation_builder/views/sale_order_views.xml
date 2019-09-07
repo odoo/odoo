@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_form_quote_design" model="ir.ui.view">
+        <field name="name">sale.order.form.sale_quotation_builder</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="website_description" invisible="1" readonly="1"/>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/form/field[@name='name']" position="after">
+                <field name="website_description" invisible="1" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//button[@name='button_add_to_order']" position="after">
+            	<field name="website_description" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='require_payment']" position="after">
+                <field name="website_description" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

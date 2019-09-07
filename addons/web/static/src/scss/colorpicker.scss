@@ -1,0 +1,85 @@
+// COLOR PICKER
+.o_colorpicker_widget {
+    .o_color_pick_area {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        background-image: linear-gradient(to bottom, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 100%, 0) 50%, hsla(0, 0%, 0%, 0) 50%, hsl(0, 0%, 0%) 100%),
+                          linear-gradient(to right, hsl(0, 0%, 50%) 0%, hsla(0, 0%, 50%, 0) 100%);
+        cursor: crosshair;
+
+        .o_picker_pointer {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 1px solid white;
+            box-shadow: 0px 0px 2px 1px gray('400');
+        }
+    }
+    .o_color_slider {
+        position: relative;
+        width: 18px;
+        height: 200px;
+        background: linear-gradient(#F00 0%, #FF0 16.66%, #0F0 33.33%, #0FF 50%, #00F 66.66%, #F0F 83.33%, #F00 100%);
+        cursor: pointer;
+
+        .o_slider_pointer {
+            @include o-position-absolute($left: -4px);
+            width: 23px;
+            height: 6px;
+            border: 1px solid white;
+            box-shadow: 0px 0px 2px 1px gray('600');
+        }
+    }
+    .o_opacity_slider {
+        position: relative;
+        width: 18px;
+        height: 200px;
+        cursor: pointer;
+
+        .o_opacity_pointer {
+            @include o-position-absolute($left: -4px);
+            width: 23px;
+            height: 6px;
+            border: 1px solid white;
+            box-shadow: 0px 0px 2px 1px gray('600');
+        }
+
+        &::before {
+            content: "";
+            @include o-position-absolute(0, 0, 0, 0);
+            z-index: -1;
+            background-image: url('/web_editor/static/src/img/transparent.png');
+        }
+    }
+    .o_color_picker_inputs {
+        display: flex;
+        flex-direction: column;
+        & > .form-row {
+            flex: 1;
+            .col {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+            }
+        }
+        .o_color_preview_parent {
+            background-image: url('/web_editor/static/src/img/transparent.png');
+        }
+        .o_color_preview {
+            padding: 0.375rem 1.2rem;
+        }
+        .form-group {
+            margin-bottom: 0.3rem;
+            label {
+                margin-bottom: 0px;
+                font-size: 0.7rem;
+                font-weight: bold;
+            }
+        }
+        .form-control {
+            height: 24px !important;
+            font-weight: bold;
+        }
+    }
+}

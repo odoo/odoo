@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.analytic.default</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='analytic_account_link']" position="after">
+                <div class="mt8">
+                    <button name="%(account_analytic_default.action_analytic_default_list)d" icon="fa-arrow-right" type="action" string="Default Analytic Values" class="btn-link"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

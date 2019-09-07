@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- iap Client Account Views -->
+    <record id="iap_account_view_form" model="ir.ui.view">
+        <field name="name">iap.account.form</field>
+        <field name="model">iap.account</field>
+        <field name="arch" type="xml">
+            <form string="IAP Account">
+                <sheet>
+                    <group name="account" string="Account Information">
+                        <field name="service_name"/>
+                        <field name="company_ids" widget="many2many_tags" domain="[('id', 'in', allowed_company_ids)]"/>
+                        <field name="account_token"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="iap_account_view_tree" model="ir.ui.view">
+        <field name="name">iap.account.tree</field>
+        <field name="model">iap.account</field>
+        <field name="arch" type="xml">
+            <tree string="IAP Accounts">
+                <field name="service_name"/>
+                <field name="company_ids" widget="many2many_tags"/>
+                <field name="account_token" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Actions -->
+    <record id="iap_account_action" model="ir.actions.act_window">
+        <field name="name">IAP Account</field>
+        <field name="res_model">iap.account</field>
+        <field name='view_mode'>tree,form</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem
+        id="iap_root_menu"
+        name="IAP"
+        parent="base.menu_custom"
+        sequence="4"/>
+
+    <menuitem
+        id="iap_account_menu"
+        name="IAP Accounts"
+        parent="iap_root_menu"
+        action="iap_account_action"
+        sequence="10"/>
+
+</odoo>

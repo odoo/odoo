@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-
 from odoo import models, fields, api, exceptions, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class HrAttendance(models.Model):
@@ -16,12 +13,12 @@ class HrAttendance(models.Model):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
     employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True, ondelete='cascade', index=True)
-    department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id")
+    department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id",
+        readonly=True)
     check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True)
     check_out = fields.Datetime(string="Check Out")
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
 
-    @api.multi
     def name_get(self):
         result = []
         for attendance in self:
@@ -42,8 +39,7 @@ class HrAttendance(models.Model):
     def _compute_worked_hours(self):
         for attendance in self:
             if attendance.check_out:
-                delta = datetime.strptime(attendance.check_out, DEFAULT_SERVER_DATETIME_FORMAT) - datetime.strptime(
-                    attendance.check_in, DEFAULT_SERVER_DATETIME_FORMAT)
+                delta = attendance.check_out - attendance.check_in
                 attendance.worked_hours = delta.total_seconds() / 3600.0
 
     @api.constrains('check_in', 'check_out')
@@ -68,7 +64,7 @@ class HrAttendance(models.Model):
                 ('check_in', '<=', attendance.check_in),
                 ('id', '!=', attendance.id),
             ], order='check_in desc', limit=1)
-            if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out >= attendance.check_in:
+            if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out > attendance.check_in:
                 raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s") % {
                     'empl_name': attendance.employee_id.name,
                     'datetime': fields.Datetime.to_string(fields.Datetime.context_timestamp(self, fields.Datetime.from_string(attendance.check_in))),
@@ -80,7 +76,7 @@ class HrAttendance(models.Model):
                     ('employee_id', '=', attendance.employee_id.id),
                     ('check_out', '=', False),
                     ('id', '!=', attendance.id),
-                ])
+                ], order='check_in desc', limit=1)
                 if no_check_out_attendances:
                     raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s") % {
                         'empl_name': attendance.employee_id.name,
@@ -91,7 +87,7 @@ class HrAttendance(models.Model):
                 # is the same as the one before our check_in time computed before, otherwise it overlaps
                 last_attendance_before_check_out = self.env['hr.attendance'].search([
                     ('employee_id', '=', attendance.employee_id.id),
-                    ('check_in', '<=', attendance.check_out),
+                    ('check_in', '<', attendance.check_out),
                     ('id', '!=', attendance.id),
                 ], order='check_in desc', limit=1)
                 if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
@@ -100,6 +96,6 @@ class HrAttendance(models.Model):
                         'datetime': fields.Datetime.to_string(fields.Datetime.context_timestamp(self, fields.Datetime.from_string(last_attendance_before_check_out.check_in))),
                     })
 
-    @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self):
         raise exceptions.UserError(_('You cannot duplicate an attendance.'))

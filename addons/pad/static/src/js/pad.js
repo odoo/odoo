@@ -13,7 +13,6 @@ var FieldPad = AbstractField.extend({
     events: {
         'click .oe_pad_switch': '_onToggleFullScreen',
     },
-    supportedFieldTypes: ['char'],
 
     /**
      * @override
@@ -29,18 +28,39 @@ var FieldPad = AbstractField.extend({
                 FieldPad.prototype.isPadConfigured = result;
             });
         }
-        return $.when();
+        return this._super.apply(this, arguments);
     },
     /**
      * @override
      */
     start: function () {
         if (!this.isPadConfigured) {
-            this.$(".oe_unconfigured").removeClass('hidden');
-            this.$(".oe_configured").addClass('hidden');
-            return;
+            this.$(".oe_unconfigured").removeClass('d-none');
+            this.$(".oe_configured").addClass('d-none');
+            return Promise.resolve();
         }
-        return this._super.apply(this, arguments);
+        var defs = [];
+        if (this.mode === 'edit' && _.str.startsWith(this.value, 'http')) {
+            this.url = this.value;
+            // please close your eyes and look elsewhere...
+            // Since the pad value (the url) will not change during the edition
+            // process, we have a problem: the description field will not be
+            // properly updated.  We need to explicitely write the value each
+            // time someone edit the record in order to force the server to read
+            // the updated value of the pad and put it in the description field.
+            //
+            // However, the basic model optimizes away the changes if they are
+            // not really different from the current value. So, we need to
+            // either add special configuration options to the basic model, or
+            // to trick him into accepting the same value as being different...
+            // Guess what we decided...
+            var url = {};
+            url.toJSON = _.constant(this.url);
+            defs.push(this._setValue(url, {doNotSetDirty: true}));
+        }
+
+        defs.push(this._super.apply(this, arguments));
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
@@ -76,11 +96,11 @@ var FieldPad = AbstractField.extend({
      * @private
      */
     _renderEdit: function () {
-        if (_.str.startsWith(this.value, 'http')) {
+        if (this.url) {
             // here, we have a valid url, so we can simply display an iframe
             // with the correct src attribute
             var userName = encodeURIComponent(this.getSession().userName);
-            var url = this.value + '?showChat=false&userName=' + userName;
+            var url = this.url + '?showChat=false&userName=' + userName;
             var content = '<iframe width="100%" height="100%" frameborder="0" src="' + url + '"></iframe>';
             this.$('.oe_pad_content').html(content);
         } else if (this.value) {
@@ -112,7 +132,8 @@ var FieldPad = AbstractField.extend({
                 // We need to write the url of the pad to trigger
                 // the write function which updates the actual value
                 // of the field to the value of the pad content
-                self._setValue(result.url);
+                self.url = result.url;
+                self._setValue(result.url, {doNotSetDirty: true});
             });
         }
     },
@@ -137,7 +158,7 @@ var FieldPad = AbstractField.extend({
                     .removeClass('oe_pad_loading')
                     .html('<div class="oe_pad_readonly"><div>');
                 self.$('.oe_pad_readonly').html(data);
-            }).fail(function () {
+            }).guardedCatch(function () {
                 self.$('.oe_pad_content').text(_t('Unable to load pad'));
             });
         } else {
@@ -159,6 +180,7 @@ var FieldPad = AbstractField.extend({
     _onToggleFullScreen: function () {
         this.$el.toggleClass('oe_pad_fullscreen mb0');
         this.$('.oe_pad_switch').toggleClass('fa-expand fa-compress');
+        this.$el.parents('.o_touch_device').toggleClass('o_scroll_hidden');
     },
 });
 

@@ -14,7 +14,7 @@
 
             <!-- Orderlines -->
             <h3>Products</h3>
-            <table  class="table table-condensed">
+            <table  class="table table-sm">
                 <thead><tr>
                     <th>Product</th>
                     <th>Quantity</th>
@@ -22,10 +22,11 @@
                 </tr></thead>
                 <tbody>
                 <tr t-foreach='products' t-as='line'>
-                    <td><t t-esc="line['product_name']" /></td>
+                    <t t-set="internal_reference" t-value="line['code'] and '[%s] ' % line['code'] or ''" />
+                    <td><t t-esc="internal_reference" /><t t-esc="line['product_name']" /></td>
                     <td>
                         <t t-esc="line['quantity']" />
-                        <t t-if='line["uom"] != "Unit(s)"'>
+                        <t t-if='line["uom"] != "Units"'>
                             <t t-esc='line["uom"]' /> 
                         </t>
                     </td>
@@ -42,7 +43,7 @@
             <br/>
 
             <h3>Payments</h3>
-            <table  class="table table-condensed">
+            <table  class="table table-sm">
                 <thead><tr>
                     <th>Name</th>
                     <th>Total</th>
@@ -50,7 +51,7 @@
                 <tbody>
                 <tr t-foreach='payments' t-as='payment'>
                     <td><t t-esc="payment['name']" /></td>
-                    <td><t t-esc="payment['total']" /></td>
+                    <td><t t-esc="payment['total']" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
                 </tr>
                 </tbody>
             </table>
@@ -58,7 +59,7 @@
             <br/>
 
             <h3>Taxes</h3>
-            <table  class="table table-condensed">
+            <table  class="table table-sm">
                 <thead><tr>
                     <th>Name</th>
                     <th>Tax Amount</th>
@@ -67,8 +68,8 @@
                 <tbody>
                 <tr t-foreach='taxes' t-as='tax'>
                     <td><t t-esc="tax['name']" /></td>
-                    <td><t t-esc="tax['tax_amount']" /></td>
-                    <td><t t-esc="tax['base_amount']" /></td>
+                    <td><t t-esc="tax['tax_amount']" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
+                    <td><t t-esc="tax['base_amount']" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
                 </tr>
                 </tbody>
             </table>
@@ -76,7 +77,7 @@
             <br/>
             <br/>
 
-            <strong>Total: <t t-esc='total_paid'/></strong>
+            <strong>Total: <t t-esc='total_paid' t-options="{'widget': 'float', 'precision': currency_precision}"/></strong>
 
         </div>
     </t>

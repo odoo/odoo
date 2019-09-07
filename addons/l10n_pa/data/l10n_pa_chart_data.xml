@@ -4,25 +4,14 @@
         <field name="name">Cuentas No Clasificadas</field>
     </record>
 
-    <record id="transfer_account_id" model="account.account.template">
-       <field name="name">Cuentas de Transferencia</field>
-       <field name="code">112.</field>
-       <field name="reconcile" eval="True"/>
-       <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-   </record>
-
     <!-- Account Chart Templates -->
     <record id="l10npa_chart_template" model="account.chart.template">
         <field name="name">Panamá - Plan de Cuentas</field>
         <field name="bank_account_code_prefix">111.</field>
         <field name="cash_account_code_prefix">113.</field>
+        <field name="transfer_account_code_prefix">112.</field>
         <field name="code_digits">7</field>
         <field name="currency_id" ref="base.PAB"/>
-        <field name="transfer_account_id" ref="transfer_account_id"/>
-    </record>
-
-    <record id="transfer_account_id" model="account.account.template">
-        <field name="chart_template_id" ref="l10npa_chart_template"/>
     </record>
     <!-- Account Templates -->
 
@@ -30,6 +19,7 @@
             <record id="115" model="account.account.template"><field name="name">Caja y Bancos - Valores a Depositar </field><field name="code">115</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_current_assets" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="116" model="account.account.template"><field name="name">Caja y Bancos - Recaudaciones a Depositar </field><field name="code">116</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_current_assets" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="121" model="account.account.template"><field name="name">Cuentas por Cobrar / Deudores por Ventas</field><field name="code">121</field><field name="reconcile" eval="True"/><field ref="account.data_account_type_receivable" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/><field name="reconcile">1</field></record>
+            <record id="121_01" model="account.account.template"><field name="name">Cuentas por Cobrar / Deudores por Ventas (PoS)</field><field name="code">121.01</field><field name="reconcile" eval="True"/><field ref="account.data_account_type_receivable" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/><field name="reconcile">1</field></record>
             <record id="122" model="account.account.template"><field name="name">Cuentas por Cobrar / Deudores Morosos</field><field name="code">122</field><field name="reconcile" eval="True"/><field ref="account.data_account_type_receivable" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/><field name="reconcile">1</field></record>
             <record id="123" model="account.account.template"><field name="name">Cuentas por Cobrar / Deudores en Gestión Judicial</field><field name="code">123</field><field name="reconcile" eval="True"/><field ref="account.data_account_type_receivable" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="124" model="account.account.template"><field name="name">Cuentas por Cobrar / Deudores Varios</field><field name="code">124</field><field name="reconcile" eval="True"/><field ref="account.data_account_type_receivable" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
@@ -165,5 +155,6 @@
       <field name="property_account_income_categ_id" ref="411_01"/>
       <field name="income_currency_exchange_account_id" ref="gain81_01"/>
       <field name="expense_currency_exchange_account_id" ref="loss81_01"/>
+      <field name="default_pos_receivable_account_id" ref="121_01" />
     </record>
 </odoo>

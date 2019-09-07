@@ -19,7 +19,7 @@ var Followers = AbstractField.extend({
         // click on '(Un)Follow' button, that toggles the follow for uid
         'click .o_followers_follow_button': '_onFollowButtonClicked',
         // click on a subtype, that (un)subscribes for this subtype
-        'click .o_subtypes_list input': '_onSubtypeClicked',
+        'click .o_subtypes_list .custom-checkbox': '_onSubtypeClicked',
         // click on 'invite' button, that opens the invite wizard
         'click .o_add_follower': '_onAddFollower',
         'click .o_add_follower_channel': '_onAddChannel',
@@ -28,19 +28,21 @@ var Followers = AbstractField.extend({
         'click .o_remove_follower': '_onRemoveFollower',
         'click .o_mail_redirect': '_onRedirect',
     },
-    supportedFieldTypes: ['one2many'],
+    // this widget only supports one2many but is not generic enough to claim
+    // that it supports all one2many fields
+    // supportedFieldTypes: ['one2many'],
 
     // inherited
-    init: function(parent, name, record, options) {
+    init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
 
-        this.image = this.attrs.image || 'image_small';
+        this.image = this.attrs.image || 'image_64';
         this.comment = this.attrs.help || false;
 
         this.followers = [];
         this.subtypes = [];
         this.data_subtype = {};
-        this.is_follower = undefined;
+        this._isFollower = undefined;
         var session = this.getSession();
         this.partnerID = session.partner_id;
 
@@ -53,14 +55,14 @@ var Followers = AbstractField.extend({
         // note: the rendering of this widget is asynchronous as it needs to
         // fetch the details of the followers, but it performs a first rendering
         // synchronously (_displayGeneric), and updates its rendering once it
-        // has fetched the required data, so this function doesn't return a deferred
+        // has fetched the required data, so this function doesn't return a promise
         // as we don't want to wait to the data to be loaded to display the widget
         var self = this;
         var fetch_def = this.dp.add(this._readFollowers());
 
         concurrency.rejectAfter(concurrency.delay(0), fetch_def).then(this._displayGeneric.bind(this));
 
-        fetch_def.then(function () {
+        return fetch_def.then(function () {
             self._displayButtons();
             self._displayFollowers(self.followers);
             if (self.subtypes) { // current user is follower
@@ -84,7 +86,7 @@ var Followers = AbstractField.extend({
 
     // private
     _displayButtons: function () {
-        if (this.is_follower) {
+        if (this._isFollower) {
             this.$('button.o_followers_follow_button').removeClass('o_followers_notfollow').addClass('o_followers_following');
             this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', false);
             this.$('.o_followers_actions .dropdown-toggle').addClass('o_followers_following');
@@ -93,6 +95,7 @@ var Followers = AbstractField.extend({
             this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', true);
             this.$('.o_followers_actions .dropdown-toggle').removeClass('o_followers_following');
         }
+        this.$('button.o_followers_follow_button').attr("aria-pressed", this.is_follower);
     },
     _displayGeneric: function () {
         // only display the number of followers (e.g. if read failed)
@@ -100,7 +103,7 @@ var Followers = AbstractField.extend({
         this.$('.o_followers_title_box > button').prop('disabled', true);
         this.$('.o_followers_count')
             .html(this.value.res_ids.length)
-            .parent().attr("title", this._formatFollowers(this.value.res_ids.length));
+            .parent().attr('title', this._formatFollowers(this.value.res_ids.length));
     },
     _displayFollowers: function () {
         var self = this;
@@ -110,16 +113,22 @@ var Followers = AbstractField.extend({
         $(QWeb.render('mail.Followers.add_more', {widget: this})).appendTo($followers_list);
         var $follower_li;
         _.each(this.followers, function (record) {
+            if(!record.active) {
+                record.title = _.str.sprintf(_t('%s \n(inactive)'), record.name);
+            } else {
+                record.title = record.name;
+            }
+
             $follower_li = $(QWeb.render('mail.Followers.partner', {
-                'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_small'}),
+                'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_64'}),
                 'widget': self})
             );
             $follower_li.appendTo($followers_list);
 
             // On mouse-enter it will show the edit_subtype pencil.
             if (record.is_editable) {
-                $follower_li.on('mouseenter mouseleave', function(e) {
-                    $(e.currentTarget).find('.o_edit_subtype').toggleClass('hide', e.type === 'mouseleave');
+                $follower_li.on('mouseenter mouseleave', function (e) {
+                    $(e.currentTarget).find('.o_edit_subtype').toggleClass('d-none', e.type === 'mouseleave');
                 });
             }
         });
@@ -129,15 +138,15 @@ var Followers = AbstractField.extend({
         this.$('.o_followers_title_box > button').prop('disabled', !$followers_list.children().length);
         this.$('.o_followers_count')
             .html(this.value.res_ids.length)
-            .parent().attr("title", this._formatFollowers(this.value.res_ids.length));
+            .parent().attr('title', this._formatFollowers(this.value.res_ids.length));
     },
     _displaySubtypes:function (data, dialog, display_warning) {
         var old_parent_model;
         var $list;
         if (dialog) {
-            $list = $('<ul>').appendTo(this.dialog.$el);
+            $list = $('<div>').appendTo(this.dialog.$el);
         } else {
-            $list = this.$('.o_subtypes_list ul');
+            $list = this.$('.o_subtypes_list .dropdown-menu');
         }
         $list.empty();
 
@@ -145,7 +154,7 @@ var Followers = AbstractField.extend({
 
         _.each(data, function (record) {
             if (old_parent_model !== record.parent_model && old_parent_model !== undefined) {
-                $list.append($('<li>').addClass('divider'));
+                $list.append($('<div>', {class: 'dropdown-divider'}));
             }
             old_parent_model = record.parent_model;
             record.followed = record.followed || undefined;
@@ -165,9 +174,8 @@ var Followers = AbstractField.extend({
             type: 'ir.actions.act_window',
             res_model: 'mail.wizard.invite',
             view_mode: 'form',
-            view_type: 'form',
             views: [[false, 'form']],
-            name: _t('Invite Follower'),
+            name: _t("Invite Follower"),
             target: 'new',
             context: {
                 'default_res_model': this.model,
@@ -182,11 +190,11 @@ var Followers = AbstractField.extend({
     _formatFollowers: function (count){
         var str = '';
         if (count <= 0) {
-            str = _t('No follower');
+            str = _t("No follower");
         } else if (count === 1){
-            str = _t('One follower');
+            str = _t("One follower");
         } else {
-            str = ''+count+' '+_t('followers');
+            str = ''+count+' '+_t("followers");
         }
         return str;
     },
@@ -197,20 +205,22 @@ var Followers = AbstractField.extend({
         if (missing_ids.length) {
             def = this._rpc({
                     route: '/mail/read_followers',
-                    params: { follower_ids: missing_ids, res_model: this.model }
+                    params: { follower_ids: missing_ids, res_model: this.model, context: {} }  // empty context to be overridden in session.js with 'allowed_company_ids'
                 });
         }
-        return $.when(def).then(function (results) {
+        return Promise.resolve(def).then(function (results) {
             if (results) {
                 self.followers = _.uniq(results.followers.concat(self.followers), 'id');
-                self.subtypes = results.subtypes;
+                if (results.subtypes) { //read_followers will return False if current user is not in the list
+                    self.subtypes = results.subtypes;
+                }
             }
             // filter out previously fetched followers that are no longer following
             self.followers = _.filter(self.followers, function (follower) {
                 return _.contains(self.value.res_ids, follower.id);
             });
             var user_follower = _.filter(self.followers, function (rec) { return rec.is_uid; });
-            self.is_follower = user_follower.length >= 1;
+            self._isFollower = user_follower.length >= 1;
         });
     },
     _reload: function () {
@@ -231,44 +241,54 @@ var Followers = AbstractField.extend({
     },
     /**
      * Remove partners or channels from the followers
+     *
+     * @private
+     * @param {Object} ids
+     * @param {Array} [ids.partner_ids] the partner ids
+     * @param {Array} [ids.channel_ids] the channel ids
+     */
+    _messageUnsubscribe: function (ids) {
+        return this._rpc({
+            model: this.model,
+            method: 'message_unsubscribe',
+            args: [[this.res_id], ids.partner_ids, ids.channel_ids],
+        }).then(this._reload.bind(this));
+    },
+    /**
+     * Remove partners or channels from the followers
      * @param {Array} [ids.partner_ids] the partner ids
      * @param {Array} [ids.channel_ids] the channel ids
      */
     _unfollow: function (ids) {
         var self = this;
-        var def = $.Deferred();
-        var text = _t("Warning! \n If you remove a follower, he won't be notified of any email or discussion on this document.\n Do you really want to remove this follower ?");
-        Dialog.confirm(this, text, {
-            confirm_callback: function () {
-                var args = [
-                    [self.res_id],
-                    ids.partner_ids,
-                    ids.channel_ids,
-                    {}, // FIXME
-                ];
-                self._rpc({
-                        model: self.model,
-                        method: 'message_unsubscribe',
-                        args: args
-                    })
-                    .then(self._reload.bind(self));
-                def.resolve();
-            },
-            cancel_callback: def.reject.bind(def),
+        // do not prompt confirmation dialog on unsubscribe of current user.
+        if (_.isEqual(ids.partner_ids, [this.partnerID]) && _.isEmpty(ids.channel_ids)) {
+            return this._messageUnsubscribe(ids);
+        }
+        return new Promise(function (resolve, reject) {
+            var follower = _.find(self.followers, { res_id: ids.partner_ids ? ids.partner_ids[0] : ids.channel_ids[0] });
+            var text = _.str.sprintf(_t("If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove %s?"), follower.name);
+            Dialog.confirm(this, text, {
+                title: _t("Warning"),
+                confirm_callback: function () {
+                    self._messageUnsubscribe(ids);
+                    resolve();
+                },
+                cancel_callback: reject,
+            });
         });
-        return def;
     },
-    _updateSubscription: function (event, follower_id, is_channel) {
+    _updateSubscription: function (event, followerID, isChannel) {
         var ids = {};
         var subtypes;
 
-        if (follower_id !== undefined) {
+        if (followerID !== undefined) {
             // Subtypes edited from the modal
             subtypes = this.dialog.$('input[type="checkbox"]');
-            if (is_channel) {
-                ids.channel_ids = [follower_id];
+            if (isChannel) {
+                ids.channel_ids = [followerID];
             } else {
-                ids.partner_ids = [follower_id];
+                ids.partner_ids = [followerID];
             }
         } else {
             subtypes = this.$('.o_followers_actions input[type="checkbox"]');
@@ -285,11 +305,20 @@ var Followers = AbstractField.extend({
 
         // If no more subtype followed, unsubscribe the follower
         if (!checklist.length) {
-            this._unfollow(ids).fail(function () {
-                $(event.target).prop("checked", true);
+            this._unfollow(ids).guardedCatch(function () {
+                $(event.currentTarget).find('input').addBack('input').prop('checked', true);
             });
         } else {
             var kwargs = _.extend({}, ids);
+            if (followerID === undefined || followerID === this.partnerID) {
+                //this.subtypes will only be updated if the current user
+                //just added himself to the followers. We need to update
+                //the subtypes manually when editing subtypes
+                //for current user
+                _.each(this.subtypes, function (subtype) {
+                    subtype.followed = checklist.indexOf(subtype.id) > -1;
+                });
+            }
             kwargs.subtype_ids = checklist;
             kwargs.context = {}; // FIXME
             this._rpc({
@@ -302,20 +331,35 @@ var Followers = AbstractField.extend({
         }
     },
 
-    // handlers
-    _onAddFollower: function (event) {
-        event.preventDefault();
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onAddFollower: function (ev) {
+        ev.preventDefault();
         this._inviteFollower(false);
     },
-    _onAddChannel: function (event) {
-        event.preventDefault();
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onAddChannel: function (ev) {
+        ev.preventDefault();
         this._inviteFollower(true);
     },
-    _onEditSubtype: function (event) {
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onEditSubtype: function (ev) {
         var self = this;
-        var $currentTarget = $(event.currentTarget);
+        var $currentTarget = $(ev.currentTarget);
         var follower_id = $currentTarget.data('follower-id'); // id of model mail_follower
-        return this._rpc({
+        this._rpc({
                 route: '/mail/read_subscription_data',
                 params: {res_model: this.model, follower_id: follower_id},
             })
@@ -324,13 +368,13 @@ var Followers = AbstractField.extend({
                 var is_channel = $currentTarget.data('oe-model') === 'mail.channel';
                 self.dialog = new Dialog(this, {
                     size: 'medium',
-                    title: _t('Edit Subscription of ') + $currentTarget.siblings('a').text(),
+                    title: _t("Edit Subscription of ") + $currentTarget.siblings('a').text(),
                     buttons: [
                         {
                             text: _t("Apply"),
                             classes: 'btn-primary',
                             click: function () {
-                                self._updateSubscription(event, res_id, is_channel);
+                                self._updateSubscription(ev, res_id, is_channel);
                             },
                             close: true
                         },
@@ -339,47 +383,64 @@ var Followers = AbstractField.extend({
                             close: true,
                         },
                     ],
-                }).open();
-                self._displaySubtypes(data, true, is_channel);
+                });
+                self.dialog.opened().then(function () {
+                    self._displaySubtypes(data, true, is_channel);
+                });
+                self.dialog.open();
             });
     },
+    /**
+     * @private
+     */
     _onFollowButtonClicked: function () {
-        if (!this.is_follower) {
+        if (!this._isFollower) {
             this._follow();
         } else {
             this._unfollow({partner_ids: [this.partnerID]});
         }
     },
-    _onRedirect: function (event) {
-        event.preventDefault();
-        var $target = $(event.target);
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onRedirect: function (ev) {
+        ev.preventDefault();
+        var $target = $(ev.target);
         this.do_action({
             type: 'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'form',
             res_model: $target.data('oe-model'),
             views: [[false, 'form']],
             res_id: $target.data('oe-id'),
         });
     },
-    _onRemoveFollower: function (event) {
-        var res_model = $(event.target).parent().find('a').data('oe-model');
-        var res_id = $(event.target).parent().find('a').data('oe-id');
-        if (res_model === 'res.partner') {
-            return this._unfollow({partner_ids: [res_id]});
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onRemoveFollower: function (ev) {
+        var resModel = $(ev.target).parent().find('a').data('oe-model');
+        var resID = $(ev.target).parent().find('a').data('oe-id');
+        if (resModel === 'res.partner') {
+            return this._unfollow({partner_ids: [resID]});
         } else {
-            return this._unfollow({channel_ids: [res_id]});
+            return this._unfollow({channel_ids: [resID]});
         }
     },
-    _onSubtypeClicked: function (event) {
-        event.stopPropagation();
-        this._updateSubscription(event);
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onSubtypeClicked: function (ev) {
+        ev.stopPropagation();
+        this._updateSubscription(ev);
         var $list = this.$('.o_subtypes_list');
-        if (!$list.hasClass('open')) {
-            $list.addClass('open');
+        if (!$list.hasClass('show')) {
+            $list.addClass('show');
         }
-        if (this.$('.o_subtypes_list ul')[0].children.length < 1) {
-            $list.removeClass('open');
+        if (this.$('.o_subtypes_list .dropdown-menu')[0].children.length < 1) {
+            $list.removeClass('show');
         }
     },
 });

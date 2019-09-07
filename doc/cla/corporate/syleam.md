@@ -14,4 +14,7 @@ List of contributors:
 
 Sébastien Lange sebastien.lange@syleam.fr https://github.com/alnslang
 Sylvain Garancher sylvain.garancher@syleam.fr https://github.com/sylvain-garancher
-Alexandre Moreau alexandre.moreau@syleam.fr https://github.com/a-moreau
+Alexandre Moreau alexandre.moreau@syleam.fr https://github.com/a-moreau (Up to 2017-08-31)
+Christopher Tribbeck chris.tribbeck@syleam.fr https://github.com/ctribbeck
+Jérémy Cormier jeremy.cormier@syleam.fr https://github.com/Corbiezorq
+Samuel Piquet samuel.piquet@syleam.fr https://github.com/sa3m

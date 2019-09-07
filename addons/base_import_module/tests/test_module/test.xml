@@ -11,14 +11,14 @@
         <field name="currency_id" ref="base.EUR"/>
     </record>
 
-    <template id="test_page" name="Test Page" page="True">
+    <template id="test_page" name="Test Page">
         <t t-call="website.layout">
             <h1>
                 This page comes from an imported module!
             </h1>
             <p>
                 And this static image too !
-                <img src="/test_module/static/src/img/c64.png"/>
+                <img src="/test_module/static/src/img/c64.png" alt='Logo'/>
             </p>
         </t>
     </template>

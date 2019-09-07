@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_base_language_install" model="ir.ui.view">
+            <field name="name">Load a Translation</field>
+            <field name="model">base.language.install</field>
+            <field name="arch" type="xml">
+                <form string="Load a Translation">
+                    <field name="state" invisible="1"/>
+                    <group states="init">
+                        <field name="lang"/>
+                        <field name="overwrite" groups="base.group_no_one"/>
+                    </group>
+                    <group states="done" colspan="4">
+                        <span class="o_form_label">The selected language has been successfully installed.
+You must change the preferences of the user to view the changes.</span>
+                    </group>
+                    <footer states="init">
+                        <button name="lang_install" string="Load" type="object" class="btn-primary"/>
+                        <button special="cancel" string="Cancel" class="btn-secondary"/>
+                    </footer>
+                    <footer states="done">
+                        <button name="reload" string="Close" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+           </field>
+        </record>
+
+        <record id="action_view_base_language_install" model="ir.actions.act_window">
+            <field name="name">Load a Translation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.language.install</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
+

@@ -13,16 +13,15 @@
     </record>
 
     <record id="product_attribute_category_action" model="ir.actions.act_window">
-        <field name="name">Website attribute categories</field>
+        <field name="name">Attribute Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.attribute.category</field>
         <field name="view_mode">tree</field>
-        <field name="view_type">form</field>
     </record>
 
     <menuitem action="product_attribute_category_action"
         id="menu_attribute_category_action"
-        parent="website_sale.menu_ecommerce_settings" sequence="11"/>
+        parent="website_sale.menu_product_settings" groups="product.group_product_variant" sequence="11"/>
 
     <record id="product_attribute_tree_view_inherit" model="ir.ui.view">
         <field name="name">product.attribute.tree.inherit</field>
@@ -38,7 +37,7 @@
     <record id="product_attribute_view_form" model="ir.ui.view">
         <field name="name">product.attribute.form.inherit</field>
         <field name="model">product.attribute</field>
-        <field name="inherit_id" ref="website_sale.product_attribute_view_form"/>
+        <field name="inherit_id" ref="product.product_attribute_view_form"/>
         <field name="priority" eval="8"/>
         <field name="arch" type="xml">
             <field name='name' position='after'>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <div t-name='res_config_dev_tool'>
+        <div id="developer_tool">
+            <h2>Developer Tools</h2>
+            <div class="row mt16 o_settings_container">
+                <div class="col-12 col-lg-6 o_setting_box" id="devel_tool">
+                    <div class="o_setting_right_pane">
+                        <a t-if="!widget.isDebug" class="d-block" href="?debug=1">Activate the developer mode</a>
+                        <a t-if="!widget.isAssets" class="d-block" href="?debug=assets">Activate the developer mode (with assets)</a>
+                        <a t-if="!widget.isTests" class="d-block" href="?debug=assets,tests">Activate the developer mode (with tests assets)</a>
+                        <a t-if="widget.isDebug" class="d-block" href="?debug=">Deactivate the developer mode</a>
+                        <a t-if="!widget.isDebug &amp;&amp; !widget.demo_active" class="o_web_settings_force_demo" href="#">Load demo data</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

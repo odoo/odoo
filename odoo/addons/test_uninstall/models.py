@@ -9,6 +9,7 @@ class test_uninstall_model(models.Model):
     the uninstall feature of Odoo.
     """
     _name = 'test_uninstall.model'
+    _description = 'Testing Uninstall Model'
 
     name = fields.Char('Name')
     ref = fields.Many2one('res.users', string='User')

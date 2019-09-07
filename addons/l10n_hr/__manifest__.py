@@ -41,7 +41,6 @@ Izvori podataka:
     "version": "13.0",
     "author": "OpenERP Croatian Community",
     'category': 'Localization',
-    "website": "https://code.launchpad.net/openobject-croatia",
 
     'depends': [
         'account',
@@ -51,9 +50,11 @@ Izvori podataka:
         'data/account.account.type.csv',
         'data/account.account.template.csv',
         'data/account_chart_tag_data.xml',
-        'data/account.tax.template.csv',
+        'data/account.tax.group.csv',
+        'data/account_tax_report_data.xml',
+        'data/account_tax_template_data.xml',
         'data/account_tax_fiscal_position_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_data.xml',
     ],
     "active": False,
 }

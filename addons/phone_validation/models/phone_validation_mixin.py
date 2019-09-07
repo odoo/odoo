@@ -7,23 +7,40 @@ from odoo.addons.phone_validation.tools import phone_validation
 
 class PhoneValidationMixin(models.AbstractModel):
     _name = 'phone.validation.mixin'
+    _description = 'Phone Validation Mixin'
 
-    def _phone_get_country_code(self):
+    def _phone_get_country_field(self):
         if 'country_id' in self:
-            return self.country_id.code
-        return self.env.user.company_id.country_id.code
+            return 'country_id'
+        return False
 
-    def _phone_get_always_international(self):
-        if 'company_id' in self:
-            return self.company_id.phone_international_format
-        return self.env.user.company_id.phone_international_format
+    def _phone_get_country(self):
+        if 'country_id' in self and self.country_id:
+            return self.country_id
+        return self.env.company.country_id
 
     def phone_format(self, number, country=None, company=None):
-        country_code = country.code if country else self._phone_get_country_code()
-        always_international = company.phone_international_format if company else self._phone_get_always_international()
-
+        country = country or self._phone_get_country()
+        if not country:
+            return number
         return phone_validation.phone_format(
-            number, country_code if country_code else None,
-            always_international=always_international,
-            raise_exception=True
+            number,
+            country.code if country else None,
+            country.phone_code if country else None,
+            force_format='INTERNATIONAL',
+            raise_exception=False
         )
+
+    def phone_get_sanitized_numbers(self, number_fname='mobile', force_format='E164'):
+        res = dict.fromkeys(self.ids, False)
+        country_fname = self._phone_get_country_field()
+        for record in self:
+            number = record[number_fname]
+            res[record.id] = phone_validation.phone_sanitize_numbers_w_record([number], record, record_country_fname=country_fname, force_format=force_format)[number]['sanitized']
+        return res
+
+    def phone_get_sanitized_number(self, number_fname='mobile', force_format='E164'):
+        self.ensure_one()
+        country_fname = self._phone_get_country_field()
+        number = self[number_fname]
+        return phone_validation.phone_sanitize_numbers_w_record([number], self, record_country_fname=country_fname, force_format=force_format)[number]['sanitized']

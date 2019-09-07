@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-extend="wysiwyg.widgets.file">
+    <t t-jquery=".o_we_existing_attachments" t-operation="after">
+        <div class="unsplash_img_container"></div>
+    </t>
+</t>
+
+<t t-name="web_unsplash.dialog.media.search_icon" t-extend="">
+    <div class="dropdown">
+        <button type="button" class="btn btn-primary dropdown-toggle o_we_search_icon" data-toggle="dropdown">
+            <i class="fa fa-search"/>
+            <span/>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+            <button class="dropdown-item o_search_an_image" type="button">
+                Search among my images for:
+                <div class="font-weight-bold o_search_value_input"></div>
+            </button>
+            <button class="dropdown-item o_search_from_unsplash" type="button">
+                Search from Unsplash for:
+                <div class="font-weight-bold o_search_value_input"></div>
+            </button>
+        </div>
+    </div>
+</t>
+
+<t t-name="web_unsplash.dialog.image.content">
+    <div class="row mt16">
+        <div class="col-sm-2 o_unsplash_img_cell text-center" t-as="img" t-foreach="records">
+            <div class="o_image o_webimage text-center" t-att-data-imgid="img.id" t-att-data-url="img.urls.regular" t-att-data-download-url="img.links.download_location">
+                <img class="img-fluid" t-att-src="img.urls.thumb"/>
+            </div>
+            <div class="author_name"><a t-att-href="img.user.links.html" target="_blank"><t t-esc="img.user.name"/></a></div>
+        </div>
+    </div>
+    <div class="row mt16" t-if="records.length == 0">
+        <div class="m-auto text-muted not-found">
+            <i class="fa fa-camera mr8"/> Photos not found
+        </div>
+    </div>
+</t>
+
+<t t-name="web_unsplash.dialog.error.credentials">
+    <h4><t t-esc="title"/></h4>
+    <div class="details">
+        <t t-esc="subtitle"/>
+        <div class="form-group mt-4 access_key_box">
+            <input type="text" class="form-control w-100" id="accessKeyInput" placeholder="Paste your access key here"/>
+        </div>
+        <a href="https://www.odoo.com/documentation/user/general/unsplash/unsplash_access_key.html" target="_blank"><i class="fa fa-arrow-right"/> Generate an access key</a>
+        <div class="form-group mt-4 access_key_box">
+            <input type="text" class="form-control w-100" id="appIdInput" placeholder="Paste your application ID here"/>
+        </div>
+        <a href="https://www.odoo.com/documentation/user/general/unsplash/unsplash_application_id.html" target="_blank"><i class="fa fa-arrow-right"/> How to find my Unsplash Application ID?</a>
+        <button type="button" class="btn btn-primary btn-block mt-4 save_unsplash">Apply</button>
+    </div>
+</t>
+
+<t t-name="web_unsplash.dialog.error.content">
+    <div class="d-flex mt-2 unsplash_error">
+        <div class="mx-auto text-center">
+            <t t-if="status == 'key_not_found'">
+                <t t-call="web_unsplash.dialog.error.credentials">
+                    <t t-set="title">
+                        Unsplash requires an access key and an application ID
+                    </t>
+                </t>
+            </t>
+            <t t-elif="status == 403">
+                <h4 class="text-muted">
+                    Search is temporarily unavailable
+                </h4>
+                <div class="details">
+                    The max number of searches is exceeded. Please retry in an hour or extend to a better account.
+                </div>
+            </t>
+            <t t-elif="status == 401">
+                <t t-call="web_unsplash.dialog.error.credentials">
+                    <t t-set="title">
+                        Unauthorized Key
+                    </t>
+                    <t t-set="subtitle">
+                        Please check your Unsplash access key and application ID.
+                    </t>
+                </t>
+            </t>
+            <t t-else="">
+                <h4 class="text-muted">
+                    Something went wrong
+                </h4>
+                <div class="details">
+                    Please check your internet connection or contact administrator.
+                </div>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

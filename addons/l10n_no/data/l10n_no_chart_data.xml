@@ -1,30 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="account_reports_no_statements_menu" name="Norwegian Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
+    <menuitem id="account_reports_no_statements_menu" name="Norway" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
     <data noupdate="1">
 
-	<menuitem id="account_reports_no_statements_menu" name="Norwegian Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
-
-    <record id="chart1940" model="account.account.template">
-        <field name="code">1940</field>
-        <field name="reconcile" eval="True"/>
-        <field name="user_type_id" ref="account.data_account_type_current_assets" />
-        <field name="name">Bank i transfer</field>
-    </record>
+	<menuitem id="account_reports_no_statements_menu" name="Norwegian Statements" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
     <!-- Account Templates -->
         <record id="no_chart_template" model="account.chart.template">
             <field name="name">Norway's Chart of Accounts</field>
             <field name="cash_account_code_prefix">1900</field>
             <field name="bank_account_code_prefix">1920</field>
+            <field name="transfer_account_code_prefix">1940</field>
             <field name="code_digits">4</field>
             <field name="currency_id" ref="base.NOK"/>
-            <field name="transfer_account_id" ref="chart1940"/>
-        </record>
-
-        <record id="chart1940" model="account.account.template">
-           <field name="chart_template_id" ref="no_chart_template"/>
         </record>
 
     <!-- Account Templates -->
@@ -307,6 +296,13 @@
             <field name="reconcile" eval="True"/>
             <field name="user_type_id" ref="account.data_account_type_receivable" />
             <field name="name">Kundefordringer</field>
+            <field name="chart_template_id" ref="no_chart_template"/>
+        </record>
+        <record id="chart1501" model="account.account.template">
+            <field name="code">1501</field>
+            <field name="reconcile" eval="True"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable" />
+            <field name="name">Kundefordringer (PoS)</field>
             <field name="chart_template_id" ref="no_chart_template"/>
         </record>
         <record id="chart1513" model="account.account.template">
@@ -2489,6 +2485,7 @@
             <field name="property_account_income_id" ref="chart3000"/> <!-- To be corrected,possibly -->
             <field name="income_currency_exchange_account_id" ref="chart8060"/>
             <field name="expense_currency_exchange_account_id" ref="chart8160"/>
+            <field name="default_pos_receivable_account_id" ref="chart1501" />
         </record>
     </data>
 </odoo>

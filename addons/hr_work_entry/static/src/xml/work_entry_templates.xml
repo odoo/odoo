@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="hr_work_entry.work_entry_button">
+        <button t-if="disabled" disabled="" title="Solve conflicts first" t-attf-class="btn btn-primary btn-work-entry {{ event_class }}" type="button" t-esc="button_text"/>
+        <button t-else="" t-attf-class="btn btn-primary btn-work-entry {{ event_class }}" type="button" t-esc="button_text"/>
+    </t>
+
+    <t t-name="hr_work_entry.work_entry_error_message">
+        <div role='alertdialog' class='alert alert-info'>We found some conflicts,
+                <strong>
+                    <a role='button' type="action" name='hr_work_entry.hr_work_entry_action_conflict'>click here to revise them</a>
+                </strong>
+        </div>
+    </t>
+</templates>

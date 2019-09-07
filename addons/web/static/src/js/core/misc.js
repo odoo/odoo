@@ -2,9 +2,9 @@ odoo.define('web.framework', function (require) {
 "use strict";
 
 var core = require('web.core');
-var crash_manager = require('web.crash_manager');
 var ajax = require('web.ajax');
 var Widget = require('web.Widget');
+var disableCrashManager = require('web.CrashManager').disable;
 
 var _t = core._t;
 
@@ -52,21 +52,46 @@ if ($.blockUI) {
 }
 
 
+/**
+ * Remove the "accesskey" attributes to avoid the use of the access keys
+ * while the blockUI is enable.
+ */
+
+function blockAccessKeys() {
+    var elementWithAccessKey = [];
+    elementWithAccessKey = document.querySelectorAll('[accesskey]');
+    _.each(elementWithAccessKey, function (elem) {
+        elem.setAttribute("data-accesskey",elem.getAttribute('accesskey'));
+        elem.removeAttribute('accesskey');
+    });
+}
+
+function unblockAccessKeys() {
+    var elementWithDataAccessKey = [];
+    elementWithDataAccessKey = document.querySelectorAll('[data-accesskey]');
+    _.each(elementWithDataAccessKey, function (elem) {
+        elem.setAttribute('accesskey', elem.getAttribute('data-accesskey'));
+        elem.removeAttribute('data-accesskey');
+    });
+}
+
 var throbbers = [];
 
-function blockUI () {
+function blockUI() {
     var tmp = $.blockUI.apply($, arguments);
     var throbber = new Throbber();
     throbbers.push(throbber);
     throbber.appendTo($(".oe_blockui_spin_container"));
-    $('body').addClass('o_ui_blocked');
+    $(document.body).addClass('o_ui_blocked');
+    blockAccessKeys();
     return tmp;
 }
 
-function unblockUI () {
+function unblockUI() {
     _.invoke(throbbers, 'destroy');
     throbbers = [];
-    $('body').removeClass('o_ui_blocked');
+    $(document.body).removeClass('o_ui_blocked');
+    unblockAccessKeys();
     return $.unblockUI.apply($, arguments);
 }
 
@@ -76,7 +101,7 @@ function unblockUI () {
  */
 function redirect (url, wait) {
     // Dont display a dialog if some xmlhttprequest are in progress
-    crash_manager.disable();
+    disableCrashManager();
 
     var load = function() {
         var old = "" + window.location;
@@ -89,7 +114,7 @@ function redirect (url, wait) {
     };
 
     var wait_server = function() {
-        ajax.rpc("/web/webclient/version_info", {}).done(load).fail(function() {
+        ajax.rpc("/web/webclient/version_info", {}).then(load).guardedCatch(function () {
             setTimeout(wait_server, 250);
         });
     };
@@ -104,7 +129,7 @@ function redirect (url, wait) {
 //  * Client action to reload the whole interface.
 //  * If params.menu_id, it opens the given menu entry.
 //  * If params.wait, reload will wait the openerp server to be reachable before reloading
- 
+
 function Reload(parent, action) {
     var params = action.params || {};
     var menu_id = params.menu_id || false;
@@ -122,6 +147,9 @@ function Reload(parent, action) {
     }
     var url = l.protocol + "//" + l.host + l.pathname + search + hash;
 
+    // Clear cache
+    core.bus.trigger('clear_cache');
+
     redirect(url, params.wait);
 }
 
@@ -137,17 +165,6 @@ function Home (parent, action) {
 }
 core.action_registry.add("home", Home);
 
-/**
- * Client action to go back in breadcrumb history.
- * If can't go back in history stack, will go back to home.
- */
-function HistoryBack (parent) {
-    parent.history_back().fail(function () {
-        Home(parent);
-    });
-}
-core.action_registry.add("history_back", HistoryBack);
-
 function login() {
     redirect('/web/login');
 }
@@ -155,7 +172,7 @@ core.action_registry.add("login", login);
 
 function logout() {
     redirect('/web/session/logout');
-    return $.Deferred();
+    return new Promise();
 }
 core.action_registry.add("logout", logout);
 
@@ -172,6 +189,23 @@ function ReloadContext (parent, action) {
 }
 core.action_registry.add("reload_context", ReloadContext);
 
+// In Internet Explorer, document doesn't have the contains method, so we make a
+// polyfill for the method in order to be compatible.
+if (!document.contains) {
+    document.contains = function contains (node) {
+        if (!(0 in arguments)) {
+            throw new TypeError('1 argument is required');
+        }
+
+        do {
+            if (this === node) {
+                return true;
+            }
+        } while (node = node && node.parentNode);
+
+        return false;
+    };
+}
 
 return {
     blockUI: blockUI,

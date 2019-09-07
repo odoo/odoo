@@ -1,7 +1,7 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_ir_attachment_all","ir_attachment all","model_ir_attachment",,1,0,0,0
+"access_decimal_precision_config","decimal.precision configuration","model_decimal_precision","group_system",1,1,1,1
 "access_ir_attachment_group_user","ir_attachment group_user","model_ir_attachment","group_user",1,1,1,1
-"access_ir_attachment_portal","ir.attachment.portal","model_ir_attachment","group_portal",1,0,1,0
+"access_ir_attachment_group_portal_public","ir_attachment group_portal_public","model_ir_attachment",,0,0,0,0
 "access_ir_cron_group_cron","ir_cron group_cron","model_ir_cron","group_system",1,1,1,1
 "access_ir_exports_group_system","ir_exports group_system","model_ir_exports","base.group_user",1,1,1,1
 "access_ir_exports_line_group_system","ir_exports_line group_system","model_ir_exports_line","base.group_user",1,1,1,1
@@ -11,9 +11,11 @@
 "access_ir_model_access_group_erp_manager","ir_model_access_group_erp_manager","model_ir_model_access","group_erp_manager",1,1,1,1
 "access_ir_model_data_group_erp_manager","ir_model_data group_erp_manager","model_ir_model_data","group_erp_manager",1,1,1,1
 "access_ir_model_fields_group_erp_manager","ir_model_fields group_erp_manager","model_ir_model_fields","group_erp_manager",1,1,1,1
+"access_ir_model_fields_selection_group_erp_manager","ir_model_fields_selection group_erp_manager","model_ir_model_fields_selection","group_erp_manager",1,1,1,1
 "access_ir_model_user","ir_model_all","model_ir_model",base.group_user,1,0,0,0
 "access_ir_model_data_user","ir_model_data user","model_ir_model_data",base.group_user,1,0,1,0
 "access_ir_model_fields_user","ir_model_fields all","model_ir_model_fields",base.group_user,1,0,0,0
+"access_ir_model_fields_selection_user","ir_model_fields_selection all","model_ir_model_fields_selection",base.group_user,1,0,0,0
 "access_ir_module_category_group_user","ir_module_category group_user","model_ir_module_category","group_erp_manager",1,0,0,0
 "access_ir_module_module_group_user","ir_module_module group_user","model_ir_module_module","group_system",1,1,1,1
 "access_ir_module_module_dependency_group_system","ir_module_module_dependency group_system","model_ir_module_module_dependency","group_system",1,1,1,1
@@ -32,7 +34,9 @@
 "access_ir_ui_view_group_user","ir_ui_view group_user","model_ir_ui_view",,1,0,0,0
 "access_ir_ui_view_group_system","ir_ui_view group_system","model_ir_ui_view","group_system",1,1,1,1
 "access_ir_ui_view_custom_group_user","ir_ui_view_custom_group_user","model_ir_ui_view_custom",,1,1,1,1
-"access_ir_values_group_all","ir_values group_all","model_ir_values",,1,1,1,1
+"access_ir_default_all","ir_default all","model_ir_default",,1,0,0,0
+"access_ir_default_group_user","ir_default group_user","model_ir_default","group_user",1,1,1,1
+"access_ir_default_group_system","ir_default group_system","model_ir_default","group_system",1,1,1,1
 "access_res_company_group_erp_manager","res_company group_erp_manager","model_res_company","group_erp_manager",1,1,1,1
 "access_res_company_group_user","res_company group_user","model_res_company",,1,0,0,0
 "access_res_country_group_all","res_country group_user_all","model_res_country",,1,0,0,0
@@ -59,10 +63,8 @@
 "access_res_partner_category_group_partner_manager","res_partner_category group_partner_manager","model_res_partner_category","group_partner_manager",1,1,1,1
 "access_res_partner_industry_group_user","res_partner_industry group_user","model_res_partner_industry","group_user",1,0,0,0
 "access_res_partner_industry_group_system","res_partner_industry group_system","model_res_partner_industry","group_system",1,1,1,1
-"access_res_partner_title_group_user","res_partner_title group_user","model_res_partner_title","group_partner_manager",1,1,1,1
-"access_res_partner_title_group_partner_manager","res_partner_title group_partner_manager","model_res_partner_title",,1,0,0,0
-"access_res_request_link_group_system","res_request_link group_system","model_res_request_link","group_system",1,1,1,1
-"access_res_request_link_group_user","res_request_link group_user","model_res_request_link",,1,0,0,0
+"access_res_partner_title_group_user","res_partner_title group_partner_manager","model_res_partner_title","group_partner_manager",1,1,1,1
+"access_res_partner_title_group_partner_manager","res_partner_title group_user","model_res_partner_title",,1,0,0,0
 "access_res_users_all","res_users all","model_res_users",,1,0,0,0
 "access_res_users_group_erp_manager","res_users group_erp_manager","model_res_users","group_erp_manager",1,1,1,1
 "access_res_users_log_all","res_users_log_all","model_res_users_log",,1,0,1,0
@@ -95,4 +97,5 @@
 "access_ir_actions_client","ir_actions_client all","model_ir_actions_client",,1,0,0,0
 "access_ir_logging","ir_logging admin","model_ir_logging","group_erp_manager",1,1,1,1
 "paperformat_access_portal","ir_actions_report_paperformat group_portal","model_report_paperformat",,1,0,0,0
-"paperformat_access_employee","ir_actions_report_paperformat group_hr_user","model_report_paperformat",,1,0,1,0
+"paperformat_access_employee","ir_actions_report_paperformat group_system","model_report_paperformat",group_system,1,1,1,1
+"access_report_layout","access_report_layout","model_report_layout",,1,1,1,1

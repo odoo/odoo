@@ -1,8 +1,13 @@
 :banner: banners/build_interface_ext.jpg
 
 =============================
-Building Interface Extensions
+Customizing the web client
 =============================
+
+Note: this section is really really out of date. It will be updated someday,
+but meanwhile, this tutorial will probably be frustrating to follow, since it
+was written a long time ago.
+
 
 .. highlight:: javascript
 
@@ -1539,10 +1544,10 @@ Exercises
                 local.HomePage = instance.Widget.extend({
                     template: "HomePage",
                     start: function () {
-                        return $.when(
+                        return Promise.all([
                             new local.PetToysList(this).appendTo(this.$('.oe_petstore_homepage_left')),
                             new local.MessageOfTheDay(this).appendTo(this.$('.oe_petstore_homepage_right'))
-                        );
+                        ]);
                     }
                 });
                 instance.web.client_actions.add('petstore.homepage', 'instance.oepetstore.HomePage');

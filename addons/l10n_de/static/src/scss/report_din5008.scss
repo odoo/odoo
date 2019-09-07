@@ -1,0 +1,51 @@
+.din {
+    &.header {
+        min-height: 45mm;
+        max-height: 45mm;
+        overflow: hidden;
+        img {
+            max-height: 45mm;
+        }
+    }
+    .company_address {
+        position: relative;
+        left: 45mm;
+        top: 5mm;
+        width: 75mm;
+        min-width: 75mm;
+        display: inline-block;
+    }
+    .invoice_address {
+        position: relative;
+        left: 25mm;
+        top: 17.7mm;
+        width: 85mm;
+        height: 27.3mm;
+        overflow-y: hidden;
+        word-break: break-word;
+        float: left;
+    }
+    .header_address { 
+        min-height: 45mm;
+    }
+    .page_number {
+        margin-top: 4.23mm;
+        margin-bottom: 4.23mm;
+    }
+    &.article {
+        .page {
+            position: relative;
+            top: 8.46mm;
+            left: 25mm;
+            width: 190mm;
+        }
+        .address {
+            margin-top: 5mm;
+        }
+    }
+    &.o_background_footer {
+        position: relative;
+        left: 25mm;
+        width: 190mm;
+    }
+}

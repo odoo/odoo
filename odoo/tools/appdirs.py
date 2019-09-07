@@ -21,12 +21,6 @@ __version__ = '.'.join(str(v) for v in __version_info__)
 import sys
 import os
 
-PY3 = sys.version_info[0] == 3
-
-if PY3:
-    unicode = str
-
-
 
 def user_data_dir(appname=None, appauthor=None, version=None, roaming=False):
     r"""Return full path to the user-specific data dir for this application.
@@ -57,7 +51,7 @@ def user_data_dir(appname=None, appauthor=None, version=None, roaming=False):
         Win 7  (roaming):       C:\Users\<username>\AppData\Roaming\<AppAuthor>\<AppName>
 
     For Unix, we follow the XDG spec and support $XDG_DATA_HOME.
-    That means, by deafult "~/.local/share/<AppName>".
+    That means, by default "~/.local/share/<AppName>".
     """
     if sys.platform == "win32":
         if appauthor is None:
@@ -167,7 +161,7 @@ def user_config_dir(appname=None, appauthor=None, version=None, roaming=False):
         Win *:                  same as user_data_dir
 
     For Unix, we follow the XDG spec and support $XDG_DATA_HOME.
-    That means, by deafult "~/.local/share/<AppName>".
+    That means, by default "~/.local/share/<AppName>".
     """
     if sys.platform in [ "win32", "darwin" ]:
         path = user_data_dir(appname, appauthor, None, roaming)
@@ -397,7 +391,7 @@ def _get_win_folder_with_pywin32(csidl_name):
     # not return unicode strings when there is unicode data in the
     # path.
     try:
-        dir = unicode(dir)
+        dir = str(dir)
 
         # Downgrade to short path name if have highbit chars. See
         # <http://bugs.activestate.com/show_bug.cgi?id=85099>.

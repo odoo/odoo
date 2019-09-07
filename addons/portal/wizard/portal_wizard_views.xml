@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- wizard action on res.partner -->
+        <act_window id="partner_wizard_action"
+            name="Grant portal access"
+            binding_model="res.partner"
+            res_model="portal.wizard"
+            view_mode="form" target="new"
+            groups="base.group_partner_manager"/>
+
+        <!-- wizard view -->
+        <record id="wizard_view" model="ir.ui.view">
+            <field name="name">Grant Portal Access</field>
+            <field name="model">portal.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Grant Portal Access">
+                    <div>
+                        Select which contacts should belong to the portal in the list below.
+                        The email address of each selected contact must be valid and unique.
+                        If necessary, you can fix any contact's email address directly in the list.
+                    </div>
+                    <field name="user_ids">
+                        <tree string="Contacts" editable="bottom" create="false" delete="false">
+                            <field name="partner_id" force_save="1"/>
+                            <field name="email"/>
+                            <field name="in_portal"/>
+                        </tree>
+                    </field>
+                    <field name="welcome_message"
+                        placeholder="This text is included in the email sent to new portal users."/>
+                    <footer>
+                        <button string="Apply" name="action_apply" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+</odoo>

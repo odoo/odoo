@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo.tools import pycompat
 
 
 class test_search(TransactionCase):
@@ -75,7 +74,7 @@ class test_search(TransactionCase):
         c = Users.create({'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us.id, 'state_id': states_us[0].id})
 
         # Search as search user
-        Users = Users.sudo(u)
+        Users = Users.with_user(u)
 
         # Do: search on res.users, order on a field on res.partner to try inherits'd fields, then res.users
         expected_ids = [u.id, a.id, c.id, b.id]
@@ -108,7 +107,7 @@ class test_search(TransactionCase):
             user_ids[u] = Users.create({'name': u, 'login': u}).id
             cron_ids[u] = Cron.create({'name': u, 'model_id': self.env.ref('base.model_res_partner').id, 'user_id': user_ids[u]}).id
 
-        ids = Cron.search([('id', 'in', list(pycompat.values(cron_ids)))], order='user_id').ids
+        ids = Cron.search([('id', 'in', list(cron_ids.values()))], order='user_id').ids
         expected_ids = [cron_ids[l] for l in 'ABC']
         self.assertEqual(ids, expected_ids)
 
@@ -128,7 +127,7 @@ class test_search(TransactionCase):
         create('F', parent_id=cat_ids['D'])
 
         expected_ids = [cat_ids[x] for x in 'ADEFBC']
-        found_ids = Cats.search([('id', 'in', list(pycompat.values(cat_ids)))]).ids
+        found_ids = Cats.search([('id', 'in', list(cat_ids.values()))]).ids
         self.assertEqual(found_ids, expected_ids)
 
     def test_13_m2o_order_loop_multi(self):
@@ -142,9 +141,9 @@ class test_search(TransactionCase):
                                      self.ref('base.group_partner_manager')])])
 
         u1 = Users.create(dict(name='Q', login='m', **kw)).id
-        u2 = Users.sudo(user=u1).create(dict(name='B', login='f', **kw)).id
+        u2 = Users.with_user(u1).create(dict(name='B', login='f', **kw)).id
         u3 = Users.create(dict(name='C', login='c', **kw)).id
-        u4 = Users.sudo(user=u2).create(dict(name='D', login='z', **kw)).id
+        u4 = Users.with_user(u2).create(dict(name='D', login='z', **kw)).id
 
         expected_ids = [u2, u4, u3, u1]
         found_ids = Users.search([('id', 'in', expected_ids)]).ids

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+    <!--
+        @param {string|integer} activeThreadID
+        @param {mail.model.Channel[]} channels
+        @param {boolean} isMyselfModerator
+        @param {mail.model.Mailbox} inbox
+        @param {mail.model.Mailbox} starred
+        @param {mail.model.Mailbox|undefined} moderation set if current user is moderator
+        @param {boolean} displayQuickSearch
+        @param {Object} options
+    -->
+    <t t-extend="mail.discuss.Sidebar">
+        <t t-jquery="hr" t-operation="before">
+            <t t-foreach="channels" t-as="channel">
+                <t t-if="channel.getType() == 'support_channel'">
+                    <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == channel.getID()) ? 'o_active': ''}"
+                         t-att-data-thread-id="channel.getID()">
+                        <span class="o_thread_name"><i class="fa fa-question-circle mr8"/>Odoo Support</span>
+                        <t t-set="counter" t-value="channel.getUnreadCounter()"/>
+                        <t t-call="mail.discuss.SidebarCounter"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </t>
+
+</template>

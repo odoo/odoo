@@ -7,7 +7,6 @@ from datetime import date, datetime, timedelta
 
 from odoo import api, fields, models, _, exceptions
 from odoo.osv import expression
-from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -21,7 +20,7 @@ class GoalDefinition(models.Model):
     a new gamification_goal_definition
     """
     _name = 'gamification.goal.definition'
-    _description = 'Gamification goal definition'
+    _description = 'Gamification Goal Definition'
 
     name = fields.Char("Goal Definition", required=True, translate=True)
     description = fields.Text("Goal Description")
@@ -67,7 +66,7 @@ class GoalDefinition(models.Model):
             items = []
 
             if goal.monetary:
-                items.append(self.env.user.company_id.currency_id.symbol or u'¤')
+                items.append(self.env.company.currency_id.symbol or u'¤')
             if goal.suffix:
                 items.append(goal.suffix)
 
@@ -82,7 +81,7 @@ class GoalDefinition(models.Model):
             Obj = self.env[definition.model_id.model]
             try:
                 domain = safe_eval(definition.domain, {
-                    'user': self.env.user.sudo(self.env.user)
+                    'user': self.env.user.with_user(self.env.user)
                 })
                 # dummy search to make sure the domain is valid
                 Obj.search_count(domain)
@@ -118,7 +117,6 @@ class GoalDefinition(models.Model):
             definition._check_model_validity()
         return definition
 
-    @api.multi
     def write(self, vals):
         res = super(GoalDefinition, self).write(vals)
         if vals.get('computation_mode', 'count') in ('count', 'sum') and (vals.get('domain') or vals.get('model_id')):
@@ -146,7 +144,8 @@ class Goal(models.Model):
     An individual goal for a user on a specified time period"""
 
     _name = 'gamification.goal'
-    _description = 'Gamification goal instance'
+    _description = 'Gamification Goal'
+    _rec_name = 'definition_id'
     _order = 'start_date desc, end_date desc, definition_id, id'
 
     definition_id = fields.Many2one('gamification.goal.definition', string="Goal Definition", required=True, ondelete="cascade")
@@ -158,9 +157,9 @@ class Goal(models.Model):
              "to generate goals with a value in this field.")
     start_date = fields.Date("Start Date", default=fields.Date.today)
     end_date = fields.Date("End Date")  # no start and end = always active
-    target_goal = fields.Float('To Reach', required=True, track_visibility='always')
+    target_goal = fields.Float('To Reach', required=True, tracking=True)
 # no goal = global index
-    current = fields.Float("Current Value", required=True, default=0, track_visibility='always')
+    current = fields.Float("Current Value", required=True, default=0, tracking=True)
     completeness = fields.Float("Completeness", compute='_get_completion')
     state = fields.Selection([
         ('draft', "Draft"),
@@ -168,11 +167,11 @@ class Goal(models.Model):
         ('reached', "Reached"),
         ('failed', "Failed"),
         ('canceled', "Canceled"),
-    ], default='draft', string='State', required=True, track_visibility='always')
+    ], default='draft', string='State', required=True, tracking=True)
     to_update = fields.Boolean('To update')
     closed = fields.Boolean('Closed goal', help="These goals will not be recomputed.")
 
-    computation_mode = fields.Selection(related='definition_id.computation_mode')
+    computation_mode = fields.Selection(related='definition_id.computation_mode', readonly=False)
     remind_update_delay = fields.Integer(
         "Remind delay", help="The number of days after which the user "
                              "assigned to a manual goal will be reminded. "
@@ -221,11 +220,12 @@ class Goal(models.Model):
         template = self.env.ref('gamification.email_template_goal_reminder')\
                            .get_email_template(self.id)
         body_html = self.env['mail.template'].with_context(template._context)\
-            .render_template(template.body_html, 'gamification.goal', self.id)
-        self.env['mail.thread'].message_post(
+            ._render_template(template.body_html, 'gamification.goal', self.id)
+        self.message_notify(
             body=body_html,
-            partner_ids=[ self.user_id.partner_id.id],
-            subtype='mail.mt_comment'
+            partner_ids=[self.user_id.partner_id.id],
+            subtype='mail.mt_comment',
+            email_layout_xmlid='mail.mail_notification_light',
         )
 
         return {'to_update': True}
@@ -249,7 +249,6 @@ class Goal(models.Model):
 
         return {self: result}
 
-    @api.multi
     def update_goal(self):
         """Update the goals to recomputes values and change of states
 
@@ -259,10 +258,10 @@ class Goal(models.Model):
         If the end date is passed (at least +1 day, time not considered) without
         the target value being reached, the goal is set as failed."""
         goals_by_definition = {}
-        for goal in self:
+        for goal in self.with_context(prefetch_fields=False):
             goals_by_definition.setdefault(goal.definition_id, []).append(goal)
 
-        for definition, goals in pycompat.items(goals_by_definition):
+        for definition, goals in goals_by_definition.items():
             goals_to_write = {}
             if definition.computation_mode == 'manually':
                 for goal in goals:
@@ -284,7 +283,7 @@ class Goal(models.Model):
                     safe_eval(code, cxt, mode="exec", nocopy=True)
                     # the result of the evaluated codeis put in the 'result' local variable, propagated to the context
                     result = cxt.get('result')
-                    if result is not None and isinstance(result, (float, pycompat.integer_types)):
+                    if isinstance(result, (float, int)):
                         goals_to_write.update(goal._get_write_values(result))
                     else:
                         _logger.error(
@@ -307,9 +306,9 @@ class Goal(models.Model):
                         subqueries.setdefault((start_date, end_date), {}).update({goal.id:safe_eval(definition.batch_user_expression, {'user': goal.user_id})})
 
                     # the global query should be split by time periods (especially for recurrent goals)
-                    for (start_date, end_date), query_goals in pycompat.items(subqueries):
+                    for (start_date, end_date), query_goals in subqueries.items():
                         subquery_domain = list(general_domain)
-                        subquery_domain.append((field_name, 'in', list(set(pycompat.values(query_goals)))))
+                        subquery_domain.append((field_name, 'in', list(set(query_goals.values()))))
                         if start_date:
                             subquery_domain.append((field_date_name, '>=', start_date))
                         if end_date:
@@ -325,7 +324,7 @@ class Goal(models.Model):
                         for goal in [g for g in goals if g.id in query_goals]:
                             for user_value in user_values:
                                 queried_value = field_name in user_value and user_value[field_name] or False
-                                if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], pycompat.integer_types):
+                                if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], int):
                                     queried_value = queried_value[0]
                                 if queried_value == query_goals[goal.id]:
                                     new_value = user_value.get(field_name+'_count', goal.current)
@@ -353,7 +352,7 @@ class Goal(models.Model):
 
                         goals_to_write.update(goal._get_write_values(new_value))
 
-            for goal, values in pycompat.items(goals_to_write):
+            for goal, values in goals_to_write.items():
                 if not values:
                     continue
                 goal.write(values)
@@ -361,7 +360,6 @@ class Goal(models.Model):
                 self.env.cr.commit()
         return True
 
-    @api.multi
     def action_start(self):
         """Mark a goal as started.
 
@@ -369,7 +367,6 @@ class Goal(models.Model):
         self.write({'state': 'inprogress'})
         return self.update_goal()
 
-    @api.multi
     def action_reach(self):
         """Mark a goal as reached.
 
@@ -377,14 +374,12 @@ class Goal(models.Model):
         Progress at the next goal update until the end date."""
         return self.write({'state': 'reached'})
 
-    @api.multi
     def action_fail(self):
         """Set the state of the goal to failed.
 
         A failed goal will be ignored in future checks."""
         return self.write({'state': 'failed'})
 
-    @api.multi
     def action_cancel(self):
         """Reset the completion after setting a goal as reached or failed.
 
@@ -397,7 +392,6 @@ class Goal(models.Model):
     def create(self, vals):
         return super(Goal, self.with_context(no_remind_goal=True)).create(vals)
 
-    @api.multi
     def write(self, vals):
         """Overwrite the write method to update the last_update field to today
 
@@ -416,7 +410,6 @@ class Goal(models.Model):
                     goal.challenge_id.sudo().report_progress(users=goal.user_id)
         return result
 
-    @api.multi
     def get_action(self):
         """Get the ir.action related to update the goal
 
@@ -428,7 +421,7 @@ class Goal(models.Model):
             action = self.definition_id.action_id.read()[0]
 
             if self.definition_id.res_id_field:
-                current_user = self.env.user.sudo(self.env.user)
+                current_user = self.env.user.with_user(self.env.user)
                 action['res_id'] = safe_eval(self.definition_id.res_id_field, {
                     'user': current_user
                 })

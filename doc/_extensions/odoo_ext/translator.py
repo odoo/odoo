@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 import os.path
 import posixpath
 import re
@@ -8,7 +10,7 @@ except ImportError:
     from urllib import url2pathname  # pylint: disable=deprecated-module
 
 from docutils import nodes
-from sphinx import addnodes, util
+from sphinx import addnodes, util, builders
 from sphinx.locale import admonitionlabels
 
 
@@ -39,7 +41,12 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         '<meta name="viewport" content="width=device-width, initial-scale=1">'
     ]
 
-    def __init__(self, builder, document):
+    def __init__(self, document, builder):
+        # order of parameter swapped between Sphinx 1.x and 2.x, check if
+        # we're running 1.x and swap back
+        if not isinstance(builder, builders.Builder):
+            builder, document = document, builder
+
         super(BootstrapTranslator, self).__init__(document)
         self.builder = builder
         self.body = []
@@ -62,7 +69,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         self.param_separator = ','
 
     def encode(self, text):
-        return unicode(text).translate({
+        return str(text).translate({
             ord('&'): u'&amp;',
             ord('<'): u'&lt;',
             ord('"'): u'&quot;',
@@ -71,7 +78,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         })
 
     def starttag(self, node, tagname, **attributes):
-        tagname = unicode(tagname).lower()
+        tagname = str(tagname).lower()
 
         # extract generic attributes
         attrs = {name.lower(): value for name, value in attributes.items()}
@@ -105,14 +112,14 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         )
     # only "space characters" SPACE, CHARACTER TABULATION, LINE FEED,
     # FORM FEED and CARRIAGE RETURN should be collapsed, not al White_Space
-    def attval(self, value, whitespace=re.compile(u'[ \t\n\f\r]')):
-        return self.encode(whitespace.sub(u' ', unicode(value)))
+    def attval(self, value, whitespace=re.compile(u'[ \t\n\f\r]+')):
+        return self.encode(whitespace.sub(' ', str(value)))
 
     def astext(self):
         return u''.join(self.body)
 
     def unknown_visit(self, node):
-        print "unknown node", node.__class__.__name__
+        print("unknown node", node.__class__.__name__)
         self.body.append(u'[UNKNOWN NODE {}]'.format(node.__class__.__name__))
         raise nodes.SkipNode
 
@@ -139,6 +146,11 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         # close last section of document
         if not self.section_level:
             self.body.append(u'</section>')
+
+    def visit_topic(self, node):
+        self.body.append(self.starttag(node, 'nav'))
+    def depart_topic(self, node):
+        self.body.append(u'</nav>')
 
     def is_compact_paragraph(self, node):
         parent = node.parent
@@ -181,6 +193,18 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
     def depart_compact_paragraph(self, node):
         pass
 
+    def visit_problematic(self, node):
+        if node.hasattr('refid'):
+            self.body.append('<a href="#%s">' % node['refid'])
+            self.context.append('</a>')
+        else:
+            self.context.append('')
+        self.body.append(self.starttag(node, 'span', CLASS='problematic'))
+
+    def depart_problematic(self, node):
+        self.body.append('</span>')
+        self.body.append(self.context.pop())
+
     def visit_literal_block(self, node):
         if node.rawsource != node.astext():
             # most probably a parsed-literal block -- don't highlight
@@ -199,7 +223,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         else:
             opts = {}
 
-        def warner(msg):
+        def warner(msg, **kw):
             self.builder.warn(msg, (self.builder.current_docname, node.line))
         highlighted = self.builder.highlighter.highlight_block(
             node.rawsource, lang, opts=opts, warn=warner, linenos=linenos,
@@ -303,9 +327,9 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
 
     def visit_title(self, node):
         parent = node.parent
-        closing = u'</p>'
+        closing = u'</h3>'
         if isinstance(parent, nodes.Admonition):
-            self.body.append(self.starttag(node, 'p', CLASS='alert-title'))
+            self.body.append(self.starttag(node, 'h3', CLASS='alert-title'))
         elif isinstance(node.parent, nodes.document):
             self.body.append(self.starttag(node, 'h1'))
             closing = u'</h1>'
@@ -372,6 +396,10 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
                     "Unsupported alignment value \"%s\"" % node['align'],
                     location=doc
                 )
+        elif 'align' in node.parent and node.parent['align'] == 'center':
+            # figure > image
+            attrs['class'] += ' center-block'
+
         # todo: explicit width/height/scale?
         self.body.append(self.starttag(node, 'img', **attrs))
     def depart_image(self, node): pass
@@ -620,9 +648,9 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
             classes = env.metadata[ref].get('types', 'tutorials')
             classes += ' toc-single-entry' if not toc else ' toc-section'
             self.body.append(self.starttag(node, 'div', CLASS="row " + classes))
-            self.body.append(u'<h2 class="col-sm-12">')
+            self.body.append(u'<div class="col-sm-12"><h2>')
             self.body.append(title if title else util.nodes.clean_astext(env.titles[ref]))
-            self.body.append(u'</h2>')
+            self.body.append(u'</h2></div>')
 
             entries = [(title, ref)] if not toc else ((e[0], e[1]) for e in toc[0]['entries'])
             for subtitle, subref in entries:

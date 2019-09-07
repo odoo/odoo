@@ -1,0 +1,34 @@
+$o_wss_color_1 : #5B7687;
+$o_wss_color_2 : #485761;
+
+// General
+// **************************************************
+.o_wss_certification_icon {
+    @include size(1.4em, auto);
+}
+
+// Course page
+// **************************************************
+#wrap.o_wss_certification_channel {
+    .o_wslides_course_header {
+        background-image: linear-gradient(120deg, $o_wss_color_1, $o_wss_color_2);
+    }
+
+    .o_wslides_course_pict {
+        @include media-breakpoint-up(md)  {
+            border-color: $o_wss_color_2;
+        }
+    }
+
+    .o_wslides_nav_tabs .nav-link {
+        @include media-breakpoint-up(md) {
+            &, &:hover{
+                border-color: $o_wss_color_1;
+            }
+
+            &.active {
+                border-color: $gray-100;
+            }
+        }
+    }
+}

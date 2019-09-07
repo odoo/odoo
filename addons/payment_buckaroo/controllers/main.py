@@ -6,7 +6,6 @@ import werkzeug
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -22,11 +21,11 @@ class BuckarooController(http.Controller):
         '/payment/buckaroo/cancel',
         '/payment/buckaroo/error',
         '/payment/buckaroo/reject',
-    ], type='http', auth='none', csrf=False)
+    ], type='http', auth='public', csrf=False)
     def buckaroo_return(self, **post):
         """ Buckaroo."""
         _logger.info('Buckaroo: entering form_feedback with post data %s', pprint.pformat(post))  # debug
         request.env['payment.transaction'].sudo().form_feedback(post, 'buckaroo')
-        post = {key.upper(): value for key, value in pycompat.items(post)}
+        post = {key.upper(): value for key, value in post.items()}
         return_url = post.get('ADD_RETURNDATA') or '/'
-        return werkzeug.utils.redirect(return_url)
+        return werkzeug.utils.redirect('/payment/process')

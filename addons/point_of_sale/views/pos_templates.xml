@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<template id="pos_assets_backend" name="POS UI Backend Assets" inherit_id="web.assets_backend" primary="True">
+    <xpath expr="//script[contains(@src, '/mail/static/src/js/services/mail_service.js')]" position="replace"></xpath>
+</template>
+
 <template id="index" name="POS Index">&lt;!DOCTYPE html&gt;
 <html>
     <head>
@@ -19,22 +23,22 @@
         <link rel="apple-touch-icon" sizes="120x120" href="/point_of_sale/static/src/img/touch-icon-iphone-retina.png"/>
         <link rel="apple-touch-icon" sizes="152x152" href="/point_of_sale/static/src/img/touch-icon-ipad-retina.png"/>
 
-        <style> body { background: #222; } </style> 
+        <style> body { background: #222; } </style>
 
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
 
         <script type="text/javascript">
-            var odoo = {
-                csrf_token: "<t t-esc="request.csrf_token(None)"/>",
-                session_info: <t t-raw="session_info"/>,
-            };
+            var odoo = <t t-raw="json.dumps({
+                'csrf_token': request.csrf_token(None),
+                'session_info': session_info,
+                'debug': debug,
+            })"/>;
         </script>
 
         <t t-call-assets="web.assets_common" t-css="false"/>
-        <t t-call-assets="web.assets_backend" t-css="false"/>
-        <t t-call-assets="web_editor.summernote" t-css="false"/>
-        <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+        <t t-call-assets="point_of_sale.pos_assets_backend" t-css="false"/>
         <t t-call-assets="point_of_sale.assets"/>
+        <t t-call="web.conditional_assets_tests"/>
 
         <script type="text/javascript" id="loading-script" t-raw="init">
             odoo.define('web.web_client', function (require) {
@@ -55,7 +59,6 @@
         </script>
     </head>
     <body>
-        <div class="o_main_content"/>
     </body>
 </html>
 </template>
@@ -72,47 +75,10 @@
     </script>
 </template>
 
-<template id="pos_editor_assets" inherit_id="web_editor.assets_editor">
+<template id="pos_editor_assets" inherit_id="web_editor.wysiwyg_snippets">
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/point_of_sale/static/src/js/pos.web_editor.js"/>
     </xpath>
 </template>
 
-
-<template id="customer_facing_display_snippets">
-    <!-- web_editor needs a ul (normally contains the header, body, extra buttons)-->
-    <ul/>
-    <div id="o_scroll" class="hidden"/>
-
-    <div id="snippet_options" class="hidden">
-        <t t-call="web_editor.snippet_options"/>
-
-        <div data-js='pos_no_remove' data-selector=".pos-company_logo, .pos-adv, .pos-customer_facing_display"/>
-        <div data-js='pos_no_parent' data-selector=".pos-company_logo, .pos-adv"/>
-        <div data-js='pos_company_logo' data-selector=".pos-company_logo"/>
-
-        <div data-js='pos_palette' data-selector=".pos-customer_facing_display">
-            <li data-select_class="pos-palette_01"><a href="#" class="pos-palette_01"/></li>
-            <li data-select_class="pos-palette_02"><a href="#" class="pos-palette_02"/></li>
-            <li data-select_class="pos-palette_03"><a href="#" class="pos-palette_03"/></li>
-            <li data-select_class="pos-palette_04"><a href="#" class="pos-palette_04"/></li>
-            <li data-select_class="pos-palette_05"><a href="#" class="pos-palette_05"/></li>
-            <li data-select_class="pos-palette_06"><a href="#" class="pos-palette_06"/></li>
-            <li data-select_class="pos-palette_07"><a href="#" class="pos-palette_07"/></li>
-            <li data-select_class="pos-palette_08"><a href="#" class="pos-palette_08"/></li>
-            <li data-select_class="pos-palette_09"><a href="#" class="pos-palette_09"/></li>
-            <li data-select_class="pos-palette_10"><a href="#" class="pos-palette_10"/></li>
-            <li data-select_class="pos-palette_11"><a href="#" class="pos-palette_11"/></li>
-            <li data-select_class="pos-palette_12"><a href="#" class="pos-palette_12"/></li>
-            <li data-select_class="pos-palette_13"><a href="#" class="pos-palette_13"/></li>
-        </div>
-
-        <div data-js='pos_background' data-selector=".pos-company_logo, .pos-adv">
-            <li data-choose_image="choose_image"><a href="#"><b>Set Custom Image...</b></a></li>
-            <li class="hidden pos-use_default_logo" data-background=""><a href="#">Default company logo</a></li>
-            <li class="divider"/>
-            <li data-toggle_class="pos-hidden"><a href="#"><i class="fa fa-eye-slash"/>Hide</a></li>
-        </div>
-    </div>
-</template>
 </odoo>

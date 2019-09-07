@@ -11,32 +11,54 @@
                             <field name="serial" invisible="1"/>
                             <field name="production_id" invisible="1"/>
                             <field name="product_id" readonly="1"/>
-                            <label for="product_qty"/>
+                            <field name="is_pending_production" invisible="1"/>
+                            <label for="qty_producing" string="Quantity"/>
                             <div class="o_row">
-                                <field name="product_qty" attrs="{'readonly': [('serial', '=', True)]}"/>
-                                <field name="product_uom_id" readonly="1"/>
+                                <field name="qty_producing" attrs="{'readonly': [('serial', '=', True)]}"/>
+                                <field name="product_uom_id" readonly="1" groups="uom.group_uom"/>
                             </div>
                             <field name="product_tracking" invisible="1"/>
-                            <field name="lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none')]}" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}"/>
+                            <label for="finished_lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')]}"/>
+                            <div class="o_row">
+                                <field name="finished_lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none'), ('finished_lot_id', '!=', False)]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+                                <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" attrs="{'invisible': ['|', ('product_tracking', '=', 'none'), ('finished_lot_id', '!=', False)]}"/>
+                            </div>
                         </group>
                     </group>
+                    <h4 attrs="{'invisible': [('raw_workorder_line_ids', '=', [])]}">Components</h4>
                     <group>
-                        <field name="consume_line_ids" attrs="{'invisible': [('consume_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_lot_id': lot_id}">
-                            <tree editable="top" delete="0" create="0">
-                                <field name="product_id" readonly="1"/>
-                                <field name="quantity" readonly="1"/>
-                                <field name="plus_visible" invisible="1"/>
-                                <field name="quantity_done"/>
-                                <field name="lot_id" context="{'default_product_id': product_id}"/>
+                        <field name="raw_workorder_line_ids" attrs="{'invisible': [('raw_workorder_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_finished_lot_id': finished_lot_id}">
+                            <tree editable="top" delete="0" decoration-danger="(qty_to_consume &lt; qty_done)">
+                                <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" required="1" domain="[('id', '!=', parent.product_id)]" force_save="1"/>
+                                <field name="product_tracking" invisible="1"/>
+                                <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id, 'active_mo_id': parent.production_id}" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot"/>
+                                <field name="qty_to_consume" readonly="1" force_save="1"/>
+                                <field name="qty_reserved" readonly="1" force_save="1" optional="show"/>
+                                <field name="qty_done"/>
+                                <field name="product_uom_id" readonly="1" force_save="1" groups="uom.group_uom"/>
                                 <field name="move_id" invisible="1"/>
-                                <button name="do_minus" type="object" icon="fa-minus-square" attrs="{'invisible': [('quantity_done', '&lt;=', 0.99)]}" invisible="context.get('state_done')"/>
-                                <button name="do_plus" type="object" icon="fa-plus-square" attrs="{'invisible': [('plus_visible', '=', False)]}" invisible="context.get('state_done')"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <h4 attrs="{'invisible': [('finished_workorder_line_ids', '=', [])]}">By-products</h4>
+                    <group>
+                        <field name="finished_workorder_line_ids" attrs="{'invisible': [('finished_workorder_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_finished_lot_id': finished_lot_id}">
+                            <tree editable="top" delete="0" decoration-danger="(qty_to_consume &lt; qty_done)">
+                                <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" required="1" domain="[('id', '!=', parent.product_id)]" force_save="1"/>
+                                <field name="product_tracking" invisible="1"/>
+                                <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id}" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot"/>
+                                <field name="qty_to_consume" string="To Produce" readonly="1" force_save="1"/>
+                                <field name="qty_done" string="Produced"/>
+                                <field name="product_uom_id" readonly="1" force_save="1" groups="uom.group_uom"/>
+                                <field name="move_id" invisible="1"/>
                             </tree>
                         </field>
                     </group>
                     <footer>
-                        <button name="do_produce" type="object" string="Record Production" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button name="continue_production" attrs="{'invisible':[('is_pending_production', '=', False)]}" type="object" string="Continue" class="btn-primary"/>
+                        <button name="do_produce" type="object" string="Save" class="btn-default btn-secondary" attrs="{'invisible':[('is_pending_production', '=', False)]}"/>
+                        <button name="do_produce" type="object" string="Save" class="btn-primary" attrs="{'invisible':[('is_pending_production', '=', True)]}"/>
+                        <button string="Discard" class="btn-default btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -46,10 +68,8 @@
             <field name="name">Produce</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.product.produce</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="context">{}</field>
             <field name="target">new</field>
         </record>
-
 </odoo>

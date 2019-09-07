@@ -8,7 +8,6 @@ from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
 
-from odoo.tools import pycompat
 from odoo.tools.float_utils import float_compare
 
 _logger = logging.getLogger(__name__)
@@ -21,7 +20,7 @@ def normalize_keys_upper(data):
     convert everything to upper case to be able to easily detected the presence
     of a parameter by checking the uppercase key only
     """
-    return {key.upper(): val for key, val in pycompat.items(data)}
+    return {key.upper(): val for key, val in data.items()}
 
 
 class AcquirerBuckaroo(models.Model):
@@ -73,7 +72,7 @@ class AcquirerBuckaroo(models.Model):
                     del values[key]
                     break
 
-            items = sorted(pycompat.items(values), key=lambda pair: pair[0].lower())
+            items = sorted(values.items(), key=lambda pair: pair[0].lower())
             sign = ''.join('%s=%s' % (k, urls.url_unquote_plus(v)) for k, v in items)
         else:
             sign = ''.join('%s=%s' % (k, get_value(k)) for k in keys)
@@ -82,7 +81,6 @@ class AcquirerBuckaroo(models.Model):
         shasign = sha1(sign.encode('utf-8')).hexdigest()
         return shasign
 
-    @api.multi
     def buckaroo_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         buckaroo_tx_values = dict(values)
@@ -91,7 +89,7 @@ class AcquirerBuckaroo(models.Model):
             'Brq_amount': values['amount'],
             'Brq_currency': values['currency'] and values['currency'].name or '',
             'Brq_invoicenumber': values['reference'],
-            'brq_test': False if self.environment == 'prod' else True,
+            'brq_test': True if self.state == 'test' else False,
             'Brq_return': urls.url_join(base_url, BuckarooController._return_url),
             'Brq_returncancel': urls.url_join(base_url, BuckarooController._cancel_url),
             'Brq_returnerror': urls.url_join(base_url, BuckarooController._exception_url),
@@ -102,9 +100,10 @@ class AcquirerBuckaroo(models.Model):
         buckaroo_tx_values['Brq_signature'] = self._buckaroo_generate_digital_sign('in', buckaroo_tx_values)
         return buckaroo_tx_values
 
-    @api.multi
     def buckaroo_get_form_action_url(self):
-        return self._get_buckaroo_urls(self.environment)['buckaroo_form_url']
+        self.ensure_one()
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_buckaroo_urls(environment)['buckaroo_form_url']
 
 
 class TxBuckaroo(models.Model):
@@ -169,29 +168,23 @@ class TxBuckaroo(models.Model):
         data = normalize_keys_upper(data)
         status_code = int(data.get('BRQ_STATUSCODE', '0'))
         if status_code in self._buckaroo_valid_tx_status:
-            self.write({
-                'state': 'done',
-                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
-            })
+            self.write({'acquirer_reference': data.get('BRQ_TRANSACTIONS')})
+            self._set_transaction_done()
             return True
         elif status_code in self._buckaroo_pending_tx_status:
-            self.write({
-                'state': 'pending',
-                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
-            })
+            self.write({'acquirer_reference': data.get('BRQ_TRANSACTIONS')})
+            self._set_transaction_pending()
             return True
         elif status_code in self._buckaroo_cancel_tx_status:
-            self.write({
-                'state': 'cancel',
-                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
-            })
+            self.write({'acquirer_reference': data.get('BRQ_TRANSACTIONS')})
+            self._set_transaction_cancel()
             return True
         else:
             error = 'Buckaroo: feedback error'
             _logger.info(error)
             self.write({
-                'state': 'error',
                 'state_message': error,
                 'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
             })
+            self._set_transaction_cancel()
             return False

@@ -1,0 +1,236 @@
+$gold: #ffcc00;
+$silver: #cccccc;
+$bronze: #eea91e;
+
+.website_forum {
+
+    .question-block .question-name {
+        max-width: 80%;
+    }
+
+    .o_post_content {
+        pre {
+            padding: 1.5rem;
+            border-radius: 5px;
+            color: $white;
+            background-color: $gray-700;
+        }
+        blockquote {
+            position: relative;
+            padding-left: 3rem;
+            border-left: 2px solid $gray-500;
+            font-style: italic;
+            font-weight: lighter;
+        }
+        word-wrap: break-word;
+    }
+
+    .vote {
+        min-width: 38px;
+        margin-right: 12px;
+        .vote_count {
+            font-weight: bold;
+            line-height: 12px;
+            font-size: 160%;
+        }
+        .vote_down,
+        .vote_up {
+            font-size: 130%;
+        }
+    }
+
+    .post_to_validate {
+        overflow: hidden;
+        .validate_answer {
+            display: none;
+        }
+    }
+
+    .validate_answer {
+        @include o-position-absolute(0, auto, 0, 0);
+        width: 4px;
+        height: 100%;
+        z-index: 1; // On top of card content if an alert is displayed inside
+
+        > .bg-success {
+            @include o-position-absolute(0, 0, 0, 0);
+        }
+        > span {
+            @include o-position-absolute(10px, 50%);
+            transform: translateX(50%);
+            font-size: 20px;
+
+            &[data-href] {
+                cursor: pointer;
+            }
+
+            i {
+                padding: 2px 3px;
+                border-radius: 100%;
+            }
+        }
+    }
+
+    .user_name_people {
+        font-weight: bold;
+        max-width: 60%;
+    }
+
+    .oe_answer_true {
+        color: theme-color('success');
+        &:hover {
+            color: lighten(theme-color('success'), 20%);
+        }
+    }
+
+    .oe_answer_false {
+        color: $gray-400;
+        &:hover {
+            color: $gray-600;
+        }
+    }
+
+    .favourite_question {
+        color: $gray-400 !important;
+
+        &.forum_favourite_question {
+            color: $gold !important;
+        }
+    }
+
+    .oe_grey {
+        background-color: #eeeeee;
+    }
+
+
+    a.no-decoration {
+        cursor: pointer;
+        text-decoration: none !important;
+    }
+
+    .close.comment_delete {
+        font-size: 0.875rem;
+        float: none;
+        opacity: 1;
+        font-weight: 300;
+        line-height: 1.5;
+    }
+    .country_flag {
+        display: inline-block;
+        margin-left: 2px;
+        max-height: 13px;
+        width: auto !important;
+    }
+
+    .forum_answer img, .question-block img {
+        max-width: 100%
+    }
+
+    img.country_flag_people {
+        @include o-position-absolute(0,0);
+        max-height: 25px;
+        width: auto;
+    }
+
+    .tag_text .text-core .text-wrap {
+        .text-dropdown,
+        .text-prompt,
+        input,
+        textarea {
+            font: 1.2em "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+        }
+
+        .text-tags .text-tag .text-button {
+            font: 1.2em "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+            height: 1.2em !important;
+        }
+    }
+
+    .oe_forum_email_required {
+        position: absolute;
+        margin-top: 155px;
+        margin-left: 500px;
+        margin-right: 100px;
+        z-index: 5;
+    }
+
+    button.btn-link.text-muted {
+        color: $gray-600;
+    }
+}
+
+.o_forum_tag_follow_box {
+    position: absolute;
+    display: none;
+    z-index: 1;
+    text-align: center;
+    opacity: 0.9;
+}
+
+.forum_answer {
+    position: relative;
+}
+
+.o_wforum_post_count_answer_count {
+    border-left: 3px solid;
+}
+
+.o_profile_main {
+    overflow: hidden;
+}
+
+img.o_forum_avatar {
+    max-height: 40px;
+    margin-right: 10px;
+    width: auto;
+}
+
+img.o_forum_avatar_big {
+    max-width: 75px;
+    margin-right: 10px;
+    width: auto;
+}
+
+.o_forum_user_bio_expand {
+    position: absolute;
+    display: none;
+    z-index: 200;
+}
+
+.o_forum_tooltip_heading {
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+}
+
+.o_forum_user_bio {
+    color: $black;
+    width: 318px;
+    min-height: 100px;
+    cursor: auto;
+    border: 1px solid darkgray;
+    background-color: whitesmoke;
+    line-height: 13px;
+    font-size: 11px;
+    word-wrap: break-word;
+    .o_forum_tooltip_line {
+        min-height: 13px;
+    }
+    .o_forum_tooltip_header {
+        min-height: 75px;
+    }
+}
+
+.o_wforum_elearning_navtabs_container {
+    @include media-breakpoint-up(md) {
+        background-color: theme-color('secondary');
+    }
+}
+
+.website_forum {
+    margin-bottom: $spacer;
+}
+
+.o_wforum_forum_card_bg {
+    background: linear-gradient(99deg, theme-color('secondary') 10%, darken(theme-color('secondary'), 10%) 90%);
+}

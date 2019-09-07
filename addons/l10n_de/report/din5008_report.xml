@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- New report paperformat for din5008 format -->
+        <record id="paperformat_euro_din" model="report.paperformat">
+            <field name="name">European A4 for DIN</field>
+            <field name="default" eval="False" />
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">45</field>
+            <field name="margin_bottom">28</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">45</field>
+        </record>
+
+        <template id="assets_common" name="l10n_de_din5008_report" inherit_id="web.report_assets_common">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/l10n_de/static/src/scss/report_din5008.scss"/>
+            </xpath>
+        </template>
+
+        <!-- New report layout for din5008 format -->
+        <template id="external_layout_din5008">
+            <t t-if="not o and doc">
+                <t t-set="o" t-value="doc"/>
+            </t>
+
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+            <div>
+                <div class="header din">
+                    <div class="float-right">
+                        <h3 class="mt0 text-right" t-field="company.report_header"/>
+                    </div>
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-left"/>
+                </div>
+
+                <div class="article din" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+                    <div class="header_address">
+                        <t t-if="address">
+                            <div name="invoice_address" class="invoice_address">
+                                <t t-raw="address"/>
+                            </div>
+                        </t>
+                        <div class="company_address">
+                            <div>
+                                <strong t-field="company.partner_id.name"/>
+                            </div>
+                            <span t-field="company.partner_id"
+                                t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                            <t t-if="information_block">
+                                <div class="address">
+                                    <t t-raw="information_block"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                        <t t-raw="0" />
+                </div>
+
+                <div class="footer o_background_footer din">
+                    <div class="text-right page_number">
+                        <div class="text-muted">
+                            Page:
+                            <span class="page"/>
+                            of
+                            <span class="topage"/>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <ul class="list-inline">
+                            <li t-if="company.phone"><i class="fa fa-phone"/> <span t-field="company.phone"/></li>
+                            <li t-if="company.email"><i class="fa fa-at"/> <span t-field="company.email"/></li>
+                            <li t-if="company.website"><i class="fa fa-globe"/> <span t-field="company.website"/></li>
+                            <li t-if="company.vat"><i class="fa fa-building-o"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                        </ul>
+                        <div t-field="company.report_footer"/>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+    </data>
+</odoo>

@@ -3,24 +3,13 @@
 
 import logging
 import re
-import unicodedata
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import ustr
+from odoo.tools import remove_accents
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
-
-
-# Inspired by http://stackoverflow.com/questions/517923
-def remove_accents(input_str):
-    """Suboptimal-but-better-than-nothing way to replace accented
-    latin letters by an ASCII equivalent. Will obviously change the
-    meaning of input_str and work only for some cases"""
-    input_str = ustr(input_str)
-    nkfd_form = unicodedata.normalize('NFKD', input_str)
-    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
 
 
 class Alias(models.Model):
@@ -50,7 +39,7 @@ class Alias(models.Model):
                                       # hack to only allow selecting mail_thread models (we might
                                       # (have a few false positives, though)
                                       domain="[('field_id.name', '=', 'message_ids')]")
-    alias_user_id = fields.Many2one('res.users', 'Owner', defaults=lambda self: self.env.user,
+    alias_user_id = fields.Many2one('res.users', 'Owner', default=lambda self: self.env.user,
                                     help="The owner of records created upon receiving emails on this alias. "
                                          "If this field is not set the system will attempt to find the right owner "
                                          "based on the sender (From) address, or will use the Administrator account "
@@ -84,19 +73,18 @@ class Alias(models.Model):
         ('alias_unique', 'UNIQUE(alias_name)', 'Unfortunately this email alias is already used, please choose a unique one')
     ]
 
-    @api.multi
     def _get_alias_domain(self):
         alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
         for record in self:
             record.alias_domain = alias_domain
 
-    @api.one
     @api.constrains('alias_defaults')
     def _check_alias_defaults(self):
-        try:
-            dict(safe_eval(self.alias_defaults))
-        except Exception:
-            raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
+        for alias in self:
+            try:
+                dict(safe_eval(alias.alias_defaults))
+            except Exception:
+                raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 
     @api.model
     def create(self, vals):
@@ -118,14 +106,12 @@ class Alias(models.Model):
             vals['alias_parent_model_id'] = model.id
         return super(Alias, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         """"give a unique alias name if given alias name is already assigned"""
         if vals.get('alias_name') and self.ids:
             vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'), alias_ids=self.ids)
         return super(Alias, self).write(vals)
 
-    @api.multi
     def name_get(self):
         """Return the mail alias display alias_name, including the implicit
            mail catchall domain if exists from config otherwise "New Alias".
@@ -165,24 +151,20 @@ class Alias(models.Model):
         name = re.sub(r'[^\w+.]+', '-', name)
         return self._find_unique(name, alias_ids=alias_ids)
 
-    @api.multi
     def open_document(self):
         if not self.alias_model_id or not self.alias_force_thread_id:
             return False
         return {
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': self.alias_model_id.model,
             'res_id': self.alias_force_thread_id,
             'type': 'ir.actions.act_window',
         }
 
-    @api.multi
     def open_parent_document(self):
         if not self.alias_parent_model_id or not self.alias_parent_thread_id:
             return False
         return {
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': self.alias_parent_model_id.model,
             'res_id': self.alias_parent_thread_id,
@@ -197,6 +179,7 @@ class AliasMixin(models.AbstractModel):
     """
     _name = 'mail.alias.mixin'
     _inherits = {'mail.alias': 'alias_id'}
+    _description = 'Email Aliases Mixin'
 
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True)
 
@@ -224,7 +207,6 @@ class AliasMixin(models.AbstractModel):
         record.alias_id.sudo().write(record.get_alias_values())
         return record
 
-    @api.multi
     def unlink(self):
         """ Delete the given records, and cascade-delete their corresponding alias. """
         aliases = self.mapped('alias_id')
@@ -232,7 +214,6 @@ class AliasMixin(models.AbstractModel):
         aliases.unlink()
         return res
 
-    @api.model_cr_context
     def _init_column(self, name):
         """ Create aliases for existing rows. """
         super(AliasMixin, self)._init_column(name)
@@ -264,16 +245,27 @@ class AliasMixin(models.AbstractModel):
                          record._name, record.display_name, record.id)
 
     def _alias_check_contact(self, message, message_dict, alias):
+        """ Main mixin method that inheriting models may inherit in order
+        to implement a specifc behavior. """
+        return self._alias_check_contact_on_record(self, message, message_dict, alias)
+
+    def _alias_check_contact_on_record(self, record, message, message_dict, alias):
+        """ Generic method that takes a record not necessarily inheriting from
+        mail.alias.mixin. """
         author = self.env['res.partner'].browse(message_dict.get('author_id', False))
-        if alias.alias_contact == 'followers' and self.ids:
-            if not hasattr(self, "message_partner_ids") or not hasattr(self, "message_channel_ids"):
+        if alias.alias_contact == 'followers':
+            if not record.ids:
                 return {
-                    'error_mesage': _('incorrectly configured alias'),
+                    'error_message': _('incorrectly configured alias (unknown reference record)'),
                 }
-            accepted_partner_ids = self.message_partner_ids | self.message_channel_ids.mapped('channel_partner_ids')
+            if not hasattr(record, "message_partner_ids") or not hasattr(record, "message_channel_ids"):
+                return {
+                    'error_message': _('incorrectly configured alias'),
+                }
+            accepted_partner_ids = record.message_partner_ids | record.message_channel_ids.mapped('channel_partner_ids')
             if not author or author not in accepted_partner_ids:
                 return {
-                    'error_mesage': _('restricted to followers'),
+                    'error_message': _('restricted to followers'),
                 }
         elif alias.alias_contact == 'partners' and not author:
             return {
