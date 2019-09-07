@@ -16,6 +16,8 @@
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # Clo <clo@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Celia Tydgat <cty@odoo.com>, 2019
+# gdp Odoo <gdp@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -23,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:15+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: gdp Odoo <gdp@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -267,6 +269,8 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -297,6 +301,11 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Des documents sont attachés aux tâches de votre projet.</p><p>\n"
+"                        Envoyer des messages ou laissé une note interne avec des pièes jointes à lier\n"
+"                        documents to your project.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -333,7 +342,7 @@ msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tâches\" title=\"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Profitability</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Rentabilité</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -427,7 +436,7 @@ msgstr "Activités"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Activité d'exception de décoration"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
@@ -529,6 +538,9 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
+"Compte analytique auquel votre projet est lié pour la gestion financière. "
+"Utilisez un compte analytique pour enregistrer les coûts et revenus de votre"
+" projet."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -997,6 +1009,11 @@ msgid ""
 "- Visible by portal users and employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
+"Définis la visibilité des tâches du projet:\n"
+"- Visible par les employés invités: les employés ne peuvent suivre que les projets et tâches suivis.\n"
+"- Visible par les employés: les employés peuvent suivre tous les projets et tâches.\n"
+"- Visible par les utilisateurs portal et employés: les employés peuvent tout voir. Les utilisateurs portal ne voient que les projets et tâches suivis par .\n"
+"   eux ou une personne de leur société."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1139,7 +1156,7 @@ msgstr "Modèle de courriel"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Courriel cc"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1181,7 +1198,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Exception Activities"
-msgstr ""
+msgstr "Activités d'Exception"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1244,7 +1261,7 @@ msgstr "Suivi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Followed Tasks"
-msgstr ""
+msgstr "Tâches suivies"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
@@ -1364,6 +1381,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Comment avoir un retour client?\n"
+"- évaluation lors d'un changement d'étape: un courriel sera envoyé lorsqu'une tâche est poussée dans une autre étape.\n"
+"- évaluation périodique: courriel sera envoyé périodiquement.\n"
+"\n"
+"N'oubliez pas de configurer les modèles d'emails sur les étapes auxquelles vous désirez les retours clients."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1397,7 +1419,7 @@ msgstr "Icône"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Icône pour indiquer une activité d'exception."
 
 #. module: project
 #. openerp-web
@@ -1565,7 +1587,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid "Label used for the tasks of the project."
-msgstr ""
+msgstr "Intitulé utilisé pour les tâches du projet."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -1670,7 +1692,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Liste de cc des courriels entrant."
 
 #. module: project
 #. openerp-web
@@ -1723,6 +1745,9 @@ msgid ""
 "acquired project, assign them and use the %s and %s to define if the project"
 " is ready for the next step."
 msgstr ""
+"Gérer le cycle de vie de votre projet en utilisant la vue Kanban. Ajoutez un"
+" projet récemment acquis, attribuer les et utilisez les %s et %s pour "
+"définir si le projet est prêt pour l'étape suivante."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -2044,7 +2069,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "Pourcentage d'évaluations contentes"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2109,6 +2134,10 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task."
 msgstr ""
+"Prioritiser les tâches par l'utilisation de %s icône.%s Utiliser le %s "
+"boutton pour signaler à vos collègues qu'une tâche est prête pour l'étape "
+"suivante.%s Utiliser le %s pour signaler un problème ou un besoin de "
+"discussion sur une tâche."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2187,6 +2216,8 @@ msgid ""
 "Project in which sub-tasks of the current project will be created. It can be"
 " the current project itself."
 msgstr ""
+"Projet dans lequel les sous-tâches du projet actuel seront créées. Celà peut"
+" être le projet actuel lui même."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -2282,7 +2313,7 @@ msgstr "Date limite de la demande d'évaluation"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "Evaluation de la satisfaction"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
@@ -3006,7 +3037,7 @@ msgstr "Deux fois par mois"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Type d'activité d'exception enregistrée"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3077,17 +3108,17 @@ msgstr "Courriel de l'utilisateur"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "Visible by employees"
-msgstr ""
+msgstr "Visible par les employés"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Visible by invited employees"
-msgstr ""
+msgstr "Visible par les employés invités"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Visible by portal users and employees"
-msgstr ""
+msgstr "Visible par les utilisateurs portal et employés"
 
 #. module: project
 #. openerp-web
@@ -3133,7 +3164,7 @@ msgstr "Hebdomadaire"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on your dashboard."
-msgstr ""
+msgstr "Si ce projet devrait être affiché sur votre tableau de bord."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -3200,7 +3231,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot create recursive tasks."
-msgstr ""
+msgstr "Vous ne pouvez pas créer de tâches récursives"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3216,7 +3247,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Your task must beo in the same company as its project."
-msgstr ""
+msgstr "Votre tâche doit être dans la même société que votre projet."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3262,7 +3293,7 @@ msgstr "tâche"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "text-warning font-weight-bold"
-msgstr ""
+msgstr "text-warning font-weight-bold"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
