@@ -25,7 +25,7 @@ class Survey(models.Model):
         return str(uuid.uuid4())
 
     # description
-    title = fields.Char('Title', required=True, translate=True)
+    title = fields.Char('Survey Title', required=True, translate=True)
     description = fields.Html("Description", translate=True,
         help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.")
     color = fields.Integer('Color Index', default=0)
