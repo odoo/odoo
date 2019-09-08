@@ -1127,7 +1127,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Uložit kartu"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1269,12 +1269,16 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
+"V tomto poli je obrázek použitý pro tuto ikonu platby omezen na 1024 x 1024 "
+"pixelů"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
 msgstr ""
+"Toto pole obsahuje obrázek použitý pro tohoto poskytovatele, omezený na 1024"
+" x 1024 pixelů"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_save_token
@@ -1284,6 +1288,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Tato možnost umožňuje zákazníkům uložit kreditní kartu jako token platby a "
+"znovu ji použít pro pozdější nákup. Pokud spravujete předplatné (opakující "
+"se fakturace), musíte ji při vystavení faktury automaticky účtovat "
+"zákazníkovi."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_country_ids
@@ -1395,13 +1403,13 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:189
 #, python-format
 msgid "We're unable to process your payment."
-msgstr ""
+msgstr "Nemůžeme zpracovat vaši platbu."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "bankovní převod"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe

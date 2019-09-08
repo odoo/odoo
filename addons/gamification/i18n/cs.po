@@ -533,6 +533,9 @@ msgid ""
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
 msgstr ""
+"Po dokončení výzvy se udělují odznaky. To je buď na konci běžícího období "
+"(např .: konec měsíce pro měsíční výzvu), na konci data výzvy (pokud není "
+"stanovena periodicita), nebo když je výzva ručně ukončena."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_mode
@@ -553,7 +556,7 @@ msgstr ""
 #: code:addons/gamification/models/goal.py:412
 #, python-format
 msgid "Can not modify the configuration of a started goal"
-msgstr ""
+msgstr "Nelze změnit konfiguraci zahájeného cíle"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -590,7 +593,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_name
 msgid "Challenge Name"
-msgstr ""
+msgstr "Název výzvy"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_challenge_id
@@ -969,7 +972,7 @@ msgstr "Cíl"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_name
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
-msgstr ""
+msgstr "Určení cíle"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_definition_list_action
@@ -1023,7 +1026,7 @@ msgstr "Cíle"
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_good_job
 msgid "Good Job"
-msgstr ""
+msgstr "Dobrá práce"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
@@ -1168,7 +1171,7 @@ msgstr "Individuální cíle"
 #: model:gamification.challenge.line,name:gamification.line_base_admin3
 #: model:gamification.goal.definition,name:gamification.definition_base_invite
 msgid "Invite new Users"
-msgstr ""
+msgstr "Pozvěte nové uživatele"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge___last_update
@@ -1260,7 +1263,7 @@ msgstr "Model"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_monetary
 msgid "Monetary"
-msgstr ""
+msgstr "Měnový"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_monetary
@@ -1352,7 +1355,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.challenge,period:0
 msgid "Non recurring"
-msgstr ""
+msgstr "Neopakující se"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_remind_update_delay
@@ -1387,7 +1390,7 @@ msgstr "Pouze tito lidé mohou dát tento odznak"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Optimisation"
-msgstr ""
+msgstr "Optimalizace"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_owner_ids
@@ -1559,7 +1562,7 @@ msgstr "Spuštěno"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Running Challenges"
-msgstr ""
+msgstr "Běžící výzvy"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
@@ -1767,7 +1770,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
 msgid "The higher the better"
-msgstr ""
+msgstr "Čím vyšší, tím lepší"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_owner_ids
@@ -1857,7 +1860,7 @@ msgstr "Počet obdržených odznaků."
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_monetary
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_monetary
 msgid "The target and current value are defined in the company currency."
-msgstr ""
+msgstr "Cílová a aktuální hodnota jsou definovány v měně společnosti."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_suffix
@@ -1889,6 +1892,9 @@ msgid ""
 "reference to 'user' which is a browse record of the current user, e.g. "
 "user.id, user.partner_id.id..."
 msgstr ""
+"Hodnota k porovnání s rozlišovacím polem. Výraz může obsahovat odkaz na "
+"„uživatele“, což je procházení záznamu aktuálního uživatele, např. user.id, "
+"user.partner_id.id ..."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -1999,6 +2005,8 @@ msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
 msgstr ""
+"Pokud je tato možnost povolena, může uživatel obdržet odznak pouze jednou. "
+"Nejlepší 3 odznaky jsou stále odměňovány až na konci výzvy."
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_idea
