@@ -260,3 +260,37 @@ class sale_quote(http.Controller):
         tx.confirm_sale_token()
         # redirect the user to the online quote
         return request.redirect('/quote/%s/%s' % (order_id, order.access_token))
+
+    @http.route('/quote/<int:order_id>/transaction/json_token', type='json', auth='public')
+    def payment_token_json(self, order_id, pm_id=None, **kwargs):
+        order = request.env['sale.order'].sudo().browse(order_id)
+        if not order or not order.order_line or pm_id is None:
+            raise exceptions.UserError(_('Nothing to pay/no token selected'))
+
+        # try to convert pm_id into an integer, if it doesn't work redirect the user to the quote
+        try:
+            pm_id = int(pm_id)
+        except ValueError:
+            raise exceptions.UserError(_('Faulty token value'))
+
+        # retrieve the token from its id
+        token = request.env['payment.token'].sudo().browse(pm_id)
+        if not token:
+            raise exceptions.UserError(_('Cannot find token'))
+
+        # find an already existing transaction
+        tx = request.env['payment.transaction'].sudo().search([('reference', '=', order.name)], limit=1)
+        # set the transaction type to server2server
+        tx_type = 'server2server'
+        # check if the transaction exists, if not then it create one
+        tx = tx._check_or_create_sale_tx(order, token.acquirer_id, payment_token=token, tx_type=tx_type)
+        # set the transaction id into the session
+        request.session['quote_%s_transaction_id' % order_id] = tx.id
+        # proceed to try the payment
+        tx.with_context(off_session=False).confirm_sale_token()
+        # send result in json
+        tx_info = tx._get_json_info()
+        return {
+            'tx_info': tx_info,
+            'redirect': '/quote/%s/%s' % (order_id, order.access_token),
+        }
