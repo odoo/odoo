@@ -207,6 +207,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         }
         return loaded.then(function () {
             return self.load_js(file_list);
+        }).then(function () {
+            return self.configure_locale();
         });
     },
     load_translations: function () {
@@ -241,6 +243,15 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             });
         });
         return lock;
+    },
+    configure_locale: function () {
+        moment.updateLocale(moment.locale(), {
+            week: {
+                // Moment uses index 0 for Sunday but Odoo stores it as 7:
+                dow: (_t.database.parameters.week_start || 0) % 7,
+            },
+        });
+        return Promise.resolve();
     },
     get_currency: function (currency_id) {
         return this.currencies[currency_id];
