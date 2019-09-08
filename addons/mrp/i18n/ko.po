@@ -2870,12 +2870,12 @@ msgstr "사유"
 #: model:ir.model,name:mrp.model_mrp_product_produce
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Record Production"
-msgstr "제품 기록"
+msgstr "생산 기록"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Record Production Line"
-msgstr "제품 명세 기록"
+msgstr "생산 명세 기록"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:185
@@ -4347,6 +4347,12 @@ msgstr "동일한 일련 번호를 두 번 사용할 수 없습니다. 인코딩
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
 msgstr "상태가 '완료'인 해체 지시는 삭제할 수 없습니다."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:533
+#, python-format
+msgid "You cannot produce a MO with a bom kit product."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:82
