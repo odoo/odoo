@@ -3,6 +3,7 @@
 
 from odoo import http, _
 from odoo.addons.portal.controllers.portal import _build_url_w_params
+from odoo.exceptions import UserError
 from odoo.http import request, route
 
 
@@ -98,3 +99,40 @@ class PaymentPortal(http.Controller):
                 return request.redirect(_build_url_w_params(error_url, params))
             params['success'] = 'pay_sale'
         return request.redirect(_build_url_w_params(success_url, params))
+
+
+    @http.route('/pay/sale/<int:order_id>/s2s_json_token_tx', type='json', auth='public')
+    def sale_pay_token_json(self, order_id, pm_id=None, **kwargs):
+        """ Use a token to perform a s2s transaction """
+        order_sudo = request.env['sale.order'].sudo().browse(order_id).exists()
+        if not order_sudo:
+            raise UserError(_('Invalid order'))
+        try:
+            token = request.env['payment.token'].sudo().browse(int(pm_id))
+        except (ValueError, TypeError):
+            token = False
+
+        token_owner = order_sudo.partner_id if request.env.user._is_public() else request.env.user.partner_id
+        if not token or token.partner_id != token_owner:
+            raise UserError(_('Invalid Token'))
+
+        # find an existing tx or create a new one
+        tx = request.env['payment.transaction'].sudo()._check_or_create_sale_tx(
+            order_sudo,
+            token.acquirer_id,
+            payment_token=token,
+            tx_type='server2server',
+        )
+
+        # set the transaction id into the session
+        request.session['portal_sale_%s_transaction_id' % order_sudo.id] = tx.id
+
+        # proceed to the payment
+        res = tx.confirm_sale_token()
+        tx.with_context(off_session=False).confirm_sale_token()
+        # redirect the user to the online quote
+        tx_info = tx._get_json_info()
+        return {
+            'tx_info': tx_info,
+            'redirect': '/my/orders/%s' % (order_id),
+        }
