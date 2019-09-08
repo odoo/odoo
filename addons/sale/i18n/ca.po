@@ -632,6 +632,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"D'acord a la configuració del producte, la quantitat entregada pot ser automàticament informatitzada per un mecanisme:\n"
+"- Manual: La quantitat és establerta manualment en la línia\n"
+"- Analític de despeses: La quantitat és la suma de les despeses publicades\n"
+"- Full de temps: La quantitat és la suma d'hores registrades en tasques enllaçades a la línia de vendes\n"
+"- Moviments d'estoc: La quantitat prové de recollides confirmades\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -641,7 +646,7 @@ msgstr "Número de compte"
 #. module: sale
 #: model:ir.model,name:sale.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr ""
+msgstr "Widget de reconciliació del compte"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -730,7 +735,7 @@ msgstr "Compte analític"
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analítiques de les despeses"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -943,7 +948,7 @@ msgstr "Calcular despeses d'enviament amb DHL"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "Calcular despeses d'enviament i envia-ho amb Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1162,7 +1167,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Connector"
-msgstr ""
+msgstr "Connector DHL"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1342,7 +1347,7 @@ msgstr "Mostrar Nom"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Tipus de visualització"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -1619,6 +1624,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Si desem la informació de pagament en el nostres servidor, les subscripcions"
+" de pagament es faran automàticament."
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:165
@@ -2038,7 +2045,7 @@ msgstr "Mètode"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Mètode d'actualització de la quantitat entregada"
 
 #. module: sale
 #: sql_constraint:sale.order.line:0
@@ -2237,14 +2244,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_payment
 msgid "Online Payment"
-msgstr ""
+msgstr "Pagament online"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online Signature"
-msgstr ""
+msgstr "Signatura online"
 
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
@@ -2409,7 +2416,7 @@ msgstr "País Empresa"
 #: code:addons/sale/controllers/portal.py:293
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Paga i confirma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2425,12 +2432,12 @@ msgstr "Pagar Ara"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay now"
-msgstr ""
+msgstr "Paga ara"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay with"
-msgstr ""
+msgstr "Paga amb"
 
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
@@ -2904,6 +2911,8 @@ msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Sol·licita una signatura online al client per tal de confirmar comandes "
+"automàticament."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2916,6 +2925,8 @@ msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Sol·licita un pagament en línia al client per tal de confirmar comandes "
+"automàticament."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3404,7 +3415,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Sold in the last 365 days"
-msgstr ""
+msgstr "Venut en els darrers 365 dies "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__source_id
@@ -3510,7 +3521,7 @@ msgstr "Impost utilitzat per als dipòsits "
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Camp tècnic amb finalitat UX"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

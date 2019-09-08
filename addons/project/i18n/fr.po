@@ -42,6 +42,9 @@
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # Clo <clo@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Celia Tydgat <cty@odoo.com>, 2019
+# Inès Gérardy <ige@odoo.com>, 2019
+# gdp Odoo <gdp@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -49,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: gdp Odoo <gdp@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -302,6 +305,8 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -332,6 +337,11 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Des documents sont attachés aux tâches de votre projet.</p><p>\n"
+"                        Envoyer des messages ou laissé une note interne avec des pièes jointes à lier\n"
+"                        documents to your project.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:143
@@ -368,7 +378,7 @@ msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tâches\" title=\"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Profitability</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Rentabilité</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -559,6 +569,9 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
+"Compte analytique auque votre projet est liée pour la gestion financière. "
+"Utilisez un compte analytique pour enregistré vos coûts et revenus de votre "
+"projet."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1029,6 +1042,11 @@ msgid ""
 "- Visible by portal users and employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
+"Définis la visibilité des tâches du projet:\n"
+"- Visible par les employés invités: les employés ne peuvent suivre que les projets et tâches suivis.\n"
+"- Visible par les employés: les employés peuvent suivre tous les projets et tâches.\n"
+"- Visible par les utilisateurs portal et employés: les employés peuvent tout voir. Les utilisateurs portal ne voient que les projets et tâches suivis par.\n"
+"   eux ou une personne de leur société."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1170,7 +1188,7 @@ msgstr "Modèle de courriel"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Email cc"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1394,6 +1412,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Comment avoir un retour client?\n"
+"- Evaluation lors d'un changement d'étape: un email sera envoyé lorsqu'une tâche est poussée dans une autre étape.\n"
+"- Evaluation périodique: email sera envoyé périodiquement.\n"
+"\n"
+"N'oubliez pas de configurer les modèles d'emails sur l'étape à laquelle vous désirez les retours clients."
 
 #. module: project
 #: code:addons/project/models/project.py:833
@@ -1582,7 +1605,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid "Label used for the tasks of the project."
-msgstr ""
+msgstr "Intitulé utilisé pour les tâches du projet."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -1687,7 +1710,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Liste de cc d'emails entrants."
 
 #. module: project
 #. openerp-web
@@ -1740,6 +1763,9 @@ msgid ""
 "acquired project, assign them and use the %s and %s to define if the project"
 " is ready for the next step."
 msgstr ""
+"Gérer le cycle de vie de votre projet en utilisant la vue Kanban. Ajoutez un"
+" projet récemment acquis, assignez-les et utilisez les %s et %s pour définir"
+" si le projet est prêt pour l'étape suivante."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -2076,7 +2102,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "Pourcentage d'évaluations contentes"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2146,6 +2172,10 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task."
 msgstr ""
+"Prioritiser les tâches en utilisant le %s icone. %s Utiliser le %s button  "
+"pour signaler à vos collègues que cette tâche est prête pour l'étape "
+"suivante.%s Utiliser le %s pour signaler un problème ou un besoin de "
+"discussion sur cette tâche."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2224,6 +2254,8 @@ msgid ""
 "Project in which sub-tasks of the current project will be created. It can be"
 " the current project itself."
 msgstr ""
+"Projet dans lequel les sous-tâches du projet actuel seront créées. Celà peut"
+" être le projet actuel lui même."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -2319,7 +2351,7 @@ msgstr "Date limite de la demande d'évaluation"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "Evaluation de la satisfaction"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
@@ -3102,17 +3134,17 @@ msgstr "Courriel de l'utilisateur"
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Visible by employees"
-msgstr ""
+msgstr "Visible par les employés"
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Visible by invited employees"
-msgstr ""
+msgstr "Visible par les employés invités"
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Visible by portal users and employees"
-msgstr ""
+msgstr "Visible par les utilisateurs portal et employés"
 
 #. module: project
 #. openerp-web
@@ -3158,7 +3190,7 @@ msgstr "Hebdomadaire"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on your dashboard."
-msgstr ""
+msgstr "Si ce projet devrait être affiché sur votre tableau de bord."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
