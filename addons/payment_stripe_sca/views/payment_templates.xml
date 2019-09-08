@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="stripe_form" inherit_id="payment_stripe.stripe_form">
+            <xpath expr="//script" position="before">
+                <input type='hidden' name='session_id' t-att-value='session_id'/>
+            </xpath>
+            <xpath expr="//script" position="replace">
+                <script type="text/javascript">
+                    odoo.define(function (require) {
+                        var ajax = require('web.ajax');
+                        ajax.loadJS("/payment_stripe_sca/static/src/js/stripe_sca.js");
+                    });
+                </script>
+            </xpath>
+        </template>
+
+        <template id="stripe_s2s_form" inherit_id="payment_stripe.stripe_s2s_form">
+            <xpath expr="//div" position="replace">
+                <input type="hidden" name="data_set" value="/payment/stripe/s2s/create_json_3ds"/>
+                <input type="hidden" name="acquirer_id" t-att-value="id"/>
+                <input type="hidden" name="stripe_publishable_key" t-att-value="acq.sudo().stripe_publishable_key"/>
+                <input type="hidden" name="currency_id" t-att-value="currency_id"/>
+                <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
+                <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div id="payment-form">
+                    <div id="card-element" class="m-3"/>
+                    <div id="card-errors" class="m-3 text-danger"/>
+                </div>
+            </xpath>
+            <xpath expr="//input[@name='data_set']" position="replace"/>
+        </template>
+
+        <template inherit_id="payment.payment_tokens_list" id="payment_tokens_list" name="Payment Tokens list">
+            <!-- add the provider on saved tokens -->
+            <xpath expr="//t[@t-foreach='pms']//input[@name='pm_id'][@type='radio'][@t-att-value='pm.id']" position="attributes">
+                <attribute name="t-att-data-provider">pm.acquirer_id.provider</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>
