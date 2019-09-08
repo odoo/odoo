@@ -21,6 +21,7 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2019\n"
+"Last-Translator: Maxim Vandenbroucke <mxv@odoo.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +46,10 @@ msgid ""
 "                Please change the journal entry date or the tax lock date set in the settings (%s) to proceed\n"
 "            "
 msgstr ""
+"\n"
+"                De operatie is geweigerd omdat het een effect zou hebben op een al uitgegeven belastingaangifte \n"
+"                Gelieve de datum van de journaal ingave of de ingestelde belastingvergrendelingdatum te wijzigen in de instellingen (%s) om verder te gaan. \n"
+"            "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -1489,6 +1494,8 @@ msgid ""
 "Additional tags that will be assigned by this repartition line for use in "
 "financial reports"
 msgstr ""
+"Extra tags die door deze verdelingsregel worden toegewezen voor gebruik in "
+"financiële rapporten"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -2529,7 +2536,7 @@ msgstr "CSV import"
 #: code:addons/account/models/account_move.py:1611
 #, python-format
 msgid "CUST"
-msgstr ""
+msgstr "CUST"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__visible
@@ -2645,7 +2652,7 @@ msgstr "Kasstelsel belastingen"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
-msgstr ""
+msgstr "Cash Basis Overgangsrekening"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in
@@ -2830,6 +2837,9 @@ msgid ""
 "Check this boox to negate the absolute value of the balance of the lines "
 "associated with this tag in tax report computation."
 msgstr ""
+"Vink dit vakje aan om de absolute waarde van het saldo van de regels die aan"
+" deze tag zijn gekoppeld in de berekening van het belastingrapport te "
+"negeren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -3123,7 +3133,7 @@ msgstr "Complete set van belastingen"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__name
 msgid "Complete name for this report line, to be used in report."
-msgstr ""
+msgstr "Volledige naam voor deze rapportregel, te gebruiken in rapport."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
@@ -3151,6 +3161,8 @@ msgid ""
 "Computed field, listing the tax grids impacted by this line, and the amount "
 "it applies to each of them."
 msgstr ""
+"Berekend veld met een overzicht van de belastinggrids waarop deze regel een "
+"invloed heeft en het bedrag dat voor elk van hen van toepassing is."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -5669,7 +5681,7 @@ msgstr "Factuurdatum"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_filter_type_domain
 msgid "Invoice Filter Type Domain"
-msgstr ""
+msgstr "Factuur Filter Type Domein"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_has_matching_supsense_amount
@@ -5704,7 +5716,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_payments_widget
 msgid "Invoice Payments Widget"
-msgstr ""
+msgstr "Factuur Betalingen Widget"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5744,6 +5756,8 @@ msgid ""
 "Invoice and credit note repartition should each contain exactly one line for"
 " the base."
 msgstr ""
+"De verdeling van facturen en creditnota's moet elk exact één regel voor de "
+"basis bevatten."
 
 #. module: account
 #: code:addons/account/models/account.py:1111
@@ -5783,7 +5797,7 @@ msgstr "Factuur bevestigd"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_date
 msgid "Invoice/Bill Date"
-msgstr ""
+msgstr "Factuur/Rekening Datum"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -8565,7 +8579,7 @@ msgstr "Vertegenwoordigd de niet-nul kleinste munt (bijvoorbeeld 0,05)."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__require_partner_bank_account
 msgid "Require Partner Bank Account"
-msgstr ""
+msgstr "Vereist Partner Bankrekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id

@@ -54,6 +54,7 @@
 # Clo <clo@odoo.com>, 2019
 # f5f0a0dac17dde787a1d812a6989680e, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Maxence del Marmol <mdm@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -61,7 +62,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: Maxence del Marmol <mdm@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,22 +155,22 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Inventory - %s' % (object.name)"
-msgstr ""
+msgstr "'Inventaire - %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr ""
+msgstr "'Localisation - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
 msgid "'Lot-Serial - %s' % object.name"
-msgstr ""
+msgstr "'Numéro de Lot - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
 msgid "'Operation-type - %s' % object.name"
-msgstr ""
+msgstr "'Type d'opération - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
@@ -243,6 +244,8 @@ msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
 " to bring products in this location."
 msgstr ""
+"<br>Si des produits ne sont pas disponibles <b>%s</b>, une règle va être "
+"générée pour amener les produits à la localisation."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_view_kanban
@@ -324,7 +327,7 @@ msgstr "<span class=\"o_stat_text\">Disponible</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Opérations</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -433,7 +436,7 @@ msgstr "<strong>Qté Min :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr ""
+msgstr "<strong>Quantité disponible</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -684,7 +687,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
 msgid "Allows to start with an empty inventory."
-msgstr ""
+msgstr "Autorise de commencer avec un inventaire vide."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -762,7 +765,7 @@ msgstr "Attribuer un propriétaire"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_responsible
 msgid "Assign Responsible"
-msgstr ""
+msgstr "Attribuer responsable"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_assign_responsible_action
@@ -1232,7 +1235,7 @@ msgstr "Contenu"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Continue Inventory"
-msgstr ""
+msgstr "Continuer l'inventaire"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
@@ -1294,7 +1297,7 @@ msgstr "Compter les préparations"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_qty
 msgid "Counted Quantity"
-msgstr ""
+msgstr "Quantités Comptés"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2021,7 +2024,7 @@ msgstr "Date effective"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__start_empty
 msgid "Empty Inventory"
-msgstr ""
+msgstr "Inventaire vide"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -2568,6 +2571,8 @@ msgid ""
 "Indicates the gap between the product's theoretical quantity and its newest "
 "quantity."
 msgstr ""
+"Indique la différence entre la quantité théorique du produit et sa nouvelle "
+"quantité."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
@@ -2789,7 +2794,7 @@ msgstr "Inventaire à la date"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__is_editable
 msgid "Is Editable"
-msgstr ""
+msgstr "est modifiable"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_is_follower
@@ -3471,7 +3476,7 @@ msgstr "Mes activités"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Transfers"
-msgstr ""
+msgstr "Mes transferts"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__name
@@ -3669,7 +3674,7 @@ msgstr "OK"
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "On Hand Quantity"
-msgstr ""
+msgstr "Quantités disponibles"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -3691,7 +3696,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:84
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
-msgstr ""
+msgstr "Seul le manager des stocks peut valider l'ajustement d'un inventaire."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:103
@@ -3834,7 +3839,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Outdated Theoretical Quantities"
-msgstr ""
+msgstr "Quantités théoriques dépassées"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
@@ -4381,7 +4386,7 @@ msgstr "Conditionnements de produits"
 #: code:addons/stock/models/stock_quant.py:487
 #, python-format
 msgid "Product Quantity Updated"
-msgstr ""
+msgstr "Quantité d'article mise à jour"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_replenish
@@ -4474,6 +4479,8 @@ msgid ""
 "Products will be reserved first for the transfers with the highest "
 "priorities."
 msgstr ""
+"Les articles seront réservés en priorité aux transferts les plus "
+"prioritaires."
 
 #. module: stock
 #: code:addons/stock/models/product.py:367
@@ -4834,7 +4841,7 @@ msgstr "Réceptions"
 #. module: stock
 #: model:ir.actions.server,name:stock.model_stock_inventory_line_action_recompute_quantity
 msgid "Recompute On Hand Quantity"
-msgstr ""
+msgstr "Recalculer la quantité disponible"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__name
@@ -5969,7 +5976,7 @@ msgstr "La date prévue pour le transfert créé sera calculée selon ce délai.
 #: code:addons/stock/static/src/js/inventory_validate_button_controller.js:73
 #, python-format
 msgid "The inventory has been validated"
-msgstr ""
+msgstr "L'inventaire a été validé"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0

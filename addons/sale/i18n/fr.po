@@ -34,7 +34,6 @@
 # Richard Mathot <rim@odoo.com>, 2019
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2019
 # Fabri Yohann <psn@fabri.pw>, 2019
-# Lucas Deliege <lud@odoo.com>, 2019
 # f5f0a0dac17dde787a1d812a6989680e, 2019
 # Laura Piraux <lap@odoo.com>, 2019
 # Nathan Noël <nathan070@me.com>, 2019
@@ -56,6 +55,7 @@
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Jonathan Wynands <jwy@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Lucas Deliege <lud@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -63,7 +63,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:27+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: Lucas Deliege <lud@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,6 +101,8 @@ msgid ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${(object.get_portal_last_transaction().state == "
+"'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -131,7 +133,7 @@ msgstr "&amp;times;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'PRO-FORMA - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -139,6 +141,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -419,7 +423,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Courriel de confirmation</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -485,7 +489,7 @@ msgstr "<strong class=\"d-block mb-1\">Factures</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Adresse de livraison:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -537,7 +541,7 @@ msgstr "<strong>Vendeur :</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong>Adresse de livraison:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -581,7 +585,7 @@ msgstr "<strong>Votre référence : </strong>"
 #. module: sale
 #: sql_constraint:sale.order:0
 msgid "A confirmed sales order requires a confirmation date."
-msgstr ""
+msgstr "Un bon de commande confirmé nécessite une date de confirmation."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:833
@@ -658,7 +662,7 @@ msgstr "Accepter &amp; Payer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Pay Quotation"
-msgstr ""
+msgstr "Acceptez &amp; Payez le devis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -668,7 +672,7 @@ msgstr "Accepter et signer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Sign Quotation"
-msgstr ""
+msgstr "Acceptez &amp; Signez le devis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -886,6 +890,8 @@ msgid ""
 "Beyond this date, the customer is no longer able to accept the quotation "
 "from the portal."
 msgstr ""
+"Au-delà de cette date, le client n'est plus en mesure d'accepter l'offre du "
+"portail."
 
 #. module: sale
 #: selection:product.template,sale_line_warn:0
@@ -1175,7 +1181,7 @@ msgstr "Pays du client"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
 msgid "Customer Entity"
-msgstr ""
+msgstr "Entité Client"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
@@ -1860,7 +1866,7 @@ msgstr "Facturation"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address:"
-msgstr ""
+msgstr "Adresse de facturation:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -1878,7 +1884,7 @@ msgstr "Objectif de facturation"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address:"
-msgstr ""
+msgstr "Adresse de facturation et d'expédition:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
@@ -2426,6 +2432,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Quantité commandée: facturez les quantités commandées par le client.\n"
+"Quantité livrée: facturez les quantités livrées au client."
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
@@ -2578,6 +2586,8 @@ msgstr "Conditions de règlement"
 #: model:ir.model.fields,help:sale.field_sale_order__payment_term_id
 msgid "Payment terms applies to all invoices issued from this order."
 msgstr ""
+"Les conditions de paiement s'appliquent à toutes les factures émises à "
+"partir de cette commande."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -3334,7 +3344,7 @@ msgstr "Envoyer un devis pour tester le portail client."
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_sample_quotation
 msgid "Send a sample quotation"
-msgstr ""
+msgstr "Envoyer un exemple de devis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4103,7 +4113,7 @@ msgstr "Confirmer la commande"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "View Quotation"
-msgstr ""
+msgstr "Visualiser le devis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
