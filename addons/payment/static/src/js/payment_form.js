@@ -429,7 +429,7 @@ odoo.define('payment.payment_form', function (require) {
                 $acquirerForm = this.$('#o_payment_form_acq_' + acquirerID);
             }
 
-            if ($checkedRadio.length === 0) {
+            if (!$acquirerForm || $checkedRadio.length === 0) {
                 return new Dialog(null, {
                     title: _t('Error: ') + _.str.escapeHTML(title),
                     size: 'medium',

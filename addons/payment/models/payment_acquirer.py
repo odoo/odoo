@@ -700,6 +700,14 @@ class PaymentTransaction(models.Model):
             ref_suffix += 1
         return reference
 
+    def _get_json_info(self):
+        self.ensure_one()
+        return {
+            'state': self.state,
+            'acquirer_reference': self.acquirer_reference,
+            'reference': self.reference,
+        }
+
     def _generate_callback_hash(self):
         self.ensure_one()
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
