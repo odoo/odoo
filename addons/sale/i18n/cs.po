@@ -973,7 +973,7 @@ msgstr "Předplatba (procentem)"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:82
 #, python-format
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "Záloha ve výši %s%%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_is_downpayment
@@ -981,6 +981,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"Zálohy se provádějí při vytváření faktur z prodejní objednávky. Při "
+"kopírování prodejní objednávky nejsou kopírovány."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -1287,12 +1289,12 @@ msgstr "Invoicing and Shipping Address:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_is_downpayment
 msgid "Is a down payment"
-msgstr ""
+msgstr "Je záloha"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_is_expired
 msgid "Is expired"
-msgstr ""
+msgstr "vypršela platnost"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:864
@@ -1301,12 +1303,14 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Je zakázáno měnit následující pole v uzamčené objednávce:\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:551
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "Není dovoleno potvrzovat objednávku v následujících stavech: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
@@ -1623,7 +1627,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr ""
+msgstr "Objednané množství"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:841
@@ -1723,7 +1727,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:353
 #, python-format
 msgid "Please define an accounting sales journal for this company."
-msgstr ""
+msgstr "Definujte prosím účetní deník pro tuto společnost."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:949
