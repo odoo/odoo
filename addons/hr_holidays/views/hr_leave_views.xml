@@ -216,10 +216,10 @@
                     </h1>
                 </div>
                 <div class="row" name="status_id">
-                    <label class="col-2" for="holiday_status_id"/>
+                    <label class="col-2 mr-0" for="holiday_status_id"/>
                     <!-- RLI FIXME: we should avoid redefining the domain in the view when there already is a domain on the model -->
-                    <field name="holiday_status_id" domain="['&amp;', ('virtual_remaining_leaves', '&gt;', 0), '|', ('allocation_type', 'in', ['fixed_allocation', 'no']),'&amp;',('allocation_type', '=', 'fixed'), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="col-9" nolabel="1"/>
-                </div>                        
+                    <field name="holiday_status_id" domain="['&amp;', ('virtual_remaining_leaves', '&gt;', 0), '|', ('allocation_type', 'in', ['fixed_allocation', 'no']),'&amp;',('allocation_type', '=', 'fixed'), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="col-9 pl-0" nolabel="1"/>
+                </div>
                 <group>
                     <group>
 
@@ -315,8 +315,8 @@
                     </group>
                 </group>
                 <div class="row" name="description">
-                    <label class="col-2" for="name"/>
-                    <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" class="col-9" nolabel="1"/>
+                    <label class="col-2 mr-0" for="name"/>
+                    <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" class="col-9 pl-0" nolabel="1"/>
                 </div>
             </sheet>
             <div class="oe_chatter">
