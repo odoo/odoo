@@ -15,6 +15,7 @@ odoo.define('website_slides.fullscreen', function (require) {
 
     var Dialog = require('web.Dialog');
 
+    require('website_slides.course.join.widget');
 
     /**
      * Helper: Get the slide dict matching the given criteria

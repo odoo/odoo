@@ -116,7 +116,7 @@
                                 <div class="o_wslides_fs_slide_name  text-muted" t-esc="slide.name"/>
                             </div>
                         </span>
-                        <ul class="list-unstyled w-100 pt-2 small" t-if="slide.link_ids or (slide.question_ids and not slide.slide_type =='quiz')" >
+                        <ul class="list-unstyled w-100 pt-2 small" t-if="slide.link_ids or slide.slide_resource_ids or (slide.question_ids and not slide.slide_type =='quiz')" >
                             <li t-if="slide.link_ids" t-foreach="slide.link_ids" t-as="link" class="pl-0 mb-1">
                                 <a t-if="can_access" class="o_wslides_fs_slide_link" t-att-href="link.link" target="_blank">
                                     <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
@@ -125,6 +125,19 @@
                                     <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
                                 </span>
                             </li>
+                            <div class="o_wslides_js_course_join pl-0" t-if="slide.slide_resource_ids">
+                                <t t-if="is_member or slide.channel_id.can_publish">
+                                    <li t-foreach="slide.slide_resource_ids" t-as="resource" class="mb-1">
+                                        <a class="o_wslides_fs_slide_link" t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true">
+                                            <i class="fa fa-download mr-2"/><span t-esc="resource.name"/>
+                                        </a>
+                                    </li>
+                                </t>
+                                <li t-elif="slide.channel_id.enroll == 'public'" class="o_wslides_fs_slide_link mb-1">
+                                    <i class="fa fa-download mr-1"/>
+                                    <t t-call="website_slides.join_course_link"/>
+                                </li>
+                            </div>
                             <li class="o_wslides_fs_sidebar_list_item pl-0 mb-1" t-if="slide.question_ids and not slide.slide_type == 'quiz'"
                                 t-att-data-id="slide.id"
                                 t-att-data-can-access="can_access"
