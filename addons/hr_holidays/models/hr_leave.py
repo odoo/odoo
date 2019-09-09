@@ -876,7 +876,7 @@ class HolidaysRequest(models.Model):
 
                     # This handles states validate1 validate and refuse
                     if holiday.employee_id == current_employee:
-                        raise UserError(_('Only a Leave Manager can approve its own requests.'))
+                        raise UserError(_('Only a Leave Manager can approve/refuse its own requests.'))
 
                     if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager') and holiday.holiday_type == 'employee':
                         if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:

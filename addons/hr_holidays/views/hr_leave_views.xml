@@ -56,6 +56,7 @@
                 <field name="holiday_status_id"/>
                 <field name="name"/>
                 <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
+                <filter domain="[('state', '=', 'validate1')]" string="Need Second Approval" name="second_approval"/>
                 <filter string="Approved Time Off" domain="[('state', '=', 'validate')]" name="validated"/>
                 <separator/>
                 <filter string="My Department Time Off" name="department" domain="['|', ('department_id.member_ids.user_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="My Department Time Off"/>
