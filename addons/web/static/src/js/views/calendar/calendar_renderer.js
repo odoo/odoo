@@ -699,7 +699,7 @@ return AbstractRenderer.extend({
             } else {
                 context.eventDate.date = isSameDayEvent ? start.clone().format('dddd, LL') : start.clone().format('LL') + ' - ' + end.clone().format('LL');
             }
-    
+
             if (eventData.record.allday && isSameDayEvent) {
                 context.eventDate.duration = _t("All day");
             } else if (eventData.record.allday && !isSameDayEvent) {
@@ -772,7 +772,10 @@ return AbstractRenderer.extend({
      */
     _onEditEvent: function (event) {
         this._unselectEvent();
-        this.trigger_up('openEvent', {_id: event.data.id});
+        this.trigger_up('openEvent', {
+            _id: event.data.id,
+            title: event.data.title,
+        });
     },
     /**
      * @private
