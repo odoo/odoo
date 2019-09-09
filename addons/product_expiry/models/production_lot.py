@@ -7,7 +7,9 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 class StockProductionLot(models.Model):
     _inherit = 'stock.production.lot'
 
-    life_date = fields.Datetime(string='End of Life Date',
+    use_expiration_date = fields.Boolean(
+        string='Use Expiration Date', related='product_id.use_expiration_date')
+    expiration_date = fields.Datetime(string='End of Life Date',
         help='This is the date on which the goods with this Serial Number may become dangerous and must not be consumed.')
     use_date = fields.Datetime(string='Best before Date',
         help='This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet.')
@@ -29,7 +31,7 @@ class StockProductionLot(models.Model):
     def _get_dates(self, product_id=None):
         """Returns dates based on number of days configured in current lot's product."""
         mapped_fields = {
-            'life_date': 'life_time',
+            'expiration_date': 'expiration_time',
             'use_date': 'use_time',
             'removal_date': 'removal_time',
             'alert_date': 'alert_time'
