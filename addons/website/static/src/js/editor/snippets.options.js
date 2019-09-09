@@ -1492,6 +1492,13 @@ options.registry.anchorName = options.Class.extend({
             click: function () {
                 var $input = this.$('.o_input_anchor_name');
                 var anchorName = $input.val().trim().replace(/\s/g, '_');
+                if (self.$target[0].id === anchorName) {
+                    // If the chosen anchor name is already the one used by the
+                    // element, close the dialog and do nothing else
+                    this.close();
+                    return;
+                }
+
                 var isValid = /^[\w-]+$/.test(anchorName);
                 var alreadyExists = isValid && $('#' + anchorName).length > 0;
                 var anchorOK = isValid && !alreadyExists;
