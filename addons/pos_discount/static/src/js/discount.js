@@ -18,7 +18,10 @@ models.load_models([{
   model:  product_model.model,
   fields: product_model.fields,
   order:  product_model.order,
-  domain: function(self) {return [['id', '=', self.config.discount_product_id[0]]];},
+  domain: function(self) {
+    const { discount_product_id = [] } = self.config;
+    return [['id', '=', discount_product_id[0]]];
+  },
   context: product_model.context,
   loaded: product_model.loaded,
 }]);

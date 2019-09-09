@@ -300,10 +300,10 @@ QUnit.module("pos.ui", {
 
             const order = instance.pos.get_order();
             const products = instance.pos.db.get_product_by_category(0);
-            const orderline1 = new Orderline({}, {pos: instance.pos, order, product: new Product({}, products[0])});
-            order.add_orderline(orderline1);
-            const orderline2 = new Orderline({}, {pos: instance.pos, order, product: new Product({}, products[1])});
-            order.add_orderline(orderline2);
+            const product0 = new Product({}, products[0]);
+            order.add_product(product0, { quantity: 1 });
+            const product1 = new Product({}, products[1]);
+            order.add_product(product1, { quantity: 1 });
 
             const orderContainer = ".product-screen .order-container";
 
