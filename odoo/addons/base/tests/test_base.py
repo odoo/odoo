@@ -157,7 +157,7 @@ class TestBase(TransactionCase):
             'street': 'Strongarm Avenue, 12',
             'parent_id': ironshield.id,
         })
-        self.assertEquals(p1.type, 'contact', 'Default type must be "contact", not the copied parent type')
+        self.assertEqual(p1.type, 'contact', 'Default type must be "contact", not the copied parent type')
         self.assertEqual(ironshield.street, p1.street, 'Address fields should be copied to company')
 
     def test_40_res_partner_address_get(self):
@@ -310,30 +310,30 @@ class TestBase(TransactionCase):
         p3 = res_partner.search([('email', '=', 'ugr@sunhelm.com')], limit=1)
 
         for p in (p0, p1, p11, p2, p3):
-            self.assertEquals(p.commercial_partner_id, sunhelm, 'Incorrect commercial entity resolution')
-            self.assertEquals(p.vat, sunhelm.vat, 'Commercial fields must be automatically synced')
+            self.assertEqual(p.commercial_partner_id, sunhelm, 'Incorrect commercial entity resolution')
+            self.assertEqual(p.vat, sunhelm.vat, 'Commercial fields must be automatically synced')
         sunhelmvat = 'BE0123456789'
         sunhelm.write({'vat': sunhelmvat})
         for p in (p0, p1, p11, p2, p3):
-            self.assertEquals(p.vat, sunhelmvat, 'Commercial fields must be automatically and recursively synced')
+            self.assertEqual(p.vat, sunhelmvat, 'Commercial fields must be automatically and recursively synced')
 
         p1vat = 'BE0987654321'
         p1.write({'vat': p1vat})
         for p in (sunhelm, p0, p11, p2, p3):
-            self.assertEquals(p.vat, sunhelmvat, 'Sync to children should only work downstream and on commercial entities')
+            self.assertEqual(p.vat, sunhelmvat, 'Sync to children should only work downstream and on commercial entities')
 
         # promote p1 to commercial entity
         p1.write({'parent_id': sunhelm.id,
                   'is_company': True,
                   'name': 'Sunhelm Subsidiary'})
-        self.assertEquals(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
-        self.assertEquals(p1.commercial_partner_id, p1, 'Incorrect commercial entity resolution after setting is_company')
+        self.assertEqual(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
+        self.assertEqual(p1.commercial_partner_id, p1, 'Incorrect commercial entity resolution after setting is_company')
 
         # writing on parent should not touch child commercial entities
         sunhelmvat2 = 'BE0112233445'
         sunhelm.write({'vat': sunhelmvat2})
-        self.assertEquals(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
-        self.assertEquals(p0.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
+        self.assertEqual(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
+        self.assertEqual(p0.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
 
     def test_60_read_group(self):
         title_sir = self.env['res.partner.title'].create({'name': 'Sir...'})

@@ -199,7 +199,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         """
         moves_to_process = moves.filtered(lambda m: m.product_id in quantities_to_process.keys())
         for move in moves_to_process:
-            self.assertEquals(move.product_uom_qty, quantities_to_process[move.product_id])
+            self.assertEqual(move.product_uom_qty, quantities_to_process[move.product_id])
 
     def _create_move_quantities(self, qty_to_process, components, warehouse):
         """ Helper to creates moves in order to update the quantities of components
@@ -701,24 +701,24 @@ class TestSaleMrpFlow(common.SavepointCase):
         so.action_confirm()
 
         # Check picking creation
-        self.assertEquals(len(so.picking_ids), 1)
+        self.assertEqual(len(so.picking_ids), 1)
         picking_original = so.picking_ids[0]
         move_lines = picking_original.move_lines
 
         # Check if the correct amount of stock.moves are created
-        self.assertEquals(len(move_lines), 3)
+        self.assertEqual(len(move_lines), 3)
 
         # Check if BoM is created and is for a 'Kit'
         bom_from_k1 = self.env['mrp.bom']._bom_find(product=self.kit_1)
-        self.assertEquals(self.bom_kit_1.id, bom_from_k1.id)
-        self.assertEquals(bom_from_k1.type, 'phantom')
+        self.assertEqual(self.bom_kit_1.id, bom_from_k1.id)
+        self.assertEqual(bom_from_k1.type, 'phantom')
 
         # Check there's only 1 order line on the SO and it's for x10 'kit_1'
         order_lines = so.order_line
-        self.assertEquals(len(order_lines), 1)
+        self.assertEqual(len(order_lines), 1)
         order_line = order_lines[0]
-        self.assertEquals(order_line.product_id.id, self.kit_1.id)
-        self.assertEquals(order_line.product_uom_qty, 10.0)
+        self.assertEqual(order_line.product_id.id, self.kit_1.id)
+        self.assertEqual(order_line.product_uom_qty, 10.0)
 
         # Check if correct qty is ordered for each component of the kit
         expected_quantities = {
@@ -734,10 +734,10 @@ class TestSaleMrpFlow(common.SavepointCase):
         backorder_wizard.process()
 
         # Check that the backorder was created, no kit should be delivered at this point
-        self.assertEquals(len(so.picking_ids), 2)
+        self.assertEqual(len(so.picking_ids), 2)
         backorder_1 = so.picking_ids - picking_original
-        self.assertEquals(backorder_1.backorder_id.id, picking_original.id)
-        self.assertEquals(order_line.qty_delivered, 0)
+        self.assertEqual(backorder_1.backorder_id.id, picking_original.id)
+        self.assertEqual(order_line.qty_delivered, 0)
 
         # Process only x6 each componenent in the picking
         # Then create a backorder for the missing components
@@ -746,13 +746,13 @@ class TestSaleMrpFlow(common.SavepointCase):
         backorder_wizard.process()
 
         # Check that a backorder is created
-        self.assertEquals(len(so.picking_ids), 3)
+        self.assertEqual(len(so.picking_ids), 3)
         backorder_2 = so.picking_ids - picking_original - backorder_1
-        self.assertEquals(backorder_2.backorder_id.id, backorder_1.id)
+        self.assertEqual(backorder_2.backorder_id.id, backorder_1.id)
 
         # With x6 unit of each components, we can only make 2 kits.
         # So only 2 kits should be delivered
-        self.assertEquals(order_line.qty_delivered, 2)
+        self.assertEqual(order_line.qty_delivered, 2)
 
         # Process x3 more unit of each components :
         # - Now only 3 kits should be delivered
@@ -762,10 +762,10 @@ class TestSaleMrpFlow(common.SavepointCase):
         backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_2.id)]})
         backorder_wizard.process()
 
-        self.assertEquals(len(so.picking_ids), 4)
+        self.assertEqual(len(so.picking_ids), 4)
         backorder_3 = so.picking_ids - picking_original - backorder_2 - backorder_1
-        self.assertEquals(backorder_3.backorder_id.id, backorder_2.id)
-        self.assertEquals(order_line.qty_delivered, 3)
+        self.assertEqual(backorder_3.backorder_id.id, backorder_2.id)
+        self.assertEqual(order_line.qty_delivered, 3)
 
         # Adding missing components
         qty_to_process = {
@@ -780,7 +780,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         order_line._compute_qty_delivered()
 
         # All kits should be delivered
-        self.assertEquals(order_line.qty_delivered, 10)
+        self.assertEqual(order_line.qty_delivered, 10)
 
     def test_04_sale_mrp_kit_qty_delivered(self):
         """ Test that the quantities delivered are correct when
@@ -825,7 +825,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         # Check picking creation, its move lines should concern
         # only components. Also checks that the quantities are corresponding
         # to the SO
-        self.assertEquals(len(so.picking_ids), 1)
+        self.assertEqual(len(so.picking_ids), 1)
         order_line = so.order_line[0]
         picking_original = so.picking_ids[0]
         move_lines = picking_original.move_lines
@@ -842,7 +842,7 @@ class TestSaleMrpFlow(common.SavepointCase):
             self.component_g: 28.0
         }
 
-        self.assertEquals(len(move_lines), 7)
+        self.assertEqual(len(move_lines), 7)
         self.assertTrue(not any(kit in products for kit in kits))
         self.assertTrue(all(component in products for component in components))
         self._assert_quantities(move_lines, expected_quantities)
@@ -856,13 +856,13 @@ class TestSaleMrpFlow(common.SavepointCase):
         backorder_wizard.process()
 
         # Check that a backorded is created
-        self.assertEquals(len(so.picking_ids), 2)
+        self.assertEqual(len(so.picking_ids), 2)
         backorder_1 = so.picking_ids - picking_original
-        self.assertEquals(backorder_1.backorder_id.id, picking_original.id)
+        self.assertEqual(backorder_1.backorder_id.id, picking_original.id)
 
         # Even if some components are delivered completely,
         # no KitParent should be delivered
-        self.assertEquals(order_line.qty_delivered, 0)
+        self.assertEqual(order_line.qty_delivered, 0)
 
         # Process just enough components to make 1 kit_parent
         qty_to_process = {
@@ -876,12 +876,12 @@ class TestSaleMrpFlow(common.SavepointCase):
         backorder_wizard.process()
 
         # Only 1 kit_parent should be delivered at this point
-        self.assertEquals(order_line.qty_delivered, 1)
+        self.assertEqual(order_line.qty_delivered, 1)
 
         # Check that the second backorder is created
-        self.assertEquals(len(so.picking_ids), 3)
+        self.assertEqual(len(so.picking_ids), 3)
         backorder_2 = so.picking_ids - picking_original - backorder_1
-        self.assertEquals(backorder_2.backorder_id.id, backorder_1.id)
+        self.assertEqual(backorder_2.backorder_id.id, backorder_1.id)
 
         # Set the components quantities that backorder_2 should have
         expected_quantities = {
@@ -896,7 +896,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         # Check that the computed quantities are matching the theorical ones.
         # Since component_e was totally processed, this componenent shouldn't be
         # present in backorder_2
-        self.assertEquals(len(backorder_2.move_lines), 6)
+        self.assertEqual(len(backorder_2.move_lines), 6)
         move_comp_e = backorder_2.move_lines.filtered(lambda m: m.product_id.id == self.component_e.id)
         self.assertFalse(move_comp_e)
         self._assert_quantities(backorder_2.move_lines, expected_quantities)
@@ -915,12 +915,12 @@ class TestSaleMrpFlow(common.SavepointCase):
         backorder_wizard.process()
 
         # Check that x3 kit_parents are indeed delivered
-        self.assertEquals(order_line.qty_delivered, 3)
+        self.assertEqual(order_line.qty_delivered, 3)
 
         # Check that the third backorder is created
-        self.assertEquals(len(so.picking_ids), 4)
+        self.assertEqual(len(so.picking_ids), 4)
         backorder_3 = so.picking_ids - (picking_original + backorder_1 + backorder_2)
-        self.assertEquals(backorder_3.backorder_id.id, backorder_2.id)
+        self.assertEqual(backorder_3.backorder_id.id, backorder_2.id)
 
         # Check the components quantities that backorder_3 should have
         expected_quantities = {
@@ -939,7 +939,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         # Validating the last backorder now it's complete.
         # All kits should be delivered
         backorder_3.button_validate()
-        self.assertEquals(order_line.qty_delivered, 7.0)
+        self.assertEqual(order_line.qty_delivered, 7.0)
 
         # Return all components processed by backorder_3
         stock_return_picking_form = Form(self.env['stock.return.picking']
@@ -960,7 +960,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         wiz.process()
 
         # Now quantity delivered should be 3 again
-        self.assertEquals(order_line.qty_delivered, 3)
+        self.assertEqual(order_line.qty_delivered, 3)
 
         stock_return_picking_form = Form(self.env['stock.return.picking']
             .with_context(active_ids=return_pick.ids, active_id=return_pick.ids[0],
@@ -982,16 +982,16 @@ class TestSaleMrpFlow(common.SavepointCase):
         backorder_wizard.process()
 
         # As one of each component is missing, only 6 kit_parents should be delivered
-        self.assertEquals(order_line.qty_delivered, 6)
+        self.assertEqual(order_line.qty_delivered, 6)
 
         # Check that the 4th backorder is created.
-        self.assertEquals(len(so.picking_ids), 7)
+        self.assertEqual(len(so.picking_ids), 7)
         backorder_4 = so.picking_ids - (picking_original + backorder_1 + backorder_2 + backorder_3 + return_of_return_pick + return_pick)
-        self.assertEquals(backorder_4.backorder_id.id, return_of_return_pick.id)
+        self.assertEqual(backorder_4.backorder_id.id, return_of_return_pick.id)
 
         # Check the components quantities that backorder_4 should have
         for move in backorder_4.move_lines:
-            self.assertEquals(move.product_qty, 1)
+            self.assertEqual(move.product_qty, 1)
 
     @mute_logger('odoo.tests.common.onchange')
     def test_05_mrp_sale_kit_availability(self):
@@ -1049,8 +1049,8 @@ class TestSaleMrpFlow(common.SavepointCase):
 
         # Check that not enough enough quantities are available in the warehouse set in the SO
         # but there are enough quantities in Warehouse 1 for 1 kit_parent
-        self.assertEquals(kit_parent_wh_order.virtual_available, 0)
-        self.assertEquals(kit_parent_wh1.virtual_available, 1)
+        self.assertEqual(kit_parent_wh_order.virtual_available, 0)
+        self.assertEqual(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
         self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
@@ -1071,8 +1071,8 @@ class TestSaleMrpFlow(common.SavepointCase):
         # But the quantity available in Warehouse 1 should stay 1
         kit_parent_wh_order = self.kit_parent.with_context(warehouse=so.warehouse_id.id)
         kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
-        self.assertEquals(kit_parent_wh_order.virtual_available, 3)
-        self.assertEquals(kit_parent_wh1.virtual_available, 1)
+        self.assertEqual(kit_parent_wh_order.virtual_available, 3)
+        self.assertEqual(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
         self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
@@ -1091,7 +1091,7 @@ class TestSaleMrpFlow(common.SavepointCase):
 
         # Enough quantities should be available, no warning message should be displayed
         kit_parent_wh_order = self.kit_parent.with_context(warehouse=so.warehouse_id.id)
-        self.assertEquals(kit_parent_wh_order.virtual_available, 7)
+        self.assertEqual(kit_parent_wh_order.virtual_available, 7)
 
     def test_06_kit_qty_delivered_mixed_uom(self):
         """
@@ -1160,7 +1160,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         for ml in move_lines:
             corr_bom_line = bom_kit_uom_1.bom_line_ids.filtered(lambda b: b.product_id.id == ml.product_id.id)
             computed_qty = ml.product_uom._compute_quantity(ml.product_uom_qty, corr_bom_line.product_uom_id)
-            self.assertEquals(computed_qty, order_line.product_uom_qty * corr_bom_line.product_qty)
+            self.assertEqual(computed_qty, order_line.product_uom_qty * corr_bom_line.product_qty)
 
         # Processe enough componenents in the picking to make 2 kit_uom_1
         # Then create a backorder for the missing components
@@ -1175,12 +1175,12 @@ class TestSaleMrpFlow(common.SavepointCase):
         backorder_wizard.process()
 
         # Check that a backorder is created
-        self.assertEquals(len(so.picking_ids), 2)
+        self.assertEqual(len(so.picking_ids), 2)
         backorder_1 = so.picking_ids - picking_original
-        self.assertEquals(backorder_1.backorder_id.id, picking_original.id)
+        self.assertEqual(backorder_1.backorder_id.id, picking_original.id)
 
         # Only 2 kits should be delivered
-        self.assertEquals(order_line.qty_delivered, 2)
+        self.assertEqual(order_line.qty_delivered, 2)
 
         # Adding missing components
         qty_to_process = {
@@ -1194,7 +1194,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         backorder_1.button_validate()
         order_line._compute_qty_delivered()
         # All kits should be delivered
-        self.assertEquals(order_line.qty_delivered, 10)
+        self.assertEqual(order_line.qty_delivered, 10)
 
     @mute_logger('odoo.tests.common.onchange')
     def test_07_kit_availability_mixed_uom(self):
@@ -1286,7 +1286,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         # but there are enough quantities in Warehouse 1 for 1 kit_parent
         kit_uom_in_kit.with_context(warehouse=warehouse_1.id)._compute_quantities()
         virtual_available_wh_order = kit_uom_in_kit.virtual_available
-        self.assertEquals(virtual_available_wh_order, 1)
+        self.assertEqual(virtual_available_wh_order, 1)
 
         # Check there arn't enough quantities available for the sale order
         self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
@@ -1305,14 +1305,14 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
         kit_uom_in_kit.with_context(warehouse=warehouse_1.id)._compute_quantities()
         virtual_available_wh_order = kit_uom_in_kit.virtual_available
-        self.assertEquals(virtual_available_wh_order, 3)
+        self.assertEqual(virtual_available_wh_order, 3)
 
         # We process enough quantities to have enough kit_uom_in_kit available for the sale order.
         self._create_move_quantities(qty_to_process, components, warehouse_1)
 
         # We check that enough quantities were processed to sell 5 kit_uom_in_kit
         kit_uom_in_kit.with_context(warehouse=warehouse_1.id)._compute_quantities()
-        self.assertEquals(kit_uom_in_kit.virtual_available, 5)
+        self.assertEqual(kit_uom_in_kit.virtual_available, 5)
 
     def test_10_sale_mrp_kits_routes(self):
 
@@ -1386,16 +1386,16 @@ class TestSaleMrpFlow(common.SavepointCase):
 
         # Now we check that the routes of the components were applied, in order to make sure the routes set
         # on the kit itself are ignored
-        self.assertEquals(len(order.picking_ids), 2)
-        self.assertEquals(len(order.picking_ids[0].move_lines), 1)
-        self.assertEquals(len(order.picking_ids[1].move_lines), 1)
+        self.assertEqual(len(order.picking_ids), 2)
+        self.assertEqual(len(order.picking_ids[0].move_lines), 1)
+        self.assertEqual(len(order.picking_ids[1].move_lines), 1)
         moves = order.picking_ids.mapped('move_lines')
         move_shelf1 = moves.filtered(lambda m: m.product_id == component_shelf1)
         move_shelf2 = moves.filtered(lambda m: m.product_id == component_shelf2)
-        self.assertEquals(move_shelf1.location_id.id, self.ref('stock.stock_location_components'))
-        self.assertEquals(move_shelf1.location_dest_id.id, self.ref('stock.stock_location_customers'))
-        self.assertEquals(move_shelf2.location_id.id, self.ref('stock.stock_location_14'))
-        self.assertEquals(move_shelf2.location_dest_id.id, self.ref('stock.stock_location_customers'))
+        self.assertEqual(move_shelf1.location_id.id, self.ref('stock.stock_location_components'))
+        self.assertEqual(move_shelf1.location_dest_id.id, self.ref('stock.stock_location_customers'))
+        self.assertEqual(move_shelf2.location_id.id, self.ref('stock.stock_location_14'))
+        self.assertEqual(move_shelf2.location_dest_id.id, self.ref('stock.stock_location_customers'))
 
     def test_11_sale_mrp_explode_kits_uom_quantities(self):
 
@@ -1445,14 +1445,14 @@ class TestSaleMrpFlow(common.SavepointCase):
 
         # Now we check that the routes of the components were applied, in order to make sure the routes set
         # on the kit itself are ignored
-        self.assertEquals(len(order.picking_ids), 1)
-        self.assertEquals(len(order.picking_ids[0].move_lines), 2)
+        self.assertEqual(len(order.picking_ids), 1)
+        self.assertEqual(len(order.picking_ids[0].move_lines), 2)
 
         # Finally, we check the quantities for each component on the picking
         move_component_unit = order.picking_ids[0].move_lines.filtered(lambda m: m.product_id == component_unit)
         move_component_kg = order.picking_ids[0].move_lines - move_component_unit
-        self.assertEquals(move_component_unit.product_uom_qty, 0.5)
-        self.assertEquals(move_component_kg.product_uom_qty, 0.583)
+        self.assertEqual(move_component_unit.product_uom_qty, 0.5)
+        self.assertEqual(move_component_kg.product_uom_qty, 0.583)
 
     def test_product_type_service_1(self):
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id

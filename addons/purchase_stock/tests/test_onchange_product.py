@@ -72,16 +72,16 @@ class TestOnchangeProductId(TransactionCase):
 
         po_line = po.order_line[0]
         po_line.onchange_product_id()
-        self.assertEquals(100, po_line.price_unit, "The included tax must be subtracted to the price")
+        self.assertEqual(100, po_line.price_unit, "The included tax must be subtracted to the price")
 
         supplierinfo.write({'min_qty': 24})
         po_line.write({'product_qty': 20})
         po_line._onchange_quantity()
-        self.assertEquals(0, po_line.price_unit, "Unit price should be reset to 0 since the supplier supplies minimum of 24 quantities")
+        self.assertEqual(0, po_line.price_unit, "Unit price should be reset to 0 since the supplier supplies minimum of 24 quantities")
 
         po_line.write({'product_qty': 3, 'product_uom': self.ref("uom.product_uom_dozen")})
         po_line._onchange_quantity()
-        self.assertEquals(1200, po_line.price_unit, "Unit price should be 1200 for one Dozen")
+        self.assertEqual(1200, po_line.price_unit, "Unit price should be 1200 for one Dozen")
 
         product_ipad = self.env.ref('product.product_product_4')
         po_line2 = self.po_line_model.create({
@@ -94,4 +94,4 @@ class TestOnchangeProductId(TransactionCase):
             'date_planned': fields.Date().today()
         })
         po_line2.onchange_product_id()
-        self.assertEquals(0, po_line2.price_unit, "No vendor supplies this product, hence unit price should be set to 0")
+        self.assertEqual(0, po_line2.price_unit, "No vendor supplies this product, hence unit price should be set to 0")

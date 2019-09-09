@@ -58,7 +58,7 @@ class TestFiscalPosition(common.TransactionCase):
 
     def test_10_fp_country(self):
         def assert_fp(partner, expected_pos, message):
-            self.assertEquals(
+            self.assertEqual(
                 self.fp.get_fiscal_position(partner.id),
                 expected_pos.id,
                 message)
