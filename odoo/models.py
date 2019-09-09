@@ -2630,6 +2630,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             del cls._fields[name]
             delattr(cls, name)
 
+        # fix up _rec_name
+        if 'x_name' in bad_fields and cls._rec_name == 'x_name':
+            cls._rec_name = None
+            field = cls._fields['display_name']
+            field.depends = tuple(name for name in field.depends if name != 'x_name')
+
         # map each field to the fields computed with the same method
         groups = defaultdict(list)
         for field in cls._fields.values():
