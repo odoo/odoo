@@ -132,6 +132,19 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
     socket open when a reload happens.
     """
     def __init__(self, host, port, app):
+        # The ODOO_MAX_HTTP_THREADS environment variable allows to limit the amount of concurrent
+        # socket connections accepted by a threaded server, implicitly limiting the amount of
+        # concurrent threads running for http requests handling.
+        self.max_http_threads = os.environ.get("ODOO_MAX_HTTP_THREADS")
+        if self.max_http_threads:
+            try:
+                self.max_http_threads = int(self.max_http_threads)
+            except ValueError:
+                # If the value can't be parsed to an integer then it's computed in an automated way to
+                # half the size of db_maxconn because while most requests won't borrow cursors concurrently
+                # there are some exceptions where some controllers might allocate two or more cursors.
+                self.max_http_threads = config['db_maxconn'] // 2
+            self.http_threads_sem = threading.Semaphore(self.max_http_threads)
         super(ThreadedWSGIServerReloadable, self).__init__(host, port, app,
                                                            handler=RequestHandler)
 
@@ -184,8 +197,20 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
         """
         if self._BaseServer__shutdown_request:
             return
+        if self.max_http_threads and not self.http_threads_sem.acquire(timeout=0.1):
+            # If the semaphore is full we will return immediately to the upstream (most probably
+            # socketserver.BaseServer's serve_forever loop  which will retry immediately as the
+            # selector will find a pending connection to accept on the socket. There is a 100 ms
+            # penalty in such case in order to avoid cpu bound loop while waiting for the semaphore.
+            return
+        # upstream _handle_request_noblock will handle errors and call shutdown_request in any cases
         super(ThreadedWSGIServerReloadable, self)._handle_request_noblock()
 
+    def shutdown_request(self, request):
+        if self.max_http_threads:
+            # upstream is supposed to call this function no matter what happens during processing
+            self.http_threads_sem.release()
+        super().shutdown_request(request)
 
 #----------------------------------------------------------
 # FileSystem Watcher for autoreload and cache invalidation
