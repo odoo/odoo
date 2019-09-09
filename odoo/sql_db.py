@@ -386,9 +386,12 @@ class Cursor(object):
     def commit(self):
         """ Perform an SQL `COMMIT`
         """
-        env = get_env(currentframe(), 2)
-        if env is not None:
-            env['base'].flush()
+        try:
+            env = get_env(currentframe(), 2)
+            if env is not None:
+                env['base'].flush()
+        except RuntimeError:  # DB manager
+            pass
         result = self._cnx.commit()
         for func in self._pop_event_handlers()['commit']:
             func()
