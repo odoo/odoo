@@ -116,7 +116,7 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
             $progress.appendTo($loadingContainer);
             $post.appendTo(self.$target);
 
-            var m = $thumb.css('background-image').match(/url\(["']?(.+)["']?\)/);
+            var m = $thumb.css('background-image').match(/url\(["']?(.+?)["']?\)/);
             var bg = m ? m[1] : 'none';
             var loaded = false;
 
