@@ -829,8 +829,8 @@
 
 <t t-name="FieldMany2One">
     <t t-if="widget.mode === 'readonly'">
-        <a t-if="!widget.nodeOptions.no_open" t-att-tabindex="widget.attrs.tabindex" class="o_form_uri" href="#"/>
-        <span t-if="widget.nodeOptions.no_open"/>
+        <a t-if="!widget.noOpen" t-att-tabindex="widget.attrs.tabindex" class="o_form_uri" href="#"/>
+        <span t-if="widget.noOpen"/>
     </t>
     <div t-if="widget.mode === 'edit'" class="o_field_widget o_field_many2one" aria-atomic="true">
         <div class="o_input_dropdown">
