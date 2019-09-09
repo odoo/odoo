@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo import fields
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.exceptions import UserError
+from odoo.tests.common import Form
 
 
 class TestStockProductionLot(TestStockCommon):
@@ -211,3 +211,59 @@ class TestStockProductionLot(TestStockCommon):
             ('res_id', '=', self.lot1_productCCC.id)
         ])
         self.assertEqual(activity_count, 0, "An activity has been created while it shouldn't")
+
+    def test_03_onchange_expiration_date(self):
+        """ Updates the `expiration_date` of the lot production and checks other date
+        fields are updated as well. """
+        # Creates a tracked product with expiration dates.
+        apple_product = self.ProductObj.create({
+            'name': 'Apple',
+            'type': 'product',
+            'tracking': 'lot',
+            'use_expiration_date': True,
+            'expiration_time': 10,
+            'use_time': 5,
+            'removal_time': 8,
+            'alert_time': 4,
+        })
+        # Keeps track of the current datetime and set a delta for the compares.
+        today_date = datetime.today()
+        time_gap = timedelta(seconds=10)
+        # Creates a new lot number and saves it...
+        lot_form = Form(self.LotObj)
+        lot_form.name = 'Apple Box #1'
+        lot_form.product_id = apple_product
+        lot_form.company_id = self.env.company
+        apple_lot = lot_form.save()
+        # ...then checks date fields have the expected values.
+        self.assertAlmostEqual(
+            today_date + timedelta(days=apple_product.expiration_time),
+            apple_lot.expiration_date, delta=time_gap)
+        self.assertAlmostEqual(
+            today_date + timedelta(days=apple_product.use_time),
+            apple_lot.use_date, delta=time_gap)
+        self.assertAlmostEqual(
+            today_date + timedelta(days=apple_product.removal_time),
+            apple_lot.removal_date, delta=time_gap)
+        self.assertAlmostEqual(
+            today_date + timedelta(days=apple_product.alert_time),
+            apple_lot.alert_date, delta=time_gap)
+
+        difference = timedelta(days=20)
+        new_date = apple_lot.expiration_date + difference
+        old_use_date = apple_lot.use_date
+        old_removal_date = apple_lot.removal_date
+        old_alert_date = apple_lot.alert_date
+
+        # Modifies the lot `expiration_date`...
+        lot_form = Form(apple_lot)
+        lot_form.expiration_date = new_date
+        apple_lot = lot_form.save()
+
+        # ...then checks all other date fields were correclty updated.
+        self.assertAlmostEqual(
+            apple_lot.use_date, old_use_date + difference, delta=time_gap)
+        self.assertAlmostEqual(
+            apple_lot.removal_date, old_removal_date + difference, delta=time_gap)
+        self.assertAlmostEqual(
+            apple_lot.alert_date, old_alert_date + difference, delta=time_gap)
