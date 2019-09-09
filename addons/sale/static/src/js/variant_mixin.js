@@ -301,11 +301,6 @@ var VariantMixin = {
                     JSON.stringify(self.getSelectedVariantValues($container)),
             };
 
-            // Note about 12.0 compatibility: this route will not exist if
-            // updating the code but not restarting the server. (404)
-            // We don't handle that compatibility because the previous code was
-            // not working either: it was making an RPC that failed with any
-            // non-admin user anyway. To use this feature, restart the server.
             var route = '/sale/create_product_variant';
             if (useAjax) {
                 productReady = ajax.jsonRpc(route, 'call', params);
@@ -458,11 +453,7 @@ var VariantMixin = {
         }
         this._toggleDisable($parent, isCombinationPossible);
 
-
-        // compatibility_check to remove in master
-        // needed for fix in 12.0 in the case of git pull and no server restart
-        var compatibility_check = combination.list_price - combination.price >= 0.01;
-        if (combination.has_discounted_price !== undefined ? combination.has_discounted_price : compatibility_check) {
+        if (combination.has_discounted_price) {
             $default_price
                 .closest('.oe_website_sale')
                 .addClass("discount");
