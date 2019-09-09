@@ -1300,14 +1300,15 @@ class Root(object):
         controllers and configure them.  """
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
-        for addons_path in odoo.modules.module.ad_paths:
+        for addons_path in odoo.addons.__path__:
             for module in sorted(os.listdir(str(addons_path))):
                 if module not in addons_manifest:
                     mod_path = opj(addons_path, module)
                     manifest_path = module_manifest(mod_path)
                     path_static = opj(addons_path, module, 'static')
                     if manifest_path and os.path.isdir(path_static):
-                        manifest_data = open(manifest_path, 'rb').read()
+                        with open(manifest_path, 'rb') as fd:
+                            manifest_data = fd.read()
                         manifest = ast.literal_eval(pycompat.to_text(manifest_data))
                         if not manifest.get('installable', True):
                             continue

@@ -1155,7 +1155,8 @@ class View(http.Controller):
 class Binary(http.Controller):
 
     def placeholder(self, image='placeholder.png'):
-        return tools.file_open(get_resource_path('web', 'static/src/img', image), 'rb').read()
+        with tools.file_open(get_resource_path('web', 'static/src/img', image), 'rb') as fd:
+            return fd.read()
 
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',

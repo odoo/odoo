@@ -954,7 +954,7 @@ def trans_generate(lang, modules, cr):
         for m in env['ir.module.module'].search_read([('state', '=', 'installed')], fields=['name'])
     ]
 
-    path_list = [(path, True) for path in odoo.modules.module.ad_paths]
+    path_list = [(path, True) for path in odoo.addons.__path__]
     # Also scan these non-addon paths
     for bin_path in ['osv', 'report', 'modules', 'service', 'tools']:
         path_list.append((os.path.join(config['root_path'], bin_path), True))
