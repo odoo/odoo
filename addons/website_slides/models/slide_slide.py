@@ -61,6 +61,15 @@ class SlideLink(models.Model):
     link = fields.Char('Link', required=True)
 
 
+class SlideResource(models.Model):
+    _name = 'slide.slide.resource'
+    _description = "Additional resource for a particular slide"
+
+    slide_id = fields.Many2one('slide.slide', required=True, ondelete='cascade')
+    name = fields.Char('Name', required=True)
+    datas = fields.Binary('Resource')
+
+
 class EmbeddedSlide(models.Model):
     """ Embedding in third party websites. Track view count, generate statistics. """
     _name = 'slide.embed'
@@ -123,6 +132,7 @@ class Slide(models.Model):
     channel_id = fields.Many2one('slide.channel', string="Course", required=True)
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
+    allow_download = fields.Boolean('Allow Download', default=False, help="Allow the user to download the content of the slide.")
     completion_time = fields.Float('Duration', digits=(10, 4), help="The estimated completion time for this slide")
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
@@ -157,6 +167,7 @@ class Slide(models.Model):
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
+    resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
     mime_type = fields.Char('Mime-type')
     html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True)
     # website

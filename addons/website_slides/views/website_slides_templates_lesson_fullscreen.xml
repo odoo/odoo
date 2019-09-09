@@ -112,13 +112,21 @@
                                 <div class="o_wslides_fs_slide_name  text-muted" t-esc="slide.name"/>
                             </div>
                         </span>
-                        <ul class="list-unstyled w-100 pt-2 small" t-if="slide.link_ids or (slide.question_ids and not slide.slide_type =='quiz')" >
+                        <ul class="list-unstyled w-100 pt-2 small" t-if="slide.link_ids or slide.resource_ids or (slide.question_ids and not slide.slide_type =='quiz')" >
                             <li t-if="slide.link_ids" t-foreach="slide.link_ids" t-as="link" class="pl-0 mb-1">
                                 <a t-if="can_access" class="o_wslides_fs_slide_link" t-att-href="link.link" target="_blank">
                                     <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
                                 </a>
                                 <span t-else="" class="o_wslides_fs_slide_link text-muted">
                                     <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
+                                </span>
+                            </li>
+                            <li t-if="slide.resource_ids" t-foreach="slide.resource_ids" t-as="resource" class="pl-0 mb-1">
+                                <a t-if="can_access" class="o_wslides_fs_slide_link" t-attf-href="/web/content/slide.slide.resource/#{resource.id}/datas?download=true">
+                                    <i class="fa fa-download mr-2"/><span t-esc="resource.name"/>
+                                </a>
+                                <span t-else="" class="o_wslides_fs_slide_link text-muted">
+                                    <i class="fa fa-download mr-2"/><span t-esc="resource.name"/>
                                 </span>
                             </li>
                             <li class="o_wslides_fs_sidebar_list_item pl-0 mb-1" t-if="slide.question_ids and not slide.slide_type == 'quiz'"

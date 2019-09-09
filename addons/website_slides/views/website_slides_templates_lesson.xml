@@ -160,7 +160,7 @@
                             </span>
                         </div>
                     </a>
-                    <ul t-if="aside_slide.link_ids or aside_slide.question_ids" class="list-group px-2 mb-1 list-unstyled">
+                    <ul t-if="aside_slide.link_ids or aside_slide.resource_ids or aside_slide.question_ids" class="list-group px-2 mb-1 list-unstyled">
                         <t t-foreach="aside_slide.link_ids" t-as="resource">
                             <li class="pl-4">
                                 <a t-if="can_access" t-att-href="resource.link" target="new" class="text-decoration-none small">
@@ -168,6 +168,16 @@
                                 </a>
                                 <span t-else="" class="text-decoration-none text-muted small">
                                     <i class="fa fa-link mr-1"/><span t-field="resource.name"/>
+                                </span>
+                            </li>
+                        </t>
+                        <t t-foreach="aside_slide.resource_ids" t-as="resource">
+                            <li class="pl-4">
+                                <a t-if="can_access" t-attf-href="/web/content/slide.slide.resource/#{resource.id}/datas?download=true" class="text-decoration-none small">
+                                    <i class="fa fa-download mr-1"/><span t-field="resource.name"/>
+                                </a>
+                                <span t-else="" class="text-decoration-none text-muted small">
+                                    <i class="fa fa-download mr-1"/><span t-field="resource.name"/>
                                 </span>
                             </li>
                         </t>
@@ -366,6 +376,14 @@
             <div class="text-muted mr-auto border-left pl-3">
                 <t t-foreach="slide.link_ids" t-as="link">
                     <a t-att-href="link.link" t-esc="link.name"/><br />
+                </t>
+            </div>
+        </div>
+        <div class="col-12 col-md d-flex align-items-start mb-4 mb-md-0" t-if="len(slide.resource_ids)">
+            <span t-if="slide.resource_ids" class="text-muted font-weight-bold mr-3">Additional Resources</span>
+            <div class="text-muted mr-auto border-left pl-3">
+                <t t-foreach="slide.resource_ids" t-as="link">
+                    <a t-attf-href="/web/content/slide.slide.resource/#{link.id}/datas?download=true" t-esc="link.name"/><br />
                 </t>
             </div>
         </div>
