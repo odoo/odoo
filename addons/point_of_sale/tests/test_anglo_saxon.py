@@ -3,7 +3,6 @@
 import odoo
 import time
 from odoo import fields
-
 from odoo.tests import common
 
 class TestAngloSaxonCommon(common.TransactionCase):
