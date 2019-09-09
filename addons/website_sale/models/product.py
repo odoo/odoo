@@ -182,7 +182,7 @@ class ProductTemplate(models.Model):
                                                '(upsell strategy).Those product show up on the product page.')
     accessory_product_ids = fields.Many2many('product.product', 'product_accessory_rel', 'src_id', 'dest_id',
                                              string='Accessory Products', help='Accessories show up when the customer'
-                                             'reviews the cart before payment (cross-sell strategy).')
+                                             ' reviews the cart before payment (cross-sell strategy).')
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
     website_style_ids = fields.Many2many('product.style', string='Styles')

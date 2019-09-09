@@ -192,12 +192,13 @@ var KeywordList = Widget.extend({
             keyword.on('selected', self, function (word, language) {
                 self.trigger('selected', word, language);
             });
-            keyword.appendTo(self.$el);
+            keyword.appendTo(self.$el).then(() => {
+                self.trigger('content-updated');
+            });
         }
         if (self.isFull()) {
             self.trigger('list-full');
         }
-        self.trigger('content-updated');
     },
 });
 
