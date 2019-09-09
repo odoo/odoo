@@ -467,31 +467,8 @@ body.editor_enable.editor_has_snippets {
             @include o-position-absolute(-$o-we-handles-offset-to-hide, 0, auto, 0);
             border-color: inherit;
 
-            > .o_handle, > .o_move_handle {
-                position: relative;
-
-                &.w {
-                    @include o-position-absolute($o-we-handles-offset-to-hide, auto, -$o-we-handles-offset-to-hide, 0);
-                    width: $o-we-handle-edge-size;
-                }
-
-                &.e {
-                    @include o-position-absolute($o-we-handles-offset-to-hide, 0, -$o-we-handles-offset-to-hide, auto);
-                    width: $o-we-handle-edge-size;
-                }
-
-                &.n {
-                    @include o-position-absolute($o-we-handles-offset-to-hide, 0, auto, 0);
-                    height: $o-we-handle-edge-size;
-                }
-
-                &.s {
-                    @include o-position-absolute(auto, 0, -$o-we-handles-offset-to-hide, 0);
-                    height: $o-we-handle-edge-size;
-                }
-            }
-
             > .o_handle {
+                position: relative;
                 border: 0 dashed transparent;
                 border-color: inherit;
                 transition: background 300ms ease 0s;
@@ -507,6 +484,8 @@ body.editor_enable.editor_has_snippets {
                 }
 
                 &.w {
+                    @include o-position-absolute($o-we-handles-offset-to-hide, auto, -$o-we-handles-offset-to-hide, 0);
+                    width: $o-we-handle-edge-size;
                     border-width: $o-we-handle-border-width-preview;
                     border-right-width: 0;
                     cursor: e-resize;
@@ -523,6 +502,8 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
                 &.e {
+                    @include o-position-absolute($o-we-handles-offset-to-hide, 0, -$o-we-handles-offset-to-hide, auto);
+                    width: $o-we-handle-edge-size;
                     border-right-width: $o-we-handle-border-width-preview;
                     cursor: w-resize;
 
@@ -536,6 +517,8 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
                 &.n {
+                    @include o-position-absolute($o-we-handles-offset-to-hide, 0, auto, 0);
+                    height: $o-we-handle-edge-size;
                     border-top-width: $o-we-handle-border-width-preview;
                     cursor: ns-resize;
 
@@ -549,6 +532,8 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
                 &.s {
+                    @include o-position-absolute(auto, 0, -$o-we-handles-offset-to-hide, 0);
+                    height: $o-we-handle-edge-size;
                     border-bottom-width: $o-we-handle-border-width-preview;
                     cursor: ns-resize;
 
@@ -573,11 +558,6 @@ body.editor_enable.editor_has_snippets {
                         opacity: 0.5;
                     }
                 }
-            }
-
-            > .o_move_handle {
-                cursor: pointer;
-                cursor: move;
             }
         }
 
@@ -666,6 +646,31 @@ body.editor_enable.editor_has_snippets {
                     }
                     &.s {
                         border-bottom-width: $o-we-handle-border-width;
+                    }
+                }
+
+                > .o_move_handle {
+                    @include o-position-absolute($o-we-handles-offset-to-hide, $left: 50%);
+                    transform: translate(-50%, -110%);
+                    padding: 2px 4px;
+                    border: 1px solid $o-we-color-text-normal;
+                    border-radius: 20%;
+                    color: $o-we-color-text-normal;
+                    opacity: 0.5;
+                    transition: opacity 400ms ease 0;
+                    cursor: pointer;
+                    cursor: move;
+
+                    &::before, &::after {
+                        content: '\f141';
+                        display: block;
+                        font-family: FontAwesome;
+                        font-size: 0.8em;
+                        line-height: 0.35em;
+                    }
+
+                    &:hover {
+                        opacity: 1;
                     }
                 }
             }
