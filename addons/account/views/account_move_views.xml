@@ -640,6 +640,8 @@
                                        options="{'no_create': True}"
                                        domain="[('type', '=?', invoice_filter_type_domain)]"/>
 
+                                <field name="company_id" groups="base.group_multi_company"/>
+
                                 <field name="currency_id"
                                        groups="base.group_multi_currency"
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
@@ -851,7 +853,6 @@
                                     <group string="Invoice"
                                            name="sale_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
-                                        <field name="company_id" groups="base.group_multi_company"/>
                                         <field name="invoice_user_id"/>
                                         <field name="invoice_origin" string="Source Document"
                                                attrs="{'invisible': [('type', '=', 'entry')]}"/>
