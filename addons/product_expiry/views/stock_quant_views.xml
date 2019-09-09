@@ -42,4 +42,17 @@
             </xpath>
         </field>
     </record>
+
+    <record id="quant_search_view_inherit_product_expiry" model="ir.ui.view">
+        <field name="name">stock.quant.search.inherit</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.quant_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='reserved']" position="after">
+                <separator/>
+                <filter string="Expiration Alerts" name="expiration_alerts"
+                    domain="[('removal_date', '&lt;=', context_today().strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            </xpath>
+        </field>
+     </record>
 </odoo>
