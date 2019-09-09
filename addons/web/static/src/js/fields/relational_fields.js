@@ -766,6 +766,25 @@ var FieldMany2One = AbstractField.extend({
 });
 
 var ListFieldMany2One = FieldMany2One.extend({
+    events: _.extend({}, FieldMany2One.prototype.events, {
+        'focusin input': '_onInputFocusin',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * If in readonly, will never be considered as an active widget.
+     *
+     * @override
+     */
+    activate: function () {
+        if (this.mode === 'readonly') {
+            return false;
+        }
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
