@@ -103,13 +103,13 @@ class HolidaysRequest(models.Model):
         ('refuse', 'Refused'),
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
-        ], string='Status', readonly=True, tracking=True, copy=False,
+        ], string='Status', readonly=True, tracking=True, copy=False, default='draft',
         help="The status is set to 'To Submit', when a time off request is created." +
         "\nThe status is 'To Approve', when time off request is confirmed by user." +
         "\nThe status is 'Refused', when time off request is refused by manager." +
         "\nThe status is 'Approved', when time off request is approved by manager.")
-    payslip_status = fields.Boolean('Reported in last payslips', help='Green this button when the time off has been taken into account in the payslip.')
-    report_note = fields.Text('HR Comments')
+    payslip_status = fields.Boolean('Reported in last payslips', help='Green this button when the time off has been taken into account in the payslip.', copy=False)
+    report_note = fields.Text('HR Comments', copy=False)
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, compute_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
     manager_id = fields.Many2one('hr.employee')
     # leave type configuration
@@ -139,15 +139,15 @@ class HolidaysRequest(models.Model):
         'Duration (Days)', copy=False, tracking=True,
         help='Number of days of the time off request. Used in the calculation. To manually correct the duration, use this field.')
     number_of_days_display = fields.Float(
-        'Duration in days', compute='_compute_number_of_days_display', copy=False, readonly=True,
+        'Duration in days', compute='_compute_number_of_days_display', readonly=True,
         help='Number of days of the time off request according to your working schedule. Used for interface.')
     number_of_hours_display = fields.Float(
-        'Duration in hours', compute='_compute_number_of_hours_display', copy=False, readonly=True,
+        'Duration in hours', compute='_compute_number_of_hours_display', readonly=True,
         help='Number of hours of the time off request according to your working schedule. Used for interface.')
     duration_display = fields.Char('Requested (Days/Hours)', compute='_compute_duration_display',
         help="Field allowing to see the leave request duration in days or hours depending on the leave_type_request_unit")    # details
     # details
-    meeting_id = fields.Many2one('calendar.event', string='Meeting')
+    meeting_id = fields.Many2one('calendar.event', string='Meeting', copy=False)
     parent_id = fields.Many2one('hr.leave', string='Parent', copy=False)
     linked_request_ids = fields.One2many('hr.leave', 'parent_id', string='Linked Requests')
     holiday_type = fields.Selection([
@@ -664,6 +664,10 @@ class HolidaysRequest(models.Model):
         return super(HolidaysRequest, self).unlink()
 
     def copy_data(self, default=None):
+        if 'date_from' in default and 'date_to' in default:
+            default['request_date_from'] = default.get('date_from').date()
+            default['request_date_to'] = default.get('date_to').date()
+            return super().copy_data(default)
         raise UserError(_('A leave cannot be duplicated.'))
 
     def _get_mail_redirect_suggested_company(self):

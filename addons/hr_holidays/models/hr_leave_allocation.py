@@ -396,9 +396,6 @@ class HolidaysAllocation(models.Model):
             raise UserError(_('You cannot delete an allocation request which is in %s state.') % (state_description_values.get(holiday.state),))
         return super(HolidaysAllocation, self).unlink()
 
-    def copy_data(self, default=None):
-        raise UserError(_('An allocation request cannot be duplicated.'))
-
     def _get_mail_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
 
