@@ -549,8 +549,7 @@ class Warehouse(models.Model):
         """
         for warehouse in self:
             company_id = vals.get('company_id', warehouse.company_id.id)
-            vals.update(company_id=company_id)
-            sub_locations = warehouse._get_locations_values(vals, warehouse.code)
+            sub_locations = warehouse._get_locations_values(dict(vals, company_id=company_id), warehouse.code)
             missing_location = {}
             for location, location_values in sub_locations.items():
                 if not warehouse[location] and location not in vals:
