@@ -152,11 +152,11 @@ class Company(models.Model):
     _inherit = 'res.company'
 
     street_name = fields.Char('Street Name', compute='_compute_address',
-                              inverse='_inverse_street_name')
+                              inverse='_inverse_street')
     street_number = fields.Char('House Number', compute='_compute_address',
-                                inverse='_inverse_street_number')
+                                inverse='_inverse_street')
     street_number2 = fields.Char('Door Number', compute='_compute_address',
-                                 inverse='_inverse_street_number2')
+                                 inverse='_inverse_street')
 
     def _get_company_address_fields(self, partner):
         address_fields = super(Company, self)._get_company_address_fields(partner)
@@ -167,14 +167,10 @@ class Company(models.Model):
         })
         return address_fields
 
-    def _inverse_street_name(self):
+    def _inverse_street(self):
         for company in self:
-            company.partner_id.street_name = company.street_name
-
-    def _inverse_street_number(self):
-        for company in self:
-            company.partner_id.street_number = company.street_number
-
-    def _inverse_street_number2(self):
-        for company in self:
-            company.partner_id.street_number2 = company.street_number2
+            company.partner_id.write({
+                'street_name': company.street_name,
+                'street_number': company.street_number,
+                'street_number2': company.street_number2
+            })
