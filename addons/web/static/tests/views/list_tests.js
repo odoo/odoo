@@ -4703,6 +4703,30 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: many2one with readonly modifier', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch:
+                `<tree editable="top">
+                    <field name="m2o" readonly="1"/>
+                    <field name="foo"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // edit a field
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+
+        assert.containsOnce(list, '.o_data_row:eq(0) .o_data_cell:eq(0) a[name="m2o"]');
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:eq(0) .o_data_cell:eq(1) input')[0],
+            "focus should go to the char input");
+
+        list.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 
