@@ -27,11 +27,11 @@ class Partner(models.Model):
     _name = 'res.partner'
 
     street_name = fields.Char('Street Name', compute='_split_street',
-                              inverse='_set_street', store=True)
+                              inverse='_set_street', store=True, default=False)
     street_number = fields.Char('House', compute='_split_street', help="House Number",
-                                inverse='_set_street', store=True)
+                                inverse='_set_street', store=True, default=False)
     street_number2 = fields.Char('Door', compute='_split_street', help="Door Number",
-                                 inverse='_set_street', store=True)
+                                 inverse='_set_street', store=True, default=False)
 
     def _formatting_address_fields(self):
         """Returns the list of address fields usable to format addresses."""
@@ -152,11 +152,11 @@ class Company(models.Model):
     _inherit = 'res.company'
 
     street_name = fields.Char('Street Name', compute='_compute_address',
-                              inverse='_inverse_street_name')
+                              inverse='_inverse_street_name', default=False)
     street_number = fields.Char('House Number', compute='_compute_address',
-                                inverse='_inverse_street_number')
+                                inverse='_inverse_street_number', default=False)
     street_number2 = fields.Char('Door Number', compute='_compute_address',
-                                 inverse='_inverse_street_number2')
+                                 inverse='_inverse_street_number2', default=False)
 
     def _get_company_address_fields(self, partner):
         address_fields = super(Company, self)._get_company_address_fields(partner)
