@@ -822,6 +822,22 @@ var Many2oneBarcode = FieldMany2One.extend({
 var ListFieldMany2One = FieldMany2One.extend({
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * If in readonly, will never be considered as an active widget.
+     *
+     * @override
+     */
+    activate: function () {
+        if (this.mode === 'readonly') {
+            return false;
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
