@@ -104,6 +104,7 @@ class Website(models.Model):
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
     partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner', readonly=False)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
+    menu_ids = fields.One2many('website.menu', 'website_id', string="Menus")
     homepage_id = fields.Many2one('website.page', string='Homepage')
 
     def _default_favicon(self):
@@ -126,10 +127,14 @@ class Website(models.Model):
         if language_ids and self.default_lang_id not in language_ids:
             self.default_lang_id = language_ids[0]
 
+    @api.depends('menu_ids')
     def _compute_menu(self):
-        Menu = self.env['website.menu']
+        # accessing through menu_ids allows to prefetch all menus at once
         for website in self:
-            website.menu_id = Menu.search([('parent_id', '=', False), ('website_id', '=', website.id)], order='id', limit=1).id
+            for menu in website.menu_ids:
+                if not menu.parent_id:
+                    website.menu_id = menu
+                    break
 
     @api.model
     def create(self, vals):
