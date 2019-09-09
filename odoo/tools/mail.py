@@ -11,7 +11,7 @@ import threading
 import time
 
 from email.header import decode_header, Header
-from email.utils import getaddresses, formataddr
+from email.utils import getaddresses, formataddr, quote
 from lxml import etree
 
 import odoo
@@ -521,11 +521,18 @@ def email_references(references):
     return (ref_match, model, thread_id, hostname, is_private)
 
 # was mail_message.decode()
-def decode_smtp_header(smtp_header):
+def decode_smtp_header(smtp_header, escape_names=False):
     """Returns unicode() string conversion of the given encoded smtp header
     text. email.header decode_header method return a decoded string and its
     charset for each decoded par of the header. This method unicodes the
-    decoded header and join them in a complete string. """
+    decoded header and join them in a complete string.
+
+    escape_names: we need to escape the name for commas, quotes and backslash.
+    The email_from is used afterwards and given to getadresses, which might fail otherwise.
+    E.g. '\u1f980, crab <crab@snip.com>' is parsed as ('', '\u1f980') and ('crab', '<crab@snip.com>').
+    The name is incorrect in the second, and '\u1f980' is not a valid address.
+    Since the return value squash the tokens, we lose the info on significant commas
+    """
     if isinstance(smtp_header, Header):
         smtp_header = ustr(smtp_header)
     if smtp_header:
@@ -533,7 +540,12 @@ def decode_smtp_header(smtp_header):
         # The joining space will not be needed as of Python 3.3
         # See https://github.com/python/cpython/commit/07ea53cb218812404cdbde820647ce6e4b2d0f8e
         sep = ' ' if pycompat.PY2 else ''
-        return sep.join([ustr(x[0], x[1]) for x in text])
+        if not escape_names:
+            return sep.join([ustr(x[0], x[1]) for x in text])
+        else:
+            # getaddresses is "-aware, but we need quote to take care of pesky \ and "
+            f = lambda s: '"' + quote(s) + '"' if any(ss in s for ss in [',', '"', '\\']) else s
+            return sep.join([ustr(f(ustr(x[0])), x[1]) for x in text])
     return u''
 
 # was mail_thread.decode_header()
