@@ -9,7 +9,7 @@ class StockProductionLot(models.Model):
 
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
-    expiration_date = fields.Datetime(string='End of Life Date',
+    expiration_date = fields.Datetime(string='Expiration Date',
         help='This is the date on which the goods with this Serial Number may become dangerous and must not be consumed.')
     use_date = fields.Datetime(string='Best before Date',
         help='This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet.')
