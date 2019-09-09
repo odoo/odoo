@@ -29,7 +29,6 @@ class ResConfigSettings(models.TransientModel):
     module_voip = fields.Boolean("Asterisk (VoIP)")
     module_web_unsplash = fields.Boolean("Unsplash Image Library")
     module_partner_autocomplete = fields.Boolean("Partner Autocomplete")
-    module_sms = fields.Boolean("Send SMS")
     module_base_geolocalize = fields.Boolean("GeoLocalize")
     report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.", readonly=False)
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
