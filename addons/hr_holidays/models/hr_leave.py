@@ -632,10 +632,15 @@ class HolidaysRequest(models.Model):
                 raise UserError(_('You cannot update a leave that already begun'))
 
         employee_id = values.get('employee_id', False)
-        if not self.env.context.get('leave_fast_create') and values.get('state'):
-            self._check_approval_update(values['state'])
-            if any(holiday.validation_type == 'both' for holiday in self):
-                self._check_double_validation_rules(self.env['hr.employee'].browse(values.get('employee_id', self.employee_id.id)), values['state'])
+        if not self.env.context.get('leave_fast_create'):
+            if values.get('state'):
+                self._check_approval_update(values['state'])
+                if any(holiday.validation_type == 'both' for holiday in self):
+                    self._check_double_validation_rules(self.env['hr.employee'].browse(values.get('employee_id', self.employee_id.id)), values['state'])
+            if 'date_from' in values:
+                values['request_date_from'] = values['date_from']
+            if 'date_to' in values:
+                values['request_date_to'] = values['date_to']
         result = super(HolidaysRequest, self).write(values)
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
