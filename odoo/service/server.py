@@ -76,7 +76,7 @@ def memory_info(process):
 
 
 def set_limit_memory_hard():
-    if os.name == 'posix':
+    if os.name == 'posix' and config['limit_memory_hard']:
         rlimit = resource.RLIMIT_RSS if platform.system() == 'Darwin' else resource.RLIMIT_AS
         soft, hard = resource.getrlimit(rlimit)
         resource.setrlimit(rlimit, (config['limit_memory_hard'], hard))
@@ -343,7 +343,7 @@ class ThreadedServer(CommonServer):
     def process_limit(self):
         memory = memory_info(psutil.Process(os.getpid()))
         if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
-            _logger.info('Server memory limit (%s) reached.', memory)
+            _logger.warning('Server memory limit (%s) reached.', memory)
             self.limits_reached_threads.add(threading.currentThread())
 
         for thread in threading.enumerate():
@@ -357,7 +357,7 @@ class ThreadedServer(CommonServer):
                             config['limit_time_real_cron'] and config['limit_time_real_cron'] > 0):
                         thread_limit_time_real = config['limit_time_real_cron']
                     if thread_limit_time_real and thread_execution_time > thread_limit_time_real:
-                        _logger.info(
+                        _logger.warning(
                             'Thread %s virtual real time limit (%d/%ds) reached.',
                             thread, thread_execution_time, thread_limit_time_real)
                         self.limits_reached_threads.add(thread)
@@ -1207,6 +1207,28 @@ def start(preload=None, stop=False):
             # turn on buffering also for wfile, to avoid partial writes (Default buffer = 8k)
             werkzeug.serving.WSGIRequestHandler.wbufsize = -1
     else:
+        if platform.system() == "Linux" and sys.maxsize > 2**32 and "MALLOC_ARENA_MAX" not in os.environ:
+            # glibc's malloc() uses arenas [1] in order to efficiently handle memory allocation of multi-threaded
+            # applications. This allows better memory allocation handling in case of multiple threads that
+            # would be using malloc() concurrently [2].
+            # Due to the python's GIL, this optimization have no effect on multithreaded python programs.
+            # Unfortunately, a downside of creating one arena per cpu core is the increase of virtual memory
+            # which Odoo is based upon in order to limit the memory usage for threaded workers.
+            # On 32bit systems the default size of an arena is 512K while on 64bit systems it's 64M [3],
+            # hence a threaded worker will quickly reach it's default memory soft limit upon concurrent requests.
+            # We therefore set the maximum arenas allowed to 2 unless the MALLOC_ARENA_MAX env variable is set.
+            # Note: Setting MALLOC_ARENA_MAX=0 allow to explicitely set the default glibs's malloc() behaviour.
+            #
+            # [1] https://sourceware.org/glibc/wiki/MallocInternals#Arenas_and_Heaps
+            # [2] https://www.gnu.org/software/libc/manual/html_node/The-GNU-Allocator.html
+            # [3] https://sourceware.org/git/?p=glibc.git;a=blob;f=malloc/malloc.c;h=00ce48c;hb=0a8262a#l862
+            try:
+                import ctypes
+                libc = ctypes.CDLL("libc.so.6")
+                M_ARENA_MAX = -8
+                assert libc.mallopt(ctypes.c_int(M_ARENA_MAX), ctypes.c_int(2))
+            except Exception:
+                _logger.warning("Could not set ARENA_MAX through mallopt()")
         server = ThreadedServer(odoo.service.wsgi_server.application)
 
     watcher = None
