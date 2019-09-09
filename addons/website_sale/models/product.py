@@ -137,12 +137,19 @@ class ProductPublicCategory(models.Model):
     _parent_store = True
     _order = "sequence, name"
 
+    def _get_sequence(self):
+        self._cr.execute("SELECT MAX(sequence) FROM %s" % self._table)
+        max_sequence = self._cr.fetchone()[0]
+        if max_sequence is None:
+            return 10000
+        return max_sequence + 5
+
     name = fields.Char(required=True, translate=True)
     parent_id = fields.Many2one('product.public.category', string='Parent Category', index=True, ondelete="cascade")
     parent_path = fields.Char(index=True)
     child_id = fields.One2many('product.public.category', 'parent_id', string='Children Categories')
     parents_and_self = fields.Many2many('product.public.category', compute='_compute_parents_and_self')
-    sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.", index=True)
+    sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.", index=True, default=_get_sequence)
     website_description = fields.Html('Category Description', sanitize_attributes=False, translate=html_translate)
     product_tmpl_ids = fields.Many2many('product.template', relation='product_public_category_product_template_rel')
 
@@ -163,6 +170,45 @@ class ProductPublicCategory(models.Model):
                 category.parents_and_self = self.env['product.public.category'].browse([int(p) for p in category.parent_path.split('/')[:-1]])
             else:
                 category.parents_and_self = category
+
+    def _add_nb_child(self, categs_nbr_prod):
+        """ Recursively add the number of product in childeren to their parents.
+            Done this way for performance. Selecting the childs of the categories in SQL is an issue """
+        # Only child with products in them are returned by sql.
+        categs_nbr_prod.setdefault(self.id, 0)
+        for child in self.child_id:
+            categs_nbr_prod[self.id] += child._add_nb_child(categs_nbr_prod)
+        if categs_nbr_prod[self.id] == 0:
+            # We go all the way to the leafs but there might not be any product there.
+            del categs_nbr_prod[self.id]
+            return 0
+        return categs_nbr_prod[self.id]
+
+    def _get_categories_and_count_from_product_domain(self, product_domain):
+        """ Return a tuple with the main product.public.category and a dict with category id as key and product count as value.
+            The dict will contain the quantity of product for all the child categories of the main categories.
+        """
+        Product = self.env['product.template']
+        where_query = Product._where_calc(product_domain)
+        Product._apply_ir_rules(where_query)
+        from_clause, where_clause, args = where_query.get_sql()
+        query = """
+            SELECT c.id, COUNT(DISTINCT product_template)
+            FROM %s
+            INNER JOIN %s ON product_template_id = product_template.id
+            INNER JOIN %s c ON product_public_category_id = c.id
+            WHERE %s
+            GROUP BY c.id
+        """ % (self._fields['product_tmpl_ids'].relation, Product._table, self._table, where_clause)
+        self.flush()
+        self.env.cr.execute(query, args)
+        categs_nbr_prod = dict(self.env.cr.fetchall())
+        categs_ids = tuple(categs_nbr_prod.keys())
+        categs = self.search([('id', 'parent_of', categs_ids), ('parent_id', '=', False)]).with_prefetch(categs_ids)
+
+        for categ in categs:
+            categ._add_nb_child(categs_nbr_prod)
+        return (categs, categs_nbr_prod)
 
 
 class ProductTemplate(models.Model):

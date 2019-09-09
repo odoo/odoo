@@ -154,7 +154,7 @@ class WebsiteSale(http.Controller):
         order = post.get('order') or 'website_sequence ASC'
         return 'is_published desc, %s, id desc' % order
 
-    def _get_search_domain(self, search, category, attrib_values, search_in_description=True):
+    def _get_search_domain(self, search, attrib_values, search_in_description=True):
         domains = [request.website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
@@ -166,9 +166,6 @@ class WebsiteSale(http.Controller):
                     subdomains.append([('description', 'ilike', srch)])
                     subdomains.append([('description_sale', 'ilike', srch)])
                 domains.append(expression.OR(subdomains))
-
-        if category:
-            domains.append([('public_categ_ids', 'child_of', int(category))])
 
         if attrib_values:
             attrib = None
@@ -232,12 +229,9 @@ class WebsiteSale(http.Controller):
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
 
-        domain = self._get_search_domain(search, category, attrib_values)
-
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, order=post.get('order'))
 
         pricelist_context, pricelist = self._get_pricelist_context()
-
         request.context = dict(request.context, pricelist=pricelist.id, partner=request.env.user.partner_id)
 
         url = "/shop"
@@ -246,28 +240,23 @@ class WebsiteSale(http.Controller):
         if attrib_list:
             post['attrib'] = attrib_list
 
-        Product = request.env['product.template'].with_context(bin_size=True)
-
-        search_product = Product.search(domain)
+        domain = self._get_search_domain(search, attrib_values)
         website_domain = request.website.website_domain()
-        categs_domain = [('parent_id', '=', False)] + website_domain
-        if search:
-            search_categories = Category.search([('product_tmpl_ids', 'in', search_product.ids)] + website_domain).parents_and_self
-            categs_domain.append(('id', 'in', search_categories.ids))
-        else:
-            search_categories = Category
-        categs = Category.search(categs_domain)
+        product_domain = expression.AND([domain, website_domain])
+        main_categs, categs_nbr_prod = Category._get_categories_and_count_from_product_domain(product_domain)
 
         if category:
+            domain = expression.AND([domain, [('public_categ_ids', 'child_of', category.id)]])
             url = "/shop/category/%s" % slug(category)
 
+        Product = request.env['product.template'].with_context(bin_size=True)
+        search_product = Product.search(domain)
         product_count = len(search_product)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
         products = Product.search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
 
         ProductAttribute = request.env['product.attribute']
         if products:
-            # get all products without limit
             attributes = ProductAttribute.search([('product_tmpl_ids', 'in', search_product.ids)])
         else:
             attributes = ProductAttribute.browse(attributes_ids)
@@ -292,10 +281,10 @@ class WebsiteSale(http.Controller):
             'bins': TableCompute().process(products, ppg, ppr),
             'ppg': ppg,
             'ppr': ppr,
-            'categories': categs,
+            'main_categs': main_categs,
+            'all_categs_with_count': categs_nbr_prod,
             'attributes': attributes,
             'keep': keep,
-            'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
         }
         if category:
@@ -1170,10 +1159,10 @@ class WebsiteSale(http.Controller):
         order = self._get_search_order(options)
         max_nb_chars = options.get('max_nb_chars', 999)
 
-        category = options.get('category')
         attrib_values = options.get('attrib_values')
 
-        domain = self._get_search_domain(term, category, attrib_values, display_description)
+        domain = self._get_search_domain(term, attrib_values, display_description)
+
         products = ProductTemplate.search(
             domain,
             limit=min(20, options.get('limit', 5)),

@@ -326,12 +326,12 @@
         <li class="nav-item">
             <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link #{'active' if c.id == category.id else ''}">
                 <span t-field="c.name"/>
+                <t t-if="show_product_count" t-esc="'(%d)' % all_categs_with_count[c.id]"/>
             </a>
-            <ul t-if="c.child_id" class="nav nav-pills flex-column nav-hierarchy">
-                <t t-foreach="c.child_id" t-as="c">
-                    <t t-if="not search or c.id in search_categories_ids">
-                        <t t-call="website_sale.categories_recursive" />
-                    </t>
+            <t t-set="children" t-value="c.child_id.filtered(lambda c: c.id in all_categs_with_count)"/>
+            <ul t-if="children" class="nav nav-pills flex-column nav-hierarchy">
+                <t t-foreach="children" t-as="c">
+                    <t t-call="website_sale.categories_recursive" />
                 </t>
             </ul>
         </li>
@@ -351,7 +351,8 @@
                     <li class="nav-item">
                         <a t-att-href="keep('/shop', category=0)" t-attf-class="nav-link #{'' if category else 'active'} o_not_editable">All Products</a>
                     </li>
-                    <t t-foreach="categories" t-as="c">
+                    <t t-set="show_product_count" t-value="False"/>
+                    <t t-foreach="main_categs" t-as="c">
                         <t t-call="website_sale.categories_recursive" />
                     </t>
                 </ul>
@@ -361,11 +362,14 @@
 
     <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
         <li class="nav-item">
-            <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
+            <t t-set="children" t-value="c.child_id.filtered(lambda c: c.id in all_categs_with_count)"/>
             <i t-if="children" t-attf-class="text-primary fa #{'fa-chevron-down' if c.id in category.parents_and_self.ids else 'fa-chevron-right'}"
                t-attf-title="#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
                t-attf-aria-label="#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}" role="img"/>
-            <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link #{'active' if c.id == category.id else ''}" t-field="c.name"></a>
+            <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link #{'active' if c.id == category.id else ''}">
+                <span t-field="c.name"/>
+                <t t-if="show_product_count" t-esc="'(%d)' % all_categs_with_count[c.id]"/>
+            </a>
             <ul t-if="children" class="nav nav-pills flex-column nav-hierarchy" t-att-style="'display:block;' if c.id in category.parents_and_self.ids else 'display:none;'">
                 <t t-foreach="children" t-as="c">
                     <t t-call="website_sale.option_collapse_categories_recursive"/>
@@ -380,6 +384,12 @@
         </xpath>
         <xpath expr="//t[@t-call='website_sale.categories_recursive']" position="attributes">
             <attribute name="t-call">website_sale.option_collapse_categories_recursive</attribute>
+        </xpath>
+    </template>
+
+    <template id="option_count_products_categories" name="Product Count" inherit_id="website_sale.products_categories" active="True" customize_show="True">
+        <xpath expr="//t[@t-set='show_product_count']" position="attributes">
+            <attribute name="t-value">True</attribute>
         </xpath>
     </template>
 
