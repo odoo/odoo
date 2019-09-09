@@ -33,7 +33,7 @@ var LunchKanbanModel = KanbanModel.extend({
     getLocationDomain: function () {
         var self = this;
         return this._initUserLocation().then(function () {
-            return [self._buildLocationDomainLeaf()];
+            return self._buildLocationDomainLeaf() ? [self._buildLocationDomainLeaf()]: [];
         });
     },
     load: function () {
@@ -62,15 +62,19 @@ var LunchKanbanModel = KanbanModel.extend({
     //--------------------------------------------------------------------------
 
     _addOrUpdate: function (domain, subDomain) {
-        var key = subDomain[0];
-        var index = _.findIndex(domain, function (val) {
-            return val[0] === key;
-        });
+        if (subDomain && subDomain.length) {
+            var key = subDomain[0];
+            var index = _.findIndex(domain, function (val) {
+                return val[0] === key;
+            });
 
-        if (index < 0) {
-            domain.push(subDomain);
-        } else {
-            domain[index] = subDomain;
+            if (index < 0) {
+                domain.push(subDomain);
+            } else {
+                domain[index] = subDomain;
+            }
+
+            return domain;
         }
 
         return domain;
