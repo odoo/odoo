@@ -60,6 +60,10 @@ body.editor_enable.editor_has_snippets {
                 background: var(--o-we-snippets-bg-color);
                 color: var(--o-we-snippets-color);
             }
+
+            &:focus, &:active, &:focus:active {
+                outline: none;
+            }
         }
     }
 
@@ -201,8 +205,6 @@ body.editor_enable.editor_has_snippets {
                 font-weight: bold;
                 color: inherit !important;
 
-                @include we-icon-button('\f107');
-
                 > we-button-group {
                     flex: 0 0 auto;
                     display: block;
@@ -236,10 +238,6 @@ body.editor_enable.editor_has_snippets {
                 border-radius: 0;
             }
             we-button {
-                &.we-button-hover-icon:hover {
-                    @include we-icon-button('\f040');
-                }
-
                 &.active {
                     @include we-icon-button('\f00c', $o-we-color-success);
                 }
@@ -274,9 +272,6 @@ body.editor_enable.editor_has_snippets {
             color: var(--o-we-snippets-color);
             cursor: pointer;
 
-            > we-title {
-                @include we-icon-button('\f104');
-            }
             > we-customizeblock-option {
                 max-height: 0;
                 transition-duration: 25ms;

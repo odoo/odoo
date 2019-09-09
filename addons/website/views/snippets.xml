@@ -134,7 +134,7 @@
     </section>
 </template>
 
-<template id="s_three_columns" name="Three Columns">
+<template id="s_three_columns" name="Columns">
     <section class="s_three_columns bg-200 pt32 pb32">
         <div class="container">
             <div class="row d-flex align-items-stretch">
@@ -1157,7 +1157,7 @@
             <i class="fa fa-fw fa-trash-o"/> Remove Slide
         </we-button>
         <we-collapse-area>
-            <we-toggler><i class="fa fa-fw fa-clone"/>Transition</we-toggler>
+            <we-toggler><i class="fa fa-fw fa-clone"/> Transition</we-toggler>
             <we-collapse>
                 <we-button data-select-class="slide">Slide</we-button>
                 <we-button data-select-class="carousel-fade slide">Fade</we-button>
@@ -1198,7 +1198,7 @@
     </div>
 
     <div data-js="gallery" data-selector=".o_gallery">
-        <we-button class="we-button-hover-icon" data-add-images="true" data-no-preview="true">
+        <we-button data-add-images="true" data-no-preview="true">
             <i class="fa fa-fw fa-plus-circle"/> Add images
         </we-button>
         <we-button data-remove-all-images="true" data-no-preview="true">
@@ -1271,7 +1271,7 @@
 
     <!-- Facebook Page -->
     <div data-js="facebookPage" data-selector=".o_facebook_page">
-        <we-button class="we-button-hover-icon" data-fb-page-options="true" data-no-preview="true">
+        <we-button data-fb-page-options="true" data-no-preview="true">
             <i class="fa fa-fw fa-facebook"/> Options
         </we-button>
     </div>
@@ -1315,7 +1315,7 @@
     <div data-js="background"
         data-selector="section, .parallax, :not(.o_gallery > .container) > .carousel"
         data-exclude=".s_hr, .s_image_gallery">
-        <we-button class="we-button-hover-icon" data-choose-image="true" data-no-preview="true">
+        <we-button data-choose-image="true" data-no-preview="true">
             <i class="fa fa-fw fa-picture-o"/> Background Image
         </we-button>
     </div>
@@ -1323,7 +1323,7 @@
     <!-- Background Image -->
     <div data-js="background_position"
         data-selector="section, .parallax, :not(.o_gallery > .container) > .carousel">
-        <we-button class="we-button-hover-icon" data-background-position="true" data-no-preview="true">
+        <we-button data-background-position="true" data-no-preview="true">
             <i class="fa fa-fw fa-arrows"/> Background Image Sizing
         </we-button>
     </div>
@@ -1446,8 +1446,8 @@
     <div data-js="anchorName"
         data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *, .row > div"
         data-exclude=".modal *">
-        <we-button class="we-button-hover-icon" data-no-preview="true" data-open-anchor-dialog="">
-            <i class="fa fa-fw fa-anchor"/> Anchor Name
+        <we-button data-no-preview="true" data-open-anchor-dialog="">
+            <i class="fa fa-fw fa-anchor"/> Link Anchor
         </we-button>
     </div>
 
