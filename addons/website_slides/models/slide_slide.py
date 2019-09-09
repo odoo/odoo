@@ -63,6 +63,15 @@ class SlideLink(models.Model):
     link = fields.Char('Link', required=True)
 
 
+class SlideResource(models.Model):
+    _name = 'slide.slide.resource'
+    _description = "Additional resource for a particular slide"
+
+    slide_id = fields.Many2one('slide.slide', required=True, ondelete='cascade')
+    name = fields.Char('Name', required=True)
+    data = fields.Binary('Resource')
+
+
 class EmbeddedSlide(models.Model):
     """ Embedding in third party websites. Track view count, generate statistics. """
     _name = 'slide.embed'
@@ -160,6 +169,8 @@ class Slide(models.Model):
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
+    slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
+    slide_resource_downloadable = fields.Boolean('Allow Download', default=False, help="Allow the user to download the content of the slide.")
     mime_type = fields.Char('Mime-type')
     html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True)
     # website
@@ -347,12 +358,20 @@ class Slide(models.Model):
 
     @api.onchange('datas')
     def _on_change_datas(self):
-        """ For PDFs, we assume that it takes 5 minutes to read a page. """
+        """ For PDFs, we assume that it takes 5 minutes to read a page.
+            If the selected file is not a PDF, it is an image (You can
+            only upload PDF or Image file) then the slide_type is changed
+            into infographic and the uploaded dataS is transfered to the
+            image field. (It avoids the infinite loading in PDF viewer)"""
         if self.datas:
             data = base64.b64decode(self.datas)
             if data.startswith(b'%PDF-'):
                 pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False)
                 self.completion_time = (5 * len(pdf.pages)) / 60
+            else:
+                self.slide_type = 'infographic'
+                self.image_1920 = self.datas
+                self.datas = None
 
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):

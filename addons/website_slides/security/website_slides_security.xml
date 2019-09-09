@@ -155,5 +155,17 @@
             <field name="perm_read" eval="0"/>
             <field name="perm_create" eval="1"/>
         </record>
+
+        <!--SLIDE RESOURCE-->
+        <record id="rule_slide_slide_resource_downloadable" model="ir.rule">
+            <field name="name">Resource: restricted to channel members and channel responsible</field>
+            <field name="model_id" ref="model_slide_slide_resource"/>
+            <field name="domain_force">[('slide_id.channel_id.partner_ids', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
     </data>
 </odoo>
