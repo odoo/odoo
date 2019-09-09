@@ -15,6 +15,8 @@ class TestPartnerAutocompleteFields(TransactionCase):
                                            name="State",
                                            code="ST",
                                            country_id=self.be.id))
+        self.view_id = self.env.ref('base.view_partner_form').copy()
+        # import ipdb; ipdb.set_trace()
 
         self.data = {
             'name': 'Odoo S.A.',
@@ -66,7 +68,8 @@ class TestPartnerAutocompleteFields(TransactionCase):
 
     def test_10_test(self):
 
-        f = Form(self.partner_model)
+        f = Form(self.partner_model, view=self.view_id)
         
         self.assertEqual(0, 0)
+        # import ipdb; ipdb.set_trace()
         aa = f.save()

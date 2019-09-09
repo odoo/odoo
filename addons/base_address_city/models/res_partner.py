@@ -27,7 +27,7 @@ class Partner(models.Model):
         doc = etree.fromstring(arch)
         if doc.xpath("//field[@name='city_id']"):
             return arch
-
+        # import ipdb; ipdb.set_trace()
         replacement_xml = """
             <div>
                 <field name="country_enforce_cities" invisible="1"/>
@@ -83,4 +83,6 @@ class Partner(models.Model):
             parent.remove(city_node)
 
         arch = etree.tostring(doc, encoding='unicode')
+        # import ipdb; ipdb.set_trace()
+
         return arch
