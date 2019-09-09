@@ -1902,7 +1902,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Update event with filters', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var records = this.data.user.records;
         records.push({
@@ -1958,6 +1958,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 2) .fc-content'));
         assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
         await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_edit'));
+        assert.strictEqual($('.modal .modal-title').text(), 'Open: event 2', "dialog should have a valid title");
         await testUtils.dom.click($('.modal .o_field_widget[name="user_id"] input'));
         await testUtils.dom.click($('.ui-menu-item a:contains(user 5)').trigger('mouseenter'));
         await testUtils.dom.click($('.modal button.btn:contains(Save)'));
