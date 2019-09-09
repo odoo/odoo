@@ -186,7 +186,7 @@ var FormController = BasicController.extend({
         var self = this;
         if (this.hasSidebar) {
             var otherItems = [];
-            if (this.archiveEnabled) {
+            if (this.archiveEnabled && this.initialState.data.active !== undefined) {
                 var classname = "o_sidebar_item_archive" + (this.initialState.data.active ? "" : " o_hidden")
                 otherItems.push({
                     label: _t("Archive"),
