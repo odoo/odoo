@@ -120,7 +120,7 @@ class HolidaysRequest(models.Model):
     validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type', readonly=False)
     # HR data
     employee_id = fields.Many2one(
-        'hr.employee', string='Employee', index=True, readonly=True,
+        'hr.employee', string='Employee', index=True, readonly=True, ondelete="restrict",
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True)
     department_id = fields.Many2one(
         'hr.department', string='Department', readonly=True,

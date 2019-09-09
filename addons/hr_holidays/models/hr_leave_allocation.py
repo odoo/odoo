@@ -59,7 +59,7 @@ class HolidaysAllocation(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         domain=[('valid', '=', True), ('allocation_type', '!=', 'no')], default=_default_holiday_status_id)
     employee_id = fields.Many2one(
-        'hr.employee', string='Employee', index=True, readonly=True,
+        'hr.employee', string='Employee', index=True, readonly=True, ondelete="restrict",
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True)
     manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True)
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
