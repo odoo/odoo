@@ -18,6 +18,12 @@
         <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_tools')), (4, ref('website_slides.slide_tag_demo_howto'))]"/>
         <field name="description">A summary of know-how: how and what. All the basics for this course about gardening.</field>
     </record>
+        <!--RESOURCE-->
+        <record id="slide_slide_demo_0_0_resource_0" model="slide.slide.resource">
+            <field name="name">Document</field>
+            <field name="data" type="base64" file="website_slides/static/src/img/document.png"/>
+            <field name="slide_id" ref="slide_slide_demo_0_0"/>
+        </record>
     <record id="slide_slide_demo_0_1" model="slide.slide">
         <field name="name">Home Gardening</field>
         <field name="sequence">2</field>
@@ -189,6 +195,12 @@
         <record id="slide_slide_demo_1_2_link_1" model="slide.slide.link">
             <field name="name">Energy Efficient Link 2</field>
             <field name="link">http://www.example.com</field>
+            <field name="slide_id" ref="slide_slide_demo_1_2"/>
+        </record>
+        <!--RESOURCE-->
+        <record id="slide_slide_demo_1_2_resource_0" model="slide.slide.resource">
+            <field name="name">Presentation</field>
+            <field name="data" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
             <field name="slide_id" ref="slide_slide_demo_1_2"/>
         </record>
     <record id="slide_slide_demo_1_3" model="slide.slide">
@@ -390,6 +402,12 @@
         <record id="slide_slide_demo_2_0_link_1" model="slide.slide.link">
             <field name="name">Main types of trees Link</field>
             <field name="link">http://www.example.com</field>
+            <field name="slide_id" ref="slide_slide_demo_2_0"/>
+        </record>
+        <!--RESOURCE-->
+        <record id="slide_slide_demo_2_0_resource_0" model="slide.slide.resource">
+            <field name="name">Tree image</field>
+            <field name="data" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_2.jpg"/>
             <field name="slide_id" ref="slide_slide_demo_2_0"/>
         </record>
         <!-- QUIZZ -->
