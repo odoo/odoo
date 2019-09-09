@@ -420,7 +420,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # by default, company-dependent fields are not stored and not copied
             attrs['store'] = False
             attrs['copy'] = attrs.get('copy', False)
-            attrs['default'] = self._default_company_dependent
+            attrs['default'] = attrs.get('default', self._default_company_dependent)
             attrs['compute'] = self._compute_company_dependent
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_company_dependent
