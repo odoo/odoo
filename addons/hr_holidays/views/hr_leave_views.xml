@@ -215,14 +215,11 @@
                         <field name="display_name"/>
                     </h1>
                 </div>
-                <div class="row" name="status_id">
-                    <label class="col-2" for="holiday_status_id"/>
-                    <!-- RLI FIXME: we should avoid redefining the domain in the view when there already is a domain on the model -->
-                    <field name="holiday_status_id" domain="['&amp;', ('virtual_remaining_leaves', '&gt;', 0), '|', ('allocation_type', 'in', ['fixed_allocation', 'no']),'&amp;',('allocation_type', '=', 'fixed'), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="col-9" nolabel="1"/>
-                </div>                        
                 <group>
                     <group>
 
+                        <!-- RLI FIXME: we should avoid redefining the domain in the view when there already is a domain on the model -->
+                        <field name="holiday_status_id" domain="['&amp;', ('virtual_remaining_leaves', '&gt;', 0), '|', ('allocation_type', 'in', ['fixed_allocation', 'no']),'&amp;',('allocation_type', '=', 'fixed'), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}"/>
                         <label for="request_date_from" string="From"/>
                         <div>
                             <field name="date_from" invisible="1"/>
@@ -307,6 +304,7 @@
                             </div>
                         </div>
 
+                        <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
                         <field name="user_id" invisible="1"/>
                     </group>
                     <group name="col_right">
@@ -314,10 +312,6 @@
                         <field name="department_id" groups="hr_holidays.group_hr_holidays_user" invisible="1"/>
                     </group>
                 </group>
-                <div class="row" name="description">
-                    <label class="col-2" for="name"/>
-                    <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" class="col-9" nolabel="1"/>
-                </div>
             </sheet>
             <div class="oe_chatter">
                 <field name="message_follower_ids" widget="mail_followers"/>
@@ -358,18 +352,8 @@
         <field name="mode">primary</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
-            <div name="status_id" position="replace"/>
-            <div name="title" position="replace">
-                <field name="display_name" invisible="1"/>
-                <div class="oe_title" name="title">
-                    <h2>
-                        <field name="holiday_status_id" nolabel="1"/>
-                    </h2>
-                </div>
-            </div>
-            <div name="description" position="replace"/>
-            <field name="user_id" position="before">
-                <field name="name"/>
+            <field name="display_name" position="attributes">
+                <attribute name="invisible">1</attribute>
             </field>
             <xpath expr="//group[@name='col_right']" position="replace">
                 <group>
@@ -418,21 +402,11 @@
         <field name="mode">primary</field>
         <field name="priority">5</field>
         <field name="arch" type="xml">
-            <div name="status_id" position="replace"/>
-            <div name="title" position="replace">
-                <field name="display_name" invisible="1"/>
-                <div class="oe_title" name="title">
-                    <h1>
-                        <field name="employee_id" nolabel="1"/>
-                    </h1>
-                    <h2>
-                        <field name="holiday_status_id" nolabel="1"/>
-                    </h2>
-                </div>
-            </div>
-            <div name="description" position="replace"/>
-            <field name="user_id" position="before">
-                <field name="name"/>
+            <field name="display_name" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="holiday_status_id" position="before">
+                <field name="employee_id"/>
             </field>
             <xpath expr="//sheet" position="inside">
                 <div groups="hr_holidays.group_hr_holidays_manager">
