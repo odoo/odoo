@@ -739,8 +739,7 @@ class PosSession(models.Model):
             'name': _('Payments'),
             'type': 'ir.actions.act_window',
             'res_model': 'pos.payment',
-            'view_id': self.env.ref('point_of_sale.view_pos_payment_tree').id,
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'domain': [('session_id', '=', self.id)],
             'context': {'search_default_group_by_payment_method': 1}
         }
