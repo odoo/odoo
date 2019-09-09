@@ -193,9 +193,8 @@ body.editor_enable.editor_has_snippets {
 
         we-customizeblock-options {
             display: block;
-            border: $o-we-border-width solid $o-we-handles-accent-color;
-            color: $o-we-handles-accent-color;
-            margin-top: 0.25rem;
+            color: var(--o-we-snippets-color);
+            margin-top: 0.5rem;
 
             > we-title {
                 display: flex;
@@ -223,9 +222,6 @@ body.editor_enable.editor_has_snippets {
         we-customizeblock-option {
             position: relative;
             display: block;
-            overflow: hidden;
-            max-height: 500px;
-            transition: max-height 200ms ease 0s;
 
             > * {
                 display: block;
@@ -264,21 +260,6 @@ body.editor_enable.editor_has_snippets {
             .dropdown-menu {
                 // FIXME temporary fix for m2o option for example
                 position: static !important;
-            }
-        }
-
-        we-customizeblock-options.o_we_closed {
-            border-color: var(--o-we-snippets-color);
-            color: var(--o-we-snippets-color);
-            cursor: pointer;
-
-            > we-customizeblock-option {
-                max-height: 0;
-                transition-duration: 25ms;
-
-                + we-customizeblock-option {
-                    margin-top: 0;
-                }
             }
         }
     }
@@ -447,7 +428,7 @@ body.editor_enable.editor_has_snippets {
         @include o-position-absolute;
         display: none;
         height: 0;
-        border-color: $o-we-handles-accent-color-preview;
+        border-color: $o-we-handles-accent-color;
         background: transparent;
         text-align: center;
         transition: opacity 400ms linear 0s;
@@ -457,8 +438,6 @@ body.editor_enable.editor_has_snippets {
         }
         &.oe_active {
             display: block;
-        }
-        &.o_we_options_opened {
             z-index: 1;
         }
 
@@ -467,34 +446,21 @@ body.editor_enable.editor_has_snippets {
             @include o-position-absolute(-$o-we-handles-offset-to-hide, 0, auto, 0);
             border-color: inherit;
 
+            &:hover > .o_handle {
+                background-color: rgba($o-we-handles-accent-color, 0.05);
+            }
             > .o_handle {
                 position: relative;
-                border: 0 dashed transparent;
+                border: 0 solid transparent;
                 border-color: inherit;
                 transition: background 300ms ease 0s;
-
-                &::before {
-                    content: '';
-                    @include o-position-absolute(0, 0, 0, 0);
-                    z-index: -1;
-                    display: block;
-                    border-width: inherit;
-                    border-style: solid;
-                    border-color: white;
-                }
 
                 &.w {
                     @include o-position-absolute($o-we-handles-offset-to-hide, auto, -$o-we-handles-offset-to-hide, 0);
                     width: $o-we-handle-edge-size;
-                    border-width: $o-we-handle-border-width-preview;
+                    border-width: $o-we-handle-border-width;
                     border-right-width: 0;
                     cursor: e-resize;
-
-                    &::before {
-                        top: -$o-we-handle-border-width-preview;
-                        bottom: -$o-we-handle-border-width-preview;
-                        left: -$o-we-handle-border-width-preview;
-                    }
 
                     &:after {
                         @include o-position-absolute($top: 50%, $left: 40%);
@@ -504,12 +470,8 @@ body.editor_enable.editor_has_snippets {
                 &.e {
                     @include o-position-absolute($o-we-handles-offset-to-hide, 0, -$o-we-handles-offset-to-hide, auto);
                     width: $o-we-handle-edge-size;
-                    border-right-width: $o-we-handle-border-width-preview;
+                    border-right-width: $o-we-handle-border-width;
                     cursor: w-resize;
-
-                    &::before {
-                        right: -$o-we-handle-border-width-preview;
-                    }
 
                     &:after {
                         @include o-position-absolute($top: 50%, $right: 40%);
@@ -519,12 +481,8 @@ body.editor_enable.editor_has_snippets {
                 &.n {
                     @include o-position-absolute($o-we-handles-offset-to-hide, 0, auto, 0);
                     height: $o-we-handle-edge-size;
-                    border-top-width: $o-we-handle-border-width-preview;
+                    border-top-width: $o-we-handle-border-width;
                     cursor: ns-resize;
-
-                    &::before {
-                        top: -$o-we-handle-border-width-preview;
-                    }
 
                     &:after {
                         @include o-position-absolute($left: 50%, $top: 40%);
@@ -534,16 +492,71 @@ body.editor_enable.editor_has_snippets {
                 &.s {
                     @include o-position-absolute(auto, 0, -$o-we-handles-offset-to-hide, 0);
                     height: $o-we-handle-edge-size;
-                    border-bottom-width: $o-we-handle-border-width-preview;
+                    border-bottom-width: $o-we-handle-border-width;
                     cursor: ns-resize;
-
-                    &::before {
-                        bottom: -$o-we-handle-border-width-preview;
-                    }
 
                     &:after {
                         @include o-position-absolute($left: 50%, $bottom: 40%);
                         margin-left: -$o-we-handles-btn-size/2;
+                    }
+                }
+
+                &::after {
+                    z-index: 1;
+                    display: block;
+                    width: $o-we-handles-btn-size;
+                    height: $o-we-handles-btn-size;
+                    border: solid 1px darken($o-we-handles-accent-color, 10%);
+                    line-height: $o-we-handles-btn-size - 2;
+                    font-size: 14px;
+                    font-family: FontAwesome;
+                    background-color: darken($o-we-handles-accent-color, 20%);
+                    color: white;
+                }
+
+                &:hover,
+                &.o_active {
+                    background-color: rgba($o-we-handles-accent-color, 0.2);
+
+                    &::after {
+                        border-color: darken($o-we-handles-accent-color, 10%);
+                        background-color: darken($o-we-handles-accent-color, 20%);
+                    }
+                }
+
+                &.w:after,
+                &.e:after {
+                    content: "\f07e";
+                }
+
+                &.s:after,
+                &.n:after {
+                    content: "\f07d";
+                }
+
+                &.o_handle_start {
+
+                    &.w:after,
+                    &.e:after {
+                        content: '\f061';
+                    }
+
+                    &.n:after,
+                    &.s:after {
+                        content: '\f063';
+                    }
+                }
+
+                &.o_handle_end {
+
+                    &.w:after,
+                    &.e:after {
+                        content: '\f060';
+                    }
+
+                    &.n:after,
+                    &.s:after {
+                        content: '\f062';
                     }
                 }
 
@@ -559,119 +572,90 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
             }
+
+            > .o_move_handle {
+                @include o-position-absolute($o-we-handles-offset-to-hide, $left: 50%);
+                transform: translate(-50%, -110%);
+                padding: 2px 4px;
+                border: 1px solid $o-we-color-text-normal;
+                border-radius: 20%;
+                color: $o-we-color-text-normal;
+                opacity: 0.5;
+                transition: opacity 400ms ease 0;
+                cursor: pointer;
+                cursor: move;
+
+                &::before, &::after {
+                    content: '\f141';
+                    display: block;
+                    font-family: FontAwesome;
+                    font-size: 0.8em;
+                    line-height: 0.35em;
+                }
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
         }
 
-        &.o_we_sticky {
-            border-color: $o-we-handles-accent-color;
+        &.o_we_overlay_preview {
+            border-color: $o-we-handles-accent-color-preview;
 
             > .o_handles {
-                &:hover > .o_handle {
-                    background-color: rgba($o-we-handles-accent-color, 0.05);
-                }
+
                 > .o_handle {
-                    border-style: solid;
+                    border-style: dashed;
+                    background-color: transparent !important;
 
                     &::before {
+                        content: '';
+                        @include o-position-absolute(0, 0, 0, 0);
+                        z-index: -1;
+                        display: block;
+                        border-width: inherit;
+                        border-style: solid;
+                        border-color: white;
+                    }
+                    &::after {
                         display: none;
                     }
 
-                    &:hover,
-                    &.o_active {
-                        background-color: rgba($o-we-handles-accent-color, 0.2);
-
-                        &:after {
-                            border-color: darken($o-we-handles-accent-color, 10%);
-                            background-color: darken($o-we-handles-accent-color, 20%);
-                        }
-                    }
-
-                    &:after {
-                        z-index: 1;
-                        display: block;
-                        width: $o-we-handles-btn-size;
-                        height: $o-we-handles-btn-size;
-                        border: solid 1px darken($o-we-handles-accent-color, 10%);
-                        line-height: $o-we-handles-btn-size - 2;
-                        font-size: 14px;
-                        font-family: FontAwesome;
-                        background-color: darken($o-we-handles-accent-color, 20%);
-                        color: white;
-                    }
-
-                    &.w:after,
-                    &.e:after {
-                        content: "\f07e";
-                    }
-
-                    &.s:after,
-                    &.n:after {
-                        content: "\f07d";
-                    }
-
-                    &.o_handle_start {
-
-                        &.w:after,
-                        &.e:after {
-                            content: '\f061';
-                        }
-
-                        &.n:after,
-                        &.s:after {
-                            content: '\f063';
-                        }
-                    }
-
-                    &.o_handle_end {
-
-                        &.w:after,
-                        &.e:after {
-                            content: '\f060';
-                        }
-
-                        &.n:after,
-                        &.s:after {
-                            content: '\f062';
-                        }
-                    }
-
                     &.w {
-                        border-width: $o-we-handle-border-width;
+                        border-width: $o-we-handle-border-width-preview;
                         border-right-width: 0;
+
+                        &::before {
+                            top: -$o-we-handle-border-width-preview;
+                            bottom: -$o-we-handle-border-width-preview;
+                            left: -$o-we-handle-border-width-preview;
+                        }
                     }
                     &.e {
-                        border-right-width: $o-we-handle-border-width;
+                        border-right-width: $o-we-handle-border-width-preview;
+
+                        &::before {
+                            right: -$o-we-handle-border-width-preview;
+                        }
                     }
                     &.n {
-                        border-top-width: $o-we-handle-border-width;
+                        border-top-width: $o-we-handle-border-width-preview;
+
+                        &::before {
+                            top: -$o-we-handle-border-width-preview;
+                        }
                     }
                     &.s {
-                        border-bottom-width: $o-we-handle-border-width;
+                        border-bottom-width: $o-we-handle-border-width-preview;
+
+                        &::before {
+                            bottom: -$o-we-handle-border-width-preview;
+                        }
                     }
                 }
 
                 > .o_move_handle {
-                    @include o-position-absolute($o-we-handles-offset-to-hide, $left: 50%);
-                    transform: translate(-50%, -110%);
-                    padding: 2px 4px;
-                    border: 1px solid $o-we-color-text-normal;
-                    border-radius: 20%;
-                    color: $o-we-color-text-normal;
-                    opacity: 0.5;
-                    transition: opacity 400ms ease 0;
-                    cursor: pointer;
-                    cursor: move;
-
-                    &::before, &::after {
-                        content: '\f141';
-                        display: block;
-                        font-family: FontAwesome;
-                        font-size: 0.8em;
-                        line-height: 0.35em;
-                    }
-
-                    &:hover {
-                        opacity: 1;
-                    }
+                    display: none;
                 }
             }
         }
