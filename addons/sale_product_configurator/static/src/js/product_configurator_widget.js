@@ -152,14 +152,24 @@ ProductConfiguratorWidget.include({
                 if (result && !result.special) {
                     self._addProducts(result, dataPointId);
                 } else {
-                    // is this restoreProductTemplateId ability useful ???
                     if (self.restoreProductTemplateId) {
+                        // if configurator opened in edit mode.
                         self.trigger_up('field_changed', {
                             dataPointID: dataPointId,
                             preventProductIdCheck: true,
                             changes: {
                                 product_template_id: self.restoreProductTemplateId.data
                             }
+                        });
+                    } else {
+                        // if configurator opened to create line:
+                        // destroy line if configurator closed during configuration process.
+                        self.trigger_up('field_changed', {
+                            dataPointID: dataPointId,
+                            changes: {
+                                product_template_id: false,
+                                product_id: false,
+                            },
                         });
                     }
                 }
