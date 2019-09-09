@@ -77,10 +77,6 @@ odoo.define('website_form_editor.tour', function(require) {
             run:      "text Test Date"
         },
         {
-            content: "Go to the row option",
-            trigger: 'we-customizeblock-options.o_we_closed:last',
-        },
-        {
             content:  "Click on Required",
             trigger:  "[data-website_form_field_require]"
         },
@@ -116,10 +112,6 @@ odoo.define('website_form_editor.tour', function(require) {
             content:  "Change the label",
             trigger:  ".col-form-label[for='record_name']",
             run:      "text Awesome Label"
-        },
-        {
-            content: "Go to the row option",
-            trigger: 'we-customizeblock-options.o_we_closed:last',
         },
         {
             content:  "Click on Hidden",
@@ -158,10 +150,6 @@ odoo.define('website_form_editor.tour', function(require) {
             content:  "Change the label",
             trigger:  ".col-form-label[for='body_html']",
             run:      "text Your Message"
-        },
-        {
-            content: "Go to the row option",
-            trigger: 'we-customizeblock-options.o_we_closed:last',
         },
         {
             content:  "Click on Required",
@@ -249,10 +237,6 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".col-form-label:contains('Products')"
         },
         {
-            content: "Go to the row option",
-            trigger: 'we-customizeblock-options.o_we_closed:last',
-        },
-        {
             content:  "Click on Required",
             trigger:  "[data-website_form_field_require]"
         },
@@ -314,10 +298,6 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Click on field",
             trigger:  ".col-form-label:contains('Service')"
-        },
-        {
-            content: "Go to the row option",
-            trigger: 'we-customizeblock-options.o_we_closed:last',
         },
         {
             content:  "Click on Required",
@@ -396,10 +376,6 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Click on field",
             trigger:  ".col-form-label:contains('State')"
-        },
-        {
-            content: "Go to the row option",
-            trigger: 'we-customizeblock-options.o_we_closed:last',
         },
         {
             content:  "Click on Required",
