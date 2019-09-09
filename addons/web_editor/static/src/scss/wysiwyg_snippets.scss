@@ -501,10 +501,26 @@ body.editor_enable.editor_has_snippets {
                 border-color: inherit;
                 transition: background 300ms ease 0s;
 
+                &::before {
+                    content: '';
+                    @include o-position-absolute(0, 0, 0, 0);
+                    z-index: -1;
+                    display: block;
+                    border-width: inherit;
+                    border-style: solid;
+                    border-color: white;
+                }
+
                 &.w {
                     border-width: $o-we-handle-border-width-preview;
                     border-right-width: 0;
                     cursor: e-resize;
+
+                    &::before {
+                        top: -$o-we-handle-border-width-preview;
+                        bottom: -$o-we-handle-border-width-preview;
+                        left: -$o-we-handle-border-width-preview;
+                    }
 
                     &:after {
                         @include o-position-absolute($top: 50%, $left: 40%);
@@ -515,6 +531,10 @@ body.editor_enable.editor_has_snippets {
                     border-right-width: $o-we-handle-border-width-preview;
                     cursor: w-resize;
 
+                    &::before {
+                        right: -$o-we-handle-border-width-preview;
+                    }
+
                     &:after {
                         @include o-position-absolute($top: 50%, $right: 40%);
                         margin-top: -$o-we-handles-btn-size/2;
@@ -524,6 +544,10 @@ body.editor_enable.editor_has_snippets {
                     border-top-width: $o-we-handle-border-width-preview;
                     cursor: ns-resize;
 
+                    &::before {
+                        top: -$o-we-handle-border-width-preview;
+                    }
+
                     &:after {
                         @include o-position-absolute($left: 50%, $top: 40%);
                         margin-left: -$o-we-handles-btn-size/2;
@@ -532,6 +556,10 @@ body.editor_enable.editor_has_snippets {
                 &.s {
                     border-bottom-width: $o-we-handle-border-width-preview;
                     cursor: ns-resize;
+
+                    &::before {
+                        bottom: -$o-we-handle-border-width-preview;
+                    }
 
                     &:after {
                         @include o-position-absolute($left: 50%, $bottom: 40%);
@@ -566,24 +594,15 @@ body.editor_enable.editor_has_snippets {
                     background-color: rgba($o-we-handles-accent-color, 0.05);
                 }
                 > .o_handle {
+                    border-style: solid;
+
+                    &::before {
+                        display: none;
+                    }
+
                     &:hover,
                     &.o_active {
                         background-color: rgba($o-we-handles-accent-color, 0.2);
-
-                        &:before {
-                            content: '';
-                            @include o-position-absolute(0, $left: 50%);
-                            width: 1px;
-                            height: 100%;
-                            margin-left: -1px;
-                            background-color: rgba($o-we-handles-accent-color, 0.5);
-                        }
-
-                        &.w:before {
-                            @include o-position-absolute(50%, $left: 0);
-                            width: 100%;
-                            height: 1px;
-                        }
 
                         &:after {
                             border-color: darken($o-we-handles-accent-color, 10%);
@@ -655,9 +674,6 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
             }
-        }
-        &.o_we_options_opened > .o_handles > .o_handle {
-            border-style: solid;
         }
     }
 
