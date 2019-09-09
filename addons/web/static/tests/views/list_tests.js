@@ -4309,37 +4309,6 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('navigation with tab in editable list with only readonly fields', async function (assert) {
-        assert.expect(6);
-
-        var list = await createView({
-            View: ListView,
-            model: 'foo',
-            data: this.data,
-            arch: '<tree editable="bottom">' +
-                    '<field name="m2o" attrs="{\'readonly\': [(\'int_field\', \'>\', 9)]}"/>' +
-                    '<field name="int_field" readonly="1"/>' +
-                '</tree>',
-        });
-
-        assert.hasClass(list.$('.o_data_row:first .o_data_cell:first'), 'o_readonly_modifier');
-        assert.doesNotHaveClass(list.$('.o_data_row:nth(1) .o_data_cell:first'), 'o_readonly_modifier');
-
-        // try to enter first row in edition
-        await testUtils.dom.click(list.$('.o_data_row .o_data_cell:first'));
-
-        assert.hasClass(list.$('.o_data_row:first'), 'o_selected_row');
-        assert.strictEqual(document.activeElement, list.$('.o_selected_row .o_field_widget[name=m2o]').get(0));
-
-        // press tab to move to next focusable field (next line here)
-        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
-        await testUtils.nextTick();
-        assert.hasClass(list.$('.o_data_row:nth(1)'), 'o_selected_row');
-        assert.strictEqual(document.activeElement, list.$('.o_selected_row .o_field_many2one input').get(0));
-
-        list.destroy();
-    });
-
     QUnit.test('edition, then navigation with tab (with a readonly field)', async function (assert) {
         // This test makes sure that if we have 2 cells in a row, the first in
         // edit mode, and the second one readonly, then if we edit and press TAB,
@@ -5558,6 +5527,30 @@ QUnit.module('Views', {
             "the first row should be updated");
         assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "2blip666",
             "the second row should be updated");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: many2one with readonly modifier', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch:
+                `<tree editable="top">
+                    <field name="m2o" readonly="1"/>
+                    <field name="foo"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // edit a field
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+
+        assert.containsOnce(list, '.o_data_row:eq(0) .o_data_cell:eq(0) a[name="m2o"]');
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:eq(0) .o_data_cell:eq(1) input')[0],
+            "focus should go to the char input");
 
         list.destroy();
     });
