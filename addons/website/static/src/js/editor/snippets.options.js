@@ -1519,7 +1519,7 @@ options.registry.anchorName = options.Class.extend({
             });
         }
         new Dialog(this, {
-            title: _t("Anchor Name"),
+            title: _t("Link Anchor"),
             $content: $(qweb.render('website.dialog.anchorName', {
                 currentAnchor: this.$target.attr('id'),
             })),
