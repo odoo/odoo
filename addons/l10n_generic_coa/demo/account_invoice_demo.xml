@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- ==== Invoice Demo 1 ==== -->
+        <!-- ==== Invoice Demo 1 with attachment ==== -->
         <record id="demo_invoice_1" model="account.move">
             <field name="type">out_invoice</field>
             <field name="partner_id" ref="base.res_partner_12"/>
@@ -50,7 +50,7 @@
         </record>
 
         <!-- ==== Invoice Demo 5 - Draft Vendor Bill ==== -->
-        <record id="demo_invoice_0" model="account.move">
+        <record id="demo_invoice_5" model="account.move">
             <field name="type">in_invoice</field>
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="invoice_user_id" ref="base.user_demo"/>
@@ -63,43 +63,24 @@
         </record>
 
         <!-- ==== Invoice Demo 6 - Draft Vendor Bill for OCR ==== -->
-        <record id="ir_attachment_in_invoice_draft" model="ir.attachment">
-            <field name="type">binary</field>
-            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/in_invoice_yourcompany_demo.pdf"/>
-            <field name="name">in_invoice_yourcompany_demo.pdf</field>
-            <field name="res_model">account.move</field>
-        </record>
 
         <record id="demo_invoice_extract" model="account.move" context="{'type': 'in_invoice'}">
             <field name="type">in_invoice</field>
             <field name="invoice_user_id" ref="base.user_demo"/>
-            <field name="message_main_attachment_id" ref="ir_attachment_in_invoice_draft"/>
-        </record>
-
-        <record id="ir_attachment_in_invoice_draft" model="ir.attachment">
-            <field name="res_id" ref="demo_invoice_extract"/>
-        </record>
-
-        <record id="mail_message_in_invoice_0" model="mail.message">
-            <field name="model">account.move</field>
-            <field name="res_id" ref="l10n_generic_coa.demo_invoice_extract"/>
-            <field name="body">Vendor Bill attachment</field>
-            <field name="message_type">comment</field>
-            <field name="author_id" ref="base.partner_demo"/>
-            <field name="date" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
-            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_in_invoice_draft')])]"/>
         </record>
 
         <!-- ==== Invoice Demo 7 - Posted vendor bill ==== -->
         <record id="demo_invoice_equipment_purchase" model="account.move">
             <field name="type">in_invoice</field>
-            <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-15'"/>
+            <field name="ref">INV/2018/0057</field>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="invoice_date">2018-09-17</field>
             <field name="invoice_line_ids" eval="[
-                (0, 0, {'product_id': ref('product.product_product_6'), 'quantity': 1, 'price_unit': 4999.99, 'price_unit': 4999.99})
+                (0, 0, {'name': 'Redeem Reference Number: PO02529', 'quantity': 1, 'price_unit': 541.10})
             ]"/>
         </record>
 
+        <!-- ==== Post invoices ==== -->
         <function model="account.move" name="post">
             <value eval="[
                 ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'),
@@ -107,5 +88,131 @@
             ]"/>
         </function>
 
+        <!-- ==== Create attachments for posted invoices ==== -->
+        <record id="ir_attachment_out_invoice_draft_1" model="ir.attachment">
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/out_invoice_yourcompany_demo_1.pdf"/>
+            <field name="name">out_invoice_yourcompany_demo.pdf</field>
+            <field name="res_model">account.move</field>
+            <field name="res_id" ref="demo_invoice_1"/>
+        </record>
+
+        <record id="demo_invoice_1" model="account.move">
+            <field name="message_main_attachment_id" ref="ir_attachment_out_invoice_draft_1"/>
+        </record>
+
+        <record id="mail_message_out_invoice_1" model="mail.message">
+            <field name="model">account.move</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_1"/>
+            <field name="body">Customer Invoice attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_out_invoice_draft_1')])]"/>
+        </record>
+
+        <record id="ir_attachment_out_invoice_draft_2" model="ir.attachment">
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/out_invoice_yourcompany_demo_2.pdf"/>
+            <field name="name">out_invoice_yourcompany_demo.pdf</field>
+            <field name="res_model">account.move</field>
+            <field name="res_id" ref="demo_invoice_2"/>
+        </record>
+
+        <record id="demo_invoice_2" model="account.move">
+            <field name="message_main_attachment_id" ref="ir_attachment_out_invoice_draft_2"/>
+        </record>
+
+        <record id="mail_message_out_invoice_2" model="mail.message">
+            <field name="model">account.move</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_2"/>
+            <field name="body">Customer Invoice attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_out_invoice_draft_2')])]"/>
+        </record>
+
+        <record id="ir_attachment_out_invoice_draft_3" model="ir.attachment">
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/out_invoice_yourcompany_demo_3.pdf"/>
+            <field name="name">out_invoice_yourcompany_demo.pdf</field>
+            <field name="res_model">account.move</field>
+            <field name="res_id" ref="demo_invoice_3"/>
+        </record>
+
+        <record id="demo_invoice_3" model="account.move">
+            <field name="message_main_attachment_id" ref="ir_attachment_out_invoice_draft_3"/>
+        </record>
+
+        <record id="mail_message_out_invoice_3" model="mail.message">
+            <field name="model">account.move</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_3"/>
+            <field name="body">Customer Invoice attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_out_invoice_draft_3')])]"/>
+        </record>
+
+        <record id="ir_attachment_out_invoice_draft_4" model="ir.attachment">
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/out_invoice_yourcompany_demo_4.pdf"/>
+            <field name="name">out_invoice_yourcompany_demo.pdf</field>
+            <field name="res_model">account.move</field>
+            <field name="res_id" ref="demo_invoice_followup"/>
+        </record>
+
+        <record id="demo_invoice_followup" model="account.move">
+            <field name="message_main_attachment_id" ref="ir_attachment_out_invoice_draft_4"/>
+        </record>
+
+        <record id="mail_message_out_invoice_4" model="mail.message">
+            <field name="model">account.move</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_followup"/>
+            <field name="body">Customer Invoice attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_out_invoice_draft_4')])]"/>
+        </record>
+
+        <record id="ir_attachment_in_invoice_1" model="ir.attachment">
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/in_invoice_yourcompany_demo_1.pdf"/>
+            <field name="name">in_invoice_yourcompany_demo.pdf</field>
+            <field name="res_model">account.move</field>
+            <field name="res_id" ref="demo_invoice_extract"/>
+        </record>
+
+        <record id="demo_invoice_extract" model="account.move">
+            <field name="message_main_attachment_id" ref="ir_attachment_in_invoice_1"/>
+        </record>
+
+        <record id="mail_message_in_invoice_1" model="mail.message">
+            <field name="model">account.move</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_extract"/>
+            <field name="body">Vendor Bill attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_in_invoice_1')])]"/>
+        </record>
+
+        <record id="ir_attachment_in_invoice_2" model="ir.attachment">
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/in_invoice_yourcompany_demo_2.pdf"/>
+            <field name="name">in_invoice_yourcompany_demo.pdf</field>
+            <field name="res_model">account.move</field>
+            <field name="res_id" ref="demo_invoice_equipment_purchase"/>
+        </record>
+
+        <record id="demo_invoice_equipment_purchase" model="account.move">
+            <field name="message_main_attachment_id" ref="ir_attachment_in_invoice_2"/>
+        </record>
+
+        <record id="mail_message_in_invoice_2" model="mail.message">
+            <field name="model">account.move</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_equipment_purchase"/>
+            <field name="body">Vendor Bill attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_in_invoice_2')])]"/>
+        </record>
     </data>
 </odoo>
