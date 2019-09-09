@@ -44,7 +44,7 @@
                             ('product_tracking', '=', 'none'),
                             ('is_editable', '=', False),
                             ('state', '!=', 'confirm')]}"
-                       context="{'default_product_id': product_id}" optional="show"/>
+                       context="{'default_product_id': product_id, 'default_company_id': company_id}" optional="show"/>
                 <field name="package_id" groups="stock.group_tracking_lot" width="0.8"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
