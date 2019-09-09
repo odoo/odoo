@@ -431,6 +431,20 @@ class TestWarehouse(TestStockCommon):
         # Ensure there still no quants in distribution warehouse
         self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id).mapped('quantity')), 0)
 
+    def test_noleak(self):
+        # non-regression test to avoid company_id leaking to other warehouses (see blame)
+        wh = self.env["stock.warehouse"].search([])
+
+        assert len(set(wh.mapped("company_id.id"))) > 1
+
+        companies_before = wh.mapped(lambda w: (w.id, w.company_id))
+        # writing on any field should change the company of warehouses
+        wh.write({"active": True})
+        companies_after = wh.mapped(lambda w: (w.id, w.company_id))
+
+        self.assertEqual(companies_after, companies_before)
+
+
 class TestResupply(TestStockCommon):
     def setUp(self):
         super(TestResupply, self).setUp()
