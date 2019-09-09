@@ -300,6 +300,7 @@ class Module(models.Model):
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)', 'The name of the module must be unique!'),
+        ('version_mandatory_if_module_is_installed', "CHECK ((NOT state = 'installed') OR (latest_version IS NOT NULL))", "Installed modules must have an Installed Version number."),
     ]
 
     @api.multi
