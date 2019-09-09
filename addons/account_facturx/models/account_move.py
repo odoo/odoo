@@ -222,7 +222,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).message_post(**kwargs)
 
         if 'no_new_invoice' not in self.env.context and len(self) == 1 and self.state == 'draft':
-            for attachment in res.attachment_ids:
+            for attachment in self.env['ir.attachment'].browse(kwargs.get('attachment_ids', [])):
                 self._create_invoice_from_attachment(attachment)
         return res
 
