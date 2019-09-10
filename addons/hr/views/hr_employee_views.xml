@@ -255,7 +255,7 @@
                                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="hr.group_hr_manager"/>
                                <ul>
                                    <li id="last_login"/>
-                                   <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
+                                   <li t-if="record.work_email.raw_value" class="o_text_overflow"><field name="work_email" /></li>
                                    <li t-if="record.work_phone.raw_value"><field name="work_phone" /></li>
                                </ul>
                            </div>
