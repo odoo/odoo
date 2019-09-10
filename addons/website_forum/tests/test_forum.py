@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import KARMA, TestForumCommon
-from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
 from odoo.exceptions import UserError, AccessError
 from odoo.tools import mute_logger
 from psycopg2 import IntegrityError
@@ -135,7 +134,7 @@ class TestForum(TestForumCommon):
             })
 
         # Portal user asks a question with tags: not allowed, unsufficient karma
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             Post.with_user(self.user_portal).create({
                 'name': " Q_0",
                 'forum_id': self.forum.id,
@@ -164,7 +163,7 @@ class TestForum(TestForumCommon):
         Post = self.env['forum.post']
 
         # Answers its own question: not allowed, unsufficient karma
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             Post.with_user(self.user_employee).create({
                 'name': " A0",
                 'forum_id': self.forum.id,
@@ -194,7 +193,7 @@ class TestForum(TestForumCommon):
             emp_answer.vote(upvote=True)
 
         # not enough karma
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).vote(upvote=True)
 
     def test_vote(self):
@@ -217,7 +216,7 @@ class TestForum(TestForumCommon):
             emp_answer.vote(upvote=False)
 
         # not enough karma
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).vote(upvote=False)
 
     def test_downvote(self):
@@ -227,7 +226,7 @@ class TestForum(TestForumCommon):
         self.assertEqual(self.post.create_uid.karma, 50 + KARMA['gen_que_dwv'], 'website_forum: wrong karma generation of downvoted question author')
 
     def test_comment_crash(self):
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).message_post(body='Should crash', message_type='comment')
 
     def test_comment(self):
@@ -245,7 +244,7 @@ class TestForum(TestForumCommon):
         })
 
         # portal user flags a post: not allowed, unsufficient karma
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             post.with_user(self.user_portal).flag()
 
         # portal user flags a post: ok if enough karma
@@ -263,7 +262,7 @@ class TestForum(TestForumCommon):
         })
 
         # portal user validate a post: not allowed, unsufficient karma
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             post.with_user(self.user_portal).validate()
 
         # portal user validate a pending post
@@ -296,7 +295,7 @@ class TestForum(TestForumCommon):
         })
 
         # portal user validate a post: not allowed, unsufficient karma
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             post.with_user(self.user_portal).refuse()
 
         # portal user validate a pending post
@@ -316,7 +315,7 @@ class TestForum(TestForumCommon):
         })
 
         # portal user mark a post as offensive: not allowed, unsufficient karma
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             post.with_user(self.user_portal).mark_as_offensive(12)
 
         # portal user mark a post as offensive
@@ -335,7 +334,7 @@ class TestForum(TestForumCommon):
         self.assertEqual(new_msg.id, False, 'website_forum: question to comment conversion failed')
         self.assertEqual(Post.search([('name', '=', 'TestQuestion')])[0].forum_id.name, 'TestForum', 'website_forum: question to comment conversion failed')
 
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             self.answer.with_user(self.user_portal).convert_answer_to_comment()
 
     def test_convert_answer_to_comment(self):
@@ -347,7 +346,7 @@ class TestForum(TestForumCommon):
         self.assertIn('I am an anteater', new_msg.body, 'website_forum: wrong answer to comment conversion')
 
     def test_edit_post_crash(self):
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).write({'name': 'I am not your father.'})
 
     def test_edit_post(self):
@@ -357,7 +356,7 @@ class TestForum(TestForumCommon):
         self.post.with_user(self.user_portal).write({'name': 'Actually I am your cat.'})
 
     def test_close_post_crash(self):
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).close(None)
 
     def test_close_post_own(self):
@@ -369,7 +368,7 @@ class TestForum(TestForumCommon):
         self.post.with_user(self.user_portal).close(None)
 
     def test_deactivate_post_crash(self):
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).write({'active': False})
 
     def test_deactivate_post_own(self):
@@ -381,7 +380,7 @@ class TestForum(TestForumCommon):
         self.post.with_user(self.user_portal).write({'active': False})
 
     def test_unlink_post_crash(self):
-        with self.assertRaises(KarmaError):
+        with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).unlink()
 
     def test_unlink_post_own(self):
