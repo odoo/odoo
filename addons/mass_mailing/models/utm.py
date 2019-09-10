@@ -9,11 +9,12 @@ class UtmCampaign(models.Model):
 
     mailing_ids = fields.One2many(
         'mailing.mailing', 'campaign_id',
+        groups="mass_mailing.group_mass_mailing_user",
         string='Mass Mailings')
-    mailing_clicks_ratio = fields.Integer(default=0, compute="_compute_mailing_clicks_ratio", string="Number of clicks")
-    mailing_items = fields.Integer(compute="_compute_mailing_items", string='Number of mails')
-    mailing_clicked = fields.Integer(compute="_compute_mailing_items", string='Mailings Clicked')
-    mailings_count = fields.Integer(compute="_compute_mailings_count", string="Number of mailings")
+    mailing_clicks_ratio = fields.Integer(default=0, compute="_compute_mailing_clicks_ratio", groups="mass_mailing.group_mass_mailing_user", string="Number of clicks")
+    mailing_items = fields.Integer(compute="_compute_mailing_items", groups="mass_mailing.group_mass_mailing_user",  string='Number of mails')
+    mailing_clicked = fields.Integer(compute="_compute_mailing_items", groups="mass_mailing.group_mass_mailing_user",  string='Mailings Clicked')
+    mailings_count = fields.Integer(compute="_compute_mailings_count", groups="mass_mailing.group_mass_mailing_user",  string="Number of mailings")
     # stat fields
     total = fields.Integer(compute="_compute_statistics")
     scheduled = fields.Integer(compute="_compute_statistics")
