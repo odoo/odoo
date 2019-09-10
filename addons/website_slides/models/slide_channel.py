@@ -492,7 +492,7 @@ class Channel(models.Model):
 
     def action_view_slides(self):
         action = self.env.ref('website_slides.slide_slide_action').read()[0]
-        action['context'] = {'default_channel_id': self.id}
+        action['context'] = {'default_channel_id': self.id, 'search_default_published': 1}
         action['domain'] = [('channel_id', "=", self.id), ('is_category', '=', False)]
         return action
 
