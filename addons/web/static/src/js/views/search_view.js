@@ -138,8 +138,13 @@ var InputView = Widget.extend({
         focus: function () { this.trigger('focused', this); },
         blur: function () { this.$el.val(''); this.trigger('blurred', this); },
         keydown: 'onKeydown',
+        'compositionend': '_onCompositionend',
+        'compositionstart': '_onCompositionstart',
     },
     onKeydown: function (e) {
+        if (this._isComposing) {
+            return;
+        }
         switch (e.which) {
             case $.ui.keyCode.BACKSPACE:
                 if(this.$el.val() === '') {
@@ -162,7 +167,21 @@ var InputView = Widget.extend({
                 }
                 break;
         }
-    }
+    },
+    /**
+     * @private
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionend: function (ev) {
+        this._isComposing = false;
+    },
+    /**
+     * @private
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionstart: function (ev) {
+        this._isComposing = true;
+    },
 });
 
 var FacetView = Widget.extend({
@@ -239,6 +258,9 @@ var SearchView = View.extend({
             this.toggle_buttons();
         },
         'keydown .o_searchview_input, .o_searchview_facet': function (e) {
+            if (this._isInputComposing) {
+                return;
+            }
             switch(e.which) {
                 case $.ui.keyCode.LEFT:
                     this.focusPreceding(e.target);
@@ -252,6 +274,8 @@ var SearchView = View.extend({
                     break;
             }
         },
+        'compositionend .o_searchview_input': '_onCompositionendInput',
+        'compositionstart .o_searchview_input': '_onCompositionstartInput',
     },
     defaults: _.extend({}, View.prototype.defaults, {
         hidden: false,
@@ -600,6 +624,25 @@ var SearchView = View.extend({
             }
             current_category = filter.category;
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+     /**
+     * @rivate
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionendInput: function () {
+        this._isInputComposing = false;
+    },
+    /**
+     * @rivate
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionstartInput: function () {
+        this._isInputComposing = true;
     },
 });
 

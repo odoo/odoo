@@ -299,7 +299,7 @@ class AccountBankStatement(models.Model):
 
         #try to assign partner to bank_statement_line
         stl_to_assign_partner = [stl.id for stl in st_lines_left if not stl.partner_id]
-        refs = list(set([st.name for st in st_lines_left if not stl.partner_id]))
+        refs = list(set([st.name for st in st_lines_left if not st.partner_id]))
         if st_lines_left and stl_to_assign_partner and refs\
            and st_lines_left[0].journal_id.default_credit_account_id\
            and st_lines_left[0].journal_id.default_debit_account_id:
