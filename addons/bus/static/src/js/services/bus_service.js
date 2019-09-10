@@ -31,12 +31,12 @@ var BusService =  CrossTab.extend(ServicesMixin, {
      */
     sendNotification: function (title, content, callback) {
         if (window.Notification && Notification.permission === "granted") {
-            if (this.isMasterTab()) {
+            if (this._isMasterTab) {
                 this._sendNativeNotification(title, content, callback);
             }
         } else {
             this.do_notify(title, content);
-            if (this.isMasterTab()) {
+            if (this._isMasterTab) {
                 this._beep();
             }
         }

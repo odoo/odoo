@@ -1,8 +1,8 @@
 odoo.define('bus.Longpolling', function (require) {
 "use strict";
 
-var Bus = require('web.Bus');
-var ServicesMixin = require('web.ServicesMixin');
+const Bus = require('web.Bus');
+const ServicesMixin = require('web.ServicesMixin');
 
 
 /**
@@ -14,51 +14,51 @@ var ServicesMixin = require('web.ServicesMixin');
  *
  * @class Longpolling
  */
-var LongpollingBus = Bus.extend(ServicesMixin, {
-    // constants
-    PARTNERS_PRESENCE_CHECK_PERIOD: 30000,  // don't check presence more than once every 30s
-    ERROR_RETRY_DELAY: 10000, // 10 seconds
+const LongpollingBus = Bus.extend(ServicesMixin, {
     POLL_ROUTE: '/longpolling/poll',
 
-    // properties
-    _isActive: null,
-    _lastNotificationID: 0,
-    _isOdooFocused: true,
-    _pollRetryTimeout: null,
-
     /**
      * @override
      */
-    init: function (parent, params) {
-        this._super.apply(this, arguments);
-        this._id = _.uniqueId('bus');
+    init(...args) {
+        this._super(...args);
 
-        // the _id is modified by crosstab_bus, so we can't use it to unbind the events in the destroy.
-        this._longPollingBusId = this._id;
-        this._options = {};
         this._channels = [];
+        this._id = _.uniqueId('bus');
+        this._isActive = false;
+        this._isOdooFocused = true;
+        this._lastNotificationID = 0;
+        this._options = {};
+        this._pollRetryTimeout = null;
+        this._pollRpc = null;
+        this._presence = Date.now();
 
-        // bus presence
-        this._lastPresenceTime = new Date().getTime();
-        $(window).on("focus." + this._longPollingBusId, this._onFocusChange.bind(this, {focus: true}));
-        $(window).on("blur." + this._longPollingBusId, this._onFocusChange.bind(this, {focus: false}));
-        $(window).on("unload." + this._longPollingBusId, this._onFocusChange.bind(this, {focus: false}));
+        this._beforeunloadGlobalListener = ev => this._onBeforeunloadGlobal(ev);
+        this._blurGlobalListener = ev => this._onBlurGlobal(ev);
+        this._clickGlobalListener = ev => this._onClickGlobal(ev);
+        this._focusGlobalListener = ev => this._onFocusGlobal(ev);
+        this._keydownGlobalListener = ev => this._onKeydownGlobal(ev);
+        this._keyupGlobalListener = ev => this._onKeyupGlobal(ev);
 
-        $(window).on("click." + this._longPollingBusId, this._onPresence.bind(this));
-        $(window).on("keydown." + this._longPollingBusId, this._onPresence.bind(this));
-        $(window).on("keyup." + this._longPollingBusId, this._onPresence.bind(this));
+        window.addEventListener('beforeunload', this._beforeunloadGlobalListener);
+        window.addEventListener('blur', this._blurGlobalListener);
+        window.addEventListener('click', this._clickGlobalListener);
+        window.addEventListener('focus', this._focusGlobalListener);
+        window.addEventListener('keydown', this._keydownGlobalListener);
+        window.addEventListener('keyup', this._keyupGlobalListener);
     },
+
     /**
      * @override
      */
-    destroy: function () {
+    destroy() {
         this.stopPolling();
-        $(window).off("focus." + this._longPollingBusId);
-        $(window).off("blur." + this._longPollingBusId);
-        $(window).off("unload." + this._longPollingBusId);
-        $(window).off("click." + this._longPollingBusId);
-        $(window).off("keydown." + this._longPollingBusId);
-        $(window).off("keyup." + this._longPollingBusId);
+        window.removeEventListener('beforeunload', this._beforeunloadGlobalListener);
+        window.removeEventListener('blur', this._blurGlobalListener);
+        window.removeEventListener('click', this._clickGlobalListener);
+        window.removeEventListener('focus', this._focusGlobalListener);
+        window.removeEventListener('keydown', this._keydownGlobalListener);
+        window.removeEventListener('keyup', this._keyupGlobalListener);
         this._super();
     },
     //--------------------------------------------------------------------------
@@ -72,14 +72,15 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      *
      * @param {string} channel
      */
-    addChannel: function (channel) {
-        if (this._channels.indexOf(channel) === -1) {
-            this._channels.push(channel);
-            if (this._pollRpc) {
-                this._pollRpc.abort();
-            } else {
-                this.startPolling();
-            }
+    addChannel(channel) {
+        if (this._channels.includes(channel)) {
+            return;
+        }
+        this._channels.push(channel);
+        if (this._pollRpc) {
+            this._pollRpc.abort();
+        } else {
+            this.startPolling();
         }
     },
     /**
@@ -91,13 +92,14 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      *
      * @param {string} channel
      */
-    deleteChannel: function (channel) {
+    deleteChannel(channel) {
         var index = this._channels.indexOf(channel);
-        if (index !== -1) {
-            this._channels.splice(index, 1);
-            if (this._pollRpc) {
-                this._pollRpc.abort();
-            }
+        if (index === -1) {
+            return;
+        }
+        this._channels.splice(index, 1);
+        if (this._pollRpc) {
+            this._pollRpc.abort();
         }
     },
     /**
@@ -105,21 +107,19 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      *
      * @returns {boolean}
      */
-    isOdooFocused: function () {
+    isOdooFocused() {
         return this._isOdooFocused;
     },
     /**
      * Start a long polling, i.e. it continually opens a long poll
      * connection as long as it is not stopped (@see `stopPolling`)
      */
-    startPolling: function () {
-        if (this._isActive === null) {
-            this._poll = this._poll.bind(this);
+    startPolling() {
+        if (this._isActive) {
+            return;
         }
-        if (!this._isActive) {
-            this._isActive = true;
-            this._poll();
-        }
+        this._isActive = true;
+        this._poll();
     },
     /**
      * Stops any started long polling
@@ -127,7 +127,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      * Aborts a pending longpoll so that we immediately remove ourselves
      * from listening on notifications on this channel.
      */
-    stopPolling: function () {
+    stopPolling() {
         this._isActive = false;
         this._channels = [];
         clearTimeout(this._pollRetryTimeout);
@@ -142,20 +142,29 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      * @param {string} key
      * @param {any} value
      */
-    updateOption: function (key, value) {
+    updateOption(key, value) {
         this._options[key] = value;
     },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
     /**
-     * returns the last recorded presence
-     *
      * @private
-     * @returns {integer} number of milliseconds since 1 January 1970 00:00:00
+     * @param {Object[]} notifications
      */
-    _getLastPresence: function () {
-        return this._lastPresenceTime;
+    _parseAndTriggerNotifications(notifications) {
+        const notifs = notifications
+            .filter(notif =>
+                !this._lastNotificationId ||
+                notif.id > this._lastNotificationId)
+            .map(notif => {
+                if (notif.id > this._lastNotificationID) {
+                    this._lastNotificationID = notif.id;
+                }
+                return [notif.channel, notif.message];
+            });
+        this.trigger('notification', notifs);
     },
     /**
      * Continually start a poll:
@@ -171,51 +180,92 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      *
      * @private
      */
-    _poll: function () {
-        var self = this;
+    _poll() {
         if (!this._isActive) {
             return;
         }
-        var now = new Date().getTime();
-        var options = _.extend({}, this._options, {
-            bus_inactivity: now - this._getLastPresence(),
-        });
-        var data = {channels: this._channels, last: this._lastNotificationID, options: options};
+        const now = Date.now();
+        const options = Object.assign(
+            {},
+            this._options,
+            { bus_inactivity: now - this._presence }
+        );
+        const data = {
+            channels: this._channels,
+            last: this._lastNotificationID,
+            options,
+        };
         // The backend has a maximum cycle time of 50 seconds so give +10 seconds
-        this._pollRpc = this._rpc({route: this.POLL_ROUTE, params: data}, {shadow : true, timeout: 60000});
-        this._pollRpc.then(function (result) {
-            self._pollRpc = false;
-            self._onPoll(result);
-            self._poll();
-        }).guardedCatch(function (result) {
-            self._pollRpc = false;
+        this._pollRpc = this._rpc({
+            params: data,
+            route: this.POLL_ROUTE,
+        }, {
+            shadow: true,
+            timeout: 60*1000,
+        });
+        this._pollRpc.then(result => {
+            this._pollRpc = false;
+            this._onPoll(result);
+            this._poll();
+        }).guardedCatch(result => {
+            this._pollRpc = false;
             // no error popup if request is interrupted or fails for any reason
             result.event.preventDefault();
-            if (result.message && result.message.message === "XmlHttpRequestError abort") {
-                self._poll();
+            if (
+                result.message &&
+                result.message.message === "XmlHttpRequestError abort"
+            ) {
+                this._poll();
             } else {
                 // random delay to avoid massive longpolling
-                self._pollRetryTimeout = setTimeout(self._poll, self.ERROR_RETRY_DELAY + (Math.floor((Math.random()*20)+1)*1000));
+                this._pollRetryTimeout = setTimeout(
+                    () => this._poll(),
+                    (10+Math.floor((Math.random()*20)+1))*1000
+                );
             }
         });
     },
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
     /**
-     * Handler when the focus of the window change.
-     * Trigger the 'window_focus' event.
-     *
      * @private
-     * @param {Object} params
-     * @param {Boolean} params.focus
      */
-    _onFocusChange: function (params) {
-        this._isOdooFocused = params.focus;
-        if (params.focus) {
-            this._lastPresenceTime = new Date().getTime();
-            this.trigger('window_focus', this._isOdooFocused);
-        }
+    _onBeforeunloadGlobal() {
+        this._isOdooFocused = false;
+    },
+    /**
+     * @private
+     */
+    _onBlurGlobal() {
+        this._isOdooFocused = false;
+    },
+    /**
+     * @private
+     */
+    _onClickGlobal() {
+        this._presence = Date.now();
+    },
+    /**
+     * @private
+     */
+    _onFocusGlobal() {
+        this._isOdooFocused = true;
+        this._presence = Date.now();
+        this.trigger('window_focus', this._isOdooFocused);
+    },
+    /**
+     * @private
+     */
+    _onKeydownGlobal() {
+        this._presence = Date.now();
+    },
+    /**
+     * @private
+     */
+    _onKeyupGlobal() {
+        this._presence = Date.now();
     },
     /**
      * Handler when the long polling receive the new notifications
@@ -224,27 +274,9 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      *
      * @private
      * @param {Object[]} notifications, Input notifications have an id, channel, message
-     * @returns {Array[]} Output arrays have notification's channel and message
      */
-    _onPoll: function (notifications) {
-        var self = this;
-        var notifs = _.map(notifications, function (notif) {
-            if (notif.id > self._lastNotificationID) {
-                self._lastNotificationID = notif.id;
-            }
-            return [notif.channel, notif.message];
-        });
-        this.trigger("notification", notifs);
-        return notifs;
-    },
-    /**
-     * Handler when they are an activity on the window (click, keydown, keyup)
-     * Update the last presence date.
-     *
-     * @private
-     */
-    _onPresence: function () {
-        this._lastPresenceTime = new Date().getTime();
+    _onPoll(notifications) {
+        this._parseAndTriggerNotifications(notifications);
     },
 });
 

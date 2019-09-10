@@ -1,9 +1,9 @@
 odoo.define('bus.CrossTab', function (require) {
 "use strict";
 
-var Longpolling = require('bus.Longpolling');
+const Longpolling = require('bus.Longpolling');
 
-var session = require('web.session');
+const PREFIX = "crosstab-bus";
 
 /**
  * CrossTab
@@ -12,343 +12,477 @@ var session = require('web.session');
  * It uses a Master/Slaves with Leader Election architecture:
  * - a single tab handles longpolling.
  * - tabs are synchronized by means of the local storage.
- *
- * localStorage used keys are:
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.channels : shared public channel list to listen during the poll
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.options : shared options
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.notification : the received notifications from the last poll
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.tab_list : list of opened tab ids
- * - {LOCAL_STORAGE_PREFIX}.{sanitizedOrigin}.tab_master : generated id of the master tab
- *
- * trigger:
- * - window_focus : when the window is focused
- * - notification : when a notification is receive from the long polling
- * - become_master : when this tab became the master
- * - no_longer_master : when this tab is not longer the master (the user swith tab)
  */
-var CrossTabBus = Longpolling.extend({
-    // constants
-    TAB_HEARTBEAT_PERIOD: 10000, // 10 seconds
-    MASTER_TAB_HEARTBEAT_PERIOD: 1500, // 1.5 seconds
-    HEARTBEAT_OUT_OF_DATE_PERIOD: 5000, // 5 seconds
-    HEARTBEAT_KILL_OLD_PERIOD: 15000, // 15 seconds
-    LOCAL_STORAGE_PREFIX: 'bus',
-
-    // properties
-    _isMasterTab: false,
-    _isRegistered: false,
+const CrossTabBus = Longpolling.extend({
+    PING_TIMEOUT: 50,
+    TAB_TIMEOUT: 5*1000,
 
     /**
      * @override
      */
-    init: function () {
-        this._super.apply(this, arguments);
-        var now = new Date().getTime();
-        // used to prefix localStorage keys
-        this._sanitizedOrigin = session.origin.replace(/:\/{0,2}/g, '_');
-        // prevents collisions between different tabs and in tests
-        this._id = _.uniqueId(this.LOCAL_STORAGE_PREFIX) + ':' + now;
-        if (this._callLocalStorage('getItem', 'last_ts', 0) + 50000 < now) {
-            this._callLocalStorage('removeItem', 'last');
-        }
-        this._lastNotificationID = this._callLocalStorage('getItem', 'last', 0);
+    init() {
+        this._super(...arguments);
+        const now = Date.now();
+        const tabId = `${_.uniqueId(`${PREFIX}:`)}:${now}`;
+        const tab = {
+            id: tabId,
+            timestamp: now,
+        };
+        const masterTabTimestamp = this
+            ._getFromStorage('master-timestamp', { data: 0 })
+            .data;
+        const masterTabId = (now - masterTabTimestamp < this.TAB_TIMEOUT)
+            ? this
+                ._getFromStorage('master-id', { data: null })
+                .data
+            : null;
+        this._beforeunloadGlobalListener = ev => this._onBeforeunload(ev);
+        this._heartbeatTimeout = null;
+        this._isSelfPromotingMasterTab = false;
+        this._masterTabId = masterTabId;
+        this._tab = tab;
+        this._tabId = tabId;
+        this._tabs = Object.assign(
+            {},
+            this
+                ._getFromStorage('tabs', { data: {} })
+                .data,
+            { [tabId]: tab }
+        );
+        window.addEventListener('beforeunload', this._beforeunloadGlobalListener);
         this.call('local_storage', 'onStorage', this, this._onStorage);
     },
-    destroy: function () {
+    /**
+     * @override
+     */
+    destroy() {
+        window.removeEventListener('beforeunload', this._beforeunloadGlobalListener);
+        this._clearTimeout(this._heartbeatTimeout);
+        if (Object.keys(this._tabs).length === 1) {
+            this._broadcast('tabs', {});
+        } else {
+            this._broadcast('tab-close', this._tabId);
+        }
+        if (this._masterTabId === this._tabId) {
+            this._broadcast('master-id', null);
+            this._broadcast('master-timestamp', null);
+        }
         this._super();
-        clearTimeout(this._heartbeatTimeout);
     },
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+
     /**
-     * Share the bus channels with the others tab by the local storage
-     *
      * @override
      */
-    addChannel: function () {
-        this._super.apply(this, arguments);
-        this._callLocalStorage('setItem', 'channels', this._channels);
+    addChannel(channel) {
+        if (this._channels.includes(channel)) {
+            return;
+        }
+        this._super(...arguments);
+        if (this._masterTabId === this._tabId) {
+            this._broadcast('channels', this._channels);
+        } else {
+            this._broadcast('add-channel', channel, this._masterTabId);
+        }
     },
     /**
-     * Share the bus channels with the others tab by the local storage
-     *
      * @override
      */
-    deleteChannel: function () {
-        this._super.apply(this, arguments);
-        this._callLocalStorage('setItem', 'channels', this._channels);
+    deleteChannel(channel) {
+        if (!this._channels.includes(channel)) {
+            return;
+        }
+        this._super(...arguments);
+        if (this._masterTabId === this._tabId) {
+            this._broadcast('channels', this._channels);
+        } else {
+            this._broadcast('delete-channel', channel, this._masterTabId);
+        }
     },
     /**
      * @return {string}
      */
-    getTabId: function () {
-        return this._id;
-    },
-    /**
-     * Tells whether this bus is related to the master tab.
-     *
-     * @returns {boolean}
-     */
-    isMasterTab: function () {
-        return this._isMasterTab;
+    getTabId() {
+        return this._tabId;
     },
     /**
      * Use the local storage to share the long polling from the master tab.
      *
      * @override
      */
-    startPolling: function () {
-        if (this._isActive === null) {
-            this._heartbeat = this._heartbeat.bind(this);
+    startPolling() {
+        this._heartbeat();
+        if (this._masterTabId !== this._tabId) {
+            return;
         }
-        if (!this._isRegistered) {
-            this._isRegistered = true;
-
-            var peers = this._callLocalStorage('getItem', 'peers', {});
-            peers[this._id] = new Date().getTime();
-            this._callLocalStorage('setItem', 'peers', peers);
-
-            $(window).on('unload.' + this._id, this._onUnload.bind(this));
-
-            if (!this._callLocalStorage('getItem', 'master')) {
-                this._startElection();
-            }
-
-            this._heartbeat();
-
-            if (this._isMasterTab) {
-                this._callLocalStorage('setItem', 'channels', this._channels);
-                this._callLocalStorage('setItem', 'options', this._options);
-            } else {
-                this._channels = this._callLocalStorage('getItem', 'channels', this._channels);
-                this._options = this._callLocalStorage('getItem', 'options', this._options);
-            }
-            return;  // startPolling will be called again on tab registration
-        }
-
-        if (this._isMasterTab) {
-            this._super.apply(this, arguments);
-        }
+        this._super(...arguments);
     },
     /**
-     * Share the option with the local storage
-     *
      * @override
      */
-    updateOption: function () {
-        this._super.apply(this, arguments);
-        this._callLocalStorage('setItem', 'options', this._options);
+    updateOptions(key, value) {
+        this._super(...arguments);
+        if (this._masterTabId === this._tabId) {
+            this._broadcast('options', this._options);
+        } else {
+            this._broadcast('update-option', { key, value }, this._masterTabId);
+        }
     },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-    /**
-     * Call local_storage service
-     *
-     * @private
-     * @param {string} method (getItem, setItem, removeItem, on)
-     * @param {string} key
-     * @param {any} param
-     * @returns service information
-     */
-    _callLocalStorage: function (method, key, param) {
-        return this.call('local_storage', method, this._generateKey(key), param);
-    },
-    /**
-     * Generates localStorage keys prefixed by bus. (LOCAL_STORAGE_PREFIX = the name
-     * of this addon), and the sanitized origin, to prevent keys from
-     * conflicting when several bus instances (polling different origins)
-     * co-exist.
-     *
-     * @private
-     * @param {string} key
-     * @returns key prefixed with the origin
-     */
-    _generateKey: function (key) {
-        return this.LOCAL_STORAGE_PREFIX + '.' + this._sanitizedOrigin + '.' + key;
-    },
-    /**
-     * @override
-     * @returns {integer} number of milliseconds since 1 January 1970 00:00:00
-     */
-    _getLastPresence: function () {
-        return this._callLocalStorage('getItem', 'lastPresence') || this._super();
-    },
-    /**
-     * Check all the time (according to the constants) if the tab is the master tab and
-     * check if it is active. Use the local storage for this checks.
-     *
-     * @private
-     * @see _startElection method
-     */
-    _heartbeat: function () {
-        var now = new Date().getTime();
-        var heartbeatValue = parseInt(this._callLocalStorage('getItem', 'heartbeat', 0));
-        var peers = this._callLocalStorage('getItem', 'peers', {});
 
-        if ((heartbeatValue + this.HEARTBEAT_OUT_OF_DATE_PERIOD) < now) {
-            // Heartbeat is out of date. Electing new master
-            this._startElection();
-            heartbeatValue = parseInt(this._callLocalStorage('getItem', 'heartbeat', 0));
-        }
-
-        if (this._isMasterTab) {
-            //walk through all peers and kill old
-            var cleanedPeers = {};
-            for (var peerName in peers) {
-                if (peers[peerName] + this.HEARTBEAT_KILL_OLD_PERIOD > now) {
-                    cleanedPeers[peerName] = peers[peerName];
-                }
-            }
-
-            if (heartbeatValue !== this.lastHeartbeat) {
-                // someone else is also master...
-                // it should not happen, except in some race condition situation.
-                this._isMasterTab = false;
-                this.lastHeartbeat = 0;
-                peers[this._id] = now;
-                this._callLocalStorage('setItem', 'peers', peers);
-                this.stopPolling();
-                this.trigger('no_longer_master');
-            } else {
-                this.lastHeartbeat = now;
-                this._callLocalStorage('setItem', 'heartbeat', now);
-                this._callLocalStorage('setItem', 'peers', cleanedPeers);
+    /**
+     * @private
+     * @param {string} name
+     * @param {any} [data]
+     * @param {string} [to] tab id
+     */
+    _broadcast(name, data, to) {
+        const message = {
+            data,
+            from: this._tabId,
+            name,
+            timestamp: Date.now(),
+            to,
+        };
+        if (
+            name === 'channels' ||
+            name === 'master-id' ||
+            name === 'master-timestamp' ||
+            name === 'options' ||
+            name === 'tabs'
+        ) {
+            this.call('local_storage', 'setItem', `${PREFIX}:${name}`, message);
+            if (!data) {
+                this.call('local_storage', 'removeItem', `${PREFIX}:${name}`);
             }
         } else {
-            //update own heartbeat
-            peers[this._id] = now;
-            this._callLocalStorage('setItem', 'peers', peers);
+            this.call('local_storage', 'setItem', `${PREFIX}:${name}`, message);
+            this.call('local_storage', 'removeItem', `${PREFIX}:${name}`);
         }
-
-        // Write lastPresence in local storage if it has been updated since last heartbeat
-        var hbPeriod = this._isMasterTab ? this.MASTER_TAB_HEARTBEAT_PERIOD : this.TAB_HEARTBEAT_PERIOD;
-        if (this._lastPresenceTime + hbPeriod > now) {
-            this._callLocalStorage('setItem', 'lastPresence', this._lastPresenceTime);
-        }
-
-        this._heartbeatTimeout = setTimeout(this._heartbeat, hbPeriod);
+        const ev = new Event('storage');
+        Object.assign(ev, {
+            key: `${PREFIX}:${name}`,
+            newValue: message,
+        });
+        window.dispatchEvent(ev);
     },
     /**
-     * Check with the local storage if the current tab is the master tab.
-     * If this tab became the master, trigger 'become_master' event
+     * Useful for mocking timeouts in tests
      *
      * @private
+     * @param {integer} timeoutId
      */
-    _startElection: function () {
-        if (this._isMasterTab) {
-            return;
-        }
-        //check who's next
-        var now = new Date().getTime();
-        var peers = this._callLocalStorage('getItem', 'peers', {});
-        var heartbeatKillOld = now - this.HEARTBEAT_KILL_OLD_PERIOD;
-        var newMaster;
-        for (var peerName in peers) {
-            //check for dead peers
-            if (peers[peerName] < heartbeatKillOld) {
-                continue;
+    _clearTimeout(timeoutId) {
+        clearTimeout(timeoutId);
+    },
+    /**
+     * @private
+     */
+    _electMasterTab() {
+        const mostRecentTab = Object
+            .values(this._tabs)
+            .sort((tab1, tab2) => tab1.timestamp < tab2.timestamp ? -1 : 1)
+            .shift();
+        if (this._tabId === mostRecentTab.id) {
+            if (this._isSelfPromotingMasterTab) {
+                return;
             }
-            newMaster = peerName;
-            break;
-        }
-
-        if (newMaster === this._id) {
-            //we're next in queue. Electing as master
-            this.lastHeartbeat = now;
-            this._callLocalStorage('setItem', 'heartbeat', this.lastHeartbeat);
-            this._callLocalStorage('setItem', 'master', true);
-            this._isMasterTab = true;
-            this.startPolling();
-            this.trigger('become_master');
-
-            //removing master peer from queue
-            delete peers[newMaster];
-            this._callLocalStorage('setItem', 'peers', peers);
+            this._isSelfPromotingMasterTab = true;
+            this._broadcast('master-id', this._tabId);
+            this._broadcast('tab-promote');
+            this._setTimeout(
+                () => {
+                    if (this.isDestroyed()) {
+                        return;
+                    }
+                    this._isSelfPromotingMasterTab = false;
+                    this._masterTabId = this
+                        ._getFromStorage('master-id', { data: null })
+                        .data;
+                    if (this._masterTabId === this._tabId) {
+                        this.startPolling();
+                    }
+                }, this.PING_TIMEOUT);
         }
     },
+    /**
+     * @private
+     * @param {string} key
+     * @param {any} [defaultValue]
+     * @return {any}
+     */
+    _getFromStorage(key, defaultValue) {
+        return this.call('local_storage', 'getItem', `${PREFIX}:${key}`, defaultValue);
+    },
+    /**
+     * @private
+     */
+    _heartbeat() {
+        if (this.isDestroyed()) {
+            return;
+        }
+        const now = Date.now();
+        this._clearTimeout(this._heartbeatTimeout);
+        this._heartbeatTimeout = this._setTimeout(
+            () => this._heartbeat(),
+            500 + Math.round(Math.random()*500));
+        if (!this._tabs[this._masterTabId]) {
+            this._electMasterTab();
+        }
+        this._tab.lastUpdated = now;
+        if (this._masterTabId === this._tabId) {
+            this._broadcast('master-timestamp', now);
+        }
+        this._broadcast('ping', this._tab);
+        for (const tab of Object.values(this._tabs)) {
+            if (now - tab.lastUpdated > this.TAB_TIMEOUT) {
+                this._broadcast('tab-close', tab.id);
+            }
+        }
+    },
+    /**
+     * Useful to mock timeouts in tests
+     *
+     * @private
+     * @param {Function} func
+     * @param {integer} duration
+     * @return {integer}
+     */
+    _setTimeout(func, duration) {
+        return setTimeout(func, duration);
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
     /**
-     * @override
+     * @private
      */
-    _onFocusChange: function (params) {
-        this._super.apply(this, arguments);
-        this._callLocalStorage('setItem', 'focus', params.focus);
+    _onBeforeunload() {
+        this.destroy();
     },
     /**
-     * If it's the master tab, the notifications ares broadcasted to other tabs by the
-     * local storage.
-     *
-     * @override
+     * @private
+     * @param {Object} message
+     * @param {string} message.data channel to add
      */
-    _onPoll: function (notifications) {
-        var notifs = this._super(notifications);
-        if (this._isMasterTab && notifs.length) {
-            this._callLocalStorage('setItem', 'last', this._lastNotificationID);
-            this._callLocalStorage('setItem', 'last_ts', new Date().getTime());
-            this._callLocalStorage('setItem', 'notification', notifs);
+    _onCrosstabAddChannel(message) {
+        if (this._channels.includes(message.data)) {
+            return;
         }
+        this.addChannel(message.data);
+    },
+    /**
+     * @private
+     * @param {Object} message
+     * @param {string[]} message.data
+     */
+    _onCrosstabChannels(message) {
+        this._channels = message.data;
+    },
+    /**
+     * @private
+     * @param {Object} message
+     * @param {string} message.data channel to delete
+     */
+    _onCrosstabDeleteChannel(message) {
+        if (!this._channels.includes(message.data)) {
+            return;
+        }
+        this.deleteChannel(message.data);
+    },
+    /**
+     * @private
+     * @param {Object} message
+     * @param {string|null} message.data
+     */
+    _onCrosstabMasterId(message) {
+        this._masterTabId = message.data;
+    },
+    /**
+     * @private
+     * @param {Object} message
+     * @param {Object[]} message.data
+     */
+    _onCrosstabNotifications(message) {
+        this._parseAndTriggerNotifications(message.data);
+    },
+    /**
+     * @private
+     * @param {Object} message
+     * @param {Object} message.data
+     * @param {string} message.data.id tab id
+     * @param {integer} message.data.timestamp datetime
+     */
+    _onCrosstabPing(message) {
+        if (Date.now() - message.data.timestamp > this.PING_TIMEOUT) {
+            return;
+        }
+        this._tabs[message.data.id] = message.data;
+        this._setTimeout(
+            () => {
+                if (this.isDestroyed()) {
+                    return;
+                }
+                if (!this._tabs[this._masterTabId]) {
+                    this._electMasterTab();
+                } else if (this._masterTabId === this._tabId) {
+                    this._broadcast('tabs', this._tabs);
+                }
+            },
+            this.PING_TIMEOUT);
+        this._tab.lastUpdated = Date.now();
+        this._broadcast('pong', this._tab);
+    },
+    /**
+     * @private
+     * @param {Object} message
+     * @param {Object} message.data
+     * @param {string} message.data.id tab id
+     * @param {integer} message.data.timestamp datetime
+     */
+    _onCrosstabPong(message) {
+        if (Date.now() - message.data.timestamp > this.PING_TIMEOUT) {
+            return;
+        }
+        this._tabs[message.data.id] = message.data;
+    },
+    /**
+     * @private
+     * @param {Object} message
+     * @param {string} message.data tab id
+     */
+    _onCrosstabTabClose(message) {
+        const tabId = message.data;
+        delete this._tabs[tabId];
+        if (!this._masterTabId || this._masterTabId === tabId) {
+            this._masterTabId = null;
+            this._electMasterTab();
+        } else if (this._masterTabId === this._tabId) {
+            this._broadcast('tabs', this._tabs);
+        }
+    },
+    /**
+     * @private
+     */
+    _onCrosstabTabPromote() {
+        this._masterTabId = this
+            ._getFromStorage('master-id', { data: null })
+            .data;
+    },
+    /**
+     * @private
+     * @param {Object} message
+     * @param {Object} message.data
+     * @param {string} message.data.key
+     * @param {any} message.data.value
+     */
+    _onCrosstabUpdateOption(message) {
+        this.updateOptions(message.data.key, message.data.value);
+    },
+    /**
+     * @private
+     * @param {Object} message
+     * @param {Object} message.data
+     */
+    _onCrosstabOptions(message) {
+        this._options = message.data;
+    },
+    /**
+     * @private
+     * @param {Object} ev
+     * @param {Object[]} message.data
+     */
+    _onCrosstabTabs(message) {
+        const selfTab = {};
+        selfTab[this._tabId] = this._tab;
+        this._tabs = Object.assign(
+            {},
+            message.data,
+            selfTab
+        );
+    },
+    /**
+     * @override
+     * @private
+     */
+    _onPoll(notifications) {
+        this._broadcast('notifications', notifications);
+        return this._super(...arguments);
     },
     /**
      * Handler when the local storage is updated
      *
      * @private
-     * @param {OdooEvent} event
-     * @param {string} event.key
-     * @param {string} event.newValue
+     * @param {StorageEvent} ev
      */
-    _onStorage: function (e) {
-        var value = JSON.parse(e.newValue);
-        var key = e.key;
-
-        if (this._isRegistered && key === this._generateKey('master') && !value) {
-            //master was unloaded
-            this._startElection();
+    _onStorage(ev) {
+        if (!ev.newValue) {
+            return;
         }
-
-        // last notification id changed
-        if (key === this._generateKey('last')) {
-            this._lastNotificationID = value || 0;
+        if (!ev.key.startsWith(PREFIX)) {
+            return;
         }
-        // notifications changed
-        else if (key === this._generateKey('notification')) {
-            if (!this._isMasterTab) {
-                this.trigger("notification", value);
-            }
+        const type = ev.key.substr(PREFIX.length + 1); // ':'
+        let message;
+        try {
+            message = JSON.parse(ev.newValue);
+        } catch (error) {
+            return;
         }
-        // update channels
-        else if (key === this._generateKey('channels')) {
-            var channels = value;
-            _.each(_.difference(this._channels, channels), this.deleteChannel.bind(this));
-            _.each(_.difference(channels, this._channels), this.addChannel.bind(this));
+        if (!message) {
+            return;
         }
-        // update options
-        else if (key === this._generateKey('options')) {
-            this._options = value;
+        if (message.from && message.from === this._tabId) {
+            return;
         }
-        // update focus
-        else if (key === this._generateKey('focus')) {
-            this._isOdooFocused = value;
-            this.trigger('window_focus', this._isOdooFocused);
+        if (message.to && message.to !== this._tabId) {
+            return;
         }
-    },
-    /**
-     * Handler when unload the window
-     *
-     * @private
-     */
-    _onUnload: function () {
-        // unload peer
-        var peers = this._callLocalStorage('getItem', 'peers', {});
-        delete peers[this._id];
-        this._callLocalStorage('setItem', 'peers', peers);
-
-        // unload master
-        if (this._isMasterTab) {
-            this._callLocalStorage('removeItem', 'master');
+        switch (type) {
+            case 'add-channel':
+                this._onCrosstabAddChannel(message);
+                break;
+            case 'channels':
+                this._onCrosstabChannels(message);
+                break;
+            case 'delete-channel':
+                this._onCrosstabDeleteChannel(message);
+                break;
+            case 'master-id':
+                this._onCrosstabMasterId(message);
+                break;
+            case 'notifications':
+                this._onCrosstabNotifications(message);
+                break;
+            case 'options':
+                this._onCrosstabOptions(message);
+                break;
+            case 'ping':
+                this._onCrosstabPing(message);
+                break;
+            case 'pong':
+                this._onCrosstabPong(message);
+                break;
+            case 'tabs':
+                this._onCrosstabTabs(message);
+                break;
+            case 'tab-close':
+                this._onCrosstabTabClose(message);
+                break;
+            case 'tab-promote':
+                this._onCrosstabTabPromote(message);
+                break;
+            case 'update-option':
+                this._onCrosstabUpdateOption(message);
+                break;
         }
     },
 });
