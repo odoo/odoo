@@ -15,7 +15,6 @@
     'data': [
         'security/ir.model.access.csv',
         'views/account_tax_view.xml',
-        'data/account_types.xml',
         'data/l10n_pe_chart_data.xml',
         'data/account.group.csv',
         'data/account.account.template.csv',
