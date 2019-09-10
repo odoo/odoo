@@ -668,7 +668,7 @@ class Website(models.Model):
                 return False
 
         # dont't list routes without argument having no default value or converter
-        spec = inspect.getargspec(endpoint.method.original_func)
+        spec = inspect.getfullargspec(endpoint.method.original_func)
 
         # remove self and arguments having a default value
         defaults_count = len(spec.defaults or [])

@@ -513,8 +513,10 @@ def route(route=None, **kw):
         @functools.wraps(f)
         def response_wrap(*args, **kw):
             # if controller cannot be called with extra args (utm, debug, ...), call endpoint ignoring them
-            spec = inspect.getargspec(f)
-            if not spec.keywords:
+            spec = inspect.getfullargspec(f)
+            if spec.kwonlyargs or spec.kwonlydefaults:
+                raise ValueError("Unsupported signature.")
+            if not spec.varkw:
                 ignored = ['<%s=%s>' % (k, kw.pop(k)) for k in list(kw) if k not in spec.args]
                 if ignored:
                     _logger.info("<function %s.%s> called ignoring args %s" % (f.__module__, f.__name__, ', '.join(ignored)))
@@ -858,7 +860,7 @@ class ControllerType(type):
                                     " Will use original type: %r" % (cls.__module__, cls.__name__, k, parent_routing_type))
                 v.original_func.routing_type = routing_type or parent_routing_type
 
-                spec = inspect.getargspec(v.original_func)
+                spec = inspect.getfullargspec(v.original_func)
                 first_arg = spec.args[1] if len(spec.args) >= 2 else None
                 if first_arg in ["req", "request"]:
                     v._first_arg_is_req = True
