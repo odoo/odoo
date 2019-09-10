@@ -3,24 +3,6 @@
 from odoo import api, fields, models, exceptions
 from odoo.tools.translate import html_translate
 
-
-class KarmaError(exceptions.except_orm):
-    """ Karma-related error, used for forum and posts. """
-    def __init__(self, msg):
-        super(KarmaError, self).__init__(msg)
-
-
-class Http(models.AbstractModel):
-    _inherit = 'ir.http'
-
-    @classmethod
-    def serialize_exception(self, e):
-        res = super(Http, self).serialize_exception(e)
-        if isinstance(e, KarmaError):
-            res["exception_type"] = "karma_error"
-        return res
-
-
 class KarmaRank(models.Model):
     _name = 'gamification.karma.rank'
     _description = 'Rank based on karma'

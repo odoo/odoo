@@ -5,7 +5,7 @@ import uuid
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
+from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 
 
@@ -366,7 +366,7 @@ class Channel(models.Model):
         note as we don't want all channel followers to be notified of this answer. """
         self.ensure_one()
         if kwargs.get('message_type') == 'comment' and not self.can_review:
-            raise KarmaError(_('Not enough karma to review'))
+            raise AccessError(_('Not enough karma to review'))
         if parent_id:
             parent_message = self.env['mail.message'].sudo().browse(parent_id)
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):
