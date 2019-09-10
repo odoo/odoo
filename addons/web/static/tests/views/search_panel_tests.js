@@ -2064,9 +2064,47 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('disable search panel onExecuteAction', async function (assert) {
-        assert.expect(6);
+    QUnit.test('after onExecuteAction, selects "All" as default category value', async function (assert) {
+        assert.expect(4);
 
+        var Storage = RamStorage.extend({
+            getItem: function (key) {
+                assert.step('getItem ' + key);
+                return 3; // 'asustek'
+            },
+            setItem: function (key, value) {
+                assert.step('setItem ' + key + ' to ' + value);
+            },
+        });
+        var RamStorageService = AbstractStorageService.extend({
+            storage: new Storage(),
+        });
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        await actionManager.doAction(2);
+        await testUtils.dom.click(actionManager.$('.o_form_view button:contains("multi view")'));
+
+        assert.containsOnce(actionManager, '.o_kanban_view');
+        assert.containsOnce(actionManager, '.o_search_panel');
+        assert.containsOnce(actionManager, '.o_search_panel_category_value:first .active');
+
+        assert.verifySteps([]); // should not communicate with localStorage
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('search panel is not instantiated if stated in context', async function (assert) {
+        assert.expect(2);
+
+        this.actions[0].context = {search_panel: false};
         var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
@@ -2075,16 +2113,8 @@ QUnit.module('Views', {
         });
 
         await actionManager.doAction(2);
-
         await testUtils.dom.click(actionManager.$('.o_form_view button:contains("multi view")'));
-        assert.containsOnce(actionManager, '.o_kanban_view');
-        assert.containsNone(actionManager, '.o_search_panel');
 
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
-        assert.containsOnce(actionManager, '.o_list_view');
-        assert.containsNone(actionManager, '.o_search_panel');
-
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
         assert.containsOnce(actionManager, '.o_kanban_view');
         assert.containsNone(actionManager, '.o_search_panel');
 
