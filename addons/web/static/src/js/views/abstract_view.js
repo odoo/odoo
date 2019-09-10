@@ -91,8 +91,8 @@ var AbstractView = Factory.extend({
      * @param {Array[]} [params.searchQuery.domain=[]]
      * @param {string[]} [params.searchQuery.groupBy=[]]
      * @param {Object} [params.userContext={}]
-     * @param {boolean} [params.withControlPanel=true]
-     * @param {boolean} [params.withSearchPanel=true]
+     * @param {boolean} [params.withControlPanel=AbstractView.prototype.withControlPanel]
+     * @param {boolean} [params.withSearchPanel=AbstractView.prototype.withSearchPanel]
      */
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
@@ -115,7 +115,9 @@ var AbstractView = Factory.extend({
         this.fields = this.fieldsView.viewFields;
         this.userContext = params.userContext || {};
         this.withControlPanel = this.withControlPanel && params.withControlPanel;
-        this.withSearchPanel = this.withSearchPanel && this.multi_record && params.withSearchPanel;
+        const searchPanelDisabled = 'search_panel' in params.context && !params.search_panel;
+        this.withSearchPanel = this.withSearchPanel && this.multi_record &&
+                               params.withSearchPanel && !searchPanelDisabled;
 
         // the boolean parameter 'isEmbedded' determines if the view should be
         // considered as a subview. For now this is only used by the graph
@@ -187,6 +189,9 @@ var AbstractView = Factory.extend({
             withSearchBar: params.withSearchBar,
         };
         this.searchPanelParams = {
+            defaultNoFilter: params.searchPanelDefaultNoFilter,
+            fields: this.fields,
+            model: this.loadParams.modelName,
             state: controllerState.spState,
         };
     },
@@ -292,15 +297,12 @@ var AbstractView = Factory.extend({
             }
         });
         var controlPanelDomain = this.loadParams.domain;
-        var searchPanel = new this.config.SearchPanel(parent, {
+        var spParams = _.extend({}, this.searchPanelParams, {
             defaultValues: defaultValues,
-            fields: this.fields,
-            model: this.loadParams.modelName,
             searchDomain: controlPanelDomain,
-            sections: this.searchPanelParams.sections,
-            state: this.searchPanelParams.state,
             classes: params.classes || [],
         });
+        var searchPanel = new this.config.SearchPanel(parent, spParams);
         this.controllerParams.searchPanel = searchPanel;
         this.controllerParams.controlPanelDomain = controlPanelDomain;
         await searchPanel.appendTo(document.createDocumentFragment());
