@@ -49,12 +49,6 @@ list_credential_template = jinja_env.get_template('list_credential.html')
 
 class IoTboxHomepage(web.Home):
 
-    def get_pos_device_status(self):
-        statuses = {}
-        for driver in hw_proxy.drivers:
-            statuses[driver] = hw_proxy.drivers[driver].get_status()
-        return statuses
-
     def get_six_terminal(self):
         terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
         return terminal_id or 'Not Configured'
@@ -75,18 +69,7 @@ class IoTboxHomepage(web.Home):
         else:
             network = 'Not Connected'
 
-        pos_device = self.get_pos_device_status()
         iot_device = []
-
-        if not iot_devices:
-            for status in pos_device:
-                if pos_device[status]['status'] == 'connected':
-                    iot_device.append({
-                        'name': status,
-                        'type': 'device',
-                        'message': ' '.join(pos_device[status]['messages'])
-                    })
-
         for device in iot_devices:
             iot_device.append({
                 'name': iot_devices[device].device_name + ' : ' + str(iot_devices[device].data['value']),
