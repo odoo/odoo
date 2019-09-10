@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='iface_tipproduct']//div[hasclass('content-group')]" position="inside">
-                <div class="mt16">
+                <field name="module_pos_adyen" invisible="1"/>
+                <div class="mt16" attrs="{'invisible': [('module_pos_adyen', '=', False)]}">
                     <div class="row">
                         <field name="adyen_ask_customer_for_tip" class="col-lg-1 ml16"/>
                         <label class="o_light_label" for="adyen_ask_customer_for_tip" string="Add tip through payment terminal (Adyen)"/>
