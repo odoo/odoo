@@ -20,6 +20,8 @@ from odoo.http import request
 from odoo.modules.module import get_resource_path
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.tools.translate import _
+from psycopg2 import IntegrityError
+from odoo.exceptions import UserError
 
 logger = logging.getLogger(__name__)
 
@@ -178,16 +180,20 @@ class Website(models.Model):
             vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
 
     def unlink(self):
-        # Do not delete invoices, delete what's strictly necessary
-        attachments_to_unlink = self.env['ir.attachment'].search([
-            ('website_id', 'in', self.ids),
-            '|', '|',
-            ('key', '!=', False),  # theme attachment
-            ('url', 'ilike', '.custom.'),  # customized theme attachment
-            ('url', 'ilike', '.assets\\_'),
-        ])
-        attachments_to_unlink.unlink()
-        return super(Website, self).unlink()
+        try:
+            # Do not delete invoices, delete what's strictly necessary
+            attachments_to_unlink = self.env['ir.attachment'].search([
+                ('website_id', 'in', self.ids),
+                '|', '|',
+                ('key', '!=', False),  # theme attachment
+                ('url', 'ilike', '.custom.'),  # customized theme attachment
+                ('url', 'ilike', '.assets\\_'),
+            ])
+            attachments_to_unlink.unlink()
+            return super(Website, self).unlink()
+        except IntegrityError:
+            raise UserError(_('The operation cannot be completed. Archive it instead.'))
+
 
     # ----------------------------------------------------------
     # Page Management
