@@ -9,7 +9,10 @@ from odoo.tools.misc import formatLang
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.safe_eval import safe_eval
 import odoo.addons.decimal_precision as dp
+import logging
 from lxml import etree
+
+_logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
 # Entries
@@ -209,13 +212,16 @@ class AccountMove(models.Model):
         prec = self.env['decimal.precision'].precision_get('Account')
 
         self._cr.execute("""\
-            SELECT      move_id
+            SELECT      move_id, abs(sum(debit) - sum(credit))
             FROM        account_move_line
             WHERE       move_id in %s
             GROUP BY    move_id
             HAVING      abs(sum(debit) - sum(credit)) > %s
             """, (tuple(self.ids), 10 ** (-max(5, prec))))
-        if len(self._cr.fetchall()) != 0:
+
+        result = self._cr.fetchall()
+        if len(result) != 0:
+            _logger.warning('The move %s cannot be balanced. Difference (abs(sum(debit) - sum(credit)) = %s' % (result[0], result[1]))
             raise UserError(_("Cannot create unbalanced journal entry."))
         return True
 
