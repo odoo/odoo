@@ -38,7 +38,7 @@ class ResConfigSettings(models.TransientModel):
         for setting in self:
             if setting.predictive_lead_scoring_fields_str:
                 names = setting.predictive_lead_scoring_fields_str.split(',')
-                setting.predictive_lead_scoring_fields = self.env['crm.lead.scoring.frequency.field'].search([('name', 'in', names)])
+                setting.predictive_lead_scoring_fields = self.env['crm.lead.scoring.frequency.field'].search([('field_id.name', 'in', names)])
             else:
                 setting.predictive_lead_scoring_fields = None
 
@@ -47,7 +47,7 @@ class ResConfigSettings(models.TransientModel):
             we store the fields with a comma separated string into a Char config field """
         for setting in self:
             if setting.predictive_lead_scoring_fields:
-                setting.predictive_lead_scoring_fields_str = ','.join(setting.predictive_lead_scoring_fields.mapped('name'))
+                setting.predictive_lead_scoring_fields_str = ','.join(setting.predictive_lead_scoring_fields.mapped('field_id.name'))
             else:
                 setting.predictive_lead_scoring_fields_str = ''
 
