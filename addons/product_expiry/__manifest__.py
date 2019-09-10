@@ -21,5 +21,6 @@ Also implements the removal strategy First Expiry First Out (FEFO) widely used, 
              'views/product_template_views.xml',
              'views/stock_move_views.xml',
              'views/stock_quant_views.xml',
+             'report/report_lot_barcode.xml',
              'data/product_expiry_data.xml'],
 }
