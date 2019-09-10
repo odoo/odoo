@@ -59,18 +59,12 @@ class StockProductionLot(models.Model):
     def _onchange_expiration_date(self):
         if not self._origin or not (self.expiration_date and self._origin.expiration_date):
             return
-        vals = {}
         time_delta = self.expiration_date - self._origin.expiration_date
         # As we compare expiration_date with _origin.expiration_date, we need to
-        # use _origin valuesto keep a stability in the values.
+        # use `_get_date_values` with _origin to keep a stability in the values.
         # Otherwise it will recompute from the updated values if the user calls
         # this onchange multiple times without save between each onchange.
-        if self.use_date and self._origin.use_date:
-            vals['use_date'] = self._origin.use_date + time_delta
-        if self.removal_date and self._origin.removal_date:
-            vals['removal_date'] = self._origin.removal_date + time_delta
-        if self.alert_date and self._origin.alert_date:
-            vals['alert_date'] = self._origin.alert_date + time_delta
+        vals = self._origin._get_date_values(time_delta)
         self.update(vals)
 
     @api.onchange('product_id')
@@ -105,6 +99,26 @@ class StockProductionLot(models.Model):
         alert_lots.write({
             'product_expiry_reminded': True
         })
+
+    def _update_date_values(self, new_date):
+        if new_date:
+            time_delta = new_date - self.expiration_date
+            vals = self._get_date_values(time_delta)
+            vals['expiration_date'] = new_date
+            self.write(vals)
+
+    def _get_date_values(self, time_delta):
+        ''' Return a dict with different date values updated depending of the
+        time_delta. Used in the onchange of `expiration_date` and when user
+        defines a date at the receipt. '''
+        vals = {}
+        if self.use_date:
+            vals['use_date'] = self.use_date + time_delta
+        if self.removal_date:
+            vals['removal_date'] = self.removal_date + time_delta
+        if self.alert_date:
+            vals['alert_date'] = self.alert_date + time_delta
+        return vals
 
 
 class ProcurementGroup(models.Model):

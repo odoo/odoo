@@ -10,6 +10,21 @@ from odoo.tests.common import Form
 
 class TestStockProductionLot(TestStockCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super(TestStockProductionLot, cls).setUpClass()
+        # Creates a tracked product with expiration dates.
+        cls.apple_product = cls.ProductObj.create({
+            'name': 'Apple',
+            'type': 'product',
+            'tracking': 'lot',
+            'use_expiration_date': True,
+            'expiration_time': 10,
+            'use_time': 5,
+            'removal_time': 8,
+            'alert_time': 4,
+        })
+
     def test_00_stock_production_lot(self):
         """ Test Scheduled Task on lot with an alert_date in the past creates an activity """
 
@@ -107,7 +122,6 @@ class TestStockProductionLot(TestStockCommon):
         ])
         self.assertEqual(activity_count, 0, "As there is already an activity marked as done, there shouldn't be any related activity created for this lot")
 
-
     def test_01_stock_production_lot(self):
         """ Test Scheduled Task on lot with an alert_date in future does not create an activity """
 
@@ -164,7 +178,6 @@ class TestStockProductionLot(TestStockCommon):
         ])
         self.assertEqual(activity_count, 0, "An activity has been created while it shouldn't")
 
-
     def test_02_stock_production_lot(self):
         """ Test Scheduled Task on lot without an alert_date does not create an activity """
 
@@ -215,38 +228,27 @@ class TestStockProductionLot(TestStockCommon):
     def test_03_onchange_expiration_date(self):
         """ Updates the `expiration_date` of the lot production and checks other date
         fields are updated as well. """
-        # Creates a tracked product with expiration dates.
-        apple_product = self.ProductObj.create({
-            'name': 'Apple',
-            'type': 'product',
-            'tracking': 'lot',
-            'use_expiration_date': True,
-            'expiration_time': 10,
-            'use_time': 5,
-            'removal_time': 8,
-            'alert_time': 4,
-        })
         # Keeps track of the current datetime and set a delta for the compares.
         today_date = datetime.today()
         time_gap = timedelta(seconds=10)
         # Creates a new lot number and saves it...
         lot_form = Form(self.LotObj)
         lot_form.name = 'Apple Box #1'
-        lot_form.product_id = apple_product
+        lot_form.product_id = self.apple_product
         lot_form.company_id = self.env.company
         apple_lot = lot_form.save()
         # ...then checks date fields have the expected values.
         self.assertAlmostEqual(
-            today_date + timedelta(days=apple_product.expiration_time),
+            today_date + timedelta(days=self.apple_product.expiration_time),
             apple_lot.expiration_date, delta=time_gap)
         self.assertAlmostEqual(
-            today_date + timedelta(days=apple_product.use_time),
+            today_date + timedelta(days=self.apple_product.use_time),
             apple_lot.use_date, delta=time_gap)
         self.assertAlmostEqual(
-            today_date + timedelta(days=apple_product.removal_time),
+            today_date + timedelta(days=self.apple_product.removal_time),
             apple_lot.removal_date, delta=time_gap)
         self.assertAlmostEqual(
-            today_date + timedelta(days=apple_product.alert_time),
+            today_date + timedelta(days=self.apple_product.alert_time),
             apple_lot.alert_date, delta=time_gap)
 
         difference = timedelta(days=20)
@@ -267,3 +269,47 @@ class TestStockProductionLot(TestStockCommon):
             apple_lot.removal_date, old_removal_date + difference, delta=time_gap)
         self.assertAlmostEqual(
             apple_lot.alert_date, old_alert_date + difference, delta=time_gap)
+
+    def test_04_expiration_date_on_receipt(self):
+        """ Test we can set an expiration date on receipt and all expiration
+        date will be correctly set. """
+        partner = self.env['res.partner'].create({
+            'name': 'Apple\'s Joe',
+            'company_id': self.env.ref('base.main_company').id,
+        })
+        expiration_date = datetime.today() + timedelta(days=30)
+        time_gap = timedelta(seconds=10)
+
+        # Receives a tracked production using expiration date.
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.apple_product
+            move.product_uom_qty = 4
+        receipt = picking_form.save()
+        receipt.action_confirm()
+
+        # Defines a date during the receipt.
+        move = receipt.move_ids_without_package[0]
+        line = move.move_line_ids[0]
+        self.assertEqual(move.use_expiration_date, True)
+        line.lot_name = 'Apple Box #2'
+        line.expiration_date = expiration_date
+        line.qty_done = 4
+
+        receipt._action_done()
+        # Get back the lot created when the picking was done...
+        apple_lot = self.env['stock.production.lot'].search(
+            [('product_id', '=', self.apple_product.id)],
+            limit=1,
+        )
+        # ... and checks all date fields are correctly set.
+        self.assertAlmostEqual(
+            apple_lot.expiration_date, expiration_date, delta=time_gap)
+        self.assertAlmostEqual(
+            apple_lot.use_date, expiration_date - timedelta(days=5), delta=time_gap)
+        self.assertAlmostEqual(
+            apple_lot.removal_date, expiration_date - timedelta(days=2), delta=time_gap)
+        self.assertAlmostEqual(
+            apple_lot.alert_date, expiration_date - timedelta(days=6), delta=time_gap)

@@ -416,11 +416,7 @@ class StockMoveLine(models.Model):
                             # If a picking type is linked, we may have to create a production lot on
                             # the fly before assigning it to the move line if the user checked both
                             # `use_create_lots` and `use_existing_lots`.
-                            if ml.lot_name and not ml.lot_id:
-                                lot = self.env['stock.production.lot'].create(
-                                    {'name': ml.lot_name, 'product_id': ml.product_id.id, 'company_id': ml.move_id.company_id.id}
-                                )
-                                ml.write({'lot_id': lot.id})
+                            ml._create_and_assign_production_lot()
                         elif not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots:
                             # If the user disabled both `use_create_lots` and `use_existing_lots`
                             # checkboxes on the picking type, he's allowed to enter tracked
@@ -475,6 +471,17 @@ class StockMoveLine(models.Model):
             'product_uom_qty': 0.00,
             'date': fields.Datetime.now(),
         })
+
+    def _create_and_assign_production_lot(self):
+        """ Creates and assign a new production lot of the move line."""
+        self.ensure_one()
+        if self.lot_name and not self.lot_id:
+            lot = self.env['stock.production.lot'].create({
+                'company_id': self.move_id.company_id.id,
+                'name': self.lot_name,
+                'product_id': self.product_id.id,
+            })
+            self.write({'lot_id': lot.id})
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
         self.ensure_one()
