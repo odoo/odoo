@@ -31,6 +31,7 @@
         <record id="mrp_bom_form_view" model="ir.ui.view">
             <field name="name">mrp.bom.form</field>
             <field name="model">mrp.bom</field>
+            <field name="priority">100</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material">
                     <sheet>
@@ -222,6 +223,7 @@
                     <group>
                         <group string="Product">
                             <field name="product_id"/>
+                            <field name="parent_product_tmpl_id" invisible="1"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row">
                                 <field name="product_qty"/>
