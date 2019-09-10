@@ -140,11 +140,9 @@ class IoTboxHomepage(web.Home):
 
     @http.route('/clear_credential', type='http', auth='none', cors='*', csrf=False)
     def clear_credential(self):
-        subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
         helpers.unlink_file('odoo-db-uuid.conf')
         helpers.unlink_file('odoo-enterprise-code.conf')
         subprocess.check_call(["sudo", "service", "odoo", "restart"])
-        subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
         return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069'>"
 
     def get_wifi_essid(self):

@@ -109,6 +109,7 @@ def load_certificate():
             Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
             subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
             subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"])
+            subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
             subprocess.check_call(["sudo", "service", "nginx", "restart"])
 
 def download_drivers(auto=True):
@@ -127,6 +128,7 @@ def download_drivers(auto=True):
                 zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                 zip_file.extractall(get_resource_path('hw_drivers', 'drivers'))
                 subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
+                subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
         except Exception as e:
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
@@ -145,9 +147,11 @@ def unlink_file(filename):
     if path.exists():
         path.unlink()
     subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
+    subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
 
 def write_file(filename, text):
     subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
     path = Path.home() / filename
     path.write_text(text)
     subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
+    subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
