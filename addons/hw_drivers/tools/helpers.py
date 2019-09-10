@@ -74,7 +74,17 @@ def get_token():
     return read_file_first_line('token')
 
 def get_version():
-    return '19_07'
+    return '19.07'
+
+def get_wifi_essid(self):
+    wifi_options = []
+    process_iwlist = subprocess.Popen(['sudo', 'iwlist', 'wlan0', 'scan'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process_grep = subprocess.Popen(['grep', 'ESSID:"'], stdin=process_iwlist.stdout, stdout=subprocess.PIPE).stdout.readlines()
+    for ssid in process_grep:
+        essid = ssid.decode('utf-8').split('"')[1]
+        if essid not in wifi_options:
+            wifi_options.append(essid)
+    return wifi_options
 
 def load_certificate():
     """

@@ -97,7 +97,7 @@ class IoTboxHomepage(web.Home):
                 'title': 'Configure IoT Box',
                 'breadcrumb': 'Configure IoT Box',
                 'loading_message': 'Configuring your IoT Box',
-                'ssid': self.get_wifi_essid(),
+                'ssid': helpers.get_wifi_essid(),
                 'server': helpers.get_odoo_server_url(),
                 'hostname': subprocess.check_output('hostname').decode('utf-8'),
                 })
@@ -145,27 +145,13 @@ class IoTboxHomepage(web.Home):
         subprocess.check_call(["sudo", "service", "odoo", "restart"])
         return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069'>"
 
-    def get_wifi_essid(self):
-        wifi_options = []
-        try:
-            f = open('/tmp/scanned_networks.txt', 'r')
-            for line in f:
-                line = line.rstrip()
-                line = misc.html_escape(line)
-                if line not in wifi_options:
-                    wifi_options.append(line)
-            f.close()
-        except IOError:
-            _logger.warning("No /tmp/scanned_networks.txt")
-        return wifi_options
-
     @http.route('/wifi', type='http', auth='none', website=True)
     def wifi(self):
         return wifi_config_template.render({
             'title': 'Wifi configuration',
             'breadcrumb': 'Configure Wifi',
             'loading_message': 'Connecting to Wifi',
-            'ssid': self.get_wifi_essid(),
+            'ssid': helpers.get_wifi_essid(),
         })
 
     @http.route('/wifi_connect', type='http', auth='none', cors='*', csrf=False)
@@ -184,6 +170,11 @@ class IoTboxHomepage(web.Home):
             res_payload['server'] = {
                 'url': server,
                 'message': 'Redirect to Odoo Server'
+            }
+        else:
+            res_payload['server'] = {
+                'url': 'http://' + helpers.get_ip() + ':8069',
+                'message': 'Redirect to IoT Box'
             }
 
         return json.dumps(res_payload)
@@ -229,7 +220,7 @@ class IoTboxHomepage(web.Home):
             'title': 'Configure IoT Box',
             'breadcrumb': 'Configure IoT Box',
             'loading_message': 'Configuring your IoT Box',
-            'ssid': self.get_wifi_essid(),
+            'ssid': helpers.get_wifi_essid(),
             'server': helpers.get_odoo_server_url(),
             'hostname': subprocess.check_output('hostname').decode('utf-8').strip('\n'),
         })
