@@ -47,9 +47,10 @@ var PrinterMixin = {
     htmlToImg: function (receipt) {
         var self = this;
         $('.pos-receipts').html(receipt);
-        $('.pos-receipt').addClass('pos-receipt-print');
+        $('.pos-receipts>.pos-receipt').addClass('pos-receipt-print');
         var promise = new Promise(function (resolve, reject) {
-            html2canvas($('.pos-receipt')[0], {
+            html2canvas($('.pos-receipt-print')[0], {
+                background :'#FFFFFF',
                 ignoreElements: function (node) {
                     // By default, html2canvas copies the whole DOM even if we just capture a part
                     // of it. When copying the list of products, it gets all of the product from the
@@ -58,11 +59,12 @@ var PrinterMixin = {
                         return true;
                     }
                     return false;
-                }
-            }).then(function (canvas) {
-                $('.pos-receipts').empty();
-                resolve(self.process_canvas(canvas));
-            });
+                },
+                onrendered: function (canvas) {
+                    $('.pos-receipts').empty();
+                    resolve(self.process_canvas(canvas));
+                } 
+            })
         });
         return promise;
     },

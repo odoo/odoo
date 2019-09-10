@@ -263,12 +263,12 @@ exports.PosModel = Backbone.Model.extend({
         domain: function(self){ return [['id','=', self.config_id]]; },
         loaded: function(self,configs){
             self.config = configs[0];
-            self.config.use_proxy = self.config.iface_payment_terminal ||
+            self.config.use_proxy = self.config.is_posbox && (
+                                    self.config.iface_payment_terminal ||
                                     self.config.iface_electronic_scale ||
                                     self.config.iface_print_via_proxy  ||
                                     self.config.iface_scan_via_proxy   ||
-                                    self.config.iface_cashdrawer       ||
-                                    self.config.iface_customer_facing_display;
+                                    self.config.iface_customer_facing_display);
 
             self.db.set_uuid(self.config.uuid);
             self.set_cashier(self.get_cashier());
