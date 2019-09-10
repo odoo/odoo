@@ -13,8 +13,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
-from odoo.exceptions import Warning, UserError
+from odoo.exceptions import Warning, UserError, AccessError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
 
@@ -438,7 +437,7 @@ class Slide(models.Model):
     def message_post(self, message_type='notification', **kwargs):
         self.ensure_one()
         if message_type == 'comment' and not self.channel_id.can_comment:  # user comments have a restriction on karma
-            raise KarmaError(_('Not enough karma to comment'))
+            raise AccessError(_('Not enough karma to comment'))
         return super(Slide, self).message_post(message_type=message_type, **kwargs)
 
     def get_access_action(self, access_uid=None):

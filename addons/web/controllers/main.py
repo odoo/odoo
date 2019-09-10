@@ -42,7 +42,7 @@ from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
 from odoo.tools.safe_eval import safe_eval
 from odoo import http, tools
-from odoo.http import content_disposition, dispatch_rpc, request, Response
+from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db, security
@@ -84,7 +84,7 @@ def serialize_exception(f):
             return f(*args, **kwargs)
         except Exception as e:
             _logger.exception("An exception occured during an http request")
-            se = request.registry['ir.http'].serialize_exception(e)
+            se = _serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "Odoo Server Error",
@@ -1850,7 +1850,7 @@ class ReportController(http.Controller):
             else:
                 return
         except Exception as e:
-            se = request.env['ir.http'].serialize_exception(e)
+            se = _serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "Odoo Server Error",
