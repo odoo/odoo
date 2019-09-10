@@ -29,10 +29,17 @@ odoo.define('account.hierarchy.selection', function (require) {
                             'name': _('Balance Sheet'),
                             'children': [
                                 {'name': _t('Assets'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'asset'), v => v['id'])},
-                                {'name': _t('Liabilities'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'liability' || v['internal_group'] == 'equity'), v => v['id'])},
-                            ]
+                                {'name': _t('Liabilities'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'liability'), v => v['id'])},
+                                {'name': _t('Equity'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'equity'), v => v['id'])},
+                            ],
                         },
-                        {'name': _t('Profit & Loss'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'income' || v['internal_group'] == 'expense'), v => v['id'])},
+                        {
+                            'name': _t('Profit & Loss'),
+                            'children': [
+                                {'name': _t('Income'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'income'), v => v['id'])},
+                                {'name': _t('Expense'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'expense'), v => v['id'])},
+                            ],
+                        },
                         {'name': _t('Other'), 'ids': _.map(_.filter(arg, v => !['asset', 'liability', 'equity', 'income', 'expense'].includes(v['internal_group'])), v => v['id'])},
                     ]
                 });
@@ -52,7 +59,7 @@ odoo.define('account.hierarchy.selection', function (require) {
             var self = this;
             _.each(group, function(item) {
                 var optgroup = $('<optgroup/>').attr(({
-                    'label': $('<div/>').html('&nbsp;&nbsp;'.repeat(3 * level) + item['name']).text(),
+                    'label': $('<div/>').html('&nbsp;'.repeat(6 * level) + item['name']).text(),
                 }))
                 _.each(item['ids'], function(id) {
                     var value = _.find(self.values, v => v[0] == id)
