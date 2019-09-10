@@ -67,8 +67,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     def _get_shipment_rate(self):
         vals = self.carrier_id.rate_shipment(self.order_id)
         if vals.get('success'):
-            if vals.get('warning_message'):
-                self.delivery_message = vals['warning_message']
+            self.delivery_message = vals.get('warning_message', False)
             self.delivery_price = vals['price']
             self.display_price = vals['carrier_price']
             return {}
