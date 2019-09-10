@@ -113,7 +113,7 @@ class AccountVoucher(models.Model):
                 ('type', 'in', ('bank', 'cash')),
                 ('company_id', '=', voucher.company_id.id),
             ]
-            if voucher.account_id and voucher.account_id.internal_type == 'liquidity':
+            if voucher.account_id:
                 field = 'default_debit_account_id' if voucher.voucher_type == 'sale' else 'default_credit_account_id'
                 domain.append((field, '=', voucher.account_id.id))
             voucher.payment_journal_id = self.env['account.journal'].search(domain, limit=1)
