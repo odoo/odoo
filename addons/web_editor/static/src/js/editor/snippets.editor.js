@@ -80,7 +80,16 @@ var SnippetEditor = Widget.extend({
                     return $clone;
                 },
                 start: _.bind(self._onDragAndDropStart, self),
-                stop: _.bind(self._onDragAndDropStop, self)
+                stop: function () {
+                    // Delay our stop handler so that some summernote handlers
+                    // which occur on mouseup (and are themself delayed) are
+                    // executed first (this prevents the library to crash
+                    // because our stop handler may change the DOM).
+                    var args = arguments;
+                    setTimeout(function () {
+                        self._onDragAndDropStop.apply(self, args);
+                    }, 0);
+                },
             });
         }
 
