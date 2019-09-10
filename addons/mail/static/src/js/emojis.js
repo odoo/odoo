@@ -124,6 +124,8 @@ var data = {
     ":music":         "🎵",
     ":trumpet":       "🎺",
     ":guitar":        "🎸",
+    ":run":           "🏃",
+    ":bike":          "🚲",
     ":soccer":        "⚽️",
     ":football":      "🏈",
     ":8ball":         "🎱",
