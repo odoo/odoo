@@ -105,6 +105,8 @@ class Lead(models.Model):
 
     def _iap_enrich_get_message_data(self, company_data):
         log_data = {
+            'name': company_data.get('name'),
+            'description': company_data.get('description'),
             'twitter': company_data.get('twitter'),
             'logo': company_data.get('logo'),
             'phone_numbers': company_data.get('phone_numbers'),
