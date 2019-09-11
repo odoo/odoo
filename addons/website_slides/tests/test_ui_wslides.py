@@ -50,6 +50,25 @@ class TestUi(tests.HttpCase):
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member.ready',
             login=user_portal.login)
 
+
+@tests.common.tagged('external', '-standard')
+class TestUiYoutube(tests.HttpCase):
+
+    def test_course_member_yt_employee(self):
+        # remove membership because we need to be able to join the course during the tour
+        user_demo = self.env.ref('base.user_demo')
+        user_demo.flush()
+        user_demo.write({
+            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)]
+        })
+        self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo'))
+
+        self.phantom_js(
+            '/slides',
+            'odoo.__DEBUG__.services["web_tour.tour"].run("course_member_youtube")',
+            'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member_youtube.ready',
+            login=user_demo.login)
+
     def test_course_publisher_website_designer(self):
         # remove membership because we need to be able to join the course during the tour
         # group_website_designer
