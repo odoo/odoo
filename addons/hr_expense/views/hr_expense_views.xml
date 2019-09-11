@@ -18,7 +18,7 @@
             <field name="inherit_id" ref="hr.res_users_view_form_profile" />
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='managers']" position="inside">
-                    <field name="expense_manager_id"/>
+                    <field name="expense_manager_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                 </xpath>
             </field>
         </record>
