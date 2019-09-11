@@ -85,7 +85,7 @@
         <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='employee_bank_account_id']" position="replace">
-                <field name="employee_bank_account_id" context="{'display_partner':True}"/>
+                <field name="employee_bank_account_id" context="{'display_partner':True}" attrs="{'readonly': [('can_edit', '=', False)]}"/>
             </xpath>
         </field>
     </record>
