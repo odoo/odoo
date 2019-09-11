@@ -715,7 +715,7 @@ class AccountJournal(models.Model):
         return {
             'alias_defaults': {'type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'company_id': self.company_id.id},
             'alias_parent_thread_id': self.id,
-            'alias_name': re.sub(r'[^\w]+', '-', alias_name)
+            'alias_name': alias_name,
         }
 
     @api.multi
