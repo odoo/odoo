@@ -2146,14 +2146,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
             }
         });
     },
-    toggle_email_button: function() {
-        var client = this.pos.get_client();
-        this.$('.js_email').removeClass('oe_hidden', client);
-    },
     customer_changed: function() {
         var client = this.pos.get_client();
         this.$('.js_customer_name').text( client ? client.name : _t('Customer') );
-        this.toggle_email_button();
     },
     click_set_customer: function(){
         this.gui.show_screen('clientlist');
@@ -2283,10 +2278,17 @@ var PaymentScreenWidget = ScreenWidget.extend({
             }
         }
 
-        if (order.get_client && order.is_to_email() && !order.get_client().email) {
+        var client = order.get_client();
+        if (order.is_to_email() && (!client || client && !utils.is_email(client.email))) {
+            var title = !client
+                ? 'Please select the customer'
+                : 'Please provide valid email';
+            var body = !client
+                ? 'You need to select the customer before you can send the receipt via email.'
+                : 'This customer does not have a valid email address, define one or do not send an email.';
             this.gui.show_popup('confirm', {
-                'title': _t('Please fill the Customer Email'),
-                'body': _t('This customer does not have an email address, define one or do not send an email'),
+                'title': _t(title),
+                'body': _t(body),
                 confirm: function () {
                     this.gui.show_screen('clientlist');
                 },
