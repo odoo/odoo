@@ -106,7 +106,7 @@ class SaleOrder(models.Model):
             values['name'] += _(' (Estimated Cost: %s )') % self._format_currency_amount(price_unit)
         else:
             values['price_unit'] = price_unit
-        if carrier.free_over and self._compute_amount_total_without_delivery() >= price_unit:
+        if carrier.free_over and self.currency_id.is_zero(price_unit) :
             values['name'] += '\n' + 'Free Shipping'
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
