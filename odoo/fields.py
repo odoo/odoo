@@ -942,8 +942,9 @@ class Field(MetaField('DummyField', (object,), {})):
         # only a single record may be accessed
         record.ensure_one()
 
-        if self.compute and (record.id in env.all.tocompute.get(self, ())) \
-                and not env.is_protected(self, record):
+        should_compute = self.compute and (record.id in env.all.tocompute.get(self, ())) \
+            and not env.is_protected(self, record)
+        if should_compute:
             # self must be computed on record
             recs = record if self.recursive else env.records_to_compute(self)
             try:
@@ -957,6 +958,8 @@ class Field(MetaField('DummyField', (object,), {})):
         except KeyError:
             # real record
             if record.id and self.store:
+                if should_compute and self.readonly:
+                    raise self._make_compute_cache_miss_error(record)
                 recs = record._in_cache_without(self)
                 try:
                     recs._fetch_field(self)
@@ -979,7 +982,10 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(recs)
                     except AccessError:
                         self.compute_value(record)
-                    value = env.cache.get(record, self)
+                    try:
+                        value = env.cache.get(record, self)
+                    except KeyError:
+                        raise self._make_compute_cache_miss_error(record)
 
             elif (not record.id) and record._origin:
                 value = self.convert_to_cache(record._origin[self.name], record)
@@ -1079,8 +1085,15 @@ class Field(MetaField('DummyField', (object,), {})):
 
     ############################################################################
     #
-    # Notification when fields are modified
+    # Error helpers
     #
+
+    def _make_compute_cache_miss_error(self, record):
+        return ValueError("\n".join([
+            _("The value is not in cache despite the field computation has been called."),
+            _("Most-likely, the compute method of the field does not set a value for all records"),
+            _("(Record: %s, Field: %s, User: %s)") % (record, self.name, record.env.uid),
+        ]))
 
 
 class Boolean(Field):

@@ -518,6 +518,25 @@ class ComputeOnchange(models.Model):
                 record.baz = record.foo
 
 
+class ComputeIncomplete(models.Model):
+    _name = 'test_new_api.compute.incomplete'
+    _description = "Compute method with not all records set"
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar')
+    baz = fields.Char(compute='_compute_baz', store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self.filtered(lambda r: r.foo.startswith('foo')):
+            record.bar = record.foo
+
+    @api.depends('foo')
+    def _compute_baz(self):
+        for record in self.filtered(lambda r: r.foo.startswith('foo')):
+            record.baz = record.foo
+
+
 class ModelBinary(models.Model):
     _name = 'test_new_api.model_binary'
     _description = 'Test Image field'
@@ -733,34 +752,3 @@ class Mixin(models.AbstractModel):
 class ExtendedDisplay(models.Model):
     _name = 'test_new_api.display'
     _inherit = ['test_new_api.mixin', 'test_new_api.display']
-
-
-class ModelActiveField(models.Model):
-    _name = 'test_new_api.model_active_field'
-    _description = 'A model with active field'
-
-    active = fields.Boolean(default=True)
-    parent_id = fields.Many2one('test_new_api.model_active_field')
-    children_ids = fields.One2many('test_new_api.model_active_field', 'parent_id')
-    parent_active = fields.Boolean(string='Active Parent', related='parent_id.active', store=True)
-
-
-class ModelMany2oneReference(models.Model):
-    _name = 'test_new_api.model_many2one_reference'
-    _description = 'dummy m2oref model'
-
-    res_model = fields.Char('Resource Model')
-    res_id = fields.Many2oneReference('Resource ID', model_field='res_model')
-
-
-class InverseM2oRef(models.Model):
-    _name = 'test_new_api.inverse_m2o_ref'
-    _description = 'dummy m2oref inverse model'
-
-    model_ids = fields.One2many('test_new_api.model_many2one_reference', 'res_id', string="Models")
-    model_ids_count = fields.Integer("Count", compute='_compute_model_ids_count')
-
-    @api.depends('model_ids')
-    def _compute_model_ids_count(self):
-        for rec in self:
-            rec.model_ids_count = len(rec.model_ids)

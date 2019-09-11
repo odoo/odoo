@@ -501,6 +501,21 @@ class TestFields(common.TransactionCase):
             discussion.name = "X"
             discussion.flush()
 
+    def test_16_compute_incomplete(self):
+        model = self.env['test_new_api.compute.incomplete']
+
+        record1 = model.create({'foo': 'foo'})
+        record1.bar
+        record1.baz
+
+        with self.assertRaises(ValueError):
+            record2 = model.create({'foo': 'a'})
+            record2.bar
+
+        with self.assertRaises(ValueError):
+            record3 = model.create({'foo': 'a'})
+            record3.baz
+
     def test_20_float(self):
         """ test rounding of float fields """
         record = self.env['test_new_api.mixed'].create({})
