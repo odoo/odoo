@@ -47,7 +47,8 @@ class ResPartner(models.Model):
         Validation can be also done by calling ensure_vat() method that returns the cuit or error if this one is not
         found """
         recs_ar_vat = self.filtered(lambda x: x.l10n_latam_identification_type_id.l10n_ar_afip_code == '80')
-        recs_ar_vat.l10n_ar_vat = True
+        for rec in recs_ar_vat:
+            rec.l10n_ar_vat = rec.vat
         remaining = self - recs_ar_vat
         remaining.l10n_ar_vat = False
 
