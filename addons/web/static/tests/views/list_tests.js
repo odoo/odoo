@@ -969,7 +969,7 @@ QUnit.module('Views', {
             n += 1;
         });
         await testUtils.dom.click($td);
-        testUtils.fields.editInput($td.find('input'), 'abc');
+        await testUtils.fields.editInput($td.find('input'), 'abc');
         assert.strictEqual(n, 1, "field_changed should have been triggered");
         await testUtils.dom.click(list.$('td:not(.o_list_record_selector)').eq(2));
         assert.strictEqual(n, 1, "field_changed should not have been triggered");
@@ -1470,8 +1470,9 @@ QUnit.module('Views', {
             { field: 'qux', expected: 92, type: 'Float' },
             { field: 'date', expected: 92, type: 'Date' },
             { field: 'datetime', expected: 146, type: 'Datetime' },
+            { field: 'amount', expected: 104, type: 'Monetary' },
         ];
-        assert.expect(assertions.length + 1);
+        assert.expect(8);
 
         this.data.foo.records = [];
         var list = await createView({
@@ -1485,14 +1486,17 @@ QUnit.module('Views', {
                         '<field name="qux"/>' +
                         '<field name="date"/>' +
                         '<field name="datetime"/>' +
+                        '<field name="amount"/>' +
                     '</tree>',
         });
 
+        assert.containsNone(list, 'o_resize', "There shouldn't be any resize handle if no data");
         assertions.forEach(a => {
             assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
                 `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
         });
-        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%', "Char field should occupy the remaining space");
+        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%',
+            "Char field should occupy the remaining space");
 
         list.destroy();
     });
@@ -1504,8 +1508,9 @@ QUnit.module('Views', {
             { field: 'qux', expected: 92, type: 'Float' },
             { field: 'date', expected: 92, type: 'Date' },
             { field: 'datetime', expected: 146, type: 'Datetime' },
+            { field: 'amount', expected: 104, type: 'Monetary' },
         ];
-        assert.expect(assertions.length + 1);
+        assert.expect(8);
 
         var list = await createView({
             View: ListView,
@@ -1518,15 +1523,18 @@ QUnit.module('Views', {
                         '<field name="qux"/>' +
                         '<field name="date"/>' +
                         '<field name="datetime"/>' +
+                        '<field name="amount"/>' +
                     '</tree>',
             groupBy: ['int_field'],
         });
 
+        assert.containsNone(list, 'o_resize', "There shouldn't be any resize handle if no data");
         assertions.forEach(a => {
             assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
                 `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
         });
-        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%');
+        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%',
+            "Char field should occupy the remaining space");
 
         list.destroy();
     });
@@ -1665,9 +1673,9 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('row height should not change when switching mode', async function (assert) {
+    QUnit.test('row height and width should not change when switching mode', async function (assert) {
         // Warning: this test is css dependant
-        assert.expect(3);
+        assert.expect(5);
 
         var multiLang = _t.database.multi_lang;
         _t.database.multi_lang = true;
@@ -1702,23 +1710,54 @@ QUnit.module('Views', {
         // the width is hardcoded to make sure we have the same condition
         // between debug mode and non debug mode
         list.$el.width('1200px');
-        var startHeight = list.$('.o_data_row:first').height();
+        var startHeight = list.$('.o_data_row:first').outerHeight();
+        var startWidth = list.$('.o_data_row:first').outerWidth();
 
         // start edition of first row
         await testUtils.dom.click(list.$('.o_data_row:first > td:not(.o_list_record_selector)').first());
-
         assert.hasClass(list.$('.o_data_row:first'), 'o_selected_row');
-        var editionHeight = list.$('.o_data_row:first').height();
+        var editionHeight = list.$('.o_data_row:first').outerHeight();
+        var editionWidth = list.$('.o_data_row:first').outerWidth();
 
         // leave edition
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
-
-        var readonlyHeight = list.$('.o_data_row:first').height();
+        var readonlyHeight = list.$('.o_data_row:first').outerHeight();
+        var readonlyWidth = list.$('.o_data_row:first').outerWidth();
 
         assert.strictEqual(startHeight, editionHeight);
         assert.strictEqual(startHeight, readonlyHeight);
+        assert.strictEqual(startWidth, editionWidth);
+        assert.strictEqual(startWidth, readonlyWidth);
 
         _t.database.multi_lang = multiLang;
+        list.destroy();
+    });
+
+    QUnit.test('long words in text cells should break into smaller lines', async function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records[0].text = "a";
+        this.data.foo.records[1].text = "pneumonoultramicroscopicsilicovolcanoconiosis"; // longest english word I could find
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="text"/></tree>',
+        });
+
+        // Intentionally set the table width to a small size
+        list.$('table').width('100px');
+        list.$('th:last').width('100px');
+        var shortText = list.$('.o_data_row:eq(0) td:last')[0].clientHeight;
+        var longText = list.$('.o_data_row:eq(1) td:last')[0].clientHeight;
+        var emptyText = list.$('.o_data_row:eq(2) td:last')[0].clientHeight;
+
+        assert.strictEqual(shortText, emptyText,
+            "Short word should not change the height of the cell");
+        assert.ok(longText > emptyText,
+            "Long word should change the height of the cell");
+
         list.destroy();
     });
 
@@ -6955,6 +6994,40 @@ QUnit.module('Views', {
     });
     // TODO: write test on:
     // - default_get with a field not in view
+
+    QUnit.test('editable list: resize column headers', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                    '<field name="reference" optional="hide"/>' +
+                '</tree>',
+        });
+
+        // Target handle
+        const th = list.el.getElementsByTagName('th')[1];
+        const optionalDropdown = list.el.getElementsByClassName('o_optional_columns')[0];
+        const optionalInitialX = optionalDropdown.getBoundingClientRect().x;
+        const resizeHandle = th.getElementsByClassName('o_resize')[0];
+        const originalWidth = th.offsetWidth;
+        const expectedWidth = Math.floor(originalWidth / 2 + resizeHandle.offsetWidth / 2);
+        const delta = originalWidth - expectedWidth;
+
+        await testUtils.dom.dragAndDrop(resizeHandle, th, { mousemoveTarget: window, mouseupTarget: window });
+        const optionalFinalX = Math.floor(optionalDropdown.getBoundingClientRect().x);
+
+        assert.strictEqual(th.offsetWidth, expectedWidth,
+            // 1px for the cell right border
+            "header width should be halved (plus half the width of the handle)");
+        assert.strictEqual(optionalFinalX, optionalInitialX - delta,
+            "optional columns dropdown should have moved the same amount");
+
+        list.destroy();
+    });
 });
 
 });

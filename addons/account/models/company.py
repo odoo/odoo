@@ -107,6 +107,11 @@ Best Regards,'''))
     # Needed in the Point of Sale
     account_default_pos_receivable_account_id = fields.Many2one('account.account', string="Default PoS Receivable Account")
 
+    # Accrual Accounting
+    expense_accrual_account_id = fields.Many2one('account.account', help="Account used to move the period of an expense", domain=[('internal_group', '=', 'liability'), ('reconcile', '=', True)])
+    revenue_accrual_account_id = fields.Many2one('account.account', help="Account used to move the period of a revenue", domain=[('internal_group', '=', 'asset'), ('reconcile', '=', True)])
+    accrual_default_journal_id = fields.Many2one('account.journal', help="Journal used by default for moving the period of an entry", domain="[('type', '=', 'general')]")
+
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):
         # if the user explicitly chooses the 29th of February we allow it:

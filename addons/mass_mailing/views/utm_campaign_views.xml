@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="before">
                 <header style="min-height:31px;">
-                    <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new Mailing"/>
-                    <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new A/B Testing Mailing"/>
+                    <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Create a mailing"/>
+                    <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="btn-secondary" string="Create an A/B Testing Mailing"/>
                     <span><field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/></span>
                 </header>
             </xpath>
@@ -100,12 +100,39 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-            Create a new UTM campaign
+            Create a mailing campaign
             </p><p>
-            Create a campaign to structure mailing and get analysis from email status.
+            Campaigns are the perfect tool to track results across multiple mailings.
             </p>
         </field>
         <field name="domain">[('is_website', '=', False)]</field>
+    </record>
+
+    <record id="action_view_utm_campaign_stage" model="ir.actions.act_window">
+        <field name="name">UTM Stages</field>
+        <field name="res_model">utm.stage</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a stage for your campaigns
+            </p>
+            <p>
+            Stages allow you to organize your workflow  (e.g. : plan, design, in progress,  done, …).
+            </p>
+        </field>
+    </record>
+
+    <record id="action_view_utm_campaign_tag" model="ir.actions.act_window">
+        <field name="name">Campaign Tags</field>
+        <field name="res_model">utm.tag</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Add a new tag
+            </p>
+            <p>
+            Use tags to organize campaigns and easily filter them.
+            </p>
+        </field>
     </record>
 
     <menuitem name="Campaigns" id="menu_email_campaigns"
@@ -115,12 +142,11 @@
 
     <menuitem name="Campaign Stages" id="menu_view_mass_mailing_stages"
         parent="mass_mailing_configuration" sequence="1"
-        groups="mass_mailing.group_mass_mailing_campaign"
-        action="utm.action_view_utm_stage"/>
+        action="action_view_utm_campaign_stage"
+        groups="mass_mailing.group_mass_mailing_campaign"/>
 
-    <menuitem id="mass_mailing_tag_menu"
-        parent="mass_mailing_configuration"
-        action="utm.action_view_utm_tag"
-        sequence="2"
+    <menuitem name="Campaign Tag" id="mass_mailing_tag_menu"
+        parent="mass_mailing_configuration" sequence="2"
+        action="action_view_utm_campaign_tag"
         groups="mass_mailing.group_mass_mailing_campaign"/>
 </odoo>

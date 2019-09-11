@@ -155,13 +155,7 @@ var FormViewDialog = ViewDialog.extend({
 
                 var multi = options.disable_multiple_selection;
                 if (!multi && this.deletable) {
-                    options.buttons.push({
-                        text: _t("Remove"),
-                        classes: 'btn-secondary ' + oBtnRemove,
-                        click: function() {
-                            self._remove().then(self.close.bind(self));
-                        }
-                    });
+                    this._setRemoveButtonOption(options, oBtnRemove);
                 }
             }
         }
@@ -274,6 +268,24 @@ var FormViewDialog = ViewDialog.extend({
             // id now), so don't re-use the copy obtained before the save
             var record = self.form_view.model.get(self.form_view.handle);
             return self.on_saved(record, !!changedFields.length);
+        });
+    },
+
+    /**
+     * Set the "remove" button into the options' buttons list
+     *
+     * @private
+     * @param {Object} options The options object to modify
+     * @param {string} btnClasses The classes for the remove button
+     */
+    _setRemoveButtonOption(options, btnClasses) {
+        const self = this;
+        options.buttons.push({
+            text: _t("Remove"),
+            classes: 'btn-secondary ' + btnClasses,
+            click: function() {
+                self._remove().then(self.close.bind(self));
+            }
         });
     },
 });

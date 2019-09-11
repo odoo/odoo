@@ -56,7 +56,6 @@ class Website(models.Model):
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company, required=True)
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
-    default_lang_code = fields.Char("Default language code", related='default_lang_id.code', store=True, readonly=False)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
 
     def _default_social_facebook(self):
@@ -156,7 +155,8 @@ class Website(models.Model):
         public_user_to_change_websites = self.env['website']
         self._handle_favicon(values)
 
-        self._get_languages.clear_cache(self)
+        self.clear_caches()
+
         if 'company_id' in values and 'user_id' not in values:
             public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
             if public_user_to_change_websites:
@@ -437,19 +437,11 @@ class Website(models.Model):
     # Languages
     # ----------------------------------------------------------
 
-    def get_languages(self):
-        self.ensure_one()
-        return self._get_languages()
-
-    @tools.cache('self.id')
-    def _get_languages(self):
-        return [(lg.code, lg.name) for lg in self.language_ids]
-
     def get_alternate_languages(self, req=None):
         langs = []
         if req is None:
             req = request.httprequest
-        default = self.get_current_website().default_lang_code
+        default = self.get_current_website().default_lang_id.url_code
         shorts = []
 
         def get_url_localized(router, lang):
@@ -460,11 +452,11 @@ class Website(models.Model):
             return router.build(request.endpoint, arguments)
 
         router = request.httprequest.app.get_db_router(request.db).bind('')
-        for code, dummy in self.get_languages():
-            lg_path = ('/' + code) if code != default else ''
-            lg_codes = code.split('_')
+        for lg in self.language_ids:
+            lg_path = ('/' + lg.url_code) if lg.url_code != default else ''
+            lg_codes = lg.code.split('_')
             shorts.append(lg_codes[0])
-            uri = get_url_localized(router, code) if request.endpoint else request.httprequest.path
+            uri = get_url_localized(router, lg.url_code) if request.endpoint else request.httprequest.path
             if req.query_string:
                 uri += u'?' + req.query_string.decode('utf-8')
             lang = {

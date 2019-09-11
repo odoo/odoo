@@ -32,7 +32,7 @@ tour.register('rte_translator', {
     timeout: 60000,
 }, {
     content: "go to english version",
-    trigger: '.js_language_selector a[data-lang="en_US"]',
+    trigger: '.js_language_selector a[data-url_code="en"]',
     extra_trigger: 'html[lang*="fr"]',
 }, {
     content: "Open new page menu",
@@ -73,7 +73,7 @@ tour.register('rte_translator', {
     extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor))',
 }, {
     content: "click on french version",
-    trigger: '.js_language_selector a[data-lang="fr_BE"]',
+    trigger: '.js_language_selector a[data-url_code="fr_BE"]',
     extra_trigger: 'html[lang*="en"]:not(:has(button[data-action=save]))',
 }, {
     content: "translate",
@@ -137,7 +137,7 @@ tour.register('rte_translator', {
     extra_trigger: 'html[lang*="fr"]:not(:has(#wrap p span))',
 }, {
     content: "return to english version",
-    trigger: '.js_language_selector a[data-lang="en_US"]',
+    trigger: '.js_language_selector a[data-url_code="en"]',
 }, {
     content: "edit english version",
     trigger: 'a[data-action=edit]',
@@ -170,7 +170,7 @@ tour.register('rte_translator', {
     trigger : '.js_language_selector .dropdown-toggle',
 }, {
     content: "return in french",
-    trigger : 'html[lang="en-US"] .js_language_selector .js_change_lang[data-lang="fr_BE"]',
+    trigger : 'html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="fr_BE"]',
 }, {
     content: "check bis: content is translated",
     trigger: '#wrap p font:first:contains(translated french text)',

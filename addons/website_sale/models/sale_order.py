@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.website_order_line = order.order_line
 
-    @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')
+    @api.depends('order_line.product_uom_qty', 'order_line.product_id')
     def _compute_cart_info(self):
         for order in self:
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))

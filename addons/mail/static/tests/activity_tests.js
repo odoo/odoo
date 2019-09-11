@@ -179,7 +179,7 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
     assert.containsN(activity, td, 2, 'should contain an empty cell as no activity scheduled yet.');
 
     // schedule an activity (this triggers a do_action)
-    testUtils.fields.editAndTrigger(activity.$(td + ':first'), null, ['mouseenter', 'click']);
+    await testUtils.fields.editAndTrigger(activity.$(td + ':first'), null, ['mouseenter', 'click']);
     assert.containsOnce(activity, 'table tfoot tr .o_record_selector',
         'should contain search more selector to choose the record to schedule an activity for it');
 

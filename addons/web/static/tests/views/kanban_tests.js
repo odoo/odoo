@@ -1036,7 +1036,7 @@ QUnit.module('Views', {
             keyCode: $.ui.keyCode.ENTER,
             which: $.ui.keyCode.ENTER,
         };
-        testUtils.fields.editAndTrigger(
+        await testUtils.fields.editAndTrigger(
             kanban.$('.o_kanban_quick_create').find('input[name=foo]'),
             'new partner',
             ['input', $.Event('keydown', enterEvent), $.Event('keydown', enterEvent)]
@@ -1189,7 +1189,7 @@ QUnit.module('Views', {
             which: $.ui.keyCode.ENTER,
         };
 
-        testUtils.fields.editAndTrigger(
+        await testUtils.fields.editAndTrigger(
             kanban.$('.o_kanban_quick_create').find('input[name=foo]'),
             'new partner',
             ['input', $.Event('keydown', enterEvent), $.Event('keydown', enterEvent)]

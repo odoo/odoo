@@ -5482,9 +5482,9 @@ Fields:
                     new_records = self.filtered(lambda r: not r.id)
                     real_records = self - new_records
                     records = model.browse()
-                    if key.store and real_records:
+                    if real_records:
                         records |= model.sudo().search([(key.name, 'in', real_records.ids)])
-                    if not key.store or new_records:
+                    if new_records:
                         cache_records = self.env.cache.get_records(model, key)
                         records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
                 records._modified_triggers(val, modified=modified)

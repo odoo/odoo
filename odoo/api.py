@@ -526,13 +526,12 @@ class Environment(Mapping):
     @property
     def company(self):
         """ return the company in which the user is logged in (as an instance) """
-        try:
-            company_id = int(self.context.get('allowed_company_ids')[0])
+        company_ids = self.context.get('allowed_company_ids', False)
+        if company_ids:
+            company_id = int(company_ids[0])
             if company_id in self.user.company_ids.ids:
                 return self['res.company'].browse(company_id)
-            return self.user.company_id
-        except Exception:
-            return self.user.company_id
+        return self.user.company_id
 
     @property
     def companies(self):

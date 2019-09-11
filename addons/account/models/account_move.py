@@ -14,6 +14,7 @@ from itertools import zip_longest
 import json
 import re
 import logging
+import psycopg2
 
 _logger = logging.getLogger(__name__)
 
@@ -116,7 +117,7 @@ class AccountMove(models.Model):
     partner_id = fields.Many2one('res.partner', readonly=True, tracking=True,
         states={'draft': [('readonly', False)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        string='Customer/Vendor')
+        string='Partner')
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity', store=True, readonly=True,
         compute='_compute_commercial_partner_id')
 
@@ -1900,6 +1901,26 @@ class AccountMove(models.Model):
                 # installing Accounting- with bank statements)
                 move.company_id.account_bank_reconciliation_start = move.date
 
+        for move in self:
+            if not move.partner_id: continue
+            if move.type.startswith('out_'):
+                field='customer_rank'
+            elif move.type.startswith('in_'):
+                field='supplier_rank'
+            else:
+                continue
+            try:
+                with self.env.cr.savepoint():
+                    self.env.cr.execute("SELECT "+field+" FROM res_partner WHERE ID=%s FOR UPDATE NOWAIT", (move.partner_id.id,))
+                    self.env.cr.execute("UPDATE res_partner SET "+field+"="+field+"+1 WHERE ID=%s", (move.partner_id.id,))
+                    self.env.cache.remove(move.partner_id, move.partner_id._fields[field])
+            except psycopg2.DatabaseError as e:
+                if e.pgcode == '55P03':
+                    _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
+                    continue
+                else:
+                    raise e
+
     def action_reverse(self):
         action = self.env.ref('account.action_view_account_move_reversal').read()[0]
 
@@ -3545,6 +3566,11 @@ class AccountMoveLine(models.Model):
         [action] = self.env.ref('account.action_account_moves_all_a').read()
         ids = self._reconciled_lines()
         action['domain'] = [('id', 'in', ids)]
+        return action
+
+    def action_accrual_entry(self):
+        [action] = self.env.ref('account.account_accrual_accounting_wizard_action').read()
+        action['context'] = self.env.context
         return action
 
     @api.model

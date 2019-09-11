@@ -57,7 +57,6 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_cards_design" t-value="request.website.viewref('website_blog.opt_blog_cards_design').active"/>
         <t t-set="opt_blog_list_view" t-value="request.website.viewref('website_blog.opt_blog_list_view').active"/>
         <t t-set="opt_blog_readable" t-value="request.website.viewref('website_blog.opt_blog_readable').active"/>
-        <t t-set="opt_blog_blogs_nav_show" t-value="request.website.viewref('website_blog.opt_blog_blogs_nav_show').active"/>
         <t t-set="opt_blog_sidebar_show" t-value="request.website.viewref('website_blog.opt_blog_sidebar_show').active"/>
 
         <div id="o_wblog_blog_top">
@@ -88,6 +87,8 @@ list of filtered posts (by date or tag).
             </t>
         </div>
 
+        <t t-call="website_blog.blogs_nav"/>
+
         <section id="o_wblog_index_content" t-att-class="opt_blog_cards_design and 'o_wblog_page_cards_bg'">
             <div class="container py-4">
                 <div t-attf-class="row #{opt_blog_sidebar_show and 'justify-content-between' or 'justify-content-center'}">
@@ -110,45 +111,44 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Show latest-post as top banner
     Replace top-banner content with the latest published post
 -->
-<template id="opt_blog_cover_post" name="Top banner - Show Latest Post" inherit_id="website_blog.blog_post_short" active="True" customize_show="True">
+<template id="opt_blog_cover_post" name="Top banner - Name / Latest Post" inherit_id="website_blog.blog_post_short" active="True" customize_show="True">
     <xpath expr="//div[@id='o_wblog_blog_top_droppable']" position="replace">
-        <t t-set="opt_blog_cover_post_show_author" t-value="request.website.viewref('website_blog.opt_blog_cover_post_show_author').active"/>
-        <t t-set="blog_post" t-value="first_post"/>
-
-        <div class="container">
+        <div t-if="first_post or blog" class="container">
             <div class="row py-4">
                 <div t-attf-class="mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
                     <t t-call="website_blog.blog_cover">
-                        <t t-set="cover_properties" t-value="first_cover"/>
+                        <t t-if="blog" t-set="cover_properties" t-value="json.loads(blog.cover_properties)"/>
+                        <t t-else="first_post" t-set="cover_properties" t-value="json.loads(first_post.cover_properties)"/>
                         <t t-set="additionnal_classes" t-value="'h-100 py-5 py-md-0 overflow-hidden rounded shadow'"/>
                     </t>
                 </div>
                 <div t-att-class="'col-md-7' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'">
                     <div class="container position-relative h-100 d-flex flex-column justify-content-around pt-1 pb-2">
                         <div t-attf-class="o_wblog_post_title o_wblog_cover_font_regular #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
-                            <div t-if="not date and not tag" class="h4 mb-3 bg-gamma px-2 rounded-sm d-inline-block mr-auto">Latest</div>
-                            <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}"
-                               t-field="blog_post.name" class="h1 d-block" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
-                            <div t-field="blog_post.subtitle" class="h4" placeholder="Subtitle"/>
+                            <t t-if="blog">
+                                <span t-field="blog.name" class="h1 d-block" placeholder="Blog's Title"/>
+                                <div t-field="blog.subtitle" class="h4" placeholder="Subtitle"/>
+                            </t>
+                            <t t-else="first_post">
+                                <div t-if="not date and not tag" class="h4 mb-3 bg-gamma px-2 rounded-sm d-inline-block mr-auto">Latest</div>
+                                <a t-attf-href="/blog/#{slug(first_post.blog_id)}/post/#{slug(first_post)}"
+                                   t-field="first_post.name" class="h1 d-block" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
+                                <div t-field="first_post.subtitle" class="h4" placeholder="Subtitle"/>
 
-                            <div t-if="not blog or opt_blog_cover_post_show_author" class="d-flex">
-                                <div t-if="not blog" class="small mt-2 mb-3 mr-1">
-                                    in <i class="fa fa-folder-open text-muted"/> <a t-attf-href="#{blog_url(blog=blog_post.blog_id)}" t-field="blog_post.blog_id"/>
-                                    <t t-if="opt_blog_cover_post_show_author">, by</t>
+                                <div t-if="not blog" class="d-flex">
+                                    <div class="small mt-2 mb-3 mr-1">
+                                        in <i class="fa fa-folder-open text-muted"/> <a t-attf-href="#{blog_url(blog=first_post.blog_id)}" t-field="first_post.blog_id"/>
+                                    </div>
                                 </div>
-                                <t t-if="opt_blog_cover_post_show_author" t-call="website_blog.post_author">
-                                    <t t-set="additionnal_classes" t-value="'d-inline-flex h6 w-auto'"/>
-                                    <t t-set="hide_date" t-value="True"/>
-                                </t>
-                            </div>
-                            <div t-field="blog_post.teaser" class="mb-4 lead"  placeholder=""/>
-                            <div>
-                                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}" class="btn btn-primary">Read more</a>
-                            </div>
+                                <div t-field="first_post.teaser" class="mb-4 lead"  placeholder=""/>
+                                <div>
+                                    <a t-attf-href="/blog/#{slug(first_post.blog_id)}/post/#{slug(first_post)}" class="btn btn-primary">Read more</a>
+                                </div>
+                            </t>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 mt-3" t-if="not opt_blog_blogs_nav_show"> <hr/> </div>
+                <div class="col-12 mt-3"> <hr/> </div>
             </div>
         </div>
     </xpath>
@@ -157,34 +157,31 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Show latest-post as top banner : 'Full Width' design -->
 <template id="opt_blog_cover_post_fullwidth_design" name="Full-Width Cover" inherit_id="website_blog.opt_blog_cover_post" active="True" customize_show="True">
     <xpath expr="//div[hasclass('container')]" position="replace">
-        <t t-call="website_blog.blog_cover" t-if="first_post">
-            <t t-set="cover_properties" t-value="first_cover"/>
+        <t t-call="website_blog.blog_cover">
+            <t t-if="blog" t-set="cover_properties" t-value="json.loads(blog.cover_properties)"/>
+            <t t-else="first_post" t-set="cover_properties" t-value="first_post and json.loads(first_post.cover_properties)"/>
             <t t-set="use_filters" t-value="True"/>
             <t t-set="use_text_size" t-value="True"/>
             <t t-set="use_text_align" t-value="True"/>
             <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_has_cover cover_auto'"/>
 
-            <div class="container position-relative h-100 d-flex flex-column justify-content-around">
+            <div t-if="first_post or blog" class="container position-relative h-100 d-flex flex-column justify-content-around">
                 <div t-attf-class="o_wblog_post_title o_wblog_cover_font_regular #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
-                    <div t-if="not date and not tag" class="h4 bg-gamma px-2 d-inline-block rounded-sm">Latest</div>
-                    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}" t-att-title="blog_post.name" class="text-white text-decoration-none">
-                        <div t-field="blog_post.name" id="o_wblog_post_name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
-                        <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
+                    <div t-if="not date and not tag and not blog" class="h4 bg-gamma px-2 d-inline-block rounded-sm">Latest</div>
+                    <a t-if="not blog and first_post" t-attf-href="/blog/#{slug(first_post.blog_id)}/post/#{slug(first_post)}" t-att-title="first_post.name" class="text-white text-decoration-none">
+                        <div t-field="first_post.name" id="o_wblog_post_name" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
+                        <div t-field="first_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
                     </a>
+                    <span t-elif="blog" t-att-title="blog.name" class="text-white text-decoration-none">
+                        <div t-field="blog.name" id="o_wblog_post_name" placeholder="Blog Title"/>
+                        <div t-field="blog.subtitle" id="o_wblog_post_subtitle" placeholder="Blog Subtitle"/>
+                    </span>
 
                     <div>
-                        <span t-if="not blog" class="text-white small mt-2 mb-3">
+                        <span t-if="not blog and blog_post" class="text-white small mt-2 mb-3">
                             in <i class="fa fa-folder-open text-white-75"/><a t-attf-href="#{blog_url(blog=blog_post.blog_id)}" class="text-white" t-field="blog_post.blog_id"/>
-                            <t t-if="opt_blog_cover_post_show_author">, </t>
                         </span>
                         <span t-else="">&amp;nbsp;</span>
-                        <small t-if="opt_blog_cover_post_show_author">
-                            by
-                            <t t-if="opt_blog_cover_post_show_author" t-call="website_blog.post_author">
-                                <t t-set="additionnal_classes" t-value="'d-inline-flex w-auto text-white my-2 ml-1'"/>
-                                <t t-set="hide_date" t-value="True"/>
-                            </t>
-                        </small>
                     </div>
                 </div>
             </div>
@@ -192,17 +189,6 @@ list of filtered posts (by date or tag).
     </xpath>
 </template>
 
-<!-- (Option) Blog: Show latest-post as top banner : Show author -->
-<template id="opt_blog_cover_post_show_author" name="Show Author" inherit_id="website_blog.opt_blog_cover_post" active="False" customize_show="True"/>
-
-<!-- (Option) Blog: Blogs Nav : Show
-    Show blogs navigation bar
--->
-<template id="opt_blog_blogs_nav_show" name="Blogs Navigation" inherit_id="website_blog.blog_post_short" active="True" customize_show="True">
-    <xpath expr="//section[@id='o_wblog_index_content']" position="before">
-        <t t-call="website_blog.blogs_nav"/>
-    </xpath>
-</template>
 
 <!-- (Option) Blog: Sidebar : Show -->
 <template id="opt_blog_sidebar_show" name="Show Sidebar" inherit_id="website_blog.blog_post_short" active="False" customize_show="True">
@@ -248,14 +234,14 @@ list of filtered posts (by date or tag).
         <section id="o_wblog_post_top">
             <div id="title" class="blog_header" t-ignore="True">
                 <t t-call="website_blog.blog_cover">
-                    <t t-set="cover_properties" t-value="blog_post_cover_properties"/>
+                    <t t-set="cover_properties" t-value="json.loads(blog_post.cover_properties)"/>
                     <t t-set="use_filters" t-value="True"/>
                     <t t-set="use_size" t-value="True"/>
                     <t t-set="use_text_size" t-value="True"/>
                     <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover'"/>
 
                     <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
-                        <div t-attf-class="o_wblog_post_title o_wblog_cover_font_regular #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
+                        <div t-attf-class="o_wblog_post_title o_wblog_cover_font_regular #{opt_blog_post_select_to_tweet and 'js_tweet'} #{opt_blog_post_select_to_comment and 'js_comment'}">
                             <div t-field="blog_post.name" id="o_wblog_post_name" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
                             <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
                         </div>
@@ -267,23 +253,23 @@ list of filtered posts (by date or tag).
             </div>
         </section>
 
-        <section id="o_wblog_post_main" t-attf-class="container pt-4 pb-5 #{'o_wblog_post_main_transition' if request.params.get('is_trans') else ''}">
+        <section id="o_wblog_post_main" t-attf-class="container pt-4 pb-5 #{'anim' in request.params and 'o_wblog_post_main_transition'}">
             <!-- Sidebar-enabled Layout -->
-            <div t-if="opt_blog_post_sidebar" t-attf-class="mx-auto #{'o_wblog_read_with_sidebar' if opt_blog_post_readable else ''}">
-                <div t-attf-class="d-flex flex-column flex-lg-row #{'justify-content-between' if opt_blog_post_readable else ''}">
-                    <div id="o_wblog_post_content" t-attf-class="#{'o_wblog_read w-100 flex-shrink-0' if opt_blog_post_readable else 'w-lg-75'}">
+            <div t-if="opt_blog_post_sidebar" t-attf-class="mx-auto #{opt_blog_post_readable and 'o_wblog_read_with_sidebar'}">
+                <div t-attf-class="d-flex flex-column flex-lg-row #{opt_blog_post_readable and 'justify-content-between'}">
+                    <div id="o_wblog_post_content" t-attf-class="#{opt_blog_post_readable and 'o_wblog_read w-100 flex-shrink-0' or 'w-lg-75'}">
                         <t t-call="website_blog.blog_post_content"/>
                     </div>
-                    <div id="o_wblog_post_sidebar_col" t-attf-class="pl-lg-5 #{'flex-grow-1 w-lg-25' if not opt_blog_post_readable else ''}">
+                    <div id="o_wblog_post_sidebar_col" t-attf-class="pl-lg-5 #{not opt_blog_post_readable and 'flex-grow-1 w-lg-25'}">
                         <t t-call="website_blog.blog_post_sidebar"/>
                     </div>
                 </div>
             </div>
 
             <!-- No-Sidebar Layout -->
-            <div t-if="not opt_blog_post_sidebar" t-attf-class="mx-auto #{'o_wblog_read' if opt_blog_post_readable else ''}">
+            <div t-if="not opt_blog_post_sidebar" t-attf-class="mx-auto #{opt_blog_post_readable and 'o_wblog_read'}">
                 <div class="d-flex flex-column flex-lg-row">
-                    <div id="o_wblog_post_content" t-attf-class=" #{'o_wblog_read w-100 flex-shrink-0' if opt_blog_post_readable else ''}">
+                    <div id="o_wblog_post_content" t-attf-class=" #{opt_blog_post_readable and 'o_wblog_read w-100 flex-shrink-0'}">
                         <t t-call="website_blog.blog_post_content"/>
                     </div>
                 </div>
@@ -364,7 +350,7 @@ list of filtered posts (by date or tag).
 
                 <t t-call="website_blog.blog_cover">
                     <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_regular rounded shadow overflow-hidden'"/>
-                    <t t-set="cover_properties" t-value="blog_post_cover_properties"/>
+                    <t t-set="cover_properties" t-value="json.loads(blog_post.cover_properties)"/>
                     <t t-set="use_size" t-value="True"/>
                 </t>
             </div>
@@ -433,7 +419,7 @@ list of filtered posts (by date or tag).
                             </div>
                             <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="w-25">
                                 <t t-call="website_blog.blog_cover">
-                                    <t t-set="cover_properties" t-value="next_post_cover_properties"/>
+                                    <t t-set="cover_properties" t-value="json.loads(next_post.cover_properties)"/>
                                     <t t-set="additionnal_classes" t-value="'rounded shadow-sm overflow-hidden h-100'"/>
                                 </t>
                             </a>
@@ -444,37 +430,39 @@ list of filtered posts (by date or tag).
             <t t-else="">
                 <div id="o_wblog_next_container" class="d-flex flex-column">
                     <t t-call="website_blog.blog_cover">
-                        <t t-set="cover_properties" t-value="next_post_cover_properties"/>
+                        <t t-set="cover_properties" t-value="json.loads(next_post.cover_properties)"/>
                         <t t-set="use_filters" t-value="True"/>
                         <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_footer o_wblog_has_cover'"/>
 
                         <a id="o_wblog_next_post_info" class="d-none"
                            t-att-data-size="cover_properties.get('resize_class')"
                            t-att-data-text="cover_properties.get('text_size_class')"
-                           t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post) + '?is_trans=True'"/>
+                           t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post) + '?anim'"/>
 
                         <t t-set="next_cover_is_full" t-value="'cover_full' in cover_properties.get('resize_class')"/>
                         <t t-set="next_cover_is_auto" t-value="'cover_auto' in cover_properties.get('resize_class')"/>
 
                         <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
-                            <div t-attf-class="o_wblog_toggle d-flex #{'mb-n5' if next_cover_is_full else ''}">
-                                <span class="bg-gamma h4 d-inline-block py-1 px-2 rounded-sm">Read Next</span>
-                            </div>
-
                             <div t-attf-class="o_wblog_post_title o_wblog_cover_font_regular">
                                 <div t-field="next_post.name" id="o_wblog_post_name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title"/>
                                 <div t-field="next_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
                             </div>
 
+                            <div t-attf-class="o_wblog_toggle #{next_cover_is_full and 'mb-n5'}">
+                                <span class="h4 d-inline-block py-1 px-2 rounded-sm text-white">
+                                    <i class="fa fa-angle-right fa-3x text-white" aria-label="Read next" title="Read Next"/>
+                                </span>
+                            </div>
+
                             <!-- Emulate the next post's cover's height. For full-screen covers,
                             the room that will be occupied by the 'scroll-down' link is temporary
-                            occupied  by the loader circle. Fot other layouts, an empty <div>
+                            occupied  by the loader circle. For other layouts, an empty <div>
                             creates enought separation.
                             -->
                             <div t-if="next_cover_is_full" class="o_wblog_next_loader justify-content-center align-items-center mx-auto position-relative">
                                 <div class="o_wblog_toggle d-none rounded-circle bg-white-50"/>
                             </div>
-                            <div t-else="" t-attf-class="o_wblog_next_fake_btn #{'d-flex o_wblog_toggle' if next_cover_is_auto else ''}"/>
+                            <div t-else="" t-attf-class="o_wblog_next_fake_btn #{next_cover_is_auto and 'd-flex o_wblog_toggle'}"/>
                         </div>
                     </t>
                     <div t-if="not next_cover_is_full" class="o_wblog_next_loader o_wblog_toggle d-none justify-content-center align-items-center flex-grow-1 position-relative">
