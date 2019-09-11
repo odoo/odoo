@@ -361,7 +361,7 @@ class AccountReconcileModel(models.Model):
             query += ' AND st_line.name NOT ILIKE %s'
             params += ['%%%s%%' % rule.match_label_param]
         elif rule.match_label == 'match_regex':
-            query += ' AND st_line.name ~ %s'
+            query += ' AND st_line.name ~* %s'
             params += [rule.match_label_param]
 
         # Filter on partners.
@@ -621,8 +621,10 @@ class AccountReconcileModel(models.Model):
 
         if line_residual > total_residual:
             amount_percentage = (total_residual / line_residual) * 100
-        else:
+        elif total_residual:
             amount_percentage = (line_residual / total_residual) * 100 if total_residual else 0
+        else:
+            return False
         return amount_percentage >= self.match_total_amount_param
 
     @api.multi

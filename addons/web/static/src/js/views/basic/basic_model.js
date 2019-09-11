@@ -2001,9 +2001,11 @@ var BasicModel = AbstractModel.extend({
                 if (field.onChange) {
                     hasOnchange = true;
                 }
-                _.each(fieldInfo.views, function (view) {
-                    generateSpecs(view.fieldsInfo[view.type], view.fields, key + '.');
-                });
+                if (field.type === 'one2many' || field.type === 'many2many') {
+                    _.each(fieldInfo.views, function (view) {
+                        generateSpecs(view.fieldsInfo[view.type], view.fields, key + '.');
+                    });
+                }
             });
         }
         return hasOnchange ? specs : false;

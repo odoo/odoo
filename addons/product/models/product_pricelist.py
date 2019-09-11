@@ -139,6 +139,7 @@ class Pricelist(models.Model):
         self.ensure_one()
         if not date:
             date = self._context.get('date') or fields.Date.context_today(self)
+        date = fields.Date.to_date(date)  # handwritten query below does not work with non-dates (e.g. datetimes)
         if not uom_id and self._context.get('uom'):
             uom_id = self._context['uom']
         if uom_id:
@@ -329,10 +330,10 @@ class Pricelist(models.Model):
         return res[partner_id].id
 
     def _get_partner_pricelist_multi_search_domain_hook(self):
-        return []
+        return [('active', '=', True)]
 
     def _get_partner_pricelist_multi_filter_hook(self):
-        return self
+        return self.filtered('active')
 
     def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
         """ Retrieve the applicable pricelist for given partners in a given company.

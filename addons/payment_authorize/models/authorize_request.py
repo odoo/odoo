@@ -238,7 +238,12 @@ class AuthorizeAPI():
         etree.SubElement(root_profile, "customerProfileId").text = res['profile_id']
         etree.SubElement(root_profile, "customerPaymentProfileId").text = res['payment_profile_id']
         response_profile = self._authorize_request(root_profile)
-        res['name'] = response_profile.find('paymentProfile/payment/creditCard/cardNumber').text
+        card_number = response_profile.find('paymentProfile/payment/creditCard/cardNumber')
+        if card_number:
+            res['name'] = card_number.text
+        else:
+            res['name'] = response_profile.find('paymentProfile/payment/bankAccount/accountNumber').text
+
         return res
 
     def credit(self, token, amount, transaction_id):

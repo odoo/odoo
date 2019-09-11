@@ -383,9 +383,9 @@ class Challenge(models.Model):
 
                     # the goal is initialised over the limit to make sure we will compute it at least once
                     if line.condition == 'higher':
-                        values['current'] = line.target_goal - 1
+                        values['current'] = min(line.target_goal - 1, 0)
                     else:
-                        values['current'] = line.target_goal + 1
+                        values['current'] = max(line.target_goal + 1, 0)
 
                 if challenge.remind_update_delay:
                     values['remind_update_delay'] = challenge.remind_update_delay
@@ -743,7 +743,7 @@ class Challenge(models.Model):
                     all_reached = False
                 if goal.definition_condition == 'higher':
                     # can be over 100
-                    total_completeness += 100.0 * goal.current / goal.target_goal
+                    total_completeness += (100.0 * goal.current / goal.target_goal) if goal.target_goal else 0
                 elif goal.state == 'reached':
                     # for lower goals, can not get percentage so 0 or 100
                     total_completeness += 100

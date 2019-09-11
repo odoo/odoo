@@ -62,9 +62,16 @@ var DocumentThread = Thread.extend({
      * shared between tabs, and restored on F5.
      *
      * @override
+     * @param {Object} [options]
+     * @param {boolean} [options.skipCrossTabSync=false] if set, it should
+     *   not notify other tabs from updating document thread state. This happens
+     *   in case the `close` operation comes from local storage event.
      */
-    close: function () {
+    close: function (options) {
         this._super.apply(this, arguments);
+        if (options && options.skipCrossTabSync) {
+            return;
+        }
         this.call('mail_service', 'updateDocumentThreadState', this._id, {
             name: this.getName(),
             windowState: 'closed',
@@ -75,9 +82,16 @@ var DocumentThread = Thread.extend({
      * shared between tabs, and restored on F5.
      *
      * @override
+     * @param {Object} [options]
+     * @param {boolean} [options.skipCrossTabSync=false] if set, it should
+     *   not notify other tabs from updating document thread state. This happens
+     *   in case the `detach` operation comes from local storage event.
      */
-    detach: function () {
+    detach: function (options) {
         this._super.apply(this, arguments);
+        if (options && options.skipCrossTabSync) {
+            return;
+        }
         var windowState = this._folded ? 'folded' : 'open';
         this.call('mail_service', 'updateDocumentThreadState', this._id, {
             name: this.getName(),
@@ -105,9 +119,16 @@ var DocumentThread = Thread.extend({
      * shared between tabs, and restored on F5.
      *
      * @override
+     * @param {Object} [options]
+     * @param {boolean} [options.skipCrossTabSync=false] if set, it should
+     *   not notify other tabs from updating document thread state. This happens
+     *   in case the `detach` operation comes from local storage event.
      */
-    fold: function () {
+    fold: function (folded, options) {
         this._super.apply(this, arguments);
+        if (options && options.skipCrossTabSync) {
+            return;
+        }
         var windowState = this._folded ? 'folded' : 'open';
         this.call('mail_service', 'updateDocumentThreadState', this._id, {
             name: this.getName(),

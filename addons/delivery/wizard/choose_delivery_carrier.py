@@ -74,6 +74,5 @@ class ChooseDeliveryCarrier(models.TransientModel):
         }
 
     def button_confirm(self):
-        self.order_id.carrier_id = self.carrier_id
         self.order_id.delivery_message = self.delivery_message
         self.order_id.set_delivery_line(self.carrier_id, self.delivery_price)

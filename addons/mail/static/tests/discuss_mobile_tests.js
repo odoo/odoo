@@ -13,6 +13,9 @@ QUnit.module('Discuss in mobile', {
     beforeEach: function () {
         this.services = mailTestUtils.getMailServices();
         this.data = {
+            'mail.channel': {
+                fields: {},
+            },
             'mail.message': {
                 fields: {},
             },
@@ -80,27 +83,65 @@ QUnit.test('mobile basic rendering', async function (assert) {
     discuss.destroy();
 });
 
-QUnit.test('on_{attach/detach}_callback', function (assert) {
+QUnit.test('on_{attach/detach}_callback', async function (assert) {
     assert.expect(2);
-    var done = assert.async();
 
-    createDiscuss({
+    var discuss = await createDiscuss({
         id: 1,
         context: {},
         params: {},
         data: this.data,
         services: this.services,
-    }).then(function (discuss) {
-        try {
-            discuss.on_attach_callback();
-            assert.ok(true, 'should not crash on attach callback');
-            discuss.on_detach_callback();
-            assert.ok(true, 'should not crash on detach callback');
-        } finally {
-            discuss.destroy();
-            done();
-        }
     });
+
+    discuss.on_attach_callback();
+    assert.ok(true, 'should not crash on attach callback');
+    discuss.on_detach_callback();
+    assert.ok(true, 'should not crash on detach callback');
+    discuss.destroy();
+});
+
+QUnit.test('extended composer in mass mailing channel', async function (assert) {
+    assert.expect(4);
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "General",
+                mass_mailing: true,
+            }],
+        },
+    };
+
+    var discuss = await createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+    });
+
+    await testUtils.dom.click(discuss.$('.o_mail_mobile_tab[data-type="multi_user_channel"]'));
+    await testUtils.dom.click(discuss.$('.o_mail_preview[data-preview-id="1"]'));
+    assert.containsOnce(
+        $,
+        '.o_thread_window',
+        "should display a chat window");
+    assert.strictEqual(
+        $('.o_thread_window').data('thread-id'),
+        1,
+        "chat window should be from channel General");
+    assert.containsOnce(
+        $('.o_thread_window'),
+        '.o_thread_composer',
+        "chat window should have a composer");
+    assert.ok(
+        $('.o_thread_window .o_thread_composer').hasClass('o_thread_composer_extended'),
+        "chat window composer should be extended composer");
+
+    discuss.destroy();
 });
 
 });

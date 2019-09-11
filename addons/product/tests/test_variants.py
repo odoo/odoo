@@ -817,3 +817,25 @@ class TestVariantsArchive(common.TestProductCommon):
                          "We should have re-activated one variant only.")
 
         Product._revert_method('unlink')
+
+    def test_name_search_dynamic_attributes(self):
+        dynamic_attr = self.env['product.attribute'].create({
+            'name': 'Dynamic',
+            'create_variant': 'dynamic',
+            'value_ids': [(0, False, {'name': 'ValueDynamic'})],
+        })
+        template = self.env['product.template'].create({
+            'name': 'cimanyd'
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+
+        template.write({
+            'attribute_line_ids': [(0, False, {
+                'attribute_id': dynamic_attr.id,
+                'value_ids': [(4, dynamic_attr.value_ids[0].id, False)],
+            })]
+        })
+        self.assertEqual(len(template.product_variant_ids), 0)
+
+        name_searched = self.env['product.template'].name_search(name='cima')
+        self.assertIn(template.id, [ng[0] for ng in name_searched])
