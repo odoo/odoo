@@ -76,7 +76,7 @@ def get_token():
 def get_version():
     return '19.07'
 
-def get_wifi_essid(self):
+def get_wifi_essid():
     wifi_options = []
     process_iwlist = subprocess.Popen(['sudo', 'iwlist', 'wlan0', 'scan'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     process_grep = subprocess.Popen(['grep', 'ESSID:"'], stdin=process_iwlist.stdout, stdout=subprocess.PIPE).stdout.readlines()
