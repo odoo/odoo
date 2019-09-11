@@ -339,9 +339,7 @@ ListRenderer.include({
      * @returns {boolean}
      */
     inMultipleRecordEdition: function (recordId) {
-        const record = this._getRecord(recordId) || {};
-        const recordIds = [...new Set([recordId, ...this.selection])];
-        return this.editable && recordIds.length > 1 && record.res_id;
+        return this.editable && this.selection.length > 1 && this.selection.includes(recordId);
     },
     /**
      * Removes the line associated to the given recordID (the index of the row
