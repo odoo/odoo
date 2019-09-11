@@ -13,5 +13,5 @@ class SaleOrderLine(models.Model):
         default_analytic_account = self.env['account.analytic.default'].account_get(self.product_id.id, self.order_id.partner_id.id, self.order_id.user_id.id, fields.Date.today())
         if default_analytic_account:
             res.update({'account_analytic_id': default_analytic_account.analytic_id.id})
-            res.update({'analytic_tag_ids' : [(6, 0, default_analytic_account.analytic_tag_ids.ids)]})
+            res.update({'analytic_tag_ids' : [(6, 0, default_analytic_account.analytic_tag_ids.ids + self.analytic_tag_ids.ids)]})
         return res
