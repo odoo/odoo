@@ -156,6 +156,7 @@ class ProductTemplate(models.Model):
         inverse='_set_default_code', store=True)
 
     item_ids = fields.One2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items')
+    show_logistic_parameters = fields.Boolean(compute='_compute_show_logistic_parameters')
 
     @api.depends('product_variant_ids')
     def _compute_product_variant_id(self):
@@ -171,6 +172,14 @@ class ProductTemplate(models.Model):
     def _compute_cost_currency_id(self):
         for template in self:
             template.cost_currency_id = self.env.user.company_id.currency_id.id
+
+    def _compute_show_logistic_parameters(self):
+        display_product_variant_view = self.env.context.get('display_product_variant_view')
+        for template in self:
+            if display_product_variant_view or template.product_variant_count == 1:
+                template.show_logistic_parameters = True
+            else:
+                template.show_logistic_parameters = False
 
     @api.multi
     def _compute_template_price(self):

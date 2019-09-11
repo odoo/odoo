@@ -25,7 +25,11 @@
         <field name="res_model">product.product</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="context" eval="{'search_default_filter_to_availabe_pos': 1, 'default_available_in_pos': True}"/>
+        <field name="context">{
+            'default_available_in_pos': True,
+            'display_product_variant_view': True,
+            'search_default_filter_to_availabe_pos': 1,
+        }</field>
         <field name="domain" eval="[]"/>
         <field name="search_view_id" eval="False"/> <!-- Force empty -->
         <field name="view_id" ref="product.product_product_tree_view"/>

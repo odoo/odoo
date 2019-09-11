@@ -81,7 +81,10 @@
             <field name="view_mode">tree,kanban,form,activity</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
-            <field name="context">{"search_default_filter_to_purchase": 1}</field>
+            <field name="context">{
+                'display_product_variant_view': True,
+                'search_default_filter_to_purchase': 1,
+            }</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new product variant
