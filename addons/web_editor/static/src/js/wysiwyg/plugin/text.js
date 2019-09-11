@@ -679,7 +679,12 @@ var TextPlugin = AbstractPlugin.extend({
      */
     _removeIllegalClipboardElements: function ($clipboardData) {
         var root = true;
-        $clipboardData = $clipboardData.not('meta').not('style').not('script');
+        $clipboardData.each(function (i, node) {
+            var tag = node.tagName;
+            if (tag === 'meta' || tag === 'style' || tag === 'script') {
+                $(node).remove();
+            }
+        });
         var $badNodes = this._filterIllegalClipboardElements($clipboardData);
 
         do {

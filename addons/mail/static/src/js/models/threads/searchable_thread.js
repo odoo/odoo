@@ -148,7 +148,11 @@ var SearchableThread = Thread.extend({
         if (cache.messages[index] !== message) {
             cache.messages.splice(index, 0, message);
         }
-        if (!message.isMyselfAuthor() && options.incrementUnread) {
+        if (
+            !message.isMyselfAuthor() &&
+            options.incrementUnread &&
+            message.getType() !== 'notification'
+        ) {
             this._incrementUnreadCounter();
         }
     },

@@ -2,6 +2,7 @@
 
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
+from odoo.tools import mute_logger
 
 
 class TestWarehouse(TestStockCommon):
@@ -402,6 +403,20 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 2)
         # Ensure there still no quants in distribution warehouse
         self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id).mapped('quantity')), 0)
+
+    def test_noleak(self):
+        # non-regression test to avoid company_id leaking to other warehouses (see blame)
+        wh = self.env["stock.warehouse"].search([])
+
+        assert len(set(wh.mapped("company_id.id"))) > 1
+
+        companies_before = wh.mapped(lambda w: (w.id, w.company_id))
+        # writing on any field should change the company of warehouses
+        with mute_logger("odoo.models"):
+            wh.write({"whatever": "no one cares"})
+        companies_after = wh.mapped(lambda w: (w.id, w.company_id))
+
+        self.assertEqual(companies_after, companies_before)
 
     def test_toggle_active_warehouse_1(self):
         """ Basic test that create a warehouse with classic configuration.

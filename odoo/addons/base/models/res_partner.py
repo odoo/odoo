@@ -273,7 +273,7 @@ class Partner(models.Model):
             domain = [('vat', '=', partner.vat)]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
-            partner.same_vat_partner_id = partner.vat and not partner.parent_id and self.env['res.partner'].search(domain, limit=1)
+            partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and self.env['res.partner'].search(domain, limit=1)
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
@@ -828,10 +828,14 @@ class Partner(models.Model):
                 e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
         assert email, 'an email is required for find_or_create to work'
         emails = tools.email_split(email)
+        name_emails = tools.email_split_and_format(email)
         if emails:
             email = emails[0]
+            name_email = name_emails[0]
+        else:
+            name_email = email
         partners = self.search([('email', '=ilike', email)], limit=1)
-        return partners.id or self.name_create(email)[0]
+        return partners.id or self.name_create(name_email)[0]
 
     def _get_gravatar_image(self, email):
         email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()

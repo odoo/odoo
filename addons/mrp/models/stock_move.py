@@ -233,6 +233,11 @@ class StockMove(models.Model):
         res = super(StockMove, self)._should_be_assigned()
         return bool(res and not (self.production_id or self.raw_material_production_id))
 
+    def _key_assign_picking(self):
+        keys = super(StockMove, self)._key_assign_picking()
+        return keys + (self.created_production_id,)
+
+
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
         """ Computes the quantity delivered or received when a kit is sold or purchased.
         A ratio 'qty_processed/qty_needed' is computed for each component, and the lowest one is kept

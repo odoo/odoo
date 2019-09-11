@@ -41,7 +41,10 @@ class SaleOrder(models.Model):
             values['product_id'] = ticket.product_id.id
             values['event_id'] = ticket.event_id.id
             values['event_ticket_id'] = ticket.id
-            values['price_unit'] = ticket.price_reduce
+            if order.pricelist_id.discount_policy == 'without_discount':
+                values['price_unit'] = ticket.price
+            else:
+                values['price_unit'] = ticket.price_reduce
             values['name'] = ticket.get_ticket_multiline_description_sale()
 
         # avoid writing related values that end up locking the product record
