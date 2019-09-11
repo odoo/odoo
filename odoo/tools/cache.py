@@ -90,7 +90,7 @@ class ormcache(object):
             value = d[key] = self.method(*args, **kwargs)
             return value
         except TypeError:
-            _logger.warn("cache lookup error on %r", key, exc_info=True)
+            _logger.warning("cache lookup error on %r", key, exc_info=True)
             counter.err += 1
             return self.method(*args, **kwargs)
 

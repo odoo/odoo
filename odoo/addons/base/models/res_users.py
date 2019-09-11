@@ -814,7 +814,7 @@ class Users(models.Model):
         source = request.httprequest.remote_addr
         (failures, previous) = failures_map[source]
         if self._on_login_cooldown(failures, previous):
-            _logger.warn(
+            _logger.warning(
                 "Login attempt ignored for %s on %s: "
                 "%d failures since last success, last failure at %s. "
                 "You can configure the number of login failures before a "
@@ -823,7 +823,7 @@ class Users(models.Model):
                 "\"base.login_cooldown_after\" to 0.",
                 source, self.env.cr.dbname, failures, previous)
             if ipaddress.ip_address(source).is_private:
-                _logger.warn(
+                _logger.warning(
                     "The rate-limited IP address %s is classified as private "
                     "and *might* be a proxy. If your Odoo is behind a proxy, "
                     "it may be mis-configured. Check that you are running "
@@ -870,7 +870,7 @@ class Users(models.Model):
 
     def _register_hook(self):
         if hasattr(self, 'check_credentials'):
-            _logger.warn("The check_credentials method of res.users has been renamed _check_credentials. One of your installed modules defines one, but it will not be called anymore.")
+            _logger.warning("The check_credentials method of res.users has been renamed _check_credentials. One of your installed modules defines one, but it will not be called anymore.")
 #
 # Implied groups
 #
