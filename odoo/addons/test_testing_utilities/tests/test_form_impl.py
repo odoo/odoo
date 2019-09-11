@@ -42,7 +42,7 @@ class TestBasic(TransactionCase):
     def test_required(self):
         f = Form(self.env['test_testing_utilities.a'])
         # f1 no default & no value => should fail
-        with self.assertRaisesRegexp(AssertionError, 'f1 is a required field'):
+        with self.assertRaisesRegex(AssertionError, 'f1 is a required field'):
             f.save()
         # set f1 and unset f2 => should work
         f.f1 = '1'

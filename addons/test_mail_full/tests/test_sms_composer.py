@@ -463,8 +463,8 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
             })
             # Call manually the onchange
             composer._onchange_template_id()
-            self.assertEquals(composer.composition_mode, "comment")
-            self.assertEquals(composer.body, "Hello %s ceci est en français." % test_record_2.display_name)
+            self.assertEqual(composer.composition_mode, "comment")
+            self.assertEqual(composer.body, "Hello %s ceci est en français." % test_record_2.display_name)
 
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
@@ -487,9 +487,9 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
             })
             # Call manually the onchange
             composer._onchange_template_id()
-            self.assertEquals(composer.composition_mode, "mass")
+            self.assertEqual(composer.composition_mode, "mass")
             # In english because by default but when sinding depending of record
-            self.assertEquals(composer.body, "Dear ${object.display_name} this is an SMS.")
+            self.assertEqual(composer.body, "Dear ${object.display_name} this is an SMS.")
 
             with self.mockSMSGateway():
                 composer.action_send_sms()

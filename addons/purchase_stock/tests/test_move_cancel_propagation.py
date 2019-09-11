@@ -95,7 +95,7 @@ class TestMoveCancelPropagation(TestPurchase):
         purchase_order .button_cancel()
 
         # Check the status of picking after canceling po.
-        self.assertEquals(picking_in.state, 'cancel')
+        self.assertEqual(picking_in.state, 'cancel')
         self.assertNotEqual(self.picking_out.state, 'cancel')
 
     def test_03_cancel_draft_purchase_order_two_steps(self):

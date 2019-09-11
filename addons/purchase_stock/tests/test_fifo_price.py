@@ -47,7 +47,7 @@ class TestFifoPrice(TestPurchase):
         purchase_order_1.button_confirm()
 
         # Check the "Purchase" status of purchase order 1
-        self.assertEquals(purchase_order_1.state, 'purchase')
+        self.assertEqual(purchase_order_1.state, 'purchase')
 
         # Process the reception of purchase order 1 and set date
         picking = purchase_order_1.picking_ids[0]
@@ -55,8 +55,8 @@ class TestFifoPrice(TestPurchase):
 
         # Check the standard price of the product (fifo icecream), that should have not changed
         # because the standard price is supposed to be updated only when goods are going out of the stock
-        self.assertEquals(product_cable_management_box.standard_price, 70.0, 'Standard price should not have changed')
-        self.assertEquals(product_cable_management_box.value_svl, 500.0, 'Wrong stock value')
+        self.assertEqual(product_cable_management_box.standard_price, 70.0, 'Standard price should not have changed')
+        self.assertEqual(product_cable_management_box.value_svl, 500.0, 'Wrong stock value')
 
         # I create a draft Purchase Order for second shipment for 30 kg at 80 euro
         purchase_order_2 = self.env['purchase.order'].create({
@@ -79,8 +79,8 @@ class TestFifoPrice(TestPurchase):
 
         # Check the standard price of the product, that should have not changed because the
         # standard price is supposed to be updated only when goods are going out of the stock
-        self.assertEquals(product_cable_management_box.standard_price, 70.0, 'Standard price as fifo price of second reception incorrect!')
-        self.assertEquals(product_cable_management_box.value_svl, 2900.0, 'Stock valuation should be 2900')
+        self.assertEqual(product_cable_management_box.standard_price, 70.0, 'Standard price as fifo price of second reception incorrect!')
+        self.assertEqual(product_cable_management_box.value_svl, 2900.0, 'Stock valuation should be 2900')
 
         # Let us send some goods
         outgoing_shipment = self.env['stock.picking'].create({
@@ -313,5 +313,5 @@ class TestFifoPrice(TestPurchase):
         self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 
         original_out_move = outgoing_shipment_neg.move_lines[0]
-        self.assertEquals(original_out_move.product_id.value_svl,  12000.0, 'Value of the move should be 12000')
-        self.assertEquals(original_out_move.product_id.qty_available, 150.0, 'Qty available should be 150')
+        self.assertEqual(original_out_move.product_id.value_svl,  12000.0, 'Value of the move should be 12000')
+        self.assertEqual(original_out_move.product_id.qty_available, 150.0, 'Qty available should be 150')

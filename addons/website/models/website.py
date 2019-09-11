@@ -667,14 +667,15 @@ class Website(models.Model):
                 return False
 
         # dont't list routes without argument having no default value or converter
-        spec = inspect.getargspec(endpoint.method.original_func)
-
-        # remove self and arguments having a default value
-        defaults_count = len(spec.defaults or [])
-        args = spec.args[1:(-defaults_count or None)]
+        sign = inspect.signature(endpoint.method.original_func)
+        params = list(sign.parameters.values())[1:]  # skip self
+        supported_kinds = (inspect.Parameter.POSITIONAL_ONLY,
+                           inspect.Parameter.POSITIONAL_OR_KEYWORD)
+        has_no_default = lambda p: p.default is inspect.Parameter.empty
 
         # check that all args have a converter
-        return all((arg in rule._converters) for arg in args)
+        return all(p.name in rule._converters for p in params
+                   if p.kind in supported_kinds and has_no_default(p))
 
     def enumerate_pages(self, query_string=None, force=False):
         """ Available pages in the website/CMS. This is mostly used for links

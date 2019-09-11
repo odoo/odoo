@@ -17,7 +17,7 @@ class AccountingTestCase(HttpCase):
         super(AccountingTestCase, self).setUp()
         domain = [('company_id', '=', self.env.ref('base.main_company').id)]
         if not self.env['account.account'].search_count(domain):
-            _logger.warn('Test skipped because there is no chart of account defined ...')
+            _logger.warning('Test skipped because there is no chart of account defined ...')
             self.skipTest("No Chart of account found")
 
     def ensure_account_property(self, property_name):

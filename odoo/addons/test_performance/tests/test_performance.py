@@ -176,7 +176,7 @@ class TestPerformance(TransactionCase):
         # This write() will raise because of the unique index if the unlink() is
         # not performed before the create()
         rec.write({'line_ids': [(5,)] + [(0, 0, {'value': val}) for val in range(6)]})
-        self.assertEquals(len(rec.line_ids), 6)
+        self.assertEqual(len(rec.line_ids), 6)
 
     @mute_logger('odoo.models.unlink')
     @users('__system__', 'demo')

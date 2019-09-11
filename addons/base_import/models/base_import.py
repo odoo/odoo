@@ -236,7 +236,7 @@ class Import(models.TransientModel):
             try:
                 return getattr(self, '_read_' + file_extension)(options)
             except Exception:
-                _logger.warn("Failed to read file '%s' (transient id %d) using guessed mimetype %s", self.file_name or '<unknown>', self.id, mimetype)
+                _logger.warning("Failed to read file '%s' (transient id %d) using guessed mimetype %s", self.file_name or '<unknown>', self.id, mimetype)
 
         # try reading with user-provided mimetype
         (file_extension, handler, req) = FILE_TYPE_DICT.get(self.file_type, (None, None, None))
@@ -244,7 +244,7 @@ class Import(models.TransientModel):
             try:
                 return getattr(self, '_read_' + file_extension)(options)
             except Exception:
-                _logger.warn("Failed to read file '%s' (transient id %d) using user-provided mimetype %s", self.file_name or '<unknown>', self.id, self.file_type)
+                _logger.warning("Failed to read file '%s' (transient id %d) using user-provided mimetype %s", self.file_name or '<unknown>', self.id, self.file_type)
 
         # fallback on file extensions as mime types can be unreliable (e.g.
         # software setting incorrect mime types, or non-installed software
@@ -255,7 +255,7 @@ class Import(models.TransientModel):
                 try:
                     return getattr(self, '_read_' + ext[1:])(options)
                 except Exception:
-                    _logger.warn("Failed to read file '%s' (transient id %s) using file extension", self.file_name, self.id)
+                    _logger.warning("Failed to read file '%s' (transient id %s) using file extension", self.file_name, self.id)
 
         if req:
             raise ImportError(_("Unable to load \"{extension}\" file: requires Python module \"{modname}\"").format(extension=file_extension, modname=req))

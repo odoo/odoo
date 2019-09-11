@@ -116,7 +116,7 @@ class TestProcurement(TestMrpCommon):
         # set the product of `self.bom_1` to this child category
         for bom_line_id in self.bom_1.bom_line_ids:
             # check that no routes are defined on the product
-            self.assertEquals(len(bom_line_id.product_id.route_ids), 0)
+            self.assertEqual(len(bom_line_id.product_id.route_ids), 0)
             # set the category of the product to a child category
             bom_line_id.product_id.categ_id = child_categ_id
 

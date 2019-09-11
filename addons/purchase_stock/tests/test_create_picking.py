@@ -446,7 +446,7 @@ class TestCreatePicking(common.TestProductCommon):
         purchase_order_line.write({'date_planned': purchase_order_line.date_planned + timedelta(days=5)})
 
         # Now check scheduled date of delivery order is changed or not.
-        self.assertEquals(purchase_order_line.date_planned, delivery_order.scheduled_date,
+        self.assertEqual(purchase_order_line.date_planned, delivery_order.scheduled_date,
             'Delivery order schedule date should be changed as we have set date propagate.')
 
     def test_06_no_propagate_date(self):
@@ -466,5 +466,5 @@ class TestCreatePicking(common.TestProductCommon):
         purchase_order_line.write({'date_planned': purchase_order_line.date_planned + timedelta(days=5)})
 
         # Now check scheduled date of delivery order is changed or not.
-        self.assertNotEquals(purchase_order_line.date_planned, delivery_order.scheduled_date,
+        self.assertNotEqual(purchase_order_line.date_planned, delivery_order.scheduled_date,
             'Delivery order schedule date should not changed.')

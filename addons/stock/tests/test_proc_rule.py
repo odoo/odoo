@@ -101,13 +101,13 @@ class TestProcRule(TransactionCase):
 
         # change above the minimum delta
         move_orig.date_expected += timedelta(days=6)
-        self.assertAlmostEquals(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated as the minimum delta is below')
+        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated as the minimum delta is below')
 
         # change below the minimum delta
         move_dest_initial_date = move_dest.date_expected
         move_orig.date_expected += timedelta(days=4)
 
-        self.assertAlmostEquals(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated as the minimum delta is above')
+        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated as the minimum delta is above')
 
     def test_rule_propagate_2(self):
         move_dest = self.env['stock.move'].create({
@@ -133,11 +133,11 @@ class TestProcRule(TransactionCase):
 
         # change below the minimum delta
         move_orig.date_expected += timedelta(days=4)
-        self.assertAlmostEquals(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated')
+        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated')
 
         # change above the minimum delta
         move_orig.date_expected += timedelta(days=2)
-        self.assertAlmostEquals(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated')
+        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated')
 
     def test_rule_propagate_3(self):
         move_dest = self.env['stock.move'].create({
@@ -163,6 +163,6 @@ class TestProcRule(TransactionCase):
         move_dest_initial_date = move_dest.date_expected
         move_orig_initial_date = move_orig.date_expected
         move_orig._action_done()
-        self.assertAlmostEquals(move_orig.date_expected, move_orig_initial_date, delta=timedelta(seconds=10), msg='schedule date should not be impacted by action_done')
-        self.assertAlmostEquals(move_orig.date, datetime.now(), delta=timedelta(seconds=10), msg='date should be now')
-        self.assertAlmostEquals(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated')
+        self.assertAlmostEqual(move_orig.date_expected, move_orig_initial_date, delta=timedelta(seconds=10), msg='schedule date should not be impacted by action_done')
+        self.assertAlmostEqual(move_orig.date, datetime.now(), delta=timedelta(seconds=10), msg='date should be now')
+        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated')
