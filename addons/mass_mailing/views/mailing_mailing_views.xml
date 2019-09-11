@@ -177,6 +177,19 @@
                                         'inline-field': 'body_html'
                                 }" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                             </page>
+                            <page string="Dynamic Placeholder Generator" groups="base.group_no_one">
+                                <group>
+                                    <field name="model_object_field" attrs="{'invisible': True}"/>
+                                    <field name="model_object_field"
+                                        domain="[('model_id','=',mailing_model_real),('ttype','!=','one2many'),('ttype','!=','many2many')]"/>
+                                    <field name="sub_object" readonly="1"/> 
+                                    <field name="sub_model_object_field" 
+                                        domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
+                                        attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"/>
+                                    <field name="null_value"/>
+                                    <field name="copyvalue"/>
+                                </group>
+                            </page>
                             <page string="Settings">
                                 <group>
                                     <group>
