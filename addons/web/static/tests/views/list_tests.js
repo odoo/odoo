@@ -4727,6 +4727,41 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: multi edition: edit and validate last row', async function (assert) {
+        assert.expect(3);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                    '</tree>',
+            // in this test, we want to accurately mock what really happens, that is, input
+            // fields only trigger their changes on 'change' event, not on 'input'
+            fieldDebounce: 100000,
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+
+        // select all records
+        await testUtils.dom.click(list.$('.o_list_view thead .o_list_record_selector input'));
+
+        // edit last cell of last line
+        await testUtils.dom.click(list.$('.o_data_row:last .o_data_cell:last'));
+        testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), '666');
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row .o_data_cell:last input'), 'enter');
+
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.containsN(list, '.o_data_row', 4,
+            "should not create a new row as we were in multi edition");
+
+        list.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 
