@@ -164,7 +164,7 @@ class AccountAnalyticAccount(models.Model):
             partner_ids = self.env['res.partner']._search([('name', operator, name)], limit=limit, access_rights_uid=name_get_uid)
             domain = ['|', '|', ('code', operator, name), ('name', operator, name), ('partner_id', 'in', partner_ids)]
         analytic_account_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(analytic_account_ids).name_get()
+        return models.lazy_name_get(self.browse(analytic_account_ids).with_user(name_get_uid))
 
 
 class AccountAnalyticLine(models.Model):
