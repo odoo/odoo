@@ -2,23 +2,6 @@ odoo.define('website_slides.tour.slide.course.member', function (require) {
 'use strict';
 
 var tour = require('web_tour.tour');
-var FullScreen = require('website_slides.fullscreen');
-
-/**
- * Alter this method for test purposes.
- * This will make the video start at 10 minutes.
- * As it lasts 10min24s, it will mark it as completed immediately.
- */
-FullScreen.include({
-    _renderSlide: function () {
-
-        var slide = this.get('slide');
-        slide.embedUrl += '&start=600';
-        this.set('slide', slide);
-
-        return this._super.call(this, arguments);
-    }
-});
 
 /**
  * Global use case:
@@ -105,12 +88,9 @@ tour.register('course_member', {
     extra_trigger: '.o_wslides_progress_percentage:contains("60")',
     run: function () {} // check that previous step succeeded
 }, {
-    trigger: '.o_wslides_fs_sidebar_list_item div:contains("How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks")'
+    trigger: '.o_wslides_fs_sidebar_list_item div:contains("How to Grow and Harvest The Best Strawberries | Basics")'
 }, {
-    trigger: '.player',
-    run: function () {} // check player loading
-}, {
-    trigger: '.o_wslides_fs_sidebar_section_slides li:contains("How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks") .o_wslides_slide_completed',
+    trigger: '.o_wslides_fs_sidebar_section_slides li:contains("How to Grow and Harvest The Best Strawberries | Basics") .o_wslides_slide_completed',
     run: function () {} // check that video slide is marked as 'done'
 }, {
     trigger: '.o_wslides_progress_percentage:contains("80")',

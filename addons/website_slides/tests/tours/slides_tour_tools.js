@@ -1,6 +1,10 @@
 odoo.define('website_slides.tour.tools', function (require) {
 'use strict';
 
+/*
+ * PUBLISHER / CONTENT CREATION
+ */
+
 var addSection = function (sectionName) {
 	return [
 {
