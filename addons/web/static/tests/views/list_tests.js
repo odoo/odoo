@@ -4445,6 +4445,32 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: single edition with selected records', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch: `<tree editable="top"><field name="foo"/></tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // Select first record
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+
+        // Edit the second
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:first()'));
+        await testUtils.fields.editInput(list.$('.o_data_row:eq(1) .o_data_cell:first() input'), "oui");
+        await testUtils.dom.click($('.o_list_button_save'));
+
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell:first()').text(), "yop",
+            "First row should remain unchanged");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell:first()').text(), "oui",
+            "Second row should have been updated");
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: multi edition', async function (assert) {
         assert.expect(22);
 
@@ -4495,8 +4521,6 @@ QUnit.module('Views', {
         assert.verifySteps(['create', 'read']);
 
         // edit a field
-        // We deliberately unselect the first row to check the multi edit union (recordId + selectedRecordIds)
-        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
         await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));

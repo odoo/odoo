@@ -296,9 +296,7 @@ ListRenderer.include({
      * @returns {boolean}
      */
     inMultipleRecordEdition: function (recordId) {
-        var record = this._getRecord(recordId) || {};
-        var recordIds = _.union([recordId], this.selection);
-        return this.editable && recordIds.length > 1 && record.res_id;
+        return this.editable && this.selection.length > 1 && this.selection.indexOf(recordId) > -1;
     },
     /**
      * Removes the line associated to the given recordID (the index of the row
