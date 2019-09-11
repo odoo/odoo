@@ -498,30 +498,24 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.depends is not None:
             return
 
-        def get_depends(func):
-            deps = getattr(func, '_depends', ())
-            return deps(model) if callable(deps) else deps
-
-        def get_depends_context(func):
-            return getattr(func, '_depends_context', ())
-
+        # determine the functions implementing self.compute
         if isinstance(self.compute, str):
-            # if the compute method has been overridden, concatenate all their _depends
-            self.depends = tuple(
-                dep
-                for method in resolve_mro(model, self.compute, callable)
-                for dep in get_depends(method)
-            )
-            depends_context = tuple(
-                dep
-                for method in resolve_mro(model, self.compute, callable)
-                for dep in get_depends_context(method)
-            )
+            funcs = resolve_mro(model, self.compute, callable)
+        elif self.compute:
+            funcs = [self.compute]
         else:
-            self.depends = tuple(get_depends(self.compute))
-            depends_context = tuple(get_depends_context(self.compute))
+            funcs = []
 
-        self.depends_context = (self.depends_context or ()) + depends_context
+        # collect depends and depends_context
+        depends = []
+        depends_context = list(self.depends_context or ())
+        for func in funcs:
+            deps = getattr(func, '_depends', ())
+            depends.extend(deps(model) if callable(deps) else deps)
+            depends_context.extend(getattr(func, '_depends_context', ()))
+
+        self.depends = tuple(depends)
+        self.depends_context = tuple(depends_context)
 
         # display_name may depend on context['lang'] (`test_lp1071710`)
         if self.automatic and self.name == 'display_name' and model._rec_name:
@@ -697,6 +691,26 @@ class Field(MetaField('DummyField', (object,), {})):
     def _search_company_dependent(self, records, operator, value):
         Property = records.env['ir.property']
         return Property.search_multi(self.name, self.model_name, operator, value)
+
+    #
+    # Cache key for context-dependent fields
+    #
+
+    def cache_key(self, env):
+        """ Return the cache key corresponding to ``self.depends_context``. """
+        get_context = env.context.get
+
+        def get(key):
+            if key == 'force_company':
+                return get_context('force_company') or env.company.id
+            elif key == 'uid':
+                return (env.uid, env.su)
+            elif key == 'active_test':
+                return get_context('active_test', self.context.get('active_test', True))
+            else:
+                return get_context(key)
+
+        return tuple(get(key) for key in self.depends_context)
 
     #
     # Setup of field triggers
