@@ -697,7 +697,9 @@ ActionManager.include({
                 };
             }
             var options = {on_close: ev.data.on_closed};
-            action.flags = _.extend({}, action.flags, {withSearchPanel: false});
+            if (ev.data.action_data.class && ev.data.action_data.class.includes('oe_stat_button')) {
+                action.flags = _.extend({}, action.flags, {withSearchPanel: false});
+            }
             return self.doAction(action, options).then(ev.data.on_success, ev.data.on_fail);
         });
     },

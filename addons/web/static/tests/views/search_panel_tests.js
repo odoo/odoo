@@ -75,7 +75,8 @@ QUnit.module('Views', {
                 </kanban>`,
             'partner,false,form':
                 `<form>
-                    <button name="1" type="action" string="multi view"/>
+                    <button name="1" class="oe_stat_button o_other_class" type="action" string="multi view stat button"/>
+                    <button name="1" type="action" string="multi view normal button"/>
                     <field name="foo"/>
                 </form>`,
             'partner,false,pivot': '<pivot><field name="int_field" type="measure"/></pivot>',
@@ -2064,7 +2065,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('disable search panel onExecuteAction', async function (assert) {
+    QUnit.test('disable search panel onExecuteAction for stat button', async function (assert) {
         assert.expect(6);
 
         var actionManager = await createActionManager({
@@ -2076,7 +2077,7 @@ QUnit.module('Views', {
 
         await actionManager.doAction(2);
 
-        await testUtils.dom.click(actionManager.$('.o_form_view button:contains("multi view")'));
+        await testUtils.dom.click(actionManager.$('.o_form_view button:contains("multi view stat button")'));
         assert.containsOnce(actionManager, '.o_kanban_view');
         assert.containsNone(actionManager, '.o_search_panel');
 
@@ -2087,6 +2088,33 @@ QUnit.module('Views', {
         await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
         assert.containsOnce(actionManager, '.o_kanban_view');
         assert.containsNone(actionManager, '.o_search_panel');
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('search panel enabled onExecuteAction', async function (assert) {
+        assert.expect(6);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: this.services,
+        });
+
+        await actionManager.doAction(2);
+
+        await testUtils.dom.click(actionManager.$('.o_form_view button:contains("multi view normal button")'));
+        assert.containsOnce(actionManager, '.o_kanban_view');
+        assert.containsOnce(actionManager, '.o_search_panel');
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        assert.containsOnce(actionManager, '.o_list_view');
+        assert.containsOnce(actionManager, '.o_search_panel');
+
+        await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
+        assert.containsOnce(actionManager, '.o_kanban_view');
+        assert.containsOnce(actionManager, '.o_search_panel');
 
         actionManager.destroy();
     });
