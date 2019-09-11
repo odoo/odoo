@@ -71,7 +71,7 @@ class Pricelist(models.Model):
             # regular search() to apply ACLs - may limit results below limit in some cases
             pricelist_ids = self._search([('id', 'in', ids)], limit=limit, access_rights_uid=name_get_uid)
             if pricelist_ids:
-                return self.browse(pricelist_ids).name_get()
+                return models.lazy_name_get(self.browse(pricelist_ids).with_user(name_get_uid))
         return super(Pricelist, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _compute_price_rule_multi(self, products_qty_partner, date=False, uom_id=False):
