@@ -25,12 +25,12 @@
             <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.l10n_latam_tax_ids))</attribute>
         </xpath>
 
-        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="replace">
-            <t t-set="current_subtotal" t-value="current_subtotal + line.l10n_latam_price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
+            <attribute name="t-value">current_subtotal + line.l10n_latam_price_subtotal</attribute>
         </t>
 
-        <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded" position="replace">
-            <span t-field="line.l10n_latam_price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+        <span t-field="line.price_subtotal" position="attributes">
+            <attribute name="t-field">line.l10n_latam_price_subtotal</attribute>
         </span>
 
         <span t-field="o.amount_untaxed" position="attributes">
