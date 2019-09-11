@@ -950,7 +950,7 @@ if record:
             <field name="code">action = model.action_your_pipeline()</field>
         </record>
 
-        <record model="ir.actions.act_window" id="crm_lead_opportunities_tree_view">
+        <record model="ir.actions.act_window" id="crm_lead_action_pipeline">
             <field name="name">Pipeline</field>
             <field name="res_model">crm.lead</field>
             <field name="view_mode">kanban,tree,graph,pivot,form,calendar,activity</field>
@@ -962,39 +962,39 @@ if record:
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
         </record>
 
-        <record id="crm_lead_opportunities_tree_view_view_kanban" model="ir.actions.act_window.view">
+        <record id="crm_lead_action_pipeline_view_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="crm_case_kanban_view_leads"/>
-            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+            <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
-        <record id="crm_lead_opportunities_tree_view_view_tree" model="ir.actions.act_window.view">
+        <record id="crm_lead_action_pipeline_view_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
-            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+            <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
-        <record id="crm_lead_opportunities_tree_view_view_calendar" model="ir.actions.act_window.view">
+        <record id="crm_lead_action_pipeline_view_calendar" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">calendar</field>
             <field name="view_id" ref="crm_case_calendar_view_leads"/>
-            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+            <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
-        <record id="crm_lead_opportunities_tree_view_view_pivot" model="ir.actions.act_window.view">
+        <record id="crm_lead_action_pipeline_view_pivot" model="ir.actions.act_window.view">
             <field name="sequence" eval="3"/>
             <field name="view_mode">pivot</field>
             <field name="view_id" ref="crm_lead_view_pivot"/>
-            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+            <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
-        <record id="crm_lead_opportunities_tree_view_view_graph" model="ir.actions.act_window.view">
+        <record id="crm_lead_action_pipeline_view_graph" model="ir.actions.act_window.view">
             <field name="sequence" eval="5"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="crm_lead_view_graph"/>
-            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+            <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
         <menuitem
