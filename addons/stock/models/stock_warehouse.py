@@ -499,7 +499,7 @@ class Warehouse(models.Model):
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
         code = vals.get('code') or code
         code = code.replace(' ', '').upper()
-        company_id = vals.get('company_id', self.company_id.id)
+        company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
         sub_locations = {
             'lot_stock_id': {
                 'name': _('Stock'),
@@ -548,12 +548,13 @@ class Warehouse(models.Model):
         avoid mistakes during picking types and rules creation.
         """
         for warehouse in self:
-            sub_locations = warehouse._get_locations_values(vals, warehouse.code)
+            company_id = vals.get('company_id', warehouse.company_id.id)
+            sub_locations = warehouse._get_locations_values(dict(vals, company_id=company_id), warehouse.code)
             missing_location = {}
             for location, location_values in sub_locations.items():
                 if not warehouse[location] and location not in vals:
                     location_values['location_id'] = vals.get('view_location_id', warehouse.view_location_id.id)
-                    location_values['company_id'] = vals.get('company_id', warehouse.company_id.id)
+                    location_values['company_id'] = company_id
                     missing_location[location] = self.env['stock.location'].create(location_values).id
             if missing_location:
                 warehouse.write(missing_location)

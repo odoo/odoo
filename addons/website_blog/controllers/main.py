@@ -109,6 +109,9 @@ class WebsiteBlog(http.Controller):
         # retrocompatibility to accept tag as slug
         active_tag_ids = tag and [int(unslug(t)[1]) for t in tag.split(',')] or []
         if active_tag_ids:
+            fixed_tag_slug = ",".join(slug(t) for t in request.env['blog.tag'].browse(active_tag_ids))
+            if fixed_tag_slug != tag:
+                return request.redirect(request.httprequest.full_path.replace("/tag/%s/" % tag, "/tag/%s/" % fixed_tag_slug, 1), 301)
             domain += [('tag_ids', 'in', active_tag_ids)]
         if blog:
             domain += [('blog_id', '=', blog.id)]
@@ -230,14 +233,16 @@ class WebsiteBlog(http.Controller):
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog_post.blog_id, tag=tag, date_begin=date_begin, date_end=date_end)
 
         if not blog_post.blog_id.id == blog.id:
-            return request.redirect("/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post)))
+            return request.redirect("/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post)), code=301)
 
         tags = request.env['blog.tag'].search([])
 
         # Find next Post
-        all_post = BlogPost.search([('blog_id', '=', blog.id)])
+        blog_post_domain = [('blog_id', '=', blog.id)]
         if not request.env.user.has_group('website.group_website_designer'):
-            all_post = all_post.filtered(lambda r: r.post_date <= fields.Datetime.now())
+            blog_post_domain += [('post_date', '<=', fields.Datetime.now())]
+
+        all_post = BlogPost.search(blog_post_domain)
 
         if blog_post not in all_post:
             return request.redirect("/blog/%s" % (slug(blog_post.blog_id)))

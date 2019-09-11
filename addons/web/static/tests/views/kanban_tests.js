@@ -1,6 +1,7 @@
 odoo.define('web.kanban_tests', function (require) {
 "use strict";
 
+var AbstractField = require('web.AbstractField');
 var fieldRegistry = require('web.field_registry');
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 var kanbanExamplesRegistry = require('web.kanban_examples_registry');
@@ -4491,6 +4492,60 @@ QUnit.module('Views', {
 
         kanban.destroy();
         delete widgetRegistry.map.test;
+    });
+
+    QUnit.test('subwidgets with on_attach_callback when changing record color', async function (assert) {
+        assert.expect(3);
+
+        var counter = 0;
+        var MyTestWidget = AbstractField.extend({
+            on_attach_callback: function () {
+                counter++;
+            },
+        });
+        fieldRegistry.add('test_widget', MyTestWidget);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'category',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="color"/>' +
+                        '<templates>' +
+                            '<t t-name="kanban-box">' +
+                                '<div color="color">' +
+                                    '<div class="o_dropdown_kanban dropdown">' +
+                                        '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
+                                            '<span class="fa fa-bars fa-lg"/>' +
+                                        '</a>' +
+                                        '<ul class="dropdown-menu" role="menu">' +
+                                            '<li>' +
+                                                '<ul class="oe_kanban_colorpicker"/>' +
+                                            '</li>' +
+                                        '</ul>' +
+                                    '</div>' +
+                                '<field name="name" widget="test_widget"/>' +
+                                '</div>' +
+                            '</t>' +
+                        '</templates>' +
+                    '</kanban>',
+        });
+
+        // counter should be 2 as there are 2 records
+        assert.strictEqual(counter, 2, "on_attach_callback should have been called twice");
+
+        // set a color to kanban record
+        var $firstRecord = kanban.$('.o_kanban_record:first()');
+        testUtils.kanban.toggleRecordDropdown($firstRecord);
+        await testUtils.dom.click($firstRecord.find('.oe_kanban_colorpicker a.oe_kanban_color_9'));
+
+        // first record has replaced its $el with a new one
+        $firstRecord = kanban.$('.o_kanban_record:first()');
+        assert.hasClass($firstRecord, 'oe_kanban_color_9');
+        assert.strictEqual(counter, 3, "on_attach_callback method should be called 3 times");
+
+        delete fieldRegistry.map.test_widget;
+        kanban.destroy();
     });
 
     QUnit.test('column progressbars properly work', async function (assert) {

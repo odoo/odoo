@@ -2293,6 +2293,7 @@ QUnit.module('Views', {
             intercepts: {
                 do_action: function (event) {
                     assert.deepEqual(event.data.action, {
+                        context: {create: false},
                         res_id: 2,
                         res_model: 'res_currency',
                         type: 'ir.actions.act_window',
@@ -2303,6 +2304,42 @@ QUnit.module('Views', {
             },
         });
         await testUtils.dom.click(list.$('.o_group_header:eq(0) button'));
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with subfields, and onchange', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.onchanges = {
+            foo: function () {},
+        };
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree editable="bottom" expand="1">
+                    <field name="foo"/>
+                    <field name="currency_id"/>
+                    <groupby name="currency_id">
+                        <field name="position" invisible="1"/>
+                    </groupby>
+                </tree>`,
+            groupBy: ['currency_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.deepEqual(args.args[3], {
+                        foo: "1",
+                        currency_id: "",
+                    }, 'onchange spec should not follow relation of many2one fields');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:first'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), "new value");
+
         list.destroy();
     });
 
@@ -3811,6 +3848,58 @@ QUnit.module('Views', {
         }).length;
         assert.strictEqual(nbInputRight, 2,
             "there should be two right-aligned input");
+
+        list.destroy();
+    });
+
+    QUnit.test('grouped list with another grouped list parent, click unfold', async function (assert) {
+        assert.expect(3);
+        this.data.bar.fields = {
+            cornichon: {string: 'cornichon', type: 'char'},
+        };
+
+        var rec = this.data.bar.records[0];
+        // create records to have the search more button
+        var newRecs = [];
+        for (var i=0; i<8; i++) {
+            var newRec = _.extend({}, rec);
+            newRec.id = 10 + i;
+            newRec.cornichon = 'extra fin';
+            newRecs.push(newRec);
+        }
+        this.data.bar.records = newRecs;
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/><field name="m2o"/></tree>',
+            groupBy: ['bar'],
+            archs: {
+                'bar,false,list': '<tree><field name="cornichon"/></tree>',
+                'bar,false,search': '<search><filter context="{\'group_by\': \'cornichon\'}" string="cornichon"/></search>',
+            },
+        });
+
+        await list.update({groupBy: []});
+
+        await testUtils.dom.click(list.$('.o_data_cell:eq(0)'));
+
+        await testUtils.dom.click(list.$('.o_selected_row .o_data_cell .o_field_many2one input'));
+        await testUtils.dom.triggerEvents($('.ui-autocomplete a:contains(Search More)'),
+            ['mouseenter', 'click']);
+
+        assert.containsOnce($('body'), '.modal-content');
+
+        assert.containsNone($('body'), '.modal-content .o_group_name', 'list in modal not grouped');
+
+        await testUtils.dom.click($('body .modal-content button:contains(Group By)'));
+
+        await testUtils.dom.click($('body .modal-content .o_menu_item a:contains(cornichon)'));
+
+        await testUtils.dom.click($('body .modal-content .o_group_header'));
+
+        assert.containsOnce($('body'), '.modal-content .o_group_open');
 
         list.destroy();
     });

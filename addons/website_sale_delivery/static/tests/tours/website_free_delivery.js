@@ -8,6 +8,7 @@ tour.register('check_free_delivery', {
         url: '/shop?search=office chair black',
 },
     [
+        // Part 1: Check free delivery
         {
             content: "select office chair black",
             trigger: '.oe_product_cart:first a:contains("Office Chair Black")',
@@ -26,5 +27,21 @@ tour.register('check_free_delivery', {
             extra_trigger: '#delivery_carrier label:containsExact("Delivery Now Free Over 10")',
             trigger: "#delivery_carrier span:contains('0.0')"
         },
+        // Part 2: check multiple delivery & price loaded asynchronously
+        {
+            content: "Ensure price was loaded asynchronously",
+            extra_trigger: '#delivery_carrier input[name="delivery_type"]:checked',
+            trigger: '#delivery_method .o_delivery_carrier_select:contains("20.0"):contains("The Poste")',
+            run: function () {}, // it's a check
+        },
+        {
+            content: "Click on Pay Now",
+            trigger: 'button[id="o_payment_form_pay"]:visible:not(:disabled)',
+        },
+        {
+            content: "Confirmation page should be shown",
+            trigger: '#oe_structure_website_sale_confirmation_1',
+            run: function () {}, // it's a check
+        }
     ]);
 });
