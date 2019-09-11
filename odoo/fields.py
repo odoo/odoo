@@ -2306,7 +2306,14 @@ class Many2one(_Relational):
         # 3) The ondelete attribute is explicitly defined as 'set null' for a required m2o,
         #    this is considered a programming error.
         if not self.ondelete:
-            self.ondelete = 'restrict' if self.required else 'set null'
+            comodel = model.env[self.comodel_name]
+            if model.is_transient() and not comodel.is_transient():
+                # Many2one relations from TransientModel Model are annoying because
+                # they can block deletion due to foreign keys. So unless stated
+                # otherwise, we default them to ondelete='cascade'.
+                self.ondelete = 'cascade' if self.required else 'set null'
+            else:
+                self.ondelete = 'restrict' if self.required else 'set null'
         if self.ondelete == 'set null' and self.required:
             raise ValueError(
                 "The m2o field %s of model %s is required but declares its ondelete policy "
@@ -2318,11 +2325,6 @@ class Many2one(_Relational):
         comodel = model.env[self.comodel_name]
         if not model.is_transient() and comodel.is_transient():
             raise ValueError('Many2one %s from Model to TransientModel is forbidden' % self)
-        if model.is_transient() and not comodel.is_transient():
-            # Many2one relations from TransientModel Model are annoying because
-            # they can block deletion due to foreign keys. So unless stated
-            # otherwise, we default them to ondelete='cascade'.
-            self.ondelete = self.ondelete or 'cascade'
         return super(Many2one, self).update_db(model, columns)
 
     def update_db_column(self, model, column):
