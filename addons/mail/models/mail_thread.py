@@ -260,9 +260,10 @@ class MailThread(models.AbstractModel):
 
         # subscribe uid unless asked not to
         if not self._context.get('mail_create_nosubscribe'):
+            default_followers = self.env['mail.followers']._add_default_followers(self._name, [], self.env.user.partner_id.ids, customer_ids=[])[0][0]
             for values in vals_list:
                 message_follower_ids = values.get('message_follower_ids') or []
-                message_follower_ids += [(0, 0, fol_vals) for fol_vals in self.env['mail.followers']._add_default_followers(self._name, [], self.env.user.partner_id.ids, customer_ids=[])[0][0]]
+                message_follower_ids += [(0, 0, fol_vals) for fol_vals in default_followers]
                 values['message_follower_ids'] = message_follower_ids
 
         threads = super(MailThread, self).create(vals_list)
