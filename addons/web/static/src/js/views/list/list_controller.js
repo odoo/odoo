@@ -766,12 +766,9 @@ var ListController = BasicController.extend({
             this.fieldChangedPrevented = ev;
         } else if (this.renderer.inMultipleRecordEdition(recordId)) {
             // deal with edition of multiple lines
-            const _onSuccess = ev.data.onSuccess;
             ev.data.onSuccess = () => {
-                Promise.resolve(_onSuccess()).then(() => {
-                    const savedRecordsPromise = this._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
-                    this.multipleRecordsSavingPromise = savedRecordsPromise;
-                });
+                this.multipleRecordsSavingPromise =
+                    this._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
             };
         }
         this._super.apply(this, arguments);
