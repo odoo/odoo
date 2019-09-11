@@ -8,11 +8,11 @@ from odoo.exceptions import ValidationError
 class SlideQuestion(models.Model):
     _name = "slide.question"
     _rec_name = "question"
-    _description = "Slide Quiz Question"
+    _description = "Content Quiz Question"
 
     sequence = fields.Integer("Sequence", default=10)
     question = fields.Char("Question Name", required=True, translate=True)
-    slide_id = fields.Many2one('slide.slide', string="Slide", required=True)
+    slide_id = fields.Many2one('slide.slide', string="Content", required=True)
     answer_ids = fields.One2many('slide.answer', 'question_id', string="Answer")
     # statistics
     attempts_count = fields.Integer(compute='_compute_statistics', groups='website.group_website_publisher')
