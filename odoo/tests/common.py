@@ -212,9 +212,9 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         return self.env.ref(xid)
 
     @contextmanager
-    def _assertRaises(self, exception):
+    def _assertRaises(self, exception, *, msg=None):
         """ Context manager that clears the environment upon failure. """
-        with super(BaseCase, self).assertRaises(exception) as cm:
+        with super(BaseCase, self).assertRaises(exception, msg=msg) as cm:
             if hasattr(self, 'env'):
                 with self.env.clear_upon_failure():
                     yield cm
@@ -226,7 +226,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             with self._assertRaises(exception):
                 func(*args, **kwargs)
         else:
-            return self._assertRaises(exception)
+            return self._assertRaises(exception, **kwargs)
 
     @contextmanager
     def assertQueryCount(self, default=0, flush=True, **counters):
