@@ -716,6 +716,7 @@ class HolidaysRequest(models.Model):
             'state': 'open',  # to block that meeting date in the calendar
             'privacy': 'confidential',
             'event_tz': self.user_id.tz,
+            'activity_ids': [(5, 0, 0)],
         }
         # Add the partner_id (if exist) as an attendee
         if self.user_id and self.user_id.partner_id:
