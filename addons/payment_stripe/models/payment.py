@@ -246,7 +246,7 @@ class PaymentTransactionStripe(models.Model):
             return True
         else:
             error = tree.get('failure_message')
-            _logger.warn(error)
+            _logger.warning(error)
             vals.update({'state_message': error})
             self.write(vals)
             self._set_transaction_cancel()

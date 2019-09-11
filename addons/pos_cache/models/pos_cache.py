@@ -30,7 +30,7 @@ class pos_cache(models.Model):
                 display_default_code=False, lang=cache.compute_user_id.lang)
             res = prod_ctx.read(cache.get_product_fields())
             cache.write({
-                'cache': base64.encodestring(json.dumps(res).encode('utf-8')),
+                'cache': base64.encodebytes(json.dumps(res).encode('utf-8')),
             })
 
     @api.model
@@ -48,7 +48,7 @@ class pos_cache(models.Model):
             self.product_fields = str(fields)
             self.refresh_cache()
 
-        return json.loads(base64.decodestring(self.cache).decode('utf-8'))
+        return json.loads(base64.decodebytes(self.cache).decode('utf-8'))
 
 
 class pos_config(models.Model):

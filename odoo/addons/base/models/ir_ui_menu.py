@@ -67,7 +67,7 @@ class IrUiMenu(models.Model):
         icon_image = False
         if icon_path:
             with tools.file_open(icon_path, 'rb') as icon_file:
-                icon_image = base64.encodestring(icon_file.read())
+                icon_image = base64.encodebytes(icon_file.read())
         return icon_image
 
     @api.constrains('parent_id')

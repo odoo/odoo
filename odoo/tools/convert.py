@@ -787,10 +787,10 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         _logger.exception("The XML file '%s' does not fit the required schema !", xmlfile.name)
         if jingtrang:
             p = subprocess.run(['pyjing', schema, xmlfile.name], stdout=subprocess.PIPE)
-            _logger.warn(p.stdout.decode())
+            _logger.warning(p.stdout.decode())
         else:
             for e in relaxng.error_log:
-                _logger.warn(e)
+                _logger.warning(e)
             _logger.info("Install 'jingtrang' for more precise and useful validation messages.")
         raise
 

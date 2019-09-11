@@ -109,8 +109,8 @@ class TestDropship(common.TransactionCase):
         purchase = self.env['purchase.order'].search([('partner_id', '=', supplier_dropship.id)])
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         purchase.button_confirm()
-        self.assertEquals(purchase.state, 'purchase', 'Purchase order should be in the approved state')
-        self.assertEquals(len(purchase.ids), 1, 'There should be one picking')
+        self.assertEqual(purchase.state, 'purchase', 'Purchase order should be in the approved state')
+        self.assertEqual(len(purchase.ids), 1, 'There should be one picking')
 
         # Send the 200 pieces
         purchase.picking_ids.move_lines.quantity_done = purchase.picking_ids.move_lines.product_qty
@@ -120,4 +120,4 @@ class TestDropship(common.TransactionCase):
         move_line = self.env['stock.move.line'].search([
             ('location_dest_id', '=', self.env.ref('stock.stock_location_customers').id),
             ('product_id', '=', drop_shop_product.id)])
-        self.assertEquals(len(move_line.ids), 1, 'There should be exactly one move line')
+        self.assertEqual(len(move_line.ids), 1, 'There should be exactly one move line')

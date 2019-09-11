@@ -55,13 +55,13 @@ class TestQWebTField(TransactionCase):
     def test_reject_crummy_tags(self):
         field = etree.Element('td', {'t-field': u'company.name'})
 
-        with self.assertRaisesRegexp(QWebException, r'^RTE widgets do not work correctly'):
+        with self.assertRaisesRegex(QWebException, r'^RTE widgets do not work correctly'):
             self.engine.render(field, {'company': None})
 
     def test_reject_t_tag(self):
         field = etree.Element('t', {'t-field': u'company.name'})
 
-        with self.assertRaisesRegexp(QWebException, r'^t-field can not be used on a t element'):
+        with self.assertRaisesRegex(QWebException, r'^t-field can not be used on a t element'):
             self.engine.render(field, {'company': None})
 
     def test_render_t_options(self):

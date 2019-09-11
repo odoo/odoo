@@ -351,7 +351,7 @@ actual arch.
                     message = "View inheritance may not use attribute %r as a selector." % match.group(1)
                     self.raise_view_error(message, self.id)
                 if WRONGCLASS.search(node.get('expr', '')):
-                    _logger.warn(
+                    _logger.warning(
                         "Error-prone use of @class in view %s (%s): use the "
                         "hasclass(*classes) function to filter elements by "
                         "their classes", self.name, self.xml_id

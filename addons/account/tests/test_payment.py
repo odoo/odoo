@@ -88,7 +88,7 @@ class TestPayment(AccountingTestCase):
         })
         payment = self.payment_model.browse(register_payments.create_payments()['res_id'])
 
-        self.assertAlmostEquals(payment.amount, 300)
+        self.assertAlmostEqual(payment.amount, 300)
         self.assertEqual(payment.state, 'posted')
         self.assertEqual(payment.state, 'posted')
         self.assertEqual(inv_1.invoice_payment_state, 'paid')
@@ -161,7 +161,7 @@ class TestPayment(AccountingTestCase):
 
         self.assertEqual(len(payment), 1)
         self.assertEqual(payment.invoice_ids[0].id, inv_1.id)
-        self.assertAlmostEquals(payment.amount, 550)
+        self.assertAlmostEqual(payment.amount, 550)
         self.assertEqual(payment.payment_type, 'inbound')
         self.assertEqual(payment.partner_id, self.partner_agrolait)
         self.assertEqual(payment.partner_type, 'customer')
@@ -180,7 +180,7 @@ class TestPayment(AccountingTestCase):
 
         self.assertEqual(len(payment), 1)
         self.assertEqual(payment.invoice_ids[0].id, inv_2.id)
-        self.assertAlmostEquals(payment.amount, 300)
+        self.assertAlmostEqual(payment.amount, 300)
         self.assertEqual(payment.payment_type, 'outbound')
         self.assertEqual(payment.partner_id, self.partner_china_exp)
         self.assertEqual(payment.partner_type, 'supplier')
