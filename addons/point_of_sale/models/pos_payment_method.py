@@ -67,6 +67,8 @@ class PosPaymentMethod(models.Model):
     def _onchange_is_cash_count(self):
         if not self.is_cash_count:
             self.cash_journal_id = False
+        else:
+            self.use_payment_terminal = False
 
     def _is_write_forbidden(self, fields):
         return bool(fields and self.open_session_ids)
