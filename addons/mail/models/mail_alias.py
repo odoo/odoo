@@ -249,7 +249,7 @@ class AliasMixin(models.AbstractModel):
         for record in child_model.search([('alias_id', '=', False)]):
             # create the alias, and link it to the current record
             alias = alias_model.create(record.get_alias_values())
-            record.with_context({'mail_notrack': True}).alias_id = alias
+            record.with_context(mail_notrack=True).alias_id = alias
             _logger.info('Mail alias created for %s %s (id %s)',
                          record._name, record.display_name, record.id)
 

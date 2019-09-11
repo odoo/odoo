@@ -332,7 +332,7 @@ class WebsiteSale(ProductConfiguratorController):
             'main_object': product,
             'product': product,
             'add_qty': add_qty,
-            'optional_product_ids': [p.with_context({'active_id': p.id}) for p in product.optional_product_ids],
+            'optional_product_ids': [p.with_context(active_id=p.id) for p in product.optional_product_ids],
             # get_attribute_exclusions deprecated, use product method
             'get_attribute_exclusions': self._get_attribute_exclusions,
         }
