@@ -594,6 +594,14 @@ class RequiredM2O(models.Model):
     bar = fields.Many2one('res.country', required=True)
 
 
+class RequiredM2OTransient(models.TransientModel):
+    _name = 'test_new_api.req_m2o_transient'
+    _description = 'Transient Model with Required Many2one'
+
+    foo = fields.Many2one('res.currency', required=True, ondelete='restrict')
+    bar = fields.Many2one('res.country', required=True)
+
+
 class Attachment(models.Model):
     _name = 'test_new_api.attachment'
     _description = 'Attachment'
