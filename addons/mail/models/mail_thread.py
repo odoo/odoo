@@ -281,13 +281,16 @@ class MailThread(models.AbstractModel):
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not self._context.get('mail_create_nolog'):
             doc_name = self.env['ir.model']._get(self._name).name
+            body = _('%s created') % doc_name
+            threads_no_subtype = self.env[self._name]
             for thread in threads:
                 subtype = thread._creation_subtype()
-                body = _('%s created') % doc_name
-                if subtype:  # if we have a sybtype, post message to notify users from _message_auto_subscribe
+                if subtype:  # if we have a subtype, post message to notify users from _message_auto_subscribe
                     thread.sudo().message_post(body=body, subtype_id=subtype.id, author_id=self.env.user.partner_id.id)
                 else:
-                    thread._message_log(body=body)
+                    threads_no_subtype += thread
+            if threads_no_subtype:
+                threads_no_subtype._message_log_batch(bodies={t.id: body for t in threads_no_subtype})
 
         # post track template if a tracked field changed
         if not self._context.get('mail_notrack'):
@@ -555,8 +558,9 @@ class MailThread(models.AbstractModel):
     def _creation_subtype(self):
         """ Give the subtypes triggered by the creation of a record
 
-        :returns: a subtype browse record or False if no subtype is trigerred
+        :returns: a subtype browse record (empty if no subtype is triggered)
         """
+        return self.env['mail.message.subtype']
 
     def _track_subtype(self, init_values):
         """ Give the subtypes triggered by the changes on the record according
@@ -1020,8 +1024,7 @@ class MailThread(models.AbstractModel):
                 message_dict.pop('parent_id', None)
                 thread = ModelCtx.message_new(message_dict, custom_values)
                 thread_id = thread.id
-                subtype = thread._creation_subtype()
-                subtype_id = subtype.id if subtype else False
+                subtype_id = thread._creation_subtype().id
 
             # replies to internal message are considered as notes, but parent message
             # author is added in recipients to ensure he is notified of a private answer
