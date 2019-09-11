@@ -49,12 +49,6 @@ list_credential_template = jinja_env.get_template('list_credential.html')
 
 class IoTboxHomepage(web.Home):
 
-    def get_pos_device_status(self):
-        statuses = {}
-        for driver in hw_proxy.drivers:
-            statuses[driver] = hw_proxy.drivers[driver].get_status()
-        return statuses
-
     def get_six_terminal(self):
         terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
         return terminal_id or 'Not Configured'
@@ -75,18 +69,7 @@ class IoTboxHomepage(web.Home):
         else:
             network = 'Not Connected'
 
-        pos_device = self.get_pos_device_status()
         iot_device = []
-
-        if not iot_devices:
-            for status in pos_device:
-                if pos_device[status]['status'] == 'connected':
-                    iot_device.append({
-                        'name': status,
-                        'type': 'device',
-                        'message': ' '.join(pos_device[status]['messages'])
-                    })
-
         for device in iot_devices:
             iot_device.append({
                 'name': iot_devices[device].device_name + ' : ' + str(iot_devices[device].data['value']),
@@ -114,7 +97,7 @@ class IoTboxHomepage(web.Home):
                 'title': 'Configure IoT Box',
                 'breadcrumb': 'Configure IoT Box',
                 'loading_message': 'Configuring your IoT Box',
-                'ssid': self.get_wifi_essid(),
+                'ssid': helpers.get_wifi_essid(),
                 'server': helpers.get_odoo_server_url(),
                 'hostname': subprocess.check_output('hostname').decode('utf-8'),
                 })
@@ -157,26 +140,10 @@ class IoTboxHomepage(web.Home):
 
     @http.route('/clear_credential', type='http', auth='none', cors='*', csrf=False)
     def clear_credential(self):
-        subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
         helpers.unlink_file('odoo-db-uuid.conf')
         helpers.unlink_file('odoo-enterprise-code.conf')
         subprocess.check_call(["sudo", "service", "odoo", "restart"])
-        subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
         return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069'>"
-
-    def get_wifi_essid(self):
-        wifi_options = []
-        try:
-            f = open('/tmp/scanned_networks.txt', 'r')
-            for line in f:
-                line = line.rstrip()
-                line = misc.html_escape(line)
-                if line not in wifi_options:
-                    wifi_options.append(line)
-            f.close()
-        except IOError:
-            _logger.warning("No /tmp/scanned_networks.txt")
-        return wifi_options
 
     @http.route('/wifi', type='http', auth='none', website=True)
     def wifi(self):
@@ -184,7 +151,7 @@ class IoTboxHomepage(web.Home):
             'title': 'Wifi configuration',
             'breadcrumb': 'Configure Wifi',
             'loading_message': 'Connecting to Wifi',
-            'ssid': self.get_wifi_essid(),
+            'ssid': helpers.get_wifi_essid(),
         })
 
     @http.route('/wifi_connect', type='http', auth='none', cors='*', csrf=False)
@@ -203,6 +170,11 @@ class IoTboxHomepage(web.Home):
             res_payload['server'] = {
                 'url': server,
                 'message': 'Redirect to Odoo Server'
+            }
+        else:
+            res_payload['server'] = {
+                'url': 'http://' + helpers.get_ip() + ':8069',
+                'message': 'Redirect to IoT Box'
             }
 
         return json.dumps(res_payload)
@@ -248,7 +220,7 @@ class IoTboxHomepage(web.Home):
             'title': 'Configure IoT Box',
             'breadcrumb': 'Configure IoT Box',
             'loading_message': 'Configuring your IoT Box',
-            'ssid': self.get_wifi_essid(),
+            'ssid': helpers.get_wifi_essid(),
             'server': helpers.get_odoo_server_url(),
             'hostname': subprocess.check_output('hostname').decode('utf-8').strip('\n'),
         })

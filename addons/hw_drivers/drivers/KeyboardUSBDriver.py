@@ -181,9 +181,7 @@ class KeyboardUSBDriver(Driver):
         else:
             data = {}
         data[self.device_identifier] = layout
-        subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
-        file_path.write_text(json.dumps(data))
-        subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
+        helpers.write_file('odoo-keyboard-layouts.conf', json.dumps(data))
 
     def load_layout(self):
         """Read the layout from the saved filed and set it as current layout.
