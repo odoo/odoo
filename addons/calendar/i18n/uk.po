@@ -37,14 +37,14 @@ msgid ""
 "%s at %s To\n"
 " %s at %s (%s)"
 msgstr ""
-"%s о %s До\n"
-"%s о %s (%s)"
+"%s в %s До\n"
+"%s в %s (%s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr "%s о (%s до %s) (%s)"
+msgstr "%s в (%s до %s) (%s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:0
@@ -275,7 +275,7 @@ msgstr ""
 "    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
 "    <p>\n"
 "        Вітаємо ${object.common_name},<br/><br/>\n"
-"        Дата зустрічі була оновлена. Зустріч ${object.event_id.name} created by ${object.event_id.user_id.partner_id.name} запланована на ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.\n"
+"        Дата зустрічі була оновлена. Зустріч ${object.event_id.name} створена ${object.event_id.user_id.partner_id.name} запланована на ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
 "        <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
@@ -636,7 +636,7 @@ msgstr "Контакти календаря"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "Календар подій"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -799,12 +799,12 @@ msgstr "Ел. пошта"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "Email - 3 Hours"
-msgstr ""
+msgstr "Email - 3 години"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "Email - 6 Hours"
-msgstr ""
+msgstr "Email - 6 годин"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
@@ -1210,27 +1210,27 @@ msgstr "Сповіщення"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "Notification - 1 Days"
-msgstr ""
+msgstr "Сповіщення - 1 день"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "Notification - 1 Hours"
-msgstr ""
+msgstr "Сповіщення - 1 година"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "Notification - 15 Minutes"
-msgstr ""
+msgstr "Сповіщення - 15 хвилин"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "Notification - 2 Hours"
-msgstr ""
+msgstr "Сповіщення - 2 години"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "Notification - 30 Minutes"
-msgstr ""
+msgstr "Сповіщення - 30 хвилин"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter

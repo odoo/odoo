@@ -88,7 +88,7 @@ class PrinterDriver(Driver):
             'reason': None,
         }
         self.send_status()
-        if 'direct' in self._device_connection:
+        if 'direct' in self._device_connection or helpers.get_odoo_server_url():
             self.add_connected_printer()
             self.print_status()
 

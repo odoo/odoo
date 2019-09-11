@@ -1,13 +1,45 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class Lead(models.Model):
     _inherit = 'crm.lead'
 
-    visitor_id = fields.Many2one('website.visitor', "Web Visitor")
+    visitor_ids = fields.Many2many('website.visitor', string="Web Visitors")
+    visitor_page_count = fields.Integer('# Page Views', compute="_compute_visitor_page_count")
+
+    @api.depends('visitor_ids.page_ids')
+    def _compute_visitor_page_count(self):
+        self.flush(['visitor_ids'])
+        sql = """ SELECT l.id as lead_id, count(*) as page_view_count
+                    FROM crm_lead l
+                    JOIN crm_lead_website_visitor_rel lv ON l.id = lv.crm_lead_id
+                    JOIN website_visitor v ON v.id = lv.website_visitor_id
+                    JOIN website_visitor_page p ON p.visitor_id = v.id
+                    WHERE l.id in %s
+                    GROUP BY l.id"""
+        self.env.cr.execute(sql, (tuple(self.ids),))
+        page_data = self.env.cr.dictfetchall()
+        mapped_data = {data['lead_id']: data['page_view_count'] for data in page_data}
+        for lead in self:
+            lead.visitor_page_count = mapped_data.get(lead.id, 0)
+
+    def action_redirect_to_page_views(self):
+        visitors = self.visitor_ids
+        action = self.env.ref('website.website_visitor_page_action').read()[0]
+        action['domain'] = [('visitor_id', 'in', visitors.ids)]
+        # avoid grouping if only few records
+        if len(visitors.visitor_page_ids.ids) > 15 and len(visitors.page_ids.ids) > 1:
+            action['context'] = {'search_default_group_by_page': '1'}
+        return action
+
+    def _merge_data(self, fields):
+        merged_data = super(Lead, self)._merge_data(fields)
+        # add all the visitors from all lead to merge
+        merged_data['visitor_ids'] = [(6, 0, self.visitor_ids.ids)]
+        return merged_data
 
     def website_form_input_filter(self, request, values):
         values['medium_id'] = values.get('medium_id') or \

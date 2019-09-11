@@ -228,7 +228,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_survey_label_form">
-        <field name="name">Labels</field>
+        <field name="name">Suggested Values</field>
         <field name="res_model">survey.label</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="survey_label_search"/>
@@ -240,7 +240,15 @@
         </field>
     </record>
 
-    <menuitem name="Questions" id="menu_survey_question_form1" action="action_survey_question_form" parent="menu_surveys_configuration" sequence="2"/>
-    <menuitem name="Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>
+    <menuitem name="Questions"
+        id="menu_survey_question_form1"
+        action="action_survey_question_form"
+        parent="survey_menu_questions"
+        sequence="2"/>
+    <menuitem name="Suggested Values"
+        id="menu_survey_label_form1"
+        action="action_survey_label_form"
+        parent="survey_menu_questions"
+        sequence="3"/>
 </data>
 </odoo>

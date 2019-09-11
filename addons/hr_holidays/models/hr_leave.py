@@ -103,13 +103,13 @@ class HolidaysRequest(models.Model):
         ('refuse', 'Refused'),
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
-        ], string='Status', readonly=True, tracking=True, copy=False,
+        ], string='Status', readonly=True, tracking=True, copy=False, default='draft',
         help="The status is set to 'To Submit', when a time off request is created." +
         "\nThe status is 'To Approve', when time off request is confirmed by user." +
         "\nThe status is 'Refused', when time off request is refused by manager." +
         "\nThe status is 'Approved', when time off request is approved by manager.")
-    payslip_status = fields.Boolean('Reported in last payslips', help='Green this button when the time off has been taken into account in the payslip.')
-    report_note = fields.Text('HR Comments')
+    payslip_status = fields.Boolean('Reported in last payslips', help='Green this button when the time off has been taken into account in the payslip.', copy=False)
+    report_note = fields.Text('HR Comments', copy=False)
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, compute_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
     manager_id = fields.Many2one('hr.employee')
     # leave type configuration
@@ -120,7 +120,7 @@ class HolidaysRequest(models.Model):
     validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type', readonly=False)
     # HR data
     employee_id = fields.Many2one(
-        'hr.employee', string='Employee', index=True, readonly=True,
+        'hr.employee', string='Employee', index=True, readonly=True, ondelete="restrict",
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True)
     department_id = fields.Many2one(
         'hr.department', string='Department', readonly=True,
@@ -139,15 +139,15 @@ class HolidaysRequest(models.Model):
         'Duration (Days)', copy=False, tracking=True,
         help='Number of days of the time off request. Used in the calculation. To manually correct the duration, use this field.')
     number_of_days_display = fields.Float(
-        'Duration in days', compute='_compute_number_of_days_display', copy=False, readonly=True,
+        'Duration in days', compute='_compute_number_of_days_display', readonly=True,
         help='Number of days of the time off request according to your working schedule. Used for interface.')
     number_of_hours_display = fields.Float(
-        'Duration in hours', compute='_compute_number_of_hours_display', copy=False, readonly=True,
+        'Duration in hours', compute='_compute_number_of_hours_display', readonly=True,
         help='Number of hours of the time off request according to your working schedule. Used for interface.')
     duration_display = fields.Char('Requested (Days/Hours)', compute='_compute_duration_display',
         help="Field allowing to see the leave request duration in days or hours depending on the leave_type_request_unit")    # details
     # details
-    meeting_id = fields.Many2one('calendar.event', string='Meeting')
+    meeting_id = fields.Many2one('calendar.event', string='Meeting', copy=False)
     parent_id = fields.Many2one('hr.leave', string='Parent', copy=False)
     linked_request_ids = fields.One2many('hr.leave', 'parent_id', string='Linked Requests')
     holiday_type = fields.Selection([
@@ -534,17 +534,17 @@ class HolidaysRequest(models.Model):
             dto    = leave.date_to
             if leave.holiday_status_id.validity_start and leave.holiday_status_id.validity_stop:
                 if dfrom and dto and (dfrom.date() < vstart or dto.date() > vstop):
-                    raise UserError(
+                    raise ValidationError(
                         _('You can take %s only between %s and %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_start, leave.holiday_status_id.validity_stop))
             elif leave.holiday_status_id.validity_start:
                 if dfrom and (dfrom.date() < vstart):
-                    raise UserError(
+                    raise ValidationError(
                         _('You can take %s from %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_start))
             elif leave.holiday_status_id.validity_stop:
                 if dto and (dto.date() > vstop):
-                    raise UserError(
+                    raise ValidationError(
                         _('You can take %s until %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_stop))
 
@@ -629,13 +629,18 @@ class HolidaysRequest(models.Model):
 
         if not is_officer:
             if any(hol.date_from.date() < fields.Date.today() for hol in self):
-                raise UserError(_('You cannot update a leave that already begun'))
+                raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
 
         employee_id = values.get('employee_id', False)
-        if not self.env.context.get('leave_fast_create') and values.get('state'):
-            self._check_approval_update(values['state'])
-            if any(holiday.validation_type == 'both' for holiday in self):
-                self._check_double_validation_rules(self.env['hr.employee'].browse(values.get('employee_id', self.employee_id.id)), values['state'])
+        if not self.env.context.get('leave_fast_create'):
+            if values.get('state'):
+                self._check_approval_update(values['state'])
+                if any(holiday.validation_type == 'both' for holiday in self):
+                    self._check_double_validation_rules(self.env['hr.employee'].browse(values.get('employee_id', self.employee_id.id)), values['state'])
+            if 'date_from' in values:
+                values['request_date_from'] = values['date_from']
+            if 'date_to' in values:
+                values['request_date_to'] = values['date_to']
         result = super(HolidaysRequest, self).write(values)
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
@@ -659,6 +664,10 @@ class HolidaysRequest(models.Model):
         return super(HolidaysRequest, self).unlink()
 
     def copy_data(self, default=None):
+        if 'date_from' in default and 'date_to' in default:
+            default['request_date_from'] = default.get('date_from').date()
+            default['request_date_to'] = default.get('date_to').date()
+            return super().copy_data(default)
         raise UserError(_('A leave cannot be duplicated.'))
 
     def _get_mail_redirect_suggested_company(self):
@@ -716,6 +725,7 @@ class HolidaysRequest(models.Model):
             'state': 'open',  # to block that meeting date in the calendar
             'privacy': 'confidential',
             'event_tz': self.user_id.tz,
+            'activity_ids': [(5, 0, 0)],
         }
         # Add the partner_id (if exist) as an attendee
         if self.user_id and self.user_id.partner_id:
@@ -876,7 +886,7 @@ class HolidaysRequest(models.Model):
 
                     # This handles states validate1 validate and refuse
                     if holiday.employee_id == current_employee:
-                        raise UserError(_('Only a Leave Manager can approve its own requests.'))
+                        raise UserError(_('Only a Leave Manager can approve/refuse its own requests.'))
 
                     if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager') and holiday.holiday_type == 'employee':
                         if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:

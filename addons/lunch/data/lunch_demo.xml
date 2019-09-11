@@ -2,6 +2,62 @@
 <odoo>
     <data noupdate="1">
 
+        <record id="lunch_location_main" model="lunch.location">
+            <field name="address">87323 Francis Corner Oscarhaven, OK 12782</field>
+        </record>
+
+        <record id="partner_hungry_dog" model="res.partner">
+            <field name="name">Hungry Dog</field>
+            <field name="city">Russeltown</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="street">975 Bullock Orchard</field>
+            <field name="zip">02155</field>
+            <field name="email">cynthiasanchez@gmail.com</field>
+        </record>
+
+        <record id="product_bacon_0" model="lunch.product">
+            <field name="name">Bacon</field>
+            <field name="category_id" ref="categ_burger"/>
+            <field name="price">7.2</field>
+            <field name="supplier_id" ref="supplier_hungry_dog"/>
+            <field name="description">Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce</field>
+            <field name="image_1920" type="base64" file="lunch/static/img/bacon_burger.png"/>
+        </record>
+
+        <record id="product_cheese_burger_0" model="lunch.product">
+            <field name="name">Cheese Burger</field>
+            <field name="category_id" ref="categ_burger"/>
+            <field name="price">6.8</field>
+            <field name="supplier_id" ref="supplier_hungry_dog"/>
+            <field name="description">Beef, Cheddar, Salad, Fried Onions, BBQ Sauce</field>
+            <field name="image_1920" type="base64" file="lunch/static/img/cheeseburger.png"/>
+        </record>
+
+        <record id="product_club_0" model="lunch.product">
+            <field name="name">Club</field>
+            <field name="category_id" ref="categ_sandwich"/>
+            <field name="price">3.4</field>
+            <field name="supplier_id" ref="supplier_hungry_dog"/>
+            <field name="description">Ham, Cheese, Vegetables</field>
+            <field name="image_1920" type="base64" file="lunch/static/img/club.png"/>
+        </record>
+
+        <record id="product_coke_0" model="lunch.product">
+            <field name="name">Coca Cola</field>
+            <field name="category_id" ref="categ_drinks"/>
+            <field name="price">2.9</field>
+            <field name="supplier_id" ref="supplier_hungry_dog"/>
+        </record>
+
+        <record id="product_pizza_0" model="lunch.product">
+            <field name="name">Pizza Margherita</field>
+            <field name="category_id" ref="categ_pizza"/>
+            <field name="price">6.90</field>
+            <field name="supplier_id" ref="supplier_hungry_dog"/>
+            <field name="description">Tomatoes, Mozzarella</field>
+        </record>
+
+
         <record id="location_office_1" model="lunch.location">
             <field name="name">Office 1</field>
         </record>
@@ -23,24 +79,18 @@
             <field name="groups_id" eval="[(4, ref('lunch.group_lunch_user'))]"/>
         </record>
 
-        <record model="lunch.product.category" id="categ_sandwich">
-            <field name="name">Sandwich</field>
-        </record>
-        <record model="lunch.product.category" id="categ_pizza">
-            <field name="name">Pizza</field>
-        </record>
         <record model="lunch.product.category" id="categ_pasta">
             <field name="name">Pasta</field>
         </record>
-        <record model="lunch.product.category" id="categ_burger">
-            <field name="name">Burger</field>
-        </record>
+
         <record model="lunch.product.category" id="categ_sushi">
             <field name="name">Sushi</field>
         </record>
+
         <record model="lunch.product.category" id="categ_temaki">
             <field name="name">Temaki</field>
         </record>
+
         <record model="lunch.product.category" id="categ_chirashi">
             <field name="name">Chirashi</field>
         </record>

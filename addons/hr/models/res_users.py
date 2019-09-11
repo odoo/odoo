@@ -10,7 +10,8 @@ class User(models.Model):
 
     # note: a user can only be linked to one employee per company (see sql constraint in ´hr.employee´)
     employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee')
-    employee_id = fields.Many2one('hr.employee', string="Company employee", compute='_compute_company_employee', store=True)
+    employee_id = fields.Many2one('hr.employee', string="Company employee",
+        compute='_compute_company_employee', search='_search_company_employee', store=False)
 
     job_title = fields.Char(related='employee_id.job_title', readonly=False)
     work_phone = fields.Char(related='employee_id.work_phone', readonly=False)
@@ -56,6 +57,13 @@ class User(models.Model):
     last_activity = fields.Date(related='employee_id.last_activity')
     last_activity_time = fields.Char(related='employee_id.last_activity_time')
 
+    can_edit = fields.Boolean(compute='_compute_can_edit')
+
+    def _compute_can_edit(self):
+        can_edit = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
+        for user in self:
+            user.can_edit = can_edit
+
     @api.depends('employee_ids')
     def _compute_employee_count(self):
         for user in self:
@@ -75,6 +83,7 @@ class User(models.Model):
             'hr_presence_state',
             'last_activity',
             'last_activity_time',
+            'can_edit',
         ]
 
         hr_writable_fields = [
@@ -182,10 +191,20 @@ class User(models.Model):
             return self.sudo().env.ref('hr.res_users_action_my').read()[0]
         return super(User, self).action_get()
 
-    @api.depends('company_id', 'employee_ids')
+    @api.depends('employee_ids')
+    @api.depends_context('force_company')
     def _compute_company_employee(self):
         for user in self:
-            user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', user.company_id.id)], limit=1)
+            user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', self.env.company.id)], limit=1)
+
+    def _search_company_employee(self, operator, value):
+        employees = self.env['hr.employee'].search([
+            ('name', operator, value),
+            '|',
+            ('company_id', '=', self.env.company.id),
+            ('company_id', '=', False)
+        ], order='company_id ASC')
+        return [('id', 'in', employees.mapped('user_id').ids)]
 
     def action_create_employee(self):
         self.ensure_one()

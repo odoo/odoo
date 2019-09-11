@@ -7,6 +7,9 @@ odoo.define('base_setup.ResConfigDevTool', function (require) {
 
     var ResConfigDevTool = Widget.extend({
         template: 'res_config_dev_tool',
+        events: {
+            'click .o_web_settings_force_demo': '_onClickForceDemo',
+        },
 
         init: function () {
             this._super.apply(this, arguments);
@@ -24,6 +27,21 @@ odoo.define('base_setup.ResConfigDevTool', function (require) {
                     self.demo_active = demo_active;
                 });
             });
+        },
+
+        //--------------------------------------------------------------------------
+        // Handlers
+        //--------------------------------------------------------------------------
+
+        /**
+         * Forces demo data to be installed in a database without demo data installed.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClickForceDemo: function (ev) {
+            ev.preventDefault();
+            this.do_action('base.demo_force_install_action');
         },
     });
 

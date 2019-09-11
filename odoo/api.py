@@ -51,7 +51,7 @@ from decorator import decorate, decorator
 from werkzeug.local import Local, release_local
 
 import odoo
-from odoo.tools import frozendict, classproperty, StackMap
+from odoo.tools import frozendict, classproperty, lazy_property, StackMap
 from odoo.exceptions import CacheMiss
 
 _logger = logging.getLogger(__name__)
@@ -518,12 +518,12 @@ class Environment(Mapping):
             superuser mode. """
         return self.su or self.user._is_system()
 
-    @property
+    @lazy_property
     def user(self):
         """ return the current user (as an instance) """
         return self(su=True)['res.users'].browse(self.uid)
 
-    @property
+    @lazy_property
     def company(self):
         """ return the company in which the user is logged in (as an instance) """
         company_ids = self.context.get('allowed_company_ids', False)
@@ -533,7 +533,7 @@ class Environment(Mapping):
                 return self['res.company'].browse(company_id)
         return self.user.company_id
 
-    @property
+    @lazy_property
     def companies(self):
         """ return a recordset of the enabled companies by the user """
         try:  # In case the user tries to bidouille the url (eg: cids=1,foo,bar)
@@ -636,14 +636,16 @@ class Environment(Mapping):
         """ Return whether ``field`` must be computed on ``record``. """
         return record.id in self.all.tocompute.get(field, ())
 
+    def not_to_compute(self, field, records):
+        """ Return the subset of ``records`` for which ``field`` must not be computed. """
+        ids = self.all.tocompute.get(field, ())
+        return records.browse(id_ for id_ in records._ids if id_ not in ids)
+
     def add_to_compute(self, field, records):
-        """ Mark ``field`` to be computed on ``records``, return newly added records. """
+        """ Mark ``field`` to be computed on ``records``. """
         if not records:
             return records
-        ids = self.all.tocompute[field]
-        added_ids = [id_ for id_ in records._ids if id_ not in ids]
-        ids.update(added_ids)
-        return records.browse(added_ids)
+        self.all.tocompute[field].update(records._ids)
 
     def remove_to_compute(self, field, records):
         """ Mark ``field`` as computed on ``records``. """
@@ -763,6 +765,24 @@ class Cache(object):
                     yield field_cache[record_id]
             except KeyError:
                 pass
+
+    def get_records_different_from(self, records, field, value):
+        """ Return the subset of ``records`` that has not ``value`` for ``field``. """
+        field_cache = self._data[field]
+        key = self._get_context_key(records.env, field) if field.depends_context else None
+        ids = []
+        for record_id in records._ids:
+            try:
+                if key:
+                    val = field_cache[record_id][key]
+                else:
+                    val = field_cache[record_id]
+            except KeyError:
+                ids.append(record_id)
+            else:
+                if val != value:
+                    ids.append(record_id)
+        return records.browse(ids)
 
     def get_fields(self, record):
         """ Return the fields with a value for ``record``. """

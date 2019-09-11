@@ -47,6 +47,9 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="res_users_view_form_simple_modif"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='odoobot_state']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('can_edit', '=', False)]}</attribute>
+                </xpath>
                 <form position="replace">
                 <form create="false" js_class="hr_employee_profile_form">
                     <field name="hr_presence_state" invisible="1"/>
@@ -90,17 +93,18 @@
                         </div>
                         <div class="row">
                             <h2 class="col-6">
-                                <field name="job_title" placeholder="Job Position"/>
+                                <field name="job_title" placeholder="Job Position" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                             </h2>
                         </div>
                         <group>
                             <group>
-                                <field name="mobile_phone" widget="phone"/>
-                                <field name="work_phone" widget="phone"/>
+                                <field name="can_edit" invisible="1"/>
+                                <field name="mobile_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="work_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                             </group>
                             <group>
-                                <field name="work_email" widget="email"/>
-                                <field name="work_location"/>
+                                <field name="work_email" widget="email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="work_location" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                 <field name="company_id" invisible="1"/>
                             </group>
                         </group>
@@ -112,14 +116,15 @@
                                 <div id="o_work_employee_container"> <!-- These two div are used to position org_chart -->
                                     <div id="o_work_employee_main">
                                         <group string="Location">
-                                            <field name="department_id"/>
+                                            <field name="department_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
-                                                options='{"always_reload": True, "highlight_first_line": True}'/>
+                                                options='{"always_reload": True, "highlight_first_line": True}'
+                                                attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                         </group>
                                         <group name="managers" string="Responsibles">
-                                            <field name="employee_parent_id"/>
-                                            <field name="coach_id"/>
+                                            <field name="employee_parent_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                            <field name="coach_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                         </group>
                                     </div>
                                 </div>
@@ -134,42 +139,43 @@
                                                 'default_employee_ids': employee_ids,
                                                 'default_type': 'private',
                                                 'form_view_ref': 'base.res_partner_view_form_private'}"
-                                            options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="private_email" string="Email"/>
-                                        <field name="employee_phone" string="Phone"/>
-                                        <field name="employee_bank_account_id"/>
-                                        <field name="km_home_work"/>
+                                            options='{"always_reload": True, "highlight_first_line": True}'
+                                            attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="employee_phone" string="Phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="employee_bank_account_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="km_home_work" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     </group>
                                     <group string="Citizenship">
-                                        <field name="employee_country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id"/>
-                                        <field name="passport_id"/>
-                                        <field name="gender"/>
-                                        <field name="birthday"/>
-                                        <field name="place_of_birth"/>
-                                        <field name="country_of_birth"/>
+                                        <field name="employee_country_id" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="identification_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="passport_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="gender" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="birthday" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="place_of_birth" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="country_of_birth" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     </group>
                                     <group string="Marital Status">
-                                        <field name="marital"/>
-                                        <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
-                                        <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
+                                        <field name="marital" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'readonly': [('can_edit', '=', False)]}"/>
                                     </group>
                                     <group string="Education">
-                                        <field name="certificate"/>
-                                        <field name="study_field"/>
-                                        <field name="study_school"/>
+                                        <field name="certificate" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="study_field" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="study_school" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     </group>
                                     <group string="Dependant">
-                                        <field name="children"/>
+                                        <field name="children" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     </group>
                                     <group string="Emergency">
-                                        <field name="emergency_contact"/>
-                                        <field name="emergency_phone"/>
+                                        <field name="emergency_contact" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="emergency_phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     </group>
                                     <group string="Work Permit" name="work_permit">
-                                        <field name="visa_no"/>
-                                        <field name="permit_no"/>
-                                        <field name="visa_expire"/>
+                                        <field name="visa_no" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="permit_no" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="visa_expire" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     </group>
                                 </group>
                             </page>
@@ -177,8 +183,8 @@
                                 <group>
                                     <group string='Status' name="active_group" invisible="1"></group>
                                     <group string="Attendance" name="identification_group">
-                                        <field name="pin"/>
-                                        <field name="barcode"/>
+                                        <field name="pin" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="barcode" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     </group>
                                 </group>
                             </page>

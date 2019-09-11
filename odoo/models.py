@@ -1099,12 +1099,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         field_names = set(field_names)
         for check in self._constraint_methods:
             if not field_names.isdisjoint(check._constrains):
-                try:
-                    check(self)
-                except ValidationError as e:
-                    raise
-                except Exception as e:
-                    raise ValidationError("%s\n\n%s" % (_("Error while validating constraint"), tools.ustr(e)))
+                check(self)
 
     @api.model
     def default_get(self, fields_list):
@@ -2587,10 +2582,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # 4. initialize more field metadata
         cls._field_computed = {}            # fields computed with the same method
         cls._field_inverses = Collector()   # inverse fields for related fields
-        cls._field_triggers = {}            # {depfield: {depfield: {...}, None: [compute_fields]}}
-        cls._field_triggers_create = {}     # {depfield: {depfield: {...}, None: [compute_fields]}}
 
         cls._setup_done = True
+
+        # 5. determine and validate rec_name
+        if cls._rec_name:
+            assert cls._rec_name in cls._fields, \
+                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
+        elif 'name' in cls._fields:
+            cls._rec_name = 'name'
+        elif 'x_name' in cls._fields:
+            cls._rec_name = 'x_name'
 
     @api.model
     def _setup_fields(self):
@@ -2616,6 +2618,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             del cls._fields[name]
             delattr(cls, name)
 
+        # fix up _rec_name
+        if 'x_name' in bad_fields and cls._rec_name == 'x_name':
+            cls._rec_name = None
+            field = cls._fields['display_name']
+            field.depends = tuple(name for name in field.depends if name != 'x_name')
+
         # map each field to the fields computed with the same method
         groups = defaultdict(list)
         for field in cls._fields.values():
@@ -2633,32 +2641,29 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """ Setup recomputation triggers, and complete the model setup. """
         cls = type(self)
 
-        if isinstance(self, Model):
-            # set up field triggers (on database-persisted models only)
-            for field in cls._fields.values():
-                # dependencies of custom fields may not exist; ignore that case
-                exceptions = (Exception,) if field.manual else ()
-                with tools.ignore(*exceptions):
-                    field.setup_triggers(self)
+        # The triggers of a field F is a tree that contains the fields that
+        # depend on F, together with the fields to inverse to find out which
+        # records to recompute.
+        #
+        # For instance, assume that G depends on F, H depends on X.F, I depends
+        # on W.X.F, and J depends on Y.F. The triggers of F will be the tree:
+        #
+        #                              [G]
+        #                            X/   \Y
+        #                          [H]     [J]
+        #                        W/
+        #                      [I]
+        #
+        # This tree provides perfect support for the trigger mechanism:
+        # when F is # modified on records,
+        #  - mark G to recompute on records,
+        #  - mark H to recompute on inverse(X, records),
+        #  - mark I to recompute on inverse(W, inverse(X, records)),
+        #  - mark J to recompute on inverse(Y, records).
+        cls._field_triggers = cls.pool.field_triggers
 
         # register constraints and onchange methods
         cls._init_constraints_onchanges()
-
-        # validate rec_name
-        if cls._rec_name:
-            assert cls._rec_name in cls._fields, \
-                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
-        elif 'name' in cls._fields:
-            cls._rec_name = 'name'
-        elif 'x_name' in cls._fields:
-            cls._rec_name = 'x_name'
-
-        if cls._rec_name:
-            rec_name_field = cls._fields[cls._rec_name]
-            if rec_name_field.translate:
-                # display_name depends on context['lang'] (`test_lp1071710`)
-                display_name_field = cls._fields['display_name']
-                display_name_field.depends_context = (display_name_field.depends_context or ()) + ('lang',)
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
@@ -5470,61 +5475,57 @@ Record ids: %(records)s
                [(invf, None) for f in fields for invf in self._field_inverses[f]]
         self.env.cache.invalidate(spec)
 
-    def modified(self, fnames, modified=None, create=False):
+    def modified(self, fnames, create=False):
         """ Notify that fields have been modified on ``self``. This invalidates
             the cache, and prepares the recomputation of stored function fields
             (new-style fields only).
 
             :param fnames: iterable of field names that have been modified on
                 records ``self``
-            :param modified: don't use this
             :param create: whether modified is called in the context of record creation
         """
         if not self or not fnames:
             return
-        field_triggers = self._field_triggers if not create else self._field_triggers_create
         if len(fnames) == 1:
-            tree = field_triggers.get(self._fields[next(iter(fnames))])
+            tree = self._field_triggers.get(self._fields[next(iter(fnames))])
         else:
             # merge dependency trees to evaluate all triggers at once
             tree = {}
             for fname in fnames:
-                node = field_triggers.get(self._fields[fname])
+                node = self._field_triggers.get(self._fields[fname])
                 if node:
                     trigger_tree_merge(tree, node)
         if tree:
-            self.sudo()._modified_triggers(tree, modified=modified)
+            self.sudo()._modified_triggers(tree, create)
 
-    def _modified_triggers(self, tree, modified=None):
+    def _modified_triggers(self, tree, create=False):
         """ Process a tree of field triggers on ``self``. """
         if not self:
             return
         for key, val in tree.items():
             if key is None:
                 # val is a list of fields to mark as todo
-                todo = defaultdict(list)
-                modified = modified or {}
                 for field in val:
                     records = self - self.env.protected(field)
-                    if modified and field in modified:
-                        records -= modified[field]
                     if not records:
                         continue
                     # Dont force the recomputation of compute fields which are
                     # not stored as this is not really necessary.
+                    recursive = not create and field.recursive
                     if field.compute and field.store:
+                        if recursive:
+                            added = self.env.not_to_compute(field, records)
                         self.env.add_to_compute(field, records)
                     else:
+                        if recursive:
+                            added = self & self.env.cache.get_records(self, field)
                         self.env.cache.invalidate([(field, records._ids)])
                     # recursively trigger recomputation of field's dependents
-                    todo[records].append(field.name)
-                for records, fieldnames in todo.items():
-                    for fname in fieldnames:
-                        if records._fields[fname] in modified:
-                            modified[records._fields[fname]] += records
-                        else:
-                            modified[records._fields[fname]] = records
-                    records.modified(fieldnames, modified=modified)
+                    if recursive:
+                        added.modified([field.name])
+            elif create and key.type in ('many2one', 'many2one_reference'):
+                # upon creation, no other record has a reference to self
+                continue
             else:
                 # val is another tree of dependencies
                 model = self.env[key.model_name]
@@ -5539,9 +5540,9 @@ Record ids: %(records)s
                             records = model.browse(rec_ids)
                         else:
                             try:
-                                records = self.mapped(invf.name)
+                                records = self[invf.name]
                             except MissingError:
-                                records = self.exists().mapped(invf.name)
+                                records = self.exists()[invf.name]
 
                         # TODO: find a better fix
                         if key.model_name == records._name:
@@ -5555,7 +5556,7 @@ Record ids: %(records)s
                     if new_records:
                         cache_records = self.env.cache.get_records(model, key)
                         records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
-                records._modified_triggers(val, modified=modified)
+                records._modified_triggers(val)
 
     @api.model
     def recompute(self, fnames=None, records=None):
@@ -5612,7 +5613,7 @@ Record ids: %(records)s
                     yield from val
                 else:
                     yield from traverse(val)
-        return traverse(self._field_triggers_create.get(field, {}))
+        return traverse(self._field_triggers.get(field, {}))
 
     def _has_onchange(self, field, other_fields):
         """ Return whether ``field`` should trigger an onchange event in the

@@ -1,6 +1,6 @@
 .o_kanban_view.o_kanban_dashboard {
-    &.o_hr_recruitment_kanban.o_kanban_ungrouped {
-        .o_kanban_record {
+    &.o_hr_recruitment_kanban {
+        &.o_kanban_ungrouped .o_kanban_record {
             width: 350px;
             height: 180px;
         }
@@ -16,7 +16,7 @@
             }
         }
         .ribbon-top-right {
-            margin-top: -9px;
+            margin-top: -$o-kanban-dashboard-vpadding;
         }
     }
 
