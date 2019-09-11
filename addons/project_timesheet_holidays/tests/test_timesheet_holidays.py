@@ -98,11 +98,11 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'number_of_days': number_of_days,
         })
         holiday.with_user(SUPERUSER_ID).action_validate()
-        self.assertEquals(len(holiday.timesheet_ids), number_of_days, 'Number of generated timesheets should be the same as the leave duration (1 per day between %s and %s)' % (fields.Datetime.to_string(self.leave_start_datetime), fields.Datetime.to_string(self.leave_end_datetime)))
+        self.assertEqual(len(holiday.timesheet_ids), number_of_days, 'Number of generated timesheets should be the same as the leave duration (1 per day between %s and %s)' % (fields.Datetime.to_string(self.leave_start_datetime), fields.Datetime.to_string(self.leave_end_datetime)))
 
         # manager refuse the leave
         holiday.with_user(SUPERUSER_ID).action_refuse()
-        self.assertEquals(len(holiday.timesheet_ids), 0, 'Number of linked timesheets should be zero, since the leave is refused.')
+        self.assertEqual(len(holiday.timesheet_ids), 0, 'Number of linked timesheets should be zero, since the leave is refused.')
 
     def test_validate_without_timesheet(self):
         # employee creates a leave request
@@ -116,4 +116,4 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'number_of_days': number_of_days,
         })
         holiday.with_user(SUPERUSER_ID).action_validate()
-        self.assertEquals(len(holiday.timesheet_ids), 0, 'Number of generated timesheets should be zero since the leave type does not generate timesheet')
+        self.assertEqual(len(holiday.timesheet_ids), 0, 'Number of generated timesheets should be zero since the leave type does not generate timesheet')

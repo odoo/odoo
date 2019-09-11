@@ -58,7 +58,7 @@ class TestViewsDuringModuleOperation(TransactionCase):
         update_module_child_view.with_context(website_id=1).write({'name': 'Child View (W1)'})
 
         # Ensure views are correctly setup
-        self.assertEquals(View.search_count([('type', '=', 'qweb'), ('key', '=', update_module_child_view.key)]), 2)
+        self.assertEqual(View.search_count([('type', '=', 'qweb'), ('key', '=', update_module_child_view.key)]), 2)
         self.assertTrue(self.env.ref(update_module_view_to_be_t_called.key))
         self.assertTrue(self.env.ref(update_module_base_view.key))
 
@@ -69,4 +69,4 @@ class TestViewsDuringModuleOperation(TransactionCase):
         # Ensure generic views got removed
         self.assertFalse(self.env.ref('test_website.update_module_view_to_be_t_called', raise_if_not_found=False))
         # Ensure specific COW views got removed
-        self.assertEquals(View.search_count([('type', '=', 'qweb'), ('key', '=', 'test_website.update_module_child_view')]), 0)
+        self.assertEqual(View.search_count([('type', '=', 'qweb'), ('key', '=', 'test_website.update_module_child_view')]), 0)

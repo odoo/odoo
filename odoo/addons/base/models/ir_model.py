@@ -647,7 +647,7 @@ class IrModelFields(models.Model):
                 ]))
             else:
                 # uninstall mode
-                _logger.warn("The following fields were force-deleted to prevent a registry crash "
+                _logger.warning("The following fields were force-deleted to prevent a registry crash "
                         + ", ".join(str(f) for f in fields)
                         + " the following view might be broken %s" % view.name)
         finally:

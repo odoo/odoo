@@ -20,9 +20,9 @@ class TestStockLocationSearch(common.TransactionCase):
     def test_10_location_search_by_barcode(self):
         """Search stock location by barcode"""
         location_names = self.location.name_search(name=self.barcode)
-        self.assertEquals(len(location_names), 1)
+        self.assertEqual(len(location_names), 1)
         location_id_found = location_names[0][0]
-        self.assertEquals(self.location_barcode_id, location_id_found)
+        self.assertEqual(self.location_barcode_id, location_id_found)
 
     def test_20_location_search_by_name(self):
         """Search stock location by name"""

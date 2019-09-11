@@ -250,7 +250,7 @@ class DateTime(models.AbstractModel):
 
                 dt = user_tz.localize(dt).astimezone(utc)
             except Exception:
-                logger.warn(
+                logger.warning(
                     "Failed to convert the value for a field of the model"
                     " %s back from the user's timezone (%s) to UTC",
                     model, tz_name,

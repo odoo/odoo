@@ -178,10 +178,10 @@ class TestBom(common.TransactionCase):
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
         self.dining_table.button_bom_cost()
         # Total cost of Dining Table = (550) + Total cost of operations (125) = 675.0
-        self.assertEquals(float_round(self.dining_table.standard_price, precision_digits=2), 675.0, "After computing price from BoM price should be 612.5")
+        self.assertEqual(float_round(self.dining_table.standard_price, precision_digits=2), 675.0, "After computing price from BoM price should be 612.5")
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
         # Total cost of Dining Table = (718.75) + Total cost of all operations (125 + 10.42) = 854.17
-        self.assertEquals(float_compare(self.dining_table.standard_price, 854.17, precision_digits=2), 0, "After computing price from BoM price should be 786.46")
+        self.assertEqual(float_compare(self.dining_table.standard_price, 854.17, precision_digits=2), 0, "After computing price from BoM price should be 786.46")
 
     def test_01_compute_price_inventory_valuation(self):
         """Test update cost from bom in list view when inventory valuation is real time."""

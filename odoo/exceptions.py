@@ -22,7 +22,7 @@ class except_orm(Exception):
     def __init__(self, name, value=None):
         if type(self) == except_orm:
             caller = frame_codeinfo(currentframe(), 1)
-            _logger.warn('except_orm is deprecated. Please use specific exceptions like UserError or AccessError. Caller: %s:%s', *caller)
+            _logger.warning('except_orm is deprecated. Please use specific exceptions like UserError or AccessError. Caller: %s:%s', *caller)
         self.name = name
         self.value = value
         self.args = (name, value)

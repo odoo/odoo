@@ -179,7 +179,7 @@ class IrActionsReport(models.Model):
             img = Image.open(stream)
             img.convert("RGB").save(stream, format="pdf")
             return stream
-        return io.BytesIO(base64.decodestring(attachment.datas))
+        return io.BytesIO(base64.decodebytes(attachment.datas))
 
     def retrieve_attachment(self, record):
         '''Retrieve an attachment for a specific record.
@@ -211,7 +211,7 @@ class IrActionsReport(models.Model):
             return None
         attachment_vals = {
             'name': attachment_name,
-            'datas': base64.encodestring(buffer.getvalue()),
+            'datas': base64.encodebytes(buffer.getvalue()),
             'res_model': self.model,
             'res_id': record.id,
             'type': 'binary',

@@ -25,7 +25,7 @@ class TestConfirmUnsubscribe(common.HttpCase):
     def test_not_subscribed_no_template(self):
         """ Test warning works on db without template (code update w/o module update) """
         self.env.ref('website_mail_channel.not_subscribed').unlink()
-        self.assertEquals(
+        self.assertEqual(
             self.env['ir.model.data'].search_count([
             ('module', '=', 'website_mail_channel'),
             ('name', '=', 'not_subscribed'),

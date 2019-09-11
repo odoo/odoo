@@ -285,9 +285,9 @@ class Http(models.AbstractModel):
                         # Needed to show reset template on translated pages (`_prepare_qcontext` will set it for main lang)
                         values['editable'] = request.uid and request.website.is_publisher()
                 elif code == 403:
-                    logger.warn("403 Forbidden:\n\n%s", values['traceback'])
+                    logger.warning("403 Forbidden:\n\n%s", values['traceback'])
                 elif code == 400:
-                    logger.warn("400 Bad Request:\n\n%s", values['traceback'])
+                    logger.warning("400 Bad Request:\n\n%s", values['traceback'])
                 try:
                     html = env['ir.ui.view'].render_template('website.%s' % view_id, values)
                 except Exception:

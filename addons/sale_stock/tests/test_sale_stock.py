@@ -291,7 +291,7 @@ class TestSaleStock(TestSale):
         # storable product, thus is unavailable. Hitting `button_validate` will first ask to
         # process all the reserved quantities and, if the user chose to process, a second wizard
         # will ask to create a backorder for the unavailable product.
-        self.assertEquals(len(self.so.picking_ids), 1)
+        self.assertEqual(len(self.so.picking_ids), 1)
         res_dict = self.so.picking_ids.sorted()[0].button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         self.assertEqual(wizard._name, 'stock.immediate.transfer')
@@ -301,7 +301,7 @@ class TestSaleStock(TestSale):
         wizard.process()
 
         # Now, the original picking is done and there is a new one (the backorder).
-        self.assertEquals(len(self.so.picking_ids), 2)
+        self.assertEqual(len(self.so.picking_ids), 2)
         for picking in self.so.picking_ids:
             move = picking.move_lines
             if picking.backorder_id:
@@ -319,7 +319,7 @@ class TestSaleStock(TestSale):
             ]
         })
         # a single picking should be created for the new delivery
-        self.assertEquals(len(self.so.picking_ids), 2)
+        self.assertEqual(len(self.so.picking_ids), 2)
         backorder = self.so.picking_ids.filtered(lambda p: p.backorder_id)
         self.assertEqual(len(backorder.move_lines), 2)
         for backorder_move in backorder.move_lines:
@@ -347,11 +347,11 @@ class TestSaleStock(TestSale):
         self.so.action_confirm()
 
         # deliver them
-        self.assertEquals(len(self.so.picking_ids), 1)
+        self.assertEqual(len(self.so.picking_ids), 1)
         res_dict = self.so.picking_ids.sorted()[0].button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
-        self.assertEquals(self.so.picking_ids.sorted()[0].state, "done")
+        self.assertEqual(self.so.picking_ids.sorted()[0].state, "done")
 
         # update the two original sale order lines
         self.so.write({
@@ -361,7 +361,7 @@ class TestSaleStock(TestSale):
             ]
         })
         # a single picking should be created for the new delivery
-        self.assertEquals(len(self.so.picking_ids), 2)
+        self.assertEqual(len(self.so.picking_ids), 2)
 
     def test_05_confirm_cancel_confirm(self):
         """ Confirm a sale order, cancel it, set to quotation, change the

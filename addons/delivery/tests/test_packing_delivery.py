@@ -66,9 +66,9 @@ class TestPacking(TestPacking):
         pack_action_model = pack_action['res_model']
 
         # We make sure the correct action was returned
-        self.assertEquals(pack_action_model, 'choose.delivery.package')
+        self.assertEqual(pack_action_model, 'choose.delivery.package')
 
         # We instanciate the wizard with the context of the action and check that the
         # default weight was set.
         pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx).create({})
-        self.assertEquals(pack_wiz.shipping_weight, 13.5)
+        self.assertEqual(pack_wiz.shipping_weight, 13.5)

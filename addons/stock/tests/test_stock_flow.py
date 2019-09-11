@@ -1542,7 +1542,7 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location})
         # validate this delivery order, it should be in the waiting state
         picking_out.action_assign()
-        self.assertEquals(picking_out.state, "confirmed")
+        self.assertEqual(picking_out.state, "confirmed")
 
         # receive one product in stock
         inventory = self.env['stock.inventory'].create({
@@ -1558,9 +1558,9 @@ class TestStockFlow(TestStockCommon):
         inventory.action_validate()
         # recheck availability of the delivery order, it should be assigned
         picking_out.action_assign()
-        self.assertEquals(len(picking_out.move_lines), 1.0)
-        self.assertEquals(picking_out.move_lines.product_qty, 2.0)
-        self.assertEquals(picking_out.state, "assigned")
+        self.assertEqual(len(picking_out.move_lines), 1.0)
+        self.assertEqual(picking_out.move_lines.product_qty, 2.0)
+        self.assertEqual(picking_out.state, "assigned")
 
     def test_71_picking_state_all_at_once_force_assign(self):
         """ This test will check that the state of the picking is correctly computed according
@@ -1590,7 +1590,7 @@ class TestStockFlow(TestStockCommon):
 
         # validate this delivery order, it should be in the waiting state
         picking_out.action_assign()
-        self.assertEquals(picking_out.state, "confirmed")
+        self.assertEqual(picking_out.state, "confirmed")
 
     def test_72_picking_state_partial_reserve(self):
         """ This test will check that the state of the picking is correctly computed according
@@ -1633,7 +1633,7 @@ class TestStockFlow(TestStockCommon):
 
         # validate this delivery order, it should be in partially available
         picking_out.action_assign()
-        self.assertEquals(picking_out.state, "assigned")
+        self.assertEqual(picking_out.state, "assigned")
 
         # receive one product in stock
         inventory = self.env['stock.inventory'].create({
@@ -1650,7 +1650,7 @@ class TestStockFlow(TestStockCommon):
 
         # recheck availability of the delivery order, it should be assigned
         picking_out.action_assign()
-        self.assertEquals(picking_out.state, "assigned")
+        self.assertEqual(picking_out.state, "assigned")
 
     def test_73_picking_state_partial_force_assign(self):
         """ This test will check that the state of the picking is correctly computed according
@@ -1679,7 +1679,7 @@ class TestStockFlow(TestStockCommon):
 
         # validate this delivery order, it should be in the waiting state
         picking_out.action_assign()
-        self.assertEquals(picking_out.state, "confirmed")
+        self.assertEqual(picking_out.state, "confirmed")
 
     def test_74_move_state_waiting_mto(self):
         """ This test will check that when a move is unreserved, its state changes to 'waiting' if
@@ -1734,9 +1734,9 @@ class TestStockFlow(TestStockCommon):
         move_with_ancestors._do_unreserve()
         other_move._do_unreserve()
 
-        self.assertEquals(move_mto_alone.state, "draft")
-        self.assertEquals(move_with_ancestors.state, "waiting")
-        self.assertEquals(other_move.state, "confirmed")
+        self.assertEqual(move_mto_alone.state, "draft")
+        self.assertEqual(move_with_ancestors.state, "waiting")
+        self.assertEqual(other_move.state, "confirmed")
 
     def test_80_partial_picking_without_backorder(self):
         """ This test will create a picking with an initial demand for a product
@@ -1769,19 +1769,19 @@ class TestStockFlow(TestStockCommon):
         self.assertFalse(picking.backorder_id)
 
         # Checking that the original move is still in the same picking
-        self.assertEquals(move_a.picking_id.id, picking.id)
+        self.assertEqual(move_a.picking_id.id, picking.id)
 
         move_lines = picking.move_lines
         move_done = move_lines.browse(move_a.id)
         move_canceled = move_lines - move_done
 
         # Checking that the original move was set to done
-        self.assertEquals(move_done.product_uom_qty, 4)
-        self.assertEquals(move_done.state, 'done')
+        self.assertEqual(move_done.product_uom_qty, 4)
+        self.assertEqual(move_done.state, 'done')
 
         # Checking that the new move created was canceled
-        self.assertEquals(move_canceled.product_uom_qty, 6)
-        self.assertEquals(move_canceled.state, 'cancel')
+        self.assertEqual(move_canceled.product_uom_qty, 6)
+        self.assertEqual(move_canceled.state, 'cancel')
 
         # Checking that the canceled move is in the original picking
         self.assertIn(move_canceled.id, picking.move_lines.mapped('id'))
@@ -1968,11 +1968,11 @@ class TestStockFlow(TestStockCommon):
         f.scheduled_date = fields.Datetime.now()
         picking = f.save()
 
-        self.assertEquals(f.state, 'draft')
+        self.assertEqual(f.state, 'draft')
         picking.action_confirm()
 
         f = Form(picking, view='stock.view_picking_form')
         f.scheduled_date = fields.Datetime.now()
         picking = f.save()
 
-        self.assertEquals(f.state, 'confirmed')
+        self.assertEqual(f.state, 'confirmed')

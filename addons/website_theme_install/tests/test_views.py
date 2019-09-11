@@ -70,13 +70,13 @@ class Crawler(HttpCase):
             # It should crash as it should not find a view on website 1 for '_theme_kea_sale.products', !!and certainly not a theme.ir.ui.view!!.
             view = View.with_context(website_id=website_1.id)._view_obj('_theme_kea_sale.products')
         view = View.with_context(website_id=website_2.id)._view_obj('_theme_kea_sale.products')
-        self.assertEquals(len(view), 1, "It should find the ir.ui.view with key '_theme_kea_sale.products' on website 2..")
-        self.assertEquals(view._name, 'ir.ui.view', "..and not a theme.ir.ui.view")
+        self.assertEqual(len(view), 1, "It should find the ir.ui.view with key '_theme_kea_sale.products' on website 2..")
+        self.assertEqual(view._name, 'ir.ui.view', "..and not a theme.ir.ui.view")
 
         views = View.with_context(website_id=website_1.id).get_related_views('_website_sale.products')
-        self.assertEquals(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_website_sale.child_view_w1'] should be returned")
+        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_website_sale.child_view_w1'] should be returned")
         views = View.with_context(website_id=website_2.id).get_related_views('_website_sale.products')
-        self.assertEquals(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_theme_kea_sale.products'] should be returned")
+        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_theme_kea_sale.products'] should be returned")
 
         # Part 2 of the test, it test the same stuff but from a higher level (get_related_views ends up calling _view_obj)
         called_theme_view = self.env['theme.ir.ui.view'].with_context(install_filename='/testviews').create({
@@ -115,9 +115,9 @@ class Crawler(HttpCase):
 
         # Next line should not crash (was mixing apples and oranges - ir.ui.view and theme.ir.ui.view)
         views = View.with_context(website_id=website_1.id).get_related_views('_website_sale.products')
-        self.assertEquals(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_website_sale.child_view_w1'] should be returned (2)")
+        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_website_sale.child_view_w1'] should be returned (2)")
         views = View.with_context(website_id=website_2.id).get_related_views('_website_sale.products')
-        self.assertEquals(len(views), 3, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_theme_kea_sale.products', '_theme_kea_sale.t_called_view'] should be returned")
+        self.assertEqual(len(views), 3, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_theme_kea_sale.products', '_theme_kea_sale.t_called_view'] should be returned")
 
         # ########################################################
         # Test the controller (which is calling get_related_views)

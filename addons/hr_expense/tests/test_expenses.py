@@ -44,39 +44,39 @@ class TestAccountEntry(TestExpenseCommon):
         })
         expense_line._onchange_product_id()
         # State should default to draft
-        self.assertEquals(expense.state, 'draft', 'Expense should be created in Draft state')
+        self.assertEqual(expense.state, 'draft', 'Expense should be created in Draft state')
         # Submitted to Manager
         expense.action_submit_sheet()
-        self.assertEquals(expense.state, 'submit', 'Expense is not in Reported state')
+        self.assertEqual(expense.state, 'submit', 'Expense is not in Reported state')
         # Approve
         expense.approve_expense_sheets()
-        self.assertEquals(expense.state, 'approve', 'Expense is not in Approved state')
+        self.assertEqual(expense.state, 'approve', 'Expense is not in Approved state')
         # Create Expense Entries
         expense.action_sheet_move_create()
-        self.assertEquals(expense.state, 'post', 'Expense is not in Waiting Payment state')
+        self.assertEqual(expense.state, 'post', 'Expense is not in Waiting Payment state')
         self.assertTrue(expense.account_move_id.id, 'Expense Journal Entry is not created')
 
         # [(line.debit, line.credit, line.tax_line_id.id) for line in self.expense.expense_line_ids.account_move_id.line_ids]
         # should git this result [(0.0, 700.0, False), (63.64, 0.0, 179), (636.36, 0.0, False)]
         for line in expense.account_move_id.line_ids:
             if line.credit:
-                self.assertAlmostEquals(line.credit, 700.00)
-                self.assertEquals(len(line.analytic_line_ids), 0, "The credit move line should not have analytic lines")
+                self.assertAlmostEqual(line.credit, 700.00)
+                self.assertEqual(len(line.analytic_line_ids), 0, "The credit move line should not have analytic lines")
                 self.assertFalse(line.product_id, "Product of credit move line should be false")
             else:
                 if not line.tax_line_id == self.tax:
-                    self.assertAlmostEquals(line.debit, 636.36)
-                    self.assertEquals(len(line.analytic_line_ids), 1, "The debit move line should have 1 analytic lines")
-                    self.assertEquals(line.product_id, self.product_expense, "Product of debit move line should be the one from the expense")
+                    self.assertAlmostEqual(line.debit, 636.36)
+                    self.assertEqual(len(line.analytic_line_ids), 1, "The debit move line should have 1 analytic lines")
+                    self.assertEqual(line.product_id, self.product_expense, "Product of debit move line should be the one from the expense")
                 else:
-                    self.assertAlmostEquals(line.debit, 63.64)
-                    self.assertEquals(len(line.analytic_line_ids), 0, "The tax move line should not have analytic lines")
+                    self.assertAlmostEqual(line.debit, 63.64)
+                    self.assertEqual(len(line.analytic_line_ids), 0, "The tax move line should not have analytic lines")
                     self.assertFalse(line.product_id, "Product of tax move line should be false")
 
-        self.assertEquals(self.analytic_account.line_ids, expense.account_move_id.mapped('line_ids.analytic_line_ids'))
-        self.assertEquals(len(self.analytic_account.line_ids), 1, "Analytic Account should have only one line")
-        self.assertAlmostEquals(self.analytic_account.line_ids[0].amount, -636.36, "Amount on the only AAL is wrong")
-        self.assertEquals(self.analytic_account.line_ids[0].product_id, self.product_expense, "Product of AAL should be the one from the expense")
+        self.assertEqual(self.analytic_account.line_ids, expense.account_move_id.mapped('line_ids.analytic_line_ids'))
+        self.assertEqual(len(self.analytic_account.line_ids), 1, "Analytic Account should have only one line")
+        self.assertAlmostEqual(self.analytic_account.line_ids[0].amount, -636.36, "Amount on the only AAL is wrong")
+        self.assertEqual(self.analytic_account.line_ids[0].product_id, self.product_expense, "Product of AAL should be the one from the expense")
 
     def test_account_entry_multi_currency(self):
         """ Checking accounting move entries and analytic entries when submitting expense. With
@@ -108,42 +108,42 @@ class TestAccountEntry(TestExpenseCommon):
         })
         expense_line._onchange_product_id()
         # State should default to draft
-        self.assertEquals(expense.state, 'draft', 'Expense should be created in Draft state')
+        self.assertEqual(expense.state, 'draft', 'Expense should be created in Draft state')
         # Submitted to Manager
         expense.action_submit_sheet()
-        self.assertEquals(expense.state, 'submit', 'Expense is not in Reported state')
+        self.assertEqual(expense.state, 'submit', 'Expense is not in Reported state')
         # Approve
         expense.approve_expense_sheets()
-        self.assertEquals(expense.state, 'approve', 'Expense is not in Approved state')
+        self.assertEqual(expense.state, 'approve', 'Expense is not in Approved state')
         # Create Expense Entries
         expense.action_sheet_move_create()
-        self.assertEquals(expense.state, 'post', 'Expense is not in Waiting Payment state')
+        self.assertEqual(expense.state, 'post', 'Expense is not in Waiting Payment state')
         self.assertTrue(expense.account_move_id.id, 'Expense Journal Entry is not created')
 
         # Should get this result [(0.0, 350.0, -700.0), (318.18, 0.0, 636.36), (31.82, 0.0, 63.64)]
         for line in expense.account_move_id.line_ids:
             if line.credit:
-                self.assertAlmostEquals(line.credit, 350.0)
-                self.assertAlmostEquals(line.amount_currency, -700.0)
-                self.assertEquals(len(line.analytic_line_ids), 0, "The credit move line should not have analytic lines")
+                self.assertAlmostEqual(line.credit, 350.0)
+                self.assertAlmostEqual(line.amount_currency, -700.0)
+                self.assertEqual(len(line.analytic_line_ids), 0, "The credit move line should not have analytic lines")
                 self.assertFalse(line.product_id, "Product of credit move line should be false")
             else:
                 if not line.tax_line_id == self.tax:
-                    self.assertAlmostEquals(line.debit, 318.18)
-                    self.assertAlmostEquals(line.amount_currency, 636.36)
-                    self.assertEquals(len(line.analytic_line_ids), 1, "The debit move line should have 1 analytic lines")
-                    self.assertEquals(line.product_id, self.product_expense, "Product of debit move line should be the one from the expense")
+                    self.assertAlmostEqual(line.debit, 318.18)
+                    self.assertAlmostEqual(line.amount_currency, 636.36)
+                    self.assertEqual(len(line.analytic_line_ids), 1, "The debit move line should have 1 analytic lines")
+                    self.assertEqual(line.product_id, self.product_expense, "Product of debit move line should be the one from the expense")
                 else:
-                    self.assertAlmostEquals(line.debit, 31.82)
-                    self.assertAlmostEquals(line.amount_currency, 63.64)
-                    self.assertEquals(len(line.analytic_line_ids), 0, "The tax move line should not have analytic lines")
+                    self.assertAlmostEqual(line.debit, 31.82)
+                    self.assertAlmostEqual(line.amount_currency, 63.64)
+                    self.assertEqual(len(line.analytic_line_ids), 0, "The tax move line should not have analytic lines")
                     self.assertFalse(line.product_id, "Product of tax move line should be false")
 
-        self.assertEquals(self.analytic_account.line_ids, expense.account_move_id.mapped('line_ids.analytic_line_ids'))
-        self.assertEquals(len(self.analytic_account.line_ids), 1, "Analytic Account should have only one line")
-        self.assertAlmostEquals(self.analytic_account.line_ids[0].amount, -318.18, "Amount on the only AAL is wrong")
-        self.assertAlmostEquals(self.analytic_account.line_ids[0].currency_id, self.env.company.currency_id, "Currency on the only AAL is wrong")
-        self.assertEquals(self.analytic_account.line_ids[0].product_id, self.product_expense, "Product of AAL should be the one from the expense")
+        self.assertEqual(self.analytic_account.line_ids, expense.account_move_id.mapped('line_ids.analytic_line_ids'))
+        self.assertEqual(len(self.analytic_account.line_ids), 1, "Analytic Account should have only one line")
+        self.assertAlmostEqual(self.analytic_account.line_ids[0].amount, -318.18, "Amount on the only AAL is wrong")
+        self.assertAlmostEqual(self.analytic_account.line_ids[0].currency_id, self.env.company.currency_id, "Currency on the only AAL is wrong")
+        self.assertEqual(self.analytic_account.line_ids[0].product_id, self.product_expense, "Product of AAL should be the one from the expense")
 
     def test_expense_from_email(self):
         user_demo = self.env.ref('base.user_demo')
@@ -161,9 +161,9 @@ class TestAccountEntry(TestExpenseCommon):
         expense = self.env['hr.expense'].message_new(message_parsed)
 
         air_ticket = self.env.ref("hr_expense.air_ticket")
-        self.assertEquals(expense.product_id, air_ticket)
-        self.assertEquals(expense.tax_ids.ids, [])
-        self.assertEquals(expense.total_amount, 9876.0)
+        self.assertEqual(expense.product_id, air_ticket)
+        self.assertEqual(expense.tax_ids.ids, [])
+        self.assertEqual(expense.total_amount, 9876.0)
         self.assertTrue(expense.employee_id in user_demo.employee_ids)
 
     def test_expense_from_email_without_product(self):
@@ -183,8 +183,8 @@ class TestAccountEntry(TestExpenseCommon):
 
         air_ticket = self.env.ref("hr_expense.air_ticket")
         self.assertFalse(expense.product_id, "No product should be linked")
-        self.assertEquals(expense.tax_ids.ids, [])
-        self.assertEquals(expense.total_amount, 9876.0)
+        self.assertEqual(expense.tax_ids.ids, [])
+        self.assertEqual(expense.total_amount, 9876.0)
         self.assertTrue(expense.employee_id in user_demo.employee_ids)
 
     def test_partial_payment_multiexpense(self):
@@ -222,7 +222,7 @@ class TestAccountEntry(TestExpenseCommon):
 
         exp_move_lines = expense.account_move_id.line_ids
         payable_move_lines = exp_move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
-        self.assertEquals(len(payable_move_lines), 2)
+        self.assertEqual(len(payable_move_lines), 2)
 
         WizardRegister = self.env["hr.expense.sheet.register.payment.wizard"].with_context(
             active_model=expense._name, active_id=expense.id, active_ids=expense.ids
@@ -237,7 +237,7 @@ class TestAccountEntry(TestExpenseCommon):
 
         exp_move_lines = expense.account_move_id.line_ids
         payable_move_lines = exp_move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
-        self.assertEquals(len(payable_move_lines.filtered(lambda l: l.reconciled)), 1)
+        self.assertEqual(len(payable_move_lines.filtered(lambda l: l.reconciled)), 1)
 
         register_pay2 = WizardRegister.create({
             'journal_id': bank_journal.id,
@@ -247,10 +247,10 @@ class TestAccountEntry(TestExpenseCommon):
         register_pay2.expense_post_payment()
         exp_move_lines = expense.account_move_id.line_ids
         payable_move_lines = exp_move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
-        self.assertEquals(len(payable_move_lines.filtered(lambda l: l.reconciled)), 2)
+        self.assertEqual(len(payable_move_lines.filtered(lambda l: l.reconciled)), 2)
 
         full_reconcile = payable_move_lines.mapped('full_reconcile_id')
-        self.assertEquals(len(full_reconcile), 1)
+        self.assertEqual(len(full_reconcile), 1)
 
 
 class TestExpenseRights(TestExpenseCommon):

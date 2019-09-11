@@ -81,7 +81,7 @@ class TestSanitizer(BaseCase):
             self.assertTrue('ha.ckers.org' not in html or 'http://ha.ckers.org/xss.css' in html, 'html_sanitize did not remove a malicious code in %s (%s)' % (content, html))
 
         content = "<!--[if gte IE 4]><SCRIPT>alert('XSS');</SCRIPT><![endif]-->"  # down-level hidden block
-        self.assertEquals(html_sanitize(content, silent=False), '')
+        self.assertEqual(html_sanitize(content, silent=False), '')
 
     def test_html(self):
         sanitized_html = html_sanitize(test_mail_examples.MISC_HTML_SOURCE)

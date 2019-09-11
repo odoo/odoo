@@ -39,9 +39,9 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
         product.with_context(website_id=1).write({'name': 'Trigger COW'})
 
         # Verify initial state: the specific views exist
-        self.assertEquals(Website1.viewref('website_sale.product').website_id.id, 1)
-        self.assertEquals(Website1.viewref('website_sale_comparison.product_add_to_compare').website_id.id, 1)
-        self.assertEquals(Website1.viewref(test_view_key).website_id.id, 1)
+        self.assertEqual(Website1.viewref('website_sale.product').website_id.id, 1)
+        self.assertEqual(Website1.viewref('website_sale_comparison.product_add_to_compare').website_id.id, 1)
+        self.assertEqual(Website1.viewref(test_view_key).website_id.id, 1)
 
         # Remove the module (use `module_uninstall` because it is enough to test
         # what we want here, no need/can't use `button_immediate_uninstall`

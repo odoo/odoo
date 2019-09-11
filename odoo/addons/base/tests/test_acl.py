@@ -35,7 +35,7 @@ class TestACL(TransactionCase):
         has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
         self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group before the test")
         self.assertIn('decimal_places', original_fields, "'decimal_places' field must be properly visible before the test")
-        self.assertNotEquals(view_arch.xpath("//field[@name='decimal_places']"), [],
+        self.assertNotEqual(view_arch.xpath("//field[@name='decimal_places']"), [],
                              "Field 'decimal_places' must be found in view definition before the test")
 
         # restrict access to the field and check it's gone
@@ -45,7 +45,7 @@ class TestACL(TransactionCase):
         form_view = currency.fields_view_get(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         self.assertNotIn('decimal_places', fields, "'decimal_places' field should be gone")
-        self.assertEquals(view_arch.xpath("//field[@name='decimal_places']"), [],
+        self.assertEqual(view_arch.xpath("//field[@name='decimal_places']"), [],
                           "Field 'decimal_places' must not be found in view definition")
 
         # Make demo user a member of the restricted group and check that the field is back
@@ -56,7 +56,7 @@ class TestACL(TransactionCase):
         view_arch = etree.fromstring(form_view.get('arch'))
         self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
         self.assertIn('decimal_places', fields, "'decimal_places' field must be properly visible again")
-        self.assertNotEquals(view_arch.xpath("//field[@name='decimal_places']"), [],
+        self.assertNotEqual(view_arch.xpath("//field[@name='decimal_places']"), [],
                              "Field 'decimal_places' must be found in view definition again")
 
     @mute_logger('odoo.models')
@@ -67,8 +67,8 @@ class TestACL(TransactionCase):
         # Verify the test environment first
         has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
         self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group")
-        self.assert_(partner.read(['bank_ids']))
-        self.assert_(partner.write({'bank_ids': []}))
+        self.assertTrue(partner.read(['bank_ids']))
+        self.assertTrue(partner.write({'bank_ids': []}))
 
         # Now restrict access to the field and check it's forbidden
         self._set_field_groups(partner, 'bank_ids', GROUP_SYSTEM)
@@ -82,8 +82,8 @@ class TestACL(TransactionCase):
         self.erp_system_group.users += self.demo_user
         has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
         self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
-        self.assert_(partner.read(['bank_ids']))
-        self.assert_(partner.write({'bank_ids': []}))
+        self.assertTrue(partner.read(['bank_ids']))
+        self.assertTrue(partner.write({'bank_ids': []}))
 
     @mute_logger('odoo.models')
     def test_fields_browse_restriction(self):
