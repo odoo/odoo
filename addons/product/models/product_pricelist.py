@@ -317,10 +317,10 @@ class Pricelist(models.Model):
         return res[partner_id].id
 
     def _get_partner_pricelist_multi_search_domain_hook(self):
-        return [('active', '=', True)]
+        return []
 
     def _get_partner_pricelist_multi_filter_hook(self):
-        return self.filtered('active')
+        return self
 
     def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
         """ Retrieve the applicable pricelist for given partners in a given company.
