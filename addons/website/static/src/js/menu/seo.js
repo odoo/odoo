@@ -20,7 +20,7 @@ var Suggestion = Widget.extend({
     template: 'website.seo_suggestion',
     xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
     events: {
-        'click .js_seo_suggestion': 'select',
+        'click .o_seo_suggestion': 'select',
     },
 
     init: function (parent, options) {
@@ -106,7 +106,7 @@ var Keyword = Widget.extend({
     },
     start: function () {
         var self = this;
-        this.$('.js_seo_keyword_suggestion').empty();
+        this.$('.o_seo_keyword_suggestion').empty();
         this.suggestionList = new SuggestionList(this, {
             root: this.keyword,
             language: this.language,
@@ -115,7 +115,7 @@ var Keyword = Widget.extend({
         this.suggestionList.on('selected', this, function (word, language) {
             this.trigger('selected', word, language);
         });
-        return this.suggestionList.appendTo(this.$('.js_seo_keyword_suggestion')).then(function() {
+        return this.suggestionList.appendTo(this.$('.o_seo_keyword_suggestion')).then(function() {
             self.htmlPage.on('title-changed', self, self._updateTitle);
             self.htmlPage.on('description-changed', self, self._updateDescription);
             self._updateTitle();
