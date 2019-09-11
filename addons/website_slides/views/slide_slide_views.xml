@@ -244,7 +244,7 @@
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Channel" name="groupby_channel" domain="[]" context="{'group_by': 'channel_id'}"/>
+                        <filter string="Course" name="groupby_channel" domain="[]" context="{'group_by': 'channel_id'}"/>
                         <filter string="Category" name="groupby_category" domain="[]" context="{'group_by': 'category_id'}"/>
                         <filter string="Type" name="groupby_type" domain="[]" context="{'group_by': 'slide_type'}"/>
                     </group>
@@ -258,8 +258,20 @@
             <field name="arch" type="xml">
                 <graph string="Graph of Contents" stacked="False">
                     <field name="channel_id" type="row"/>
+                    <field name="slide_type" type="col"/>
                     <field name="total_views" type="measure"/>
                 </graph>
+            </field>
+        </record>
+
+        <record id="slide_slide_view_pivot" model="ir.ui.view">
+            <field name="name">slide.slide.view.pivot</field>
+            <field name="model">slide.slide</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="channel_id" type="row"/>
+                    <field name="total_views" type="measure"/>
+                </pivot>
             </field>
         </record>
 
@@ -280,7 +292,7 @@
             <field name="name">Contents</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">slide.slide</field>
-            <field name="view_mode">graph,tree,form</field>
+            <field name="view_mode">graph,tree,form,pivot</field>
             <field name="view_id" ref="slide_slide_view_graph"/>
         </record>
     </data>
