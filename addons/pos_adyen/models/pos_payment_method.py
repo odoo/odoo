@@ -27,6 +27,8 @@ class PosPaymentMethod(models.Model):
     @api.constrains('adyen_terminal_identifier')
     def _check_adyen_terminal_identifier(self):
         for payment_method in self:
+            if not payment_method.adyen_terminal_identifier:
+                continue
             existing_payment_method = self.search([('id', '!=', payment_method.id),
                                                    ('adyen_terminal_identifier', '=', payment_method.adyen_terminal_identifier)],
                                                   limit=1)
