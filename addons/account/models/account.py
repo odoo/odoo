@@ -361,7 +361,7 @@ class AccountAccount(models.Model):
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&', '!'] + domain[1:]
         account_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(account_ids).name_get()
+        return models.lazy_name_get(self.browse(account_ids).with_user(name_get_uid))
 
     @api.onchange('user_type_id')
     def _onchange_user_type_id(self):
@@ -562,7 +562,7 @@ class AccountGroup(models.Model):
             criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
             domain = criteria_operator + [('code_prefix', '=ilike', name + '%'), ('name', operator, name)]
         group_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(group_ids).name_get()
+        return models.lazy_name_get(self.browse(group_ids).with_user(name_get_uid))
 
 
 class AccountRoot(models.Model):
@@ -1034,7 +1034,7 @@ class AccountJournal(models.Model):
             connector = '&' if operator in expression.NEGATIVE_TERM_OPERATORS else '|'
             domain = [connector, ('code', operator, name), ('name', operator, name)]
         journal_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(journal_ids).name_get()
+        return models.lazy_name_get(self.browse(journal_ids).with_user(name_get_uid))
 
     @api.depends('inbound_payment_method_ids', 'outbound_payment_method_ids')
     def _methods_compute(self):
@@ -1248,7 +1248,7 @@ class AccountTax(models.Model):
             connector = '&' if operator in expression.NEGATIVE_TERM_OPERATORS else '|'
             domain = [connector, ('description', operator, name), ('name', operator, name)]
         tax_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(tax_ids).name_get()
+        return models.lazy_name_get(self.browse(tax_ids).with_user(name_get_uid))
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):

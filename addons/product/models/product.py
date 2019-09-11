@@ -534,7 +534,7 @@ class ProductProduct(models.Model):
                     product_ids = self._search([('product_tmpl_id.seller_ids', 'in', suppliers_ids)], limit=limit, access_rights_uid=name_get_uid)
         else:
             product_ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(product_ids).name_get()
+        return models.lazy_name_get(self.browse(product_ids).with_user(name_get_uid))
 
     @api.model
     def view_header_get(self, view_id, view_type):

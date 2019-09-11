@@ -134,7 +134,7 @@ class PurchaseOrder(models.Model):
         if name:
             domain = ['|', ('name', operator, name), ('partner_ref', operator, name)]
         purchase_order_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(purchase_order_ids).name_get()
+        return models.lazy_name_get(self.browse(purchase_order_ids).with_user(name_get_uid))
 
     @api.depends('date_order', 'currency_id', 'company_id', 'company_id.currency_id')
     def _compute_currency_rate(self):
