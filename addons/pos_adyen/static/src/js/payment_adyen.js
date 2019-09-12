@@ -8,12 +8,12 @@ var PaymentInterface = require('point_of_sale.PaymentInterface');
 var _t = core._t;
 
 var PaymentAdyen = PaymentInterface.extend({
-    send_payment_request: function (cid) {
+    send_payment_request: function () {
         this._super.apply(this, arguments);
         this._reset_state();
         return this._adyen_pay();
     },
-    send_payment_cancel: function (order, cid) {
+    send_payment_cancel: function () {
         this._super.apply(this, arguments);
         // set only if we are polling
         this.was_cancelled = !!this.polling;
@@ -43,7 +43,6 @@ var PaymentAdyen = PaymentInterface.extend({
     },
 
     _call_adyen: function (data) {
-        var self = this;
         return rpc.query({
             model: 'pos.payment.method',
             method: 'proxy_adyen_request',

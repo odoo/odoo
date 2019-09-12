@@ -93,7 +93,7 @@ var TableWidget = PosBaseWidget.extend({
         }
     },
     // drag and drop for moving the table, at drag start
-    dragstart_handler:   function(event, ui){
+    dragstart_handler:   function(){
         this.dragging = true;
     },
     // drag and drop for moving the table, at drag end
@@ -219,7 +219,7 @@ var TableWidget = PosBaseWidget.extend({
                         self.pos.tables_by_id[table.id] = self.table;
                         self.renderElement();
                     });
-            }, function(type,err) {
+            }, function() {
                     self.gui.show_sync_error_popup();
             });
     },
@@ -255,7 +255,7 @@ var TableWidget = PosBaseWidget.extend({
                 }
                 floorplan.update_toolbar();
                 self.destroy();
-            }, function(type, err) {
+            }, function() {
                 self.gui.show_sync_error_popup();
             });
     },
@@ -283,7 +283,6 @@ var TableWidget = PosBaseWidget.extend({
         }
     },
     renderElement: function(){
-        var self = this;
         this.order_count    = this.table.order_count !== undefined ?
             this.table.order_count :
             this.pos.get_table_orders(this.table)
@@ -303,9 +302,9 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
     template: 'FloorScreenWidget',
 
     // Ignore products, discounts, and client barcodes
-    barcode_product_action: function(code){},
-    barcode_discount_action: function(code){},
-    barcode_client_action: function(code){},
+    barcode_product_action: function(){},
+    barcode_discount_action: function(){},
+    barcode_client_action: function(){},
 
     init: function(parent, options) {
         this._super(parent, options);
@@ -336,7 +335,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
                     function(tw){
                         tw.renderElement();
                     });
-        }, function(type,err) {
+        }, function() {
             self.table_widgets.forEach(
                     function(tw){
                         tw.table.order_count = self.pos.get_table_orders(tw.table)
@@ -825,9 +824,9 @@ models.PosModel = models.PosModel.extend({
         var self = this;
         this.set_synch('connecting', ids_to_remove.length);
         self._remove_from_server(ids_to_remove)
-            .then(function(server_ids) {
+            .then(function() {
                 self.set_synch('connected');
-            }).catch(function(reason){
+            }).catch(function(){
                 self.set_synch('error');
             });
     },
@@ -841,7 +840,6 @@ models.PosModel = models.PosModel.extend({
      */
     _get_from_server: function (table_id, options) {
         options = options || {};
-        var self = this;
         var timeout = typeof options.timeout === 'number' ? options.timeout : 7500;
         return rpc.query({
                 model: 'pos.order',
@@ -918,7 +916,7 @@ models.PosModel = models.PosModel.extend({
                         } else {
                             self.remove_from_server_and_set_sync_state(ids_to_remove);
                         }
-                    }).catch(function(reason){
+                    }).catch(function(){
                         self.set_synch('error');
                     }).finally(function(){
                         if (self.order_to_transfer_to_different_table && table) {
@@ -965,7 +963,7 @@ models.PosModel = models.PosModel.extend({
                     } else {
                         self.remove_from_server_and_set_sync_state(ids_to_remove);
                     }
-                }).catch(function(reason){
+                }).catch(function(){
                     self.set_synch('error');
                 }).finally(function(){
                     var orders = self.get_order_list();

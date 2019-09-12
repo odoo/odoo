@@ -5,7 +5,6 @@ odoo.define('pos_hr.chrome', function (require) {
     var chrome = require('point_of_sale.chrome');
     var _t = core._t;
     var _lt = core._lt;
-    var QWeb = core.qweb;
 
 
     /* ------- The User Name Widget ------- */
@@ -39,7 +38,6 @@ odoo.define('pos_hr.chrome', function (require) {
     var HeaderCloseButtonWidget = chrome.HeaderButtonWidget.extend({
         start: function(){
             if (this.pos.config.module_pos_hr) {
-                var self = this;
                 this.pos.bind('change:cashier', this._show_hide_close_button , this);
             }
             return this._super();

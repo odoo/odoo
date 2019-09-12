@@ -5,7 +5,6 @@ var models = require('point_of_sale.models');
 var screens = require('point_of_sale.screens');
 var core = require('web.core');
 
-var QWeb = core.qweb;
 var _t   = core._t;
 
 var _super_orderline = models.Orderline.prototype;
@@ -19,7 +18,7 @@ models.Orderline = models.Orderline.extend({
         this.note = note;
         this.trigger('change',this);
     },
-    get_note: function(note){
+    get_note: function(){
         return this.note;
     },
     can_be_merged_with: function(orderline) {
