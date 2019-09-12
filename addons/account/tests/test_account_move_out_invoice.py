@@ -1268,3 +1268,47 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             'amount_total' : self.move_vals['amount_total'],
             'amount_untaxed' : self.move_vals['amount_untaxed'],
         })
+
+    def test_out_invoice_accrual(self):
+        self.env.company.accrual_default_journal_id = self.company_data['default_journal_misc']
+        self.env.company.expense_accrual_account_id = self.env['account.account'].create({
+            'name': 'Accrual Expense Account',
+            'code': '234567',
+            'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+            'reconcile': True,
+        })
+        self.env.company.revenue_accrual_account_id = self.env['account.account'].create({
+            'name': 'Accrual Revenue Account',
+            'code': '765432',
+            'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+            'reconcile': True,
+        })
+
+        invoice_line = self.invoice.line_ids.filtered(lambda l: l.account_id == self.product_a.property_account_income_id)
+        self.env['account.accrual.accounting.wizard'].with_context(
+            active_model='account.move.line',
+            active_ids=invoice_line.ids
+        ).create({
+            'date': '2016-01-01',
+            'percentage': 60,
+        }).amend_entries()
+
+        # Nothing changed except the account
+        self.assertInvoiceValues(self.invoice, [
+            {
+                **self.product_line_vals_1,
+                'account_id': self.env.company.revenue_accrual_account_id.id,
+            },
+            self.product_line_vals_2,
+            self.tax_line_vals_1,
+            self.tax_line_vals_2,
+            self.term_line_vals_1,
+        ], self.move_vals)
+
+        accrual_moves = self.env['account.move'].search([('journal_id', '=', self.env.company.accrual_default_journal_id.id)])
+        accrual_other_date = accrual_moves.filtered(lambda m: m.date == fields.Date.to_date('2016-01-01'))
+        accrual_same_date = accrual_moves.filtered(lambda m: m.date == invoice_line.date)
+
+        self.assertEqual(accrual_same_date.amount_total, 0.4 * -invoice_line.balance)
+        self.assertEqual(accrual_other_date.amount_total, 0.6 * -invoice_line.balance)
+        self.assertTrue(accrual_other_date.line_ids.full_reconcile_id)
