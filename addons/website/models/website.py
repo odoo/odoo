@@ -123,6 +123,7 @@ class Website(models.Model):
         ('b2b', 'On invitation'),
         ('b2c', 'Free sign up'),
     ], string='Customer Account', default='b2b')
+    active = fields.Boolean(default=True)
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):
