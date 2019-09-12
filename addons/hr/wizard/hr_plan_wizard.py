@@ -25,6 +25,7 @@ class HrPlanWizard(models.TransientModel):
                 'res_id': self.employee_id.id,
                 'res_model_id': self.env['ir.model']._get('hr.employee').id,
                 'summary': activity_type.summary,
+                'note': activity_type.note,
                 'activity_type_id': activity_type.activity_type_id.id,
                 'user_id': activity_type.get_responsible_id(self.employee_id).id,
             })
