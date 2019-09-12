@@ -2470,8 +2470,7 @@ class Many2oneReference(Integer):
         # cache format: id or None
         if isinstance(value, BaseModel):
             value = value._ids[0] if value._ids else None
-
-        return value
+        return super().convert_to_cache(value, record, validate)
 
     def _remove_inverses(self, records, value):
         # TODO: unused
