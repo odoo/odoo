@@ -3245,6 +3245,45 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('multi edition of datetime field in list view: edit date in input', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="datetime"/>' +
+                  '</tree>',
+            translateParameters: { // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
+        });
+
+        // select two records and edit them
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell'));
+        assert.containsOnce(list, 'input.o_datepicker_input');
+        list.$('.o_datepicker_input').val("10/02/2019 09:00:00");
+        await testUtils.dom.triggerEvents(list.$('.o_datepicker_input'), ['change']);
+
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+        assert.strictEqual(list.$('.o_data_row:first .o_data_cell').text(), "10/02/2019 09:00:00");
+        assert.strictEqual(list.$('.o_data_row:nth(1) .o_data_cell').text(), "10/02/2019 09:00:00");
+
+        list.destroy();
+    });
+
     QUnit.test('datetime field remove value', async function (assert) {
         assert.expect(4);
 

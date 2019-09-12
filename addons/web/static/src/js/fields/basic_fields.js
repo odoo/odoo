@@ -488,6 +488,9 @@ var FieldDate = InputField.extend({
     className: "o_field_date",
     tagName: "span",
     supportedFieldTypes: ['date', 'datetime'],
+    // we don't need to listen on 'input' nor 'change' events because the
+    // datepicker widget is already listening, and will correctly notify changes
+    events: AbstractField.prototype.events,
 
     /**
      * @override
