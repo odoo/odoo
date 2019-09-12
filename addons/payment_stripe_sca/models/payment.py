@@ -113,7 +113,7 @@ class PaymentTransactionStripeSCA(models.Model):
     stripe_payment_intent_secret = fields.Char(string="Stripe Payment Intent Secret", readonly=True)
 
     def _get_json_info(self):
-        res = super()._get_json_info()
+        res = super(PaymentTransactionStripeSCA, self)._get_json_info()
         if self.acquirer_id.provider == 'stripe':
             res.update({
                 'stripe_payment_intent': self.stripe_payment_intent,
