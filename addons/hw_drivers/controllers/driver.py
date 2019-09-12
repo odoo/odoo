@@ -128,6 +128,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
         self.dev = device
         self.data = {'value': ''}
         self.gatt_device = False
+        self._device_manufacturer = ''
 
     @property
     def device_name(self):
@@ -136,6 +137,10 @@ class Driver(Thread, metaclass=DriverMetaClass):
     @property
     def device_identifier(self):
         return self.dev.identifier
+
+    @property
+    def device_manufacturer(self):
+        return self._device_manufacturer
 
     @property
     def device_connection(self):
@@ -270,6 +275,7 @@ class Manager(Thread):
                 devices_list[identifier] = {
                     'name': iot_devices[device].device_name,
                     'type': iot_devices[device].device_type,
+                    'manufacturer': iot_devices[device].device_manufacturer,
                     'connection': iot_devices[device].device_connection,
                 }
             data = {
