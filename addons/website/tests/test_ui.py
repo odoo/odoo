@@ -83,7 +83,7 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
     def test_html_editor_scss(self):
         self.start_tour("/", 'test_html_editor_scss', login='admin')
 
-
+@odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslate(odoo.tests.HttpCase):
     def test_admin_tour_rte_translator(self):
         self.start_tour("/", 'rte_translator', login='admin', timeout=120)
