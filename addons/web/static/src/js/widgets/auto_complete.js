@@ -29,16 +29,23 @@ return Widget.extend({
         this.searching = true;
         this.search_string = '';
         this.current_search = null;
+        this._isInputComposing = false;
     },
     start: function () {
         var self = this;
+        this.$input.on('compositionend', function (ev) {
+            self._isInputComposing = false;
+        });
+        this.$input.on('compositionstart', function (ev) {
+            self._isInputComposing = true;
+        });
         this.$input.on('keyup', function (ev) {
-            if (ev.which === $.ui.keyCode.RIGHT) {
+            if (ev.which === $.ui.keyCode.RIGHT && !self._isInputComposing) {
                 self.searching = true;
                 ev.preventDefault();
                 return;
             }
-            if (ev.which === $.ui.keyCode.ENTER) {
+            if (ev.which === $.ui.keyCode.ENTER && !self._isInputComposing) {
                 if (self.search_string.length) {
                     self.select_item(ev);
                 }
@@ -68,6 +75,9 @@ return Widget.extend({
             }
         });
         this.$input.on('keydown', function (ev) {
+            if (self._isInputComposing) {
+                return;
+            }
             switch (ev.which) {
                 case $.ui.keyCode.ENTER:
 
