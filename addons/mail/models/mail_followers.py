@@ -241,7 +241,7 @@ GROUP BY fol.id%s""" % (
         :param check_existing: see ``_add_followers``;
         :param existing_policy: see ``_add_followers``;
         """
-        sudo_self = self.sudo()
+        sudo_self = self.sudo().with_context(default_partner_id=False, default_channel_id=False)
         if not partner_subtypes and not channel_subtypes:  # no subtypes -> default computation, no force, skip existing
             new, upd = self._add_default_followers(res_model, res_ids, partner_ids, channel_ids, customer_ids=customer_ids)
         else:
