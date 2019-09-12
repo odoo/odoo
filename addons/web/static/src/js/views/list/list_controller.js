@@ -396,6 +396,7 @@ var ListController = BasicController.extend({
         var nbInvalid = recordIds.length - validRecordIds.length;
 
         return new Promise(function (resolve, reject) {
+            var dialog;
             var rejectAndDiscard = function () {
                 self.model.discardChanges(recordId);
                 return self._confirmSave(recordId).then(reject);
@@ -411,24 +412,33 @@ var ListController = BasicController.extend({
                         _t("Do you want to set the value on the %d valid selected records? (%d invalid)"),
                         validRecordIds.length, nbInvalid);
                 }
-                Dialog.confirm(self, message, {
+                dialog = Dialog.confirm(self, message, {
                     confirm_callback: function () {
-                        self.model.saveRecords(recordId, validRecordIds, fieldName)
+                        return self.model.saveRecords(recordId, validRecordIds, fieldName)
                             .then(function () {
                                 self._updateButtons('readonly');
                                 var state = self.model.get(self.handle);
-                                self.renderer.updateState(state, {});
-                                resolve(Object.keys(changes));
+                                return self.renderer.updateState(state, {}).then(function () {
+                                    resolve(Object.keys(changes));
+                                });
                             })
                             .guardedCatch(rejectAndDiscard);
                     },
                     cancel_callback: rejectAndDiscard,
                 });
             } else {
-                Dialog.alert(self, _t("No valid record to save"), {
+                dialog = Dialog.alert(self, _t("No valid record to save"), {
                     confirm_callback: rejectAndDiscard,
                 });
             }
+            dialog.on('closed', self, function () {
+                // we need to wait for the dialog to be actually closed, but
+                // the 'closed' event is triggered just before, and it prevents
+                // from focussing the cell
+                Promise.resolve().then(function () {
+                    self.renderer.focusCell(recordId, node);
+                });
+            });
         });
     },
     /**
