@@ -265,7 +265,8 @@ class Slide(models.Model):
     def _compute_slides_statistics(self):
         # Do not use dict.fromkeys(self.ids, dict()) otherwise it will use the same dictionnary for all keys.
         # Therefore, when updating the dict of one key, it updates the dict of all keys.
-        result = {_id: {} for _id in self.ids}
+        keys = ['nbr_%s' % slide_type for slide_type in self.env['slide.slide']._fields['slide_type'].get_values(self.env)]
+        default_vals = dict((key, 0) for key in keys)
 
         res = self.env['slide.slide'].read_group(
             [('is_published', '=', True), ('category_id', 'in', self.ids), ('is_category', '=', False)],
@@ -273,11 +274,9 @@ class Slide(models.Model):
             lazy=False)
 
         type_stats = self._compute_slides_statistics_type(res)
-        for cid, cdata in type_stats.items():
-            result[cid].update(cdata)
 
         for record in self:
-            record.update(result[record.id])
+            record.update(type_stats.get(record._origin.id, default_vals))
 
     def _compute_slides_statistics_type(self, read_group_res):
         """ Compute statistics based on all existing slide types """
