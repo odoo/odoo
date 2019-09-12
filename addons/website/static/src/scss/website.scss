@@ -840,10 +840,15 @@ table.table_desc tr td {
     &.o_slideshow {
         .carousel {
             height: 100%;
+
             .carousel-inner {
                 height: 100%;
             }
-            .carousel-item {
+            .carousel-item.active,
+            .carousel-item-next,
+            .carousel-item-prev {
+                display: flex;
+                align-items: center;
                 height: 100%;
                 padding-bottom: 64px;
             }
