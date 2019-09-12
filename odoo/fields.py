@@ -360,7 +360,7 @@ class Field(MetaField('DummyField', (object,), {})):
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_company_dependent
             attrs['search'] = self._search_company_dependent
-            attrs['depends_context'] = attrs.get('depends_context', ()) + ('force_company',)
+            attrs['depends_context'] = attrs.get('depends_context', ()) + ('company',)
         if attrs.get('translate'):
             # by default, translatable fields are context-dependent
             attrs['depends_context'] = attrs.get('depends_context', ()) + ('lang',)
@@ -599,22 +599,14 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _compute_company_dependent(self, records):
         # read property as superuser, as the current user may not have access
-        context = records.env.context
-        if 'force_company' not in context:
-            company = records.env.company
-            context = dict(context, force_company=company.id)
-        Property = records.env(context=context, su=True)['ir.property']
+        Property = records.env['ir.property'].sudo()
         values = Property.get_multi(self.name, self.model_name, records.ids)
         for record in records:
             record[self.name] = values.get(record.id)
 
     def _inverse_company_dependent(self, records):
         # update property as superuser, as the current user may not have access
-        context = records.env.context
-        if 'force_company' not in context:
-            company = records.env.company
-            context = dict(context, force_company=company.id)
-        Property = records.env(context=context, su=True)['ir.property']
+        Property = records.env['ir.property'].sudo()
         values = {
             record.id: self.convert_to_write(record[self.name], record)
             for record in records
@@ -634,8 +626,8 @@ class Field(MetaField('DummyField', (object,), {})):
         get_context = env.context.get
 
         def get(key):
-            if key == 'force_company':
-                return get_context('force_company') or env.company.id
+            if key == 'company':
+                return env.company.id
             elif key == 'uid':
                 return (env.uid, env.su)
             elif key == 'active_test':
