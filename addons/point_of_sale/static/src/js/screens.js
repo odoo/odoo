@@ -976,28 +976,8 @@ var ProductListWidget = PosBaseWidget.extend({
 // sale extensions modules. 
 
 var action_button_classes = [];
-var define_action_button = function(classe, options){
-    options = options || {};
-
-    var classes = action_button_classes;
-    var index   = classes.length;
-    var i;
-
-    if (options.after) {
-        for (i = 0; i < classes.length; i++) {
-            if (classes[i].name === options.after) {
-                index = i + 1;
-            }
-        }
-    } else if (options.before) {
-        for (i = 0; i < classes.length; i++) {
-            if (classes[i].name === options.after) {
-                index = i;
-                break;
-            }
-        }
-    }
-    classes.splice(i,0,classe);
+var define_action_button = function(classe){
+    action_button_classes.unshift(classe);
 };
 
 var ActionButtonWidget = PosBaseWidget.extend({
