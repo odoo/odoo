@@ -88,13 +88,30 @@ var SnippetEditor = Widget.extend({
             $customize.find('.oe_snippet_remove').addClass('d-none');
         }
 
+        var _animationsCount = 0;
+        var postAnimationCover = _.throttle(() => this.cover(), 100);
         this.$target.on('transitionstart.snippet_editor, animationstart.snippet_editor', () => {
-            this._targetIsAnimated = true;
+            // We cannot rely on the fact each transition/animation start will
+            // trigger a transition/animation end as the element may be removed
+            // from the DOM before or it could simply be an infinite animation.
+            //
+            // By simplicity, for each start, we add a delayed operation that
+            // will decrease the animation counter after a fixed duration and
+            // do the post animation cover if none is registered anymore.
+            _animationsCount++;
+            setTimeout(() => {
+                if (!--_animationsCount) {
+                    postAnimationCover();
+                }
+            }, 500); // This delay have to be huge enough to take care of long
+                     // animations which will not trigger an animation end event
+                     // but if it is too small for some, this is the job of the
+                     // animation creator to manually ask for a re-cover
         });
-        this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', () => {
-            this._targetIsAnimated = false;
-            this.cover();
-        });
+        // On top of what is explained above, do the post animation cover for
+        // each detected transition/animation end so that the user does not see
+        // a flickering when not needed.
+        this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', postAnimationCover);
 
         return Promise.all(defs);
     },
@@ -137,10 +154,7 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
-        if (this._targetIsAnimated || !this.isShown() || !this.$target.length) {
-            // Do not cover a target being animated, it will be covered once the
-            // animation is completed. Also ignore if the overlay is not shown
-            // yet or that the $target element has been removed.
+        if (!this.isShown() || !this.$target.length) {
             return;
         }
         var offset = this.$target.offset();
