@@ -61,7 +61,7 @@
                                 </td>
                                 <td class="text-right">
                                     <span t-esc="h['total']"
-                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                 </td>
                             </tr>
                         </tbody>
@@ -86,7 +86,7 @@
                                 <td><span t-esc="p.get('amount', 0)"/></td>
                                 <td class="text-right">
                                     <span t-esc="p.get('total', 0)"
-                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                 </td>
                             </tr>
                         </tbody>
