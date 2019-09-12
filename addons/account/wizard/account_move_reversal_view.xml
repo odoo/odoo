@@ -9,6 +9,11 @@
                     <field name="residual" invisible="1"/>
                     <field name="move_type" invisible="1"/>
                     <group>
+                         <group>
+                              <field name="move_id" readonly="context.get('active_id')" invisible="context.get('active_id')" />
+                         </group>
+                    </group>
+                    <group>
                          <group attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'in_invoice'))]}">
                             <field name="refund_method" widget="radio" attrs="{'readonly': [('residual', '=', 0)]}"/>
                          </group>
@@ -24,8 +29,9 @@
                                The original invoice is duplicated as a new draft.
                             </div>
                          </group>
+                    </group>
+                    <group>
                          <group>
-                             <field name="move_id" readonly="context.get('active_id')" invisible="context.get('active_id')" />
                              <field name="reason" attrs="{'invisible': [('move_type', '==', 'entry')], 'reason': [('move_type', '==', 'entry')]}"/>
                              <field name="date" string="Refund Date" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'in_invoice'))]}"/>
                              <field name="date" attrs="{'invisible': [('move_type', 'in', ('out_invoice', 'in_invoice'))]}"/>

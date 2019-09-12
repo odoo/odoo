@@ -21,7 +21,7 @@ class AccountMoveReversal(models.TransientModel):
         return self.env['account.move']
 
     move_id = fields.Many2one('account.move', string='Journal Entry',
-        default=_get_default_move,
+        default=lambda self: self._get_default_move,
         domain=[('state', '=', 'posted'), ('type', 'not in', ('out_refund', 'in_refund'))])
     date = fields.Date(string='Reversal date', default=fields.Date.context_today, required=True)
     reason = fields.Char(string='Reason')
