@@ -198,6 +198,7 @@ class TestPacking(SavepointCase):
             location should trigger a wizard. This wizard applies the same destination
             location to all the move lines
         """
+        self.warehouse.in_type_id.show_reserved = True
         shelf1_location = self.env['stock.location'].create({
             'name': 'shelf1',
             'usage': 'internal',

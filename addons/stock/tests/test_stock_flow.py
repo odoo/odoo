@@ -1260,6 +1260,7 @@ class TestStockFlow(TestStockCommon):
 
     def test_40_pack_in_pack(self):
         """ Put a pack in pack"""
+        self.env['stock.picking.type'].browse(self.picking_type_in).show_reserved = True
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.pack_location,
