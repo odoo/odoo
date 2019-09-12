@@ -123,14 +123,15 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         return new Promise(function (resolve, reject) {
             self.barcode_reader.disconnect_from_proxy();
-            self.chrome.loading_message(_t('Connecting to the IoT Box'), 0);
-            self.chrome.loading_skip(function () {
+            self.trigger("loading", _t('Connecting to the IoT Box'), 0);
+            self.trigger("connecting:proxy");
+            self.once("loading:skip", function () {
                 self.proxy.stop_searching();
             });
             self.proxy.autoconnect({
                 force_ip: self.config.proxy_ip || undefined,
                 progress: function(prog){
-                    self.chrome.loading_progress(prog);
+                    self.trigger("loading:progress", prog);
                 },
             }).then(
                 function () {
@@ -537,7 +538,7 @@ exports.PosModel = Backbone.Model.extend({
                     resolve();
                 } else {
                     var model = self.models[index];
-                    self.chrome.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
+                    self.trigger('loading', `${_t('Loading')} ${model.label || model.model}`, progress);
 
                     var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
                     if (!cond) {
