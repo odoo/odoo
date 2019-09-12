@@ -86,7 +86,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         }));
 
         defs.push(this._rpc({
-            model: 'website.redirect',
+            model: 'website.rewrite',
             method: 'fields_get',
         }).then(function (fields) {
             self.fields = fields;

@@ -908,9 +908,8 @@ class EndPoint(object):
     def __call__(self, *args, **kw):
         return self.method(*args, **kw)
 
-def routing_map(modules, nodb_only, converters=None):
-    routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
 
+def _generate_routing_rules(modules, nodb_only, converters=None):
     def get_subclasses(klass):
         def valid(c):
             return c.__module__.startswith('odoo.addons.') and c.__module__.split(".")[2] in modules
@@ -949,16 +948,8 @@ def routing_map(modules, nodb_only, converters=None):
                         assert routing['routes'], "Method %r has not route defined" % mv
                         endpoint = EndPoint(mv, routing)
                         for url in routing['routes']:
-                            if routing.get("combine", False):
-                                # deprecated v7 declaration
-                                url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
-                                if url.endswith("/") and len(url) > 1:
-                                    url = url[: -1]
+                            yield (url, endpoint, routing)
 
-                            xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
-                            kw = {k: routing[k] for k in xtra_keys if k in routing}
-                            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw))
-    return routing_map
 
 #----------------------------------------------------------
 # HTTP Sessions
@@ -1276,7 +1267,10 @@ class Root(object):
     @lazy_property
     def nodb_routing_map(self):
         _logger.info("Generating nondb routing")
-        return routing_map([''] + odoo.conf.server_wide_modules, True)
+        routing_map = werkzeug.routing.Map(strict_slashes=False, converters=None)
+        for url, endpoint, routing in odoo.http._generate_routing_rules([''] + odoo.conf.server_wide_modules, True):
+            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods']))
+        return routing_map
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
