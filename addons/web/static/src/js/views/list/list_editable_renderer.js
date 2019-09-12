@@ -277,6 +277,17 @@ ListRenderer.include({
         this._selectCell(rowIndex, 0);
     },
     /**
+     * Gives focus to a specific cell, given its row and its related column.
+     *
+     * @param {string} recordId
+     * @param {Object} column
+     */
+    focusCell: function (recordId, column) {
+        var $row = this._getRow(recordId);
+        var cellIndex = this.columns.indexOf(column);
+        $row.find('.o_data_cell')[cellIndex].focus();
+    },
+    /**
      * Returns the recordID associated to the line which is currently in edition
      * or null if there is no line in edition.
      *

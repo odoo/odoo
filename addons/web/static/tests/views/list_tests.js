@@ -4480,7 +4480,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list view: multi edition', async function (assert) {
-        assert.expect(22);
+        assert.expect(24);
 
         var list = await createView({
             View: ListView,
@@ -4536,6 +4536,8 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.modal .btn:contains(Cancel)'));
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop10',
             "changes have been discarded and row is back to readonly");
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:eq(0) .o_data_cell:eq(1)')[0],
+            "focus should be given to the most recently edited cell after discard");
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
         await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
         await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:eq(0)'));
@@ -4548,6 +4550,8 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "blip666",
             "the second row should be updated");
         assert.containsNone(list, '.o_data_cell input.o_field_widget', "no field should be editable anymore");
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:eq(0) .o_data_cell:eq(1)')[0],
+            "focus should be given to the most recently edited cell after confirm");
 
         list.destroy();
     });
