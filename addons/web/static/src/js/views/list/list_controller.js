@@ -477,6 +477,7 @@ var ListController = BasicController.extend({
                 this.model.discardChanges(recordId);
                 return this._confirmSave(recordId).then(reject);
             };
+            let dialog;
             if (validRecordIds.length > 0) {
                 let message;
                 if (nbInvalid === 0) {
@@ -488,13 +489,13 @@ var ListController = BasicController.extend({
                         _t("Do you want to set the value on the %d valid selected records? (%d invalid)"),
                         validRecordIds.length, nbInvalid);
                 }
-                Dialog.confirm(this, message, {
+                dialog = Dialog.confirm(this, message, {
                     confirm_callback: () => {
-                        this.model.saveRecords(recordId, validRecordIds, fieldName)
-                            .then(() => {
+                        return this.model.saveRecords(recordId, validRecordIds, fieldName)
+                            .then(async () => {
                                 this._updateButtons('readonly');
                                 const state = this.model.get(this.handle);
-                                this.renderer.updateState(state, {keepWidths: true});
+                                await this.renderer.updateState(state, {keepWidths: true});
                                 resolve(Object.keys(changes));
                             })
                             .guardedCatch(rejectAndDiscard);
@@ -502,10 +503,17 @@ var ListController = BasicController.extend({
                     cancel_callback: rejectAndDiscard,
                 });
             } else {
-                Dialog.alert(this, _t("No valid record to save"), {
+                dialog = Dialog.alert(this, _t("No valid record to save"), {
                     confirm_callback: rejectAndDiscard,
                 });
             }
+            dialog.on('closed', this, async () => {
+                // we need to wait for the dialog to be actually closed, but
+                // the 'closed' event is triggered just before, and it prevents
+                // from focussing the cell
+                await Promise.resolve();
+                this.renderer.focusCell(recordId, node);
+            });
         });
     },
     /**
