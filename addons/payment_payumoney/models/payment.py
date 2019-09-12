@@ -26,7 +26,7 @@ class PaymentAcquirerPayumoney(models.Model):
         if environment == 'prod':
             return {'payumoney_form_url': 'https://secure.payu.in/_payment'}
         else:
-            return {'payumoney_form_url': 'https://test.payu.in/_payment'}
+            return {'payumoney_form_url': 'https://sandboxsecure.payu.in/_payment'}
 
     def _payumoney_generate_sign(self, inout, values):
         """ Generate the shasign for incoming or outgoing communications.
