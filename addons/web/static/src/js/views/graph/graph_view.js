@@ -52,6 +52,7 @@ var GraphView = AbstractView.extend({
         this.fields.__count__ = {string: _t("Count"), type: "integer"};
 
         this.arch.children.forEach(function (field) {
+<<<<<<< HEAD
             var fieldName = field.attrs.name;
             if (fieldName === "id") {
                 return;
@@ -60,6 +61,14 @@ var GraphView = AbstractView.extend({
             if (interval) {
                 intervalMapping[fieldName] = interval;
                 fieldName = fieldName + ':' + interval;
+=======
+            var name = field.attrs.name;
+            if (name === "id") {
+                return;
+            }
+            if (field.attrs.interval) {
+                name += ':' + field.attrs.interval;
+>>>>>>> 44a93d745c2... temp
             }
             if (field.attrs.type === 'measure') {
                 measure = fieldName;

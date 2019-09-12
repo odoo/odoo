@@ -107,6 +107,7 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+<<<<<<< HEAD
     QUnit.test('title attribute', function (assert) {
         assert.expect(1);
 
@@ -122,6 +123,8 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+=======
+>>>>>>> 44a93d745c2... temp
     QUnit.test('field id not in groupBy', function (assert) {
         assert.expect(1);
 

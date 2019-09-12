@@ -2630,6 +2630,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             del cls._fields[name]
             delattr(cls, name)
 
+        # fix up _rec_name
+        if 'x_name' in bad_fields and cls._rec_name == 'x_name':
+            cls._rec_name = None
+            field = cls._fields['display_name']
+            field.depends = tuple(name for name in field.depends if name != 'x_name')
+
         # map each field to the fields computed with the same method
         groups = defaultdict(list)
         for field in cls._fields.values():
@@ -5212,6 +5218,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if path == 'id':
                     target0 = self
                 else:
+<<<<<<< HEAD
                     Model = self.env[model_name]
                     f = Model._fields.get(path)
                     if f and f.store and f.type not in ('one2many', 'many2many'):
@@ -5222,6 +5229,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         env = self.env(user=SUPERUSER_ID, context={'active_test': False})
                         target0 = env[model_name].search([(path, 'in', self.ids)])
                         target0 = target0.with_env(self.env)
+=======
+                    env = self.env(user=SUPERUSER_ID, context={'active_test': False})
+                    target0 = env[model_name].search([(path, 'in', self.ids)], order='id')
+                    target0 = target0.with_env(self.env)
+>>>>>>> 44a93d745c2... temp
                 # prepare recomputation for each field on linked records
                 for field in stored:
                     # discard records to not recompute for field

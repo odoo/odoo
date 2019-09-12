@@ -228,6 +228,7 @@ class TestAccountEntry(TestExpenseCommon):
 
         full_reconcile = payable_move_lines.mapped('full_reconcile_id')
         self.assertEquals(len(full_reconcile), 1)
+<<<<<<< HEAD
 
 
 class TestExpenseRights(TestExpenseCommon):
@@ -323,3 +324,5 @@ class TestExpenseRights(TestExpenseCommon):
         with self.assertRaises(AccessError):
             sheet_3.sudo(self.user_officer).refuse_sheet('')
         sheet_3.sudo(self.user_manager).refuse_sheet('')
+=======
+>>>>>>> 44a93d745c2... temp

@@ -292,10 +292,61 @@ var LivechatButton = Widget.extend({
                 self._chatWindow.scrollToBottom();
             });
     },
+<<<<<<< HEAD
     /**
      * @private
      */
     _sendWelcomeMessage: function () {
+=======
+
+    add_message: function (data, options) {
+        var msg = {
+            id: data.id,
+            attachment_ids: data.attachment_ids,
+            author_id: data.author_id,
+            body: data.body,
+            date: moment(time.str_to_datetime(data.date)),
+            is_needaction: false,
+            is_note: data.is_note,
+            is_discussion: data.is_discussion,
+            is_notification: data.is_notification,
+            customer_email_data: []
+        };
+        var hasAlreadyMessage = _.some(this.messages, function (message) {
+            return message.id === msg.id;
+        });
+        if (hasAlreadyMessage) {
+            return;
+        }
+        // Compute displayed author name or email
+        msg.displayed_author = msg.author_id && msg.author_id[1] ||
+                               this.options.default_username;
+
+        // Compute the avatar_url
+        msg.avatar_src = this.server_url;
+        if (msg.author_id && msg.author_id[0]) {
+            msg.avatar_src += "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
+        } else {
+            msg.avatar_src += "/mail/static/src/img/smiley/avatar.jpg";
+        }
+
+        if (options && options.prepend) {
+            this.messages.unshift(msg);
+        } else {
+            this.messages.push(msg);
+        }
+    },
+
+    render_messages: function () {
+        var should_scroll = !this.chat_window.folded && this.chat_window.thread.is_at_bottom();
+        this.chat_window.render(this.messages);
+        if (should_scroll) {
+            this.chat_window.thread.scroll_to();
+        }
+    },
+
+    send_welcome_message: function () {
+>>>>>>> 44a93d745c2... temp
         if (this.options.default_message) {
             this._addMessage({
                 id: '_welcome',

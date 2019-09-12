@@ -5,7 +5,11 @@
 # /                    \
 # |   DO NOT FORWARD   |
 # |    PORT FURTHER    |
+<<<<<<< HEAD
 # |     THAN 12.4      |
+=======
+# |   THAN SAAS-11.2   |
+>>>>>>> 44a93d745c2... temp
 # \____________________/
 #          !  !
 #          !  !
@@ -20,7 +24,11 @@
 #          !  !
 #          \__/
 #
+<<<<<<< HEAD
 # Starting with 12.5, the payment_stripe module contains these changes OoB
+=======
+# Starting with V11, the payment_stripe module contains these changes OoB
+>>>>>>> 44a93d745c2... temp
 
 {
     'name': 'Stripe Payment Acquirer - Strong Customer Authentication Update',

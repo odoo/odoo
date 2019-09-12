@@ -128,9 +128,15 @@ class AccountInvoice(models.Model):
                 residual += line.amount_residual_currency if line.currency_id else line.amount_residual
             else:
                 if line.currency_id:
+<<<<<<< HEAD
                     residual += line.currency_id._convert(line.amount_residual_currency, self.currency_id, line.company_id, line.date or fields.Date.today())
                 else:
                     residual += line.company_id.currency_id._convert(line.amount_residual, self.currency_id, line.company_id, line.date or fields.Date.today())
+=======
+                    residual += line.currency_id.with_context(date=line.date).compute(line.amount_residual_currency, self.currency_id)
+                else:
+                    residual += line.company_id.currency_id.with_context(date=line.date).compute(line.amount_residual, self.currency_id)
+>>>>>>> 44a93d745c2... temp
         self.residual_company_signed = abs(residual_company_signed) * sign
         self.residual_signed = abs(residual) * sign
         self.residual = abs(residual)

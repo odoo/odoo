@@ -918,6 +918,53 @@ class PaymentTransaction(models.Model):
 
         return tx
 
+<<<<<<< HEAD
+=======
+    @api.multi
+    def write(self, values):
+        if ('acquirer_id' in values or 'amount' in values) and 'fees' not in values:
+            # The acquirer or the amount has changed, and the fees are not explicitly forced. Fees must be recomputed.
+            acquirer = None
+            if values.get('acquirer_id'):
+                acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
+            for tx in self:
+                vals = dict(values, fees=0.0)
+                if not acquirer:
+                    acquirer = tx.acquirer_id
+                custom_method_name = '%s_compute_fees' % acquirer.provider
+                # TDE FIXME: shouldn't we use fee_implemented ?
+                if hasattr(acquirer, custom_method_name):
+                    fees = getattr(acquirer, custom_method_name)(
+                        (values['amount'] if 'amount' in values else tx.amount) or 0.0,
+                        values.get('currency_id') or tx.currency_id.id,
+                        values.get('partner_country_id') or tx.partner_country_id.id)
+                    vals['fees'] = float_round(fees, 2)
+                res = super(PaymentTransaction, tx).write(vals)
+            return res
+        return super(PaymentTransaction, self).write(values)
+
+    @api.model
+    def get_next_reference(self, reference):
+        return self._get_next_reference(reference)
+
+    @api.model
+    def _get_next_reference(self, reference, acquirer=None):
+        ref_suffix = 1
+        init_ref = reference
+        while self.env['payment.transaction'].sudo().search_count([('reference', '=', reference)]):
+            reference = init_ref + 'x' + str(ref_suffix)
+            ref_suffix += 1
+        return reference
+
+    def _get_json_info(self):
+        self.ensure_one()
+        return {
+            'state': self.state,
+            'acquirer_reference': self.acquirer_reference,
+            'reference': self.reference,
+        }
+
+>>>>>>> 44a93d745c2... temp
     def _generate_callback_hash(self):
         self.ensure_one()
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')

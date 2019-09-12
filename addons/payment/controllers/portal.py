@@ -5,6 +5,7 @@ import logging
 import psycopg2
 
 from odoo import http, _
+from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from datetime import datetime, timedelta
@@ -265,7 +266,46 @@ class WebsitePayment(http.Controller):
         except Exception as e:
             return request.redirect('/payment/process')
 
+<<<<<<< HEAD
     @http.route(['/website_payment/confirm'], type='http', auth='public', website=True, sitemap=False)
+=======
+    @http.route(['/website_payment/json_token/<string:reference>/<string:amount>/<string:currency_id>',
+                '/website_payment/json_token/v2/<string:amount>/<string:currency_id>/<path:reference>'], type='json', auth='public')
+    def payment_token_json(self, pm_id, reference, amount, currency_id, return_url=None, **kwargs):
+        token = request.env['payment.token'].browse(int(pm_id))
+
+        if not token:
+            raise UserError(_('Incorrect token'))
+
+        partner_id = request.env.user.partner_id.id if not request.env.user._is_public() else False
+
+        values = {
+            'acquirer_id': token.acquirer_id.id,
+            'reference': reference,
+            'amount': float(amount),
+            'currency_id': int(currency_id),
+            'partner_id': partner_id,
+            'payment_token_id': pm_id,
+            'type': 'form_save' if token.acquirer_id.save_token != 'none' and partner_id else 'form',
+        }
+
+        tx = request.env['payment.transaction'].sudo().create(values)
+        request.session['website_payment_tx_id'] = tx.id
+
+        try:
+            res = tx.with_context(off_session=False).s2s_do_transaction()
+        except Exception as e:
+            raise UserError(_('Transaction failed'))
+
+        tx_info = tx._get_json_info()
+        return {
+            'tx_info': tx_info,
+            'redirect': '/website_payment/confirm?tx_id=%d' % tx.id,
+        }
+
+
+    @http.route(['/website_payment/confirm'], type='http', auth='public', website=True)
+>>>>>>> 44a93d745c2... temp
     def confirm(self, **kw):
         tx_id = int(kw.get('tx_id', 0))
         if tx_id:

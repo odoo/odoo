@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 odoo.define('payment_stripe.payment_form', function (require) {
+=======
+odoo.define('payment_stripe_sca.payment_form', function (require) {
+>>>>>>> 44a93d745c2... temp
     "use strict";
     
     var ajax = require('web.ajax');
@@ -31,11 +35,15 @@ odoo.define('payment_stripe.payment_form', function (require) {
          */
         _createStripeToken: function (ev, $checkedRadio, addPmEvent) {
             var self = this;
+<<<<<<< HEAD
             if (ev.type === 'submit') {
                 var button = $(ev.target).find('*[type="submit"]')[0]
             } else {
                 var button = ev.target;
             }
+=======
+            var button = ev.target;
+>>>>>>> 44a93d745c2... temp
             this.disableButton(button);
             var acquirerID = this.getAcquirerIdFromRadio($checkedRadio);
             var acquirerForm = this.$('#o_payment_add_token_acq_' + acquirerID);
@@ -64,6 +72,13 @@ odoo.define('payment_stripe.payment_form', function (require) {
                     return $.Deferred().reject({"message": {"data": { "message": result.error.message}}});
                 } else {
                     _.extend(formData, {"payment_method": result.setupIntent.payment_method});
+<<<<<<< HEAD
+=======
+                    if (addPmEvent) {
+                        // we force the check when adding a card trough here
+                        formData.verify_validity = true;
+                    }
+>>>>>>> 44a93d745c2... temp
                     return rpc.query({
                         route: formData.data_set,
                         params: formData,
@@ -77,17 +92,77 @@ odoo.define('payment_stripe.payment_form', function (require) {
                         window.location.reload();
                     }
                 } else {
+<<<<<<< HEAD
                     $checkedRadio.val(result.id);
                     self.el.submit();
+=======
+                    return self._chargeStripeToken(formData, result.id);
+>>>>>>> 44a93d745c2... temp
                 }
             }).fail(function (error, event) {
                 // if the rpc fails, pretty obvious
                 self.enableButton(button);
                 self.displayError(
+<<<<<<< HEAD
+=======
+                    _t('Unable to process payment'),
+                    _t("We are not able to process your payment at the moment. ") +
+                        error.message.data.message
+                );
+            });
+        },
+        _chargeExistingToken: function(ev, $checkedRadio) {
+            var pm_id = $checkedRadio.val();
+            var self = this;
+            var button = ev.target;
+            this.disableButton(button);
+            if (this.options.partnerId === undefined) {
+                console.warn('payment_form: unset partner_id when adding new token; things could go wrong');
+            }
+            var formData = self.getFormData(this.$el);
+            return this._chargeStripeToken(formData, pm_id)
+            .fail(function (error) {
+                // if the rpc fails, pretty obvious
+                self.enableButton(button);
+                self.displayError(
+>>>>>>> 44a93d745c2... temp
                     _t('Unable to save card'),
                     _t("We are not able to add your payment method at the moment. ") +
                         error.message.data.message
                 );
+<<<<<<< HEAD
+=======
+            });;
+        },
+        _chargeStripeToken: function(formData, pm_id) {
+            var json_params = _.extend({}, formData, {pm_id: pm_id})
+            var final_redirect;
+            return rpc.query({
+                route: this._guessJsonRoute(),
+                params: json_params,
+            }).then(function (result) {
+                var tx_info = result.tx_info;
+                final_redirect = result.redirect;
+                if (tx_info.state === 'done') {
+                    window.location = final_redirect;
+                } else if (tx_info.state === 'pending' && tx_info.stripe_payment_intent_secret) {
+                    var stripe = new Stripe(tx_info.stripe_publishable_key);
+                    return $.Deferred(function(defer) {
+                        stripe.handleCardPayment(tx_info.stripe_payment_intent_secret).then(function (result) {defer.resolve(result)});
+                    });
+                }
+            }).then(function (result) {
+                if (result.error) {
+                    return $.Deferred().reject({"message": {"data": { "message": result.error.message}}});
+                } else {
+                    return rpc.query({
+                        route: '/payment/stripe/s2s/process_payment_intent',
+                        params: _.extend({}, result.paymentIntent, {reference: result.paymentIntent.description}),
+                    });
+                }
+            }).then(function (result) {
+                window.location = final_redirect;
+>>>>>>> 44a93d745c2... temp
             });
         },
         /**
@@ -119,6 +194,23 @@ odoo.define('payment_stripe.payment_form', function (require) {
             this.stripe_card_element = card;
         },
         /**
+<<<<<<< HEAD
+=======
+         * guess the json route to call for an interrupted payment flow
+         * 
+         * @private
+         */
+        _guessJsonRoute: function () {
+            var route = this.$el.attr('action');
+            var json_route = route.replace('token', 'json_token');
+            if (json_route.indexOf('token') === -1) {
+                // special case: subscription payment routes don't have 'token' in the url -_-
+                json_route = route.replace('payment', 'json_payment');
+            }
+            return json_route;
+        },
+        /**
+>>>>>>> 44a93d745c2... temp
          * destroys the card element and any stripe instance linked to the widget.
          *
          * @private
@@ -162,8 +254,17 @@ odoo.define('payment_stripe.payment_form', function (require) {
             var $checkedRadio = this.$('input[type="radio"]:checked');
     
             // first we check that the user has selected a stripe as s2s payment method
+<<<<<<< HEAD
             if ($checkedRadio.length === 1 && $checkedRadio.data('provider') === 'stripe' && this.isNewPaymentRadio($checkedRadio)) {
                 return this._createStripeToken(ev, $checkedRadio);
+=======
+            if ($checkedRadio.length === 1 && $checkedRadio.data('provider') === 'stripe') {
+                if (this.isNewPaymentRadio($checkedRadio)) {
+                    return this._createStripeToken(ev, $checkedRadio);
+                } else {
+                    return this._chargeExistingToken(ev, $checkedRadio);
+                }
+>>>>>>> 44a93d745c2... temp
             } else {
                 return this._super.apply(this, arguments);
             }
@@ -185,4 +286,7 @@ odoo.define('payment_stripe.payment_form', function (require) {
         },
     });
 });
+<<<<<<< HEAD
     
+=======
+>>>>>>> 44a93d745c2... temp

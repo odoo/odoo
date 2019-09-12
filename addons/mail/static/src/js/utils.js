@@ -1,6 +1,7 @@
 odoo.define('mail.utils', function (require) {
 "use strict";
 
+<<<<<<< HEAD
 var core = require('web.core');
 
 var _t = core._t;
@@ -8,14 +9,24 @@ var _t = core._t;
 function parseAndTransform(htmlString, transformFunction) {
     var openToken = "OPEN" + Date.now();
     var string = htmlString.replace(/&lt;/g, openToken);
+=======
+function parse_and_transform(html_string, transform_function) {
+    var open_token = "OPEN" + Date.now();
+    var string = html_string.replace(/&lt;/g, open_token);
+>>>>>>> 44a93d745c2... temp
     var children;
     try {
         children = $('<div>').html(string).contents();
     } catch (e) {
         children = $('<div>').html('<pre>' + string + '</pre>').contents();
     }
+<<<<<<< HEAD
     return _parseAndTransform(children, transformFunction)
                 .replace(new RegExp(openToken, "g"), "&lt;");
+=======
+    return _parse_and_transform(children, transform_function)
+                .replace(new RegExp(open_token, "g"), "&lt;");
+>>>>>>> 44a93d745c2... temp
 }
 function _parseAndTransform(nodes, transformFunction) {
     return _.map(nodes, function (node) {

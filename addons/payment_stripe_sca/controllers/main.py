@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+<<<<<<< HEAD
 import pprint
+=======
+>>>>>>> 44a93d745c2... temp
 import werkzeug
 
 from odoo.http import route, request
@@ -17,7 +20,11 @@ class StripeControllerSCA(StripeController):
     @route(['/payment/stripe/success', '/payment/stripe/cancel'], type='http', auth='public')
     def stripe_success(self, **kwargs):
         request.env['payment.transaction'].sudo().form_feedback(kwargs, 'stripe')
+<<<<<<< HEAD
         return werkzeug.utils.redirect('/payment/process')
+=======
+        return werkzeug.utils.redirect(kwargs.get('return_url', '/'))
+>>>>>>> 44a93d745c2... temp
 
     @route(['/payment/stripe/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def stripe_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
@@ -26,10 +33,16 @@ class StripeControllerSCA(StripeController):
         token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
 
         if not token:
+<<<<<<< HEAD
             res = {
                 'result': False,
             }
             return res
+=======
+            return {
+                'result': False,
+            }
+>>>>>>> 44a93d745c2... temp
 
         res = {
             'result': True,
@@ -51,6 +64,7 @@ class StripeControllerSCA(StripeController):
         res = acquirer._create_setup_intent(kwargs)
         return res.get('client_secret')
 
+<<<<<<< HEAD
 
     @route('/payment/stripe/s2s/process_payment_intent', type='json')
     def stripe_s2s_process_payment_intent(self, **post):
@@ -61,6 +75,16 @@ class StripeControllerSCA(StripeController):
     def stripe_s2s_create_json(self, **post):
         raise werkzeug.exceptions.NotFound()
     
+=======
+    @route('/payment/stripe/s2s/process_payment_intent', type='json', auth='public')
+    def stripe_s2s_confirm_payment_intent(self, **post):
+        return request.env['payment.transaction'].sudo().form_feedback(post, 'stripe')
+
+    # These routes are deprecated, let's remove them for security's sake
+    def stripe_s2s_create_json(self, **post):
+        raise werkzeug.exceptions.NotFound()
+
+>>>>>>> 44a93d745c2... temp
     def stripe_s2s_create(self, **post):
         raise werkzeug.exceptions.NotFound()
 
