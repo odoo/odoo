@@ -474,7 +474,7 @@ class Channel(models.Model):
         for channel in self:
             removed_channel_partner_domain = expression.OR([
                 removed_channel_partner_domain,
-                [('partner_id', 'in', partner_ids.ids),
+                [('partner_id', 'in', partner_ids),
                  ('channel_id', '=', channel.id)]
             ])
 
