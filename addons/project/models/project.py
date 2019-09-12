@@ -67,6 +67,7 @@ class Project(models.Model):
     _order = "sequence, name, id"
     _period_number = 5
     _rating_satisfaction_days = False  # takes all existing ratings
+    _check_company_auto = True
 
     def get_alias_model_name(self, vals):
         return vals.get('alias_model', 'project.task')
@@ -168,7 +169,7 @@ class Project(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True,
         help="Analytic account to which this project is linked for financial management. "
              "Use an analytic account to record cost and revenue on your project.")
 
@@ -211,7 +212,6 @@ class Project(models.Model):
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
     subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
-        domain="[('company_id', '=', company_id)]",
         help="Project in which sub-tasks of the current project will be created. It can be the current project itself.")
 
     # rating fields
@@ -432,6 +432,7 @@ class Task(models.Model):
     _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, id desc"
+    _check_company_auto = True
 
     @api.model
     def default_get(self, fields_list):
@@ -501,12 +502,8 @@ class Task(models.Model):
         index=True,
         copy=False,
         readonly=True)
-    project_id = fields.Many2one('project.project',
-        string='Project',
-        default=lambda self: self.env.context.get('default_project_id'),
-        index=True,
-        tracking=True,
-        change_default=True)
+    project_id = fields.Many2one('project.project', string='Project', default=lambda self: self.env.context.get('default_project_id'),
+        index=True, tracking=True, check_company=True, change_default=True)
     planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',tracking=True)
     subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
     user_id = fields.Many2one('res.users',
@@ -641,13 +638,6 @@ class Task(models.Model):
         for task in self:
             if task.parent_id and task.child_ids:
                 raise ValidationError(_('Task %s cannot have several subtask levels.' % (task.name,)))
-
-    @api.constrains('company_id', 'project_id')
-    def _check_multi_company(self):
-        for task in self:
-            if task.project_id:
-                if task.project_id.company_id != task.company_id:
-                    raise ValidationError(_('Your task must be in the same company as its project.'))
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
