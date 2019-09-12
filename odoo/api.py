@@ -225,7 +225,7 @@ def depends_context(*args):
     All dependencies must be hashable.  The following keys have special
     support:
 
-    * `force_company` (value in context or current company id),
+    * `company` (value in context or current company id),
     * `uid` (current user id and superuser flag),
     * `active_test` (value in env.context or value in field.context).
     """

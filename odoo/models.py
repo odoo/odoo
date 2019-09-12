@@ -3142,11 +3142,8 @@ Fields:
             # The second part of the check (for property / company-dependent fields) verifies that the records
             # linked via those relation fields are compatible with the company that owns the property value, i.e.
             # the company for which the value is being assigned, i.e:
-            #      `self.property_account_payable_id.company_id == self.env.context['force_company']`
-            if self.env.context.get('force_company'):
-                company = self.env['res.company'].browse(self.env.context['force_company'])
-            else:
-                company = self.env.company
+            #      `self.property_account_payable_id.company_id == self.env.company
+            company = self.env.company
             for name in property_fields:
                 # Special case with `res.users` since an user can belong to multiple companies.
                 if record[name]._name == 'res.users' and record[name].company_ids:

@@ -935,12 +935,15 @@ class TestFields(TransactionCaseWithUserDemo):
         company2 = self.env['res.company'].create({'name': 'B'})
 
         # create one user per company
-        user0 = self.env['res.users'].create({'name': 'Foo', 'login': 'foo',
-                                              'company_id': company0.id, 'company_ids': []})
-        user1 = self.env['res.users'].create({'name': 'Bar', 'login': 'bar',
-                                              'company_id': company1.id, 'company_ids': []})
-        user2 = self.env['res.users'].create({'name': 'Baz', 'login': 'baz',
-                                              'company_id': company2.id, 'company_ids': []})
+        user0 = self.env['res.users'].create({
+            'name': 'Foo', 'login': 'foo', 'company_id': company0.id,
+            'company_ids': [(6, 0, [company0.id, company1.id, company2.id])]})
+        user1 = self.env['res.users'].create({
+            'name': 'Bar', 'login': 'bar', 'company_id': company1.id,
+            'company_ids': [(6, 0, [company0.id, company1.id, company2.id])]})
+        user2 = self.env['res.users'].create({
+            'name': 'Baz', 'login': 'baz', 'company_id': company2.id,
+            'company_ids': [(6, 0, [company0.id, company1.id, company2.id])]})
 
         # create values for many2one field
         tag0 = self.env['test_new_api.multi.tag'].create({'name': 'Qux'})
@@ -1009,8 +1012,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.with_user(user1).foo, False)
         self.assertEqual(record.with_user(user2).foo, 'default')
 
-        # set field with 'force_company' in context
-        record.with_user(user0).with_context(force_company=company1.id).foo = 'beta'
+        record.with_user(user0).with_company(company1).foo = 'beta'
         record.invalidate_cache()
         self.assertEqual(record.with_user(user0).foo, 'main')
         self.assertEqual(record.with_user(user1).foo, 'beta')
