@@ -480,7 +480,10 @@ class OdooTestResult(unittest.result.TestResult):
         (fn, lno, func, sinfo) (logger.findCaller format), see logger.log for
         the other parameters.
         """
-        logger = logging.getLogger((test or self).__module__)  # test should be always set
+        test = test or self
+        if isinstance(test, unittest.case._SubTest) and test.test_case:
+            test = test.test_case
+        logger = logging.getLogger(test.__module__)
         try:
             caller_infos = caller_infos or logger.findCaller(stack_info)
         except ValueError:
@@ -493,6 +496,8 @@ class OdooTestResult(unittest.result.TestResult):
         logger.handle(record)
 
     def getDescription(self, test):
+        if isinstance(test, unittest.case._SubTest):
+            return 'Subtest %s' % test._subDescription()
         if isinstance(test, unittest.TestCase):
             # since we have the module name in the logger, this will avoid to duplicate module info in log line
             # we only apply this for TestCase since we can receive error handler or other special case
