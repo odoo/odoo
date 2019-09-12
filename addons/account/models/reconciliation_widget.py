@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import pycompat
 from odoo.tools.misc import formatLang
+from odoo.tools import misc
 
 
 class AccountReconciliation(models.AbstractModel):
@@ -553,6 +554,8 @@ class AccountReconciliation(models.AbstractModel):
         for line in move_lines:
             company_currency = line.company_id.currency_id
             line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
+            date_maturity = misc.format_date(self.env, line.date_maturity, lang_code=self.env.user.lang)
+
             ret_line = {
                 'id': line.id,
                 'name': line.name and line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
@@ -564,7 +567,7 @@ class AccountReconciliation(models.AbstractModel):
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.internal_type,
-                'date_maturity': line.date_maturity,
+                'date_maturity': date_maturity,
                 'date': line.date,
                 'journal_id': [line.journal_id.id, line.journal_id.display_name],
                 'partner_id': line.partner_id.id,
@@ -654,13 +657,14 @@ class AccountReconciliation(models.AbstractModel):
             amount_currency = amount
             amount_currency_str = ""
         amount_str = formatLang(self.env, abs(amount), currency_obj=st_line.currency_id or statement_currency)
+        date = misc.format_date(self.env, st_line.date, lang_code=self.env.user.lang)
 
         data = {
             'id': st_line.id,
             'ref': st_line.ref,
             'note': st_line.note or "",
             'name': st_line.name,
-            'date': st_line.date,
+            'date': date,
             'amount': amount,
             'amount_str': amount_str,  # Amount in the statement line currency
             'currency_id': st_line.currency_id.id or statement_currency.id,
