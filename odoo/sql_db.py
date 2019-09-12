@@ -61,18 +61,23 @@ from inspect import currentframe
 SENTINEL = object()
 
 
-def get_env(frame, back=0):
+def get_env(cr, frame, back=0):
     """ Retrieve an environment from the given stack frame. """
     for i in range(back):
         frame = frame.f_back
-    while frame:
-        env = frame.f_locals.get('env', SENTINEL)
-        if env is not SENTINEL:
-            return env
-        env = getattr(frame.f_locals.get('self'), 'env', SENTINEL)
-        if env is not SENTINEL:
-            return env
-        frame = frame.f_back
+    try:
+        while frame:
+            env = frame.f_locals.get('env', SENTINEL)
+            if env is not SENTINEL:
+                return env if env.cr is cr else None
+            env = getattr(frame.f_locals.get('self'), 'env', SENTINEL)
+            if env is not SENTINEL:
+                return env if env.cr is cr else None
+            frame = frame.f_back
+    except Exception:
+        # the retrieval of the environment has crashed (env is not an
+        # environment or self.env crashed for some reason), we stop here
+        pass
     return None
 
 
@@ -386,7 +391,7 @@ class Cursor(object):
     def commit(self):
         """ Perform an SQL `COMMIT`
         """
-        env = get_env(currentframe(), 2)
+        env = get_env(self, currentframe(), 2)
         if env is not None:
             env['base'].flush()
         result = self._cnx.commit()
@@ -398,7 +403,7 @@ class Cursor(object):
     def rollback(self):
         """ Perform an SQL `ROLLBACK`
         """
-        env = get_env(currentframe(), 2)
+        env = get_env(self, currentframe(), 2)
         if env is not None:
             env.clear()
         result = self._cnx.rollback()
@@ -428,7 +433,7 @@ class Cursor(object):
     def savepoint(self, flush=True):
         """context manager entering in a new savepoint"""
         name = uuid.uuid1().hex
-        env = get_env(currentframe(), 2) if flush else None
+        env = get_env(self, currentframe(), 2) if flush else None
         if env is not None:
             env['base'].flush()
         self.execute('SAVEPOINT "%s"' % name)
@@ -495,13 +500,13 @@ class TestCursor(object):
         _logger.debug("TestCursor.autocommit(%r) does nothing", on)
 
     def commit(self):
-        env = get_env(currentframe(), 1)
+        env = get_env(self, currentframe(), 1)
         if env is not None:
             env['base'].flush()
         self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
 
     def rollback(self):
-        env = get_env(currentframe(), 1)
+        env = get_env(self, currentframe(), 1)
         if env is not None:
             env.clear()
         self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
