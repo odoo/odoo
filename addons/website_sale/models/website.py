@@ -303,7 +303,7 @@ class Website(models.Model):
     def sale_get_transaction(self):
         tx_id = request.session.get('sale_transaction_id')
         if tx_id:
-            transaction = self.env['payment.transaction'].sudo().browse(tx_id)
+            transaction = self.env['payment.transaction'].sudo().browse(tx_id).exists()
             # Ugly hack for SIPS: SIPS does not allow to reuse a payment reference, even if the
             # payment was not not proceeded. For example:
             # - Select SIPS for payment
