@@ -174,6 +174,7 @@ QUnit.module('DomainSelector', {
         await testUtils.dom.clickFirst($('.bootstrap-datetimepicker-widget :not(.today)[data-action="selectDay"]'));
         assert.notEqual(domainSelector.$(".o_datepicker:visible input").val(), val,
             "datepicker value should have changed");
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget a[data-action=close]'));
 
         domainSelector.destroy();
     });
