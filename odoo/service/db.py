@@ -57,6 +57,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
             # TODO this should be removed as it is done by Registry.new().
             odoo.modules.db.initialize(cr)
             odoo.tools.config['load_language'] = lang
+            env = None  # avoid retrieving env from requests in get_env call
             cr.commit()
 
         registry = odoo.modules.registry.Registry.new(db_name, demo, None, update_module=True)
@@ -292,6 +293,7 @@ def restore_db(db, dump_file, copy=False):
         if odoo.tools.exec_pg_command(pg_cmd, *pg_args):
             raise Exception("Couldn't restore database")
 
+        env = None  # avoid retrieving env from requests in get_env call
         registry = odoo.modules.registry.Registry.new(db)
         with registry.cursor() as cr:
             env = odoo.api.Environment(cr, SUPERUSER_ID, {})
