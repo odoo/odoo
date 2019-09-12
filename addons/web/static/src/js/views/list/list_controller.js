@@ -8,13 +8,68 @@ odoo.define('web.ListController', function (require) {
  */
 
 var core = require('web.core');
+var session = require('web.session');
+var framework = require('web.framework');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
 var Dialog = require('web.Dialog');
+var fieldUtils = require('web.field_utils');
 var Sidebar = require('web.Sidebar');
 
 var _t = core._t;
 var qweb = core.qweb;
+
+/**
+ * Return data required for exporting the current list to a xls file.
+ * Recursive if some groups are nested.
+ * Note: this function is also used when the records are not grouped.
+ * In this scenario, an artificial single group with every record in
+ * the list is built.
+ * @param {Array} groups
+ * @param {Array} displayedFields
+ * @param {Array} allFields
+ * @returns {Array} list of groups with the following structure:
+ *                      'data': list of records or list of sub-groups
+ *                      'isGrouped': true if data contains sub-groups
+ *                      'value': title of the group
+ *                      'count': number of records in the group
+ *                      'aggregateValues': dict container aggregated values of fields {field: aggregatedValue, ...}
+ *                      'hideHeader': self explanatory, used when the records are not grouped at all.
+ */
+var processGroups = (groups, displayedFields, allFields) => {
+    let formatRecord = record => {
+        let data = _.pick(record.data, displayedFields)
+        let formattedData = {}
+
+        Object.entries(data).forEach(([field_name, value]) => {
+            let field = allFields[field_name]
+            let formattedValue = fieldUtils.format[field.type](value, field, {data: record.data, forceString: true})
+            formattedData[field_name] = formattedValue.replace('&nbsp;', '')
+        });
+        return formattedData
+    }
+
+    if (groups.length && groups[0].groupedBy && groups[0].groupedBy.length) {
+        // Recursively process sub-group
+        return groups.map(group => ({
+            hideHeader: !!group.hideHeader,
+            isGrouped: true,
+            value: group.value !== undefined && group.value.toString() || _t("Undefined"),
+            count: group.count,
+            aggregateValues: _.pick(group.aggregateValues, displayedFields),
+            data: processGroups(group.data, displayedFields, allFields),
+        }))
+    }
+    // process records
+    return groups.map(group => ({
+        hideHeader: !!group.hideHeader,
+        isGrouped: false,
+        value: group.value !== undefined && group.value.toString() || _t("Undefined"),
+        count: group.count,
+        aggregateValues: _.pick(group.aggregateValues, displayedFields),
+        data: group.data.map(formatRecord)
+    }))
+}
 
 var ListController = BasicController.extend({
     /**
@@ -22,6 +77,9 @@ var ListController = BasicController.extend({
      * the list view. It can be overridden to add buttons in specific child views.
      */
     buttons_template: 'ListView.buttons',
+    events: _.extend({}, BasicController.prototype.events, {
+        'click .o_list_download': '_onExportRecords',
+    }),
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         activate_next_widget: '_onActivateNextWidget',
         add_record: '_onAddRecord',
@@ -50,6 +108,9 @@ var ListController = BasicController.extend({
         this.noLeaf = params.noLeaf;
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
+        this.activeActions = _.extend({}, this.activeActions, {
+            download: this.renderer.arch.attrs.download ? !!JSON.parse(this.renderer.arch.attrs.download) : true,
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -339,6 +400,31 @@ var ListController = BasicController.extend({
         });
     },
     /**
+     * Export the current list data in a xls file.
+     *
+     * @private
+     */
+    _downloadList() {
+        let groups = this.renderer.state.data
+        groups = this.renderer.isGrouped ? groups : [{data: groups, count: groups.length, hideHeader: true}] // Artificial single group
+
+        let allFields = this.renderer.state.fields
+        let columns = this.renderer.columns.map(column => ({
+            field: column.attrs.name,
+            aggregateValue: column.aggregate && column.aggregate.value,
+            string: allFields[column.attrs.name].string,
+        }))
+
+        groups = processGroups(groups, columns.map(c => c.field), allFields)
+
+        return session.get_file({
+            url: '/web/list/export_xls',
+            data: {data: JSON.stringify({columns, groups, title: this._title})},
+            complete: framework.unblockUI,
+            error: (error) => this.call('crash_manager', 'rpc_error', error),
+        });
+    },
+    /**
      * @override
      * @private
      */
@@ -612,6 +698,14 @@ var ListController = BasicController.extend({
             return field.attrs.name;
         });
         new DataExport(this, record, defaultExportFields).open();
+    },
+    /**
+     * Export Records in a xls file
+     *
+     * @private
+     */
+    _onExportRecords() {
+        this._downloadList()
     },
     /**
      * Opens the related form view.
