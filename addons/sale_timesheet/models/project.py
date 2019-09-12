@@ -185,6 +185,8 @@ class ProjectTask(models.Model):
         result = super(ProjectTask, self)._onchange_project()
         if self.project_id.sale_line_id:
             self.sale_line_id = self.project_id.sale_line_id
+        if self.project_id:
+            self.partner_id = self.project_id.partner_id
         if not self.parent_id and not self.partner_id:
             self.partner_id = self.sale_line_id.order_partner_id
         # set domain on SO: on non billable project, all SOL of customer, otherwise the one from the SO
@@ -204,6 +206,13 @@ class ProjectTask(models.Model):
         if self.partner_id:
             result.setdefault('domain', {})['sale_line_id'] = [('is_service', '=', True), ('is_expense', '=', False), ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id), ('state', 'in', ['sale', 'done'])]
         return result
+
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        super()._onchange_parent_id()
+        # check sale_line_id and customer are coherent
+        if self.sale_line_id and self.partner_id != self.sale_line_id.order_partner_id:
+            self.sale_line_id = False
 
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
@@ -229,17 +238,41 @@ class ProjectTask(models.Model):
     # ---------------------------------------------------
 
     @api.model
-    def _subtask_implied_fields(self):
-        result = super(ProjectTask, self)._subtask_implied_fields()
+    def _subtask_implied_fields_on_parent_update(self):
+        result = super(ProjectTask, self)._subtask_implied_fields_on_parent_update()
+        return result + ['sale_line_id']
+
+    @api.model
+    def _subtask_implied_fields_on_change_parent(self):
+        result = super(ProjectTask, self)._subtask_implied_fields_on_change_parent()
         return result + ['sale_line_id']
 
     def _subtask_write_values(self, values):
         result = super(ProjectTask, self)._subtask_write_values(values)
-        # changing the partner on a task will reset the sale line of its subtasks
-        if 'partner_id' in result:
-            result['sale_line_id'] = False
-        elif 'sale_line_id' in result:
-            result.pop('sale_line_id')
+        # check for partner and sale_line_id coherence
+        if 'sale_line_id' in result:
+            if self.partner_id:
+                partner_id = result.get('partner_id') or self.partner_id.id
+                match = self.env['sale.order.line'].search_count([('order_partner_id', '=', partner_id), ('id', '=', result.get('sale_line_id'))])
+                if not match:
+                    result['sale_line_id'] = False
+            else:  # would lead to sale_line_id set without partner_id
+                if 'partner_id' not in result:
+                    result['partner_id'] = self.parent_id.partner_id.id if self.parent_id.partner_id else False
+        return result
+
+    def _subtask_values_from_parent(self, parent_id, subtask_vals):
+        result = super()._subtask_values_from_parent(parent_id, subtask_vals)
+        # check we won't write sale_line_id if it is not coherent with partner
+        if 'sale_line_id' in result:
+            if subtask_vals.get('partner_id'):
+                partner_id = result.get('partner_id') or subtask_vals.get('partner_id')[0] if isinstance(subtask_vals.get('partner_id'), tuple) else subtask_vals.get('partner_id')
+                match = self.env['sale.order.line'].search_count([('order_partner_id', '=', partner_id), ('id', '=', result.get('sale_line_id'))])
+                if not match:
+                    result['sale_line_id'] = False
+            else:  # would lead to sale_line_id set without partner_id
+                if 'partner_id' not in result:
+                    result['sale_line_id'] = False
         return result
 
     # ---------------------------------------------------
