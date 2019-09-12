@@ -211,7 +211,7 @@ class TestAdvMailPerformance(TransactionCase):
         self.user_test.write({'notification_type': 'email'})
         record = self.env['mail.test.track'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=58, emp=77):  # com runbot: 58 - 77 // test_mail only: 56 - 70
+        with self.assertQueryCount(__system__=59, emp=77):  # com runbot: 59 - 77 // test_mail only: 56 - 70
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -221,7 +221,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=36, emp=47):  # test_mail only: 36 - 43
+        with self.assertQueryCount(__system__=39, emp=47):  # test_mail only: 39 - 43
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -511,7 +511,7 @@ class TestHeavyMailPerformance(TransactionCase):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(__system__=162, emp=198):  # com runbot: 161 - 198 // test_mail only: 161 - 191
+        with self.assertQueryCount(__system__=162, emp=199):  # com runbot: 161 - 198 // test_mail only: 161 - 191
             rec = self.env['mail.test.full'].create({
                 'name': 'Test',
                 'umbrella_id': umbrella_id,
