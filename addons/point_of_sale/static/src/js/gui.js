@@ -8,7 +8,6 @@ odoo.define('point_of_sale.gui', function (require) {
 
 var core = require('web.core');
 var field_utils = require('web.field_utils');
-var session = require('web.session');
 
 var _t = core._t;
 

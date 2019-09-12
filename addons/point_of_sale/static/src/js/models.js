@@ -1,7 +1,6 @@
 odoo.define('point_of_sale.models', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var BarcodeParser = require('barcodes.BarcodeParser');
 var BarcodeReader = require('point_of_sale.BarcodeReader');
 var PosDB = require('point_of_sale.DB');
