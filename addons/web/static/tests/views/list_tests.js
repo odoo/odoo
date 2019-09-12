@@ -3399,6 +3399,193 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('export list view to xls with nested groups', async function (assert) {
+        assert.expect(5);
+
+        let currencies = {};
+        _.each(this.data.res_currency.records, function (currency) {
+            currencies[currency.id] = currency;
+        });
+
+        let list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree download="1">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field" sum="Total"/>
+                    <field name="datetime"/>
+                    <field name="amount" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="o2m"/>
+                    <field name="m2o"/>
+                    <field name="m2m"/>
+                </tree>`,
+            groupBy: ['foo', 'bar'],
+            session: {
+                currencies: currencies,
+                get_file(args) {
+                    let data = JSON.parse(args.data.data);
+                    assert.strictEqual(args.url, '/web/list/export_xls',
+                        "should call get_file with the correct url");
+                    assert.deepEqual(data.columns, [
+                        {field: "foo", string: "Foo"},
+                        {field: "bar", string: "Bar"},
+                        {field: "int_field", aggregateValue: 32, string: "int_field"},
+                        {field: "datetime", string: "Datetime Field"},
+                        {field: "amount", string: "Monetary field"},
+                        {field: "o2m", string: "O2M field"},
+                        {field: "m2o", string: "M2O field"},
+                        {field: "m2m", string: "M2M field"},
+                    ], "columns should be in the correct order with the string and aggregate value")
+                    assert.deepEqual(data.groups[0], {
+                        // Group "yop"
+                        isGrouped: true,
+                        count: 1,
+                        aggregateValues: {int_field: 10},
+                        hideHeader: false,
+                        value: "yop",
+                        data: [{
+                            // Group "yop > true"
+                            isGrouped: false,
+                            count: 1,
+                            aggregateValues: {int_field: 10},
+                            hideHeader: false,
+                            value: "true",
+                            data: [{
+                                // Record "yop > true"
+                                foo: "yop",
+                                bar: "True",
+                                int_field: "10",
+                                datetime: "12/12/2016 10:55:05",
+                                amount: "1200.00€",
+                                m2m: "2 records",
+                                m2o: "Value 1",
+                                o2m: "No records",
+                            }]
+                        }]
+                    });
+                    assert.deepEqual(data.groups[1], {
+                        // Group "blip"
+                        isGrouped: true,
+                        count: 2,
+                        aggregateValues: {int_field: 5},
+                        hideHeader: false,
+                        value: "blip",
+                        data: [{
+                            // Group "blip > true"
+                            isGrouped: false,
+                            count: 1,
+                            aggregateValues: {int_field: 9},
+                            hideHeader: false,
+                            value: "true",
+                            data: [],
+                        }, {
+                            // Group "blip > false"
+                            isGrouped: false,
+                            count: 1,
+                            aggregateValues: {int_field: -4},
+                            hideHeader: false,
+                            value: "false",
+                            data: [],
+                        }]
+                    });
+                    assert.deepEqual(data.groups[2], {
+                        // Group "gnap"
+                        isGrouped: true,
+                        count: 1,
+                        aggregateValues: {int_field: 17},
+                        hideHeader: false,
+                        value: "gnap",
+                        data: [],
+                    });
+                    args.complete();
+                },
+            },
+        });
+
+        // open the first group
+        await testUtils.dom.click(list.$('.o_group_header:first'));
+
+        // open subgroup
+        let $openGroup = list.$('tbody:nth(1)');
+        await testUtils.dom.click($openGroup.find('.o_group_header:first'));
+
+        // open the second group
+        await testUtils.dom.click(list.$('.o_group_header:nth(2)'));
+
+        // Download
+        await testUtils.dom.click(list.$buttons.find('.o_list_download'));
+
+        list.destroy();
+    });
+
+    QUnit.test('export list view to xls', async function (assert) {
+        assert.expect(3);
+
+        let currencies = {};
+        _.each(this.data.res_currency.records, function (currency) {
+            currencies[currency.id] = currency;
+        });
+
+        let list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field" sum="Total"/>
+                    <field name="datetime"/>
+                    <field name="amount" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="o2m"/>
+                    <field name="m2o"/>
+                    <field name="m2m"/>
+                </tree>`,
+            session: {
+                currencies: currencies,
+                get_file(args) {
+                    let data = JSON.parse(args.data.data);
+                    assert.strictEqual(args.url, '/web/list/export_xls',
+                        "should call get_file with the correct url");
+                    assert.deepEqual(data.columns, [
+                        {field: "foo", string: "Foo"},
+                        {field: "bar", string: "Bar"},
+                        {field: "int_field", aggregateValue: 32, string: "int_field"},
+                        {field: "datetime", string: "Datetime Field"},
+                        {field: "amount", string: "Monetary field"},
+                        {field: "o2m", string: "O2M field"},
+                        {field: "m2o", string: "M2O field"},
+                        {field: "m2m", string: "M2M field"},
+                    ], "columns should be in the correct order with the string and aggregate value")
+                    assert.deepEqual(data.groups[0], {
+                        isGrouped: false,
+                        count: 4,
+                        aggregateValues: {},
+                        hideHeader: true,
+                        value: "Undefined",
+                        data: [
+                            {foo: "yop", bar: "True", int_field: "10", datetime: "12/12/2016 10:55:05", amount: "1200.00€", m2m: "2 records", m2o: "Value 1", o2m: "No records"},
+                            {foo: "blip", bar: "True", int_field: "9", datetime: "", amount: "$500.00", m2m: "3 records", m2o: "Value 2", o2m: "No records"},
+                            {foo: "gnap", bar: "True", int_field: "17", datetime: "", amount: "$300.00", m2m: "No records", m2o: "Value 1", o2m: "No records"},
+                            {foo: "blip", bar: "False", int_field: "-4", datetime: "", amount: "$0.00", m2m: "1 record", m2o: "Value 1", o2m: "No records"},
+                        ],
+                    });
+                    args.complete();
+                },
+            },
+        });
+
+        // Download
+        await testUtils.dom.click(list.$buttons.find('.o_list_download'));
+
+        list.destroy();
+    });
+
     QUnit.test('grouped list on selection field at level 2', async function (assert) {
         assert.expect(4);
 
