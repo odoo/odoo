@@ -313,6 +313,7 @@ ListRenderer.include({
         }
         if ($row.prop('rowIndex') - 1 === this.currentRow) {
             this.currentRow = null;
+            this._enableRecordSelectors();
         }
 
         // destroy widgets first
@@ -407,7 +408,11 @@ ListRenderer.include({
 
         // Toggle selected class here so that style is applied at the end
         $row.toggleClass('o_selected_row', editMode);
-        $row.find('.o_list_record_selector input').prop('disabled', !record.res_id);
+        if (editMode) {
+            this._disableRecordSelectors();
+        } else {
+            this._enableRecordSelectors();
+        }
 
         return Promise.all(defs).then(function () {
             // necessary to trigger resize on fieldtexts
@@ -444,6 +449,7 @@ ListRenderer.include({
                 onFailure: reject,
             });
         }).then(function (changedFields) {
+            self._enableRecordSelectors();
             // If any field has changed and if the list is in multiple edition,
             // we send a truthy boolean to _selectRow to tell it not to select
             // the following record.
@@ -477,6 +483,14 @@ ListRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
+     * When editing a row, we want to disable all record selectors.
+     *
+     * @private
+     */
+    _disableRecordSelectors: function () {
+        this.$('.o_list_record_selector input').attr('disabled', 'disabled');
+    },
+    /**
      * Destroy all field widgets corresponding to a record.  Useful when we are
      * removing a useless row.
      *
@@ -488,6 +502,12 @@ ListRenderer.include({
             _.each(widgetsToDestroy, this._destroyFieldWidget.bind(this, recordID));
             delete this.allFieldWidgets[recordID];
         }
+    },
+    /**
+     * @private
+     */
+    _enableRecordSelectors: function () {
+        this.$('.o_list_record_selector input').attr('disabled', false);
     },
     /**
      * Returns the relative width according to the widget or the field type.
@@ -1073,7 +1093,10 @@ ListRenderer.include({
             return new Promise(function (resolve) {
                 self.trigger_up('edit_line', {
                     recordId: recordId,
-                    onSuccess: resolve,
+                    onSuccess: function () {
+                        self._disableRecordSelectors();
+                        resolve();
+                    },
                 });
             });
         });
@@ -1277,6 +1300,7 @@ ListRenderer.include({
                 this.trigger_up('discard_changes', {
                     recordID: ev.target.dataPointID,
                     onSuccess: function () {
+                        self._enableRecordSelectors();
                         var recordId = self._getRecordID(rowIndex);
                         if (recordId) {
                             var correspondingRow = self._getRow(recordId);
