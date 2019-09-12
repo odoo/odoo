@@ -12,7 +12,6 @@ var DateWidget = Widget.extend({
     template: "web.datepicker",
     type_of_date: "date",
     events: {
-        'change.datetimepicker': 'changeDatetime',
         'error.datetimepicker': 'errorDatetime',
         'change .o_datepicker_input': 'changeDatetime',
         'click input': '_onInputClicked',
@@ -248,6 +247,7 @@ var DateWidget = Widget.extend({
      */
     _onDateTimePickerHide: function () {
         this.__isOpen = false;
+        this.changeDatetime();
     },
     /**
      * Reacts to the datetimepicker being shown

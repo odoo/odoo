@@ -3066,6 +3066,63 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('datetime fields do not trigger fieldChange before datetime completly picked', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.onchanges = {
+            datetime: function () {},
+        };
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="datetime"/></form>',
+            res_id: 1,
+            translateParameters: { // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.step('onchange');
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+
+        testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget');
+
+        // select a date and time
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch').first());
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch:eq(1)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .year:contains(2017)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .month').eq(3));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .day:contains(22)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .fa-clock-o'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .timepicker-hour'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .hour:contains(08)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .timepicker-minute'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .minute:contains(25)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .timepicker-second'));
+        assert.verifySteps([], "should not have done any onchange yet");
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .second:contains(35)'));
+
+        assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
+        assert.strictEqual(form.$('.o_datepicker_input').val(), "04/22/2017 08:25:35");
+        assert.verifySteps(['onchange'], "should have done only one onchange");
+
+        form.destroy();
+    });
 
     QUnit.test('datetime field not visible in form view should not capture the focus on keyboard navigation', async function (assert) {
         assert.expect(1);
