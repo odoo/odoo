@@ -170,7 +170,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('simple editable rendering', async function (assert) {
-        assert.expect(12);
+        assert.expect(15);
 
         var list = await createView({
             View: ListView,
@@ -181,6 +181,7 @@ QUnit.module('Views', {
 
         assert.containsN(list, 'th', 3, "should have 2 th");
         assert.containsN(list, 'th', 3, "should have 3 th");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
         assert.containsOnce(list, 'td:contains(yop)', "should contain yop");
 
         assert.isVisible(list.$buttons.find('.o_list_button_add'),
@@ -198,6 +199,7 @@ QUnit.module('Views', {
             "should have a visible save button");
         assert.isVisible(list.$buttons.find('.o_list_button_discard'),
             "should have a visible discard button");
+        assert.containsNone(list, '.o_list_record_selector input:enabled');
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
 
@@ -207,6 +209,8 @@ QUnit.module('Views', {
             "should not have a visible save button");
         assert.isNotVisible(list.$buttons.find('.o_list_button_discard'),
             "should not have a visible discard button");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
         list.destroy();
     });
 
@@ -2834,7 +2838,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('edition: create new line, then discard', async function (assert) {
-        assert.expect(8);
+        assert.expect(11);
 
         var list = await createView({
             View: ListView,
@@ -2849,11 +2853,13 @@ QUnit.module('Views', {
             "create button should be visible");
         assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 0,
             "discard button should be hidden");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
         assert.strictEqual(list.$buttons.find('.o_list_button_add:visible').length, 0,
             "create button should be hidden");
         assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 1,
             "discard button should be visible");
+        assert.containsNone(list, '.o_list_record_selector input:enabled');
         await testUtils.dom.click(list.$buttons.find('.o_list_button_discard'));
         assert.containsN(list, 'tr.o_data_row', 4,
             "should still have 4 records");
@@ -2861,6 +2867,8 @@ QUnit.module('Views', {
             "create button should be visible again");
         assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 0,
             "discard button should be hidden again");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
         list.destroy();
     });
 
@@ -4545,7 +4553,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list view: multi edition error and cancellation handling', async function (assert) {
-        assert.expect(3);
+        assert.expect(8);
 
         var list = await createView({
             View: ListView,
@@ -4556,22 +4564,28 @@ QUnit.module('Views', {
                     '</tree>',
         });
 
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
         // select two records
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
         await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
 
         // edit a line and cancel
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        assert.containsNone(list, '.o_list_record_selector input:enabled');
         await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=foo]'), "abc");
         await testUtils.dom.click($('.modal .btn:contains("Cancel")'));
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop', "first cell should have discarded any change");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
 
         // edit a line with an invalid value
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        assert.containsNone(list, '.o_list_record_selector input:enabled');
         await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=foo]'), "");
         assert.containsOnce(document.body, '.modal', "there should be an opened modal");
         await testUtils.dom.click($('.modal .btn-primary'));
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop', "changes should be discarded");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
 
         list.destroy();
     });
