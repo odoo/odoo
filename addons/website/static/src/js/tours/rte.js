@@ -64,6 +64,7 @@ tour.register('rte_translator', {
 }, {
     content : "click language dropdown",
     trigger : '.js_language_selector .dropdown-toggle',
+    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit"]',
 }, {
     content: "click on french version",
     trigger: '.js_language_selector a[data-lang="fr_BE"]',
@@ -110,6 +111,7 @@ tour.register('rte_translator', {
 }, {
     content: "check: content is translated",
     trigger: '#wrap p font:first:contains(translated french text)',
+    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit_master"]',
     run: function () {}, // it's a check
 }, {
     content: "check: content with special char is translated",
@@ -156,7 +158,7 @@ tour.register('rte_translator', {
     }, {
     content : "click language dropdown",
     trigger : '.js_language_selector .dropdown-toggle',
-
+    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit"]',
 }, {
     content: "return in french",
     trigger: 'html[lang="en-US"] .js_language_selector a[data-lang="fr_BE"]',
