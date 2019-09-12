@@ -4,7 +4,6 @@ import base64
 import datetime
 import json
 import os
-import re
 import logging
 import pytz
 import requests
