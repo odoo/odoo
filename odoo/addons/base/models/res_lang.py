@@ -202,7 +202,7 @@ class Lang(models.Model):
     @api.model
     @tools.ormcache()
     def get_available(self):
-        """ Return the available languages as a list of (code, name) sorted by name. """
+        """ Return the available languages as a list of (code, url_code, name) sorted by name. """
         langs = self.with_context(active_test=False).search([])
         return sorted([(lang.code, lang.url_code, lang.name) for lang in langs], key=itemgetter(2))
 

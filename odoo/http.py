@@ -317,7 +317,6 @@ class WebRequest(object):
         raise pycompat.reraise(type(exception), exception, sys.exc_info()[2])
 
     def _call_function(self, *args, **kwargs):
-        request = self
         if self.endpoint.routing['type'] != self._request_type:
             msg = "%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'"
             params = (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type)
@@ -326,10 +325,6 @@ class WebRequest(object):
 
         if self.endpoint_arguments:
             kwargs.update(self.endpoint_arguments)
-
-        # Backward for 7.0
-        if self.endpoint.first_arg_is_req:
-            args = (request,) + args
 
         first_time = True
 
@@ -688,33 +683,6 @@ class JsonRequest(WebRequest):
             return self._handle_exception(e)
 
 
-def serialize_exception(e):
-    tmp = {
-        "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
-        "debug": traceback.format_exc(),
-        "message": ustr(e),
-        "arguments": e.args,
-        "exception_type": "internal_error"
-    }
-    if isinstance(e, odoo.exceptions.UserError):
-        tmp["exception_type"] = "user_error"
-    elif isinstance(e, odoo.exceptions.Warning):
-        tmp["exception_type"] = "warning"
-    elif isinstance(e, odoo.exceptions.RedirectWarning):
-        tmp["exception_type"] = "warning"
-    elif isinstance(e, odoo.exceptions.AccessError):
-        tmp["exception_type"] = "access_error"
-    elif isinstance(e, odoo.exceptions.MissingError):
-        tmp["exception_type"] = "missing_error"
-    elif isinstance(e, odoo.exceptions.AccessDenied):
-        tmp["exception_type"] = "access_denied"
-    elif isinstance(e, odoo.exceptions.ValidationError):
-        tmp["exception_type"] = "validation_error"
-    elif isinstance(e, odoo.exceptions.except_orm):
-        tmp["exception_type"] = "except_orm"
-    return tmp
-
-
 class HttpRequest(WebRequest):
     """ Handler for the ``http`` request type.
 
@@ -882,9 +850,6 @@ class ControllerType(type):
                 v.original_func.routing_type = routing_type or parent_routing_type
 
                 spec = inspect.getargspec(v.original_func)
-                first_arg = spec.args[1] if len(spec.args) >= 2 else None
-                if first_arg in ["req", "request"]:
-                    v._first_arg_is_req = True
 
         # store the controller in the controllers list
         name_class = ("%s.%s" % (cls.__module__, cls.__name__), cls)
@@ -907,11 +872,6 @@ class EndPoint(object):
         self.original = getattr(method, 'original_func', method)
         self.routing = routing
         self.arguments = {}
-
-    @property
-    def first_arg_is_req(self):
-        # Backward for 7.0
-        return getattr(self.method, '_first_arg_is_req', False)
 
     def __call__(self, *args, **kw):
         return self.method(*args, **kw)
