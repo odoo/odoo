@@ -1047,11 +1047,12 @@ class TestSaleMrpFlow(common.SavepointCase):
         # Check that not enough enough quantities are available in the warehouse set in the SO
         # but there are enough quantities in Warehouse 1 for 1 kit_parent
         kit_parent_wh_order = self.kit_parent.with_context(warehouse=so.warehouse_id.id)
-        kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
 
         # Check that not enough enough quantities are available in the warehouse set in the SO
         # but there are enough quantities in Warehouse 1 for 1 kit_parent
         self.assertEquals(kit_parent_wh_order.virtual_available, 0)
+        kit_parent_wh_order.invalidate_cache()
+        kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
         self.assertEquals(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
@@ -1072,8 +1073,9 @@ class TestSaleMrpFlow(common.SavepointCase):
         # As 'Warehouse 2' is the warehouse linked to the SO, 3 kits should be available
         # But the quantity available in Warehouse 1 should stay 1
         kit_parent_wh_order = self.kit_parent.with_context(warehouse=so.warehouse_id.id)
-        kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
         self.assertEquals(kit_parent_wh_order.virtual_available, 3)
+        kit_parent_wh_order.invalidate_cache()
+        kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
         self.assertEquals(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
