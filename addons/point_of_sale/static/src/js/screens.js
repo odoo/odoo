@@ -532,7 +532,7 @@ var OrderWidget = PosBaseWidget.extend({
         }
 
     },
-    click_line: function(orderline, event) {
+    click_line: function(orderline) {
         this.pos.get_order().select_orderline(orderline);
         this.numpad_state.reset();
     },
@@ -697,12 +697,12 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
         this.start_categ_id = this.pos.config.iface_start_categ_id ? this.pos.config.iface_start_categ_id[0] : 0;
         this.set_category(this.pos.db.get_category_by_id(this.start_categ_id));
         
-        this.switch_category_handler = function(event){
+        this.switch_category_handler = function(){
             self.set_category(self.pos.db.get_category_by_id(Number(this.dataset.categoryId)));
             self.renderElement();
         };
         
-        this.clear_search_handler = function(event){
+        this.clear_search_handler = function(){
             self.clear_search();
         };
 
@@ -1555,7 +1555,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 }, 0);
             });
 
-            contents.find('.client-address-country').on('change', function (ev) {
+            contents.find('.client-address-country').on('change', function () {
                 var $stateSelection = contents.find('.client-address-states');
                 var value = this.value;
                 $stateSelection.empty()
@@ -1621,7 +1621,6 @@ var ReceiptScreenWidget = ScreenWidget.extend({
     template: 'ReceiptScreenWidget',
     show: function(){
         this._super();
-        var self = this;
 
         this.render_change();
         this.render_receipt();
@@ -1763,7 +1762,6 @@ var ReceiptScreenWidget = ScreenWidget.extend({
 
     },
     render_change: function() {
-        var self = this;
         this.$('.change-value').html(this.format_currency(this.pos.get_order().get_change()));
         var order = this.pos.get_order();
         var order_screen_params = order.get_screen_data('params');
@@ -1896,7 +1894,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
         
         if (newbuf !== this.inputbuffer) {
             this.inputbuffer = newbuf;
-            var order = this.pos.get_order();
             if (paymentline) {
                 var amount = this.inputbuffer;
 
@@ -2037,7 +2034,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
         this.$el.find('.send_force_done').click(function () {
             var line = self.pos.get_order().get_paymentline($(this).data('cid'));
-            var payment_terminal = line.payment_method.payment_terminal;
             line.set_payment_status('done');
             self.render_paymentlines();
         });
@@ -2346,7 +2342,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                     self.send_receipt_to_customer(false);
                     self.gui.show_screen('receipt');
                 });
-                ordered.catch(function(value) {
+                ordered.catch(function() {
                     order.set_to_email(false);
                     self.gui.show_screen('receipt');
                     self.gui.show_popup('error',{

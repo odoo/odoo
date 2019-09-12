@@ -14,7 +14,6 @@ var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 
 
 var _t = core._t;
-var _lt = core._lt;
 var QWeb = core.qweb;
 
 /* -------- The Order Selector -------- */
@@ -44,10 +43,10 @@ var OrderSelectorWidget = PosBaseWidget.extend({
             this.pos.set_order(order);
         }
     },
-    neworder_click_handler: function(event, $el) {
+    neworder_click_handler: function() {
         this.pos.add_new_order();
     },
-    deleteorder_click_handler: function(event, $el) {
+    deleteorder_click_handler: function() {
         var self  = this;
         var order = this.pos.get_order(); 
         if (!order) {
@@ -168,7 +167,7 @@ var DebugWidget = PosBaseWidget.extend({
             }
         }
 
-        this.dragend_handler = function(event){
+        this.dragend_handler = function(){
             self.dragging = false;
         };
         this.dragstart_handler = function(event){

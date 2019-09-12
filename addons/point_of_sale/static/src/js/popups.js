@@ -172,12 +172,11 @@ gui.define_popup({name:'confirm', widget: ConfirmPopupWidget});
 var SelectionPopupWidget = PopupWidget.extend({
     template: 'SelectionPopupWidget',
     show: function(options){
-        var self = this;
         options = options || {};
         this._super(options);
 
         this.list = options.list || [];
-        this.is_selected = options.is_selected || function (item) { return false; };
+        this.is_selected = options.is_selected || function () { return false; };
         this.renderElement();
     },
     click_item : function(event) {
@@ -326,7 +325,7 @@ var PasswordPopupWidget = NumberPopupWidget.extend({
         this._super();
         this.$('.popup').addClass('popup-password');
     },
-    click_numpad: function(event){
+    click_numpad: function(){
         this._super.apply(this, arguments);
         var $value = this.$('.value');
         $value.text($value.text().replace(/./g, '•'));

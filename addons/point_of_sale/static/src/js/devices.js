@@ -40,7 +40,7 @@ var JobQueue = function(){
 
             var always = function () {
                 // we run the next job after the scheduled_end_time, even if it finishes before
-                return new Promise(function (resolve, reject) {
+                return new Promise(function (resolve) {
                     setTimeout(
                         resolve,
                         Math.max(0, scheduled_end_time - (new Date()).getTime())
@@ -391,7 +391,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
             threads.push(thread());
         }
 
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             Promise.all(threads).then(function(results){
                 var urls = [];
                 for(var i = 0; i < results.length; i++){
@@ -428,7 +428,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         if (self.use_debug_weight) {
             return Promise.resolve({weight:this.debug_weight, unit:'Kg', info:'ok'});
         }
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             self.message('scale_read',{})
             .then(function (weight) {
                 resolve(weight);

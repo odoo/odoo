@@ -48,7 +48,7 @@ var PrinterMixin = {
         var self = this;
         $('.pos-receipts').html(receipt);
         $('.pos-receipts>.pos-receipt').addClass('pos-receipt-print');
-        var promise = new Promise(function (resolve, reject) {
+        var promise = new Promise(function (resolve) {
             html2canvas($('.pos-receipt-print')[0], {
                 background :'#FFFFFF',
                 ignoreElements: function (node) {

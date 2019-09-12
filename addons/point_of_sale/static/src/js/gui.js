@@ -297,7 +297,6 @@ var Gui = core.Class.extend({
     },
 
     _close: function() {
-        var self = this;
         this.chrome.loading_show();
         this.chrome.loading_message(_t('Closing ...'));
 

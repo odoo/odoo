@@ -120,7 +120,7 @@ exports.PosModel = Backbone.Model.extend({
 
     connect_to_proxy: function () {
         var self = this;
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             self.barcode_reader.disconnect_from_proxy();
             self.chrome.loading_message(_t('Connecting to the IoT Box'), 0);
             self.chrome.loading_skip(function () {
@@ -173,7 +173,7 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'res.company',
         fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'state_id', 'tax_calculation_rounding_method'],
-        ids:    function(self){ return [session.user_context.allowed_company_ids[0]]; },
+        ids:    function(){ return [session.user_context.allowed_company_ids[0]]; },
         loaded: function(self,companies){ self.company = companies[0]; },
     },{
         model:  'decimal.precision',
@@ -188,7 +188,7 @@ exports.PosModel = Backbone.Model.extend({
         model:  'uom.uom',
         fields: [],
         domain: null,
-        context: function(self){ return { active_test: false }; },
+        context: function(){ return { active_test: false }; },
         loaded: function(self,units){
             self.units = units;
             _.each(units, function(unit){
@@ -295,7 +295,7 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'res.users',
         fields: ['name','company_id', 'id', 'groups_id'],
-        ids:    function(self){ return [session.uid]; },
+        ids:    function(){ return [session.uid]; },
         loaded: function(self,users){
           var role = 'cashier';
           users[0].groups_id.some(function(group_id) {
@@ -391,7 +391,7 @@ exports.PosModel = Backbone.Model.extend({
             }
             return domain;
         },
-        context: function(self){ return { display_default_code: false }; },
+        context: function(){ return { display_default_code: false }; },
         loaded: function(self, products){
             var using_company_currency = self.config.currency_id[0] === self.company.currency_id[0];
             var conversion_rate = self.currency.rate / self.company_currency.rate;
@@ -467,7 +467,7 @@ exports.PosModel = Backbone.Model.extend({
     },  {
         label: 'fonts',
         loaded: function(){
-            return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve) {
                 // Waiting for fonts to be loaded to prevent receipt printing
                 // from printing empty receipt while loading Inconsolata
                 // ( The font used for the receipt )
@@ -628,7 +628,7 @@ exports.PosModel = Backbone.Model.extend({
                 } else {
                     reject();
                 }
-            }, function (type, err) { reject(); });
+            }, function () { reject(); });
         });
     },
 
@@ -750,7 +750,7 @@ exports.PosModel = Backbone.Model.extend({
     },
 
     _convert_product_img_to_base64: function (product, url) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             var img = new Image();
 
             img.onload = function () {
@@ -909,7 +909,7 @@ exports.PosModel = Backbone.Model.extend({
                                 }}).then(function () {
                                     resolveInvoiced();
                                     resolveDone();
-                                }).guardedCatch(function (error) {
+                                }).guardedCatch(function () {
                                     rejectInvoiced({code:401, message:'Backend Invoice', data:{order: order}});
                                     rejectDone();
                                 });
@@ -1045,7 +1045,7 @@ exports.PosModel = Backbone.Model.extend({
                 timeout: timeout,
                 shadow: true,
             })
-            .then(function (ids) {
+            .then(function () {
                 self.db.set_ids_removed_from_server(server_ids);
                 return server_ids;
             }).catch(function (reason){
@@ -2034,8 +2034,7 @@ exports.Packlotline = Backbone.Model.extend({
     },
 
     add: function(){
-        var order_line = this.order_line,
-            index = this.collection.indexOf(this);
+        var index = this.collection.indexOf(this);
         var new_lot_model = new exports.Packlotline({}, {'order_line': this.order_line});
         this.collection.add(new_lot_model, {at: index + 1});
         return new_lot_model;
