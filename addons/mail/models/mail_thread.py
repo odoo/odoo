@@ -2420,7 +2420,9 @@ class MailThread(models.AbstractModel):
         for pid, sids, template in res:
             new_partners.setdefault(pid, sids)
             if template:
-                notify_data.setdefault(template, list()).append(pid)
+                partner = self.env['res.partner'].browse(pid, self._prefetch)
+                lang = partner.lang if partner else None
+                notify_data.setdefault((template, lang), list()).append(pid)
 
         self.env['mail.followers']._insert_followers(
             self._name, self.ids,
@@ -2429,7 +2431,7 @@ class MailThread(models.AbstractModel):
             check_existing=True, existing_policy='skip')
 
         # notify people from auto subscription, for example like assignation
-        for template, pids in notify_data.items():
-            self._message_auto_subscribe_notify(pids, template)
+        for (template, lang), pids in notify_data.items():
+            self.with_context(lang=lang)._message_auto_subscribe_notify(pids, template)
 
         return True
