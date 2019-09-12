@@ -46,12 +46,12 @@ var ActivityModel = BasicModel.extend({
      * @param {Array[]} [params.domain]
      */
     reload: function (handle, params) {
-        if (params && 'domain' in params) {
+        if (params && params.domain) {
             this.originalDomain = _.extend([], params.domain);
             params.domain.push(['activity_ids', '!=', false]);
             this.domain = params.domain;
         }
-        if (params && 'groupBy' in params) {
+        if (params && params.groupBy) {
             params.groupBy = [];
         }
         var def = this._super.apply(this, arguments);
