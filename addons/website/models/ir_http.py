@@ -11,6 +11,8 @@ import werkzeug
 import werkzeug.routing
 import werkzeug.utils
 
+from functools import partial
+
 import odoo
 from odoo import api, models, registry
 from odoo import SUPERUSER_ID
@@ -62,6 +64,58 @@ class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
     @classmethod
+    def routing_map(cls, key=None):
+        key = key or (request and request.website_routing)
+        return super(Http, cls).routing_map(key=key)
+
+    @classmethod
+    def clear_caches(cls):
+        super(Http, cls)._clear_routing_map()
+        return super(Http, cls).clear_caches()
+
+    @classmethod
+    def _slug_matching(cls, adapter, endpoint, **kw):
+        for arg in kw:
+            if isinstance(kw[arg], models.BaseModel):
+                kw[arg] = kw[arg].with_user(request.uid)
+        qs = request.httprequest.query_string.decode('utf-8')
+        return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
+
+    @classmethod
+    def _match(cls, path_info, key=None):
+        key = key or (request and request.website_routing)
+        return super(Http, cls)._match(path_info, key=key)
+
+    @classmethod
+    def _generate_routing_rules(cls, modules, converters):
+        website_id = request.website_routing
+        logger.debug("_generate_routing_rules for website: %s", website_id)
+        domain = [('redirect_type', 'in', ('rewrite', 'not_found')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
+
+        rewrites = dict([(x.url_from, x) for x in request.env['website.rewrite'].sudo().search(domain)])
+        cls._rewrite_len[website_id] = len(rewrites)
+
+        for url, endpoint, routing in super(Http, cls)._generate_routing_rules(modules, converters):
+            routing = dict(routing)
+            if url in rewrites:
+                rewrite = rewrites[url]
+                url_to = rewrite.url_to
+                if rewrite.redirect_type == 'rewrite':
+                    logger.debug('Add rule %s for %s' % (url_to, website_id))
+                    yield url_to, endpoint, routing  # yield new url
+
+                    if url != url_to:
+                        logger.debug('Redirect from %s to %s for website %s' % (url, url_to, website_id))
+                        _slug_matching = partial(cls._slug_matching, endpoint=endpoint)
+                        routing['redirect_to'] = _slug_matching
+                        yield url, endpoint, routing  # yield original redirected to new url
+                elif rewrite.redirect_type == 'not_found':
+                    logger.debug('Return 404 for %s for website %s' % (url, website_id))
+                    continue
+            else:
+                yield url, endpoint, routing
+
+    @classmethod
     def _get_converters(cls):
         """ Get the converters list for custom url pattern werkzeug need to
             match Rule. This override adds the website ones.
@@ -111,7 +165,11 @@ class Http(models.AbstractModel):
         handling the original request, in which we should create the visitor. We ignore every other rerouting requests.
         """
         is_rerouting = hasattr(request, 'routing_iteration')
+
+        request.website_routing = request.env['website'].get_current_website().id
+
         response = super(Http, cls)._dispatch()
+
         if not is_rerouting:
             cls._register_website_track(response)
         return response
@@ -186,8 +244,12 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_redirect(cls):
         req_page = request.httprequest.path
-        domain = [('url_from', '=', req_page)] + request.website.website_domain()
-        return request.env['website.redirect'].search(domain, limit=1)
+        domain = [
+            ('redirect_type', 'in', ('redirect_301', 'redirect_302')),
+            ('url_from', '=', req_page)
+        ]
+        domain += request.website.website_domain()
+        return request.env['website.rewrite'].sudo().search(domain, limit=1)
 
     @classmethod
     def _serve_fallback(cls, exception):
