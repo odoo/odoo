@@ -13,7 +13,7 @@ class TestUi(tests.HttpCase):
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)]
         })
-        self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo'))
+        self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo').ids)
 
         self.phantom_js(
             '/slides',
@@ -29,7 +29,7 @@ class TestUi(tests.HttpCase):
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_publisher').id)]
         })
-        self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo'))
+        self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo').ids)
 
         self.phantom_js(
             '/slides',
@@ -42,7 +42,7 @@ class TestUi(tests.HttpCase):
         # group_website_designer
         user_portal = self.env.ref('base.demo_user0')
         user_portal.flush()
-        self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo_portal'))
+        self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo_portal').ids)
 
         self.phantom_js(
             '/slides',
@@ -61,7 +61,7 @@ class TestUiYoutube(tests.HttpCase):
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)]
         })
-        self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo'))
+        self.env.ref('website_slides.slide_channel_demo_3_furn0')._remove_membership(self.env.ref('base.partner_demo').ids)
 
         self.phantom_js(
             '/slides',
@@ -77,7 +77,6 @@ class TestUiYoutube(tests.HttpCase):
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_designer').id)]
         })
-        self.env.ref('website_slides.slide_channel_demo_0_gard_0')._remove_membership(self.env.ref('base.partner_demo'))
 
         self.phantom_js(
             '/slides',
