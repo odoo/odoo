@@ -22,7 +22,7 @@ Austrian charts of accounts (Einheitskontenrahmen 2010).
 
     * Defines the following chart of account templates:
         * Austrian General Chart of accounts 2010
-    * Defines templates for sale and purchase VAT
+    * Defines templates for VAT on sales and purchases
     * Defines tax templates
     * Defines fiscal positions for Austrian fiscal legislation
     * Defines tax reports U1/U30
