@@ -836,7 +836,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
 
         self.assertRecordValues(invoice_copy, [{'name': 'INV/2019/0043'}])
 
-    def test_out_invoice_create_draft_refund(self):
+    def test_out_invoice_create_refund(self):
         self.invoice.post()
 
         move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
@@ -870,12 +870,14 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': self.invoice.name,
+                'name': '',
                 'debit': 0.0,
                 'credit': 1410.0,
+                'date_maturity': move_reversal.date,
             },
         ], {
             **self.move_vals,
+            'name': '/',
             'date': move_reversal.date,
             'state': 'draft',
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
@@ -913,12 +915,135 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': self.invoice.name,
+                'name': '',
                 'debit': 0.0,
                 'credit': 1410.0,
+                'date_maturity': move_reversal.date,
             },
         ], {
             **self.move_vals,
+            'date': move_reversal.date,
+            'state': 'posted',
+            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
+            'invoice_payment_state': 'paid',
+        })
+
+    def test_out_invoice_create_refund_multi_currency(self):
+        ''' Test the account.move.reversal takes care about the currency rates when setting
+        a custom reversal date.
+        '''
+        move_form = Form(self.invoice)
+        move_form.date = '2016-01-01'
+        move_form.currency_id = self.currency_data['currency']
+        move_form.save()
+
+        self.invoice.post()
+
+        # The currency rate changed from 1/3 to 1/2.
+        move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
+            'date': fields.Date.from_string('2017-01-01'),
+            'reason': 'no reason',
+            'refund_method': 'refund',
+        })
+        reversal = move_reversal.reverse_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+
+        self.assertInvoiceValues(reverse_move, [
+            {
+                **self.product_line_vals_1,
+                'amount_currency': 1000.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 500.0,
+                'credit': 0.0,
+            },
+            {
+                **self.product_line_vals_2,
+                'amount_currency': 200.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 100.0,
+                'credit': 0.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'amount_currency': 180.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 90.0,
+                'credit': 0.0,
+            },
+            {
+                **self.tax_line_vals_2,
+                'amount_currency': 30.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 15.0,
+                'credit': 0.0,
+            },
+            {
+                **self.term_line_vals_1,
+                'name': '',
+                'amount_currency': -1410.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 0.0,
+                'credit': 705.0,
+                'date_maturity': move_reversal.date,
+            },
+        ], {
+            **self.move_vals,
+            'currency_id': self.currency_data['currency'].id,
+            'date': move_reversal.date,
+            'state': 'draft',
+            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
+            'invoice_payment_state': 'not_paid',
+        })
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_ids=self.invoice.ids).create({
+            'date': fields.Date.from_string('2017-01-01'),
+            'reason': 'no reason',
+            'refund_method': 'cancel',
+        })
+        reversal = move_reversal.reverse_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+
+        self.assertInvoiceValues(reverse_move, [
+            {
+                **self.product_line_vals_1,
+                'amount_currency': 1000.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 500.0,
+                'credit': 0.0,
+            },
+            {
+                **self.product_line_vals_2,
+                'amount_currency': 200.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 100.0,
+                'credit': 0.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'amount_currency': 180.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 90.0,
+                'credit': 0.0,
+            },
+            {
+                **self.tax_line_vals_2,
+                'amount_currency': 30.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 15.0,
+                'credit': 0.0,
+            },
+            {
+                **self.term_line_vals_1,
+                'name': '',
+                'amount_currency': -1410.0,
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 0.0,
+                'credit': 705.0,
+                'date_maturity': move_reversal.date,
+            },
+        ], {
+            **self.move_vals,
+            'currency_id': self.currency_data['currency'].id,
             'date': move_reversal.date,
             'state': 'posted',
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),

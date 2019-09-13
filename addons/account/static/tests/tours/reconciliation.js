@@ -63,19 +63,19 @@ Tour.register('bank_statement_reconciliation', {
         },
         {
             content: "use filter",
-            trigger: '.o_reconciliation_line:nth-child(2) .match .match_controls .filter',
+            trigger: '.o_reconciliation_line:nth-child(1) .match .match_controls .filter',
             run: 'text 4610'
         },
         {
             content: "select a line linked to Deco Addict ",
-            extra_trigger: ".o_reconciliation_line:nth-child(2) .match .line_info_button:last[data-content*='4,610']",
-            trigger: ".o_reconciliation_line:nth-child(2) .match .line_info_button[data-content*='Deco Addict']"
+            extra_trigger: ".o_reconciliation_line:nth-child(1) .match .line_info_button:last[data-content*='4,610']",
+            trigger: ".o_reconciliation_line:nth-child(1) .match .line_info_button[data-content*='Deco Addict']"
         },
         {
             content: "deselect the line",
-            trigger: '.o_reconciliation_line:nth-child(2) .accounting_view tbody .cell_label:first',
+            trigger: '.o_reconciliation_line:nth-child(1) .accounting_view tbody .cell_label:first',
             run: function() {
-                    $('.o_reconciliation_line:nth-child(2) .accounting_view tbody .cell_label:first').trigger('click');
+                    $('.o_reconciliation_line:nth-child(1) .accounting_view tbody .cell_label:first').trigger('click');
             }
         },
         {

@@ -622,6 +622,7 @@ var ListController = BasicController.extend({
     _onEditGroupClicked: function (ev) {
         ev.stopPropagation();
         this.do_action({
+            context: {create: false},
             type: 'ir.actions.act_window',
             views: [[false, 'form']],
             res_model: ev.data.record.model,
@@ -704,6 +705,7 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onToggleGroup: function (ev) {
+        ev.stopPropagation();
         var self = this;
         this.model
             .toggleGroup(ev.data.group.id)

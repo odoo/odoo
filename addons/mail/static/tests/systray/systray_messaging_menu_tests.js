@@ -427,6 +427,88 @@ QUnit.test('update messaging preview on receiving a new message in channel previ
     messagingMenu.destroy();
 });
 
+QUnit.test('new message of type "notification" are not considered as unread messages', async function (assert) {
+    assert.expect(8);
+
+    const messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        data: this.data,
+        services: this.services,
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    // open messaging menu
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(
+        messagingMenu,
+        '.o_mail_preview',
+        "should display a single channel preview");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_name')
+            .text()
+            .trim(),
+        "general",
+        "should display channel preview of 'general' channel");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_counter')
+            .text()
+            .trim(),
+        "",
+        "should have unread counter of 0 for 'general' channel (no unread messages)");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_last_message_preview')
+            .text()
+            .replace(/\s/g, ""),
+        "Me:test",
+        "should display author name and inline body of currently last message in the channel");
+    // close messaging menu
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+
+    // simulate receiving a new message on the channel 'general' (id 1)
+    // of type 'notification'
+    const data = {
+        id: 100,
+        author_id: [42, "Someone"],
+        body: "<p>Left #general</p>",
+        channel_ids: [1],
+        message_type: 'notification',
+    };
+    const notification = [[false, 'mail.channel', 1], data];
+    messagingMenu.call('bus_service', 'trigger', 'notification', [notification]);
+    await testUtils.nextTick();
+    // open messaging menu
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(
+        messagingMenu,
+        '.o_mail_preview',
+        "should still display a single channel preview");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_name')
+            .text()
+            .trim(),
+        "general",
+        "should still display channel preview of 'general' channel");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_counter')
+            .text()
+            .trim(),
+        "",
+        "should still have unread counter of 0 for 'general' channel (no unread messages)");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_last_message_preview')
+            .text()
+            .replace(/\s/g, ""),
+        "Someone:Left#general",
+        "should display author name and inline body of notification message (last message of channel)");
+
+    messagingMenu.destroy();
+});
+
 QUnit.test('preview of inbox message not linked to document + mark as read', async function (assert) {
     assert.expect(17);
 
