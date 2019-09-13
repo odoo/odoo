@@ -7,7 +7,7 @@ from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
-from odoo.tools.safe_eval import safe_eval, const_eval
+from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
 
 
 class TestSafeEval(BaseCase):
@@ -15,6 +15,12 @@ class TestSafeEval(BaseCase):
         # NB: True and False are names in Python 2 not consts
         expected = (1, {"a": {2.5}}, [None, u"foo"])
         actual = const_eval('(1, {"a": {2.5}}, [None, u"foo"])')
+        self.assertEqual(actual, expected)
+
+    def test_expr(self):
+        # NB: True and False are names in Python 2 not consts
+        expected = 3 * 4
+        actual = expr_eval('3 * 4')
         self.assertEqual(actual, expected)
 
     def test_01_safe_eval(self):
@@ -41,9 +47,18 @@ class TestSafeEval(BaseCase):
 
     @mute_logger('odoo.tools.safe_eval')
     def test_05_safe_eval_forbiddon(self):
-        """ Try forbidden expressions in safe_eval to verify they are not allowed (open) """
+        """ Try forbidden expressions in safe_eval to verify they are not allowed"""
+        # no forbidden builtin expression
         with self.assertRaises(ValueError):
             safe_eval('open("/etc/passwd","r")')
+
+        # no forbidden opcodes
+        with self.assertRaises(ValueError):
+            safe_eval("import odoo", mode="exec")
+
+        # no dunder
+        with self.assertRaises(NameError):
+            safe_eval("self.__name__", {'self': self}, mode="exec")
 
 
 # samples use effective TLDs from the Mozilla public suffix
