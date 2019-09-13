@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="confirm_expiry_view" model="ir.ui.view">
+        <field name="name">Confirm</field>
+        <field name="model">expiry.picking.confirmation</field>
+        <field name="arch" type="xml">
+            <form string="Confirmation">
+                <p>
+                    <field name="description"/>
+                </p>
+                <field name="show_lots" invisible="1"/>
+                <field name="lot_ids" attrs="{'invisible': [('show_lots', '=', False)]}">
+                    <tree string="Expired Lot(s)">
+                        <field name="product_id"/>
+                        <field name="name"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="process"
+                        string="Confirm"
+                        type="object"
+                        class="btn-primary"/>
+                    <button name="process_no_expired"
+                        string="Proceed except for expired one"
+                        type="object"
+                        class="btn-secondary"/>
+                    <button string="Discard"
+                        class="btn-secondary"
+                        special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
