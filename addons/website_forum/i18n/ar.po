@@ -1,32 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_forum
+# 	* website_forum
 # 
 # Translators:
-# Ghaith Gammar <g.gammar@saharaifs.net>, 2018
-# Osoul <baruni@osoul.ly>, 2018
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2018
-# amal ahmed <amalalhashemy88@hotmail.com>, 2018
-# Zuhair Hammadi <zuhair12@gmail.com>, 2018
-# Waleed Mohsen <mohsen.waleed@gmail.com>, 2018
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
-# Sadig Adam <sadig41@gmail.com>, 2018
-# Akram Alfusayal <akram_ma@hotmail.com>, 2018
-# amrnegm <amrnegm.01@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2018
-# Shaima Safar <shaima.safar@open-inside.com>, 2018
-# Yihya Hugirat <hugirat@gmail.com>, 2018
-# Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
-# hoxhe Aits <hoxhe0@gmail.com>, 2018
+# nle_odoo, 2019
+# Yihya Hugirat <hugirat@gmail.com>, 2019
+# Akram Alfusayal <akram_ma@hotmail.com>, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Sadig Adam <sadig41@gmail.com>, 2019
+# amrnegm <amrnegm.01@gmail.com>, 2019
+# Martin Trigaux, 2019
+# hoxhe Aits <hoxhe0@gmail.com>, 2019
+# Osoul <baruni@osoul.ly>, 2019
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2019
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
+# amal ahmed <amalalhashemy88@hotmail.com>, 2019
+# Zuhair Hammadi <zuhair12@gmail.com>, 2019
+# Shaima Safar <shaima.safar@open-inside.com>, 2019
+# Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: hoxhe Aits <hoxhe0@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,77 +34,170 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: website_forum
-#. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:24
+#: code:addons/website_forum/models/forum.py:0
 #, python-format
-msgid ""
-" karma is required to perform this action. You can earn karma by having your"
-" answers upvoted by the community."
+msgid "%d karma required to accept or refuse an answer."
 msgstr ""
-"تحتاج إلى نقاط الموثوقية لتنفيذ هذا الإجراء. يمكنك اكتساب نقاط الموثوقية عبر"
-" تصويت الآخرين إيجاباً على إجابابتك."
 
 #. module: website_forum
-#: model:mail.template,subject:website_forum.validation_email
-msgid "${object.company_id.name} Forums validation"
-msgstr "${object.company_id.name} مراجعة المجتمع"
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to answer a question."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to close or reopen a post."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to comment."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to convert a comment to an answer."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to convert an answer to a comment."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to convert your comment to an answer."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to create a new Tag."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to create a new question."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to delete or reactivate a post."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to downvote."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to edit a post."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to flag a post."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to mark a post as offensive."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to post an image or link."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to refuse a post."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to retag."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to unlink a comment."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to unlink a post."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to upvote."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to validate a post."
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
-msgid ""
-"&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\" title=\"Close\" role=\"img\" "
-"aria-label=\"Close\"/>&amp;nbsp;&amp;nbsp;"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "&amp;times;"
-msgstr "&amp;times;"
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
-msgstr "(اقتبس النص أعلاه بتصرف من الأسئلة الشائعة في موقع Stack Overflow.)"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
-msgid ""
-"(Un)archiving a forum automatically (un)archives its posts. Do you want to "
-"proceed?"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
-msgid ""
-"(Un)archiving a post automatically (un)archives its answers. Do you want to "
-"proceed?"
-msgstr ""
+msgstr "(اقتبس النص أعلاه بتصرف من الأسئلة الشائعة في موقع Stackoverflow.)"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "(votes - 1) **"
-msgstr "(التصويتات - 1) ×"
+msgstr "(التصويتات - 1) **"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "/ (days + 2) **"
-msgstr "÷ (الأيام + 2) ×"
+msgstr "/ (الأيام + 2) **"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid "45% of questions shared"
-msgstr "45% من الأسئلة يتم مشاركتها"
+msgstr "تمت مشاركة 45% من الأسئلة"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:30
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid ""
 "65% more chance to get an\n"
 "        answer"
-msgstr "65% فرصة أعلى في الحصول على إجابة"
+msgstr ""
+"فرصة أعلى بنسبة 65% للحصول على\n"
+"        إجابة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -127,15 +219,8 @@ msgid "<b> [Offensive]</b>"
 msgstr "<b> [مسيء]</b>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.users
-msgid "<b> badges:</b>"
-msgstr "<b> شارات:</b>"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid ""
-"<b>Answers should not add or expand questions</b>. Instead\n"
-"    either edit the question or add a comment."
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "<b>About This Community</b>"
 msgstr ""
 
 #. module: website_forum
@@ -144,12 +229,14 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead either edit the "
 "question or add a question comment."
 msgstr ""
+"<b>لا ينبغي أن تضيف الإجابات أسئلة جديدة أو تزيد من غموض السؤال</b>.بدلًا من"
+" ذلك، يمكنك تحرير السؤال أو إضافة تعليق."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Answers should not comment other answers</b>. Instead\n"
-"    add a comment on the other answers."
+"<b>Answers should not add or expand questions</b>. Insteadeither edit the "
+"question or add a comment."
 msgstr ""
 
 #. module: website_forum
@@ -158,14 +245,16 @@ msgid ""
 "<b>Answers should not comment other answers</b>. Instead add a comment on "
 "the other answers."
 msgstr ""
+"<b>لا ينبغي أن تكون الإجابات تعليقات على إجابات أخرى</b>.بدلًا من ذلك، يمكنك"
+" إضافة تعليق على الإجابات الأخرى."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Answers should not start debates</b>\n"
-"    This community Q&amp;A is not a discussion group. Please avoid holding debates in\n"
-"    your answers as they tend to dilute the essence of questions and answers. For\n"
-"    brief discussions please use commenting facility."
+"<b>Answers should not start debates</b> This community Q&amp;A is not a "
+"discussion group. Please avoid holding debates in your answers as they tend "
+"to dilute the essence of questions and answers. For brief discussions please"
+" use commenting facility."
 msgstr ""
 
 #. module: website_forum
@@ -176,25 +265,17 @@ msgid ""
 "to include links to other questions or answers providing relevant additional"
 " information."
 msgstr ""
+"<b>لا ينبغي أن تكون الإجابات مجرد إشارة لأسئلة أخرى</b>. بدلًا من ذلك، أضف "
+"تعليقًا على السؤال للإشارة إلى \"احتمالية كون السؤال مكررًا...\". لكن يمكنك "
+"إضافة روابط لأسئلة أو إجابات أخرى لتوفير معلومات إضافية ذات صلة."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Answers shouldn't just point to other questions</b>.\n"
-"    Instead add a comment indicating <i>\"Possible duplicate\n"
-"    of...\"</i>. However, it's fine to include links to other\n"
-"    questions or answers providing relevant additional\n"
-"    information."
-msgstr ""
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid ""
-"<b>Answers shouldn't just provide a\n"
-"    link a solution</b>. Instead provide the solution\n"
-"    description text in your answer, even if it's just a\n"
-"    copy/paste. Links are welcome, but should be complementary to\n"
-"    answer, referring sources or additional reading."
+"<b>Answers shouldn't just point to other questions</b>.Instead add a comment"
+" indicating <i>\"Possible duplicate of...\"</i>. However, it's fine to "
+"include links to other questions or answers providing relevant additional "
+"information."
 msgstr ""
 
 #. module: website_forum
@@ -205,30 +286,33 @@ msgid ""
 "Links are welcome, but should be complementary to answer, referring sources "
 "or additional reading."
 msgstr ""
+"<b>لا ينبغي أن تكون الإجابات مجرد روابط لصفحات ويب تحتوي على حلول</b>. بدلًا"
+" من ذلك، اكتب نص الحل في إجابتك، حتى لو بمجرد النسخ واللصق. يمكنك استخدام "
+"الروابط، لكن ينبغي أن تكون مكملة للإجابة، لذكر المصادر أو معلومات إضافية."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Before you ask - please make sure to search for a similar question.</b> You can\n"
-"    search questions by their title or tags.  It’s also OK to\n"
-"    answer your own question."
+"<b>Before you ask - please make sure to search for a similar question.</b> "
+"You can search questions by their title or tags. It’s also OK to answer your"
+" own question."
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "<b>No badge yet!</b><br/>"
-msgstr "<b>لا شارة بعد!</b><br/>"
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "<b>Keep Informed</b>"
+msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
-msgid "<b>No vote given by you yet!</b>"
-msgstr "<b> لم يتم التصويت لصالحك حتى الآن!</b>"
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "<b>Moderation Tools</b>"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Please avoid asking questions that are too subjective\n"
-"    and argumentative</b> or not relevant to this community."
+"<b>Please avoid asking questions that are too subjective and "
+"argumentative</b> or not relevant to this community."
 msgstr ""
 
 #. module: website_forum
@@ -239,11 +323,43 @@ msgid ""
 "        - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
 "        - it really helps to select the best questions and answers!"
 msgstr ""
+"<b>حاول أن تكون الإجابة موجزة.</b> إذا أردت التعليق على السؤال أو الإجابة،\n"
+"        <b>استخدم أداة التعليق</b>. تذكر ان بإمكانك دائمًا <b>مراجعة إجاباتك</b>\n"
+"        - لا حاجة لإجابة نفس السؤال مرتين. وفضلًا، <b>لا تنسى التصويت</b>\n"
+"        - فهو يساعد على تحديد أفضل الأسئلة والإجابات!"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
-msgid "<b>Share</b> Something Awesome."
-msgstr "<b>ناقش</b> موضوعاً شيقاً وهاماً."
+#: model_terms:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>What kinds of questions can I ask here?</b> <i class=\"fa fa-caret-down "
+"float-right\"></i>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>What should I avoid in my answers?</b> <i class=\"fa fa-caret-down float-"
+"right\"></i>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>What should I avoid in my questions?</b> <i class=\"fa fa-caret-down "
+"float-right\"></i>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq
+msgid ""
+"<b>Why can other people edit my questions/answers?</b> <i class=\"fa fa-"
+"caret-down float-right\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "<b>Writer</b>"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -251,29 +367,100 @@ msgid "<b>[Answer]</b>"
 msgstr "<b>[إجابة]</b>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "<i class=\"fa fa-arrow-right\"/> Back to"
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<b>|</b>\n"
+"                    <span class=\"fa fa-trophy badge-gold ml-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "<i class=\"fa fa-arrow-right\"/> Read Guidelines"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\" fa fa-comment-o\"/> <b>Comment</b>"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "<i class=\"fa fa-arrow-right\"/>Edit Your Profile"
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-bug\"/> Mark as spam"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-msgid "<i class=\"text-muted\"> awarded users</i>"
-msgstr "المستخدمين الممنوحة لهم</i>"
+#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+msgid "<i class=\"fa fa-caret-left mr-2\"/>back to post"
+msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "<i class=\"text-muted\">awarded users</i>"
-msgstr "<i class=\"text-muted\">المستخدمين الممنوحة لهم</i>"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"<i class=\"fa fa-check-circle text-success\"/> <b class=\"text-"
+"success\">Resolved</b>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid ""
+"<i class=\"fa fa-cog\" role=\"img\" aria-label=\"Dropdown menu\" "
+"title=\"Dropdown menu\"/>"
+msgstr ""
+"<i class=\"fa fa-cog\" role=\"img\" aria-label=\"القائمة المنسدلة\" "
+"title=\"القائمة المنسدلة\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid ""
+"<i class=\"fa fa-flag ml-4 mr4\"/>\n"
+"                                    Flagged"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid ""
+"<i class=\"fa fa-flag ml-4 mr4\"/>\n"
+"                        Flagged"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-flag\"/> Country"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\"fa fa-reply\"/> <b>Reply</b>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid "<i class=\"fa fa-share-alt text-primary\"/> Share"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\"fa fa-share-alt\"/> <b>Share</b>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid ""
+"<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-"
+"label=\"Negative votes\" title=\"Negative votes\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid ""
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
+" votes\" title=\"Positive votes\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-user\"/> User"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "<small class=\"font-weight-bold\">Votes</small>"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -287,13 +474,27 @@ msgstr ""
 "</small>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "<small class=\"text-muted\">profile</small>"
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-"
+"label=\"Bronze badge\" title=\"Bronze badge\"/>"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "<span class=\"sr-only\">Select Post</span>"
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-"
+"label=\"Silver badge\" title=\"Silver badge\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "<span class=\"font-weight-bold\">No answer posted yet.</span>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "<span class=\"font-weight-bold\">No question posted yet.</span>"
 msgstr ""
 
 #. module: website_forum
@@ -303,146 +504,39 @@ msgid ""
 msgstr "<span class=\"text-muted\">(يسمح بإجابة واحدة فقط لكل سؤال)</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "<span class=\"text-muted\">bio</span>"
-msgstr "<span class=\"text-muted\">السيرة</span>"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted\">or</span>"
 msgstr "<span class=\"text-muted\">أو</span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "<span class=\"text-muted\">stats</span>"
-msgstr "<span class=\"text-muted\">الإحصائيات</span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<span> on </span>"
-msgstr "<span> في </span>"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid ""
-"<span> • </span>\n"
-"                Flagged"
+"<span title=\"Question has accepted answer\" role=\"img\" aria-"
+"label=\"Question has accepted answer\"><i class=\"fa fa-check-circle text-"
+"success bg-white\"/></span>"
 msgstr ""
-"<span> • </span>\n"
-"                مُبلغ عنه"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<span>&amp;times;</span>"
+msgstr "<span>أوقات</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<span>By </span>"
 msgstr "<span>بواسطة </span>"
 
 #. module: website_forum
-#: model:mail.template,body_html:website_forum.validation_email
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\">\n"
-"                        <span style=\"font-size: 10px;\">Your Forum</span><br/>\n"
-"                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                            ${object.company_id.name} Forum validation\n"
-"                        </span>\n"
-"                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\">\n"
-"                        <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- CONTENT -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                            Hello ${object.name},<br/><br/>\n"
-"                            You have been invited to validate your email in order to get access to \"${object.company_id.name}\" Q/A Forums.\n"
-"                            To validate your email, please click on the following link:\n"
-"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                                <a href=\"${ctx.get('token_url')}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                                    Validate my account\n"
-"                                </a>\n"
-"                            </div>\n"
-"                            Thanks for your participation!\n"
-"                        </p>\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\" align=\"left\">\n"
-"                         ${user.company_id.name}\n"
-"                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
-"                        ${user.company_id.phone}\n"
-"                        % if user.company_id.email:\n"
-"                            | <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                                ${user.company_id.email}\n"
-"                            </a>\n"
-"                        % endif\n"
-"                        % if user.company_id.website:\n"
-"                            | <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                                ${user.company_id.website}\n"
-"                            </a>\n"
-"                        % endif\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
-"        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"            Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" style=\"color: #875A7B;\">Odoo</a>\n"
-"        </td></tr>\n"
-"    </table>\n"
-"</td></tr>\n"
-"</table>\n"
-"            "
-msgstr ""
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "A new answer on"
-msgstr ""
+msgstr "إجابة جديدة على"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "A new question"
-msgstr ""
+msgstr "سؤال جديد"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -451,11 +545,9 @@ msgid ""
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question. (Hover the mouse to follow/unfollow tag(s))"
 msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "About This Community"
-msgstr "حول هذا المجتمع"
+"الوسم هو بطاقة عنوان تميز سؤالك عن الأسئلة الأخرى المشابهة.\n"
+"            استخدام الوسوم الصحيحة يسهل على المستخدمين الآخرين\n"
+"            إيجاد سؤالك والإجابة عليه. (حرك المؤشر لمتابعة الوسوم أو إلغاء متابعتها)"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -473,6 +565,11 @@ msgid "Accept an answer to all questions"
 msgstr "قبول إجابة لجميع الأسئلة"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Accept this answer as the best"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Accepted Answer"
 msgstr "الإجابة المقبولة"
@@ -483,35 +580,45 @@ msgid "Accepting an answer"
 msgstr "قبول إجابة"
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Access Denied"
+msgstr "الوصول ممنوع"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_needaction
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_needaction
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_needaction
 msgid "Action Needed"
-msgstr "الإجراء المطلوب"
+msgstr "إجراء مطلوب"
 
 #. module: website_forum
-#: selection:forum.post,state:0
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__active
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__active
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__active
 msgid "Active"
 msgstr "نشط"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "Activities"
+msgstr "الأنشطة"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Activity"
 msgstr "النشاط"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answer
-msgid "Add a Comment"
-msgstr "إضافة تعليق"
-
-#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:45
+#: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid "Add to menu"
-msgstr ""
+msgstr "الإضافة للقائمة"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_share
@@ -519,9 +626,11 @@ msgid ""
 "After posting the user will be proposed to share its question or answer on "
 "social networks, enabling social network propagation of the forum content."
 msgstr ""
+"بعد نشر المستخدم سيُعرض على المستخدم نشر سؤاله أو إجابته على شبكات التواصل "
+"الاجتماعي، وتمكين نشر محتوى المنتدى على شبكة التواصل الاجتماعي."
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:203
+#: code:addons/website_forum/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -530,20 +639,21 @@ msgstr "الكل"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_bump
 msgid "Allow Bump"
-msgstr ""
+msgstr "السماح بترقية المشاركات"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Answer"
 msgstr "إجابة"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:521
+#: code:addons/website_forum/models/forum.py:0
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
 msgid "Answer Edited"
-msgstr "تم تحرير الإجابة "
+msgstr "تم تحرير الإجابة"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_accepted
@@ -558,7 +668,7 @@ msgstr "إجابة مقبولة بأكثر من 15 تصويت"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_downvote
 msgid "Answer downvoted"
-msgstr "صُوت سلباً على الإجابة"
+msgstr "صُوت سلبًا على الإجابة"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_flagged
@@ -573,22 +683,22 @@ msgstr "إجابة الأسئلة"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_upvote
 msgid "Answer upvoted"
-msgstr "التصويت إيجاباً على إجابة"
+msgstr "صُوت للإجابة إيجابيًا"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_4
 msgid "Answer voted up 15 times"
-msgstr "صُوت للإجابة إيجابياً 15 مرة"
+msgstr "صُوت للإجابة إيجابيًا 15 مرة"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_2
 msgid "Answer voted up 4 times"
-msgstr "صُوت للإجابة إيجابياً 4 مرات"
+msgstr "صُوت للإجابة إيجابيًا 4 مرات"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_3
 msgid "Answer voted up 6 times"
-msgstr "صُوت للإجابة إيجابياً 6 مرات"
+msgstr "صُوت للإجابة إيجابيًا 6 مرات"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_5
@@ -596,7 +706,7 @@ msgid "Answer was accepted with 3 or more votes"
 msgstr "تم قبول إجابة بـ3 تصويتات أو أكثر"
 
 #. module: website_forum
-#: selection:forum.forum,default_order:0
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__child_count_desc
 msgid "Answered"
 msgstr "مجابة"
 
@@ -613,16 +723,22 @@ msgstr "مُجاب بواسطة"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_8
 msgid "Answered own question with at least 4 up votes"
-msgstr "أجاب سؤاله الخاص ولها 4 تصويتات على الأقل"
+msgstr "أجاب سؤاله ولإجابته 4 تصويتات على الأقل"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_ids
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Answers"
 msgstr "الإجابات"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
+msgid "Answers Count"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_gamification_challenge__category
@@ -636,11 +752,6 @@ msgid "Archived"
 msgstr "مؤرشف"
 
 #. module: website_forum
-#: selection:forum.post,post_type:0
-msgid "Article"
-msgstr ""
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Ask Your Question"
 msgstr "اطرح سؤالك"
@@ -648,7 +759,7 @@ msgstr "اطرح سؤالك"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Ask a Question"
-msgstr "اطرح سؤالاً"
+msgstr "اطرح سؤالًا"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_ask
@@ -662,35 +773,35 @@ msgstr "اطرح أسئلة بدون مراجعة"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:29
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
 msgid "Ask the question in this forum by clicking on the button."
-msgstr "اطرح سؤالك في هذا المجتمع بالنقر على الزر."
+msgstr "اطرح سؤالك في هذا المنتدى بالنقر على الزر."
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_26
 msgid "Asked a question and accepted an answer"
-msgstr "طرح سؤالاً وقبل إجابة"
+msgstr "طرح سؤالًا وقبل إجابة"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_1
 msgid "Asked a question with at least 150 views"
-msgstr "طرح سؤالاً حظي بأكثر من 150 مشاهدة"
+msgstr "طرح سؤالًا حظي بأكثر من 150 مشاهدة"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_2
 msgid "Asked a question with at least 250 views"
-msgstr "طرح سؤالاً حظي بأكثر من 250 مشاهدة"
+msgstr "طرح سؤالًا حظي بأكثر من 250 مشاهدة"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_3
 msgid "Asked a question with at least 500 views"
-msgstr "طرح سؤالاً حظي بأكثر من 500 مشاهدة"
+msgstr "طرح سؤالًا حظي بأكثر من 500 مشاهدة"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_7
 msgid "Asked first question with at least one up vote"
-msgstr "طرح سؤاله الأول وحظي بتصويت إيجابي وحيد على الأقل"
+msgstr "طرح سؤاله الأول وحصل على تصويت إيجابي واحد على الأقل"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__create_date
@@ -698,14 +809,9 @@ msgid "Asked on"
 msgstr "سُئل في"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Asked:"
-msgstr "سُئل:"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_new
 msgid "Asking a question"
-msgstr "يطرح سؤالاً"
+msgstr "يطرح سؤالًا"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_attachment_count
@@ -717,78 +823,53 @@ msgstr "عدد المرفقات"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Author"
-msgstr "الكاتب"
+msgstr "الناشر"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_1
 msgid "Autobiographer"
-msgstr ""
+msgstr "كاتب السيرة الذاتية"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_user_tooltip
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-#: model_terms:ir.ui.view,arch_db:website_forum.users
 msgid "Avatar"
 msgstr "الصورة الرمزية"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Avoid unnecessary introductions (Hi,... Please... Thanks...),"
-msgstr ""
+msgstr "تجنب المقدمات غير الضرورية (مرحبًا، ... برجاء...، شكرًا...)،"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:343
-#: code:addons/website_forum/controllers/main.py:345
-#: code:addons/website_forum/controllers/main.py:414
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Back to"
+msgstr "رجوع الى"
+
+#. module: website_forum
+#: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/controllers/main.py:0
 #, python-format
 msgid "Bad Request"
-msgstr ""
+msgstr "طلب سيئ"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__badge_ids
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Badges"
 msgstr "الشارات"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-msgid ""
-"Besides gaining reputation with your questions and answers,\n"
-"            you receive badges for being especially helpful. Badges\n"
-"            appear on your profile page, and your posts."
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Biography"
-msgstr "سيرة"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "Bronze badge"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__bronze_badge
-msgid "Bronze badges count"
-msgstr "عدد الشارات البرونزية"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__bump_date
 msgid "Bumped on"
-msgstr ""
+msgstr "مرقّى على"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid "By sharing you answer, you will get additional"
-msgstr ""
+msgstr "بمشاركة إجابتك، ستحصل على"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_accept
@@ -808,7 +889,7 @@ msgstr "يمكنه السؤال"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_post
 msgid "Can Automatically be Validated"
-msgstr "مراجعة وقبول آلي لمشاركاته"
+msgstr "يمكن اعتماد مشاركته تلقائيًا"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_close
@@ -828,22 +909,22 @@ msgstr "يمكنه تحويل الإجابات لتعليقات"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_downvote
 msgid "Can Downvote"
-msgstr "يمكنه التصويت السلبي"
+msgstr "يمكنه التصويت سلبًا"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_edit
 msgid "Can Edit"
-msgstr "يمكنه التحرير"
+msgstr "يمكنه تحرير"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_flag
 msgid "Can Flag"
-msgstr "يمكنه التبليغ"
+msgstr "يمكنه الإبلاغ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_moderate
 msgid "Can Moderate"
-msgstr "يمكنه الإدارة"
+msgstr "يمكنه المراقبة"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_unlink
@@ -853,22 +934,17 @@ msgstr "يمكنه الحذف"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_upvote
 msgid "Can Upvote"
-msgstr "يمكنه التصويت الإيجابي"
+msgstr "يمكنه التصويت إيجابًا"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_view
 msgid "Can View"
-msgstr "يمكنه المشاهدة"
+msgstr "يمكنه مشاهدة"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_retag
 msgid "Change question tags"
 msgstr "يمكنه تغيير وسوم السؤال"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "Check available badges"
-msgstr "مشاهدة الشارات المتاحة"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_bump
@@ -877,81 +953,65 @@ msgid ""
 "given answer. The popup will offer to share it on social networks. When "
 "shared, a question is bumped at the top of the forum."
 msgstr ""
+"حدد هذا المربع لعرض نافذة منبثقة للمشاركات التي مرّ على نشرها أكثر من 10 "
+"أيام دون إجابة. ستعرض النافذة مشاركة الأسئلة على شبكات التواصل الاجتماعي. "
+"عند المشاركة، يتم ترقية السؤال للأعلى بالمنتدى."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
 #: model:gamification.challenge,name:website_forum.challenge_chief_commentator
 msgid "Chief Commentator"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "City"
-msgstr "المدينة"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Clear"
-msgstr "تفريغ"
+msgstr "أفضل المعلقين"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:24
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
 msgid "Click <em>Continue</em> to create the forum."
-msgstr ""
+msgstr "انقر <em>متابعة</em> لإنشاء المنتدى."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:73
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
 msgid "Click here to accept this answer."
 msgstr "انقر هنا لقبول هذه الإجابة."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid ""
-"Click here to send a verification email allowing you to participate to the "
-"forum."
-msgstr ""
-"انقر هنا لإرسال رسالة تأكيد البريد الإلكتروني لتتمكن من المشاركة في هذا "
-"المجتمع."
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Click to get bad question samples"
-msgstr "انقر لمشاهدة أمثلة على الأسئلة الرديئة."
+msgstr "انقر لمشاهدة أمثلة على الأسئلة الرديئة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Click to get good question titles"
-msgstr "انقر لمشاهدة أمثلة على الأسئلة الجيدة."
+msgstr "انقر لمشاهدة أمثلة على عناوين الأسئلة الجيدة"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:65
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
 msgid "Click to post your answer."
 msgstr "انقر لإضافة إجابتك."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:51
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
 msgid "Click to post your question."
 msgstr "انقر لإضافة سؤالك."
 
 #. module: website_forum
-#: selection:forum.post,state:0
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__close
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "Close"
-msgstr "إقفال"
+msgstr "إغلاق"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "Close Post"
-msgstr ""
+msgstr "إغلاق المشاركة"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_close_all
@@ -966,7 +1026,7 @@ msgstr "إغلاق مشاركاته"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "Close post"
-msgstr ""
+msgstr "إغلاق المشاركة"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_uid
@@ -985,10 +1045,8 @@ msgstr "سبب الإغلاق"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_answer
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Comment"
 msgstr "تعليق"
 
@@ -1018,8 +1076,8 @@ msgstr "المعلق"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_answer
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Comments"
 msgstr "التعليقات"
 
@@ -1036,15 +1094,6 @@ msgid "Completed own biography"
 msgstr "سيرتك الذاتية الخاصة مكتملة"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid ""
-"Congratulations! Your email has just been validated. You may now participate"
-" to our forums."
-msgstr ""
-"تهانينا! تم التحقق من صحة البريد الإلكتروني الخاص بك. تستطيع المشاركة في "
-"المجتمع الآن ."
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__content
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Content"
@@ -1056,14 +1105,14 @@ msgid "Convert all answers to comments and vice versa"
 msgstr "تحويل كافة الإجابات إلى تعليقات والعكس"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "Convert as a comment"
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Convert as a answer"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
-msgid "Convert as an answer"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Convert as a comment"
+msgstr "تحويله إلى تعليق"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_accept
@@ -1086,14 +1135,11 @@ msgid "Correct answer or answer accepted"
 msgstr "تصحيح الإجابة أو قبولها"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Country"
-msgstr "دولة"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Country..."
-msgstr "الدولة..."
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:0
+#, python-format
+msgid "Create"
+msgstr "إنشاء"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__create_date
@@ -1104,22 +1150,22 @@ msgstr "تاريخ الإنشاء"
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.action_forum_post
 msgid "Create a new forum post"
-msgstr ""
+msgstr "إنشاء مشاركة جديدة على المنتدى"
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "إنشاء وسم جديد"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_tag_create
 msgid "Create new tags"
-msgstr ""
+msgstr "إنشاء وسوم جديدة"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_32
 msgid "Created a tag used by 15 questions"
-msgstr "إنشاء وسم استخدم في 15 سؤالاً"
+msgstr "إنشاء وسم استخدم في 15 سؤالًا"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__create_uid
@@ -1153,18 +1199,13 @@ msgstr "ناقد"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__default_order
-msgid "Default Order"
-msgstr "الترتيب الافتراضي"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__default_post_type
-msgid "Default Post"
-msgstr "المشاركة الافتراضية"
+msgid "Default"
+msgstr "الافتراضي"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_gamification_challenge__category
 msgid "Define the visibility of the challenge through menus"
-msgstr ""
+msgstr "تحديد إمكانية ظهور التحدي عبر القوائم"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
@@ -1186,12 +1227,12 @@ msgstr "حذف مشاركاته"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_23
 msgid "Deleted own post with 3 or more downvotes"
-msgstr "حذف مشاركته بـ3 تصويتات سلبية أو أكثر"
+msgstr "حذف مشاركته الحاصلة على 3 أصوات سلبية أو أكثر"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_6
 msgid "Deleted own post with 3 or more upvotes"
-msgstr "حذف مشاركته بـ3 تصويتات إيجابية أو أكثر"
+msgstr "حذف مشاركته الحاصلة على 3 أصوات إيجابية أو أكثر"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__description
@@ -1199,9 +1240,16 @@ msgid "Description"
 msgstr "الوصف"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Design Welcome Message"
-msgstr "صمم رسالة الترحيب"
+msgstr "تصميم رسالة ترحيب"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:0
+#, python-format
+msgid "Discard"
+msgstr "تجاهل"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_6
@@ -1212,14 +1260,10 @@ msgid "Disciplined"
 msgstr "منضبط"
 
 #. module: website_forum
-#: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Discussion"
-msgstr "المناقشة"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_discussion
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__mode__discussions
+#, python-format
 msgid "Discussions"
 msgstr "المناقشات"
 
@@ -1230,35 +1274,28 @@ msgstr "المناقشات"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_user_bio
 msgid "Display detailed user biography"
-msgstr ""
+msgstr "عرض السيرة الذاتية المفصلة للمستخدم"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_downvote
 msgid "Downvote"
-msgstr "التصويت سلباً"
+msgstr "التصويت سلبًا"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit"
 msgstr "تحرير"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Edit Profile"
-msgstr "تحرير الملف الشخصي"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Edit Your Previous Answer"
-msgstr "تحرير إجابتك السابق"
+msgid "Edit Your Answer"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_all
@@ -1268,17 +1305,17 @@ msgstr "تحرير جميع المشاركات"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_own
 msgid "Edit own posts"
-msgstr "تحرير مشاركراته"
+msgstr "تحرير مشاركاته"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Edit question"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Edit reply"
 msgstr "تحرير الرد"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid "Edit your Link"
-msgstr "تحرير الرابط"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -1299,11 +1336,6 @@ msgid "Editor Features: image and links"
 msgstr "خيارات المحرر: الصور والروابط"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Email"
-msgstr "البريد الإلكتروني"
-
-#. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_5
 #: model:gamification.challenge,name:website_forum.challenge_enlightened
 #: model:gamification.challenge.line,name:website_forum.line_enlightened
@@ -1313,21 +1345,21 @@ msgstr "مستنير"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:19
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
 msgid "Enter a name for your new forum."
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "External link"
-msgstr ""
+msgstr "أدخل اسمًا لمنتداك الجديد."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
 msgstr "سؤال شهير"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "Favorite"
+msgstr "المفضل"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_count
@@ -1339,6 +1371,16 @@ msgstr "عدد التفضيلات"
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
 msgstr "السؤال المفضل"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "Favorites"
+msgstr "المفضلات"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_favorites
+msgid "Favorites Count"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_ids
@@ -1364,24 +1406,24 @@ msgid "Favourite Question (5)"
 msgstr "سؤال مفضل (5)"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Favourite Questions"
 msgstr "الأسئلة المفضلة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "Filter"
-msgstr "الفرز"
+msgstr "فلتر"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Filter on"
-msgstr "فرز حسب"
+msgstr "التصفية حسب"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_post_vote
 msgid "First Relevance Parameter"
-msgstr ""
+msgstr "باراميتر الصلة الأول"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_5
@@ -1399,22 +1441,19 @@ msgid "First upvote"
 msgstr "أول تصويت إيجابي"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flag"
-msgstr ""
+msgstr "الإبلاغ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_flag
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_flag
 msgid "Flag a post as offensive"
-msgstr "تبليغ عن مشاركة لإساءتها"
+msgstr "الإبلاغ عن مشاركة لكونها مسيئة"
 
 #. module: website_forum
-#: selection:forum.post,state:0
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__flagged
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flagged"
 msgstr "مُبلغ عنها"
 
@@ -1426,12 +1465,12 @@ msgstr "أبلغ عنها بواسطة"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Followed"
-msgstr "تتابعه"
+msgstr "متابع"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Followed Questions"
-msgstr "الأسئلة المتبوعة"
+msgstr "الأسئلة المتابعة"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_follower_ids
@@ -1457,12 +1496,12 @@ msgstr "المتابعون (الشركاء)"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"For example, if you ask an interesting question or give a helpful answer, your\n"
-"    input will be upvoted. On the other hand if the answer is misleading - it will\n"
-"    be downvoted. Each vote in favor will generate 10 points, each vote against\n"
-"    will subtract 10 points. There is a limit of 200 points that can be accumulated\n"
-"    for a question or answer per day. The table given at the end explains reputation point\n"
-"    requirements for each type of moderation task."
+"For example, if you ask an interesting question or give a helpful answer, "
+"your input will be upvoted. On the other hand if the answer is misleading - "
+"it will be downvoted. Each vote in favor will generate 10 points, each vote "
+"against will subtract 10 points. There is a limit of 200 points that can be "
+"accumulated for a question or answer per day. The table given at the end "
+"explains reputation point requirements for each type of moderation task."
 msgstr ""
 
 #. module: website_forum
@@ -1473,95 +1512,77 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__forum_id
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
 #: model:ir.ui.menu,name:website_forum.menu_website_forum_global
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_all
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_view_search
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 #: model:website.menu,name:website_forum.menu_website_forums
 msgid "Forum"
-msgstr "المجتمع"
+msgstr "المنتدى"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_gamification_badge__level
-#: model:ir.model.fields,field_description:website_forum.field_gamification_badge_user__level
-msgid "Forum Badge Level"
-msgstr "مستوى شارة المجتمع"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.res_users_view_form_preference
-#: model_terms:ir.ui.view,arch_db:website_forum.view_users_form_forum
-msgid "Forum Karma"
-msgstr "نقاط موثوقية المجتمع"
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__mode
+msgid "Forum Mode"
+msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:34
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
+#: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
+msgid "Forum Mode:"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
 msgid "Forum Name"
-msgstr "اسم المجتمع"
+msgstr "اسم المنتدى"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
+#, python-format
+msgid "Forum Name:"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
 msgid "Forum Post"
-msgstr "مشاركة المجتمع"
+msgstr "مشاركة المنتدى"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "Forum Posts"
-msgstr "مشاركات المجتمع"
+msgstr "مشاركات المنتدى"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Forum Settings"
-msgstr "إعدادات المجتمع"
+msgstr "إعدادات المنتدى"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
 msgid "Forum Tag"
-msgstr "وسم المجتمع"
+msgstr "وسم المنتدى"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_global
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 msgid "Forums"
-msgstr "المجتمعات"
-
-#. module: website_forum
-#: model:ir.model,name:website_forum.model_gamification_badge
-msgid "Gamification Badge"
-msgstr ""
+msgstr "المنتديات"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification Challenge"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model,name:website_forum.model_gamification_badge_user
-msgid "Gamification User Badge"
-msgstr ""
+msgstr "تحدي التنافسية"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:33
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
 msgid "Give your question title."
-msgstr "امنح سؤالك عنواناً"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "Gold badge"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__gold_badge
-msgid "Gold badges count"
-msgstr "عدد الشارات الذهبية"
+msgstr "امنح سؤالك عنوانًا."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
@@ -1584,7 +1605,7 @@ msgstr "سؤال جيد"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_graph
 msgid "Graph of Posts"
-msgstr "المشاركات بيانياً"
+msgstr "رسم بياني بالمشاركات"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_4
@@ -1630,7 +1651,7 @@ msgstr "مخضرم (15)"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__uid_has_answered
 msgid "Has Answered"
-msgstr "تم إجابته"
+msgstr "أجاب"
 
 #. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
@@ -1640,7 +1661,7 @@ msgstr "المساعدة"
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid "Hide Intro"
-msgstr ""
+msgstr "إخفاء المقدمة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -1649,11 +1670,8 @@ msgid ""
 "'remaining hours' field computed on tasks?, How to configure TPS and TVQ's "
 "canadian taxes?"
 msgstr ""
-
-#. module: website_forum
-#: selection:gamification.challenge,category:0
-msgid "Human Resources / Engagement"
-msgstr ""
+"كيفية إنشاء المخزون الفعلي في التاريخ السابق؟، كيف يتم احتساب حقل 'الساعات "
+"المتبقية' على المهام؟، كيفية تكوين معدلات TPS و TVQ للضرائب الكندية؟"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__id
@@ -1662,44 +1680,45 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__id
 msgid "ID"
-msgstr "المعرف"
+msgstr "المُعرف"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_unread
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_unread
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_unread
 msgid "If checked new messages require your attention."
-msgstr "إذا حددته، سيتم إخطارك بالرسائل الجديدة."
+msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج لرؤيتها."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_needaction
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_needaction
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "إذا حددته، سيتم إخطارك بالرسائل الجديدة."
+msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج لرؤيتها."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_error
+#: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_sms_error
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error
+#: model:ir.model.fields,help:website_forum.field_forum_post__message_has_sms_error
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error
+#: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "إذا تم تحديده ، فإن بعض الرسائل بها خطأ في التسليم."
+msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض الرسائل."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
 msgid ""
 "If the author has not enough karma, a nofollow attribute is added to links"
 msgstr ""
-"إذا لم يملك الكاتب نقاط موثوقية كافية، فسيتم إضافة nofollow إلى روابطه"
+"إذا لم يملك الناشر نقاط كارما كافية، سيتم إضافة خاصية nofollow إلى الروابط"
 
 #. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid ""
-"If this approach is not for you, please respect the community and use Google+\n"
-"    communities instead."
+"If this approach is not for you, please respect the community and use "
+"Google+ communities instead."
 msgstr ""
-"إذا لم يكن هذا الأسلوب مناسباً لك، فنرجو احترام المجتمع واستخدم\n"
-"مجتمعات جوجل بلس بدلاً منه."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1708,15 +1727,18 @@ msgid ""
 "            users having a high karma can see closed posts to moderate\n"
 "            them."
 msgstr ""
+"إذا أغلقت هذا المشاركة، ستكون مخفية عن معظم المستخدمين. يُتاح فقط\n"
+"            للمستخدمين الذين يملكون نقاط كارما كثيرة رؤية المشاركات المغلقة\n"
+"            لتقييمها."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"If you fit in one of these example or if your motivation for asking the\n"
-"    question is “I would like to participate in a discussion about ______”, then\n"
-"    you should not be asking here but on our mailing lists.\n"
-"    However, if your motivation is “I would like others to explain ______ to me”,\n"
-"    then you are probably OK."
+"If you fit in one of these example or if your motivation for asking the "
+"question is “I would like to participate in a discussion about ______”, then"
+" you should not be asking here but on our mailing lists. However, if your "
+"motivation is “I would like others to explain ______ to me”, then you are "
+"probably OK."
 msgstr ""
 
 #. module: website_forum
@@ -1726,13 +1748,45 @@ msgid ""
 "            users having a high karma can see offensive posts to moderate\n"
 "            them."
 msgstr ""
+"إذا علّمت هذه المشاركة باعتبارها مسيئة، سيتم إخفاؤها عن معظم المستخدمين. يتاح\n"
+"            فقط للمستخدمين الذين يملكون نقاط كارما كثيرة رؤية المشاركات المسيئة لتقييمها."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_1920
+msgid "Image"
+msgstr "صورة"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_1024
+msgid "Image 1024"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_128
+msgid "Image 128"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_256
+msgid "Image 256"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_512
+msgid "Image 512"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_64
+msgid "Image 64"
+msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:43
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
 msgid "Insert tags related to your question."
-msgstr "أكتب الوسوم ذات الصلة بسؤالك."
+msgstr "اكتب الوسوم ذات الصلة بسؤالك."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -1740,6 +1794,8 @@ msgid ""
 "Inventory Date Problem, Task remaining hours, Can you help solve solve my "
 "tax computation problem in Canada?"
 msgstr ""
+"مشكلة تاريخ المخزون، الساعات المتبقية حتى إتمام المهمة، هل يمكنك المساعدة في"
+" حل مشكلة احتساب ضرائبي في كندا؟"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__user_favourite
@@ -1761,65 +1817,61 @@ msgstr "مُجاب"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_display_biography
 msgid "Is the author's biography visible from his post"
+msgstr "هل السيرة الشخصية للناشر معروضة في مشاركته"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "It is not allowed to modify someone else's vote."
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "It appears your email has not been verified."
-msgstr ""
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:890
-#: code:addons/website_forum/models/forum.py:910
+#: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "It is not allowed to vote for its own post."
-msgstr ""
+msgstr "غير مسموح لك بالتصويت لمشاركتك."
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__karma
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "Karma"
-msgstr "الموثوقية"
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Karma Error"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr "مكتسبات الموثوقية"
+msgstr "مكتسبات نقاط الكارما"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Karma Related Rights"
-msgstr "الصلاحيات المكتسبة بالموثوقية"
+msgstr "الصلاحيات المكتسبة بنقاط الكارما"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_close
 msgid "Karma to close"
-msgstr "الموثوقية للإغلاق"
+msgstr "نقاط الكارما المطلوبة للإغلاق"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_comment
 msgid "Karma to comment"
-msgstr "الموثوقية للتعليق"
+msgstr "نقاط الكارما المطلوبة للتعليق"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_comment_convert
 msgid "Karma to convert comment to answer"
-msgstr "الموثوقية لتحويل تعليق إلى إجابة"
+msgstr "نقاط الكارما المطلوبة لتحويل تعليق إلى إجابة"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_edit
 msgid "Karma to edit"
-msgstr "الموثوقية للتحرير"
+msgstr "نقاط الكارما المطلوبة للتحرير"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_unlink
 msgid "Karma to unlink"
-msgstr "الموثوقية للحذف"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Keep Informed"
-msgstr "ابق على إطلاع"
+msgstr "نقاط الكارما المطلوبة لإلغاء الربط"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum____last_update
@@ -1831,7 +1883,7 @@ msgid "Last Modified on"
 msgstr "آخر تعديل في"
 
 #. module: website_forum
-#: selection:forum.forum,default_order:0
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__write_date_desc
 msgid "Last Updated"
 msgstr "آخر تحديث"
 
@@ -1857,27 +1909,9 @@ msgid "Last activity date"
 msgstr "تاريخ آخر نشاط"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Last updated:"
-msgstr "آخر تحديث:"
-
-#. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_25
 msgid "Left 10 answers with score of 10 or more"
-msgstr "ترك 10 إجابات بـ10 تصويتات أو أكثر"
-
-#. module: website_forum
-#: selection:forum.forum,default_post_type:0
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Link"
-msgstr "الرابط"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_link
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Links"
-msgstr "الروابط"
+msgstr "ترك 10 إجابات وحصل على 10 تصويتات أو أكثر"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_main_attachment_id
@@ -1890,6 +1924,11 @@ msgstr "المرفق الرئيسي"
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Mark as offensive"
+msgstr "تعيينه كمسيء"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Mark as spam"
 msgstr ""
 
 #. module: website_forum
@@ -1912,19 +1951,14 @@ msgid "Moderate posts"
 msgstr "إدارة المشاركات"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Moderation Tools"
-msgstr "أدوات الإشراف"
-
-#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "More over:"
 msgstr "المزيد:"
 
 #. module: website_forum
-#: selection:forum.forum,default_order:0
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__vote_count_desc
 msgid "Most Voted"
-msgstr "الأكثر تصويتاً"
+msgstr "الأكثر تصويتًا"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -1934,15 +1968,15 @@ msgstr "الأكثر إجابة"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Most voted"
-msgstr "الأكثر تصويتاً"
+msgstr "الأكثر تصويتًا"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:47
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid ""
 "Move this question to the top of the list by sharing it on social networks."
-msgstr ""
+msgstr "انقل هذا السؤال لأعلى القائمة بمشاركته على شبكات التواصل الاجتماعي."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__user_vote
@@ -1959,26 +1993,21 @@ msgstr "الاسم"
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
 #: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Negative vote"
-msgstr ""
+msgstr "تصويت سلبي"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_answer_new
 #: model:mail.message.subtype,name:website_forum.mt_answer_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
 msgid "New Answer"
-msgstr "إجابة جديدة "
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "New Discussion"
-msgstr "نقاش جديد"
+msgstr "إجابة جديدة"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:33
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:0
 #, python-format
 msgid "New Forum"
-msgstr "مجتمع جديد"
+msgstr "منتدى جديد"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_question_new
@@ -1988,14 +2017,9 @@ msgid "New Question"
 msgstr "سؤال جديد"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
-msgid "New Topic"
-msgstr "موضوع جديد"
-
-#. module: website_forum
-#: selection:forum.forum,default_order:0
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__create_date_desc
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Newest"
 msgstr "الأحدث"
 
@@ -2018,20 +2042,24 @@ msgid "Nice Question"
 msgstr "سؤال لطيف"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_activities
+msgid "No activities yet!"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all
-msgid "No forum post yet."
+msgid "No forum is available yet."
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+msgid "No vote given by you yet!"
 msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
 msgid "Nofollow links"
-msgstr ""
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:511
-#, python-format
-msgid "Not enough karma to retag."
-msgstr ""
+msgstr "روابط عدم المتابعة"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
@@ -2066,7 +2094,7 @@ msgstr "عدد الإجابات"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of error"
-msgstr "عدد الاخطاء"
+msgstr "عدد الأخطاء"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_flagged_posts
@@ -2078,19 +2106,19 @@ msgstr "عدد المشاركات المُبلغ عنها"
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_needaction_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "عدد الرسائل التي تتطلب اجراء"
+msgstr "عدد الرسائل التي تتطلب إجراء"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_error_counter
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "عدد الرسائل مع خطأ في التسليم"
+msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_posts_waiting_validation
 msgid "Number of posts waiting for validation"
-msgstr "عدد المشاركات في انتظار المراجعة"
+msgstr "عدد المشاركات التي تنتظر المراجعة"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_unread_counter
@@ -2100,7 +2128,7 @@ msgid "Number of unread messages"
 msgstr "عدد الرسائل الجديدة"
 
 #. module: website_forum
-#: selection:forum.post,state:0
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__offensive
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Offensive"
 msgstr "مسيء"
@@ -2108,19 +2136,14 @@ msgstr "مسيء"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "Offensive Post"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "On"
-msgstr "في"
+msgstr "مشاركة مسيئة"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid "On average,"
-msgstr "في المتوسط"
+msgstr "في المتوسط،"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -2129,13 +2152,13 @@ msgstr "خيارات"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
-msgid "Orders"
-msgstr "أوامر المبيعات"
+msgid "Order"
+msgstr "الطلب"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_all
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
 msgid "Our forums"
-msgstr "مجتمعاتنا"
+msgstr "منتدياتنا"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_23
@@ -2143,7 +2166,7 @@ msgstr "مجتمعاتنا"
 #: model:gamification.challenge.line,name:website_forum.line_peer_pressure
 #: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
 msgid "Peer Pressure"
-msgstr "ضغط الأقران"
+msgstr "تأثير الأقران"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2151,9 +2174,9 @@ msgid "Pending"
 msgstr "معلق"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "People"
-msgstr "الأعضاء"
+msgstr "أشخاص"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__plain_content
@@ -2163,14 +2186,7 @@ msgstr "محتوى بسيط"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Please enter a descriptive question (should finish by a '?')"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid ""
-"Please enter a valid email address in order to receive notifications from "
-"answers or comments."
-msgstr ""
+msgstr "برجاء كتابة سؤال وصفي (ينبغي أن ينتهي بـ'؟')"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
@@ -2200,95 +2216,73 @@ msgstr "سؤال شائع (500)"
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
 #: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Positive vote"
-msgstr ""
+msgstr "تصويت إيجابي"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Post"
-msgstr "تأجيل"
+msgstr "نشر"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Answer"
-msgstr ""
+msgstr "نشر الإجابة"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
-msgstr ""
+msgstr "سبب إغلاق المشاركة"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answer
-#: model_terms:ir.ui.view,arch_db:website_forum.post_reply
-msgid "Post Comment"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid "Post Title"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
-msgid "Post Types"
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_posts
+msgid "Post Count"
 msgstr ""
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
 msgid "Post Vote"
-msgstr ""
+msgstr "تصويتات المشاركة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Post Your Question"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
-msgid "Post Your Topic"
-msgstr ""
+msgstr "انشر سؤالك"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "Post:"
-msgstr ""
+msgstr "المشاركة:"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_p_2
 msgid "Posted 10 comments"
-msgstr ""
+msgstr "نشر 10 تعليقات"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_p_4
 msgid "Posted 100 comments"
-msgstr ""
+msgstr "نشر 100 تعليق"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:448
+#: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
-msgstr ""
+msgstr "لا يمكن نشر إجابة على سؤال [ملغي] أو [مقفل]."
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__post_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__post_ids
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Posts"
 msgstr "مشاركات"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Provide enough details and, if possible, give an example."
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Public profile"
-msgstr ""
+msgstr "قدم تفاصيل كافية، وأعطِ مثالًا إن استطعت."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
@@ -2296,32 +2290,31 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_pundit
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
-msgstr ""
+msgstr "الناقد"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:59
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
 msgid "Put your answer here."
-msgstr ""
+msgstr "اكتب إجابتك هنا."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:37
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
 msgid "Put your question here."
-msgstr ""
+msgstr "اكتب سؤالك هنا."
 
 #. module: website_forum
-#: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Question"
-msgstr "سؤال"
+msgstr "السؤال"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:524
+#: code:addons/website_forum/models/forum.py:0
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2331,87 +2324,104 @@ msgstr "تم تحرير السؤال"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_downvote
 msgid "Question downvoted"
-msgstr ""
+msgstr "صُوت سلبًا على الإجابة"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Question has accepted answer"
-msgstr ""
+msgstr "للسؤال إجابة مقبولة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
 msgid "Question not found!"
-msgstr ""
+msgstr "لم يُعثر على السؤال!"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_4
 msgid "Question set as favorite by 1 user"
-msgstr ""
+msgstr "قام مستخدم واحد بإضافة السؤال لقائمة المفضلات"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_6
 msgid "Question set as favorite by 25 users"
-msgstr ""
+msgstr "قام 25 مستخدم بإضافة السؤال لقائمة المفضلات"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_5
 msgid "Question set as favorite by 5 users"
-msgstr ""
+msgstr "قام 5 مستخدمين بإضافة السؤال لقائمة المفضلات"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:345
+#: code:addons/website_forum/controllers/main.py:0
 #, python-format
 msgid "Question should not be empty."
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Question tools"
-msgstr "أدوات السؤال"
+msgstr "لا ينبغي ترك السؤال فارغًا."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_upvote
 msgid "Question upvoted"
-msgstr ""
+msgstr "صُوت إيجابًا على الإجابة"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_10
 msgid "Question voted up 15 times"
-msgstr ""
+msgstr "صُوت إيجابًا على الإجابة 15 مرة"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_8
 msgid "Question voted up 4 times"
-msgstr ""
+msgstr "صُوت إيجابًا على الإجابة 4 مرات"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_9
 msgid "Question voted up 6 times"
-msgstr ""
+msgstr "صُوت إيجابًا على الإجابة 6 مرات"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_question
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__mode__questions
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Questions"
 msgstr "الأسئلة"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:542
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
+#, python-format
+msgid "Questions and Answers"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__mode
+msgid ""
+"Questions mode: only one answer allowed\n"
+" Discussions mode: multiple answers allowed"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.menu,name:website_forum.menu_forum_rank_global
+msgid "Ranks"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "Re: %s"
 msgstr "رد: %s"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Reactivate"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Read Guidelines"
+msgstr "اقرأ الإرشادات"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Real name"
-msgstr "الاسم الحقيقي"
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Read the guidelines to know how to gain karma."
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_reason_id
@@ -2431,12 +2441,7 @@ msgstr "السبب:"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_1
 msgid "Received at least 3 upvote for an answer for the first time"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "Redirect to external link"
-msgstr "إعادة التوجيه إلى رابط خارجي"
+msgstr "استلمت على الأقل 3 أصوات إيجابية على إجابة للمرة الأولى"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2454,8 +2459,8 @@ msgid "Reject <i class=\"fa fa-times\"/>"
 msgstr "رفض <i class=\"fa fa-times\"/>"
 
 #. module: website_forum
-#: selection:forum.forum,default_order:0
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__relevancy
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__relevancy_desc
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Relevance"
 msgstr "الصلة"
@@ -2468,13 +2473,13 @@ msgstr "احتساب الصلة"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Reopen"
-msgstr ""
+msgstr "إعادة فتح"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Reply"
-msgstr "إضافة رد"
+#: code:addons/website_forum/controllers/main.py:0
+#, python-format
+msgid "Reply should not be empty."
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__self_reply
@@ -2485,13 +2490,17 @@ msgstr "الرد على سؤاله"
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_id
 msgid "Restrict publishing to this website."
+msgstr "قصر إمكانية النشر على هذا الموقع."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.private_profile
+msgid "Return to the forum."
 msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
-#: model_terms:ir.ui.view,arch_db:website_forum.private_profile
 msgid "Return to the question list."
-msgstr "عودة إلى قائمة الأسئلة"
+msgstr "العودة إلى قائمة الأسئلة."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__moderator_id
@@ -2503,6 +2512,13 @@ msgstr "راجعه"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__is_seo_optimized
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__is_seo_optimized
 msgid "SEO optimized"
+msgstr "تم تحسين محركات البحث"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_sms_error
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_sms_error
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_sms_error
+msgid "SMS Delivery error"
 msgstr ""
 
 #. module: website_forum
@@ -2524,31 +2540,36 @@ msgid "Search in Post"
 msgstr "بحث المشاركات"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Search..."
+msgstr "بحث..."
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_time_decay
 msgid "Second Relevance Parameter"
-msgstr ""
+msgstr "باراميتر الصلة الثاني"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "See post"
-msgstr ""
+msgstr "عرض المشاركة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 msgid "See question"
-msgstr ""
+msgstr "عرض السؤال"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Seen:"
-msgstr "شوهد:"
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Select All"
+msgstr "تحديد الكل"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:15
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
 msgid "Select this menu item to create a new forum."
-msgstr "اختر هذه القائمة لإنشاء مجتمع جديد."
+msgstr "اختر هذه القائمة لإنشاء منتدى جديد."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_8
@@ -2559,9 +2580,9 @@ msgid "Self-Learner"
 msgstr "ذاتي التعلم"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "Accept answer"
-msgstr ""
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__sequence
+msgid "Sequence"
+msgstr "المسلسل"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -2569,33 +2590,18 @@ msgid ""
 "Set a clear, explicit and concise question title\n"
 "                (check"
 msgstr ""
-
-#. module: website_forum
-#: selection:gamification.challenge,category:0
-msgid "Settings / Gamification Tools"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "Share"
-msgstr "مشاركة"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid ""
-"Share an awesome link. Your post will appear in the 'Newest' top-menu.\n"
-"            If the community vote on your post, it will get traction by being promoted\n"
-"            in the homepage."
-msgstr ""
+"استخدم عنوان واضح وصريح وموجز للسؤال\n"
+"                 (التحقق من"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:39
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid ""
 "Share this content to increase your chances to be featured on the front page"
 " and attract more visitors."
 msgstr ""
+"شارك هذا المحتوى لزيادة فرص تثبيته على الصفحة الأولى وجذب المزيد من الزوار."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_share
@@ -2603,55 +2609,44 @@ msgid "Sharing Options"
 msgstr "خيارات المُشاركة"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-#: model_terms:ir.ui.view,arch_db:website_forum.user_badges
-msgid "Silver badge"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users__silver_badge
-msgid "Silver badges count"
-msgstr "عدد الشارات الفضية"
-
-#. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:26
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Sorry you must be logged in to perform this action"
-msgstr ""
+msgstr "عذرًا، يجب أن تسجل دخولك لتقوم بهذا الإجراء"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:101
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Sorry you must be logged to flag a post"
-msgstr ""
+msgstr "عذرًا، يجب أن تسجل دخولك لتتمكن من الإبلاغ عن مشاركة"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:150
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Sorry you must be logged to vote"
-msgstr ""
+msgstr "عذرًا، يجب أن تسجل دخولك لتتمكن من التصويت"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:200
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
-msgstr ""
+msgstr "عذرًا، لا يمكن للمستخدمين المجهولين اختيار إجابة صحيحة."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
 msgid "Sorry, this question is not available anymore."
-msgstr ""
+msgstr "عذرًا، لم يعد هذا السؤال متوفرًا."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:145
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
-msgstr ""
+msgstr "عذرًا، لا يمكنك التصويت لمشاركاتك"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -2659,9 +2654,14 @@ msgid "Sort by"
 msgstr "ترتيب حسب"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "Stats"
-msgstr "الاحصائيات"
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "Spam"
+msgstr "البريد غير المرغوب فيه"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Spam all post"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__state
@@ -2672,7 +2672,7 @@ msgstr "الحالة"
 #: model:gamification.badge,name:website_forum.badge_q_6
 #: model:gamification.challenge,name:website_forum.challenge_stellar_question_25
 msgid "Stellar Question"
-msgstr ""
+msgstr "سؤال ممتاز"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_7
@@ -2681,10 +2681,9 @@ msgid "Student"
 msgstr "طالب"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid "Submit a Link"
-msgstr "إرسال رابط"
+#: model_terms:ir.ui.view,arch_db:website_forum.tag
+msgid "Subscribe"
+msgstr "اشتراك"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_31
@@ -2695,26 +2694,26 @@ msgid "Supporter"
 msgstr "داعم"
 
 #. module: website_forum
-#: model:ir.actions.act_window,name:website_forum.forum_tag_action
-#: model:ir.ui.menu,name:website_forum.menu_forum_tag_global
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_form
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_list
+#: model_terms:ir.ui.view,arch_db:website_forum.header
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Tag"
 msgstr "الوسم"
 
 #. module: website_forum
-#: sql_constraint:forum.tag:0
+#: model:ir.model.constraint,message:website_forum.constraint_forum_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "هذا الوسم موجود بالفعل!"
+msgstr "اسم الوسم موجود بالفعل!"
 
 #. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.forum_tag_action
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__tag_ids
+#: model:ir.ui.menu,name:website_forum.menu_forum_tag_global
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_list
 #: model_terms:ir.ui.view,arch_db:website_forum.header
-#: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "Tags"
@@ -2726,7 +2725,7 @@ msgstr "الوسوم"
 #: model:gamification.challenge.line,name:website_forum.line_taxonomist
 #: model:gamification.goal.definition,name:website_forum.definition_taxonomist
 msgid "Taxonomist"
-msgstr ""
+msgstr "خبراء التصنيف"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_1
@@ -2743,67 +2742,73 @@ msgid ""
 "trigger a write on write_date and therefore bump the post. Directly writing "
 "on write_date is currently not supported and this field is a workaround."
 msgstr ""
+"حقل تقني يسمح بترقية السؤال. ستؤدي الكتابة في هذا الحقل إلى تفعيل الكتابة في"
+" write_date، وبالتالي ترقية المشاركة. الكتابة المباشرة على write_date غير "
+"مدعومة حاليًا وهذا الحقل هو حل بديل."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:6
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid "Thanks for posting!"
-msgstr "شكراً لمشاركتك!"
+msgstr "شكرًا لمشاركتك!"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq
+msgid ""
+"The goal of this site is create a relevant knowledge base that would answer "
+"questions related to Odoo."
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "The"
-msgstr "الـ"
+msgid "The question has been closed"
+msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "The flagged queue is empty."
+#: model_terms:ir.ui.view,arch_db:website_forum.faq
+msgid ""
+"Therefore questions and answers can be edited like wiki pages by experienced"
+" users of this site in order to improve the overall quality of the knowledge"
+" base content. Such privileges are granted based on user karma level: you "
+"will be able to do the same once your karma gets high enough."
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
+msgid ""
+"This community is for professional and enthusiast users, partners and "
+"programmers."
 msgstr ""
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"The goal of this site is create a relevant knowledge base that would answer\n"
-"    questions related to Odoo."
+"This community is for professional and enthusiast users, partners and "
+"programmers. You can ask questions about:"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "The offensive queue is empty."
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "The validation queue is empty."
-msgstr ""
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid ""
-"Therefore questions and answers can be edited like wiki pages by experienced users of\n"
-"    this site in order to improve the overall quality of the knowledge base content.\n"
-"    Such privileges are granted based on user karma level: you will be able to do the same\n"
-"    once your karma gets high enough."
-msgstr ""
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid ""
-"This community is for professional and enthusiast users,\n"
-"    partners and programmers. You can ask questions about:"
-msgstr ""
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:51
-#: model:forum.forum,description:website_forum.forum_help
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid ""
+"This community is for professionals and enthusiasts of our products and services.\n"
+"                                        <br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
+msgstr ""
+"هذا المجتمع مخصص للمحترفين والمتحمسين لمنتجاتنا وخدماتنا.\n"
+"                                         <br>يمكنك مشاركة ومناقشة أفضل محتوى وأفكار تسويقية جديدة وبناء ملف تعريفك المهني لكي تصبح مسوقًا أفضل."
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:0
+#: model:forum.forum,description:website_forum.forum_help
 #, python-format
 msgid ""
 "This community is for professionals and enthusiasts of our products and "
 "services. Share and discuss the best content and new marketing ideas, build "
 "your professional profile and become a better marketer together."
 msgstr ""
+"هذا المجتمع مخصص للمحترفين والمتحمسين لمنتجاتنا وخدماتنا. يمكنك مشاركة "
+"ومناقشة أفضل محتوى وأفكار تسويقية جديدة وبناء ملف تعريفك المهني لكي تصبح "
+"مسوقًا أفضل."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__relevancy_post_vote
@@ -2812,31 +2817,28 @@ msgid ""
 "represents number of votes for a post, and 'days' is number of days since "
 "the post creation"
 msgstr ""
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:411
-#, python-format
-msgid "This forum does not allow %s"
-msgstr ""
+"تستخدم هذه المعادلة لترتيب المشاركات حسب الأهمية. يعبر المتغير 'أصوات' عن "
+"عدد الأصوات التي حصلت عليها المشاركة، والمتغير 'أيام' عن عدد الأيام منذ "
+"إنشاء المشاركة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "This forum has been archived."
-msgstr ""
+msgstr "تمت أرشفة هذا المنتدى."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:111
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "This post can not be flagged"
-msgstr ""
+msgstr "لا يمكن الإبلاغ عن هذه المشاركة"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:106
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "This post is already flagged"
-msgstr " بالفعل تم وضع  اشارة لهذه المشاركة"
+msgstr "تم بالفعل الإبلاغ عن هذه المشاركة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2844,16 +2846,8 @@ msgid ""
 "This post is currently awaiting moderation and not yet published... Do you "
 "want <i>Accept</i> or <i>Reject</i> this post ?"
 msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.private_profile
-msgid "This profile is private!"
-msgstr "هذا الملف خاص!"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
-msgid "Threads"
-msgstr "المداولات"
+"هذه المشاركة تنتظر الموافقة ولم تُنشر بعد... هل تريد <i>قبول</i> أم "
+"<i>رفض</i> هذه المشاركة؟"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__name
@@ -2864,14 +2858,13 @@ msgstr "العنوان"
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Title must not be empty"
-msgstr "لا يمكن أن يكون العنوان فارغاً"
+msgstr "يجب ألا يُترك العنوان فارغًا"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:343
-#: code:addons/website_forum/controllers/main.py:414
+#: code:addons/website_forum/controllers/main.py:0
 #, python-format
 msgid "Title should not be empty."
-msgstr "يجب ألا تترك العنوان فارغاً."
+msgstr "لا ينبغي ترك العنوان فارغًا."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__recipient_id
@@ -2881,49 +2874,34 @@ msgstr "إلى"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"To prevent your question from being flagged and possibly removed, avoid asking\n"
-"    subjective questions where …"
+"To prevent your question from being flagged and possibly removed, avoid "
+"asking subjective questions where …"
 msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Toggle favorite status"
-msgstr ""
+msgstr "تبديل الحالة المفضلة"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_count
 msgid "Total Votes"
-msgstr ""
+msgstr "إجمالي عدد الأصوات"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Trending"
-msgstr "الأكثر تداولاً"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__post_type
-msgid "Type"
-msgstr "النوع"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__content_link
-msgid "URL"
-msgstr "رابط ويب"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_post__content_link
-msgid "URL of Link Articles"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid "URL to Share"
-msgstr "الرابط لتشاركه"
+msgstr "الأكثر تداولًا"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Unanswered"
 msgstr "بلا إجابة"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Undelete"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
@@ -2950,11 +2928,6 @@ msgid "Unread Messages Counter"
 msgstr "عدد الرسائل الجديدة"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
-msgid "Update"
-msgstr "تحديث"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_date
 msgid "Update on"
 msgstr "تحديث على"
@@ -2967,31 +2940,31 @@ msgstr "تم التحديث بواسطة"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_upvote
 msgid "Upvote"
-msgstr "التصويت إيجاباً"
+msgstr "التصويت إيجابًا"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_student
 #: model:gamification.goal.definition,name:website_forum.definition_student
 msgid "Upvoted question (1)"
-msgstr ""
+msgstr "السؤال المصوّت له إيجابًا (1)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_great_question
 #: model:gamification.goal.definition,name:website_forum.definition_great_question
 msgid "Upvoted question (15)"
-msgstr ""
+msgstr "السؤال المصوّت له إيجابًا (15)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_nice_question
 #: model:gamification.goal.definition,name:website_forum.definition_nice_question
 msgid "Upvoted question (4)"
-msgstr ""
+msgstr "السؤال المصوّت له إيجابًا (4)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_good_question
 #: model:gamification.goal.definition,name:website_forum.definition_good_question
 msgid "Upvoted question (6)"
-msgstr ""
+msgstr "السؤال المصوّت له إيجابًا (6)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__user_id
@@ -3004,36 +2977,30 @@ msgid "Users"
 msgstr "المستخدمون"
 
 #. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum__allow_question
-msgid ""
-"Users can answer only once per question. Contributors can edit answers and "
-"mark the right ones."
-msgstr ""
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Validate"
 msgstr "اعتماد"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "Validate question"
-msgstr ""
+msgstr "اعتماد السؤال"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "View"
-msgstr "عرض"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "View Your Badges"
-msgstr "مشاهدة شاراتك"
+msgstr "أداة العرض"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Views"
-msgstr "طرق العرض"
+msgstr "أدوات العرض"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_views
+msgid "Views Count"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__vote
@@ -3041,44 +3008,41 @@ msgid "Vote"
 msgstr "التصويت"
 
 #. module: website_forum
+#: model:ir.model.constraint,message:website_forum.constraint_forum_post_vote_vote_uniq
+msgid "Vote already exists !"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Votes"
 msgstr "التصويتات"
 
 #. module: website_forum
-#: selection:forum.post,state:0
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__pending
 msgid "Waiting Validation"
 msgstr "في انتظار المراجعة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
-msgstr "في انتظار التحقققيد انتظار المراجعة"
+msgstr "في انتظار المراجعة"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__forum_waiting_posts_count
 msgid "Waiting post"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid ""
-"We keep a high level of quality in showcased posts, around 20% of the submited\n"
-"            posts will be featured."
-msgstr ""
+msgstr "مشاركة معلقة"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_id
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Website"
 msgstr "الموقع الإلكتروني"
 
 #. module: website_forum
-#: selection:gamification.challenge,category:0
+#: model:ir.model.fields.selection,name:website_forum.selection__gamification_challenge__category__forum
 msgid "Website / Forum"
-msgstr ""
+msgstr "الموقع/المنتدى"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
@@ -3120,7 +3084,7 @@ msgstr "العنوان الدلالي بالموقع"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_og_img
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "صورة الرسم البياني المفتوح للموقع"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
@@ -3130,40 +3094,15 @@ msgstr "رسالة الترحيب"
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid "Welcome!"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid "What kinds of questions can I ask here?"
-msgstr "ما هي أنواع من الأسئلة يمكن أن أطلب هنا؟"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid "What should I avoid in my answers?"
-msgstr "ماذا يجب أن أتجنب في إجاباتي؟"
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid "What should I avoid in my questions?"
-msgstr "ماذا يجب أن أتجنب في أسئلتي؟"
+msgstr "مرحبًا!"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"When a question or answer is upvoted, the user who posted them will gain some\n"
-"    points, which are called \"karma points\". These points serve as a rough\n"
-"    measure of the community trust to him/her. Various moderation tasks are\n"
-"    gradually assigned to the users based on those points."
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum__allow_link
-msgid "When clicking on the post, it redirects to an external link"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:forum.forum,faq:website_forum.forum_help
-msgid "Why can other people edit my questions/answers?"
+"When a question or answer is upvoted, the user who posted them will gain "
+"some points, which are called \"karma points\". These points serve as a "
+"rough measure of the community trust to him/her. Various moderation tasks "
+"are gradually assigned to the users based on those points."
 msgstr ""
 
 #. module: website_forum
@@ -3172,49 +3111,32 @@ msgid ""
 "You already have one pending post.<br/>\n"
 "            Please wait for a moderator to validate your previous post before continuing."
 msgstr ""
+"لديك بالفعل مشاركة واحدة معلقة.<br/>\n"
+"            برجاء انتظار أن يعتمد أحد المشرفين مشاركتك السابقة قبل الاستمرار."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:139
-#, python-format
-msgid ""
-"You cannot choose %s as default post since the forum does not allow it."
-msgstr ""
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:438
+#: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "You cannot create recursive forum posts."
-msgstr ""
+msgstr "لا يمكنك إنشاء مشاركات تكرارية على المنتدى."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 msgid "You cannot post an empty answer"
-msgstr ""
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:953
-#, python-format
-msgid "You don't have enough karma to create a new Tag."
-msgstr ""
+msgstr "لا يمكنك نشر إجابة فارغة"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
-"You should only ask practical, answerable questions based\n"
-"    on actual problems that you face. Chatty, open-ended\n"
-"    questions diminish the usefulness of this site and push\n"
-"    other questions off the front page."
+"You should only ask practical, answerable questions based on actual problems"
+" that you face. Chatty, open-ended questions diminish the usefulness of this"
+" site and push other questions off the front page."
 msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 msgid "Your Answer"
-msgstr "اجابتك"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
-msgid "Your Discussion Title..."
-msgstr "عنوان نقاشك.."
+msgstr "إجابتك"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -3229,7 +3151,7 @@ msgstr "ردك"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "accept any answer"
-msgstr "قبول أي إجابة"
+msgstr "قبول أية إجابة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -3237,19 +3159,9 @@ msgid "and"
 msgstr "و"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
-msgid "back to post"
-msgstr "عودة إلى المشاركة"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "bad examples"
-msgstr "الأمثلة الرديئة"
-
-#. module: website_forum
-#: selection:gamification.badge,level:0
-msgid "bronze"
-msgstr "البرونزي"
+msgstr "الأمثلة السيئة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3269,7 +3181,7 @@ msgstr "حسب الأكثر إجابة"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "by most voted"
-msgstr "حسب الأكثر تصويتاً"
+msgstr "حسب الأكثر تصويتًا"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3317,24 +3229,19 @@ msgid "duplicate post"
 msgstr "استنساخ المشاركة"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_link
-msgid "e.g. https://www.odoo.com"
-msgstr "مثل https://www.odoo.com"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "edit any post, view offensive flags"
-msgstr ""
+msgstr "تحرير أية مشاركة، عرض المشاركات المسيئة"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "every answer is equally valid: “What’s your favorite ______?”"
-msgstr ""
+msgstr "كافة الإجابات مسموح بها: \"ما ______ المفضل لك؟\""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "flag offensive, close own questions"
-msgstr ""
+msgstr "تعليمه كمسيء، إغلاق السؤال نفسه"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3352,40 +3259,30 @@ msgid "for reason:"
 msgstr "والسبب:"
 
 #. module: website_forum
-#: selection:gamification.badge,level:0
-msgid "gold"
-msgstr "ذهبي"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "good examples"
 msgstr "الأمثلة الجيدة"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "has been closed"
-msgstr "تم إغلاقه"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid ""
 "has been posted and require your validation. Click here to access the "
 "question :"
-msgstr ""
+msgstr "تم نشره وينتظر اعتمادك. اضغط هنا للوصول للسؤال:"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "has been posted. Click here to access the post :"
-msgstr ""
+msgstr "تم نشره. اضغط هنا للوصول للمقال:"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 msgid "has been posted. Click here to access the question :"
-msgstr ""
+msgstr "تم نشره. اضغط هنا للوصول للسؤال:"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:36
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid "here"
 msgstr "هنا"
@@ -3393,36 +3290,38 @@ msgstr "هنا"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "how to configure or customize Odoo to specific business needs,"
-msgstr ""
+msgstr "كيفية إعداد أو تخصيص أودو لاحتياجات أعمال معينة،"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "how to develop modules for your own need,"
-msgstr ""
+msgstr "كيفية تطوير موديولات حسب حاجتك،"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "how to install Odoo on a specific infrastructure,"
-msgstr ""
+msgstr "كيفية تثبيت أودو على بنية تحتية معينة،"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid ""
 "if your\n"
 "        answer is selected as the right one. See what you can do with karma"
 msgstr ""
+"إذا اختيرت\n"
+"        إجابتك كإجابة صحيحة. يمكنك استخدام نقاط الكارما في التالي"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_13
 msgid "inappropriate and unacceptable statements"
-msgstr ""
+msgstr "تعليقات غير لائقة أو غير مقبولة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "insert text link, upload files"
-msgstr ""
+msgstr "إدراج رابط نصي، رفع ملفات"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
@@ -3432,66 +3331,54 @@ msgstr "لغة مهينة ومسيئة"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "karma"
-msgstr "الموثوقية"
+msgstr "إنه هراء على شكل سؤال: “______ مقرف، أليس كذلك؟\""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "karma is required to perform this action. "
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid "karma points"
-msgstr "نقاط الموثوقية"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "last connection"
-msgstr "آخر إتصال"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "location"
-msgstr "المكان"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "member since"
-msgstr "عضو منذ"
+msgstr "نقاط الكارما"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
 msgid "not a real post"
-msgstr "ليس مشاركة حقيقية"
+msgstr "ليست مشاركة حقيقية"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
 msgid "not relevant or out dated"
-msgstr "غير ذات صلة أو عفا عليها الزمن"
+msgstr "غير ذات صلة أو قديمة"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_2
 msgid "off-topic or not relevant"
-msgstr "خارج الموضوع أو ليست ذات صلة"
+msgstr "خارج الموضوع أو غير ذات صلة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
-#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "on"
-msgstr "على"
+msgstr "في"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid ""
 "on social networks get an answer within\n"
 "        5 hours. Questions shared on two social networks have"
 msgstr ""
+"احصل على إجابة عبر شبكات التواصل الاجتماعي خلال\n"
+"        5 ساعات. الأسئلة التي تُطرح على شبكتين تصل"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3504,11 +3391,6 @@ msgid "racist and hate speech"
 msgstr "خطاب عنصري وكراهية"
 
 #. module: website_forum
-#: selection:gamification.badge,level:0
-msgid "silver"
-msgstr "فضية"
-
-#. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
 msgid "spam or advertising"
 msgstr "الرسائل الإعلانية وغير المرغوب بها"
@@ -3516,7 +3398,7 @@ msgstr "الرسائل الإعلانية وغير المرغوب بها"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "specific questions about Odoo service offers, etc."
-msgstr "أسئلة محددة عن عروض خدمة أودو، الخ"
+msgstr "أسئلة محددة عن عروض خدمة أودو، إلخ."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3524,38 +3406,28 @@ msgid ""
 "there is no actual problem to be solved: “I’m curious if other people feel "
 "like I do.”"
 msgstr ""
-"ليس هناك مشكلة فعلية لحلها: \"أنا فضولي إذا كان الأشخاص الآخرين يشعرون كما "
-"أفعل.\""
+"ليس هناك مشكلة فعلية لحلها: \"أتساءل ما إن كان الآخرون يشاركونني نفس "
+"شعوري.\""
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_14
 msgid "threatening language"
-msgstr "لغة التهديد"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "time"
-msgstr "مرة"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "times"
-msgstr "مرات"
+msgstr "لغة تهديد"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
 msgid "too localized"
-msgstr "محدود جغرافياً للغاية"
+msgstr "محدود جغرافيًا للغاية"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_3
 msgid "too subjective and argumentative"
-msgstr "جدلي جداً"
+msgstr "جدلي جدًا"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "upvote, add comments"
-msgstr "التصويت إيجاباً وإضافة تعليقات"
+msgstr "التصويت إيجابًا وإضافة تعليقات"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3565,34 +3437,24 @@ msgstr "مشاهدات"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_12
 msgid "violent language"
-msgstr "لغة مسيئة"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "votes"
-msgstr "تصويتات"
+msgstr "لغة عنيفة"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "waiting for validation"
-msgstr "في انتظار المراجعة"
+msgstr "بانتظار الاعتماد"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid ""
 "we are being asked an open-ended, hypothetical question: “What if ______ "
 "happened?”"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "website"
-msgstr "موقع ويب"
+msgstr "يُطرح علينا سؤال فرضي تخيلي: \"ماذا لو حدث ______؟\""
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "what's the best way to use Odoo for a specific business need,"
-msgstr ""
+msgstr "ما أفضل طريقة لاستخدام أودو لاحتياجات أعمال معينة،"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3600,8 +3462,15 @@ msgid ""
 "your answer is provided along with the question, and you expect more "
 "answers: “I use ______ for ______, what do you use?”"
 msgstr ""
+"تطرح إجابتك مع السؤال، وتطلب إجابات أكثر: \"أنا أستخدم ______ بغرض ______, "
+"ماذا تستخدم أنت؟\""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "your biography can be seen as tooltip"
+msgstr "يمكن عرض سيرتك الذاتية كملحوظة مساعدة"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "圾 Typical Character"
 msgstr ""

@@ -33,6 +33,7 @@
                             <group>
                                 <label for="account_journal_id" string="Journal"/>
                                 <field name="account_journal_id" nolabel="1"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="account_move_id" attrs="{'invisible': [('account_move_id', '=', False)]}"/>
                                 <field name="vendor_bill_id"/>
                             </group>

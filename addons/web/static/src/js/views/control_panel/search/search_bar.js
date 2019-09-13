@@ -28,9 +28,7 @@ var SearchBar = Widget.extend({
 
         this.facets = params.facets;
         this.fields = params.fields;
-        this.filters = params.filters;
         this.filterFields = params.filterFields;
-        this.groupBys = params.groupBys;
 
         this.autoCompleteSources = [];
         this.searchFacets = [];
@@ -166,12 +164,6 @@ var SearchBar = Widget.extend({
             if (Obj) {
                 self.autoCompleteSources.push(new (Obj) (self, filter, field, self.context));
             }
-        });
-        _.each(this.filters, function (filter) {
-            self.autoCompleteSources.push(new (registry.get('filter'))(self, filter));
-        });
-        _.each(this.groupBys, function (filter) {
-            self.autoCompleteSources.push(new (registry.get('groupby'))(self, filter));
         });
     },
 

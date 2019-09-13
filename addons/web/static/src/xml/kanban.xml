@@ -243,9 +243,9 @@
         <t t-set="value" t-value="category.values[valueId]"/>
         <li class="o_search_panel_category_value border-0 list-group-item" t-att-data-id="value.id" t-att-data-category-id="category.id">
             <header t-att-class="'list-group-item-action' + (value.id === category.activeValueId ? ' active' : '')">
-                <label t-att-for="value.display_name" class="o_search_panel_label mb0 d-block">
-                    <i t-if="value.childrenIds.length" t-att-class="'fa fa-fw pull-right o_toggle_fold ' + (value.folded ? 'fa-caret-left' : 'fa-caret-down')"/>
+                <label t-att-for="value.display_name" class="o_search_panel_label mb0">
                     <span class="o_search_panel_label_title"><t t-esc="value.display_name"/></span>
+                    <i t-if="value.childrenIds.length" t-attf-class="fa fa-fw o_toggle_fold {{value.folded ? 'fa-caret-left' : 'fa-caret-down'}}"/>
                 </label>
             </header>
             <ul t-if="!value.folded" class="list-group d-block">

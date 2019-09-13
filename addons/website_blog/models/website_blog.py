@@ -21,6 +21,9 @@ class Blog(models.Model):
     subtitle = fields.Char('Blog Subtitle', translate=True)
     active = fields.Boolean('Active', default=True)
     content = fields.Html('Content', translate=html_translate, sanitize=False)
+    cover_properties = fields.Text(
+        'Cover Properties',
+        default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": "cover_mid"}')
 
     def write(self, vals):
         res = super(Blog, self).write(vals)
@@ -122,15 +125,6 @@ class BlogPost(models.Model):
         for blog_post in self:
             blog_post.website_url = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
 
-    @api.depends('post_date', 'visits')
-    def _compute_ranking(self):
-        res = {}
-        for blog_post in self:
-            if blog_post.id:  # avoid to rank one post not yet saved and so withtout post_date in case of an onchange.
-                age = datetime.now() - fields.Datetime.from_string(blog_post.post_date)
-                res[blog_post.id] = blog_post.visits * (0.5 + random.random()) / max(3, age.days)
-        return res
-
     def _default_content(self):
         return '''
             <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
@@ -160,8 +154,6 @@ class BlogPost(models.Model):
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
     author_avatar = fields.Binary(related='author_id.image_64', string="Avatar", readonly=False)
     visits = fields.Integer('No of Views', copy=False)
-    ranking = fields.Float(compute='_compute_ranking', string='Ranking')
-
     website_id = fields.Many2one(related='blog_id.website_id', readonly=True)
 
     @api.depends('content', 'teaser_manual')
@@ -260,8 +252,7 @@ class BlogPost(models.Model):
         res['default_opengraph']['article:published_time'] = self.post_date
         res['default_opengraph']['article:modified_time'] = self.write_date
         res['default_opengraph']['article:tag'] = self.tag_ids.mapped('name')
-        blog_post_cover_properties = json.loads(self.cover_properties)
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = blog_post_cover_properties.get('background-image', 'none')[4:-1]
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = json.loads(self.cover_properties).get('background-image', 'none')[4:-1]
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_meta_description'] = self.subtitle
         return res

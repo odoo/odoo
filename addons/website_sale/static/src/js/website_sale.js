@@ -414,56 +414,21 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @override
      * @private
      */
-    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, new_carousel, isCombinationPossible) {
-        var $img;
+    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newCarousel, isCombinationPossible) {
         var $carousel = $productContainer.find('#o-carousel-product');
-
-        if (isCombinationPossible === undefined) {
-            isCombinationPossible = this.isSelectedVariantAllowed;
+        // When using the web editor, don't reload this or the images won't
+        // be able to be edited depending on if this is done loading before
+        // or after the editor is ready.
+        if (window.location.search.indexOf('enable_editor') === -1) {
+            var $newCarousel = $(newCarousel);
+            $carousel.after($newCarousel);
+            $carousel.remove();
+            $carousel = $newCarousel;
+            $carousel.carousel(0);
+            this._startZoom();
+            // fix issue with carousel height
+            this.trigger_up('widgets_start_request', {$target: $carousel});
         }
-
-        if (new_carousel) {
-            // When using the web editor, don't reload this or the images won't
-            // be able to be edited depending on if this is done loading before
-            // or after the editor is ready.
-            if (window.location.search.indexOf('enable_editor') === -1) {
-                var $new_carousel = $(new_carousel);
-                $carousel.after($new_carousel);
-                $carousel.remove();
-                $carousel = $new_carousel;
-                $carousel.carousel(0);
-                this._startZoom();
-                // fix issue with carousel height
-                this.trigger_up('widgets_start_request', {$target: $carousel});
-            }
-        }
-        else { // compatibility 12.0
-            var model = productId ? 'product.product' : 'product.template';
-            var modelId = productId || productTemplateId;
-            var imageSrc = '/web/image/{0}/{1}/image_1024'
-                .replace("{0}", model)
-                .replace("{1}", modelId);
-
-            $img = $productContainer.find('img.js_variant_img');
-            $img.attr("src", imageSrc);
-            $img.parent().attr('data-oe-model', model).attr('data-oe-id', modelId)
-                .data('oe-model', model).data('oe-id', modelId);
-
-            var $thumbnail = $productContainer.find('img.js_variant_img_small');
-            if ($thumbnail.length !== 0) { // if only one, thumbnails are not displayed
-                $thumbnail.attr("src", "/web/image/{0}/{1}/image_128/90x90"
-                    .replace('{0}', model)
-                    .replace('{1}', modelId));
-                $('.carousel').carousel(0);
-            }
-
-            // reset zooming constructs
-            $img.filter('[data-zoom-image]').attr('data-zoom-image', $img.attr('src'));
-            if ($img.data('zoomOdoo') !== undefined) {
-                $img.data('zoomOdoo').isReady = false;
-            }
-        }
-
         $carousel.toggleClass('css_not_available', !isCombinationPossible);
     },
     /**
@@ -706,7 +671,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      *
      * @override
      */
-    onChangeVariant: function (ev, data) {
+    onChangeVariant: function (ev) {
         var $component = $(ev.currentTarget).closest('.js_product');
         $component.find('input').each(function () {
             var $el = $(this);

@@ -50,21 +50,22 @@ odoo.define('website_slides.fullscreen', function (require) {
             });
         },
         _loadYoutubeAPI: function () {
-            var def = new Promise(function () {});
-            if ($(document).find('script[src="' + this.youtubeUrl + '"]').length === 0) {
-                var $youtubeElement = $('<script/>', {src: this.youtubeUrl});
-                $(document.head).append($youtubeElement);
+            var self = this;
+            var prom = new Promise(function (resolve, reject) {
+                if ($(document).find('script[src="' + self.youtubeUrl + '"]').length === 0) {
+                    var $youtubeElement = $('<script/>', {src: self.youtubeUrl});
+                    $(document.head).append($youtubeElement);
 
-                // function called when the Youtube asset is loaded
-                // see https://developers.google.com/youtube/iframe_api_reference#Requirements
-                onYouTubeIframeAPIReady = function () {
-                    Promise.resolve(def);
-                };
-
-            } else {
-                Promise.resolve(def);
-            }
-            return def;
+                    // function called when the Youtube asset is loaded
+                    // see https://developers.google.com/youtube/iframe_api_reference#Requirements
+                    onYouTubeIframeAPIReady = function () {
+                        resolve();
+                    };
+                } else {
+                    resolve();
+                }
+            });
+            return prom;
         },
         /**
          * Links the youtube api to the iframe present in the template
@@ -85,9 +86,9 @@ odoo.define('website_slides.fullscreen', function (require) {
         },
         /**
          * Specific method of the youtube api.
-         * Whenever the player starts playing, a setinterval is created.
+         * Whenever the player starts playing/pausing/buffering/..., a setinterval is created.
          * This setinterval is used to check te user's progress in the video.
-         * Once the user reaches a particular time in the video, the slide will be considered as completed
+         * Once the user reaches a particular time in the video (30s before end), the slide will be considered as completed
          * if the video doesn't have a mini-quiz.
          * This method also allows to automatically go to the next slide (or the quiz associated to the current
          * video) once the video is over
@@ -97,22 +98,35 @@ odoo.define('website_slides.fullscreen', function (require) {
          */
         _onPlayerStateChange: function (event){
             var self = this;
-            clearInterval(self.tid);
-            if (event.data === YT.PlayerState.PLAYING && !self.slide.completed) {
+
+            if (self.slide.completed) {
+                return;
+            }
+
+            if (event.data !== YT.PlayerState.ENDED) {
+                if (!event.target.getCurrentTime) {
+                    return;
+                }
+
+                if (self.tid) {
+                    clearInterval(self.tid);
+                }
+
+                self.currentVideoTime = event.target.getCurrentTime();
+                self.totalVideoTime = event.target.getDuration();
                 self.tid = setInterval(function (){
-                    if (event.target.getCurrentTime){
-                        var currentTime = event.target.getCurrentTime();
-                        var totalTime = event.target.getDuration();
-                        if (totalTime && currentTime > totalTime - 30){
-                            clearInterval(self.tid);
-                            if (!self.slide.hasQuestion && !self.slide.completed){
-                                self.trigger_up('slide_to_complete', self.slide);
-                            }
+                    self.currentVideoTime += 1;
+                    if (self.totalVideoTime && self.currentVideoTime > self.totalVideoTime - 30){
+                        clearInterval(self.tid);
+                        if (!self.slide.hasQuestion && !self.slide.completed){
+                            self.trigger_up('slide_to_complete', self.slide);
                         }
                     }
                 }, 1000);
-            }
-            if (event.data === YT.PlayerState.ENDED){
+            } else {
+                if (self.tid) {
+                    clearInterval(self.tid);
+                }
                 this.player = undefined;
                 if (this.slide.hasNext) {
                     this.trigger_up('slide_go_next');
@@ -241,10 +255,12 @@ odoo.define('website_slides.fullscreen', function (require) {
         _onClickTab: function (ev) {
             ev.stopPropagation();
             var $elem = $(ev.currentTarget);
-            var isQuiz = $elem.data('isQuiz');
-            var slideID = parseInt($elem.data('id'));
-            var slide = findSlide(this.slideEntries, {id: slideID, isQuiz: isQuiz});
-            this.set('slideEntry', slide);
+            if ($elem.data('canAccess') === 'True') {
+                var isQuiz = $elem.data('isQuiz');
+                var slideID = parseInt($elem.data('id'));
+                var slide = findSlide(this.slideEntries, {id: slideID, isQuiz: isQuiz});
+                this.set('slideEntry', slide);
+            }
         },
         /**
          * Actively changes the active tab in the sidebar so that it corresponds
@@ -345,7 +361,6 @@ odoo.define('website_slides.fullscreen', function (require) {
                 }, 800);
             });
             clipboard.on('error', function (e) {
-                console.log(e);
                 clipboard.destroy();
             })
         },
@@ -429,7 +444,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                 this._toggleSidebar();
             }
             return this._super.apply(this, arguments).then(function () {
-                self._onChangeSlide(); // trigger manually once DOM ready, since slide content is not rendered server side
+                return self._onChangeSlide(); // trigger manually once DOM ready, since slide content is not rendered server side
             });
         },
         /**
@@ -580,6 +595,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                     }
                 }).then(function (data){
                     self._markAsCompleted(slideId, data.channel_completion);
+                    return Promise.resolve();
                 });
             }
             return Promise.resolve();
@@ -605,7 +621,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
-                    self._setCompleted(slide.id);
+                    return self._setCompleted(slide.id);
                 }
             });
         },
@@ -694,7 +710,7 @@ odoo.define('website_slides.fullscreen', function (require) {
          * Creates slides objects from every slide-list-cells attributes
          */
         _getSlides: function (){
-            var $slides = this.$('.o_wslides_fs_sidebar_list_item');
+            var $slides = this.$('.o_wslides_fs_sidebar_list_item[data-can-access="True"]');
             var slideList = [];
             $slides.each(function () {
                 var slideData = $(this).data();

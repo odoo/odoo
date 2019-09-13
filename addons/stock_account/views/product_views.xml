@@ -9,9 +9,9 @@
             <field name="arch" type="xml">
                 <group name="account_property" position="inside">
                     <group name="account_stock_property" string="Account Stock Properties" groups="account.group_account_user">
-                        <field name="property_stock_account_input_categ_id" domain="[('deprecated', '=', False)]" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
-                        <field name="property_stock_account_output_categ_id" domain="[('deprecated', '=', False)]" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
-                        <field name="property_stock_valuation_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}"/>
+                        <field name="property_stock_account_input_categ_id" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
+                        <field name="property_stock_account_output_categ_id" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
+                        <field name="property_stock_valuation_account_id" options="{'no_create': True}" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}"/>
                         <field name="property_stock_journal" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
                     </group>
                 </group>
@@ -66,13 +66,8 @@
                             widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
                             class="oe_inline"/>
                     </field>
-                    <xpath expr="//div[@name='standard_price_uom']" position="inside">
-                        <span name="update_cost_price">
-                            <button string="Update Cost" type="action"
-                                name="%(action_view_change_standard_price)d"
-                                attrs="{'invisible':['|', ('cost_method', '=', 'fifo'), ('product_variant_count', '=', 1)]}"
-                                class="oe_link pt-0 oe_inline"/>
-                        </span>
+                    <xpath expr="//button[@name='%(action_view_change_standard_price)d']" position="attributes">
+                        <attribute name="attrs">{'invisible': ['|', ('cost_method', '=', 'fifo'), ('product_variant_count', '=', 1)]}</attribute>
                     </xpath>
                 </data>
             </field>

@@ -107,10 +107,14 @@ class Website(Home):
     # Business
     # ------------------------------------------------------
 
+    @http.route('/website/get_languages', type='json', auth="user", website=True)
+    def website_languages(self, **kwargs):
+        return [(lg.code, lg.url_code, lg.name) for lg in request.website.language_ids]
+
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
         if lang == 'default':
-            lang = request.website.default_lang_code
+            lang = request.website.default_lang_id.url_code
             r = '/%s%s' % (lang, r or '/')
         redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
         redirect.set_cookie('frontend_lang', lang)

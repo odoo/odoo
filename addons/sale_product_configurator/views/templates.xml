@@ -37,7 +37,7 @@
                                     "display_currency": (pricelist or product).currency_id
                                 }'/>
                         </h2>
-                        <div class="css_quantity input-group oe_website_spinner">
+                        <div class="css_quantity input-group">
                             <div class="input-group-prepend">
                                 <button t-attf-href="#" class="btn btn-primary js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
                                     <i class="fa fa-minus"></i>
@@ -98,7 +98,7 @@
                     </div>
                 </td>
                 <td class="text-center td-qty">
-                    <div class="css_quantity input-group oe_website_spinner">
+                    <div class="css_quantity input-group">
                         <div class="input-group-prepend">
                             <button t-attf-href="#" class="btn btn-primary js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
                                 <i class="fa fa-minus"></i>
@@ -177,6 +177,21 @@
                             <t t-call="sale.variants"/>
                         </div>
                     </td>
+                    <td class="text-center td-qty d-none">
+                        <div class="css_quantity input-group">
+                            <div class="input-group-prepend">
+                                <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
+                            <div class="input-group-append">
+                                <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
                     <td class="text-center td-price">
                         <div t-attf-class="text-danger oe_default_price oe_optional oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
                             t-esc="combination_info['list_price']"
@@ -193,10 +208,8 @@
                         <span class="js_raw_price d-none" t-esc="combination_info['price']" />
                         <p class="css_not_available_msg alert alert-warning">Option not available</p>
 
-                        <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-add-#{product.id}" value="0"/>
                         <a role="button" href="#" class="js_add btn btn-primary btn-sm"><i class="fa fa-shopping-cart add-optionnal-item"></i> Add to cart</a>
                         <span class="js_remove d-none">
-                            <span class="optional_product_quantity"><span class="js_item add_qty">1 </span><span class="js_items d-none">5 </span> <span t-field="product.uom_id.sudo().name"/><br/></span>
                             <a role="button" href="#" class="js_remove"><i class="fa fa-trash-o remove-optionnal-item"></i></a>
                         </span>
                     </td>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="reconcile_from_label" model="account.reconcile.model">
+            <field name="name">Line with Bank Fees</field>
+            <field name="rule_type">writeoff_suggestion</field>
+            <field name="match_label">contains</field>
+            <field name="match_label_param">BRT</field>
+            <field name="label">Due amount</field>
+            <field name="account_id" model="account.account"
+                search="[('user_type_id', '=', ref('account.data_account_type_revenue')),
+                         ('company_id', '=', obj().env.company.id)]"/>
+            <field name="amount_type">regex</field>
+            <field name="amount_from_label_regex">BRT: ([\d,]+)</field>
+            <field name="decimal_separator">,</field>
+            <field name="has_second_line" eval="True"/>
+            <field name="second_label">Bank Fees</field>
+            <field name="second_account_id" model="account.account"
+                search="[('user_type_id', '=', ref('account.data_account_type_direct_costs')),
+                         ('company_id', '=', obj().env.company.id)]"/>
+            <field name="second_amount_type">percentage</field>
+            <field name="second_amount">100</field>
+        </record>
+    </data>
+</odoo>

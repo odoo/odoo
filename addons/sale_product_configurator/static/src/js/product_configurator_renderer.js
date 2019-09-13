@@ -100,7 +100,7 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(VariantMixin, {
         if (customValueIds) {
             _.each(customValueIds.data, function (customValue) {
                 if (customValue.data.custom_value) {
-                    var attributeValueId = customValue.data.attribute_value_id.data.id;
+                    var attributeValueId = customValue.data.custom_product_template_attribute_value_id.data.id;
                     var $input = self._findRelatedAttributeValueInput(attributeValueId);
                     $input
                         .closest('li[data-attribute_id]')

@@ -77,7 +77,7 @@ class StockPicking(models.Model):
 
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
-    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", check_company=True)
     volume = fields.Float(copy=False)
     weight = fields.Float(compute='_cal_weight', digits='Stock Weight', store=True, help="Total weight of the products in the picking.")
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
@@ -161,7 +161,6 @@ class StockPicking(models.Model):
         self.message_post(body=msg)
         self._add_delivery_cost_to_so()
 
-
     def print_return_label(self):
         self.ensure_one()
         res = self.carrier_id.get_return_label(self)
@@ -172,7 +171,7 @@ class StockPicking(models.Model):
         if sale_order and self.carrier_id.invoice_policy == 'real' and self.carrier_price:
             delivery_lines = sale_order.order_line.filtered(lambda l: l.is_delivery and l.currency_id.is_zero(l.price_unit) and l.product_id == self.carrier_id.product_id)
             if not delivery_lines:
-                sale_order._create_delivery_line(self.carrier_id, self.carrier_price, price_unit_in_description=False)
+                sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
             else:
                 delivery_line = delivery_lines[0]
                 delivery_line[0].write({

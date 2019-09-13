@@ -88,7 +88,7 @@ def rename_column(cr, tablename, columnname1, columnname2):
 def convert_column(cr, tablename, columnname, columntype):
     """ Convert the column to the given type. """
     try:
-        with cr.savepoint():
+        with cr.savepoint(flush=False):
             cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" TYPE {}'.format(tablename, columnname, columntype),
                        log_exceptions=False)
     except psycopg2.NotSupportedError:
@@ -106,7 +106,7 @@ def set_not_null(cr, tablename, columnname):
     """ Add a NOT NULL constraint on the given column. """
     query = 'ALTER TABLE "{}" ALTER COLUMN "{}" SET NOT NULL'.format(tablename, columnname)
     try:
-        with cr.savepoint():
+        with cr.savepoint(flush=False):
             cr.execute(query)
             _schema.debug("Table %r: column %r: added constraint NOT NULL", tablename, columnname)
     except Exception:
@@ -135,7 +135,7 @@ def add_constraint(cr, tablename, constraintname, definition):
     query1 = 'ALTER TABLE "{}" ADD CONSTRAINT "{}" {}'.format(tablename, constraintname, definition)
     query2 = 'COMMENT ON CONSTRAINT "{}" ON "{}" IS %s'.format(constraintname, tablename)
     try:
-        with cr.savepoint():
+        with cr.savepoint(flush=False):
             cr.execute(query1)
             cr.execute(query2, (definition,))
             _schema.debug("Table %r: added constraint %r as %s", tablename, constraintname, definition)
@@ -147,7 +147,7 @@ def add_constraint(cr, tablename, constraintname, definition):
 def drop_constraint(cr, tablename, constraintname):
     """ drop the given constraint. """
     try:
-        with cr.savepoint():
+        with cr.savepoint(flush=False):
             cr.execute('ALTER TABLE "{}" DROP CONSTRAINT "{}"'.format(tablename, constraintname))
             _schema.debug("Table %r: dropped constraint %r", tablename, constraintname)
     except Exception:

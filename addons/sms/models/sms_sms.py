@@ -56,6 +56,9 @@ class SmsSms(models.Model):
             if auto_commit is True and not getattr(threading.currentThread(), 'testing', False):
                 self._cr.commit()
 
+    def cancel(self):
+        self.state = 'canceled'
+
     @api.model
     def _process_queue(self, ids=None):
         """ Send immediately queued messages, committing after each message is sent.

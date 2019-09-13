@@ -1297,35 +1297,51 @@ options.registry.gallery = options.Class.extend({
      * @override
      */
     _setActive: function () {
-        this._super();
-        var classes = _.uniq((this.$target.attr('class').replace(/(^|\s)o_/g, ' ') || '').split(/\s+/));
-        this.$el.find('[data-mode]')
-            .removeClass('active')
-            .filter('[data-mode="' + classes.join('"], [data-mode="') + '"]').addClass('active');
-        var mode = this.$el.find('[data-mode].active').data('mode');
+        this._super(...arguments);
 
-        classes = _.uniq((this.$('img:first').attr('class') || '').split(/\s+/));
-        this.$el.find('[data-styling]')
+        var activeModeSelectors = [];
+        for (const className of this.$target[0].classList) {
+            if (className.startsWith('o_')) {
+                activeModeSelectors.push('[data-mode="' + className.substring(2) + '"]');
+            }
+        }
+        var activeMode = this.$el.find('[data-mode]')
             .removeClass('active')
-            .filter('[data-styling="' + classes.join('"], [data-styling="') + '"]').addClass('active');
+            .filter(activeModeSelectors.join(', '))
+            .addClass('active')
+            .data('mode');
 
-        this.$el.find('[data-interval]').removeClass('active')
-            .filter('[data-interval='+this.$target.find('.carousel:first').attr('data-interval')+']')
+        var carousel = this.$target[0].querySelector('.carousel');
+        var activeInterval = carousel ? carousel.dataset.interval : undefined;
+        var $intervalOptions = this.$el.find('[data-interval]');
+        $intervalOptions.removeClass('active')
+            .filter('[data-interval="' + activeInterval + '"]')
             .addClass('active');
-
-        var interval = this.$target.find('.carousel:first').attr('data-interval');
-        this.$el.find('[data-interval]')
-            .removeClass('active')
-            .filter('[data-interval=' + interval + ']').addClass('active');
+        $intervalOptions.closest('we-collapse-area')[0]
+            .classList.toggle('d-none', activeMode !== 'slideshow');
 
         var columns = this._getColumns();
-        this.$el.find('[data-columns]')
-            .removeClass('active')
-            .filter('[data-columns=' + columns + ']').addClass('active');
+        var $columnOptions = this.$el.find('[data-columns]');
+        $columnOptions.removeClass('active')
+            .filter('[data-columns="' + columns + '"]')
+            .addClass('active');
+        $columnOptions.closest('we-collapse-area')[0]
+            .classList.toggle('d-none', !(activeMode === 'grid' || activeMode === 'masonry'));
 
-        this.$el.find('[data-columns]:first, [data-select-class="spc-none"]')
-            .parent().parent().toggle(['grid', 'masonry'].indexOf(mode) !== -1);
-        this.$el.find('[data-interval]:first').parent().parent().toggle(mode === 'slideshow');
+        this.el.querySelector('.o_w_image_spacing_option')
+            .classList.toggle('d-none', activeMode === 'slideshow');
+
+        var $stylingOptions = this.$el.find('[data-styling]');
+        $stylingOptions.removeClass('active');
+        var img = this.$target[0].querySelector('img');
+        if (img) {
+            var activeStyleSelectors = [];
+            for (const className of img.classList) {
+                activeStyleSelectors.push('[data-styling="' + className + '"]');
+            }
+            $stylingOptions.filter(activeStyleSelectors.join(', '))
+                .addClass('active');
+        }
     },
 });
 
@@ -1410,7 +1426,7 @@ options.registry.topMenuTransparency = options.Class.extend({
                 enabled = value;
             },
         });
-        this.$el.find('[data-transparent]').addBack('[data-transparent]').toggleClass('active', !!enabled);
+        this.$el.find('[data-transparent]').toggleClass('active', !!enabled);
     },
 });
 
@@ -1465,7 +1481,6 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
  */
 options.registry.anchorName = options.Class.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
-    preventChildPropagation: true,
 
     //--------------------------------------------------------------------------
     // Public
@@ -1493,6 +1508,13 @@ options.registry.anchorName = options.Class.extend({
             click: function () {
                 var $input = this.$('.o_input_anchor_name');
                 var anchorName = $input.val().trim().replace(/\s/g, '_');
+                if (self.$target[0].id === anchorName) {
+                    // If the chosen anchor name is already the one used by the
+                    // element, close the dialog and do nothing else
+                    this.close();
+                    return;
+                }
+
                 var isValid = /^[\w-]+$/.test(anchorName);
                 var alreadyExists = isValid && $('#' + anchorName).length > 0;
                 var anchorOK = isValid && !alreadyExists;
@@ -1520,7 +1542,7 @@ options.registry.anchorName = options.Class.extend({
             });
         }
         new Dialog(this, {
-            title: _t("Anchor Name"),
+            title: _t("Link Anchor"),
             $content: $(qweb.render('website.dialog.anchorName', {
                 currentAnchor: this.$target.attr('id'),
             })),

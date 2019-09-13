@@ -360,11 +360,11 @@ odoo.define('partner_autocomplete.tests', function (require) {
                     '<field name="name"/>' +
                     '<field name="parent_id" widget="res_partner_many2one"/>' +
                 '</form>',
-        }).then(function (form) {
+        }).then(async function (form) {
             var $input = form.$('.o_field_many2one[name="parent_id"] input:visible');
             assert.strictEqual($input.length, 1, "there should be an <input/> for the Many2one");
 
-            testUtils.fields.editInput($input, 'odoo');
+            await testUtils.fields.editInput($input, 'odoo');
 
             concurrency.delay(0).then(function () {
                 var $dropdown = $input.autocomplete('widget');

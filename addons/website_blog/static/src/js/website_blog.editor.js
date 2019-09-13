@@ -101,7 +101,8 @@ WysiwygMultizone.include({
             defs.push(this._rpc({
                 route: '/blog/post_change_background',
                 params: {
-                    post_id: parseInt($el.closest('[name="blog_post"], .website_blog').find('[data-oe-model="blog.post"]').first().data('oe-id'), 10),
+                    blog_id: parseInt($el.closest('[name="blog_post"], #o_wblog_blog_top, #o_wblog_post_top').find('[data-oe-model="blog.blog"]').first().data('oe-id'), 10),
+                    post_id: parseInt($el.closest('[name="blog_post"], #o_wblog_blog_top, #o_wblog_post_top').find('[data-oe-model="blog.post"]').first().data('oe-id'), 10),
                     cover_properties: {
                         'background-image': $el.find('.o_blog_cover_image').css('background-image').replace(/"/g, '').replace(window.location.protocol + "//" + window.location.host, ''),
                         'background-color': $el.attr('data-filter-color'),
@@ -235,7 +236,7 @@ options.registry.blog_cover = options.Class.extend({
         var self = this;
         var isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
 
-        _.each(this.$el, function (el) {
+        _.each(this.$el.children(), function (el) {
             var $el = $(el);
 
             if (!$el.is('[data-change]')) {
@@ -254,7 +255,7 @@ options.registry.blog_cover = options.Class.extend({
             $el.find('.o_js_show_regular').toggleClass('d-none', !isRegularCover);
         });
 
-        this.$el.filter('[data-clear]').toggleClass('d-none', !self.$target.hasClass('o_wblog_has_cover'));
+        this.$el.find('[data-clear]').toggleClass('d-none', !self.$target.hasClass('o_wblog_has_cover'));
 
         this.$filterValueOpts.removeClass('active');
         this.$filterColorOpts.removeClass('active');

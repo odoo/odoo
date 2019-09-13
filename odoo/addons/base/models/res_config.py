@@ -568,6 +568,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         current_settings = self.default_get(list(self.fields_get()))
         with self.env.norecompute():
             for name, groups, implied_group in classified['group']:
+                groups = groups.sudo()
+                implied_group = implied_group.sudo()
                 if self[name] == current_settings[name]:
                     continue
                 if int(self[name]):
@@ -626,6 +628,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             to_uninstall_modules.button_immediate_uninstall()
 
         self._install_modules(to_install)
+
 
         if to_install or to_uninstall_modules:
             # After the uninstall/install calls, the registry and environments

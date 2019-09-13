@@ -11,11 +11,13 @@
                         Hello<br/><br/>
                         There is something new in the course <strong>${object.channel_id.name}</strong> you are following:<br/><br/>
                         <center><strong>${object.name}</strong></center>
+                        % if object.image_1024
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a href="${object.website_url}">
                                 <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
                             </a>
                         </div>
+                        % endif
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a href="${object.website_url}"
                                 style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View content</a>

@@ -49,11 +49,12 @@ def first(records):
 
 def resolve_mro(model, name, predicate):
     """ Return the list of successively overridden values of attribute ``name``
-        in mro order on ``model`` that satisfy ``predicate``.
+        in mro order on ``model`` that satisfy ``predicate``.  Model classes
+        (the ones that appear in the registry) are ignored.
     """
     result = []
     for cls in type(model).__mro__:
-        if name in cls.__dict__:
+        if not getattr(cls, 'pool', None) and name in cls.__dict__:
             value = cls.__dict__[name]
             if not predicate(value):
                 break
@@ -392,6 +393,9 @@ class Field(MetaField('DummyField', (object,), {})):
         # determine all inherited field attributes
         modules = set()
         attrs = {}
+        if self.args.get('automatic') and resolve_mro(model, name, self._can_setup_from):
+            # prevent an automatic field from overriding a real field
+            self.args.clear()
         if not (self.args.get('automatic') or self.args.get('manual')):
             # magic and custom fields do not inherit from parent classes
             for field in reversed(resolve_mro(model, name, self._can_setup_from)):
@@ -420,7 +424,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # by default, company-dependent fields are not stored and not copied
             attrs['store'] = False
             attrs['copy'] = attrs.get('copy', False)
-            attrs['default'] = self._default_company_dependent
+            attrs['default'] = attrs.get('default', self._default_company_dependent)
             attrs['compute'] = self._compute_company_dependent
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_company_dependent
@@ -487,37 +491,36 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _setup_regular_base(self, model):
         """ Setup the attributes of a non-related field. """
+        pass
+
+    def _setup_regular_full(self, model):
+        """ Determine the dependencies and inverse field(s) of ``self``. """
         if self.depends is not None:
             return
 
-        def get_depends(func):
-            deps = getattr(func, '_depends', ())
-            return deps(model) if callable(deps) else deps
-
-        def get_depends_context(func):
-            return getattr(func, '_depends_context', ())
-
+        # determine the functions implementing self.compute
         if isinstance(self.compute, str):
-            # if the compute method has been overridden, concatenate all their _depends
-            self.depends = tuple(
-                dep
-                for method in resolve_mro(model, self.compute, callable)
-                for dep in get_depends(method)
-            )
-            depends_context = tuple(
-                dep
-                for method in resolve_mro(model, self.compute, callable)
-                for dep in get_depends_context(method)
-            )
+            funcs = resolve_mro(model, self.compute, callable)
+        elif self.compute:
+            funcs = [self.compute]
         else:
-            self.depends = tuple(get_depends(self.compute))
-            depends_context = tuple(get_depends_context(self.compute))
+            funcs = []
 
-        self.depends_context = (self.depends_context or ()) + depends_context
+        # collect depends and depends_context
+        depends = []
+        depends_context = list(self.depends_context or ())
+        for func in funcs:
+            deps = getattr(func, '_depends', ())
+            depends.extend(deps(model) if callable(deps) else deps)
+            depends_context.extend(getattr(func, '_depends_context', ()))
 
-    def _setup_regular_full(self, model):
-        """ Setup the inverse field(s) of ``self``. """
-        pass
+        self.depends = tuple(depends)
+        self.depends_context = tuple(depends_context)
+
+        # display_name may depend on context['lang'] (`test_lp1071710`)
+        if self.automatic and self.name == 'display_name' and model._rec_name:
+            if model._fields[model._rec_name].translate:
+                self.depends_context += ('lang',)
 
     #
     # Setup of related fields
@@ -690,65 +693,55 @@ class Field(MetaField('DummyField', (object,), {})):
         return Property.search_multi(self.name, self.model_name, operator, value)
 
     #
+    # Cache key for context-dependent fields
+    #
+
+    def cache_key(self, env):
+        """ Return the cache key corresponding to ``self.depends_context``. """
+        get_context = env.context.get
+
+        def get(key):
+            if key == 'force_company':
+                return get_context('force_company') or env.company.id
+            elif key == 'uid':
+                return (env.uid, env.su)
+            elif key == 'active_test':
+                return get_context('active_test', self.context.get('active_test', True))
+            else:
+                return get_context(key)
+
+        return tuple(get(key) for key in self.depends_context)
+
+    #
     # Setup of field triggers
     #
-    # The triggers of a field F is a tree that contains the fields that depend
-    # on F, together with the fields to inverse to find out which records to
-    # recompute.
-    #
-    # For instance, assume that G depends on F, H depends on X.F, I depends on
-    # W.X.F, and J depends on Y.F. The triggers of F will be the tree:
-    #
-    #                                   [G]
-    #                                 X/   \Y
-    #                               [H]     [J]
-    #                             W/
-    #                           [I]
-    #
-    # This tree provides perfect support for the trigger mechanism:
-    # when F is # modified on records,
-    #  - mark G to recompute on records,
-    #  - mark H to recompute on inverse(X, records),
-    #  - mark I to recompute on inverse(W, inverse(X, records)),
-    #  - mark J to recompute on inverse(Y, records).
 
-    def setup_triggers(self, model):
-        def add_trigger(field, path):
-            """ add a trigger on field to recompute self """
-            field_model = model.env[field.model_name]
-            # trigger computations depending on one2many fields only at creation
-            nodes = [field_model._field_triggers_create.setdefault(field, {})]
-            if (field.type != 'one2many') or not field_model._field_inverses[field]:
-                nodes.append(field_model._field_triggers.setdefault(field, {}))
-            for node in nodes:
-                for f in reversed(path):
-                    node = node.setdefault(f, {})
-                node.setdefault(None, []).append(self)
-
+    def resolve_depends(self, model):
+        """ Return the dependencies of `self` as a collection of field tuples. """
         for dotnames in self.depends:
+            field_seq = []
             field_model = model
-            path = []                   # fields from model to field_model
-            for fname in dotnames.split('.'):
-                field = field_model._fields[fname]
-
+            for index, fname in enumerate(dotnames.split('.')):
                 if model._transient and not field_model._transient:
                     # modifying fields on regular models should not trigger
                     # recomputations of fields on transient models
                     break
 
-                # Do not make self trigger itself
-                # e.g. `fields.One2many('stock.move.line', 'move_id', domain=[('product_qty', '=', 0.0)])`
-                # will have 'move_line_nosuggest_ids.product_qty' as a dependency
-                if (field is not self) or path:
-                    add_trigger(field, path)
-
-                if (field is self) and path:
+                field = field_model._fields[fname]
+                if field is self and index:
                     self.recursive = True
 
-                path.append(field)
+                field_seq.append(field)
+
+                # do not make self trigger itself: for instance, a one2many
+                # field line_ids with domain [('foo', ...)] will have
+                # 'line_ids.foo' as a dependency
+                if not (field is self and not index):
+                    yield tuple(field_seq)
+
                 if field.type in ('one2many', 'many2many'):
                     for inv_field in field_model._field_inverses[field]:
-                        add_trigger(inv_field, path)
+                        yield tuple(field_seq) + (inv_field,)
 
                 field_model = model.env.get(field.comodel_name)
 
@@ -950,7 +943,7 @@ class Field(MetaField('DummyField', (object,), {})):
         indexname = '%s_%s_index' % (model._table, self.name)
         if self.index:
             try:
-                with model._cr.savepoint():
+                with model._cr.savepoint(flush=False):
                     sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
             except psycopg2.OperationalError:
                 _schema.error("Unable to add index for %s", self)
@@ -988,9 +981,8 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # update the cache, and discard the records that are not modified
         cache = records.env.cache
-        NOTHING = object()
         cache_value = self.convert_to_cache(value, records)
-        records = records.filtered(lambda record: cache.get(record, self, NOTHING) != cache_value)
+        records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
         cache.update(records, self, [cache_value] * len(records))
@@ -1092,24 +1084,34 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def __set__(self, records, value):
         """ set the value of field ``self`` on ``records`` """
-        protected_records = records & records.env.protected(self)
-        if protected_records:
-            # records being computed: no business logic, no recomputation
-            self.write(protected_records, value)
-            records -= protected_records
+        protected_ids = []
+        new_ids = []
+        other_ids = []
+        for record_id in records._ids:
+            if record_id in records.env._protected.get(self, ()):
+                protected_ids.append(record_id)
+            elif not record_id:
+                new_ids.append(record_id)
+            else:
+                other_ids.append(record_id)
 
-        new_records = records.filtered(lambda record: not record.id)
-        if new_records:
+        if protected_ids:
+            # records being computed: no business logic, no recomputation
+            protected_records = records.browse(protected_ids)
+            self.write(protected_records, value)
+
+        if new_ids:
             # new records: no business logic
+            new_records = records.browse(new_ids)
             with records.env.protecting(records._field_computed.get(self, [self]), records):
-                new_records.modified([self.name], create=True)
+                new_records.modified([self.name])
                 self.write(new_records, value)
                 if self.relational:
                     new_records.modified([self.name])
-            records -= new_records
 
-        if records:
+        if other_ids:
             # base case: full business logic
+            records = records.browse(other_ids)
             write_value = self.convert_to_write(value, records)
             records.write({self.name: write_value})
 
@@ -1407,14 +1409,17 @@ class _String(Field):
 
         # update the cache, and discard the records that are not modified
         cache = records.env.cache
-        NOTHING = object()
         cache_value = self.convert_to_cache(value, records)
-        records = records.filtered(lambda record: cache.get(record, self, NOTHING) != cache_value)
+        records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
         cache.update(records, self, [cache_value] * len(records))
 
         if not self.store:
+            return records
+
+        real_recs = records.filtered('id')
+        if not real_recs._ids:
             return records
 
         update_column = True
@@ -1437,25 +1442,22 @@ class _String(Field):
         # update towrite if modifying the source
         if update_column:
             towrite = records.env.all.towrite[self.model_name]
-            real_record_ids = [r.id for r in records if r.id]
-            for rid in real_record_ids:
+            for rid in real_recs._ids:
                 # cache_value is already in database format
                 towrite[rid][self.name] = cache_value
-            if self.translate is True and real_record_ids:
+            if self.translate is True:
                 tname = "%s,%s" % (records._name, self.name)
-                records.env['ir.translation']._set_source(tname, real_record_ids, value)
+                records.env['ir.translation']._set_source(tname, real_recs._ids, value)
 
         if update_trans:
             if callable(self.translate):
                 # the source value of self has been updated, synchronize
                 # translated terms when possible
-                real_recs = records.filtered('id')
-                records.env['ir.translation']._sync_terms_translations(self, records)
+                records.env['ir.translation']._sync_terms_translations(self, real_recs)
 
             else:
                 # update translations
                 value = self.convert_to_column(value, records)
-                real_recs = records.filtered('id')
                 source_recs = real_recs.with_context(lang='en_US')
                 source_value = first(source_recs)[self.name]
                 if not source_value:
@@ -1470,10 +1472,10 @@ class _String(Field):
                         lang=lang,
                         type='model',
                         state='translated',
-                        res_id=res_id) for res_id in real_recs.ids])
+                        res_id=res_id) for res_id in real_recs._ids])
                 else:
                     records.env['ir.translation']._set_ids(
-                        tname, 'model', lang, real_recs.ids, value, source_value,
+                        tname, 'model', lang, real_recs._ids, value, source_value,
                     )
 
         return records
@@ -1932,9 +1934,8 @@ class Binary(Field):
 
         # update the cache, and discard the records that are not modified
         cache = records.env.cache
-        NOTHING = object()
         cache_value = self.convert_to_cache(value, records)
-        records = records.filtered(lambda record: cache.get(record, self, NOTHING) != cache_value)
+        records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
         cache.update(records, self, [cache_value] * len(records))
@@ -2198,6 +2199,7 @@ class _Relational(Field):
     _slots = {
         'domain': [],                   # domain for searching values
         'context': {},                  # context for searching values
+        'check_company': False,
     }
 
     def __get__(self, records, owner):
@@ -2237,6 +2239,8 @@ class _Relational(Field):
     _description_context = property(attrgetter('context'))
 
     def _description_domain(self, env):
+        if self.check_company and not self.domain:
+            return "['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
         return self.domain(env[self.model_name]) if callable(self.domain) else self.domain
 
     def null(self, record):
@@ -2263,6 +2267,10 @@ class Many2one(_Relational):
 
     :param delegate: set it to ``True`` to make fields of the target model
         accessible from the current model (corresponds to ``_inherits``)
+
+    :param check_company: add default domain ``['|', ('company_id', '=', False),
+        ('company_id', '=', company_id)]``. Mark the field to be verified in
+        ``_check_company``.
 
     The attribute ``comodel_name`` is mandatory except in the case of related
     fields or field extensions.
@@ -2409,9 +2417,8 @@ class Many2one(_Relational):
 
         # discard the records that are not modified
         cache = records.env.cache
-        NOTHING = object()
         cache_value = self.convert_to_cache(value, records)
-        records = records.filtered(lambda record: cache.get(record, self, NOTHING) != cache_value)
+        records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
 
@@ -2477,8 +2484,7 @@ class Many2oneReference(Integer):
         # cache format: id or None
         if isinstance(value, BaseModel):
             value = value._ids[0] if value._ids else None
-
-        return value
+        return super().convert_to_cache(value, record, validate)
 
     def _remove_inverses(self, records, value):
         # TODO: unused
@@ -2679,17 +2685,14 @@ class _RelationalMulti(_Relational):
     def convert_to_display_name(self, value, record):
         raise NotImplementedError()
 
-    def _setup_regular_base(self, model):
-        super(_RelationalMulti, self)._setup_regular_base(model)
+    def _setup_regular_full(self, model):
+        super(_RelationalMulti, self)._setup_regular_full(model)
         if isinstance(self.domain, list):
             self.depends += tuple(
                 self.name + '.' + arg[0]
                 for arg in self.domain
                 if isinstance(arg, (tuple, list)) and isinstance(arg[0], str)
             )
-
-    def _setup_regular_full(self, model):
-        super(_RelationalMulti, self)._setup_regular_full(model)
         # make self depend on 'active_test' if there is a field 'active' in the comodel
         if 'active' in model.env[self.comodel_name] and 'active_test' not in (self.depends_context or ()):
             self.depends_context = (self.depends_context or ()) + ('active_test',)
@@ -3030,6 +3033,10 @@ class Many2many(_RelationalMulti):
             handling that field (dictionary)
 
         :param limit: optional limit to use upon read (integer)
+
+        :param check_company: add default domain ``['|', ('company_id', '=', False),
+            ('company_id', '=', company_id)]``. Mark the field to be verified in
+            ``_check_company``.
 
     """
     type = 'many2many'

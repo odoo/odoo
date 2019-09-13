@@ -207,11 +207,9 @@
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="arch" type="xml">
                 <form string="Reordering Rules">
-                    <group>
-                        <div class="alert alert-info" role="alert">
-                            <a style="cursor: pointer" class="alert-link o_form_uri" type="action" name="%(action_procurement_compute)d">Run the scheduler</a> manually to trigger the reordering rules right now.
-                        </div>
-                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <a style="cursor: pointer" class="alert-link o_form_uri" type="action" name="%(action_procurement_compute)d">Run the scheduler</a> manually to trigger the reordering rules right now.
+                    </div>
                     <sheet>
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">

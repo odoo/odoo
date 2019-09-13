@@ -591,6 +591,8 @@ class ChromeBrowser():
             '--disable-namespace-sandbox': '',
             '--user-data-dir': self.user_data_dir,
             '--disable-translate': '',
+            # required for tours that use Youtube autoplay conditions (namely website_slides' "course_tour")
+            '--autoplay-policy': 'no-user-gesture-required',
             '--window-size': self.window_size,
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.devtools_port),
@@ -1488,6 +1490,8 @@ class Form(object):
                 r.write(values)
         else:
             r = self._model.create(values)
+        self._model.flush()
+        self._model.invalidate_cache()
         [data] = r.read(list(self._view['fields']))
         # FIXME: process relational fields
         # alternative: iterate on record & read from it directly? pb: would
@@ -1557,6 +1561,8 @@ class Form(object):
 
         record = self._model.browse(self._values.get('id'))
         result = record.onchange(self._onchange_values(), fields, spec)
+        self._model.flush()
+        self._model.invalidate_cache()
         if result.get('warning'):
             _logger.getChild('onchange').warn("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})

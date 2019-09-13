@@ -2,9 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Sale Matrix",
-    'summary': """
-       Add variants to Sales Order through a grid entry.
-    """,
+    'summary': "Add variants to Sales Order through a grid entry.",
     'description': """
         This module allows to fill Sales Order rapidly
         by choosing product variants quantity through a Grid Entry.

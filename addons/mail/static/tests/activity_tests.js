@@ -156,13 +156,13 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
     var $th1 = activity.$('table thead tr:first th:nth-child(2)');
     assert.containsOnce($th1, 'span:first:contains(Email)', 'should contain "Email" in header of first column');
     assert.containsOnce($th1, '.o_kanban_counter', 'should contain a progressbar in header of first column');
-    assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:first'), 'data-original-title', '1 planned',
+    assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:first'), 'data-original-title', '1 Planned',
         'the counter progressbars should be correctly displayed');
-    assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:nth-child(2)'), 'data-original-title', '1 today',
+    assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:nth-child(2)'), 'data-original-title', '1 Today',
         'the counter progressbars should be correctly displayed');
     var $th2 = activity.$('table thead tr:first th:nth-child(3)');
     assert.containsOnce($th2, 'span:first:contains(Call)', 'should contain "Call" in header of second column');
-    assert.hasAttrValue($th2.find('.o_kanban_counter_progress .progress-bar:last'), 'data-original-title', '1 overdue',
+    assert.hasAttrValue($th2.find('.o_kanban_counter_progress .progress-bar:nth-child(3)'), 'data-original-title', '1 Overdue',
         'the counter progressbars should be correctly displayed');
     assert.containsNone(activity, 'table thead tr:first th:nth-child(4) .o_kanban_counter',
         'should not contain a progressbar in header of 3rd column');
@@ -179,7 +179,7 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
     assert.containsN(activity, td, 2, 'should contain an empty cell as no activity scheduled yet.');
 
     // schedule an activity (this triggers a do_action)
-    testUtils.fields.editAndTrigger(activity.$(td + ':first'), null, ['mouseenter', 'click']);
+    await testUtils.fields.editAndTrigger(activity.$(td + ':first'), null, ['mouseenter', 'click']);
     assert.containsOnce(activity, 'table tfoot tr .o_record_selector',
         'should contain search more selector to choose the record to schedule an activity for it');
 

@@ -86,10 +86,22 @@ class ProductTemplateAttributeValue(models.Model):
 
 class ProductAttributeCustomValue(models.Model):
     _name = "product.attribute.custom.value"
-    _rec_name = 'custom_value'
     _description = 'Product Attribute Custom Value'
-    _order = 'attribute_value_id, id'
+    _order = 'custom_product_template_attribute_value_id, id'
 
-    attribute_value_id = fields.Many2one('product.attribute.value', string='Attribute Value')
-    sale_order_line_id = fields.Many2one('sale.order.line', string='Sale order line')
-    custom_value = fields.Char('Custom value')
+    name = fields.Char("Name", compute='_compute_name')
+    custom_product_template_attribute_value_id = fields.Many2one('product.template.attribute.value', string="Attribute Value", required=True, ondelete='restrict')
+    sale_order_line_id = fields.Many2one('sale.order.line', string="Sales Order Line", required=True, ondelete='cascade')
+    custom_value = fields.Char("Custom Value")
+
+    @api.depends('custom_product_template_attribute_value_id.name', 'custom_value')
+    def _compute_name(self):
+        for record in self:
+            name = (record.custom_value or '').strip()
+            if record.custom_product_template_attribute_value_id.display_name:
+                name = "%s: %s" % (record.custom_product_template_attribute_value_id.display_name, name)
+            record.name = name
+
+    _sql_constraints = [
+        ('sol_custom_value_unique', 'unique(custom_product_template_attribute_value_id, sale_order_line_id)', "Only one Custom Value is allowed per Attribute Value per Sales Order Line.")
+    ]

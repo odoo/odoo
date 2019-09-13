@@ -473,11 +473,13 @@ var MassMailingFieldHtml = FieldHtml.extend({
     },
     /**
      * @override
+     * @param {MouseEvent} ev
      */
-    _onTranslate: function () {
+    _onTranslate: function (ev) {
         this.trigger_up('translate', {
             fieldName: this.nodeOptions['inline-field'],
-            id: this.dataPointID
+            id: this.dataPointID,
+            isComingFromTranslationAlert: false,
         });
     },
 });

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="test_s2s_form">
+        <input type="hidden" name="data_set" data-create-route="/payment/test/s2s/create_json_3ds"/>
+        <input type="hidden" name="acquirer_id" t-att-value="id"/>
+        <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
+        <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+        <div t-attf-class="row mt8 #{'' if bootstrap_formatting else 'o_card_brand_detail'}">
+            <div t-att-class="'form-group col-lg-12' if bootstrap_formatting else 'form-group'">
+                <input type="tel" name="cc_number" id="cc_number" class="form-control" placeholder="Card number" data-is-required="true"/>
+                <div class="card_placeholder"></div>
+                <div class="visa"></div>
+                <input type="hidden" name="cc_brand" value=""/>
+            </div>
+            <div t-att-class="'form-group col-lg-5' if bootstrap_formatting else 'form-group'">
+                <input type="text" name="cc_holder_name" id="cc_holder_name" class="form-control" placeholder="Cardholder name" data-is-required="true"/>
+            </div>
+            <div t-att-class="'form-group col-lg-3' if bootstrap_formatting else 'form-group'">
+                <input type="text" name="cc_expiry" id="cc_expiry" class="form-control" maxlength="7" placeholder="Expires (MM / YY)" data-is-required="true"/>
+            </div>
+            <div t-att-class="'form-group col-lg-4' if bootstrap_formatting else 'form-group'">
+                <input type="text" name="cvc" id="cvc" class="form-control" maxlength="4" placeholder="CVC" data-is-required="true"/>
+            </div>
+        </div>
+    </template>
+</odoo>

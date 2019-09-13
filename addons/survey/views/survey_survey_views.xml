@@ -44,7 +44,7 @@
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title" style="width: 100%;">
                         <label for="title" class="oe_edit_only"/>
-                        <h1><field name="title" placeholder="Survey Title"/></h1>
+                        <h1><field name="title" placeholder="e.g. Satisfaction Survey"/></h1>
                     </div>
                     <group>
                         <group>
@@ -229,8 +229,6 @@
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
-                <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
-                <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
@@ -259,7 +257,7 @@
           </p><p>
             You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.
           </p><p>
-            Design easily your survey, send invitations to answer by email and analyze answers.
+            Design easily your survey, send invitations and analyze answers.
           </p>
         </field>
     </record>

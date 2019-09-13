@@ -91,7 +91,7 @@ class MailController(http.Controller):
                     suggested_company = record_sudo._get_mail_redirect_suggested_company()
                     if not suggested_company:
                         raise AccessError()
-                    cids += [suggested_company.id]
+                    cids = cids + [suggested_company.id]
                     record_sudo.with_user(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
             except AccessError:
                 return cls._redirect_to_messaging()
@@ -143,7 +143,7 @@ class MailController(http.Controller):
     @http.route('/mail/read_followers', type='json', auth='user')
     def read_followers(self, follower_ids, res_model):
         followers = []
-        is_editable = request.env.user.has_group('base.group_no_one')
+        is_editable = request.env['mail.followers'].user_has_groups('base.group_no_one')
         partner_id = request.env.user.partner_id
         follower_id = None
         follower_recs = request.env['mail.followers'].sudo().browse(follower_ids)

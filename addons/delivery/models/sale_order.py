@@ -48,7 +48,7 @@ class SaleOrder(models.Model):
         self._remove_delivery_line()
 
         for order in self:
-            order._create_delivery_line(carrier, amount, price_unit_in_description=self.carrier_id.invoice_policy == 'real')
+            order._create_delivery_line(carrier, amount)
         return True
 
     def action_open_delivery_wizard(self):
@@ -73,7 +73,7 @@ class SaleOrder(models.Model):
             }
         }
 
-    def _create_delivery_line(self, carrier, price_unit, price_unit_in_description=False):
+    def _create_delivery_line(self, carrier, price_unit):
         SaleOrderLine = self.env['sale.order.line']
         if self.partner_id:
             # set delivery detail in the customer language
@@ -101,12 +101,12 @@ class SaleOrder(models.Model):
             'tax_id': [(6, 0, taxes_ids)],
             'is_delivery': True,
         }
-        if price_unit_in_description:
+        if carrier.invoice_policy == 'real':
             values['price_unit'] = 0
             values['name'] += _(' (Estimated Cost: %s )') % self._format_currency_amount(price_unit)
         else:
             values['price_unit'] = price_unit
-        if carrier.free_over and self._compute_amount_total_without_delivery() >= price_unit:
+        if carrier.free_over and self.currency_id.is_zero(price_unit) :
             values['name'] += '\n' + 'Free Shipping'
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1

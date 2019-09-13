@@ -205,10 +205,10 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             model: 'product.style',
             method: 'search_read',
         }).then(function (data) {
-            var $ul = self.$el.find('div[name="style"]');
+            var $ul = self.$el.find('[name="style"]');
             for (var k in data) {
                 $ul.append(
-                    $('<a class="dropdown-item" role="menuitem" data-style="' + data[k]['id'] + '" data-toggle-class="' + data[k]['html_class'] + '"/>')
+                    $('<we-button data-style="' + data[k]['id'] + '" data-toggle-class="' + data[k]['html_class'] + '"/>')
                         .append(data[k]['name'])
                 );
             }
@@ -222,7 +222,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     onFocus: function () {
         var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_layout_list');
-        this.$el.find('.o_wsale_soptions_menu_sizes').closest('.dropdown-submenu')
+        this.$el.find('.o_wsale_soptions_menu_sizes').closest('we-collapse-area')
             .toggleClass('d-none', listLayoutEnabled);
     },
 

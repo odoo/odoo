@@ -2,9 +2,12 @@
 import requests
 import json
 import base64
+import logging
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests import tagged
+
+_logger = logging.getLogger(__name__)
 
 @tagged('post_install', '-at_install', '-standard', 'external')
 class TestPingenSend(AccountingTestCase):
@@ -59,16 +62,20 @@ class TestPingenSend(AccountingTestCase):
         }
 
         response = requests.post(self.pingen_url, data=self.data, files=files)
-
-        try:
-            response.raise_for_status()
-        except:
-            return False
-
-        return True
+        if 400 <= response.status_code <= 599:
+            msg = "%(code)s %(side)s Error: %(reason)s for url: %(url)s\n%(body)s" % {
+                'code': response.status_code,
+                'side': r"%s",
+                'reason': response.reason,
+                'url': self.pingen_url,
+                'body': response.text}
+            if response.status_code <= 499:
+                raise requests.HTTPError(msg % "Client")
+            else:
+                _logger.warning(msg % "Server")
 
     def test_pingen_send_invoice(self):
-        self.assertTrue(self.render_and_send('external_layout_standard'))
-        self.assertTrue(self.render_and_send('external_layout_background'))
-        self.assertTrue(self.render_and_send('external_layout_boxed'))
-        self.assertTrue(self.render_and_send('external_layout_clean'))
+        self.render_and_send('external_layout_standard')
+        self.render_and_send('external_layout_background')
+        self.render_and_send('external_layout_boxed')
+        self.render_and_send('external_layout_clean')

@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_customer
+# 	* website_customer
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Bohdan Lisnenko, 2018
-# ТАрас <tratatuta@i.ua>, 2018
-# Oleksandr Paziuk <o.paziuk@mobilunity.com>, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Bohdan Lisnenko, 2019
+# ТАрас <tratatuta@i.ua>, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Oleksandr Paziuk <o.paziuk@mobilunity.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Oleksandr Paziuk <o.paziuk@mobilunity.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,26 +29,45 @@ msgid "<span class=\"fa fa-1x fa-tags\"/> All"
 msgstr "<span class=\"fa fa-1x fa-tags\"/> Всі"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+msgstr ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+
+#. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
 msgid "Active"
 msgstr "Активно"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:100
+#: code:addons/website_customer/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "Всі країни"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:81
+#: code:addons/website_customer/controllers/main.py:0
 #, python-format
 msgid "All Sectors of Activity"
 msgstr "Всі галузі діяльності"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
+msgid "Archived"
+msgstr "Заархівовано"
+
+#. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
 msgid "Bootstrap class to customize the color"
 msgstr "Вставте клас, щоб налаштувати колір"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__can_publish
+msgid "Can Publish"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
@@ -83,7 +102,7 @@ msgstr "Створив"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
 msgid "Created on"
-msgstr "Створено"
+msgstr "Створено на"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
@@ -102,13 +121,13 @@ msgstr "Реалізовано"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
-msgid "Is published"
-msgstr "Опубліковано"
+msgid "Is Published"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
 msgid "Last Modified on"
-msgstr "Остання модифікація"
+msgstr "Останні зміни на"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
@@ -126,6 +145,8 @@ msgid ""
 "Manage contact tags to better classify them for tracking and analysis "
 "purposes."
 msgstr ""
+"Керуйте тегами контактів, щоби краще класифікувати їх для цілей відстеження "
+"та аналізу."
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -149,6 +170,8 @@ msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
 "sector, or ..."
 msgstr ""
+"Теги партнера - ці теги можна використовувати на веб-сайті, щоб знайти "
+"клієнтів по секторах або ..."
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
@@ -182,9 +205,14 @@ msgid "Search"
 msgstr "Пошук"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
+msgid "Search Partner Tag"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
 msgid "The full URL to access the document through the website."
-msgstr "URL-адреса повністю, для доступу до документації через сайт"
+msgstr "URL-адреса повністю, для доступу до документації через сайт."
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -207,7 +235,7 @@ msgstr "Мітки сайту"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_url
 msgid "Website URL"
-msgstr "URL сайту"
+msgstr "URL веб-сайту"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner__website_tag_ids

@@ -1,27 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * event_sale
+# 	* event_sale
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
-# amrnegm <amrnegm.01@gmail.com>, 2018
-# Martin Trigaux, 2018
-# hoxhe Aits <hoxhe0@gmail.com>, 2018
-# Osoul <baruni@osoul.ly>, 2018
-# Mohammed Albasha <m.albasha.ma@gmail.com>, 2018
-# Ghaith Gammar <g.gammar@saharaifs.net>, 2018
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2018
-# Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2018
-# Shaima Safar <shaima.safar@open-inside.com>, 2018
-# Keen See <liquid40@live.com>, 2018
-# Husam Migdadi <samwatson18@gmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# amrnegm <amrnegm.01@gmail.com>, 2019
+# Martin Trigaux, 2019
+# hoxhe Aits <hoxhe0@gmail.com>, 2019
+# Osoul <baruni@osoul.ly>, 2019
+# Mohammed Albasha <m.albasha.ma@gmail.com>, 2019
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2019
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
+# Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2019
+# Shaima Safar <shaima.safar@open-inside.com>, 2019
+# Keen See <liquid40@live.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Husam Migdadi <samwatson18@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: Keen See <liquid40@live.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +50,16 @@ msgid "Before confirming"
 msgstr "قبل التأكيد"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__campaign_id
+msgid "Campaign"
+msgstr "الحملة"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
 msgid ""
 "Choose an event and it will automatically create a registration for this "
@@ -64,6 +74,17 @@ msgid ""
 msgstr "اختر تذكرة فعالية وسيتم إنشاء تسجيل لها تلقائيًا."
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__company_id
+msgid "Company"
+msgstr "الشركة"
+
+#. module: event_sale
+#: model:ir.actions.act_window,name:event_sale.event_configurator_action
+msgid "Configure an event"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_uid
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_uid
@@ -71,6 +92,7 @@ msgid "Created by"
 msgstr "أنشئ بواسطة"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_date
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_date
@@ -88,6 +110,7 @@ msgstr ""
 "التذاكر. اجعل هذه القيمة 0 لتجاهل هذه القاعدة وتعيين عدد غير محدود للتذاكر."
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__display_name
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
@@ -116,6 +139,7 @@ msgstr "البريد الإلكتروني"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_id
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__event_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_id
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_id
@@ -129,6 +153,11 @@ msgid "Event Category"
 msgstr "فئة الفعالية"
 
 #. module: event_sale
+#: model:ir.model,name:event_sale.model_event_event_configurator
+msgid "Event Configurator"
+msgstr ""
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_form_view
 msgid "Event Name"
 msgstr "اسم الفعالية"
@@ -138,7 +167,7 @@ msgstr "اسم الفعالية"
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Registration"
-msgstr "تسجيل التنفيذ"
+msgstr "تسجيل الفعالية"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
@@ -148,6 +177,7 @@ msgstr "تسجيلات الفعالية"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
 #: model:ir.model.fields,field_description:event_sale.field_event_event__event_ticket_ids
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
@@ -168,22 +198,24 @@ msgstr "تذكرة الفعالية"
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
 #: model:product.category,name:event_sale.product_category_events
 msgid "Events"
-msgstr "المناسبات"
+msgstr "الفعاليات"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:254
+#: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "Free"
 msgstr "مجاني"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__id
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
 msgid "ID"
-msgstr "المعرف"
+msgstr "المُعرف"
 
 #. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_product_product__event_ok
 #: model:ir.model.fields,help:event_sale.field_product_template__event_ok
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
 msgid ""
@@ -194,22 +226,24 @@ msgstr ""
 "تأكيد عملية البيع."
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_account_invoice
-msgid "Invoice"
-msgstr "الفاتورة"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__is_expired
 msgid "Is Expired"
 msgstr "هو منتهي"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Is an Event Ticket"
 msgstr "هي تذكرة فعالية"
 
 #. module: event_sale
+#: model:ir.model,name:event_sale.model_account_move
+msgid "Journal Entries"
+msgstr "القيود اليومية"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator____last_update
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket____last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor____last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line____last_update
@@ -217,6 +251,7 @@ msgid "Last Modified on"
 msgstr "آخر تعديل في"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
@@ -224,6 +259,7 @@ msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_date
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_date
@@ -231,9 +267,14 @@ msgid "Last Updated on"
 msgstr "آخر تحديث في"
 
 #. module: event_sale
-#: selection:event.event.ticket,seats_availability:0
+#: model:ir.model.fields.selection,name:event_sale.selection__event_event_ticket__seats_availability__limited
 msgid "Limited"
 msgstr "محدود"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
+msgid "Marketing"
+msgstr "التسويق"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_max
@@ -241,7 +282,17 @@ msgid "Maximum Available Seats"
 msgstr "أقصى عدد من المقاعد المتوفرة"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:249
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__medium_id
+msgid "Medium"
+msgstr "وسط"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__mobile
+msgid "Mobile"
+msgstr "الهاتف المحمول"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:0
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
 #, python-format
@@ -249,22 +300,27 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:205
+#: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "لا توجد مقاعد متاحة لهذه التذكرة"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:152
+#: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "No more available seats for this ticket type."
 msgstr "لا توجد مقاعد متاحة لهذا النوع من التذاكر."
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:250
+#: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "None"
-msgstr "لا شئ"
+msgstr "لا شيء"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Ok"
+msgstr "موافق"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
@@ -277,16 +333,16 @@ msgid "Original Registration"
 msgstr "التسجيل الأصلي"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:259
+#: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "Paid"
 msgstr "مدفوع"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:260
+#: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "Payment"
-msgstr "دفع"
+msgstr "دفعة"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
@@ -296,7 +352,7 @@ msgstr "رقم الهاتف"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
 msgid "Price"
-msgstr "سعر"
+msgstr "السعر"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
@@ -310,6 +366,7 @@ msgstr "الخصم بإضافة الضريبة"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__product_id
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__product_id
 msgid "Product"
 msgstr "المنتج"
@@ -320,16 +377,16 @@ msgid "Product Template"
 msgstr "قالب المنتج"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:20
-#: code:addons/event_sale/models/event.py:33
+#: code:addons/event_sale/models/event.py:0
+#: code:addons/event_sale/models/event.py:0
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 #, python-format
 msgid "Registration"
 msgstr "التسجيل"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:34
-#: code:addons/event_sale/models/event.py:51
+#: code:addons/event_sale/models/event.py:0
+#: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "Registration for %s"
 msgstr "تسجيل لـ%s"
@@ -350,26 +407,22 @@ msgid "Reserved Seats"
 msgstr "المقاعد المحجوزة"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order
-msgid "Sale Order"
-msgstr "أمر البيع"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__deadline
 msgid "Sales End"
 msgstr "نهاية المبيعات"
 
 #. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
 msgid "Sales Order"
-msgstr "أمر مبيعات"
+msgstr "أمر البيع"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "سطر أمر المبيعات"
+msgstr "بند أمر المبيعات"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_used
@@ -384,7 +437,12 @@ msgstr "بع أونلاين"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Skip"
-msgstr "تجاوز"
+msgstr "تخطي"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__source_id
+msgid "Source"
+msgstr "المصدر"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
@@ -392,22 +450,41 @@ msgid "Source Sales Order"
 msgstr "أمر البيع المصدر"
 
 #. module: event_sale
-#: model:event.event.ticket,name:event_sale.event_0_ticket_1
-#: model:event.event.ticket,name:event_sale.event_2_ticket_1
-msgid "Standard"
-msgstr "قياسي"
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:257
+#: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "The registration must be paid"
 msgstr "يجب سداد قيمة التسجيل"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:250
+#: model:ir.model.fields,help:event_sale.field_event_registration__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"يساعدك هذا الاسم علي تتبع جهود حملتك المختلفة، مثلًا: fall_drive "
+"،christmas_special"
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_event_registration__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+"هذه هي طريقة التسليم، مثلًا: بطاقة بريدية، أو البريد الإلكتروني أو لافتة "
+"إعلانية"
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_event_registration__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"هذا هو مصدر الرابط، مثلًا: محرك بحث، أو نطاق آخر، أو اسم في قائمة البريد "
+"الإلكتروني"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "Ticket"
-msgstr ""
+msgstr "التذكرة"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
@@ -416,7 +493,7 @@ msgid "Ticket Type"
 msgstr "نوع التذكرة"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:157
+#: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "Ticket cannot belong to both the event category and the event itself."
 msgstr "لا يمكن أن تنتمي التذكرة لفئة الفعالية وللفعالية نفسها."
@@ -434,7 +511,7 @@ msgid "Tickets"
 msgstr "تذاكر"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:256
+#: code:addons/event_sale/models/event.py:0
 #, python-format
 msgid "To pay"
 msgstr "للسداد"
@@ -447,25 +524,13 @@ msgstr "الحجوزات غير المؤكدة"
 #. module: event_sale
 #: model:product.product,uom_name:event_sale.product_product_event
 #: model:product.template,uom_name:event_sale.product_product_event_product_template
-msgid "Unit(s)"
-msgstr "وحدة"
+msgid "Units"
+msgstr ""
 
 #. module: event_sale
-#: selection:event.event.ticket,seats_availability:0
+#: model:ir.model.fields.selection,name:event_sale.selection__event_event_ticket__seats_availability__unlimited
 msgid "Unlimited"
 msgstr "غير محدود"
-
-#. module: event_sale
-#: model:event.event.ticket,name:event_sale.event_0_ticket_2
-#: model:event.event.ticket,name:event_sale.event_2_ticket_2
-msgid "VIP"
-msgstr "VIP"
-
-#. module: event_sale
-#: model:product.product,weight_uom_name:event_sale.product_product_event
-#: model:product.template,weight_uom_name:event_sale.product_product_event_product_template
-msgid "kg"
-msgstr "كجم"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

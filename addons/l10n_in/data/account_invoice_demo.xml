@@ -7,7 +7,7 @@
         <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
         <field name="l10n_in_reseller_partner_id" ref="l10n_in.res_partner_reseller"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
-        <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
@@ -51,7 +51,7 @@
         <field name="type">out_invoice</field>
         <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
-        <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
@@ -98,7 +98,7 @@
         <field name="type">out_invoice</field>
         <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer_out_state"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
-        <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
@@ -118,7 +118,7 @@
         <field name="type">out_invoice</field>
         <field name="partner_id" ref="base.res_partner_3"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
-        <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="l10n_in_export_type">export_with_igst</field>
         <field name="journal_id" model="account.journal"
@@ -148,7 +148,7 @@
         <field name="type">out_invoice</field>
         <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
-        <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {
@@ -176,7 +176,7 @@
         <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
         <field name="l10n_in_reseller_partner_id" ref="l10n_in.res_partner_reseller"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
-        <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-02'"/>
         <field name="reversed_entry_id" ref="l10n_in.demo_invoice_b2b"/>
         <field name="invoice_line_ids" model="account.move.line" eval="[
@@ -221,7 +221,7 @@
         <field name="type">out_refund</field>
         <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
-        <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-02'"/>
         <field name="reversed_entry_id" ref="l10n_in.demo_invoice_b2cl"/>
         <field name="invoice_line_ids" model="account.move.line" eval="[
@@ -243,7 +243,7 @@
         <field name="type">out_invoice</field>
         <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
-        <field name="invoice_payment_term_id" ref="account.account_payment_term"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="invoice_date" eval="(datetime.now() + relativedelta(months=1)).strftime('%Y-%m-01')"/>
         <field name="invoice_line_ids" model="account.move.line" eval="[
             (0, 0, {

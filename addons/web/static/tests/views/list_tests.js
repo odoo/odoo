@@ -94,6 +94,30 @@ QUnit.module('Views', {
                     {id: "2-20170808020000", name: "virtual"},
                 ]
             },
+            "ir.translation": {
+                fields: {
+                    lang_code: {type: "char"},
+                    value: {type: "char"},
+                    res_id: {type: "integer"},
+                    name: {type: "char"},
+                    lang: {type: "char"},
+                },
+                records: [{
+                    id: 99,
+                    res_id: 1,
+                    value: '',
+                    lang_code: 'en_US',
+                    lang: 'en_US',
+                    name: 'foo,foo'
+                },{
+                    id: 100,
+                    res_id: 1,
+                    value: '',
+                    lang_code: 'fr_BE',
+                    lang: 'fr_BE',
+                    name: 'foo,foo'
+                }]
+            },
         };
     }
 }, function () {
@@ -969,7 +993,7 @@ QUnit.module('Views', {
             n += 1;
         });
         await testUtils.dom.click($td);
-        testUtils.fields.editInput($td.find('input'), 'abc');
+        await testUtils.fields.editInput($td.find('input'), 'abc');
         assert.strictEqual(n, 1, "field_changed should have been triggered");
         await testUtils.dom.click(list.$('td:not(.o_list_record_selector)').eq(2));
         assert.strictEqual(n, 1, "field_changed should not have been triggered");
@@ -1470,8 +1494,10 @@ QUnit.module('Views', {
             { field: 'qux', expected: 92, type: 'Float' },
             { field: 'date', expected: 92, type: 'Date' },
             { field: 'datetime', expected: 146, type: 'Datetime' },
+            { field: 'amount', expected: 104, type: 'Monetary' },
+            { field: 'the_button', expected: 25, type: 'with custom width' },
         ];
-        assert.expect(assertions.length + 1);
+        assert.expect(9);
 
         this.data.foo.records = [];
         var list = await createView({
@@ -1485,16 +1511,290 @@ QUnit.module('Views', {
                         '<field name="qux"/>' +
                         '<field name="date"/>' +
                         '<field name="datetime"/>' +
+                        '<field name="amount"/>' +
+                        '<button name="the_button" width="25px"></button>' +
                     '</tree>',
         });
 
+        assert.containsNone(list, 'o_resize', "There shouldn't be any resize handle if no data");
         assertions.forEach(a => {
             assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
                 `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
         });
-        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%', "Char field should occupy the remaining space");
+        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%',
+            "Char field should occupy the remaining space");
 
         list.destroy();
+    });
+
+    QUnit.test('editable list: list view in an initially unselected notebook page', async function (assert) {
+        assert.expect(9);
+
+        this.data.foo.records = [{ id: 1, o2m: [1] }];
+        this.data.bar = {
+            fields: {
+                titi: { string: "Small char", type: "char", sortable: true },
+                grosminet: { string: "Beeg char", type: "char", sortable: true },
+            },
+            records: [
+                {
+                    id: 1,
+                    titi: "Tiny text",
+                    grosminet:
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ' +
+                        'Ut at nisi congue, facilisis neque nec, pulvinar nunc. ' +
+                        'Vivamus ac lectus velit.',
+                },
+            ],
+        };
+        let form;
+        const formOptions = {
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { mode: 'edit' },
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="Page1"></page>' +
+                            '<page string="Page2">' +
+                                '<field name="o2m">' +
+                                    '<tree editable="bottom">' +
+                                        '<field name="titi"/>' +
+                                        '<field name="grosminet"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+        };
+
+        // Case 1: select a record
+        form = await createView(formOptions);
+
+        // Since it is the first case, we assert that the list is initially hidden, then visible
+        // It should not be frozen when displayed.
+        assert.isNotVisible(form.$('.o_field_one2many'),
+            "One2many field should be hidden");
+
+        await testUtils.dom.click(form.$('.nav-item:last-child .nav-link'));
+
+        assert.isVisible(form.$('.o_field_one2many'),
+            "One2many field should be visible");
+
+        let [titi, grosminet] = form.$('.tab-pane:last-child th');
+        assert.strictEqual(titi.style.width, "",
+            "width of small char should not be set yet");
+        assert.strictEqual(grosminet.style.width, "",
+            "width of large char should also not be set");
+
+        await testUtils.dom.click(form.$('.o_data_row .o_data_cell:first-child'));
+        [titi, grosminet] = form.$('th');
+        assert.ok(
+            titi.style.width.split('px')[0] > 80 &&
+            grosminet.style.width.split('px')[0] > 700,
+            "list has been correctly frozen after selecting a record");
+
+        form.destroy();
+
+        // Case 2: add a record
+        form = await createView(formOptions);
+        await testUtils.dom.click(form.$('.nav-item:last-child .nav-link'));
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        [titi, grosminet] = form.$('th');
+        assert.ok(
+            titi.style.width.split('px')[0] > 80 &&
+            grosminet.style.width.split('px')[0] > 700,
+            "list has been correctly frozen after adding a record");
+
+        form.destroy();
+
+        // Case 3: delete a record
+        form = await createView(formOptions);
+        await testUtils.dom.click(form.$('.nav-item:last-child .nav-link'));
+
+        await testUtils.dom.click(form.$('.o_data_row:last() .o_list_record_remove'));
+        [titi, grosminet] = form.$('th');
+        assert.ok(
+            titi.style.width.split('px')[0] > 80 &&
+            grosminet.style.width.split('px')[0] > 700,
+            "list has been correctly frozen after deleting a record");
+
+        form.destroy();
+
+        // Case 4: sort a column
+        form = await createView(formOptions);
+        await testUtils.dom.click(form.$('.nav-item:last-child .nav-link'));
+
+        await testUtils.dom.click(form.$('th:first-child'));
+        [titi, grosminet] = form.$('th');
+        assert.ok(
+            titi.style.width.split('px')[0] > 80 &&
+            grosminet.style.width.split('px')[0] > 700,
+            "list has been correctly frozen after sorting a column");
+
+        form.destroy();
+
+        // Case 5: resize a column
+        form = await createView(formOptions);
+        await testUtils.dom.click(form.$('.nav-item:last-child .nav-link'));
+
+        const resizeHandle = form.$('.o_resize')[0];
+        await testUtils.dom.dragAndDrop(resizeHandle, resizeHandle, {
+            mousemoveTarget: window,
+            mouseupTarget: window,
+        });
+        [titi, grosminet] = form.$('th');
+        assert.ok(
+            titi.style.width.split('px')[0] > 80 &&
+            grosminet.style.width.split('px')[0] > 700,
+            "list has been correctly frozen after resizing a column");
+
+        form.destroy();
+    });
+
+    QUnit.test('editable list: list view hidden by an invisible modifier', async function (assert) {
+        assert.expect(5);
+
+        this.data.foo.records = [{ id: 1, bar: true, o2m: [1] }];
+        this.data.bar = {
+            fields: {
+                titi: { string: "Small char", type: "char", sortable: true },
+                grosminet: { string: "Beeg char", type: "char", sortable: true },
+            },
+            records: [
+                {
+                    id: 1,
+                    titi: "Tiny text",
+                    grosminet:
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ' +
+                        'Ut at nisi congue, facilisis neque nec, pulvinar nunc. ' +
+                        'Vivamus ac lectus velit.',
+                },
+            ],
+        };
+        var form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { mode: 'edit' },
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="bar"/>' +
+                        '<field name="o2m" attrs="{\'invisible\': [(\'bar\', \'=\', True)]}">' +
+                            '<tree editable="bottom">' +
+                                '<field name="titi"/>' +
+                                '<field name="grosminet"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        assert.isNotVisible(form.$('.o_field_one2many'),
+            "One2many field should be hidden");
+
+        await testUtils.dom.click(form.$('.o_field_boolean input'));
+
+        assert.isVisible(form.$('.o_field_one2many'),
+            "One2many field should be visible");
+
+        let [titi, grosminet] = form.$('th');
+        assert.strictEqual(titi.style.width, "",
+            "width of small char should not be set yet");
+        assert.strictEqual(grosminet.style.width, "",
+            "width of large char should also not be set");
+
+        await testUtils.dom.click(form.$('.o_data_row .o_data_cell:first-child'));
+        [titi, grosminet] = form.$('th');
+        assert.ok(
+            titi.style.width.split('px')[0] > 80 &&
+            grosminet.style.width.split('px')[0] > 700,
+            "list has been correctly frozen after selecting a record");
+        // We only test with selecting a record. Other assertion cases are run in the previous test.
+        // Once the o2m is visible, the behaviour is strictly the same.
+        // @see "editable list: list view in an initially unselected notebook page".
+
+        form.destroy();
+    });
+
+    QUnit.test('editable list: updating list state while invisible', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.onchanges = {
+            bar: function (obj) {
+                obj.o2m = [[5], [0, null, { display_name: "Whatever" }]];
+            },
+        };
+        var form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { mode: 'edit' },
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="bar"/>' +
+                        '<notebook>' +
+                            '<page string="Page 1"></page>' +
+                            '<page string="Page 2">' +
+                                '<field name="o2m">' +
+                                    '<tree editable="bottom">' +
+                                        '<field name="display_name"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        await testUtils.dom.click(form.$('.o_field_boolean input'));
+        await testUtils.dom.click(form.$('.nav-item:last() .nav-link'));
+
+        assert.strictEqual(form.$('th')[0].style.width, "",
+            "Column header should be reset and remain unfrozen");
+
+        form.destroy();
+    });
+
+    QUnit.test('editable list: unnamed columns cannot be resized', async function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records = [{ id: 1, o2m: [1] }];
+        this.data.bar.records = [{ id: 1, display_name: "Oui" }];
+        var form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { mode: 'edit' },
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="o2m">' +
+                            '<tree editable="top">' +
+                                '<field name="display_name"/>' +
+                                '<button name="the_button" icon="fa-heart"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        const [charTh, buttonTh] = form.$('.o_field_one2many th');
+        const thRect = charTh.getBoundingClientRect();
+        const resizeRect = charTh.getElementsByClassName('o_resize')[0].getBoundingClientRect();
+
+        assert.strictEqual(thRect.x + thRect.width, resizeRect.x + resizeRect.width,
+            "First resize handle should be attached at the end of the first header");
+        assert.containsNone(buttonTh, '.o_resize',
+            "Columns without name should not have a resize handle");
+
+        form.destroy();
     });
 
     QUnit.test('width of some of the fields should be hardcoded if no data (grouped case)', async function (assert) {
@@ -1504,8 +1804,10 @@ QUnit.module('Views', {
             { field: 'qux', expected: 92, type: 'Float' },
             { field: 'date', expected: 92, type: 'Date' },
             { field: 'datetime', expected: 146, type: 'Datetime' },
+            { field: 'amount', expected: 104, type: 'Monetary' },
+            { field: 'the_button', expected: 25, type: 'with custom width' },
         ];
-        assert.expect(assertions.length + 1);
+        assert.expect(9);
 
         var list = await createView({
             View: ListView,
@@ -1518,15 +1820,19 @@ QUnit.module('Views', {
                         '<field name="qux"/>' +
                         '<field name="date"/>' +
                         '<field name="datetime"/>' +
+                        '<field name="amount"/>' +
+                        '<button name="the_button" width="25px"></button>' +
                     '</tree>',
             groupBy: ['int_field'],
         });
 
+        assert.containsNone(list, 'o_resize', "There shouldn't be any resize handle if no data");
         assertions.forEach(a => {
             assert.strictEqual(list.$(`th[data-name="${a.field}"]`)[0].offsetWidth, a.expected,
                 `Field ${a.type} should have a fixed width of ${a.expected} pixels`);
         });
-        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%');
+        assert.strictEqual(list.$('th[data-name="foo"]')[0].style.width, '100%',
+            "Char field should occupy the remaining space");
 
         list.destroy();
     });
@@ -1665,9 +1971,9 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('row height should not change when switching mode', async function (assert) {
+    QUnit.test('row height and width should not change when switching mode', async function (assert) {
         // Warning: this test is css dependant
-        assert.expect(3);
+        assert.expect(5);
 
         var multiLang = _t.database.multi_lang;
         _t.database.multi_lang = true;
@@ -1702,23 +2008,96 @@ QUnit.module('Views', {
         // the width is hardcoded to make sure we have the same condition
         // between debug mode and non debug mode
         list.$el.width('1200px');
-        var startHeight = list.$('.o_data_row:first').height();
+        var startHeight = list.$('.o_data_row:first').outerHeight();
+        var startWidth = list.$('.o_data_row:first').outerWidth();
 
         // start edition of first row
         await testUtils.dom.click(list.$('.o_data_row:first > td:not(.o_list_record_selector)').first());
-
         assert.hasClass(list.$('.o_data_row:first'), 'o_selected_row');
-        var editionHeight = list.$('.o_data_row:first').height();
+        var editionHeight = list.$('.o_data_row:first').outerHeight();
+        var editionWidth = list.$('.o_data_row:first').outerWidth();
 
         // leave edition
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
-
-        var readonlyHeight = list.$('.o_data_row:first').height();
+        var readonlyHeight = list.$('.o_data_row:first').outerHeight();
+        var readonlyWidth = list.$('.o_data_row:first').outerWidth();
 
         assert.strictEqual(startHeight, editionHeight);
         assert.strictEqual(startHeight, readonlyHeight);
+        assert.strictEqual(startWidth, editionWidth);
+        assert.strictEqual(startWidth, readonlyWidth);
 
         _t.database.multi_lang = multiLang;
+        list.destroy();
+    });
+
+    QUnit.test('fields are translatable in list view', async function (assert) {
+        assert.expect(3);
+
+        var multiLang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+        this.data.foo.fields.foo.translate = true;
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                    return Promise.resolve({
+                        domain: [],
+                        context: {search_default_name: 'foo,foo'},
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([["en_US","English"], ["fr_BE", "Frenglish"]]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            arch: '<tree editable="top">' +
+                        '<field name="foo" required="1"/>' +
+                    '</tree>',
+        });
+
+        await testUtils.dom.click(list.$('.o_data_row:first > td:not(.o_list_record_selector)').first());
+        assert.hasClass(list.$('.o_data_row:first'), 'o_selected_row');
+
+        await testUtils.dom.click(list.$('input.o_field_translate+span.o_field_translate'));
+        await testUtils.nextTick();
+
+        assert.containsOnce($('body'), '.o_translation_dialog');
+        assert.containsN($('.o_translation_dialog'), '.translation>input.o_field_char', 2,
+            'modal should have 2 languages to translate');
+
+        _t.database.multi_lang = multiLang;
+        list.destroy();
+    });
+
+    QUnit.test('long words in text cells should break into smaller lines', async function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records[0].text = "a";
+        this.data.foo.records[1].text = "pneumonoultramicroscopicsilicovolcanoconiosis"; // longest english word I could find
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="text"/></tree>',
+        });
+
+        // Intentionally set the table width to a small size
+        list.$('table').width('100px');
+        list.$('th:last').width('100px');
+        var shortText = list.$('.o_data_row:eq(0) td:last')[0].clientHeight;
+        var longText = list.$('.o_data_row:eq(1) td:last')[0].clientHeight;
+        var emptyText = list.$('.o_data_row:eq(2) td:last')[0].clientHeight;
+
+        assert.strictEqual(shortText, emptyText,
+            "Short word should not change the height of the cell");
+        assert.ok(longText > emptyText,
+            "Long word should change the height of the cell");
+
         list.destroy();
     });
 
@@ -2500,6 +2879,7 @@ QUnit.module('Views', {
             intercepts: {
                 do_action: function (event) {
                     assert.deepEqual(event.data.action, {
+                        context: {create: false},
                         res_id: 2,
                         res_model: 'res_currency',
                         type: 'ir.actions.act_window',
@@ -2510,6 +2890,42 @@ QUnit.module('Views', {
             },
         });
         await testUtils.dom.click(list.$('.o_group_header:eq(0) button'));
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with subfields, and onchange', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.onchanges = {
+            foo: function () {},
+        };
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree editable="bottom" expand="1">
+                    <field name="foo"/>
+                    <field name="currency_id"/>
+                    <groupby name="currency_id">
+                        <field name="position" invisible="1"/>
+                    </groupby>
+                </tree>`,
+            groupBy: ['currency_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.deepEqual(args.args[3], {
+                        foo: "1",
+                        currency_id: "",
+                    }, 'onchange spec should not follow relation of many2one fields');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:first'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), "new value");
+
         list.destroy();
     });
 
@@ -4049,6 +4465,58 @@ QUnit.module('Views', {
         }).length;
         assert.strictEqual(nbInputRight, 2,
             "there should be two right-aligned input");
+
+        list.destroy();
+    });
+
+    QUnit.test('grouped list with another grouped list parent, click unfold', async function (assert) {
+        assert.expect(3);
+        this.data.bar.fields = {
+            cornichon: {string: 'cornichon', type: 'char'},
+        };
+
+        var rec = this.data.bar.records[0];
+        // create records to have the search more button
+        var newRecs = [];
+        for (var i=0; i<8; i++) {
+            var newRec = _.extend({}, rec);
+            newRec.id = 10 + i;
+            newRec.cornichon = 'extra fin';
+            newRecs.push(newRec);
+        }
+        this.data.bar.records = newRecs;
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/><field name="m2o"/></tree>',
+            groupBy: ['bar'],
+            archs: {
+                'bar,false,list': '<tree><field name="cornichon"/></tree>',
+                'bar,false,search': '<search><filter context="{\'group_by\': \'cornichon\'}" string="cornichon"/></search>',
+            },
+        });
+
+        await list.update({groupBy: []});
+
+        await testUtils.dom.click(list.$('.o_data_cell:eq(0)'));
+
+        await testUtils.dom.click(list.$('.o_selected_row .o_data_cell .o_field_many2one input'));
+        await testUtils.dom.triggerEvents($('.ui-autocomplete a:contains(Search More)'),
+            ['mouseenter', 'click']);
+
+        assert.containsOnce($('body'), '.modal-content');
+
+        assert.containsNone($('body'), '.modal-content .o_group_name', 'list in modal not grouped');
+
+        await testUtils.dom.click($('body .modal-content button:contains(Group By)'));
+
+        await testUtils.dom.click($('body .modal-content .o_menu_item a:contains(cornichon)'));
+
+        await testUtils.dom.click($('body .modal-content .o_group_header'));
+
+        assert.containsOnce($('body'), '.modal-content .o_group_open');
 
         list.destroy();
     });
@@ -6955,6 +7423,69 @@ QUnit.module('Views', {
     });
     // TODO: write test on:
     // - default_get with a field not in view
+
+    QUnit.test('editable list: resize column headers', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                    '<field name="reference" optional="hide"/>' +
+                '</tree>',
+        });
+
+        // Target handle
+        const th = list.el.getElementsByTagName('th')[1];
+        const optionalDropdown = list.el.getElementsByClassName('o_optional_columns')[0];
+        const optionalInitialX = optionalDropdown.getBoundingClientRect().x;
+        const resizeHandle = th.getElementsByClassName('o_resize')[0];
+        const originalWidth = th.offsetWidth;
+        const expectedWidth = Math.floor(originalWidth / 2 + resizeHandle.offsetWidth / 2);
+        const delta = originalWidth - expectedWidth;
+
+        await testUtils.dom.dragAndDrop(resizeHandle, th, { mousemoveTarget: window, mouseupTarget: window });
+        const optionalFinalX = Math.floor(optionalDropdown.getBoundingClientRect().x);
+
+        assert.strictEqual(th.offsetWidth, expectedWidth,
+            // 1px for the cell right border
+            "header width should be halved (plus half the width of the handle)");
+        assert.strictEqual(optionalFinalX, optionalInitialX - delta,
+            "optional columns dropdown should have moved the same amount");
+
+        list.destroy();
+    });
+
+    QUnit.test('enter edition in editable list with <widget>', async function (assert) {
+        assert.expect(1);
+
+        var MyWidget = Widget.extend({
+            start: function () {
+                this.$el.html('<i class="fa fa-info"/>');
+            },
+        });
+        widgetRegistry.add('some_widget', MyWidget);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<widget name="some_widget"/>' +
+                    '<field name="int_field"/>' +
+                    '<field name="qux"/>' +
+                '</tree>',
+        });
+
+        // click on int_field cell of first row
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:nth(1)'));
+        assert.strictEqual(document.activeElement.name, "int_field");
+
+        list.destroy();
+        delete widgetRegistry.map.test;
+    });
 });
 
 });

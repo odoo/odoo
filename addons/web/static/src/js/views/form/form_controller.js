@@ -20,8 +20,6 @@ var FormController = BasicController.extend({
         toggle_column_order: '_onToggleColumnOrder',
         focus_control_button: '_onFocusControlButton',
         form_dialog_discarded: '_onFormDialogDiscarded',
-        swipe_left: '_onSwipeLeft',
-        swipe_right: '_onSwipeRight',
     }),
     /**
      * @override
@@ -188,7 +186,7 @@ var FormController = BasicController.extend({
         var self = this;
         if (this.hasSidebar) {
             var otherItems = [];
-            if (this.archiveEnabled) {
+            if (this.archiveEnabled && this.initialState.data.active !== undefined) {
                 var classname = "o_sidebar_item_archive" + (this.initialState.data.active ? "" : " o_hidden")
                 otherItems.push({
                     label: _t("Archive"),
@@ -579,7 +577,14 @@ var FormController = BasicController.extend({
             return;
         }
 
-        def.then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
+        // Kind of hack for FormViewDialog: button on footer should trigger the dialog closing
+        // if the `close` attribute is set
+        def.then(function () {
+            self._enableButtons();
+            if (attrs.close) {
+                self.trigger_up('close_dialog');
+            }
+        }).guardedCatch(this._enableButtons.bind(this));
     },
     /**
      * Called when the user wants to create a new record -> @see createRecord
@@ -626,7 +631,9 @@ var FormController = BasicController.extend({
      * @private
      */
     _onEdit: function () {
-        this._setMode('edit');
+        // wait for potential pending changes to be saved (done with widgets
+        // allowing to edit in readonly)
+        this.mutex.getUnlockedDef().then(this._setMode.bind(this, 'edit'));
     },
     /**
      * This method is called when someone tries to freeze the order, most likely
@@ -680,13 +687,16 @@ var FormController = BasicController.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onOpenOne2ManyRecord: function (ev) {
+    _onOpenOne2ManyRecord: async function (ev) {
         ev.stopPropagation();
         var data = ev.data;
         var record;
         if (data.id) {
             record = this.model.get(data.id, {raw: true});
         }
+
+        // Sync with the mutex to wait for potential onchanges
+        await this.model.mutex.getUnlockedDef();
 
         new dialogs.FormViewDialog(this, {
             context: data.context,
@@ -738,30 +748,6 @@ var FormController = BasicController.extend({
         var self = this;
         this._disableButtons();
         this.saveRecord().then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
-    },
-    /**
-     * Called when user swipes left. Move to next record.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onSwipeLeft: function (ev) {
-        ev.stopPropagation();
-        if (this.pager) {
-            this.pager.next();
-        }
-    },
-    /**
-     * Called when user swipes right. Move to previous record.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onSwipeRight: function (ev) {
-        ev.stopPropagation();
-        if (this.pager) {
-            this.pager.previous();
-        }
     },
     /**
      * This method is called when someone tries to sort a column, most likely

@@ -20,7 +20,6 @@ var FormView = BasicView.extend({
     multi_record: false,
     withSearchBar: false,
     searchMenuTypes: [],
-    jsLibs: [],
     viewType: 'form',
     /**
      * @override
@@ -48,9 +47,6 @@ var FormView = BasicView.extend({
         this.controllerParams.mode = mode;
 
         this.rendererParams.mode = mode;
-        if (config.device.isMobile) {
-            this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -127,6 +123,10 @@ var FormView = BasicView.extend({
                     var refinedContext = _.pick(self.loadParams.context, function (value, key) {
                         return key.indexOf('_view_ref') === -1;
                     });
+                    // Specify the main model to prevent access rights defined in the context
+                    // (e.g. create: 0) to apply to subviews. We use here the same logic as
+                    // the one applied by the server for inline views.
+                    refinedContext.base_model_name = self.controllerParams.modelName;
                     defs.push(parent.loadViews(
                             field.relation,
                             new Context(context, self.userContext, refinedContext).eval(),

@@ -15,8 +15,8 @@
     </template>
     <template id="sale_onboarding_order_confirmation_step">
         <t t-call="base.onboarding_step">
-            <t t-set="title">Confirmation &amp; Payment</t>
-            <t t-set="description">Choose how to confirm quotations and get paid.</t>
+            <t t-set="title">Payment method</t>
+            <t t-set="description">Choose your default customer payment method.</t>
             <t t-set="btn_text">Set payments</t>
             <t t-set="method" t-value="'action_open_sale_onboarding_payment_acquirer'" />
             <t t-set="model" t-value="'res.company'" />

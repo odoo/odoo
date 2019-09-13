@@ -369,7 +369,7 @@ class TestPayment(AccountingTestCase):
             'name': 'Bank',
             'type': 'bank',
             'code': 'COUCOU',
-            'post_at_bank_rec': True,
+            'post_at': 'bank_rec',
         })
         payment_one = self.payment_model.create({'payment_type': 'inbound',
             'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,

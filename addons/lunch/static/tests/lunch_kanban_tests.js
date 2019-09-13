@@ -122,7 +122,7 @@ QUnit.module('LunchKanbanView', {
             "should have a 'classical kanban view' column");
         assert.hasClass(kanban.$('.o_kanban_view'), 'o_lunch_kanban_view',
             "should have classname 'o_lunch_kanban_view'");
-        assert.containsOnce(kanban, '.o_lunch_kanban > .o_lunch_kanban_banner',
+        assert.containsOnce(kanban, '.o_lunch_kanban > span > .o_lunch_kanban_banner',
             "should have a 'lunch kanban' banner");
 
         kanban.destroy();
@@ -207,6 +207,56 @@ QUnit.module('LunchKanbanView', {
                 "should have the first column visible");
             assert.strictEqual($kanbanWidget.find('> .o_lunch_widget_info:not(:first)').html().trim(), "",
                 "all columns but the first should be empty");
+
+            kanban.destroy();
+        });
+
+        QUnit.test('search panel domain location', async function (assert) {
+            assert.expect(10);
+            const locationId = this.data['lunch.location'].records[0].id;
+            const regularInfos = _.extend({}, this.regularInfos);
+
+            const kanban = await createLunchKanbanView({
+                View: LunchKanbanView,
+                model: 'product',
+                data: this.data,
+                arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div><field name="name"/></div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+                mockRPC: function (route, args) {
+                    assert.step(route);
+
+                    if (route.startsWith('/lunch')) {
+                        return mockLunchRPC({
+                            infos: regularInfos,
+                            userLocation: locationId,
+                        }).apply(this, arguments);
+                    }
+                    if (args.method === 'search_panel_select_multi_range') {
+                        assert.deepEqual(args.kwargs.search_domain, [["is_available_at", "in", [locationId]]],
+                            'The initial domain of the search panel must contain the user location');
+                    }
+                    if (route === '/web/dataset/search_read') {
+                        assert.deepEqual(args.domain, [["is_available_at", "in", [locationId]]],
+                            'The domain for fetching actual data should be correct');
+                    }
+                    return this._super.apply(this, arguments);
+                }
+            });
+            assert.verifySteps([
+                '/lunch/user_location_get',
+                '/web/dataset/call_kw/product/search_panel_select_multi_range',
+                '/web/dataset/call_kw/product/search_panel_select_multi_range',
+                '/web/dataset/search_read',
+                '/lunch/infos',
+                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
+            ])
 
             kanban.destroy();
         });
@@ -597,7 +647,7 @@ QUnit.module('LunchKanbanView', {
                             views: [[false, 'form']],
                             target: 'new',
                             context: {
-                                default_product_id: undefined,
+                                default_product_id: 1,
                                 line_id: false,
                             },
                         },

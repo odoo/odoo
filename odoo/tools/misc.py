@@ -1225,6 +1225,25 @@ def format_date(env, value, lang_code=False, date_format=False):
 
     return babel.dates.format_date(value, format=date_format, locale=locale)
 
+def parse_date(env, value, lang_code=False):
+    '''
+        Parse the date from a given format. If it is not a valid format for the
+        localization, return the original string.
+
+        :param env: an environment.
+        :param string value: the date to parse.
+        :param string lang_code: the lang code, if not specified it is extracted from the
+            environment context.
+        :return: date object from the localized string
+        :rtype: datetime.date
+    '''
+    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+    locale = babel.Locale.parse(lang.code)
+    try:
+        return babel.dates.parse_date(value, locale=locale)
+    except:
+        return value
+
 
 def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
     """ Formats the datetime in a given format.
@@ -1249,8 +1268,10 @@ def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
     except Exception:
         localized_datetime = utc_datetime
 
-    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
-    locale = babel.Locale.parse(lang.code)
+    lang_code = lang_code or env.context.get('lang') or 'en_US'
+    lang = env['res.lang']._lang_get(lang_code)
+
+    locale = babel.Locale.parse(lang.code or lang_code)  # lang can be inactive, so `lang`is empty
     if not dt_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
         time_format = posix_to_ldml(lang.time_format, locale=locale)

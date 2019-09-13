@@ -157,7 +157,17 @@ var ActivityRenderer = AbstractRenderer.extend({
             columnID: typeId,
             progressBarStates: {},
         }, {
-            count: _.reduce(_.values(counts), function (x, y) { return x + y; }),
+            count: _.reduce(_.values(counts), (x, y) => x + y),
+            fields: {
+                activity_state: {
+                    type: 'selection',
+                    selection: [
+                        ['planned', _t('Planned')],
+                        ['today', _t('Today')],
+                        ['overdue', _t('Overdue')],
+                    ],
+                },
+            },
             progressBarValues: {
                 field: 'activity_state',
                 colors: { planned: 'success', today: 'warning', overdue: 'danger' },

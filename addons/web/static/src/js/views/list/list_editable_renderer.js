@@ -99,6 +99,8 @@ ListRenderer.include({
         this.currentRow = null;
         this.currentFieldIndex = null;
         this.allRecordsIds = null; // flat array of records ids used by navigation
+        this.isResizing = false;
+        this.eventListeners = [];
     },
     /**
      * @override
@@ -109,6 +111,18 @@ ListRenderer.include({
             core.bus.on('click', this, this._onWindowClicked.bind(this));
         }
         return this._super();
+    },
+    /**
+     * Overriden to unbind all attached listeners
+     *
+     * @override
+     */
+    destroy: function () {
+        this.eventListeners.forEach(listener => {
+            const { type, el, callback, options } = listener;
+            el.removeEventListener(type, callback, options);
+        });
+        return this._super.apply(this, arguments);
     },
     /**
      * The list renderer needs to know if it is in the DOM, and to be notified
@@ -493,7 +507,9 @@ ListRenderer.include({
      */
     updateState: function (state, params) {
         this.columnWidths = false;
-        if (params.keepWidths) {
+        // There are some cases where a record is added to an invisible list
+        // e.g. set a quotation template with optionnal products
+        if (params.keepWidths && this.$el.is(':visible')) {
             this.columnWidths = this.$('thead th').toArray().map(function (th) {
                 return $(th).outerWidth();
             });
@@ -510,6 +526,23 @@ ListRenderer.include({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * Used to bind event listeners so that they can be unbound when the list
+     * is destroyed.
+     * There is no reverse method (list._removeEventListener) because there is
+     * no issue with removing an non-existing listener.
+     *
+     * @private
+     * @param {string} type event name
+     * @param {EventTarget} el event target
+     * @param {Function} callback callback function to attach
+     * @param {Object} options event listener options
+     */
+    _addEventListener: function (type, el, callback, options) {
+        el.addEventListener(type, callback, options);
+        this.eventListeners.push({ type, el, callback, options });
+    },
 
     /**
      * Destroy all field widgets corresponding to a record.  Useful when we are
@@ -540,17 +573,21 @@ ListRenderer.include({
      * @private
      */
     _freezeColumnWidths: function () {
-        if (!this._hasVisibleRecords(this.state) && !this.columnWidths) {
-            // there is no record nor widths to restore -> don't force column's
-            // widths w.r.t. their label
+        if (!this.columnWidths && (!this._hasVisibleRecords(this.state) || !this.$el.is(':visible'))) {
+            // there is no record nor widths to restore or the list is not visible
+            // -> don't force column's widths w.r.t. their label
             return;
         }
-        var $thead = this.$('thead');
-        $thead.find('th').each((index, th) => {
-            var $th = $(th);
-            $th.css('width', this.columnWidths ? this.columnWidths[index] : $th.outerWidth() + 'px');
+        const table = this.el.getElementsByTagName('table')[0];
+        const thead = table.getElementsByTagName('thead')[0];
+
+        // Freeze each th width according to their size in auto layout
+        [...thead.getElementsByTagName('th')].forEach((th, index) => {
+            th.style.width = `${this.columnWidths ? this.columnWidths[index] : th.offsetWidth}px`;
         });
-        this.$('table').css('table-layout', 'fixed');
+
+        // Set the table layout to fixed
+        table.style.tableLayout = 'fixed';
     },
     /**
      * Returns the width of a column according the 'width' attribute set in the
@@ -973,6 +1010,24 @@ ListRenderer.include({
         return $thead;
     },
     /**
+     * Overriden to add a resize handle in editable list column headers.
+     * Only applies to headers containing text.
+     *
+     * @override
+     * @private
+     */
+    _renderHeaderCell: function () {
+        const $th = this._super.apply(this, arguments);
+        if (this.editable && $th[0].innerHTML.length && this._hasVisibleRecords(this.state)) {
+            const resizeHandle = document.createElement('span');
+            resizeHandle.classList = 'o_resize';
+            resizeHandle.onclick = this._onClickResize.bind(this);
+            resizeHandle.onmousedown = this._onStartResize.bind(this);
+            $th.append(resizeHandle);
+        }
+        return $th;
+    },
+    /**
      * Editable rows are possibly extended with a trash icon on their right, to
      * allow deleting the corresponding record.
      * For many2many editable lists, the trash bin is replaced by X.
@@ -1122,6 +1177,7 @@ ListRenderer.include({
         if (rowIndex === this.currentRow) {
             return Promise.resolve();
         }
+        this._freezeColumnWidths();
         var recordId = this._getRecordID(rowIndex);
         // To select a row, the currently selected one must be unselected first
         var self = this;
@@ -1209,8 +1265,18 @@ ListRenderer.include({
         var $td = $(event.currentTarget);
         var $tr = $td.parent();
         var rowIndex = $tr.prop('rowIndex') - 1;
-        var fieldIndex = Math.max($tr.find('.o_data_cell').not('.o_list_button').index($td), 0);
+        var fieldIndex = Math.max($tr.find('.o_field_cell').index($td), 0);
         this._selectCell(rowIndex, fieldIndex, {event: event});
+    },
+    /**
+     * We want to override any default mouse behaviour when clicking on the resize handles
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickResize: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
     },
     /**
      * We need to manually unselect row, because no one else would do it
@@ -1372,9 +1438,98 @@ ListRenderer.include({
      * @private
      */
     _onSortColumn: function () {
-        if (this.currentRow === null) {
+        if (this.currentRow === null && !this.isResizing) {
             this._super.apply(this, arguments);
         }
+    },
+    /**
+     * Handles the resize feature on the column headers
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onStartResize: function (ev) {
+        // Only triggered by left mouse button
+        if (ev.which !== 1) {
+            return;
+        }
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        this.isResizing = true;
+
+        const table = this.el.getElementsByTagName('table')[0];
+        const th = ev.target.closest('th');
+        // Freeze the whole table width
+        this._freezeColumnWidths();
+        table.style.width = `${table.offsetWidth}px`;
+        const thPosition = [...th.parentNode.children].indexOf(th);
+        const resizingColumnElements = [...table.getElementsByTagName('tr')]
+            .filter(tr => tr.children.length === th.parentNode.children.length)
+            .map(tr => tr.children[thPosition]);
+        const optionalDropdown = this.el.getElementsByClassName('o_optional_columns')[0];
+        const initialX = ev.pageX;
+        const initialWidth = th.offsetWidth;
+        const initialTableWidth = table.offsetWidth;
+        const initialDropdownX = optionalDropdown ? optionalDropdown.offsetLeft : null;
+        const resizeStoppingEvents = [
+            'keydown',
+            'mousedown',
+            'mouseup',
+        ];
+
+        // Apply classes to table and selected column
+        table.classList.add('o_resizing');
+        resizingColumnElements.forEach(el => el.classList.add('o_column_resizing'));
+
+        // Mousemove event : resize header
+        const resizeHeader = ev => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const delta = ev.pageX - initialX;
+            const newWidth = Math.max(10, initialWidth + delta);
+            const tableDelta = newWidth - initialWidth;
+            th.style.width = `${newWidth}px`;
+            table.style.width = `${initialTableWidth + tableDelta}px`;
+            if (optionalDropdown) {
+                optionalDropdown.style.left = `${initialDropdownX + tableDelta}px`;
+            }
+        };
+        this._addEventListener('mousemove', window, resizeHeader);
+
+        // Mouse or keyboard events : stop resize
+        const stopResize = ev => {
+            // Ignores the initial 'left mouse button down' event in order
+            // to not instantly remove the listener
+            if (ev.type === 'mousedown' && ev.which === 1) {
+                return;
+            }
+            ev.preventDefault();
+            ev.stopPropagation();
+            // We need a small timeout to not trigger a click on column header
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = setTimeout(() => {
+                this.isResizing = false;
+            }, 100);
+            window.removeEventListener('mousemove', resizeHeader);
+            table.classList.remove('o_resizing');
+            resizingColumnElements.forEach(el => el.classList.remove('o_column_resizing'));
+            resizeStoppingEvents.forEach(stoppingEvent => {
+                window.removeEventListener(stoppingEvent, stopResize);
+            });
+
+            // we remove the focus to make sure that the there is no focus inside
+            // the tr.  If that is the case, there is some css to darken the whole
+            // thead, and it looks quite weird with the small css hover effect.
+            document.activeElement.blur();
+        };
+        // We have to listen to several events to properly stop the resizing function. Those are:
+        // - mousedown (e.g. pressing right click)
+        // - mouseup : logical flow of the resizing feature (drag & drop)
+        // - keydown : (e.g. pressing 'Alt' + 'Tab' or 'Windows' key)
+        resizeStoppingEvents.forEach(stoppingEvent => {
+            this._addEventListener(stoppingEvent, window, stopResize);
+        });
     },
     /**
      * Unselect the row before adding the optional column to the listview

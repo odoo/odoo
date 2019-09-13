@@ -39,7 +39,7 @@ var GroupByMenu = DropdownMenu.extend({
         // determines list of options used by groupBys of type 'date'
         this.groupableFields = [];
         _.each(fields, function (field, name) {
-            if (field.sortable && _.contains(GROUPABLE_TYPES, field.type)) {
+            if (field.sortable && name !== "id" && _.contains(GROUPABLE_TYPES, field.type)) {
                 self.groupableFields.push(_.extend({}, field, {
                     name: name,
                 }));

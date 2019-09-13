@@ -5,18 +5,18 @@
 <!-- ======   Template: Blogs Navbar   =========================================
 ============================================================================ -->
 <template id="blogs_nav" name="Blogs Bar Template">
-    <nav t-attf-class="navbar navbar-expand-sm navbar-light #{additionnal_classes}">
+    <nav t-attf-class="navbar navbar-expand-sm navbar-light #{additionnal_classes}" t-if="len(blogs) > 1">
         <div class="container">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <span class="nav-link disabled pl-0">Blogs:</span>
                 </li>
-                <li t-if="len(blogs) > 1" class="nav-item">
+                <li class="nav-item">
                     <a href="/blog" t-attf-class="nav-link font-weight-bold #{(not blog) and 'active'}">All</a>
                 </li>
                 <li class="nav-item" t-foreach="blogs" t-as="nav_blog">
                     <a t-attf-href="/blog/#{slug(nav_blog)}"
-                       t-attf-class="nav-link #{(blog and nav_blog.id == blog.id and (not tag and not date_begin)) and 'active' or ''}">
+                       t-attf-class="nav-link #{(blog and nav_blog.id == blog.id) and 'active' or ''}">
                         <b t-field="nav_blog.name"/>
                     </a>
                 </li>

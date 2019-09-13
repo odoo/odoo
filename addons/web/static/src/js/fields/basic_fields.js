@@ -40,13 +40,9 @@ var TranslatableFieldMixin = {
      * @returns {jQuery}
      */
     _renderTranslateButton: function () {
-        if (_t.database.multi_lang && this.field.translate && this.res_id) {
+        if (_t.database.multi_lang && this.field.translate) {
             var lang = _t.database.parameters.code.split('_')[0].toUpperCase();
-            return $('<button>', {
-                    type: 'button',
-                    'class': 'o_field_translate fa fa-globe btn btn-link',
-                    'data-code': lang,
-                })
+            return $(`<span class="o_field_translate btn btn-link">${lang}</span>`)
                 .on('click', this._onTranslate.bind(this));
         }
         return $();
@@ -59,10 +55,16 @@ var TranslatableFieldMixin = {
     /**
      * open the translation view for the current field
      *
+     * @param {MouseEvent} ev
      * @private
      */
-    _onTranslate: function () {
-        this.trigger_up('translate', {fieldName: this.name, id: this.dataPointID});
+    _onTranslate: function (ev) {
+        ev.preventDefault();
+        this.trigger_up('translate', {
+            fieldName: this.name,
+            id: this.dataPointID,
+            isComingFromTranslationAlert: false,
+        });
     },
 };
 
@@ -213,7 +215,9 @@ var InputField = DebouncedField.extend({
         if (!event || event === this.lastChangeEvent) {
             this.isDirty = false;
         }
-        if (this.isDirty || (event && event.target === this && event.data.changes[this.name] === this.value)) {
+        if (this.isDirty || (event && event.target === this &&
+            event.data.changes &&
+            event.data.changes[this.name] === this.value)) {
             if (this.attrs.decorations) {
                 // if a field is modified, then it could have triggered an onchange
                 // which changed some of its decorations. Since we bypass the
@@ -498,7 +502,10 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
         if (this.field.size && this.field.size > 0) {
             this.$el.attr('maxlength', this.field.size);
         }
-        this.$el = this.$el.add(this._renderTranslateButton());
+        if (this.field.translate) {
+            this.$el = this.$el.add(this._renderTranslateButton());
+            this.$el.addClass('o_field_translate');
+        }
         return def;
     },
     /**
@@ -1327,8 +1334,10 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     start: function () {
         if (this.mode === 'edit') {
             dom.autoresize(this.$el, this.autoResizeOptions);
-
-            this.$el = this.$el.add(this._renderTranslateButton());
+            if (this.field.translate) {
+                this.$el = this.$el.add(this._renderTranslateButton());
+                this.$el.addClass('o_field_translate');
+            }
         }
         return this._super();
     },
@@ -1380,7 +1389,7 @@ var HandleWidget = AbstractField.extend({
     description: _lt("Handle"),
     noLabel: true,
     className: 'o_row_handle fa fa-arrows ui-sortable-handle',
-    widthInList: '32px',
+    widthInList: '33px',
     tagName: 'span',
     supportedFieldTypes: ['integer'],
 
@@ -1822,8 +1831,11 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 
         if(this.nodeOptions.zoom) {
             var unique = this.recordData.__last_update;
-            var url = this._getImageUrl(this.model, this.res_id, 'image', unique);
+            var url = this._getImageUrl(this.model, this.res_id, 'image_1920', unique);
             var $img;
+            var imageField = _.find(Object.keys(this.recordData), function(o) {
+                return o.startsWith('image_');
+            });
 
             if(this.nodeOptions.background)
             {
@@ -1844,7 +1856,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                 $img = this.$('img');
             }
 
-            if(this.recordData.image) {
+            if(this.recordData[imageField]) {
                 $img.attr('data-zoom', 1);
                 $img.attr('data-zoom-image', url);
 
@@ -1865,6 +1877,17 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             }
         }
     },
+});
+
+var KanbanFieldBinaryImage = FieldBinaryImage.extend({
+    // In kanban views, there is a weird logic to determine whether or not a
+    // click on a card should open the record in a form view.  This logic checks
+    // if the clicked element has click handlers bound on it, and if so, does
+    // not open the record (assuming that the click will be handle by someone
+    // else).  In the case of this widget, there are clicks handler but they
+    // only apply in edit mode, which is never the case in kanban views, so we
+    // simply remove them.
+    events: {},
 });
 
 var FieldBinaryFile = AbstractFieldBinary.extend({
@@ -1941,7 +1964,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                     'download': true,
                     'data': utils.is_bin_size(this.value) ? null : this.value,
                 },
-                error: () => this.call('crash_manager', 'rpc_error', ...arguments),
+                error: (error) => this.call('crash_manager', 'rpc_error', error),
                 url: '/web/content',
             });
             ev.stopPropagation();
@@ -3266,6 +3289,7 @@ return {
     FieldPdfViewer: FieldPdfViewer,
     AbstractFieldBinary: AbstractFieldBinary,
     FieldBinaryImage: FieldBinaryImage,
+    KanbanFieldBinaryImage: KanbanFieldBinaryImage,
     FieldBoolean: FieldBoolean,
     BooleanToggle: BooleanToggle,
     FieldChar: FieldChar,
@@ -3278,7 +3302,7 @@ return {
     FieldFloatTime: FieldFloatTime,
     FieldFloatFactor: FieldFloatFactor,
     FieldFloatToggle: FieldFloatToggle,
-    FieldPercentage : FieldPercentage,
+    FieldPercentage: FieldPercentage,
     FieldInteger: FieldInteger,
     FieldMonetary: FieldMonetary,
     FieldPercentPie: FieldPercentPie,

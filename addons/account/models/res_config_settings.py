@@ -17,7 +17,7 @@ class ResConfigSettings(models.TransientModel):
         domain="[('company_id', '=', company_id), ('type', '=', 'general')]",
         help='The accounting journal where automatic exchange differences will be registered')
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
-    chart_template_id = fields.Many2one('account.chart.template', string='Template',
+    chart_template_id = fields.Many2one('account.chart.template', string='Template', default=lambda self: self.env.company.chart_template_id,
         domain="[('visible','=', True)]")
     sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False)
     purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id', readonly=False)
@@ -51,7 +51,6 @@ class ResConfigSettings(models.TransientModel):
     module_account_budget = fields.Boolean(string='Budget Management')
     module_account_payment = fields.Boolean(string='Invoice Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
-    module_account_reports_followup = fields.Boolean("Follow-up Levels")
     module_account_check_printing = fields.Boolean("Allow check printing and deposits")
     module_account_batch_payment = fields.Boolean(string='Use batch payments',
         help='This allows you grouping payments into a single batch and eases the reconciliation process.\n'
@@ -92,14 +91,13 @@ class ResConfigSettings(models.TransientModel):
         super(ResConfigSettings, self).set_values()
         if self.group_multi_currency:
             self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
-        """ install a chart of accounts for the given company (if required) """
+        # install a chart of accounts for the given company (if required)
         if self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
             self.chart_template_id._load(15.0, 15.0, self.env.company)
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
-        self.chart_template_id = self.company_id.chart_template_id or False
         self.has_accounting_entries = self.env['account.chart.template'].existing_accounting(self.company_id)
 
     @api.onchange('show_line_subtotals_tax_selection')

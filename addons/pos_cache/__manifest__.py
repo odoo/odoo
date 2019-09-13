@@ -3,8 +3,7 @@
 {
     'name': "pos_cache",
 
-    'summary': """
-        Enable a cache on products for a lower POS loading time.""",
+    'summary': "Enable a cache on products for a lower POS loading time.",
 
     'description': """
 This creates a product cache per POS config. It drastically lowers the

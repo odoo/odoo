@@ -173,7 +173,8 @@ class MailActivity(models.Model):
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
         for activity in self:
-            activity.res_name = self.env[activity.res_model].browse(activity.res_id).display_name
+            activity.res_name = activity.res_model and \
+                self.env[activity.res_model].browse(activity.res_id).display_name
 
     @api.depends('date_deadline')
     def _compute_state(self):

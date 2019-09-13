@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model='l10n_latam.identification.type' id='l10n_latam_base.it_vat'>
+        <field name='l10n_pe_vat_code'>6</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='l10n_latam_base.it_pass'>
+        <field name='l10n_pe_vat_code'>7</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='l10n_latam_base.it_fid'>
+        <field name='l10n_pe_vat_code'>4</field>
+    </record>
+
+    <record model='l10n_latam.identification.type' id='it_DNI'>
+        <field name='name'>DNI</field>
+        <field name='description'>National Identity Document</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>1</field>
+        <field name='sequence'>82</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_NDTD'>
+        <field name='name'>Non-Domiciled Tax Document</field>
+        <field name='description'>Document without RUC from another country</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>0</field>
+        <field name='sequence'>86</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_DIC'>
+        <field name='name'>Diplomatic Identity Card</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>A</field>
+        <field name='sequence'>105</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_IDCR'>
+        <field name='name'>Identity document of the country of residence</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>B</field>
+        <field name='sequence'>110</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_TIN'>
+        <field name='name'>Tax Identification Number</field>
+        <field name='description'>TIN – Doc Trib PP.NN</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>C</field>
+        <field name='sequence'>115</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_IN'>
+        <field name='name'>Identification Number</field>
+        <field name='description'>IN - Doc Trib PP. JJ</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>D</field>
+        <field name='sequence'>120</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_TAM'>
+        <field name='name'>TAM</field>
+        <field name='description'>Andean Immigration Card</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>E</field>
+        <field name='sequence'>125</field>
+    </record>
+</odoo>

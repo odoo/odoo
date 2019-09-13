@@ -27,8 +27,6 @@
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                 <separator/>
-                <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
-                <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
@@ -76,8 +74,8 @@
                     <group>
                         <group>
                             <field name="owner_user_id" string="Requested By" invisible="1"/>
-                            <field name="equipment_id"  context="{'default_category_id':category_id}"/>
-                            <field name="category_id" groups="maintenance.group_equipment_manager" attrs="{'invisible': [('equipment_id', '=', False)]}"/>
+                            <field name="equipment_id"  context="{'default_company_id':company_id, 'default_category_id':category_id}"/>
+                            <field name="category_id" groups="maintenance.group_equipment_manager" context="{'default_company_id':company_id}" attrs="{'invisible': [('equipment_id', '=', False)]}"/>
                             <field name="request_date" readonly="True"/>
                             <field name="done" invisible="1"/>
                             <field name="close_date" attrs="{'invisible': [('done', '!=', True)]}" readonly="True"/>
@@ -96,6 +94,7 @@
                             </div>
                             <field name="priority" widget="priority"/>
                             <field name="email_cc" string="Email cc" groups="base.group_no_one"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <field name='description' placeholder="Internal Note ......."/>
@@ -129,8 +128,8 @@
                 <templates>
                     <t t-name="kanban-tooltip">
                        <ul class="oe_kanban_tooltip">
-                          <li><b>Category:</b> <field name="category_id"/></li>
-                          <li><b>Request to:</b> <field name="user_id"/></li>
+                          <li t-if="record.category_id.raw_value"><b>Category:</b> <t t-esc="record.category_id.value"/></li>
+                          <li t-if="record.user_id.raw_value"><b>Request to:</b> <t t-esc="record.user_id.value"/></li>
                        </ul>
                     </t>
                     <t t-name="kanban-box">
@@ -340,6 +339,7 @@
                         <button name="%(hr_equipment_request_action_from_equipment)d"
                             type="action"
                             class="oe_stat_button"
+                            context="{'default_company_id': company_id}"
                             icon="fa-wrench">
                             <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                         </button>
@@ -352,12 +352,12 @@
                     <group>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="category_id" options="{&quot;no_open&quot;: True}"/>
+                            <field name="category_id" options="{&quot;no_open&quot;: True}" context="{'default_company_id':company_id}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="owner_user_id" string="Owner"/>
                         </group>
                         <group>
-                            <field name="maintenance_team_id" attrs="{'required': [('period', '!=', 0)]}"/>
+                            <field name="maintenance_team_id" attrs="{'required': [('period', '!=', 0)]}" context="{'default_company_id':company_id}"/>
                             <field name="technician_user_id"/>
                             <field name="assign_date" groups="base.group_no_one"/>
                             <field name="scrap_date" groups="base.group_no_one"/>
@@ -430,8 +430,8 @@
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
-                            <li><b>Serial Number:</b> <field name="serial_no"/></li>
-                            <li><b>Model Number:</b> <field name="model"/></li>
+                            <li t-if="record.serial_no.raw_value"><b>Serial Number:</b> <t t-esc="record.serial_no.value"/></li>
+                            <li t-if="record.model.raw_value"><b>Model Number:</b> <t t-esc="record.model.value"/></li>
                         </ul>
                     </t>
                     <t t-name="kanban-box">
@@ -518,10 +518,6 @@
                 <filter string="Under Maintenance" name="under_maintenance" domain="[('maintenance_open_count', '&gt;', 0)]"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
-                <separator/>
-                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                <separator/>
-                <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
                 <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"

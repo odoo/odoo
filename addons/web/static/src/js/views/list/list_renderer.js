@@ -34,7 +34,6 @@ var FIELD_CLASSES = {
 };
 
 var ListRenderer = BasicRenderer.extend({
-    className: 'o_list_view',
     events: {
         "mousedown": "_onMouseDown",
         "click .o_optional_columns_dropdown .dropdown-item": "_onToggleOptionalColumn",
@@ -386,6 +385,7 @@ var ListRenderer = BasicRenderer.extend({
         if (node.tag === 'button') {
             tdClassName += ' o_list_button';
         } else if (node.tag === 'field') {
+            tdClassName += ' o_field_cell';
             var typeClass = FIELD_CLASSES[this.state.fields[node.attrs.name].type];
             if (typeClass) {
                 tdClassName += (' ' + typeClass);
@@ -745,6 +745,9 @@ var ListRenderer = BasicRenderer.extend({
         var isNodeSorted = order[0] && order[0].name === name;
         var field = this.state.fields[name];
         var $th = $('<th>');
+        if (name) {
+            $th.attr('data-name', name);
+        }
         if (node.attrs.class) {
             if (node.attrs.class.indexOf('oe_edit_only') !== -1) {
                 $th.addClass('oe_edit_only');
@@ -764,7 +767,6 @@ var ListRenderer = BasicRenderer.extend({
             }
         }
         $th.text(description)
-            .attr('data-name', name)
             .attr('tabindex', -1)
             .toggleClass('o-sort-down', isNodeSorted ? !order[0].asc : false)
             .toggleClass('o-sort-up', isNodeSorted ? order[0].asc : false)
@@ -902,6 +904,7 @@ var ListRenderer = BasicRenderer.extend({
 
         // display the no content helper if there is no data to display
         var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
+        this.$el.toggleClass('o_list_view', !displayNoContentHelper);
         if (displayNoContentHelper) {
             // destroy the previously instantiated pagers, if any
             _.invoke(oldPagers, 'destroy');

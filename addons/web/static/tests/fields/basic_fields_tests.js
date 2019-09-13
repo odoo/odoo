@@ -1,6 +1,7 @@
 odoo.define('web.basic_fields_tests', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
@@ -12,7 +13,6 @@ var session = require('web.session');
 var testUtils = require('web.test_utils');
 var field_registry = require('web.field_registry');
 
-var createView = testUtils.createView;
 var createView = testUtils.createView;
 var DebouncedField = basicFields.DebouncedField;
 var JournalDashboardGraph = basicFields.JournalDashboardGraph;
@@ -122,6 +122,19 @@ QUnit.module('basic_fields', {
                     display_name: "€",
                     symbol: "€",
                     position: "after",
+                }]
+            },
+            "ir.translation": {
+                fields: {
+                    lang_code: {type: "char"},
+                    value: {type: "char"},
+                    res_id: {type: "integer"}
+                },
+                records: [{
+                    id: 99,
+                    res_id: 37,
+                    value: '',
+                    lang_code: 'en_US'
                 }]
             },
         };
@@ -1059,7 +1072,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('char field translatable', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         this.data.partner.fields.foo.translate = true;
 
@@ -1081,7 +1094,13 @@ QUnit.module('basic_fields', {
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
                     assert.deepEqual(args.args, ["partner",1,"foo"], 'should call "call_button" route');
-                    return Promise.resolve();
+                    return Promise.resolve({
+                        domain: [],
+                        context: {search_default_name: 'partnes,foo'},
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([["en_US"], ["fr_BE"]]);
                 }
                 return this._super.apply(this, arguments);
             },
@@ -1089,10 +1108,27 @@ QUnit.module('basic_fields', {
         await testUtils.form.clickEdit(form);
         var $button = form.$('input[type="text"].o_field_char + .o_field_translate');
         assert.strictEqual($button.length, 1, "should have a translate button");
+        assert.strictEqual($button.text(), 'EN', 'the button should have as test the current language');
         await testUtils.dom.click($button);
+        await testUtils.nextTick();
+
+        assert.containsOnce($(document), '.modal', 'a translate modal should be visible');
+
         form.destroy();
 
-        form = await createView({
+        _t.database.multi_lang = multiLang;
+    });
+
+    QUnit.test('char field translatable in create mode', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.foo.translate = true;
+
+        var multiLang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+
+
+        var form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -1104,8 +1140,8 @@ QUnit.module('basic_fields', {
                     '</sheet>' +
                 '</form>',
         });
-        $button = form.$('input[type="text"].o_field_char + .o_field_translate');
-        assert.strictEqual($button.length, 0, "should not have a translate button in create mode");
+        var $button = form.$('input[type="text"].o_field_char + .o_field_translate');
+        assert.strictEqual($button.length, 1, "should have a translate button in create mode");
         form.destroy();
 
         _t.database.multi_lang = multiLang;
@@ -1716,7 +1752,13 @@ QUnit.module('basic_fields', {
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
                     assert.deepEqual(args.args, ["partner",1,"txt"], 'should call "call_button" route');
-                    return Promise.resolve();
+                    return Promise.resolve({
+                        domain: [],
+                        context: {search_default_name: 'partnes,foo'},
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([["en_US"], ["fr_BE"]]);
                 }
                 return this._super.apply(this, arguments);
             },
@@ -1725,9 +1767,19 @@ QUnit.module('basic_fields', {
         var $button = form.$('textarea + .o_field_translate');
         assert.strictEqual($button.length, 1, "should have a translate button");
         await testUtils.dom.click($button);
+        assert.containsOnce($(document), '.modal', 'there should be a translation modal');
         form.destroy();
+        _t.database.multi_lang = multiLang;
+    });
 
-        form = await createView({
+    QUnit.test('text field translatable in create mode', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.txt.translate = true;
+
+        var multiLang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+        var form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -1739,8 +1791,8 @@ QUnit.module('basic_fields', {
                     '</sheet>' +
                 '</form>',
         });
-        $button = form.$('textarea + .o_field_translate');
-        assert.strictEqual($button.length, 0, "should not have a translate button in create mode");
+        var $button = form.$('textarea + .o_field_translate');
+        assert.strictEqual($button.length, 1, "should have a translate button in create mode");
         form.destroy();
 
         _t.database.multi_lang = multiLang;
@@ -2796,8 +2848,32 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('date field should remove the date  if the date is not valid', async function (assert) {
-        assert.expect(1);
+    QUnit.test('date field: set an invalid date when the field is already set', async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><field name="date"/></form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        var $input = form.$('.o_field_widget[name=date] input');
+
+        assert.strictEqual($input.val(), "02/03/2017");
+
+        $input.val('mmmh').trigger('change');
+        assert.strictEqual($input.val(), "02/03/2017", "should have reset the original value");
+
+        form.destroy();
+    });
+
+    QUnit.test('date field: set an invalid date when the field is not set yet', async function (assert) {
+        assert.expect(2);
 
         var form = await createView({
             View: FormView,
@@ -2805,13 +2881,18 @@ QUnit.module('basic_fields', {
             data: this.data,
             arch: '<form string="Partners"><field name="date"/></form>',
             res_id: 4,
+            viewOptions: {
+                mode: 'edit',
+            },
         });
-        // switch to edit mode
-        await testUtils.form.clickEdit(form);
-        // set an invalid date
+
         var $input = form.$('.o_field_widget[name=date] input');
+
+        assert.strictEqual($input.text(), "");
+
         $input.val('mmmh').trigger('change');
         assert.strictEqual($input.text(), "", "The date field should be empty");
+
         form.destroy();
     });
 
@@ -2967,17 +3048,17 @@ QUnit.module('basic_fields', {
         // switch to edit mode
         await testUtils.form.clickEdit(form);
         // open datepicker and select another value
-        testUtils.dom.openDatepicker(form.$('.o_datepicker'));
-        testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch').first());
-        testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch:eq(1)'));
-        testUtils.dom.click($('.bootstrap-datetimepicker-widget .year').eq(11));
-        testUtils.dom.click($('.bootstrap-datetimepicker-widget .month').eq(11));
-        testUtils.dom.click($('.day:contains(31)'));
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch').first());
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch:eq(1)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .year').eq(11));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .month').eq(11));
+        await testUtils.dom.click($('.day:contains(31)'));
 
         var $warn = form.$('.o_datepicker_warning:visible');
         assert.strictEqual($warn.length, 1, "should have a warning in the form view");
 
-        testUtils.fields.editSelect(form.$('.o_field_widget[name=date] input'), '');  // remove the value
+        await testUtils.fields.editSelect(form.$('.o_field_widget[name=date] input'), '');  // remove the value
 
         $warn = form.$('.o_datepicker_warning:visible');
         assert.strictEqual($warn.length, 0, "the warning in the form view should be hidden");
@@ -3100,7 +3181,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_datepicker_input').val(), '02/03/2017',
             'the date should be correct in edit mode');
 
-        testUtils.fields.editAndTrigger(form.$('.o_datepicker_input'), '', ['input', 'change', 'focusout']);
+        await testUtils.fields.editAndTrigger(form.$('.o_datepicker_input'), '', ['input', 'change', 'focusout']);
         assert.strictEqual(form.$('.o_datepicker_input').val(), '',
             'should have correctly removed the value');
 
@@ -5817,7 +5898,11 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.module('FieldColor');
+    QUnit.module('FieldColor', {
+        before: function () {
+            return ajax.loadXML('/web/static/src/xml/colorpicker_dialog.xml', core.qweb);
+        },
+    });
 
     QUnit.test('Field Color: default widget state', async function (assert) {
         assert.expect(3);
@@ -5837,7 +5922,6 @@ QUnit.module('basic_fields', {
         });
 
         await testUtils.dom.click(form.$('.o_field_color'));
-        await testUtils.nextTick();
         assert.containsOnce($, '.modal');
         assert.containsNone($('.modal'), '.o_opacity_slider',
             "Opacity slider should not be present");

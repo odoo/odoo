@@ -113,7 +113,7 @@ var EditorMenu = Widget.extend({
     save: function (reload) {
         var self = this;
         this.trigger_up('edition_will_stopped');
-        return this.wysiwyg.save(true).then(function (result) {
+        return this.wysiwyg.save(false).then(function (result) {
             var $wrapwrap = $('#wrapwrap');
             self.editable($wrapwrap).removeClass('o_editable');
             if (result.isDirty && reload !== false) {

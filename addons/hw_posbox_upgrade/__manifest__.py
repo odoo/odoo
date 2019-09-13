@@ -6,7 +6,7 @@
     'category': 'Point of Sale',
     'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'sequence': 6,
-    'summary': 'Allows to remotely upgrade the IoTBox software',
+    'summary': 'Remotely upgrade the IoTBox software',
     'description': """
 IoTBox Software Upgrader
 ========================

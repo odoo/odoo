@@ -69,6 +69,8 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('cuenta208_01'),
+                'tag_ids': [ref('tag_iva')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -80,6 +82,8 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('cuenta209_01'),
+                'tag_ids': [ref('tag_iva')],
             }),
         ]"/>
     </record>
@@ -104,7 +108,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'tag_ids': [ref('l10n_mx.tag_iva')],
                 'account_id': ref('cuenta208_01'),
                 'tag_ids': [ref('tag_iva')],
             }),
@@ -118,7 +121,6 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'tag_ids': [ref('l10n_mx.tag_iva')],
                 'account_id': ref('cuenta209_01'),
                 'tag_ids': [ref('tag_iva')],
             }),

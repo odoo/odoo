@@ -64,6 +64,7 @@ class TestInventory(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
+            'company_id': self.env.company.id,
         })
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
@@ -97,6 +98,7 @@ class TestInventory(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
+            'company_id': self.env.company.id,
         })
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
@@ -125,6 +127,7 @@ class TestInventory(SavepointCase):
         lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
+            'company_id': self.env.company.id,
         })
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
@@ -332,6 +335,72 @@ class TestInventory(SavepointCase):
         for line in inventory.line_ids:
             self.assertEqual(line.product_qty, 0)
             self.assertNotEqual(line.theoretical_qty, 0)
+
+    def test_inventory_9_cancel_then_start(self):
+        """ Checks when we cancel an inventory, then change its locations and/or
+        products setup and restart it, it will remove all its lines and restart
+        like a new inventory.
+        """
+        # Creates some records needed for the test...
+        product2 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        loc1 = self.env['stock.location'].create({
+            'name': 'SafeRoom A',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        # Adds some quants.
+        self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': loc1.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        self.env['stock.quant'].create({
+            'product_id': product2.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': loc1.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        self.env['stock.quant'].create({
+            'product_id': product2.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        # Creates the inventory and configures if for product1
+        inventory_form = Form(self.env['stock.inventory'], view='stock.view_inventory_form')
+        inventory_form.product_ids.add(self.product1)
+        inventory = inventory_form.save()
+        inventory.action_start()
+        # Must have two inventory lines about product1.
+        self.assertEqual(len(inventory.line_ids), 2)
+        for line in inventory.line_ids:
+            self.assertEqual(line.product_id.id, self.product1.id)
+
+        # Cancels the inventory and changes for product2 in its setup.
+        inventory.action_cancel_draft()
+        inventory_form = Form(inventory)
+        inventory_form.product_ids.remove(self.product1.id)
+        inventory_form.product_ids.add(product2)
+        inventory = inventory_form.save()
+        inventory.action_start()
+        # Must have two inventory lines about product2.
+        self.assertEqual(len(inventory.line_ids), 2)
+        self.assertEqual(inventory.line_ids.product_id.id, product2.id)
 
     def test_inventory_prefill_counted_quantity(self):
         """ Checks that inventory lines have a `product_qty` set on zero or

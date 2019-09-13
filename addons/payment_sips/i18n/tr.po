@@ -1,22 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_sips
+# 	* payment_sips
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2018
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
-# Martin Trigaux, 2018
-# Murat Kaplan <muratk@projetgrup.com>, 2018
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
-# Hüseyin Cem Aras <hcemaras@gmail.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,40 +23,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:164
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
 msgstr "; birden çok emir bulundu"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:162
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "; no order found"
 msgstr "; sipariş bulunmadı"
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr "Authorize.Net"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr "Buckaroo"
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:75
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Currency not supported by Wordline"
 msgstr "Para birimi Wordline tarafından desteklenmiyor."
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:56
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Incorrect payment acquirer provider"
 msgstr "Yanlış ödeme alıcısı sağlayıcısı"
@@ -69,24 +52,9 @@ msgid "Interface Version"
 msgstr "Arayüz Sürümü"
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr "Manuel Yapılandırma"
-
-#. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
 msgstr "Ticari ID"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr "Ogone"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
-msgstr "PayUmoney"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
@@ -97,11 +65,6 @@ msgstr "Ödeme Alıcısı"
 #: model:ir.model,name:payment_sips.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr "Paypal"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
@@ -119,20 +82,15 @@ msgid "Secret Key"
 msgstr "Gizli Şifre"
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
+#: model:ir.model.fields.selection,name:payment_sips.selection__payment_acquirer__provider__sips
 msgid "Sips"
 msgstr "Sips"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:160
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Sips: received data for reference %s"
 msgstr ""
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
-msgstr "Stripe"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
@@ -143,8 +101,3 @@ msgstr ""
 #: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Used for production only"
 msgstr "Sadece üretim için kullanılır"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr "Wire Transfer"

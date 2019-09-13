@@ -9,9 +9,10 @@ class Channel(models.Model):
 
     enroll = fields.Selection(selection_add=[('payment', 'On payment')])
     product_id = fields.Many2one('product.product', 'Product', index=True)
-    product_sale_revenues = fields.Float(
+    product_sale_revenues = fields.Monetary(
         string='Total revenues', compute='_compute_product_sale_revenues',
         groups="sales_team.group_sale_salesman")
+    currency_id = fields.Many2one(related='product_id.currency_id')
 
     _sql_constraints = [
         ('product_id_check', "CHECK( enroll!='payment' OR product_id IS NOT NULL )", "Product is required for on payment channels.")
@@ -29,6 +30,23 @@ class Channel(models.Model):
         )
         for channel in self:
             channel.product_sale_revenues = rg_data.get(channel.product_id.id, 0)
+
+    @api.model
+    def create(self, vals):
+        channel = super(Channel, self).create(vals)
+        if channel.enroll == 'payment':
+            channel._synchronize_product_publish()
+        return channel
+
+    def write(self, vals):
+        res = super(Channel, self).write(vals)
+        if 'is_published' in vals:
+            self.filtered(lambda channel: channel.enroll == 'payment')._synchronize_product_publish()
+        return res
+
+    def _synchronize_product_publish(self):
+        self.filtered(lambda channel: channel.is_published and not channel.product_id.is_published).sudo().product_id.write({'is_published': True})
+        self.filtered(lambda channel: not channel.is_published and channel.product_id.is_published).sudo().product_id.write({'is_published': False})
 
     def action_view_sales(self):
         action = self.env.ref('website_sale_slides.sale_report_action_slides').read()[0]

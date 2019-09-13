@@ -15,7 +15,7 @@ import odoo
 from odoo import api, models, registry
 from odoo import SUPERUSER_ID
 from odoo.http import request
-from odoo.tools import config
+from odoo.tools import config, ormcache
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN, OR
 
@@ -133,18 +133,6 @@ class Http(models.AbstractModel):
             request.website = request.website.with_context(request.context)
 
     @classmethod
-    def _get_languages(cls):
-        if getattr(request, 'website', False):
-            return request.website.language_ids
-        return super(Http, cls)._get_languages()
-
-    @classmethod
-    def _get_language_codes(cls):
-        if getattr(request, 'website', False):
-            return request.website._get_languages()
-        return super(Http, cls)._get_language_codes()
-
-    @classmethod
     def _get_default_lang(cls):
         if getattr(request, 'website', False):
             return request.website.default_lang_id
@@ -205,7 +193,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _handle_exception(cls, exception):
         code = 500  # default code
-        is_website_request = bool(getattr(request, 'is_frontend', False) and getattr(request, 'website', False))
+        is_website_request = bool(getattr(request, 'is_frontend', False) and get_request_website())
         if not is_website_request:
             # Don't touch non website requests exception handling
             return super(Http, cls)._handle_exception(exception)

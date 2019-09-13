@@ -1,17 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pad
+# 	* pad
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Johannes Croe <jcr@odoo.com>, 2018
+# Leon Grill <leg@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Johannes Croe <jcr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +25,7 @@ msgstr ""
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "API Key"
-msgstr "API-Schlüssel"
+msgstr "API key"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -32,7 +35,7 @@ msgstr "Unternehmen"
 #. module: pad
 #: model:ir.model,name:pad.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration "
+msgstr "Konfigurationseinstellungen"
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common__display_name
@@ -59,11 +62,11 @@ msgstr "ID"
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:147
+#: code:addons/pad/static/src/js/pad.js:149
 #, python-format
 msgid "Loading"
 msgstr "Ladevorgang"
@@ -79,6 +82,11 @@ msgid "Pad Api Key *"
 msgstr "Pad Api Schlüssel"
 
 #. module: pad
+#: model:ir.model,name:pad.model_pad_common
+msgid "Pad Common"
+msgstr "Übliches Pad"
+
+#. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_company__pad_server
 msgid "Pad Server"
 msgstr "Pad Server"
@@ -89,7 +97,7 @@ msgid "Pad Server *"
 msgstr "Pad Server"
 
 #. module: pad
-#: code:addons/pad/models/pad.py:57
+#: code:addons/pad/models/pad.py:58
 #, python-format
 msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
@@ -119,18 +127,18 @@ msgstr "Server"
 #: code:addons/pad/static/src/xml/pad.xml:14
 #, python-format
 msgid "Switch pad"
-msgstr ""
+msgstr "Pad  wechseln"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:166
+#: code:addons/pad/static/src/js/pad.js:168
 #, python-format
 msgid "This pad will be initialized on first edit"
 msgstr "Dieses Pad wird durch die erste Eingabe initialisiert."
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:160
+#: code:addons/pad/static/src/js/pad.js:162
 #, python-format
 msgid "Unable to load pad"
 msgstr "Es ist nicht möglich das Pad zu laden"
@@ -139,8 +147,3 @@ msgstr "Es ist nicht möglich das Pad zu laden"
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "e.g. beta.primarypad.com"
 msgstr "z.B. beta.primarypad.com"
-
-#. module: pad
-#: model:ir.model,name:pad.model_pad_common
-msgid "pad.common"
-msgstr "pad.common"

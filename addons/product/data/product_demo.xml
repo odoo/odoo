@@ -185,47 +185,85 @@
         </record>
 
         <!-- the product template attribute lines have to be defined before creating the variants -->
-        <record id="product_template_attribute_line_1" model="product.template.attribute.line">
+        <record id="product_4_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="attribute_id" ref="product_attribute_1"/>
             <field name="value_ids" eval="[(6, 0, [ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
         </record>
-        <record id="product_template_attribute_line_2" model="product.template.attribute.line">
+        <record id="product_4_attribute_2_product_template_attribute_line" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="attribute_id" ref="product_attribute_2"/>
             <field name="value_ids" eval="[(6, 0, [ref('product.product_attribute_value_3'), ref('product.product_attribute_value_4')])]"/>
         </record>
 
+        <!--
+        Handle automatically created product.template.attribute.value.
+        Meaning that the combination between the "customizable desk" and the attribute value "black" will be materialized
+        into a "product.template.attribute.value" with the ref "product.product_4_attribute_1_value_1".
+        This will allow setting fields like "price_extra" and "exclude_for"
+         -->
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'product.product_4_attribute_1_value_1',
+                'record': obj().env.ref('product.product_4_attribute_1_product_template_attribute_line').product_template_value_ids[0],
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_4_attribute_1_value_2',
+                'record': obj().env.ref('product.product_4_attribute_1_product_template_attribute_line').product_template_value_ids[1],
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_4_attribute_2_value_1',
+                'record': obj().env.ref('product.product_4_attribute_2_product_template_attribute_line').product_template_value_ids[0],
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_4_attribute_2_value_2',
+                'record': obj().env.ref('product.product_4_attribute_2_product_template_attribute_line').product_template_value_ids[1],
+                'noupdate': True,
+            },]"/>
+        </function>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'product.product_product_4',
+                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_1') + obj().env.ref('product.product_4_attribute_2_value_1')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_product_4b',
+                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_1') + obj().env.ref('product.product_4_attribute_2_value_2')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_product_4c',
+                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_2') + obj().env.ref('product.product_4_attribute_2_value_1')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_product_4d',
+                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_2') + obj().env.ref('product.product_4_attribute_2_value_2')),
+                'noupdate': True,
+            },]"/>
+        </function>
+
         <record id="product_product_4" model="product.product">
             <field name="default_code">FURN_0096</field>
             <field name="standard_price">500.0</field>
             <field name="weight">0.01</field>
-            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_3')])]"/>
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="image_1920" type="base64" file="product/static/img/table02.png"/>
         </record>
         <record id="product_product_4b" model="product.product">
             <field name="default_code">FURN_0097</field>
             <field name="weight">0.01</field>
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="standard_price">500.0</field>
-            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_4')])]"/>
             <field name="image_1920" type="base64" file="product/static/img/table04.png"/>
         </record>
         <record id="product_product_4c" model="product.product">
             <field name="default_code">FURN_0098</field>
             <field name="weight">0.01</field>
             <field name="standard_price">500.0</field>
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_3')])]"/>
             <field name="image_1920" type="base64" file="product/static/img/table03.png"/>
         </record>
         <record id="product_product_4d" model="product.product">
             <field name="default_code">DESK0004</field>
             <field name="weight">0.01</field>
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="standard_price">500.0</field>
-            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_4')])]"/>
             <field name="image_1920" type="base64" file="product/static/img/table01.png"/>
         </record>
 
@@ -321,48 +359,50 @@
         </record>
 
         <!-- the product template attribute lines have to be defined before creating the variants -->
-        <record id="product_template_attribute_line_4" model="product.template.attribute.line">
+        <record id="product_11_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
             <field name="attribute_id" ref="product_attribute_1"/>
             <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
         </record>
 
-        <record id="product_product_11" model="product.product">
-            <field name="default_code">E-COM12</field>
-            <field name="weight">0.01</field>
-            <field name="product_tmpl_id" ref="product_product_11_product_template"/>
-            <field name="attribute_value_ids" eval="[(6, 0, [ref('product.product_attribute_value_1')])]"/>
-        </record>
-        <record id="product_product_11b" model="product.product">
-            <field name="default_code">E-COM13</field>
-            <field name="weight">0.01</field>
-            <field name="product_tmpl_id" ref="product_product_11_product_template"/>
-            <field name="attribute_value_ids" eval="[(6, 0, [ref('product.product_attribute_value_2')])]"/>
-        </record>
-
-        <!--
-        Handle automatically created product.template.attribute.value.
-        Meaning that the combination between the "customizable desk" and the attribute value "black" will be materialized
-        into a "product.template.attribute.value" with the ref "product.product_template_attribute_value_1".
-        This will allow setting fields like "price_extra" and "exclude_for"
-         -->
         <function model="ir.model.data" name="_update_xmlids">
             <value model="base" eval="[{
-                'xml_id': 'product.product_template_attribute_value_1',
-                'record': obj().env.ref('product.product_template_attribute_line_1').product_template_value_ids[1],
+                'xml_id': 'product.product_11_attribute_1_value_1',
+                'record': obj().env.ref('product.product_11_attribute_1_product_template_attribute_line').product_template_value_ids[0],
                 'noupdate': True,
             }, {
-                'xml_id': 'product.product_template_attribute_value_2',
-                'record': obj().env.ref('product.product_template_attribute_line_4').product_template_value_ids[1],
+                'xml_id': 'product.product_11_attribute_1_value_2',
+                'record': obj().env.ref('product.product_11_attribute_1_product_template_attribute_line').product_template_value_ids[1],
                 'noupdate': True,
             }]"/>
         </function>
 
-        <record id="product_template_attribute_value_1" model="product.template.attribute.value">
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'product.product_product_11',
+                'record': obj().env.ref('product.product_product_11_product_template')._get_variant_for_combination(obj().env.ref('product.product_11_attribute_1_value_1')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_product_11b',
+                'record': obj().env.ref('product.product_product_11_product_template')._get_variant_for_combination(obj().env.ref('product.product_11_attribute_1_value_2')),
+                'noupdate': True,
+            },]"/>
+        </function>
+
+        <record id="product_product_11" model="product.product">
+            <field name="default_code">E-COM12</field>
+            <field name="weight">0.01</field>
+        </record>
+        <record id="product_product_11b" model="product.product">
+            <field name="default_code">E-COM13</field>
+            <field name="weight">0.01</field>
+        </record>
+
+        <record id="product.product_4_attribute_1_value_2" model="product.template.attribute.value">
             <field name="price_extra">50.40</field>
         </record>
 
-        <record id="product_template_attribute_value_2" model="product.template.attribute.value">
+        <record id="product.product_11_attribute_1_value_2" model="product.template.attribute.value">
             <field name="price_extra">6.40</field>
         </record>
 

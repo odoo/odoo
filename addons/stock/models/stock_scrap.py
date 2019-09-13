@@ -13,11 +13,12 @@ class StockScrap(models.Model):
     _description = 'Scrap'
 
     def _get_default_scrap_location_id(self):
-        return self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.env.company.id, False])], limit=1).id
+        company_id = self.env.context.get('default_company_id') or self.env.company.id
+        return self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [company_id, False])], limit=1).id
 
     def _get_default_location_id(self):
-        company_user = self.env.company
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
+        company_id = self.env.context.get('default_company_id') or self.env.company.id
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
         if warehouse:
             return warehouse.lot_stock_id.id
         return None
@@ -26,11 +27,11 @@ class StockScrap(models.Model):
         'Reference',  default=lambda self: _('New'),
         copy=False, readonly=True, required=True,
         states={'done': [('readonly', True)]})
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True, readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True, states={'done': [('readonly', True)]})
     origin = fields.Char(string='Source Document')
     product_id = fields.Many2one(
-        'product.product', 'Product', domain=[('type', 'in', ['product', 'consu'])],
-        required=True, states={'done': [('readonly', True)]})
+        'product.product', 'Product', domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        required=True, states={'done': [('readonly', True)]}, check_company=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         required=True, states={'done': [('readonly', True)]}, domain="[('category_id', '=', product_uom_category_id)]")
@@ -38,20 +39,19 @@ class StockScrap(models.Model):
     tracking = fields.Selection('Product Tracking', readonly=True, related="product_id.tracking")
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial',
-        states={'done': [('readonly', True)]}, domain="[('product_id', '=', product_id)]")
+        states={'done': [('readonly', True)]}, domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
-        states={'done': [('readonly', True)]},
-        domain="[('company_id', '=', company_id)]")
-    owner_id = fields.Many2one('res.partner', 'Owner', states={'done': [('readonly', True)]})
-    move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True)
-    picking_id = fields.Many2one('stock.picking', 'Picking', states={'done': [('readonly', True)]}, domain="[('company_id', '=', company_id)]")
+        states={'done': [('readonly', True)]}, check_company=True)
+    owner_id = fields.Many2one('res.partner', 'Owner', states={'done': [('readonly', True)]}, check_company=True)
+    move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True, check_company=True)
+    picking_id = fields.Many2one('stock.picking', 'Picking', states={'done': [('readonly', True)]}, check_company=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location', domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]",
-        required=True, states={'done': [('readonly', True)]}, default=_get_default_location_id)
+        required=True, states={'done': [('readonly', True)]}, default=_get_default_location_id, check_company=True)
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
-        domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", required=True, states={'done': [('readonly', True)]})
+        domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", required=True, states={'done': [('readonly', True)]}, check_company=True)
     scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -64,8 +64,10 @@ class StockScrap(models.Model):
             self.location_id = (self.picking_id.state == 'done') and self.picking_id.location_dest_id.id or self.picking_id.location_id.id
 
     @api.onchange('product_id')
-    def onchange_product_id(self):
+    def _onchange_product_id(self):
         if self.product_id:
+            if self.tracking == 'serial':
+                self.scrap_qty = 1
             self.product_uom_id = self.product_id.uom_id.id
             # Check if we can get a more precise location instead of
             # the default location (a location corresponding to where the
@@ -75,6 +77,19 @@ class StockScrap(models.Model):
                     if move_line.product_id == self.product_id:
                         self.location_id = move_line.location_id if move_line.state != 'done' else move_line.location_dest_id
                         break
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id:
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
+            self.location_id = warehouse.lot_stock_id
+            self.scrap_location_id = self.env['stock.location'].search([
+                ('scrap_location', '=', True),
+                ('company_id', 'in', [self.company_id.id, False]),
+            ], limit=1)
+        else:
+            self.location_id = False
+            self.scrap_location_id = False
 
     def unlink(self):
         if 'done' in self.mapped('state'):
@@ -113,6 +128,7 @@ class StockScrap(models.Model):
         }
 
     def do_scrap(self):
+        self._check_company()
         for scrap in self:
             scrap.name = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
             move = self.env['stock.move'].create(scrap._prepare_move_values())
@@ -150,16 +166,18 @@ class StockScrap(models.Model):
         if float_compare(available_qty, scrap_qty, precision_digits=precision) >= 0:
             return self.do_scrap()
         else:
+            ctx = dict(self.env.context)
+            ctx.update({
+                'default_product_id': self.product_id.id,
+                'default_location_id': self.location_id.id,
+                'default_scrap_id': self.id
+            })
             return {
                 'name': _('Insufficient Quantity'),
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.scrap',
                 'view_id': self.env.ref('stock.stock_warn_insufficient_qty_scrap_form_view').id,
                 'type': 'ir.actions.act_window',
-                'context': {
-                    'default_product_id': self.product_id.id,
-                    'default_location_id': self.location_id.id,
-                    'default_scrap_id': self.id
-                },
+                'context': ctx,
                 'target': 'new'
             }

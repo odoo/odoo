@@ -1,33 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_analytic_default
+# 	* account_analytic_default
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Anatolij <an@cq.lt>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
+# Martin Trigaux, 2019
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
+# Anatolij, 2019
+# Silvija Butko <silvija.butko@gmail.com>, 2019
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Monika Raciunaite <monika.raciunaite@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:07+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<i class=\"fa fa-calendar\"/> From"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\"/> Nuo"
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
@@ -40,15 +43,36 @@ msgid "<strong>Product</strong>"
 msgstr "<strong>Produktas</strong>"
 
 #. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__account_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+msgid "Account"
+msgstr "Sąskaita"
+
+#. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
 msgstr "Sąskaitos"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
+#: code:addons/account_analytic_default/models/account_analytic_default.py:28
+#, python-format
+msgid ""
+"An analytic default requires at least an analytic account or an analytic "
+"tag."
+msgstr ""
+"Numatytajai analitikai reikia bent vienos analitinės sąskaitos ar analitinės"
+" žymos."
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
 msgstr "Analitinė sąskaita"
+
+#. module: account_analytic_default
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+msgid "Analytic Default Rule"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
@@ -65,13 +89,17 @@ msgstr "Analitinis paskirstymas"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
 msgstr "Analitinės taisyklės"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "Analitinės žymos"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
 msgstr "Įmonė"
@@ -82,45 +110,46 @@ msgid "Conditions"
 msgstr "Sąlygos"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_uid
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
 msgid "Default Analytic Values"
-msgstr ""
+msgstr "Numatytosios analitinės reikšmės"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_stop
 msgid "Default end date for this Analytic Account."
 msgstr "Numatytoji pabaigos data šiai analitinei sąskaitai."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_start
 msgid "Default start date for this Analytic Account."
 msgstr "Numatytoji pradžios data šiai analitinei sąskaitai."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__display_name
 msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+msgstr "Rodomas pavadinimas"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_stop
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_stop
 msgid "End Date"
 msgstr "Pabaigos data"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr "Eilės tvarka, pagal kurią išdėstomas analitinio paskirstymo sąrašas."
+msgstr ""
+"Suteikia eilės tvarka, pagal kurią išdėstomas analitinio paskirstymo sąrašas"
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
@@ -128,49 +157,44 @@ msgid "Group By"
 msgstr "Grupuoti pagal"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__id
 msgid "ID"
 msgstr "ID"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Sąskaitos faktūros eilutė"
+#: model:ir.model,name:account_analytic_default.model_account_move_line
+msgid "Journal Item"
+msgstr "Žurnalo įrašas"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default___last_update
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_uid
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_date
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_partner_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__partner_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
 msgstr "Partneris"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__product_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "Produktas"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "Pardavimo užsakymo eilutė"
-
-#. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_company_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__company_id
 msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -181,7 +205,7 @@ msgstr ""
 "pasirenkama numatytoji analitinė sąskaita)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__partner_id
 msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -192,7 +216,7 @@ msgstr ""
 "automatiškai pasirenkama numatytoji analitinė sąskaita)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__product_id
 msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -203,23 +227,36 @@ msgstr ""
 "automatiškai pasirenkama numatytoji analitinė sąskaita)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
-msgstr "Pasirinkite naudotoją, kuris naudos numatytąją analitinę sąskaitą."
+msgstr "Pasirinkite vartotoją, kuris naudos numatytąją analitinę sąskaitą."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_sequence
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__account_id
+msgid ""
+"Select an accounting account which will use analytic account specified in "
+"analytic default (e.g. create new customer invoice or Sales order if we "
+"select this account, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__sequence
 msgid "Sequence"
 msgstr "Seka"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_start
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_start
 msgid "Start Date"
 msgstr "Pradžios data"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+msgid "Tags"
+msgstr "Žymos"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__user_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "Vartotojas"

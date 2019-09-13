@@ -52,7 +52,7 @@ CRM_LEAD_FIELDS_TO_MERGE = [
 class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
-    _order = "priority desc,activity_date_deadline,id desc"
+    _order = "priority desc, id desc"
     _inherit = ['mail.thread.cc', 'mail.thread.blacklist', 'mail.activity.mixin',
                 'utm.mixin', 'format.address.mixin', 'phone.validation.mixin']
     _primary_email = 'email_from'

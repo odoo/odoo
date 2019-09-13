@@ -175,6 +175,8 @@ class CustomerPortal(Controller):
                 values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS}
                 values.update({key: post[key] for key in self.OPTIONAL_BILLING_FIELDS if key in post})
                 values.update({'zip': values.pop('zipcode', '')})
+                if values.get('state_id') == '':
+                    values.update({'state_id': False})
                 partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)

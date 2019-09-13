@@ -23,9 +23,9 @@ class LunchOrderWizard(models.TransientModel):
 
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
 
-    product_id = fields.Many2one('lunch.product', string='Product ID')
+    product_id = fields.Many2one('lunch.product', string='Product')
     product_description = fields.Text('Description', related='product_id.description')
-    product_name = fields.Char('Product', related='product_id.name')
+    product_name = fields.Char('Product Name', related='product_id.name')
     product_category = fields.Many2one('lunch.product.category', related='product_id.category_id')
     topping_label_1 = fields.Char(related='product_id.category_id.topping_label_1')
     topping_label_2 = fields.Char(related='product_id.category_id.topping_label_2')

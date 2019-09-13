@@ -116,7 +116,7 @@ QUnit.module('fields', {}, function () {
         QUnit.module('FieldMany2Many');
 
         QUnit.test('many2many kanban: edition', async function (assert) {
-            assert.expect(32);
+            assert.expect(33);
 
             this.data.partner.records[0].timmy = [12, 14];
             this.data.partner_type.records.push({ id: 15, display_name: "red", color: 6 });
@@ -250,6 +250,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
                 'There should be a modal having Remove Button');
             await testUtils.dom.click($('.modal .modal-footer .o_btn_remove'));
+            assert.containsNone($('.o_modal'), "modal should have been closed");
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 5,
                 'should contain 5 records');
             assert.ok(!form.$('.o_kanban_record:contains(silver)').length,

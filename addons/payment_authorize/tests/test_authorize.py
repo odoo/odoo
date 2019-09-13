@@ -23,7 +23,7 @@ class AuthorizeCommon(PaymentAcquirerCommon):
         self.authorize.write({
             'authorize_login': 'dummy',
             'authorize_transaction_key': 'dummy',
-            'authorize_signature_key': 'dummy',
+            'authorize_signature_key': '00000000',
             'state': 'test',
         })
         # Be sure to be in 'capture' mode
@@ -76,7 +76,7 @@ class AuthorizeForm(AuthorizeCommon):
             'x_ship_to_state': None,
         }
 
-        form_values['x_fp_hash'] = self.env['payment.acquirer']._authorize_generate_hashing(form_values)
+        form_values['x_fp_hash'] = self.authorize._authorize_generate_hashing(form_values)
         # render the button
         res = self.authorize.render('SO004', 56.16, self.currency_usd.id, values=self.buyer_values)
         # check form result
@@ -157,10 +157,9 @@ class AuthorizeForm(AuthorizeCommon):
             'amount': 320.0,
             'acquirer_id': self.authorize.id,
             'currency_id': self.currency_usd.id,
-            'reference': 'SO004-1',
+            'reference': 'SO004',
             'partner_name': 'Norbert Buyer',
             'partner_country_id': self.country_france.id})
-        tx._set_transaction_done()
 
         # validate it
         self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
@@ -175,13 +174,12 @@ class AuthorizeForm(AuthorizeCommon):
             'reference': 'SO004-2',
             'partner_name': 'Norbert Buyer',
             'partner_country_id': self.country_france.id})
-        tx._set_transaction_done()
 
         # simulate an error
         authorize_post_data['x_response_code'] = u'3'
         self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
         # check state
-        self.assertEqual(tx.state, 'cancel', 'Authorize: erroneous validation did not put tx into error state')
+        self.assertNotEqual(tx.state, 'done', 'Authorize: erroneous validation did put tx into done state')
 
 
 @odoo.tests.tagged('post_install', '-at_install', '-standard')

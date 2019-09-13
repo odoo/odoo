@@ -13,14 +13,14 @@
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
@@ -149,11 +149,6 @@
                                         <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
                                         <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
                                     </group>
-                                    <group string="Education">
-                                        <field name="certificate"/>
-                                        <field name="study_field"/>
-                                        <field name="study_school"/>
-                                    </group>
                                     <group string="Dependant">
                                         <field name="children"/>
                                     </group>
@@ -255,7 +250,7 @@
                                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="hr.group_hr_manager"/>
                                <ul>
                                    <li id="last_login"/>
-                                   <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
+                                   <li t-if="record.work_email.raw_value" class="o_text_overflow"><field name="work_email" /></li>
                                    <li t-if="record.work_phone.raw_value"><field name="work_phone" /></li>
                                </ul>
                            </div>

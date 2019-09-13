@@ -1,28 +1,47 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_timesheet
+# 	* hr_timesheet
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
-# Martin Trigaux, 2018
-# Thomas Pot <thomas@open2bizz.nl>, 2018
-# Cas Vissers <c.vissers@brahoo.nl>, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Cas Vissers <casvissers@brahoo.nl>, 2018
+# Martin Trigaux, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Cas Vissers <c.vissers@brahoo.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:11+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+msgid "<em class=\"font-weight-normal text-muted\">Timesheets for project:</em>"
+msgstr "<em class=\"font-weight-normal text-muted\">Urenstaten voor project:</em>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
+msgid "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Datum\" title=\"Datum\"/>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"De waarden die hier worden "
+"ingesteld, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
@@ -80,6 +99,17 @@ msgid "Activities"
 msgstr "Activiteiten"
 
 #. module: hr_timesheet
+#: model:res.groups,name:hr_timesheet.group_timesheet_manager
+msgid "Administrator"
+msgstr "Beheerder"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "All"
+msgstr "Alle"
+
+#. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
 msgid "All Timesheets"
@@ -88,13 +118,10 @@ msgstr "Alle urenstaten"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__allow_timesheets
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "Allow timesheets"
 msgstr "Urenstaten toestaan"
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_account_analytic_account
-#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__analytic_account_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
 msgid "Analytic Account"
 msgstr "Kostenplaats"
@@ -117,22 +144,19 @@ msgstr "Apple App Store"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_synchro
 msgid "Awesome Timesheet"
-msgstr "Awesome Timesheet"
+msgstr "Geweldige Urenstaten"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
 msgid "By Employee"
 msgstr "Per werknemer"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_project
 msgid "By Project"
-msgstr "Op project"
+msgstr "Per project"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_task
 msgid "By Task"
 msgstr "Per taak"
@@ -141,11 +165,6 @@ msgstr "Per taak"
 #: model:ir.model,name:hr_timesheet.model_res_company
 msgid "Companies"
 msgstr "Bedrijven"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account__company_uom_id
-msgid "Company UOM"
-msgstr "Bedrijf UOM"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
@@ -165,7 +184,12 @@ msgstr "Configuratie instellingen"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
 msgid "Configuration"
-msgstr "Instellingen"
+msgstr "Configuratie"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Create timesheets upon time off validation"
+msgstr "Maak urenstaten gebaseerd op vakantie validatie"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__currency_id
@@ -174,7 +198,8 @@ msgstr "Valuta"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Date"
 msgstr "Datum"
 
@@ -184,7 +209,8 @@ msgid "Department"
 msgstr "Afdeling"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Description"
 msgstr "Omschrijving"
 
@@ -194,12 +220,14 @@ msgid "Display progress of current task."
 msgstr "Toon voortgang van huidige taak."
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Duration"
-msgstr "Duur"
+msgstr "Tijdsduur"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/models/hr_timesheet.py:95
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "Duration (%s)"
 msgstr "Duur(%s)"
@@ -213,13 +241,25 @@ msgstr "Werkelijke uren"
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Employee"
 msgstr "Werknemer"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_project__allow_timesheets
+msgid "Enable timesheeting on the project."
+msgstr "Urenstaten inschakelen op het project."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
 msgid "Encoding Unit"
 msgstr "Ingave eenheid"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__encoding_uom_id
+msgid "Encoding Uom"
+msgstr "Encodering maateenheid"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -261,27 +301,22 @@ msgid "Initially Planned Hours"
 msgstr "Begroot aantal uren"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid "Leaves"
-msgstr "Verlof"
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Last month"
+msgstr "Vorige maand"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_id
-msgid ""
-"Link this project to an analytic account if you need financial management on"
-" projects. It enables you to connect projects with budgets, planning, cost "
-"and revenue analysis, timesheets on projects, etc."
-msgstr ""
-"Koppel dit project aan een kostenplaats wanneer u behoefte heeft aan "
-"financieel beheer van projecten. Het geeft u de mogelijkheid om budgetten, "
-"planningen, kosten, opbrengsten, analyses, urenstaten, enz. aan projecten te"
-" verbinden."
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Last week"
+msgstr "Vorige week"
 
 #. module: hr_timesheet
-#: model:res.groups,name:hr_timesheet.group_timesheet_manager
-msgid "Manager"
-msgstr "Manager"
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Last year"
+msgstr "Vorig jaar"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
@@ -291,19 +326,27 @@ msgid "My Timesheets"
 msgstr "Mijn urenstaten"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Name"
+msgstr "Naam"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Newest"
+msgstr "Nieuwste"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "None"
+msgstr "Geen"
+
+#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_planned
 msgid "Planned Hours"
 msgstr "Geplande uren"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/models/analytic_account.py:28
-#, python-format
-msgid ""
-"Please remove existing tasks in the project linked to the accounts you want "
-"to delete."
-msgstr ""
-"Verwijder aub bestaande taken in het project gekoppeld aan de rekeningen die"
-" u wilt verwijderen."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -317,9 +360,11 @@ msgid "Progress"
 msgstr "Voortgang"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_project
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__project_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#, python-format
 msgid "Project"
 msgstr "Project"
 
@@ -329,21 +374,15 @@ msgid "Project -"
 msgstr "Project -"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account__project_count
-msgid "Project Count"
-msgstr "Aantal projecten"
-
-#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__project_time_mode_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid "Project Time Unit"
 msgstr "Tijdseenheid project"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account__project_ids
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.account_analytic_account_view_form_inherit
-msgid "Projects"
-msgstr "Projecten"
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
+msgid "Record Time Off"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -372,14 +411,20 @@ msgid "Reporting"
 msgstr "Rapportages"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
-msgid "Responsible"
-msgstr "Verantwoordelijke"
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Search in All"
+msgstr "Zoek in alle"
+
+#. module: hr_timesheet
+#: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
+msgid "See all Timesheets"
+msgstr "Bekijk alle urenstaten"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid "Set time unit used to record your timesheets"
-msgstr "Stel tijdseenheid in welke op urenstaten gebruikt zal worden"
+msgid "Set the time unit used to record your timesheets"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -404,8 +449,8 @@ msgstr "Som van werkelijk gepresteerde uren op de subta(a)k(en)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid "Synchronize time spent with web/mobile app"
-msgstr "Synchroniseer tijd gespendeerd met web/mobiele app"
+msgid "Synchronize time spent with our web/mobile apps"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task
@@ -421,7 +466,12 @@ msgid "Tasks Analysis"
 msgstr "Takenanalyse"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/models/hr_timesheet.py:113
+#: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
+msgid "Team Approver"
+msgstr "Goedkeurder team"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid ""
 "The project you are timesheeting on is not linked to an active analytic "
@@ -431,17 +481,37 @@ msgstr ""
 "kostenplaats. Stel een kostenplaats in bij de projectinstellingen."
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/models/project.py:147
-#, python-format
-msgid ""
-"This task must be part of a project because they some timesheets are linked "
-"to it."
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+msgid "There are no timesheets."
 msgstr ""
-"Deze taak moet deel uitmaken van een project omdat er urenstaten aan gelinkt"
-" zijn."
 
 #. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_account_analytic_account__company_uom_id
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "This Quarter"
+msgstr "Dit kwartaal"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "This month"
+msgstr "Deze maand"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"This task must be part of a project because there are some timesheets linked"
+" to it."
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "This week"
+msgstr "Deze week"
+
+#. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__project_time_mode_id
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
@@ -459,7 +529,13 @@ msgid ""
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
 "Hiermee wordt de maateenheid ingesteld die wordt gebruikt op de urenstaat. Dit levert eenvoudige hulpmiddelen\n"
-"         en widgets op  om bij de ingave te helpen. Alle rapportages wordt nog steeds uitgedrukt in uren (standaardwaarde)."
+"en widgets op  om bij de ingave te helpen. Alle rapportages wordt nog steeds uitgedrukt in uren (standaardwaarde)."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "This year"
+msgstr "Dit jaar"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -467,9 +543,14 @@ msgid "Time Encoding"
 msgstr "Tijd formattering"
 
 #. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Time Off"
+msgstr "Afwezigheid"
+
+#. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
-#: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 msgid "Timesheet"
 msgstr "Urenstaat"
@@ -486,17 +567,11 @@ msgid "Timesheet Cost"
 msgstr "Kostprijs urenstaat"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
-msgid "Timesheet Date"
-msgstr "Urenstaat datum"
-
-#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
 msgstr "Urenstaat ingave eenheid"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.project_task_action_view_timesheet
 #: model:ir.actions.report,name:hr_timesheet.timesheet_report
 msgid "Timesheet Entries"
 msgstr "Urenstaten boekingen"
@@ -509,10 +584,14 @@ msgstr "Urenstaat op datum"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_from_employee
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__timesheet_ids
+#: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_root
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_layout
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -520,18 +599,44 @@ msgid "Timesheets"
 msgstr "Urenstaten"
 
 #. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
+msgid "Timesheets By Employee"
+msgstr "Urenstaten per werknemer"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
+msgid "Timesheets By Project"
+msgstr "Urenstaten per project"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
+msgid "Timesheets By Task"
+msgstr "Urenstaten per taak"
+
+#. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
 msgid "Timesheets can be logged on this task."
 msgstr "Urenstaten kunnen geregistreerd worden op deze taak."
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/models/project.py:32
+#: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid ""
 "To allow timesheet, your project %s should have an analytic account set."
 msgstr ""
-"om urenstaten toe te staan moet uw project %s een analytisch dagboek "
+"Om urenstaten toe te staan moet uw project %s een analytisch dagboek "
 "ingesteld hebben."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Today"
+msgstr "Vandaag"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
+msgid "Total"
+msgstr "Totaal"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -546,22 +651,6 @@ msgid ""
 msgstr ""
 "Totaal resterende tijd. Kan periodiek opnieuw worden geschat door de aan "
 "deze taak toegewezen persoon."
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/models/project.py:51
-#, python-format
-msgid "Unknown Analytic Account"
-msgstr "Onbekende kostenplaats"
-
-#. module: hr_timesheet
-#: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
-msgid "User"
-msgstr "Gebruiker"
-
-#. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid "Validated leaves create timesheets automatically."
-msgstr "Bevestigde verlofaanvragen maken automatisch urenstaten"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget

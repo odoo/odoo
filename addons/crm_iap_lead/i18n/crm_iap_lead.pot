@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-12 11:32+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 08:16+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:75
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "%d credits will be consumed to find %d companies."
 msgstr ""
@@ -54,7 +54,7 @@ msgid ""
 msgstr ""
 
 #. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:216
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_empty_folder\">\n"
@@ -65,7 +65,7 @@ msgid ""
 msgstr ""
 
 #. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:228
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_empty_folder\">\n"
@@ -122,13 +122,13 @@ msgid "Commercial & Professional Services"
 msgstr ""
 
 #. module: crm_iap_lead
-#: selection:crm.iap.lead.mining.request,search_type:0
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__search_type__companies
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "Companies"
 msgstr ""
 
 #. module: crm_iap_lead
-#: selection:crm.iap.lead.mining.request,search_type:0
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__search_type__people
 msgid "Companies and their Contacts"
 msgstr ""
 
@@ -173,7 +173,7 @@ msgid "Countries"
 msgstr ""
 
 #. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:187
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Create a Lead Mining Request"
 msgstr ""
@@ -221,13 +221,13 @@ msgid "Diversified Financials"
 msgstr ""
 
 #. module: crm_iap_lead
-#: selection:crm.iap.lead.mining.request,state:0
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__done
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Done"
 msgstr ""
 
 #. module: crm_iap_lead
-#: selection:crm.iap.lead.mining.request,state:0
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__draft
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Draft"
 msgstr ""
@@ -243,8 +243,8 @@ msgid "Energy Equipment & Services"
 msgstr ""
 
 #. module: crm_iap_lead
-#: selection:crm.iap.lead.mining.request,state:0
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__error
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__error
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Error"
 msgstr ""
@@ -276,13 +276,13 @@ msgstr ""
 
 #. module: crm_iap_lead
 #. openerp-web
-#: code:addons/crm_iap_lead/static/src/xml/leads_tree_generate_leads_views.xml:5
+#: code:addons/crm_iap_lead/static/src/xml/leads_tree_generate_leads_views.xml:0
 #, python-format
 msgid "Generate Leads"
 msgstr ""
 
 #. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:188
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Generate new leads based on their country, industry, size, etc."
 msgstr ""
@@ -379,7 +379,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: crm_iap_lead
-#: selection:crm.iap.lead.mining.request,lead_type:0
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__lead
 msgid "Lead"
 msgstr ""
 
@@ -416,6 +416,11 @@ msgid "Lead Mining Requests"
 msgstr ""
 
 #. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_total_credits
+msgid "Lead Total Credits"
+msgstr ""
+
+#. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr ""
@@ -449,15 +454,15 @@ msgid "Name"
 msgstr ""
 
 #. module: crm_iap_lead
-#: sql_constraint:crm.iap.lead.seniority:0
+#: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_seniority_name_uniq
 msgid "Name already exists!"
 msgstr ""
 
 #. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:31
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:194
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:200
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:201
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "New"
 msgstr ""
@@ -483,7 +488,7 @@ msgid "Opportunities"
 msgstr ""
 
 #. module: crm_iap_lead
-#: selection:crm.iap.lead.mining.request,lead_type:0
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__opportunity
 msgid "Opportunity"
 msgstr ""
 
@@ -560,7 +565,7 @@ msgid "Reveal ID"
 msgstr ""
 
 #. module: crm_iap_lead
-#: selection:crm.iap.lead.mining.request,contact_filter_type:0
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__contact_filter_type__role
 msgid "Role"
 msgstr ""
 
@@ -570,7 +575,7 @@ msgid "Role Name"
 msgstr ""
 
 #. module: crm_iap_lead
-#: sql_constraint:crm.iap.lead.role:0
+#: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_role_name_uniq
 msgid "Role name already exists!"
 msgstr ""
 
@@ -592,8 +597,8 @@ msgid "Semiconductors & Semiconductor Equipment"
 msgstr ""
 
 #. module: crm_iap_lead
-#: selection:crm.iap.lead.mining.request,contact_filter_type:0
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__seniority_id
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__contact_filter_type__seniority
 msgid "Seniority"
 msgstr ""
 
@@ -628,7 +633,7 @@ msgid "Tag Name"
 msgstr ""
 
 #. module: crm_iap_lead
-#: sql_constraint:crm.iap.lead.industry:0
+#: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_industry_name_uniq
 msgid "Tag name already exists!"
 msgstr ""
 
@@ -658,6 +663,12 @@ msgid "Telecommunication Services"
 msgstr ""
 
 #. module: crm_iap_lead
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "This makes a total of %d credits for this request."
+msgstr ""
+
+#. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "Title"
 msgstr ""
@@ -674,12 +685,11 @@ msgid "Type"
 msgstr ""
 
 #. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:72
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid ""
-"Up to %d additional credits will be consumed\n"
-"                                per company to identify its contacts (making a\n"
-"                                total of %d credits for this request)."
+"Up to %d additional credits will be consumed to identify %d contacts per "
+"company."
 msgstr ""
 
 #. module: crm_iap_lead

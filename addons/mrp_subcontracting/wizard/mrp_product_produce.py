@@ -7,7 +7,7 @@ from odoo.tools.float_utils import float_is_zero
 class MrpProductProduce(models.TransientModel):
     _inherit = 'mrp.product.produce'
 
-    subcontract_move_id = fields.Many2one('stock.move', 'stock move from the subcontract picking')
+    subcontract_move_id = fields.Many2one('stock.move', 'stock move from the subcontract picking', check_company=True)
 
     def continue_production(self):
         action = super(MrpProductProduce, self).continue_production()

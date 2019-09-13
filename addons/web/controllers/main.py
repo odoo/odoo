@@ -42,7 +42,7 @@ from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
 from odoo.tools.safe_eval import safe_eval
 from odoo import http, tools
-from odoo.http import content_disposition, dispatch_rpc, request, Response
+from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db, security
@@ -84,7 +84,7 @@ def serialize_exception(f):
             return f(*args, **kwargs)
         except Exception as e:
             _logger.exception("An exception occured during an http request")
-            se = request.registry['ir.http'].serialize_exception(e)
+            se = _serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "Odoo Server Error",
@@ -762,7 +762,9 @@ class WebClient(http.Controller):
         # For performance reasons we only load a single translation, so for
         # sub-languages (that should only be partially translated) we load the
         # main language PO instead - that should be enough for the login screen.
-        lang = request.lang.split('_')[0]
+        context = dict(request.context)
+        request.session._fix_lang(context)
+        lang = context['lang'].split('_')[0]
 
         translations_per_module = {}
         for addon_name in mods:
@@ -1803,7 +1805,7 @@ class ReportController(http.Controller):
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
     @http.route(['/report/download'], type='http', auth="user")
-    def report_download(self, data, token):
+    def report_download(self, data, token, context=None):
         """This function is used by 'action_manager_report.js' in order to trigger the download of
         a pdf/controller report.
 
@@ -1827,11 +1829,11 @@ class ReportController(http.Controller):
 
                 if docids:
                     # Generic report:
-                    response = self.report_routes(reportname, docids=docids, converter=converter)
+                    response = self.report_routes(reportname, docids=docids, converter=converter, context=context)
                 else:
                     # Particular report:
                     data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
-                    response = self.report_routes(reportname, converter=converter, **dict(data))
+                    response = self.report_routes(reportname, converter=converter, context=context, **dict(data))
 
                 report = request.env['ir.actions.report']._get_report_from_name(reportname)
                 filename = "%s.%s" % (report.name, extension)
@@ -1848,7 +1850,7 @@ class ReportController(http.Controller):
             else:
                 return
         except Exception as e:
-            se = request.env['ir.http'].serialize_exception(e)
+            se = _serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "Odoo Server Error",

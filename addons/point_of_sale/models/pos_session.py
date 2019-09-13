@@ -220,9 +220,11 @@ class PosSession(models.Model):
 
     def login(self):
         self.ensure_one()
+        login_number = self.login_number + 1
         self.write({
-            'login_number': self.login_number + 1,
+            'login_number': login_number,
         })
+        return login_number
 
     def action_pos_session_open(self):
         # second browse because we need to refetch the data from the DB for cash_register_id
@@ -519,7 +521,7 @@ class PosSession(models.Model):
         """
         def get_income_account(order_line):
             product = order_line.product_id
-            income_account = product.property_account_income_id or product.categ_id.property_account_income_categ_id
+            income_account = product.with_context(force_company=order_line.company_id.id).property_account_income_id or product.categ_id.with_context(force_company=order_line.company_id.id).property_account_income_categ_id
             if not income_account:
                 raise UserError(_('Please define income account for this product: "%s" (id:%d).')
                                 % (product.name, product.id))
@@ -737,18 +739,17 @@ class PosSession(models.Model):
             'name': _('Payments'),
             'type': 'ir.actions.act_window',
             'res_model': 'pos.payment',
-            'view_id': self.env.ref('point_of_sale.view_pos_payment_tree').id,
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'domain': [('session_id', '=', self.id)],
             'context': {'search_default_group_by_payment_method': 1}
         }
 
     def open_frontend_cb(self):
         """Open the pos interface with config_id as an extra argument.
-            
+
         In vanilla PoS each user can only have one active session, therefore it was not needed to pass the config_id
         on opening a session. It is also possible to login to sessions created by other users.
-            
+
         :returns: dict
         """
         if not self.ids:
@@ -802,7 +803,7 @@ class PosSession(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'closing.balance.confirm.wizard',
-            'view_id': self.env.ref('point_of_sale.closing_balance_confirm').id,
+            'views': [(False, 'form')],
             'type': 'ir.actions.act_window',
             'context': context,
             'target': 'new'

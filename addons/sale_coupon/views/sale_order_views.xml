@@ -9,10 +9,10 @@
             <xpath expr="//group[@name='note_group']" position="before">
                 <div class="oe_right">
                     <button name="%(sale_coupon.sale_coupon_apply_code_action)d" class="btn btn-secondary"
-                            string="Coupon" type="action" groups="base.group_user" states="draft"/>
+                            string="Coupon" type="action" groups="base.group_user" states="draft,sent,sale"/>
                     <button name="recompute_coupon_lines" class="btn btn-secondary" string="Promotions"
                             help="When clicked, the content of the order will be checked to detect (and apply) possible promotion programs."
-                            type="object" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+                            type="object" states="draft,sent,sale"/>
                 </div>
             </xpath>
          </field>

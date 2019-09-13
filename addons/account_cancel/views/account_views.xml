@@ -5,6 +5,9 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='loss_account_id']/parent::group" position="attributes">
+                    <attribute name="attrs">{'invisible': 0}</attribute>
+                </xpath>
                 <field name="loss_account_id" position="after">
                     <field name="update_posted" groups="base.group_no_one"/>
                 </field>

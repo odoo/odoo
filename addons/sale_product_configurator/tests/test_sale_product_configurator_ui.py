@@ -57,7 +57,7 @@ class TestUi(odoo.tests.HttpCase):
             'create_variant': 'no_variant'
         }])
 
-        product_attribute_values = self.env['product.attribute.value'].create([{
+        self.env['product.attribute.value'].create([{
             'name': 'PAV' + str(i),
             'is_custom': i == 9,
             'attribute_id': product_attribute.id
@@ -68,12 +68,8 @@ class TestUi(odoo.tests.HttpCase):
         self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute.id,
             'product_tmpl_id': product_template.id,
-            'value_ids': [(6, 0, product_attribute_values.filtered(
-                lambda product_attribute_value: product_attribute_value.attribute_id == product_attribute
-            ).ids)]
+            'value_ids': [(6, 0, product_attribute.value_ids.ids)],
         } for product_attribute in product_attributes])
-
-        product_template.create_variant_ids()
 
         self.start_tour("/web", 'sale_product_configurator_advanced_tour', login="admin")
 
@@ -115,8 +111,6 @@ class TestUi(odoo.tests.HttpCase):
             'product_tmpl_id': product_template.id,
             'value_ids': [(6, 0, [product_attribute_values[0].id])]
         }])
-
-        product_template.create_variant_ids()
 
         self.start_tour("/web", 'sale_product_configurator_single_custom_attribute_tour', login="admin")
 
@@ -166,10 +160,13 @@ class TestUi(odoo.tests.HttpCase):
         if the main product does not have variants.
         """
 
-        # add an optional product to the office chair for test purposes
+        # add an optional product to the office chair and the custo desk for testing purposes
         office_chair = self.env.ref('product.product_product_12')
+        custo_desk = self.env.ref('product.product_product_4')
         office_chair.update({
             'optional_product_ids': [(6, 0, [self.env.ref('sale_product_configurator.product_product_1_product_template').id])]
         })
-
+        custo_desk.update({
+            'optional_product_ids': [(6, 0, [self.env.ref('product.product_product_12_product_template').id, self.env.ref('product.product_product_11_product_template').id])]
+        })
         self.start_tour("/web", 'sale_product_configurator_optional_products_tour', login="admin")

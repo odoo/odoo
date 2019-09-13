@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pos_mercury
+# 	* pos_mercury
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Youfu Sheng <wdmsyf@sina.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# keecome <7017511@qq.com>, 2019
+# Youfu Sheng <wdmsyf@sina.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,14 +26,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:75
-#, python-format
-msgid "&nbsp;&nbsp;APPROVAL CODE:"
-msgstr "&nbsp;&nbsp;验证代码:"
-
-#. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
 msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>购买读卡器"
 
@@ -49,22 +44,17 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:46
+#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
 #, python-format
 msgid "ABOVE AMOUNT PURSUANT"
 msgstr "上述金额"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:60
+#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
 #, python-format
 msgid "APPROVAL CODE:"
 msgstr "验证代码"
-
-#. module: pos_mercury
-#: selection:barcode.rule,type:0
-msgid "Alias"
-msgstr "别名"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_ir_autovacuum
@@ -72,40 +62,40 @@ msgid "Automatic Vacuum"
 msgstr "自动清空"
 
 #. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "银行对账单明细"
-
-#. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_barcode_rule
 msgid "Barcode Rule"
 msgstr "条码规则"
 
 #. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury_2
+msgid "Barcode Scanner/Card Reader"
+msgstr ""
+
+#. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:45
+#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
 #, python-format
 msgid "CARDHOLDER WILL PAY CARD ISSUER"
 msgstr "持卡人会付款给发卡人"
 
 #. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_brand
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_brand
 msgid "Card Brand"
 msgstr "卡品牌"
 
 #. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_number
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_number
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_order
 msgid "Card Number"
 msgstr "卡号"
 
 #. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_prefixed_card_number
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_prefixed_card_number
 msgid "Card Number Prefix"
 msgstr "卡号前缀"
 
 #. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_owner_name
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_owner_name
 msgid "Card Owner Name"
 msgstr "卡所有者名称"
 
@@ -116,23 +106,13 @@ msgid "Card Reader"
 msgstr "读卡器"
 
 #. module: pos_mercury
-#: selection:barcode.rule,type:0
-msgid "Cashier"
-msgstr "收银员"
-
-#. module: pos_mercury
-#: selection:barcode.rule,type:0
-msgid "Client"
-msgstr "客户"
-
-#. module: pos_mercury
 #: model_terms:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Configure your card reader"
 msgstr "配置读卡器"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:360
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Could not read card"
 msgstr "无法读取卡"
@@ -141,7 +121,7 @@ msgstr "无法读取卡"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__create_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__create_date
@@ -150,24 +130,19 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: pos_mercury
-#: selection:barcode.rule,type:0
+#: model:ir.model.fields.selection,name:pos_mercury.selection__barcode_rule__type__credit
 msgid "Credit Card"
 msgstr "信用卡"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:346
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid ""
 "Credit card refunds are not supported. Instead select your credit card "
 "payment method, click 'Validate' and refund the original charge manually "
 "through the Vantiv backend."
 msgstr "不支持信用卡退款。而是选择您的信用卡付款方式，点击“验证”并通过Vantiv后端手动退还原始费用。"
-
-#. module: pos_mercury
-#: selection:barcode.rule,type:0
-msgid "Discounted Product"
-msgstr "折扣的产品"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__display_name
@@ -177,7 +152,7 @@ msgstr "显示名称"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:651
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Error"
 msgstr "错误"
@@ -192,14 +167,14 @@ msgstr "快速处理订单：在支付屏幕只刷信用卡（不做其他任何
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:256
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Go to payment screen to use cards"
 msgstr "到支付屏幕使用卡"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:396
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Handling transaction..."
 msgstr "处理交易……"
@@ -223,42 +198,27 @@ msgid ""
 msgstr "如果您还没有Mercury账户，请拨打+1 (800) 846-4472，然后创建一个Mercury账号"
 
 #. module: pos_mercury
-#: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_invoice_no
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Invoice number from Mercury Pay"
 msgstr "Mercury支付的发票号码"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_account_journal
-msgid "Journal"
-msgstr "分类账"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration____last_update
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后更改日"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__write_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__write_date
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
-
-#. module: pos_mercury
-#: selection:barcode.rule,type:0
-msgid "Location"
-msgstr "地点"
-
-#. module: pos_mercury
-#: selection:barcode.rule,type:0
-msgid "Lot"
-msgstr "批次"
+msgstr "更新时间"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_id
@@ -277,22 +237,22 @@ msgid "Mercury Configurations"
 msgstr "Mercury配置"
 
 #. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_account_journal__pos_mercury_config_id
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "Mercury Credentials"
 msgstr "Mercury 凭据"
 
 #. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_invoice_no
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Mercury invoice number"
 msgstr "Mercury发票号码"
 
 #. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_record_no
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Mercury record number"
 msgstr "Mercury记录号码"
 
 #. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_ref_no
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Mercury reference number"
 msgstr "Mercury参照号码"
 
@@ -307,61 +267,56 @@ msgid "Name of this Mercury configuration"
 msgstr "Mercury配置的名称"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury_transaction.py:34
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
-msgid "No Mercury configuration associated with the journal."
-msgstr "没有与日记账关联的 Mercury 配置。"
+msgid "No Mercury configuration associated with the payment method."
+msgstr ""
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury_transaction.py:22
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No opened point of sale session for user %s found."
 msgstr "未找到用户 %s 的已打开POS会话"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:328
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
 msgstr "Mercury无响应"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:330
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "No response from server (connected to network?)"
 msgstr "服务器无响应，请检查网络。"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:423
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:577
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Odoo error while processing transaction."
 msgstr "处理交易事务的Odoo错误"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:652
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "One credit card swipe already pending."
 msgstr "有信用卡正在使用中"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:7
+#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
 #, python-format
 msgid "Online Payment"
 msgstr "在线支付"
 
 #. module: pos_mercury
-#: selection:barcode.rule,type:0
-msgid "Package"
-msgstr "包装"
-
-#. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:470
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Partially approved"
 msgstr "部分批准"
@@ -373,18 +328,25 @@ msgid ""
 msgstr "用于在支付供应商服务器上验证身份的商户密码"
 
 #. module: pos_mercury
-#: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_record_no
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#, python-format
+msgid "Pay with: "
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Payment record number from Mercury Pay"
 msgstr "Mercury支付的记录号码"
 
 #. module: pos_mercury
-#: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_ref_no
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Payment reference number from Mercury Pay"
 msgstr "Mercury支付的参照号码"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:416
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Please setup your Mercury merchant account."
 msgstr "请设置你的Mercury商人账户"
@@ -405,73 +367,78 @@ msgid "Point of Sale Orders"
 msgstr "POS订单"
 
 #. module: pos_mercury
-#: selection:barcode.rule,type:0
-msgid "Priced Product"
-msgstr "标价产品"
+#: model:ir.model,name:pos_mercury.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:345
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Refunds not supported"
 msgstr "退款不支持"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:549
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
 msgstr "反转失败，发送Vo售销…"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:591
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Reversal succeeded"
 msgstr "逆转成功"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:552
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Sending reversal..."
 msgstr "逆转发送……"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:47
+#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
 #, python-format
 msgid "TO CARDHOLDER AGREEMENT"
 msgstr "持卡人协议"
 
 #. module: pos_mercury
-#: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_brand
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
 msgstr "支付卡的品牌（例如 Visa ，AMEX……）"
 
 #. module: pos_mercury
-#: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_prefixed_card_number
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_prefixed_card_number
 msgid "The card number used for the payment."
 msgstr "付款的卡号"
 
 #. module: pos_mercury
-#: model:ir.model.fields,help:pos_mercury.field_account_journal__pos_mercury_config_id
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "The configuration of Mercury used for this journal"
 msgstr "该日记账使用的Mercury配置"
 
 #. module: pos_mercury
-#: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_number
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
 msgid "The last 4 numbers of the card used to pay"
 msgstr "付款卡的最后4位号码"
 
 #. module: pos_mercury
-#: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_owner_name
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_owner_name
 msgid "The name of the card owner"
 msgstr "持卡人姓名"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:361
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
@@ -480,7 +447,7 @@ msgstr "可能是刷卡严重错误或者输入法没有设置为美国标准（
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:146
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Transaction approved"
 msgstr "交易确认"
@@ -489,11 +456,6 @@ msgstr "交易确认"
 #: model:ir.model.fields,field_description:pos_mercury.field_barcode_rule__type
 msgid "Type"
 msgstr "类型"
-
-#. module: pos_mercury
-#: selection:barcode.rule,type:0
-msgid "Unit Product"
-msgstr "单位产品"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -508,20 +470,20 @@ msgstr ""
 "不管任何时候只要付款行建立起来，就可以通过读卡设备刷卡"
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
 msgstr "Vantiv 账户"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:599
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "VoidSale succeeded"
 msgstr "清仓成功"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:17
+#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
 #, python-format
 msgid "WAITING FOR SWIPE"
 msgstr "等待刷卡"
@@ -536,13 +498,8 @@ msgstr ""
 " 直接到销售点设备或它可以连接到IoTBox。"
 
 #. module: pos_mercury
-#: selection:barcode.rule,type:0
-msgid "Weighted Product"
-msgstr "称重的产品"
-
-#. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:50
+#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
 #, python-format
 msgid "X______________________________"
 msgstr "X______________________________"

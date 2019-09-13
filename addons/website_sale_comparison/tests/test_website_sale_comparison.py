@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import OrderedDict
+from lxml import etree
+
 import odoo.tests
 
 
@@ -60,5 +63,125 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
+    def setUp(self):
+        super(TestUi, self).setUp()
+        self.template_margaux = self.env['product.template'].create({
+            'name': "Château Margaux",
+            'website_published': True,
+            'list_price': 0,
+        })
+        self.attribute_varieties = self.env['product.attribute'].create({
+            'name': 'Grape Varieties',
+            'sequence': 2,
+        })
+        self.attribute_vintage = self.env['product.attribute'].create({
+            'name': 'Vintage',
+            'sequence': 1,
+        })
+        self.values_varieties = self.env['product.attribute.value'].create({
+            'name': n,
+            'attribute_id': self.attribute_varieties.id,
+            'sequence': i,
+        } for i, n in enumerate(['Cabernet Sauvignon', 'Merlot', 'Cabernet Franc', 'Petit Verdot']))
+        self.values_vintage = self.env['product.attribute.value'].create({
+            'name': n,
+            'attribute_id': self.attribute_vintage.id,
+            'sequence': i,
+        } for i, n in enumerate(['2018', '2017', '2016', '2015']))
+        self.attribute_line_varieties = self.env['product.template.attribute.line'].create([{
+            'product_tmpl_id': self.template_margaux.id,
+            'attribute_id': self.attribute_varieties.id,
+            'value_ids': [(6, 0, v.ids)],
+        } for v in self.values_varieties])
+        self.attribute_line_vintage = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.template_margaux.id,
+            'attribute_id': self.attribute_vintage.id,
+            'value_ids': [(6, 0, self.values_vintage.ids)],
+        })
+        self.variants_margaux = self.template_margaux._get_possible_variants_sorted()
+
+        for variant, price in zip(self.variants_margaux, [487.32, 394.05, 532.44, 1047.84]):
+            variant.product_template_attribute_value_ids.filtered(lambda ptav: ptav.attribute_id == self.attribute_vintage).price_extra = price
+
     def test_01_admin_tour_product_comparison(self):
         self.start_tour("/", 'product_comparison', login='admin')
+
+    def test_02_attribute_multiple_lines(self):
+        # Case product page with "Product attributes table" disabled (website_sale standard case)
+        self.env['website'].viewref('website_sale_comparison.product_attributes_body').active = False
+        res = self.url_open('/shop/product/%d' % self.template_margaux.id)
+        self.assertEqual(res.status_code, 200)
+        root = etree.fromstring(res.content, etree.HTMLParser())
+
+        p = root.xpath('//div[@id="product_attributes_simple"]/p')[0]
+        text = etree.tostring(p, encoding='unicode', method='text')
+        self.assertEqual(text.replace(' ', '').replace('\n', ''), "GrapeVarieties:CabernetSauvignon,Merlot,CabernetFranc,PetitVerdot")
+
+        # Case product page with "Product attributes table" enabled
+        self.env['website'].viewref('website_sale_comparison.product_attributes_body').active = True
+        res = self.url_open('/shop/product/%d' % self.template_margaux.id)
+        self.assertEqual(res.status_code, 200)
+        root = etree.fromstring(res.content, etree.HTMLParser())
+
+        tr_vintage = root.xpath('//div[@id="product_specifications"]//tr')[0]
+        text_vintage = etree.tostring(tr_vintage, encoding='unicode', method='text')
+        self.assertEqual(text_vintage.replace(' ', '').replace('\n', ''), "Vintage2018or2017or2016or2015")
+
+        tr_varieties = root.xpath('//div[@id="product_specifications"]//tr')[1]
+        text_varieties = etree.tostring(tr_varieties, encoding='unicode', method='text')
+        self.assertEqual(text_varieties.replace(' ', '').replace('\n', ''), "GrapeVarietiesCabernetSauvignon,Merlot,CabernetFranc,PetitVerdot")
+
+        # Case compare page
+        res = self.url_open('/shop/compare/?products=%s' % ','.join(str(id) for id in self.variants_margaux.ids))
+        self.assertEqual(res.status_code, 200)
+        root = etree.fromstring(res.content, etree.HTMLParser())
+
+        table = root.xpath('//table[@id="o_comparelist_table"]')[0]
+
+        products = table.xpath('//a[@class="o_product_comparison_table"]')
+        self.assertEqual(len(products), 4)
+        for product, name in zip(products, ['ChâteauMargaux(2018)', 'ChâteauMargaux(2017)', 'ChâteauMargaux(2016)', 'ChâteauMargaux(2015)']):
+            text = etree.tostring(product, encoding='unicode', method='text')
+            self.assertEqual(text.replace(' ', '').replace('\n', ''), name)
+
+        tr_vintage = table.xpath('tbody/tr')[0]
+        text_vintage = etree.tostring(tr_vintage, encoding='unicode', method='text')
+        self.assertEqual(text_vintage.replace(' ', '').replace('\n', ''), "Vintage2018201720162015")
+
+        tr_varieties = table.xpath('tbody/tr')[1]
+        text_varieties = etree.tostring(tr_varieties, encoding='unicode', method='text')
+        self.assertEqual(text_varieties.replace(' ', '').replace('\n', ''), "GrapeVarieties" + 4 * "CabernetSauvignon,Merlot,CabernetFranc,PetitVerdot")
+
+    def test_03_category_order(self):
+        """Test that categories are shown in the correct order when the
+        attributes are in a different order."""
+        category_vintage = self.env['product.attribute.category'].create({
+            'name': 'Vintage',
+            'sequence': 2,
+        })
+        category_varieties = self.env['product.attribute.category'].create({
+            'name': 'Varieties',
+            'sequence': 1,
+        })
+        self.attribute_vintage.category_id = category_vintage
+        self.attribute_varieties.category_id = category_varieties
+
+        prep_categories = self.template_margaux.valid_product_template_attribute_line_ids._prepare_categories_for_display()
+        self.assertEqual(prep_categories, OrderedDict([
+            (category_varieties, self.attribute_line_varieties),
+            (category_vintage, self.attribute_line_vintage),
+        ]))
+
+        prep_categories = self.variants_margaux[0]._prepare_categories_for_display()
+        self.assertEqual(prep_categories, OrderedDict([
+            (category_varieties, OrderedDict([
+                (self.attribute_varieties, OrderedDict([
+                    (self.template_margaux.product_variant_id, self.attribute_line_varieties.product_template_value_ids)
+                ]))
+            ])),
+            (category_vintage, OrderedDict([
+                (self.attribute_vintage, OrderedDict([
+                    (self.template_margaux.product_variant_id, self.attribute_line_vintage.product_template_value_ids[0])
+                ]))
+            ])),
+        ]))

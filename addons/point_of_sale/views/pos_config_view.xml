@@ -32,6 +32,7 @@
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="active" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
+                    <field name="selectable_categ_ids" invisible="1"/>
                     <field name="is_installed_account_accountant" invisible="1"/>
                     <field name="company_has_template" invisible="1"/>
                     <div class="oe_title" id="title">
@@ -127,7 +128,7 @@
                                     Start selling from a default product category
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('start_category', '=', False)]}">
-                                    <field name="iface_start_categ_id"/>
+                                    <field name="iface_start_categ_id" domain="[('id','in',selectable_categ_ids)]"/>
                                 </div>
                             </div>
                         </div>
@@ -188,7 +189,7 @@
                                 <field name="other_devices"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="other_devices" string="Other Devices"/>
+                                <label for="other_devices" string="Connect Devices"/>
                                 <div class="text-muted mb16">
                                     Connect devices to your PoS
                                 </div>
@@ -213,7 +214,7 @@
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box" title="Choose a specific fiscal position at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.).">
                             <div class="o_setting_left_pane">
-                                <field name="tax_regime_selection" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
+                                <field name="tax_regime_selection"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="tax_regime_selection" string="Fiscal Position per Order"/>
@@ -333,7 +334,7 @@
                                     Payment methods available
                                 </div>
                                 <div class="content-group mt16">
-                                    <field name="payment_method_ids" colspan="4" nolabel="1" context="{}" widget="many2many_tags"/>
+                                    <field name="payment_method_ids" colspan="4" nolabel="1" widget="many2many_tags" required="1"/>
                                 </div>
                                 <div>
                                     <button name="%(action_payment_methods_tree)d" icon="fa-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
@@ -352,7 +353,7 @@
                                 <div class="content-group mt16" attrs="{'invisible': [('cash_control', '=', False)]}">
                                     <div class="row mt16">
                                         <label string="Default Opening" for="proxy_ip" class="col-lg-3 o_light_label" />
-                                        <field name="default_cashbox_id" domain="[('is_a_template', '=', True)]" context="{'default_is_a_template': True}"/>
+                                        <field name="default_cashbox_id" domain="[('is_a_template', '=', True)]" context="{'default_is_a_template': True, 'current_currency_id': currency_id}"/>
                                     </div>
                                 </div>
                                 <div attrs="{'invisible': [('cash_control', '=', False)]}">
@@ -369,6 +370,27 @@
                                 <label for="iface_precompute_cash"/>
                                 <div class="text-muted">
                                     Prefill amount paid with the exact due amount
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                             id="iface_tipproduct"
+                             title="This product is used as reference on customer receipts.">
+                            <div class="o_setting_left_pane">
+                                <field name="iface_tipproduct"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="iface_tipproduct" string="Tips"/>
+                                <div class="text-muted">
+                                    Accept customer tips or convert their change to a tip
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('iface_tipproduct', '=', False)]}">
+                                    <div class="mt16">
+                                        <label string="Tip Product" for="tip_product_id" class="o_light_label"/>
+                                        <field name="tip_product_id"
+                                               domain="[('available_in_pos', '=', True)]"
+                                               context="{'default_available_in_pos': True}"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -423,7 +445,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('iface_print_via_proxy','=',False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box pos_reprint_receipt" attrs="{'invisible': [('iface_print_via_proxy','=',False)]}">
                             <div class="o_setting_left_pane">
                                 <field name='module_pos_reprint'/>
                             </div>

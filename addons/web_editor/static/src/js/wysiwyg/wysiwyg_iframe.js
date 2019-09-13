@@ -23,9 +23,6 @@ Wysiwyg.include({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         if (this.options.inIframe) {
-            if (!this.options.iframeCssAssets) {
-                this.options.iframeCssAssets = 'web_editor.wysiwyg_iframe_css_assets';
-            }
             this._onUpdateIframeId = 'onLoad_' + this.id;
         }
     },

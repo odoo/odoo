@@ -75,6 +75,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/daterangepicker.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/banner.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/colorpicker.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/translation_dialog.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/keyboard.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/name_and_signature.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/web.zoomodoo.scss"/>
@@ -163,6 +164,7 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/colorpicker_dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/translation_dialog.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/zoomodoo.js"></script>
     </template>
 
@@ -644,6 +646,7 @@
                 <script type="text/javascript" src="/base/static/tests/base_settings_tests.js"></script>
 
                 <script type="text/javascript" src="/web/static/tests/qweb_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/mockserver_tests.js"></script>
 
                 <script type="text/javascript" src="/web/static/tests/services/notification_service_tests.js"></script>
 
@@ -705,7 +708,7 @@
                 <script type="text/javascript" src="/web/static/tests/widgets/rainbow_man_tests.js"/>
 
                 <script type="text/javascript" src="/web/static/tests/tools/debug_manager_tests.js"/>
-                
+
                 <script type="text/javascript" src="/web/static/tests/helpers/test_utils_tests.js"></script>
             </t>
 
@@ -719,30 +722,6 @@
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="title">Web Mobile Tests</t>
             <t t-set="head">
-                <script>
-                    // force the config.device.isMobile key to be true so that
-                    // mobile specific files aren't rejected
-                    window.odoo = {};
-                    var odooDefine;
-                    Object.defineProperty(window.odoo, 'define', {
-                        get: function () {
-                            return odooDefine;
-                        },
-                        set: function (define) {
-                            odooDefine = function () {
-                                define.apply(this, arguments);
-                                if (arguments[0] === 'web.config') {
-                                    define.call(this, 'web.config.patch', function (require) {
-                                        var config = require('web.config');
-                                        config.device.isMobile = true;
-                                        config.device.size_class = config.device.SIZES.XS;
-                                    });
-                                }
-                            };
-                        },
-                    });
-                </script>
-
                 <t t-call="web.js_tests_assets"/>
                 <script type="text/javascript" src="/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js"></script>
 
@@ -753,7 +732,6 @@
                 <script type="text/javascript" src="/web/static/tests/views/kanban_mobile_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/mobile_control_panel_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/basic_fields_mobile_tests.js"></script>
-                <script type="text/javascript" src="/web/static/tests/fields/relational_fields_mobile_tests.js"></script>
             </t>
 
             <div id="qunit"/>

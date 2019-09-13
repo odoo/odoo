@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_automation
+# 	* base_automation
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# Emily JIA <eji@odoo.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# snow wang <147156565@qq.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# Jeanphy <hzh0292@qq.com>, 2019
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# 卫安琪 <weianqi1991@gmail.com>, 2019
+# snow wang <147156565@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# John An <johnxan@163.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: John An <johnxan@163.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +41,7 @@ msgstr "动作名称"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
 msgid "Action To Do"
-msgstr "待做的动作"
+msgstr "后置操作"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__type
@@ -77,13 +80,18 @@ msgid "Apply on"
 msgstr "应用于"
 
 #. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Archived"
+msgstr "已归档"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__is_assigned_to_admin
 msgid "Assigned to admin user"
 msgstr "指派给管理用户"
 
 #. module: base_automation
-#: selection:ir.actions.server,usage:0
 #: model:ir.model,name:base_automation.model_base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
 msgid "Automated Action"
 msgstr "自动动作"
 
@@ -91,7 +99,7 @@ msgstr "自动动作"
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
 #: model:ir.ui.menu,name:base_automation.menu_base_automation_form
 msgid "Automated Actions"
-msgstr "自动的动作"
+msgstr "自动动作"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
@@ -116,48 +124,12 @@ msgid "Base Action Rule: check and execute"
 msgstr "基本动作规则:检查并执行"
 
 #. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_recursive
-#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
-msgid "Base Automation: test recursive rule"
-msgstr "基础自动化：测试递归的规则"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_create
-#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
-msgid "Base Automation: test rule on create"
-msgstr "基础自动化：创建测试规则"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_recompute
-#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
-msgid "Base Automation: test rule on recompute"
-msgstr "基础自动化：重新计算的测试规则"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_line
-#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
-msgid "Base Automation: test rule on secondary model"
-msgstr "基础自动化：二级模型测试规则"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_write
-#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
-msgid "Base Automation: test rule on write"
-msgstr "基础自动化：写入测试规则"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_write_check_context
-#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
-msgid "Base Automation: test rule on write check context"
-msgstr "基础自动化：写入检查上下文的测试规则"
-
-#. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "Based on Form Modification"
 msgstr "基于表单修改"
 
 #. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on Timed Condition"
 msgstr "基于时间条件"
 
@@ -177,16 +149,19 @@ msgid "Binding Type"
 msgstr "绑定类型"
 
 #. module: base_automation
-#: selection:base.automation.lead.test,state:0
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
+msgid "Binding View Types"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__cancel
 msgid "Cancelled"
 msgstr "已取消"
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation_lead_test__customer
-msgid ""
-"Check this box if this contact is a customer. It can be selected in sales "
-"orders."
-msgstr "如果这个联系人是客户，请勾选此项。它就能够在销售订单中被选择。"
+#: model:ir.model.fields,help:base_automation.field_base_automation_lead_test__employee
+msgid "Check this box if this contact is an Employee."
+msgstr "标记为内部员工"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -201,7 +176,7 @@ msgid ""
 msgstr "子服务器将被被激活。注意最后返回动作的值将做用做全局变量。"
 
 #. module: base_automation
-#: selection:base.automation.lead.test,state:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__done
 msgid "Closed"
 msgstr "已关闭"
 
@@ -220,7 +195,7 @@ msgstr "创建或写入目标模型"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__create_uid
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
@@ -230,9 +205,9 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: base_automation
-#: selection:base.automation,trg_date_range_type:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__day
 msgid "Days"
-msgstr "天数"
+msgstr "天"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__deadline
@@ -261,6 +236,11 @@ msgid "Delay type"
 msgstr "延迟类型"
 
 #. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_demo
+msgid "Demo"
+msgstr "演示"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__display_name
@@ -275,12 +255,17 @@ msgstr "截止日期至"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
 msgid "Due type"
-msgstr "截止类型"
+msgstr "到期类型"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
 msgid "Email Template"
-msgstr "Email模板"
+msgstr "EMail模板"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__employee
+msgid "Employee"
+msgstr "员工"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
@@ -288,7 +273,12 @@ msgid "External ID"
 msgstr "外部 ID"
 
 #. module: base_automation
-#: selection:base.automation,trg_date_range_type:0
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
+msgid "Groups"
+msgstr "群组"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__hour
 msgid "Hours"
 msgstr "小时"
 
@@ -298,6 +288,11 @@ msgstr "小时"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
 msgstr "ID"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "在 XML 文件中定义的动作的 ID"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -314,26 +309,21 @@ msgid ""
 msgstr "在更新记录前此条件必须被满足"
 
 #. module: base_automation
-#: selection:base.automation.lead.test,state:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__open
 msgid "In Progress"
 msgstr "进行中"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__customer
-msgid "Is a Customer"
-msgstr "客户"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__date_action_last
 msgid "Last Action"
-msgstr "最近的行动"
+msgstr "最近行动"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test____last_update
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后更改日"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -352,7 +342,7 @@ msgstr "最后更新者"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__write_date
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "更新时间"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__lead_id
@@ -370,7 +360,7 @@ msgid "Link using field"
 msgstr "链接使用字段"
 
 #. module: base_automation
-#: selection:base.automation,trg_date_range_type:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
 msgid "Minutes"
 msgstr "分钟"
 
@@ -378,11 +368,6 @@ msgstr "分钟"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
 msgstr "模型"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
-msgid "Model Description"
-msgstr "模型说明"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -394,7 +379,7 @@ msgstr "模型名称"
 msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
-msgstr "记录创建/更新的模型。设置这个字段仅指明模型与基本模型的不同。"
+msgstr "记录创建 / 更新的模型。设置此字段仅仅定义了一个与base模型不一样的模型。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -402,9 +387,9 @@ msgid "Model on which the server action runs."
 msgstr "服务器动作运行的模型."
 
 #. module: base_automation
-#: selection:base.automation,trg_date_range_type:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
 msgid "Months"
-msgstr "月份"
+msgstr "月"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__name
@@ -412,7 +397,7 @@ msgid "Name"
 msgstr "名称"
 
 #. module: base_automation
-#: selection:base.automation.lead.test,state:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__draft
 msgid "New"
 msgstr "新建"
 
@@ -427,22 +412,22 @@ msgid "On Change Fields Trigger"
 msgstr "变化字段的触发器"
 
 #. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On Creation"
 msgstr "创建时"
 
 #. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On Creation & Update"
 msgstr "创建以及更新时"
 
 #. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On Deletion"
 msgstr "删除时"
 
 #. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
 msgid "On Update"
 msgstr "更新时"
 
@@ -459,9 +444,9 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: base_automation
-#: selection:base.automation.lead.test,state:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__pending
 msgid "Pending"
-msgstr "暂停"
+msgstr "待定"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__priority
@@ -481,33 +466,17 @@ msgid "Python Code"
 msgstr "Python 代码"
 
 #. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove Action"
-msgstr "移除动作"
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove the contextual action related to this server action"
-msgstr "移除与此服务器动作相关的上下文动作"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
 msgstr "负责人"
 
 #. module: base_automation
-#: selection:ir.actions.server,usage:0
-msgid "Scheduled Action"
-msgstr "安排的动作"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
-msgstr "序列"
+msgstr "单号规则"
 
 #. module: base_automation
-#: selection:ir.actions.server,usage:0
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
 msgstr "服务器动作"
@@ -532,7 +501,7 @@ msgstr "建立一个新的自动化系统"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
 msgid "Status"
-msgstr "状态"
+msgstr "省份"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__name
@@ -545,17 +514,29 @@ msgid "Summary"
 msgstr "摘要"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model"
+msgstr "目标模型"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
 msgstr "记录上用户的技术名称"
 
 #. module: base_automation
-#: code:addons/base_automation/models/base_automation.py:87
+#: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr "这个 \"%(trigger_value)s\" %(trigger_label)s 只能与 \"%(state_value)s\" 动作类型一起使用"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
+msgid ""
+"The action will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -579,12 +560,12 @@ msgid ""
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
 "服务器操作的类型。 以下值可用：\n"
-"-“执行Python代码”：将被执行的一段python代码\n"
-"- “创建或复制新记录”：用新值创建一个新记录，或复制现有数据库中的记录\n"
-"-  “在记录上写”：更新记录的值\n"
-"- “执行几个动作”：定义触发其他服务器的动作\n"
-"-“添加关注者”：将关注者添加到记录中（在论坛中可用）\n"
-"- “发送电子邮件”：自动发送电子邮件（在email_template中可用）"
+"- “执行Python代码”：将被执行的一段python代码\n"
+"- “创建或复制新记录”：用新值创建新记录，或复制你的数据库中的现有记录\n"
+"- '在记录上写'：更新记录的值\n"
+"- “执行几个动作”：定义触发其他几个服务器动作的动作\n"
+"- “添加追随者”：将追随者添加到记录中（在讨论中可用）\n"
+"- “发送EMail”：自动发送EMail（在email_template中提供）"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -636,10 +617,15 @@ msgid "Value Mapping"
 msgstr "映射的值"
 
 #. module: base_automation
-#: code:addons/base_automation/models/base_automation.py:86
+#: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
 msgstr "警告"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
+msgid "Watched fields"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -674,4 +660,4 @@ msgstr "如果不选中，此规则被隐藏且不被执行"
 msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
-msgstr "编写动作将执行的Python代码。一些变量可供使用;有关python表达式的帮助在帮助选项卡中给出。"
+msgstr "编写动作将执行的Python代码。一些变量可供使用;有关python表达式的帮助在帮助页卡中给出。"

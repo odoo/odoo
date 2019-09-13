@@ -2,10 +2,9 @@ odoo.define('website_forum.website_forum', function (require) {
 'use strict';
 
 var core = require('web.core');
-var Wysiwyg = require('web_editor.wysiwyg.root');
+var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
-var utils = require('web.utils');
 var qweb = core.qweb;
 
 var _t = core._t;
@@ -111,12 +110,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             },
         });
 
-        _.each($('textarea.load_editor'), function (textarea) {
+        _.each($('textarea.o_wysiwyg_loader'), function (textarea) {
             var $textarea = $(textarea);
             var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
-            if (!$textarea.val().match(/\S/)) {
-                $textarea.val('<p><br/></p>');
-            }
             var $form = $textarea.closest('form');
             var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
             var toolbar = [
@@ -146,12 +142,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     MediaPlugin: false,
                 };
             }
-            var wysiwyg = new Wysiwyg(self, options);
-            wysiwyg.attachTo($textarea).then(function () {
+            wysiwygLoader.load(self, $textarea[0], options).then(wysiwyg => {
                 // float-left class messes up the post layout OPW 769721
                 $form.find('.note-editable').find('img.float-left').removeClass('float-left');
-                $form.on('click', 'button .a-submit', function () {
-                    $form.find('textarea').data('wysiwyg').save();
+                $form.on('click', 'button .a-submit', () => {
+                    wysiwyg.save();
                 });
             });
         });

@@ -528,12 +528,16 @@
                             <hr t-if="product.description_sale" />
                             <div>
                                 <p t-field="product.description_sale" class="text-muted mt-3" placeholder="A short description that will also appear on documents." />
-                                <div class="o_not_editable" id="product_attributes_simple">
+                                <div id="product_attributes_simple">
                                     <hr t-if="sum([(1 if len(l.value_ids)==1 else 0) for l in product.attribute_line_ids])"/>
                                     <p class="text-muted">
-                                        <t t-foreach="product.attribute_line_ids.sorted(key=lambda x: x.attribute_id.sequence)" t-as="variant_id">
-                                            <t t-if="len(variant_id.value_ids)==1">
-                                                <span t-field="variant_id.attribute_id" />: <span t-field="variant_id.value_ids[0].name" /><br /></t>
+                                        <t t-set="single_value_attributes" t-value="product.valid_product_template_attribute_line_ids._prepare_single_value_for_display()"/>
+                                        <t t-foreach="single_value_attributes" t-as="attribute">
+                                            <span t-field="attribute.name"/>:
+                                            <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
+                                                <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
+                                            </t>
+                                            <br/>
                                         </t>
                                     </p>
                                 </div>
@@ -612,7 +616,7 @@
 
     <template id="product_quantity" inherit_id="website_sale.product" customize_show="True" name="Select Quantity">
       <xpath expr="//a[@id='add_to_cart']" position="before">
-        <div class="css_quantity input-group oe_website_spinner" contenteditable="false">
+        <div class="css_quantity input-group" contenteditable="false">
             <div class="input-group-prepend">
                 <a t-attf-href="#" class="btn btn-secondary js_add_cart_json" aria-label="Remove one" title="Remove one">
                     <i class="fa fa-minus"></i>
@@ -853,7 +857,7 @@
                             </t>
                         </td>
                         <td class="text-center td-qty">
-                            <div t-if="not line.linked_line_id" class="css_quantity input-group mx-auto oe_website_spinner">
+                            <div class="css_quantity input-group mx-auto">
                                 <div class="input-group-prepend">
                                     <a t-attf-href="#" class="btn btn-link js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
                                         <i class="fa fa-minus"></i>
@@ -866,9 +870,6 @@
                                     </a>
                                 </div>
                             </div>
-                            <t t-if="line.linked_line_id">
-                              <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-esc="int(line.product_uom_qty)"/>
-                            </t>
                         </td>
                         <td class="text-center td-price" name="price">
                             <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
@@ -1010,9 +1011,7 @@
                             <div class="text-muted d-none d-md-block" t-field="product.description_sale" />
                         </td>
                         <td class='td-price'>
-                            <t t-if="True"><!-- compatibility 12.0 -->
-                                <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                            </t>
+                            <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             <span t-esc="combination_info['price']" style="white-space: nowrap;" t-options="{'widget': 'monetary','display_currency': website.currency_id}"/>
                         </td>
                         <td class="w-25 text-center">
@@ -1626,7 +1625,7 @@
                 <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference" class="card-body">
                     <b>Communication: </b><span t-esc='order.reference'/>
                 </div>
-                <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.acquirer_id.provider == 'transfer') and (payment_tx_id.partner_id.country_id.code in ['BE', 'AT', 'DE', 'FI', 'NL']) and (payment_tx_id.currency_id.name == 'EUR')">
+                <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.acquirer_id.provider == 'transfer') and (payment_tx_id.currency_id.name == 'EUR')">
                     <div class="card-body" t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid">
                         <h3>Or scan me with your banking app.</h3>
                         <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference)"/>

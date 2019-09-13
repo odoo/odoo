@@ -1,20 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * resource
+# 	* resource
 # 
-# Translators:
-# xlu <xlu@seznam.cz>, 2018
-# Martin Trigaux, 2018
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2018
-# Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: trendspotter, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,24 +16,44 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:485
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (kopie)"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__active
 msgid "Active"
-msgstr "Aktivní"
+msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,day_period:0
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__afternoon
 msgid "Afternoon"
 msgstr ""
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"Are you sure you want to switch this calendar to 1 week calendar ? All "
+"entries will be lost"
+msgstr ""
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"Are you sure you want to switch this calendar to 2 weeks calendar ? All "
+"entries will be lost"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "Attendances can't overlap."
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
-msgid "Average hour per day"
+msgid "Average Hour per Day"
 msgstr ""
 
 #. module: resource
@@ -50,14 +63,20 @@ msgid ""
 msgstr ""
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
+msgid "Calendar in 2 weeks mode"
+msgstr ""
+
+#. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
 msgid "Closing Days"
-msgstr "Uzavírací dny"
+msgstr ""
 
 #. module: resource
 #: model:ir.model,name:resource.model_res_company
 msgid "Companies"
-msgstr "Firmy v systému"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__company_id
@@ -68,7 +87,7 @@ msgstr "Firmy v systému"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Company"
-msgstr "Firma"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_uid
@@ -77,7 +96,7 @@ msgstr "Firma"
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_test__create_uid
 msgid "Created by"
-msgstr "Vytvořil(a)"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_date
@@ -86,7 +105,7 @@ msgstr "Vytvořil(a)"
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_date
 #: model:ir.model.fields,field_description:resource.field_resource_test__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
@@ -96,7 +115,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
 msgid "Day of Week"
-msgstr "Den v týdnu"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
@@ -110,7 +129,7 @@ msgstr ""
 #: model:ir.model.fields,help:resource.field_resource_resource__calendar_id
 #: model:ir.model.fields,help:resource.field_resource_test__resource_calendar_id
 msgid "Define the schedule of resource"
-msgstr "Určit plánování zdroje"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -118,7 +137,6 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
-"Definujte pracovní dobu a rozvrh který může být naplánován členům projektu"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
@@ -128,57 +146,77 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_test__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný název"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_type
+msgid "Display Type"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
 msgid "Efficiency Factor"
-msgstr "Činitel účinnosti"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_to
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_to
 msgid "End Date"
-msgstr "Datum ukončení"
-
-#. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Friday"
-msgstr "Pátek"
-
-#. module: resource
-#: code:addons/resource/models/resource.py:166
-#, python-format
-msgid "Friday Evening"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/models/resource.py:165
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
+msgid "Even week"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
+msgid "Explanation"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
+msgid "Friday"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "Friday Afternoon"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Friday Morning"
 msgstr ""
 
 #. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
+msgid "Gives the sequence of this line when displaying the resource calendar."
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Global Leaves"
+msgid "Global Time Off"
 msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
-msgstr "Seskupit podle"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
 msgid "Hours"
-msgstr "Hodiny"
+msgstr ""
 
 #. module: resource
-#: selection:resource.resource,resource_type:0
+#: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
 msgid "Human"
-msgstr "Člověk"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__id
@@ -188,16 +226,14 @@ msgstr "Člověk"
 #: model:ir.model.fields,field_description:resource.field_resource_resource__id
 #: model:ir.model.fields,field_description:resource.field_resource_test__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__resource_id
 msgid ""
-"If empty, this is a generic holiday for the company. If a resource is set, "
-"the holiday/leave is only for this resource"
+"If empty, this is a generic time off for the company. If a resource is set, "
+"the time off is only for this resource"
 msgstr ""
-"Pokud je prázdné, jedná se o obecnou dovolenou společnosti. Pokud je zdroj "
-"nastaven, dovolená/uvolnění je pouze pro tento zdroj"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -205,13 +241,11 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Pokud je pole aktivní nastaveno na Nepravda, umožní vám to skrýt záznam "
-"zdroje bez jeho odstranění."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Inactive"
-msgstr "Neaktivní"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar____last_update
@@ -221,7 +255,7 @@ msgstr "Neaktivní"
 #: model:ir.model.fields,field_description:resource.field_resource_resource____last_update
 #: model:ir.model.fields,field_description:resource.field_resource_test____last_update
 msgid "Last Modified on"
-msgstr "Naposled změněno"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -230,7 +264,7 @@ msgstr "Naposled změněno"
 #: model:ir.model.fields,field_description:resource.field_resource_resource__write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_test__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_date
@@ -239,12 +273,7 @@ msgstr "Naposledy upraveno od"
 #: model:ir.model.fields,field_description:resource.field_resource_resource__write_date
 #: model:ir.model.fields,field_description:resource.field_resource_test__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
-
-#. module: resource
-#: selection:resource.calendar.leaves,time_type:0
-msgid "Leave"
-msgstr "Uvolnění"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -255,38 +284,32 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
-msgstr "Podrobnosti uvolnění"
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Leaves"
-msgstr "Uvolnění"
-
-#. module: resource
-#: selection:resource.resource,resource_type:0
-msgid "Material"
-msgstr "Materiál"
-
-#. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Monday"
-msgstr "Pondělí"
-
-#. module: resource
-#: code:addons/resource/models/resource.py:158
-#, python-format
-msgid "Monday Evening"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/models/resource.py:157
+#: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__material
+msgid "Material"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
+msgid "Monday"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "Monday Afternoon"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Monday Morning"
 msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,day_period:0
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__morning
 msgid "Morning"
 msgstr ""
 
@@ -296,26 +319,32 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_resource__name
 #: model:ir.model.fields,field_description:resource.field_resource_test__name
 msgid "Name"
-msgstr "Název"
+msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.leaves,time_type:0
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
+msgid "Odd week"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
 msgid "Other"
-msgstr "jiný"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Reason"
-msgstr "Důvod"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Vztažené uživatelské jméno pro zdroj ke spravování jeho přístupu."
+msgstr ""
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_test__resource_id
@@ -325,18 +354,6 @@ msgstr "Vztažené uživatelské jméno pro zdroj ke spravování jeho přístup
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Resource"
-msgstr "Zdroj"
-
-#. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
-#: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
-#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
-msgid "Resource Leaves"
-msgstr "Úroveň zásob"
-
-#. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_leaves
-msgid "Resource Leaves Detail"
 msgstr ""
 
 #. module: resource
@@ -345,9 +362,21 @@ msgid "Resource Mixin"
 msgstr ""
 
 #. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+msgid "Resource Time Off"
+msgstr ""
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
 msgid "Resource Type"
-msgstr "Typ zdroje"
+msgstr ""
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
@@ -357,7 +386,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_id
 msgid "Resource's Calendar"
-msgstr "Kalendář zdroje"
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -367,12 +396,12 @@ msgstr "Kalendář zdroje"
 #: model:ir.ui.menu,name:resource.menu_resource_resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_tree
 msgid "Resources"
-msgstr "Zdroje"
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
-msgid "Resources Leaves"
-msgstr "Uvolnění zdrojů"
+msgid "Resources Time Off"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -382,32 +411,39 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
-"Zdroje umožňují vytvořit a spravovat zdroje, které by měly být zapojené v "
-"určitých fázích projektu. Můžete také nastavit jejich úroveň účinnosti a "
-"základní zatížení na jejich týdeních pracovních hodinách."
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
 msgid "Saturday"
-msgstr "Sobota"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Search Resource"
-msgstr "Vyhledat zdroj"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-msgid "Search Working Period Leaves"
-msgstr "Hledat uvolnění pracovní doby"
+msgid "Search Working Period Time Off"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Search Working Time"
-msgstr "Hledat pracovní dobu"
+msgstr ""
 
 #. module: resource
-#: code:addons/resource/models/res_company.py:22
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
+msgid "Section"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/res_company.py:0
 #, python-format
 msgid "Standard 40 hours/week"
 msgstr ""
@@ -415,7 +451,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
 msgid "Start Date"
-msgstr "Datum zahájení"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__hour_from
@@ -427,7 +463,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_from
 msgid "Starting Date"
-msgstr "Počáteční datum"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -435,9 +471,24 @@ msgid "Starting Date of Leave"
 msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
 msgid "Sunday"
-msgstr "Neděle"
+msgstr ""
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to 1 week calendar"
+msgstr ""
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to 2 weeks calendar"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
+msgid "Technical field for UX purpose."
+msgstr ""
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_test
@@ -445,16 +496,16 @@ msgid "Test Resource Model"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/models/resource.py:464
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/models/resource.py:519
+#: code:addons/resource/models/resource.py:0
 #, python-format
-msgid "The start date of the leave must be earlier end date."
-msgstr "Datum zahájení dovolené musí být dřívější datum ukončení."
+msgid "The start date of the time off must be earlier end date."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -477,20 +528,27 @@ msgid ""
 msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
 msgid "Thursday"
-msgstr "Čtvrtek"
-
-#. module: resource
-#: code:addons/resource/models/resource.py:164
-#, python-format
-msgid "Thursday Evening"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/models/resource.py:163
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "Thursday Afternoon"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Thursday Morning"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Time Off"
 msgstr ""
 
 #. module: resource
@@ -499,7 +557,7 @@ msgid "Time Type"
 msgstr ""
 
 #. module: resource
-#: sql_constraint:resource.resource:0
+#: model:ir.model.constraint,message:resource.constraint_resource_resource_check_time_efficiency
 msgid "Time efficiency must be strictly positive"
 msgstr ""
 
@@ -509,21 +567,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_resource__tz
 #: model:ir.model.fields,field_description:resource.field_resource_test__tz
 msgid "Timezone"
-msgstr "Časové pásmo"
-
-#. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Tuesday"
-msgstr "Úterý"
-
-#. module: resource
-#: code:addons/resource/models/resource.py:160
-#, python-format
-msgid "Tuesday Evening"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/models/resource.py:159
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
+msgid "Tuesday"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "Tuesday Afternoon"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Tuesday Morning"
 msgstr ""
@@ -531,61 +589,67 @@ msgstr ""
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Type"
-msgstr "Typ"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__user_id
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "User"
-msgstr "Uživatel"
+msgstr ""
 
 #. module: resource
 #: model:ir.model,name:resource.model_res_users
 msgid "Users"
-msgstr "Uživatelé"
-
-#. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Wednesday"
-msgstr "Středa"
-
-#. module: resource
-#: code:addons/resource/models/resource.py:162
-#, python-format
-msgid "Wednesday Evening"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/models/resource.py:161
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
+msgid "Wednesday"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "Wednesday Afternoon"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Wednesday Morning"
 msgstr ""
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
+msgid "Week Even/Odd"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
-"Whether this should be computed as a holiday or as work time (eg: formation)"
+"Whether this should be computed as a time off or as work time (eg: "
+"formation)"
 msgstr ""
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr "Podrobnosti práce"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Resources"
-msgstr "Pracovní prostředky"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
 msgid "Work from"
-msgstr "Pracovat od"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_to
 msgid "Work to"
-msgstr "Pracovat po"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_ids
@@ -594,10 +658,10 @@ msgstr "Pracovat po"
 #: model:ir.model.fields,field_description:resource.field_resource_test__resource_calendar_id
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Working Hours"
-msgstr "Pracovní doba"
+msgstr ""
 
 #. module: resource
-#: code:addons/resource/models/resource.py:152
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Working Hours of %s"
 msgstr ""
@@ -605,7 +669,7 @@ msgstr ""
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Period"
-msgstr "Pracovní období"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
@@ -616,10 +680,28 @@ msgstr "Pracovní období"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
-msgstr "Pracovní čas"
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: model:ir.ui.menu,name:resource.menu_resource_calendar
 msgid "Working Times"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "You can't delete section between weeks."
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "even"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "odd"
 msgstr ""

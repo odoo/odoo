@@ -17,6 +17,7 @@ class Location(models.Model):
     _parent_store = True
     _order = 'complete_name'
     _rec_name = 'complete_name'
+    _check_company_auto = True
 
     @api.model
     def default_get(self, fields):
@@ -45,7 +46,7 @@ class Location(models.Model):
              "\n* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products"
              "\n* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations")
     location_id = fields.Many2one(
-        'stock.location', 'Parent Location', index=True, ondelete='cascade',
+        'stock.location', 'Parent Location', index=True, ondelete='cascade', check_company=True,
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
     child_ids = fields.One2many('stock.location', 'location_id', 'Contains')
     comment = fields.Text('Additional Information')
@@ -68,9 +69,8 @@ class Location(models.Model):
 
     @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
-        """ Forms complete name of location from parent location to child location. """
         for location in self:
-            if location.location_id.complete_name:
+            if location.location_id and location.usage != 'view':
                 location.complete_name = '%s/%s' % (location.location_id.complete_name, location.name)
             else:
                 location.complete_name = location.name
@@ -81,11 +81,14 @@ class Location(models.Model):
             self.scrap_location = False
 
     def write(self, values):
+        if 'company_id' in values:
+            for location in self:
+                if location.company_id.id != values['company_id']:
+                    raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         if 'usage' in values and values['usage'] == 'view':
             if self.mapped('quant_ids'):
                 raise UserError(_("This location's usage cannot be changed to view as it contains products."))
         if 'usage' in values or 'scrap_location' in values:
-
             modified_locations = self.filtered(
                 lambda l: any(l[f] != values[f] if f in values else False
                               for f in {'usage', 'scrap_location'}))
@@ -115,22 +118,8 @@ class Location(models.Model):
                     raise UserError(_('You still have some product in locations %s') %
                         (','.join(children_quants.mapped('location_id.name'))))
                 else:
-                    super(Location, children_location - self).with_context({'do_not_check_quant': True}).write(values)
-
+                    super(Location, children_location - self).with_context(do_not_check_quant=True).write(values)
         return super(Location, self).write(values)
-
-    def name_get(self):
-        ret_list = []
-        for location in self:
-            orig_location = location
-            name = location.name
-            while location.location_id and location.usage != 'view':
-                location = location.location_id
-                if not name:
-                    raise UserError(_('You have to set a name for this location.'))
-                name = location.name + "/" + name
-            ret_list.append((orig_location.id, name))
-        return ret_list
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -179,6 +168,7 @@ class Route(models.Model):
     _name = 'stock.location.route'
     _description = "Inventory Routes"
     _order = 'sequence'
+    _check_company_auto = True
 
     name = fields.Char('Route', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to hide the route without removing it.")
@@ -193,9 +183,13 @@ class Route(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env.company, index=True,
         help='Leave this field empty if this route is shared between all companies')
-    product_ids = fields.Many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products', copy=False)
+    product_ids = fields.Many2many(
+        'product.template', 'stock_route_product', 'route_id', 'product_id',
+        'Products', copy=False, check_company=True)
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)
-    warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses', copy=False)
+    warehouse_ids = fields.Many2many(
+        'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',
+        'Warehouses', copy=False, check_company=True)
 
     @api.onchange('warehouse_selectable')
     def _onchange_warehouse_selectable(self):

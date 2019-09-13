@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * barcodes
+# 	* barcodes
 # 
 # Translators:
-# 老窦 北京 <2662059195@qq.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# Martin Trigaux, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# snow wang <147156565@qq.com>, 2018
-# v2exerer <9010446@qq.com>, 2018
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# v2exerer <9010446@qq.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# ChinaMaker <liuct@chinamaker.net>, 2019
+# snow wang <147156565@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: v2exerer <9010446@qq.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,25 +27,25 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:204
+#: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
 msgstr "'*' 不是一个有效的正则条码模式，你的意思是'.*' ?"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:202
+#: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid ": a rule can only contain one pair of braces."
 msgstr ": 规则只能包含一对大括号"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:198
+#: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid ": braces can only contain N's followed by D's."
 msgstr ": 大括号只能包含N序列后跟D序列。"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:200
+#: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid ": empty braces."
 msgstr ": 空括号"
@@ -75,13 +76,13 @@ msgid "Add a new barcode nomenclature"
 msgstr "增加新条码命名规则"
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__alias
 msgid "Alias"
 msgstr "别名"
 
 #. module: barcodes
-#: selection:barcode.nomenclature,upc_ean_conv:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__always
 msgid "Always"
 msgstr "总是"
 
@@ -96,7 +97,7 @@ msgid "An internal identification of the barcode nomenclature"
 msgstr "条码命名规则的内部识别"
 
 #. module: barcodes
-#: selection:barcode.rule,encoding:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
 msgid "Any"
 msgstr "任意"
 
@@ -133,17 +134,7 @@ msgstr "条码规则"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Barcode Scanned"
-msgstr "条码扫描到"
-
-#. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Cashier"
-msgstr "收银员"
-
-#. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Client"
-msgstr "客户端"
+msgstr "扫描到条码"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -154,7 +145,7 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_date
@@ -163,21 +154,11 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Credit Card"
-msgstr "信用卡"
-
-#. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:390
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Discard"
-msgstr "取消"
-
-#. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Discounted Product"
-msgstr "折扣的产品"
+msgstr "丢弃"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
@@ -187,17 +168,17 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: barcodes
-#: selection:barcode.rule,encoding:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
 msgid "EAN-13"
 msgstr "EAN-13"
 
 #. module: barcodes
-#: selection:barcode.nomenclature,upc_ean_conv:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__ean2upc
 msgid "EAN-13 to UPC-A"
 msgstr "EAN-13 转 UPC-A"
 
 #. module: barcodes
-#: selection:barcode.rule,encoding:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean8
 msgid "EAN-8"
 msgstr "EAN-8"
 
@@ -208,31 +189,31 @@ msgstr "编码"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:326
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Error: Barcode command is undefined"
 msgstr "错误: 未定义条码指令"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:63
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Error: Document not editable"
-msgstr "错误：单据不可编辑"
+msgstr "错误：文档不可编辑"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:362
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Error: No last scanned barcode"
 msgstr "错误: 最近没扫码"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:95
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:110
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:126
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:139
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Error: Pager not available"
 msgstr "错误：Pager不可用"
@@ -254,32 +235,22 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule____last_update
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin____last_update
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr "最后更改日"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_date
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "更新时间"
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Location"
-msgstr "地点"
-
-#. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Lot"
-msgstr "批次"
-
-#. module: barcodes
-#: selection:barcode.nomenclature,upc_ean_conv:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__none
 msgid "Never"
 msgstr "从不"
 
@@ -287,11 +258,6 @@ msgstr "从不"
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
 msgid "Nomenclature"
 msgstr "命名规则"
-
-#. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Package"
-msgstr "包裹"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -309,11 +275,6 @@ msgstr ""
 "在这些案例中，在相关记录的条码字段<i>必填</i>显示这些数字为０。"
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Priced Product"
-msgstr "标价产品"
-
-#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
 msgid "Rule Name"
 msgstr "规则名称"
@@ -325,7 +286,7 @@ msgstr "规则"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:382
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Select"
 msgstr "选择"
@@ -333,11 +294,11 @@ msgstr "选择"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
 msgid "Sequence"
-msgstr "序号"
+msgstr "单号规则"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:381
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Set quantity"
 msgstr "设置数量"
@@ -363,9 +324,9 @@ msgid "The matched pattern will alias to this barcode"
 msgstr "匹配模式将别名到该条码"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:198
-#: code:addons/barcodes/models/barcodes.py:200
-#: code:addons/barcodes/models/barcodes.py:202
+#: code:addons/barcodes/models/barcodes.py:0
+#: code:addons/barcodes/models/barcodes.py:0
+#: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid "There is a syntax error in the barcode pattern "
 msgstr "条码模式中有一个语法错误"
@@ -379,14 +340,14 @@ msgstr "这条规则只适用于特殊编码的条形编码"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:64
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "To modify this document, please first start edition."
 msgstr "要修改文档，请先开始编辑"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:363
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "To set the quantity please scan a barcode first."
 msgstr "设置数量前请先扫描条码."
@@ -405,12 +366,12 @@ msgid ""
 msgstr "UPC代码可以通过前缀加零的方式转换为EAN。此设置确定UPC/EAN条码在尝试将规则与其他编码匹配时是否应该自动转换。"
 
 #. module: barcodes
-#: selection:barcode.rule,encoding:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
 msgid "UPC-A"
 msgstr "UPC-A"
 
 #. module: barcodes
-#: selection:barcode.nomenclature,upc_ean_conv:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__upc2ean
 msgid "UPC-A to EAN-13"
 msgstr "UPC-A 到 EAN-13"
 
@@ -420,7 +381,7 @@ msgid "UPC/EAN Conversion"
 msgstr "UPC/EAN 转换"
 
 #. module: barcodes
-#: selection:barcode.rule,type:0
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
 msgid "Unit Product"
 msgstr "单位产品"
 
@@ -433,9 +394,4 @@ msgstr "用于规则排序，这样较小序列的规则最先匹配"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
-msgstr "上个扫描到的条码的值"
-
-#. module: barcodes
-#: selection:barcode.rule,type:0
-msgid "Weighted Product"
-msgstr "称重的产品"
+msgstr "上次扫描到的条码的值"

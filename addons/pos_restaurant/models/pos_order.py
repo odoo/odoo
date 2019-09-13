@@ -139,7 +139,7 @@ class PosOrder(models.Model):
         self._get_payment_lines(table_orders)
 
         for order in table_orders:
-            order['pos_session_id'] = order['session_id']
+            order['pos_session_id'] = order['session_id'][0]
             order['uid'] = order['pos_reference'].split(' ')[1]
             order['name'] = order['pos_reference']
             order['creation_date'] = order['create_date']

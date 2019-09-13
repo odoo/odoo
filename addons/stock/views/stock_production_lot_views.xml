@@ -28,6 +28,7 @@
                             <field name="product_uom_id" readonly="1" groups="uom.group_uom"/>
                         </div>
                         <field name="ref"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                 </group>
                 <notebook attrs="{'invisible': [('display_complete', '=', False)]}">
@@ -54,6 +55,7 @@
                 <field name="ref" optional="show"/>
                 <field name="product_id"/>
                 <field name="create_date" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -80,7 +82,7 @@
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('view_production_lot_tree')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('view_production_lot_form')})]"/>
         <field name="search_view_id" ref="search_product_lot_filter"/>
-        <field name="context">{'search_default_group_by_product': 1, 'display_complete': True}</field>
+        <field name="context">{'search_default_group_by_product': 1, 'display_complete': True, 'default_company_id': allowed_company_ids[0]}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a lot/serial number

@@ -34,7 +34,7 @@ class PosboxUpgrader(hw_proxy.Proxy):
 
     @http.route('/hw_proxy/upgrade', type='http', auth='none', )
     def upgrade(self):
-        commit = subprocess.check_output("git --work-tree=/home/pi/odoo/ --git-dir=/home/pi/odoo/.git log -1", shell=True).decode('utf-8').replace("\n", "<br/>")
+        commit = subprocess.check_output(["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git", "log", "-1"]).decode('utf-8').replace("\n", "<br/>")
         return upgrade_page_template.render({
             'title': "Odoo's IoTBox - Software Upgrade",
             'breadcrumb': 'IoT Box Software Upgrade',
