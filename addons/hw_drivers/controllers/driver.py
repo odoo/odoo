@@ -296,8 +296,8 @@ class Manager(Thread):
 
     def get_connected_displays(self):
         display_devices = {}
-        hdmi = subprocess.check_output(['tvservice', '-n']).decode('utf-8')
-        if hdmi.find('=') != -1:
+        hdmi = subprocess.check_output(['tvservice', '-n']).decode('utf-8').replace('\n', '')
+        if hdmi.find('=') != -1 and hdmi.split('=')[1] != "Unk-Composite dis":
             hdmi_serial = sub('[^a-zA-Z0-9 ]+', '', hdmi.split('=')[1]).replace(' ', '_')
             iot_device = IoTDevice({
                 'identifier': hdmi_serial,
