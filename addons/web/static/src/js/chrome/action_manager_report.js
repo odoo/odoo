@@ -51,6 +51,7 @@ ActionManager.include({
                 url: '/report/download',
                 data: {
                     data: JSON.stringify([url, type]),
+                    context: JSON.stringify(session.user_context),
                 },
                 success: resolve,
                 error: (error) => {
