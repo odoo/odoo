@@ -85,11 +85,11 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         +---------+----------+---------------+----------+-----+---------+-----------------+--------+
         | order   | payments | invoiced?     | product  | qty | untaxed | tax             |  total |
         +---------+----------+---------------+----------+-----+---------+-----------------+--------+
-        | order 1 | cash     | yes, customer | product1 |  10 |  109.90 | 18.68 [7%->17%] | 128.58 |
+        | order 1 | cash     |  no, customer | product1 |  10 |  109.90 | 18.68 [7%->17%] | 128.58 |
         |         |          |               | product2 |  10 |  181.73 | 18.17 [10%]     | 199.90 |
         |         |          |               | product3 |  10 |  309.90 | 52.68 [7%->17%] | 362.58 |
         +---------+----------+---------------+----------+-----+---------+-----------------+--------+
-        | order 2 | cash     | yes, customer | product1 |   5 |   54.95 | 9.34 [7%->17%]  |  64.29 |
+        | order 2 | cash     |  no, customer | product1 |   5 |   54.95 | 9.34 [7%->17%]  |  64.29 |
         |         |          |               | product2 |   5 |   90.86 | 9.09 [10%]      |  99.95 |
         +---------+----------+---------------+----------+-----+---------+-----------------+--------+
         | order 3 | bank     | no            | product2 |   5 |   90.86 | 9.09 [10%]      |  99.95 |
@@ -179,11 +179,11 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         +---------+----------+---------------+----------+-----+---------+-------------+--------+
         | order   | payments | invoiced?     | product  | qty | untaxed | tax         |  total |
         +---------+----------+---------------+----------+-----+---------+-------------+--------+
-        | order 1 | bank     | yes, customer | product1 |  10 |  109.90 | 0           | 109.90 |
+        | order 1 | bank     |  no, customer | product1 |  10 |  109.90 | 0           | 109.90 |
         |         |          |               | product2 |  10 |  181.73 | 18.17 [10%] | 199.90 |
         |         |          |               | product3 |  10 |  309.90 | 0           | 309.90 |
         +---------+----------+---------------+----------+-----+---------+-------------+--------+
-        | order 2 | cash     | yes, customer | product1 |   5 |   54.95 | 0           |  54.95 |
+        | order 2 | cash     |  no, customer | product1 |   5 |   54.95 | 0           |  54.95 |
         |         |          |               | product2 |   5 |   90.86 | 9.09 [10%]  |  99.95 |
         +---------+----------+---------------+----------+-----+---------+-------------+--------+
         | order 3 | bank     | no            | product2 |   5 |   90.86 | 9.09 [10%]  |  99.95 |
@@ -339,7 +339,18 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         self.assertTrue(invoiced_order_1.account_move, msg='Invoiced order 1 should have invoice (account_move).')
         self.assertTrue(invoiced_order_2.account_move, msg='Invoiced order 2 should have invoice (account_move).')
 
-        # NOTE Tests of values in the invoice accounting lines is not done here.
+        # Check invoice values for the order with customer who has fiscal position -> the first order.
+        order_1_tax_account = self.fpos.tax_ids.tax_dest_id.invoice_repartition_line_ids.account_id
+        order_1_sale_account = self.fpos.account_ids.account_dest_id
+        # check sale line
+        sale_lines = invoiced_order_1.account_move.line_ids.filtered(lambda line: line.account_id == order_1_sale_account)
+        self.assertAlmostEqual(sum(sale_lines.mapped('balance')), -sum([109.90, 181.73, 309.90]))
+        # check receivable line
+        receivable_line = invoiced_order_1.account_move.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
+        self.assertAlmostEqual(receivable_line.balance, 691.06)
+        # check tax lines
+        tax_lines = invoiced_order_1.account_move.line_ids.filtered(lambda line: line.account_id == order_1_tax_account)
+        self.assertAlmostEqual(sum(tax_lines.mapped('balance')), -sum([71.36, 18.17]))
 
         # close the session
         self.pos_session.action_pos_session_validate()
