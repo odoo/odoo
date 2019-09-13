@@ -514,7 +514,9 @@
         <div class="card text-center mb-2 border-bottom-0 o_wprofile_pointer">
             <div class="card-body">
                 <div class="d-inline-block position-relative">
-                    <img class="rounded-circle img-fluid" t-att-src="'/profile/avatar/%s?field=image_128%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
+                    <img class="rounded-circle img-fluid"
+                        style="width: 128px; height: 128px; object-fit: cover;"
+                        t-att-src="'/profile/avatar/%s?field=image_256%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
                     <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user_index + 1}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
                 <h3 class="mt-2 mb-0" t-esc="user['name']"></h3>

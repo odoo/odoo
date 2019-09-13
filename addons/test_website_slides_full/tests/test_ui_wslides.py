@@ -14,7 +14,7 @@ class TestUi(tests.HttpCase):
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)]
         })
-        self.env.ref('website_slides.slide_channel_demo_6_furn3')._remove_membership(self.env.ref('base.partner_demo'))
+        self.env.ref('website_slides.slide_channel_demo_6_furn3')._remove_membership(self.env.ref('base.partner_demo').ids)
 
         self.phantom_js(
             '/slides',
