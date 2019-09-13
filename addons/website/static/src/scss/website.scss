@@ -14,7 +14,7 @@ $-font-numbers: (
         $-seen: append($-seen, $-number);
         $-theme-font: nth($o-theme-font-urls, $-number);
         @if $-theme-font {
-            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}&display=swap");
         }
     }
 }
