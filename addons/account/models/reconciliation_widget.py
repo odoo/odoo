@@ -500,7 +500,7 @@ class AccountReconciliation(models.AbstractModel):
             if not partner_id:
                 partner_domain = [('partner_id.name', 'ilike', search_str)]
 
-            str_domain = expression.OR([
+            str_domain = expression.AND([
                 str_domain,
                 partner_domain,
             ])
