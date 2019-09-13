@@ -5943,6 +5943,40 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('form with div tag with o_td_label class', async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<div class="o_form_label o_td_label">' +
+                                '<b>Foo</b>' +
+                            '</div>' +
+                            '<div>' +
+                                '<field name="foo"/>' +
+                            '</div>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.containsN(form, '.o_inner_group > tbody > tr', 1,
+        "there should be 1 row in the group");
+        assert.containsOnce(form, '.o_inner_group > tbody > tr:first > .o_td_label',
+        "there should be label in the first row");
+        assert.containsOnce(form, '.o_inner_group > tbody > tr:first .o_field_widget',
+        "there should be widget in the first row");
+        assert.doesNotHaveClass(form.$('.o_inner_group > tbody > tr:first .o_form_label'), 'o_td_label',
+            "div o_form_label should not have o_td_label class");
+        form.destroy();
+    });
+
     QUnit.test('custom open record dialog title', async function (assert) {
         assert.expect(1);
 
