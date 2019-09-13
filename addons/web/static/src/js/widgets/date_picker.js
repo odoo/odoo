@@ -84,6 +84,13 @@ var DateWidget = Widget.extend({
      * set datetime value
      */
     changeDatetime: function () {
+        if (this.__libInput > 0) {
+            if (this.options.warn_future) {
+                this._warnFuture(this.getValue());
+            }
+            this.trigger("datetime_changed");
+            return;
+        }
         var oldValue = this.getValue();
         if (this.isValid()) {
             this._setValueFromUi();
