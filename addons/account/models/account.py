@@ -504,12 +504,7 @@ class AccountAccount(models.Model):
     def action_open_reconcile(self):
         self.ensure_one()
         # Open reconciliation view for this account
-        if self.internal_type == 'payable':
-            action_context = {'show_mode_selector': False, 'mode': 'suppliers'}
-        elif self.internal_type == 'receivable':
-            action_context = {'show_mode_selector': False, 'mode': 'customers'}
-        else:
-            action_context = {'show_mode_selector': False, 'mode': 'accounts', 'account_ids': [self.id,]}
+        action_context = {'show_mode_selector': False, 'mode': 'accounts', 'account_ids': [self.id,]}
         return {
             'type': 'ir.actions.client',
             'tag': 'manual_reconciliation_view',
