@@ -627,8 +627,22 @@ class Field(MetaField('DummyField', (object,), {})):
                     }
                 )
         # assign final values to records
-        for record, value in zip(records, values):
-            record[self.name] = self._process_related(value[self.related_field.name])
+        values = [self._process_related(value[self.related_field.name]) for value in values]
+        self.write_multi([r for r in records], values)
+
+    def write_multi(self, records_list, value_list):
+        """For each recordset in `records_list`, write the respective value in
+        `value_list`."""
+        # group record ids by vals, to update in batch when possible
+        updates = OrderedDict([(value, records_list[0].browse()) for value in value_list])
+        for records, value in zip(records_list, value_list):
+            updates[value] += records
+
+        self._write_multi(updates)
+
+    def _write_multi(self, updates):
+        for value, records in updates.items():
+            records[self.name] = value
 
     def _process_related(self, value):
         """No transformation by default, but allows override."""
@@ -1896,14 +1910,9 @@ class Binary(Field):
     def read(self, records):
         # values are stored in attachments, retrieve them
         assert self.attachment
-        domain = [
-            ('res_model', '=', records._name),
-            ('res_field', '=', self.name),
-            ('res_id', 'in', records.ids),
-        ]
         # Note: the 'bin_size' flag is handled by the field 'datas' itself
         data = {att.res_id: att.datas
-                for att in records.env['ir.attachment'].sudo().search(domain)}
+                for att in self._get_attachment([records])}
         cache = records.env.cache
         for record in records:
             cache.set(record, self, data.get(record.id, False))
@@ -1932,46 +1941,57 @@ class Binary(Field):
     def write(self, records, value):
         if not self.attachment:
             return super().write(records, value)
+        self.write_multi([records], [value])
+        return records
 
-        # discard recomputation of self on records
-        records.env.remove_to_compute(self, records)
+    def _write_multi(self, updates):
+        if not self.attachment:
+            super().write_multi(updates)
+            return
 
-        # update the cache, and discard the records that are not modified
-        cache = records.env.cache
-        cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
-        if not records:
-            return records
-        cache.update(records, self, [cache_value] * len(records))
+        records_attachments = self._get_attachment([records for records in updates.values()])
 
-        # retrieve the attachments that store the values, and adapt them
-        if self.store:
-            atts = records.env['ir.attachment'].sudo().search([
-                ('res_model', '=', self.model_name),
-                ('res_field', '=', self.name),
-                ('res_id', 'in', records.ids),
-            ])
-            if value:
-                # update the existing attachments
-                atts.write({'datas': value})
-                atts_records = records.browse(atts.mapped('res_id'))
-                # create the missing attachments
-                missing = (records - atts_records).filtered('id')
-                if missing:
-                    atts.create([{
+        for value, records in updates.items():
+            # discard recomputation of self on records
+            records.env.remove_to_compute(self, records)
+
+            # update the cache, and discard the records that are not modified
+            cache = records.env.cache
+            cache_value = self.convert_to_cache(value, records)
+            records = cache.get_records_different_from(records, self, cache_value)
+            if not records:
+                continue
+            cache.update(records, self, [cache_value] * len(records))
+
+            # retrieve the attachments that store the values, and adapt them
+            if self.store:
+                atts = records_attachments.filtered(lambda a: a.res_id in records.ids)
+                if value:
+                    # update the existing attachments
+                    atts.write({'datas': value})
+                    atts_records = records.browse(atts.mapped('res_id'))
+                    # create the missing attachments
+                    missing = (records - atts_records).filtered('id')
+                    if missing:
+                        created = atts.create([{
                             'name': self.name,
                             'res_model': record._name,
                             'res_field': self.name,
                             'res_id': record.id,
                             'type': 'binary',
                             'datas': value,
-                        }
-                        for record in missing
-                    ])
-            else:
-                atts.unlink()
+                        } for record in missing])
+                        records_attachments += created
+                else:
+                    atts.unlink()
+                    records_attachments -= atts
 
-        return records
+    def _get_attachment(self, records_list):
+        return records_list[0].env['ir.attachment'].sudo().search([
+            ('res_model', '=', self.model_name),
+            ('res_field', '=', self.name),
+            ('res_id', 'in', list(set(rid for records in records_list for rid in records.ids))),
+        ])
 
 
 class Image(Binary):
