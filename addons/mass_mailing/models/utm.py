@@ -36,15 +36,18 @@ class UtmCampaign(models.Model):
 
     def _compute_mailing_items(self):
         super(UtmCampaign, self)._compute_clicks_ratio()
-        query = """SELECT trace.campaign_id AS campaign_id, COUNT(DISTINCT(trace.id)) AS items_total, COUNT(DISTINCT(click.mailing_trace_id)) AS clicked_total
-                    FROM mailing_trace AS trace
-                    LEFT OUTER JOIN link_tracker_click as click ON click.mailing_trace_id = trace.id
-                    WHERE trace.campaign_id IN %s
-                    GROUP BY trace.campaign_id """
-        params = [tuple(self.ids)]
-        self.env.cr.execute(query, params)
-        clicked_data = self.env.cr.dictfetchall()
-        mapped_data = {datum['campaign_id']: {'clicked_total': datum['clicked_total'], 'items_total': datum['items_total']} for datum in clicked_data}
+        mapped_data = {}
+
+        if self.ids:
+            query = """SELECT trace.campaign_id AS campaign_id, COUNT(DISTINCT(trace.id)) AS items_total, COUNT(DISTINCT(click.mailing_trace_id)) AS clicked_total
+                        FROM mailing_trace AS trace
+                        LEFT OUTER JOIN link_tracker_click as click ON click.mailing_trace_id = trace.id
+                        WHERE trace.campaign_id IN %s
+                        GROUP BY trace.campaign_id """
+            params = [tuple(self.ids)]
+            self.env.cr.execute(query, params)
+            clicked_data = self.env.cr.dictfetchall()
+            mapped_data = {datum['campaign_id']: {'clicked_total': datum['clicked_total'], 'items_total': datum['items_total']} for datum in clicked_data}
 
         for campaign in self:
             campaign_items_values = mapped_data.get(campaign.id, {})
