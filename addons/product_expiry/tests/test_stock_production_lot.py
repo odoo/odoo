@@ -313,3 +313,109 @@ class TestStockProductionLot(TestStockCommon):
             apple_lot.removal_date, expiration_date - timedelta(days=2), delta=time_gap)
         self.assertAlmostEqual(
             apple_lot.alert_date, expiration_date - timedelta(days=6), delta=time_gap)
+
+    def test_05_confirmation_on_delivery(self):
+        """ Test when user tries to delivery expired lot, he/she gets a
+        confirmation wizard. """
+        partner = self.env['res.partner'].create({
+            'name': 'Cider & Son',
+            'company_id': self.env.ref('base.main_company').id,
+        })
+        # Creates 3 lots (1 non-expired lot, 2 expired lots)
+        lot_form = Form(self.LotObj)  # Creates the lot.
+        lot_form.name = 'good-apple-lot'
+        lot_form.product_id = self.apple_product
+        lot_form.company_id = self.env.company
+        good_lot = lot_form.save()
+
+        lot_form = Form(self.LotObj)  # Creates the lot.
+        lot_form.name = 'expired-apple-lot-01'
+        lot_form.product_id = self.apple_product
+        lot_form.company_id = self.env.company
+        expired_lot_1 = lot_form.save()
+        lot_form = Form(expired_lot_1)  # Edits the lot to make it expired.
+        lot_form.expiration_date = datetime.today() - timedelta(days=10)
+        expired_lot_1 = lot_form.save()
+
+        # Case #1: make a delivery with no expired lot.
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.apple_product
+            move.product_uom_qty = 4
+        # Saves and confirms it...
+        delivery_1 = picking_form.save()
+        delivery_1.action_confirm()
+        # ... then create a move line with the non-expired lot and valids the picking.
+        delivery_1.move_line_ids_without_package = [(5, 0), (0, 0, {
+            'company_id': self.env.company.id,
+            'location_id': delivery_1.move_lines.location_id.id,
+            'location_dest_id': delivery_1.move_lines.location_dest_id.id,
+            'lot_id': good_lot.id,
+            'product_id': self.apple_product.id,
+            'product_uom_id': self.apple_product.uom_id.id,
+            'qty_done': 4,
+        })]
+        res = delivery_1.button_validate()
+        # Validate a delivery for good products must not raise anything.
+        self.assertEqual(res, True)
+
+        # Case #2: make a delivery with one non-expired lot and one expired lot.
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.apple_product
+            move.product_uom_qty = 8
+        # Saves and confirms it...
+        delivery_2 = picking_form.save()
+        delivery_2.action_confirm()
+        # ... then create a move line for the non-expired lot and for an expired
+        # lot and valids the picking.
+        delivery_2.move_line_ids_without_package = [(5, 0), (0, 0, {
+            'company_id': self.env.company.id,
+            'location_id': delivery_2.move_lines.location_id.id,
+            'location_dest_id': delivery_2.move_lines.location_dest_id.id,
+            'lot_id': good_lot.id,
+            'product_id': self.apple_product.id,
+            'product_uom_id': self.apple_product.uom_id.id,
+            'qty_done': 4,
+        }), (0, 0, {
+            'company_id': self.env.company.id,
+            'location_id': delivery_2.move_lines.location_id.id,
+            'location_dest_id': delivery_2.move_lines.location_dest_id.id,
+            'lot_id': expired_lot_1.id,
+            'product_id': self.apple_product.id,
+            'product_uom_id': self.apple_product.uom_id.id,
+            'qty_done': 4,
+        })]
+        res = delivery_2.button_validate()
+        # Validate a delivery containing expired products must raise a confirmation wizard.
+        self.assertNotEqual(res, True)
+        self.assertEqual(res['res_model'], 'expiry.picking.confirmation')
+
+        # Case #3: make a delivery with only on expired lot.
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.apple_product
+            move.product_uom_qty = 4
+        # Saves and confirms it...
+        delivery_3 = picking_form.save()
+        delivery_3.action_confirm()
+        # ... then create two move lines with expired lot and valids the picking.
+        delivery_3.move_line_ids_without_package = [(5, 0), (0, 0, {
+            'company_id': self.env.company.id,
+            'location_id': delivery_3.move_lines.location_id.id,
+            'location_dest_id': delivery_3.move_lines.location_dest_id.id,
+            'lot_id': expired_lot_1.id,
+            'product_id': self.apple_product.id,
+            'product_uom_id': self.apple_product.uom_id.id,
+            'qty_done': 4,
+        })]
+        res = delivery_3.button_validate()
+        # Validate a delivery containing expired products must raise a confirmation wizard.
+        self.assertNotEqual(res, True)
+        self.assertEqual(res['res_model'], 'expiry.picking.confirmation')
