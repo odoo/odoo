@@ -588,10 +588,12 @@ var StatementModel = BasicModel.extend({
             line.reconciliation_proposition = _.filter(line.reconciliation_proposition, function (p) {
                 return p.id !== prop.id && p.id !== prop.link && p.link !== prop.id && (!p.link || p.link !== prop.link);
             });
-            if (['receivable', 'payable', 'liquidity'].includes(prop.account_type)) {
-                line.mv_lines_match_rp.unshift(prop);
-            } else {
-                line.mv_lines_match_other.unshift(prop);
+            if (prop['reconcileModelId'] === undefined) {
+                if (['receivable', 'payable', 'liquidity'].includes(prop.account_type)) {
+                    line.mv_lines_match_rp.unshift(prop);
+                } else {
+                    line.mv_lines_match_other.unshift(prop);
+                }
             }
 
             // No proposition left and then, reset the st_line partner.
