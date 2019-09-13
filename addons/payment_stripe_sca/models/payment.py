@@ -36,7 +36,7 @@ class PaymentAcquirerStripeSCA(models.Model):
             + "?reference=%s" % tx_values["reference"],
             "cancel_url": urls.url_join(base_url, StripeController._cancel_url)
             + "?reference=%s" % tx_values["reference"],
-            "customer_email": tx_values["partner_email"],
+            "customer_email": tx_values["partner_email"] or tx_values["billing_partner_email"],
         }
         tx_values["session_id"] = self._create_stripe_session(stripe_session_data)
 
