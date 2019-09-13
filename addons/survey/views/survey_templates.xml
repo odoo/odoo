@@ -261,9 +261,15 @@
             <input type="hidden" name="token" t-att-value="answer.token" />
 
             <t t-if="survey.questions_layout == 'one_page'">
+                <t t-set="question_number" t-value="0"/>
                 <t t-foreach='survey.question_and_page_ids' t-as='question'>
                     <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title" />
-                    <t t-if="not question.is_page and question in answer.question_ids" t-call="survey.question" />
+                    <t t-if="not question.is_page and question in answer.question_ids">
+                        <t t-set="question_number" t-value="question_number + 1"/>
+                        <t t-call="survey.question"/>
+                    </t><t t-else="">
+                        <t t-set="question_number" t-value="0"/>
+                    </t>
                 </t>
 
                 <div class="text-center mt16 mb256">
@@ -276,8 +282,14 @@
                 <div t-field='page.description' class="oe_no_empty"/>
 
                 <input type="hidden" name="page_id" t-att-value="page.id" />
+                <t t-set="question_number" t-value="0"/>
                 <t t-foreach='page.question_ids' t-as='question'>
-                    <t t-if="question in answer.question_ids" t-call="survey.question" />
+                    <t t-if="question in answer.question_ids">
+                        <t t-set="question_number" t-value="question_number + 1"/>
+                        <t t-call="survey.question" />
+                    </t><t t-else="">
+                        <t t-set="question_number" t-value="0"/>
+                    </t>
                 </t>
 
                 <div class="text-center mt16 mb256">
@@ -318,6 +330,7 @@
         <t t-set="prefix" t-value="'%s_%s' % (survey.id, question.id)" />
         <div class="js_question-wrapper" t-att-id="prefix">
             <h4>
+                <span t-if="question_number"><t t-esc="question_number"/>. </span>
                 <span t-field='question.question' />
                 <span t-if="question.constr_mandatory" class="text-danger">*</span>
             </h4>
