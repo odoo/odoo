@@ -893,40 +893,19 @@ var ManualLineRenderer = LineRenderer.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            var defs = [];
-            var def;
-            if (self._initialState.partner_id) {
-                def = self._makePartnerRecord(self._initialState.partner_id, self._initialState.partner_name).then(function (recordID) {
-                    self.fields.partner_id = new relational_fields.FieldMany2One(self,
-                        'partner_id',
-                        self.model.get(recordID),
-                        {mode: 'readonly'}
-                    );
-                });
-                defs.push(def);
-            } else {
-                def = self.model.makeRecord('account.move.line', [{
-                    relation: 'account.account',
-                    type: 'many2one',
-                    name: 'account_id',
-                    value: [self._initialState.account_id.id, self._initialState.account_id.display_name],
-                }]).then(function (recordID) {
-                    self.fields.title_account_id = new relational_fields.FieldMany2One(self,
-                        'account_id',
-                        self.model.get(recordID),
-                        {mode: 'readonly'}
-                    );
-                });
-                defs.push(def);
-            }
-
-            return Promise.all(defs).then(function () {
-                if (!self.fields.title_account_id) {
-                    return self.fields.partner_id.prependTo(self.$('.accounting_view thead td:eq(0) span:first'));
-                } else {
-                    self.fields.partner_id.destroy();
-                    return self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(0) span:first'));
-                }
+            return self.model.makeRecord('account.move.line', [{
+                relation: 'account.account',
+                type: 'many2one',
+                name: 'account_id',
+                value: [self._initialState.account_id.id, self._initialState.account_id.display_name],
+            }]).then(function (recordID) {
+                self.fields.title_account_id = new relational_fields.FieldMany2One(self,
+                    'account_id',
+                    self.model.get(recordID),
+                    {mode: 'readonly'}
+                );
+            }).then(function () {
+                return self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(0) span:first'));
             });
         });
     },

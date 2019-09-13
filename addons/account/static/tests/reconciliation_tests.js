@@ -1354,8 +1354,8 @@ QUnit.module('account', {
         await testUtils.dom.click(clientAction.$('.accounting_view:first .o_reconcile:visible'));
 
         assert.strictEqual(clientAction.$('.accounting_view:first thead').text().replace(/[\n\r\s]+/g, ' '),
-            " Agrolait 101200 ",
-            "should display the partner and the account code as title");
+            " 101200 Account Receivable 101200 ",
+            "should display the account and the account code as title");
 
         assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match:first tr:first .cell_right').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '),
             "$ 11,000.00", "sould display the line in $");
