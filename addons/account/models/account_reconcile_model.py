@@ -399,7 +399,7 @@ class AccountReconcileModel(models.Model):
                 query += ' AND st_line.name NOT ILIKE %s'
                 params += ['%%%s%%' % rule['match_' + field + '_param']]
             elif rule['match_' + field] == 'match_regex':
-                query += ' AND st_line.name ~ %s'
+                query += ' AND st_line.name ~* %s'
                 params += [rule['match_' + field + '_param']]
 
         # Filter on partners.
@@ -469,12 +469,23 @@ class AccountReconcileModel(models.Model):
                 aml.amount_currency                 AS aml_amount_currency,
                 account.internal_type               AS account_internal_type,
 
-                -- Determine a matching or not with the statement line communication using the move.name or move.ref.
-                regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
-                && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                -- Determine a matching or not with the statement line communication using the aml.name, move.name or move.ref.
+                (
+                    aml.name IS NOT NULL
+                    AND
+                    TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')) != ''
+                    AND
+                        regexp_split_to_array(TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                        && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                )
+                OR
+                    regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                    && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                 OR
                 (
                     move.ref IS NOT NULL
+                    AND
+                    TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')) != ''
                     AND
                         regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
                         && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
@@ -518,11 +529,22 @@ class AccountReconcileModel(models.Model):
                         TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')) != ''
                         AND
                         (
-                            regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
-                            && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                            (
+                                aml.name IS NOT NULL
+                                AND
+                                TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')) != ''
+                                AND
+                                    regexp_split_to_array(TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                                    && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                            )
+                            OR
+                                regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                                && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                             OR
                             (
                                 move.ref IS NOT NULL
+                                AND
+                                TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')) != ''
                                 AND
                                     regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
                                     && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
@@ -633,8 +655,10 @@ class AccountReconcileModel(models.Model):
 
         if line_residual > total_residual:
             amount_percentage = (total_residual / line_residual) * 100
-        else:
+        elif total_residual:
             amount_percentage = (line_residual / total_residual) * 100 if total_residual else 0
+        else:
+            return False
         return amount_percentage >= self.match_total_amount_param
 
     def _apply_rules(self, st_lines, excluded_ids=None, partner_map=None):

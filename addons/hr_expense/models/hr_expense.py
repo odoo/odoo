@@ -33,10 +33,16 @@ class HrExpense(models.Model):
         if self.user_has_groups('hr_expense.group_hr_expense_user') or self.user_has_groups('account.group_account_user'):
             res = "['|', ('company_id', '=', False), ('company_id', '=', company_id)]"  # Then, domain accepts everything
         elif self.user_has_groups('hr_expense.group_hr_expense_team_approver') and self.env.user.employee_ids:
-            employee = self.env.user.employee_ids[0]
-            res = ['|', '|', '|', ('department_id.manager_id.id', '=', employee.id),
-                   ('parent_id.id', '=', employee.id), ('expense_manager_id.id', '=', employee.user_id.id), ('id', '=', employee.id),
-                   '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
+            user = self.env.user
+            employee = user.employee_ids[0]
+            res = [
+                '|', '|', '|',
+                ('department_id.manager_id', '=', employee.id),
+                ('parent_id', '=', employee.id),
+                ('id', '=', employee.id),
+                ('expense_manager_id', '=', user.id),
+                '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id),
+            ]
         elif self.env.user.employee_ids:
             employee = self.env.user.employee_ids[0]
             res = [('id', '=', employee.id), '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]

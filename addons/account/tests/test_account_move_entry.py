@@ -69,34 +69,27 @@ class TestAccountMove(InvoiceTestCommon):
         # lines[3] = 'revenue line 2'
         lines = self.test_move.line_ids.sorted('debit')
 
-        # Writing not affecting a tax is allowed.
-        self.test_move.write({
-            'line_ids': [
-                (1, lines[0].id, {'credit': 1750.0}),   # counterpart line
-                (1, lines[2].id, {'debit': 600.0}),     # revenue line 1
-            ],
-        })
 
         self.test_move.flush()
         self.cr.execute('SAVEPOINT test_misc_tax_lock_date_1')
 
         # Writing something affecting a tax is not allowed.
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             self.test_move.write({
                 'line_ids': [
                     (1, lines[0].id, {'credit': 2750.0}),
-                    (1, lines[3].id, {'debit': 2000.0}),
+                    (1, lines[3].id, {'debit': 2100.0}),
                 ],
             })
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             self.test_move.write({
                 'line_ids': [
                     (1, lines[3].id, {'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)]}),
                 ],
             })
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             self.test_move.write({
                 'line_ids': [
                     (1, lines[0].id, {'credit': 1900.0}),
@@ -104,12 +97,22 @@ class TestAccountMove(InvoiceTestCommon):
                 ],
             })
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             self.test_move.unlink()
 
         self.test_move.flush()
         self.test_move.invalidate_cache()
         self.cr.execute('ROLLBACK TO SAVEPOINT test_misc_tax_lock_date_1')
 
-        with self.assertRaises(UserError):
-            self.test_move.post()
+    def test_misc_unique_sequence_number(self):
+        ''' Ensure two journal entries can't share the same name when using the same sequence. '''
+        self.test_move.post()
+
+        # Edit the sequence to force the next move to get the same name.
+        self.test_move.journal_id\
+            .sequence_id.date_range_ids\
+            .filtered(lambda seq: seq.date_from == fields.Date.from_string('2016-01-01')).number_next -= 1
+
+        test_move2 = self.test_move.copy()
+        with self.assertRaises(ValidationError):
+            test_move2.post()

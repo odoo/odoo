@@ -61,6 +61,9 @@
                                         <field name="currency_id" invisible="1"/>
                                         <field name="amount_currency"/>
                                     </group>
+                                    <group string="Product" attrs="{'invisible': [('product_id', '=', False)]}">
+                                        <field name="product_id"/>
+                                    </group>
                                     <group string="States">
                                         <field name="blocked"/>
                                     </group>
@@ -611,7 +614,7 @@
                                     <label for="invoice_date" string="Bill Date" style="font-weight:bold;"
                                            attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
                                 </div>
-                                <field name="invoice_date" nolabel="1"
+                                <field name="invoice_date" nolabel="1" options="{'datepicker': {'warn_future': true}}"
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
 
                                 <field name="date" string="Accounting Date"
@@ -880,6 +883,8 @@
                                                attrs="{'invisible': [('type', '!=', 'entry')], 'readonly': [('reversed_entry_id', '!=', False)]}"/>
                                         <field name="reversed_entry_id"
                                                attrs="{'invisible': [('type', '!=', 'entry')]}"/>
+                                        <field name="to_check"
+                                               attrs="{'invisible': [('type', '!=', 'entry')]}" />
                                     </group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company" required="1"/>

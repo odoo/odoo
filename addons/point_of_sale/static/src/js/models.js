@@ -239,6 +239,19 @@ exports.PosModel = Backbone.Model.extend({
                     return self.taxes_by_id[child_tax_id];
                 });
             });
+            return new Promise(function (resolve, reject) {
+              var tax_ids = _.pluck(self.taxes, 'id');
+              rpc.query({
+                  model: 'account.tax',
+                  method: 'get_real_tax_amount',
+                  args: [tax_ids],
+              }).then(function (taxes) {
+                  _.each(taxes, function (tax) {
+                      self.taxes_by_id[tax.id].amount = tax.amount;
+                  resolve();
+                  });
+              });
+            });
         },
     },{
         model:  'pos.session',
@@ -848,7 +861,7 @@ exports.PosModel = Backbone.Model.extend({
             self.flush_mutex.exec(function () {
                 var flushed = self._flush_orders(self.db.get_orders(), opts);
 
-                flushed.then(resolve, resolve);
+                flushed.then(resolve, reject);
 
                 return flushed;
             });
@@ -929,8 +942,9 @@ exports.PosModel = Backbone.Model.extend({
         return this._save_to_server(orders, options).then(function (server_ids) {
             self.set_synch('connected');
             return _.pluck(server_ids, 'id');
-        }).catch(function(){
+        }).catch(function(error){
             self.set_synch(self.get('failed') ? 'error' : 'disconnected');
+            return Promise.reject(error);
         });
     },
 

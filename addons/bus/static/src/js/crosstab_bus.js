@@ -80,6 +80,12 @@ var CrossTabBus = Longpolling.extend({
         this._callLocalStorage('setItem', 'channels', this._channels);
     },
     /**
+     * @return {string}
+     */
+    getTabId: function () {
+        return this._id;
+    },
+    /**
      * Tells whether this bus is related to the master tab.
      *
      * @returns {boolean}
