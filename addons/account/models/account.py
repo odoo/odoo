@@ -55,7 +55,7 @@ class AccountAccountTag(models.Model):
     color = fields.Integer('Color Index')
     active = fields.Boolean(default=True, help="Set active to false to hide the Account Tag without removing it.")
     tax_report_line_ids = fields.Many2many(string="Tax Report Lines", comodel_name='account.tax.report.line', relation='account_tax_report_line_tags_rel', help="The tax report lines using this tag")
-    tax_negate = fields.Boolean(string="Negate Tax Balance", help="Check this boox to negate the absolute value of the balance of the lines associated with this tag in tax report computation.")
+    tax_negate = fields.Boolean(string="Negate Tax Balance", help="Check this box to negate the absolute value of the balance of the lines associated with this tag in tax report computation.")
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="Country for which this tag is available, when applied on taxes.")
 
 
@@ -71,7 +71,8 @@ class AccountTaxReportLine(models.Model):
     report_action_id = fields.Many2one(string="Report Action", comodel_name='ir.actions.act_window', help="The optional action to call when clicking on this line in accounting reports.")
     children_line_ids = fields.One2many(string="Children Lines", comodel_name='account.tax.report.line', inverse_name='parent_id', help="Lines that should be rendered as children of this one")
     parent_id = fields.Many2one(string="Parent Line", comodel_name='account.tax.report.line')
-    sequence = fields.Integer(string='Sequence', required=True, help="Sequence determining the order of the lines in the report (smaller ones come first). This order is applied locally per section (so, chilldren of the same line are always rendered one after the other).")
+    sequence = fields.Integer(string='Sequence', required=True,
+        help="Sequence determining the order of the lines in the report (smaller ones come first). This order is applied locally per section (so, children of the same line are always rendered one after the other).")
     parent_path = fields.Char(index=True)
 
     #helper to create tags (positive and negative) on report line creation
