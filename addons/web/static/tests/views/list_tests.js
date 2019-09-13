@@ -4556,6 +4556,62 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: multi edition and onchanges', async function (assert) {
+        assert.expect(10);
+
+        this.data.foo.onchanges = {
+            foo: function (obj) {
+                obj.int_field = obj.foo.length;
+            },
+        };
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                    '</tree>',
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (args.method === 'write') {
+                    args.args[1].int_field = args.args[1].foo.length;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // edit a single record to validate that onchanges work
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'hi');
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.dom.click(list.$('.o_list_button_discard'));
+
+        assert.containsOnce(document.body, '.modal'); // discard dialog
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.verifySteps(['/web/dataset/search_read', 'onchange']);
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        // edit foo, first row
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'hello');
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+
+        assert.containsOnce(document.body, '.modal'); // save dialog
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "hello5");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "hello5");
+
+        assert.verifySteps(['write', 'read'], "should not perform the onchange in multi edition");
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: multi edition error and cancellation handling', async function (assert) {
         assert.expect(8);
 
