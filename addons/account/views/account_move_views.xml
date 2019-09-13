@@ -489,9 +489,9 @@
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('invoice_payment_state', '!=', 'not_paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"
                                 string="Register Payment"
                                 groups="account.group_account_invoice"/>
-                        <!-- Preview (only invoices) -->
+                        <!-- Preview (only customer invoices) -->
                         <button name="preview_invoice" type="object" string="Preview"
-                                attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                                attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
                                 type="action" groups="account.group_account_invoice"
