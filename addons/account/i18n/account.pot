@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
-"PO-Revision-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-13 11:26+0000\n"
+"PO-Revision-Date: 2019-09-13 11:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1517,6 +1517,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/account_accrual_accounting.py:0
+#, python-format
+msgid "All lines must be from the same company."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid ""
@@ -2735,13 +2741,6 @@ msgid "Check them"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
-msgid ""
-"Check this boox to negate the absolute value of the balance of the lines "
-"associated with this tag in tax report computation."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
 msgid ""
 "Check this box if this account allows invoices & payments matching of "
@@ -2760,6 +2759,13 @@ msgstr ""
 msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
+msgid ""
+"Check this box to negate the absolute value of the balance of the lines "
+"associated with this tag in tax report computation."
 msgstr ""
 
 #. module: account
@@ -3770,20 +3776,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:0
-#, python-format
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Debit"
@@ -3896,13 +3888,6 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_type_form
 msgid "Define a new account type"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid ""
-"Define follow-up levels to easily know when to remind payments to your "
-"customers"
 msgstr ""
 
 #. module: account
@@ -7389,11 +7374,6 @@ msgid "Overdue"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__overdue_msg
-msgid "Overdue Payments Message"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
 msgstr ""
@@ -7687,11 +7667,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__post_at__pay_val
 msgid "Payment Validation"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports_followup
-msgid "Payment follow-up"
 msgstr ""
 
 #. module: account
@@ -9085,8 +9060,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_report_line__sequence
 msgid ""
 "Sequence determining the order of the lines in the report (smaller ones come"
-" first). This order is applied locally per section (so, chilldren of the "
-"same line are always rendered one after the other)."
+" first). This order is applied locally per section (so, children of the same"
+" line are always rendered one after the other)."
 msgstr ""
 
 #. module: account
@@ -10751,11 +10726,6 @@ msgstr ""
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "This can only be used on journal items"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "This feature is useful if you issue a high amounts of invoices."
 msgstr ""
 
 #. module: account

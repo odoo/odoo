@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:31+0000\n"
-"PO-Revision-Date: 2019-09-09 12:31+0000\n"
+"POT-Creation-Date: 2019-09-13 11:38+0000\n"
+"PO-Revision-Date: 2019-09-13 11:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -162,19 +162,6 @@ msgid ""
 "* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  You may not need to use these at all under normal circumstances.\n"
 "\n"
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
-"\n"
-"    "
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_account_deferred_revenue
-msgid ""
-"\n"
-"\n"
-"Revenue recognitions\n"
-"====================\n"
-"Manage revenue recognitions on product sales.\n"
-"Keeps track of the revenue recognition installments, and creates corresponding journal entries.\n"
 "\n"
 "    "
 msgstr ""
@@ -549,6 +536,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Hides attendance presence stat button when an employee is on leave.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_winbooks_import
+msgid ""
+"\n"
+"        Import Data From Winbooks\n"
 "    "
 msgstr ""
 
@@ -1295,14 +1290,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_be_intrastat_2019
-msgid ""
-"\n"
-"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_pos_enterprise
 msgid ""
 "\n"
@@ -1327,8 +1314,8 @@ msgid ""
 "==============================\n"
 "\n"
 "This module allows customers to pay for their orders with credit\n"
-"cards. The transactions are processed by Mercury (developed by Wells\n"
-"Fargo Bank). A Mercury merchant account is necessary. It allows the\n"
+"cards. The transactions are processed by Vantiv (developed by Wells\n"
+"Fargo Bank). A Vantiv merchant account is necessary. It allows the\n"
 "following:\n"
 "\n"
 "* Fast payment by just swiping a credit card while on the payment screen\n"
@@ -2203,6 +2190,20 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_documents_hr_contract
+msgid ""
+"\n"
+"Employee contracts files will be automatically integrated to the Document app.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_documents_hr_payroll
+msgid ""
+"\n"
+"Employee payslips will be automatically integrated to the Document app.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_utm
 msgid ""
 "\n"
@@ -2224,7 +2225,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_snailmail_account_reports_followup
+#: model:ir.module.module,description:base.module_snailmail_account_followup
 msgid ""
 "\n"
 "Extension to send follow-up documents by post\n"
@@ -2381,6 +2382,7 @@ msgid ""
 "\n"
 "Generates Intrastat XML report for declaration\n"
 "Based on invoices.\n"
+"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 "    "
 msgstr ""
 
@@ -3004,7 +3006,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_account_reports_followup
+#: model:ir.module.module,description:base.module_account_followup
 msgid ""
 "\n"
 "Module to automate letters for unpaid invoices, with multi-level recalls.\n"
@@ -3013,13 +3015,13 @@ msgid ""
 "You can define your multiple levels of recall through the menu:\n"
 "---------------------------------------------------------------\n"
 "    Configuration / Follow-up / Follow-up Levels\n"
-"    \n"
+"\n"
 "Once it is defined, you can automatically print recalls every day through simply clicking on the menu:\n"
 "------------------------------------------------------------------------------------------------------\n"
 "    Payment Follow-Up / Send Email and letters\n"
 "\n"
-"It will generate a PDF / send emails / set manual actions according to the the different levels \n"
-"of recall defined. You can define different policies for different companies. \n"
+"It will generate a PDF / send emails / set manual actions according to the the different levels\n"
+"of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
 
@@ -4715,6 +4717,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_documents_hr_holidays
+msgid ""
+"\n"
+"Time off documents will be automatically integrated to the Document app.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_product_expiry
 msgid ""
 "\n"
@@ -4963,6 +4972,12 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid " - %r in %s=%r"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_crm_livechat
+msgid ""
+" Adds a stat button on lead form view to access their livechat sessions."
 msgstr ""
 
 #. module: base
@@ -5451,12 +5466,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 
@@ -6089,6 +6104,11 @@ msgid "Account TaxCloud - Sale"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_winbooks_import
+msgid "Account Winbooks Import"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_account_payment
 msgid "Account and Payment Link and Portal"
 msgstr ""
@@ -6699,7 +6719,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_website_profile
 msgid ""
-"Allows to acces the website profile of the users and see their statistics "
+"Allows to access the website profile of the users and see their statistics "
 "(karma, badges, etc..)"
 msgstr ""
 
@@ -7496,11 +7516,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_2019
-msgid "Belgian Intrastat Declaration - Complement for 2019"
 msgstr ""
 
 #. module: base
@@ -9575,19 +9590,6 @@ msgid "Days"
 msgstr ""
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
 msgid "Debugging"
 msgstr ""
@@ -9663,11 +9665,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_theme_default
 msgid "Default website theme"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_account_deferred_revenue
-msgid "Deferred Revenues"
 msgstr ""
 
 #. module: base
@@ -10174,6 +10171,11 @@ msgid "Documents - Accounting"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_hr_contract
+msgid "Documents - Contracts"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fleet
 msgid "Documents - Fleet"
 msgstr ""
@@ -10186,6 +10188,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_documents
 msgid "Documents - Human Resources"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_hr_payroll
+msgid "Documents - Payroll"
 msgstr ""
 
 #. module: base
@@ -10206,6 +10213,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_sign
 msgid "Documents - Signatures"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_hr_holidays
+msgid "Documents - Time Off"
 msgstr ""
 
 #. module: base
@@ -10566,9 +10578,9 @@ msgid "Error message returned when the constraint is violated."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
-msgid "Error while validating constraint"
+msgid "Error while validating view"
 msgstr ""
 
 #. module: base
@@ -10814,7 +10826,7 @@ msgid "Extension View"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_snailmail_account_reports_followup
+#: model:ir.module.module,summary:base.module_snailmail_account_followup
 msgid "Extension to send follow-up documents by post"
 msgstr ""
 
@@ -12838,6 +12850,11 @@ msgid "Import CSV Bank Statement"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_account_winbooks_import
+msgid "Import Data From Winbooks"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
 msgid "Import OFX Bank Statement"
 msgstr ""
@@ -13092,6 +13109,11 @@ msgid "Integer"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_marketing_automation_sms
+msgid "Integrate SMS Marketing in marketing campaigns"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_sale_coupon
 msgid "Integrate coupon mechanism in sales orders."
 msgstr ""
@@ -13099,11 +13121,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_delivery
 msgid "Integrate coupon mechanism with shipping costs."
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_marketing_automation_sms
-msgid "Integrate mass SMS in marketing campaigns"
 msgstr ""
 
 #. module: base
@@ -13985,6 +14002,11 @@ msgid "Lead Generation From Website Visits"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_crm_livechat
+msgid "Lead Livechat Sessions"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_score
 msgid "Lead Scoring"
 msgstr ""
@@ -14707,11 +14729,6 @@ msgid "Mass Mailing Themes"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_marketing_automation_sms
-msgid "Mass SMS in Marketing Automation"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event
 msgid "Mass mailing on attendees"
 msgstr ""
@@ -14802,11 +14819,6 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Menus Customization"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_pos_mercury
-msgid "Mercury Payment Services"
 msgstr ""
 
 #. module: base
@@ -17395,13 +17407,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.company,overdue_sms_msg:base.main_company
-msgid ""
-"Our records indicate that some payments on your account are still due.\n"
-"If you have any queries regarding your account, Please contact us. Best Regards,"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
 msgid "Outgoing Mail Server"
 msgstr ""
@@ -17783,7 +17788,7 @@ msgid "Payment Acquirer: Transfer Implementation"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_account_reports_followup
+#: model:ir.module.module,shortdesc:base.module_account_followup
 msgid "Payment Follow-up Management"
 msgstr ""
 
@@ -19255,6 +19260,11 @@ msgid "SMS Marketing"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_marketing_automation_sms
+msgid "SMS Marketing in Marketing Automation"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sms
 msgid "SMS Text Messaging"
 msgstr ""
@@ -20100,7 +20110,7 @@ msgid "Snail Mail"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_snailmail_account_reports_followup
+#: model:ir.module.module,shortdesc:base.module_snailmail_account_followup
 msgid "Snail Mail Follow-Up"
 msgstr ""
 
@@ -20407,6 +20417,21 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_enterprise
 msgid "Stock enterprise"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_documents_hr_contract
+msgid "Store employee contracts in the Document app"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_documents_hr_payroll
+msgid "Store employee payslips in the Document app"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_documents_hr_holidays
+msgid "Store employee's time off documents  in the Document app"
 msgstr ""
 
 #. module: base
@@ -22652,6 +22677,11 @@ msgid "Value Text"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_mercury
+msgid "Vantiv Payment Services"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.vu
 msgid "Vanuatu"
 msgstr ""
@@ -22750,6 +22780,11 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode
 msgid "View inheritance mode"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_crm_livechat
+msgid "View livechat sessions for leads"
 msgstr ""
 
 #. module: base

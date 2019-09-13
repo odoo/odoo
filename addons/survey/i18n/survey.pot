@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-09-13 11:28+0000\n"
+"PO-Revision-Date: 2019-09-13 11:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -470,11 +470,8 @@ msgid "Answered"
 msgstr ""
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_user_input
-#: model:ir.actions.act_window,name:survey.action_survey_user_input_notest
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__user_input_line_ids
-#: model:ir.ui.menu,name:survey.menu_survey_type_form1
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
@@ -737,11 +734,6 @@ msgid "Compose Email"
 msgstr ""
 
 #. module: survey
-#: model:ir.ui.menu,name:survey.menu_surveys_configuration
-msgid "Configuration"
-msgstr ""
-
-#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "Congratulations, you have passed the test!"
 msgstr ""
@@ -895,6 +887,16 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Design easily your survey, send invitations and analyze answers."
+msgstr ""
+
+#. module: survey
+#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
+msgid "Detailed Answers"
+msgstr ""
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input_line
+msgid "Detailled Answers"
 msgstr ""
 
 #. module: survey
@@ -1188,12 +1190,6 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__sequence
 msgid "Label Sequence order"
-msgstr ""
-
-#. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_label_form
-#: model:ir.ui.menu,name:survey.menu_survey_label_form1
-msgid "Labels"
 msgstr ""
 
 #. module: survey
@@ -1605,6 +1601,14 @@ msgid "Participate to ${object.survey_id.title} survey"
 msgstr ""
 
 #. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input
+#: model:ir.actions.act_window,name:survey.action_survey_user_input_notest
+#: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.menu,name:survey.survey_menu_user_inputs
+msgid "Participations"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__partner_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Partner"
@@ -1687,6 +1691,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_question__question_ids
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_ids
 #: model:ir.ui.menu,name:survey.menu_survey_question_form1
+#: model:ir.ui.menu,name:survey.survey_menu_questions
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Questions"
 msgstr ""
@@ -2024,6 +2029,12 @@ msgid "Successfully failed"
 msgstr ""
 
 #. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_label_form
+#: model:ir.ui.menu,name:survey.menu_survey_label_form1
+msgid "Suggested Values"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested
 msgid "Suggested answer"
 msgstr ""
@@ -2100,11 +2111,6 @@ msgstr ""
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input_line
 msgid "Survey User Input Line"
-msgstr ""
-
-#. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_user_input_line
-msgid "Survey User Input lines"
 msgstr ""
 
 #. module: survey
@@ -2406,11 +2412,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__user_input_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 msgid "User Input"
-msgstr ""
-
-#. module: survey
-#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
-msgid "User Input Lines"
 msgstr ""
 
 #. module: survey
