@@ -1805,7 +1805,7 @@ class ReportController(http.Controller):
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
     @http.route(['/report/download'], type='http', auth="user")
-    def report_download(self, data, token):
+    def report_download(self, data, token, context=None):
         """This function is used by 'action_manager_report.js' in order to trigger the download of
         a pdf/controller report.
 
@@ -1829,11 +1829,11 @@ class ReportController(http.Controller):
 
                 if docids:
                     # Generic report:
-                    response = self.report_routes(reportname, docids=docids, converter=converter)
+                    response = self.report_routes(reportname, docids=docids, converter=converter, context=context)
                 else:
                     # Particular report:
                     data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
-                    response = self.report_routes(reportname, converter=converter, **dict(data))
+                    response = self.report_routes(reportname, converter=converter, context=context, **dict(data))
 
                 report = request.env['ir.actions.report']._get_report_from_name(reportname)
                 filename = "%s.%s" % (report.name, extension)
