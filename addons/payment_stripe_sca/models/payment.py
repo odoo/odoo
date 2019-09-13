@@ -44,7 +44,8 @@ class PaymentAcquirerStripeSCA(models.Model):
 
     def _stripe_request(self, url, data=False, method="POST"):
         self.ensure_one()
-        url = urls.url_join(self._get_stripe_api_url(), url)
+        stripe_url = 'https://%s/' % (self._get_stripe_api_url())
+        url = urls.url_join(stripe_url, url)
         headers = {
             "AUTHORIZATION": "Bearer %s" % self.sudo().stripe_secret_key,
             "Stripe-Version": "2019-05-16",  # SetupIntent need a specific version
@@ -83,10 +84,6 @@ class PaymentAcquirerStripeSCA(models.Model):
             "_stripe_create_setup_intent: Values received:\n%s", pprint.pformat(res)
         )
         return res
-
-    @api.model
-    def _get_stripe_api_url(self):
-        return "https://api.stripe.com/v1/"
 
     @api.model
     def stripe_s2s_form_process(self, data):
