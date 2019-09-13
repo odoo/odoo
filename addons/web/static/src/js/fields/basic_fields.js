@@ -1083,6 +1083,8 @@ var FieldBoolean = AbstractField.extend({
     _onKeydown: function (ev) {
         switch (ev.which) {
             case $.ui.keyCode.ENTER:
+                // prevent subsequent 'click' event (see _onKeydown of AbstractField)
+                ev.preventDefault();
                 this.$input.prop('checked', !this.value);
                 this._setValue(!this.value);
                 return;
