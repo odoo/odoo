@@ -11,9 +11,12 @@ class ProductTemplate(models.Model):
 
     bom_line_ids = fields.One2many('mrp.bom.line', 'product_tmpl_id', 'BoM Components')
     bom_ids = fields.One2many('mrp.bom', 'product_tmpl_id', 'Bill of Materials')
-    bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
-    used_in_bom_count = fields.Integer('# of BoM Where is Used', compute='_compute_used_in_bom_count')
-    mrp_product_qty = fields.Float('Manufactured', compute='_compute_mrp_product_qty')
+    bom_count = fields.Integer('# Bill of Material',
+        compute='_compute_bom_count', compute_sudo=False)
+    used_in_bom_count = fields.Integer('# of BoM Where is Used',
+        compute='_compute_used_in_bom_count', compute_sudo=False)
+    mrp_product_qty = fields.Float('Manufactured',
+        compute='_compute_mrp_product_qty', compute_sudo=False)
     produce_delay = fields.Float(
         'Manufacturing Lead Time', default=0.0,
         help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
@@ -52,9 +55,12 @@ class ProductProduct(models.Model):
 
     variant_bom_ids = fields.One2many('mrp.bom', 'product_id', 'BOM Product Variants')
     bom_line_ids = fields.One2many('mrp.bom.line', 'product_id', 'BoM Components')
-    bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
-    used_in_bom_count = fields.Integer('# BoM Where Used', compute='_compute_used_in_bom_count')
-    mrp_product_qty = fields.Float('Manufactured', compute='_compute_mrp_product_qty')
+    bom_count = fields.Integer('# Bill of Material',
+        compute='_compute_bom_count', compute_sudo=False)
+    used_in_bom_count = fields.Integer('# BoM Where Used',
+        compute='_compute_used_in_bom_count', compute_sudo=False)
+    mrp_product_qty = fields.Float('Manufactured',
+        compute='_compute_mrp_product_qty', compute_sudo=False)
 
     def _compute_bom_count(self):
         for product in self:
