@@ -442,56 +442,6 @@ Multiprocessing
 
     For multi-processing mode, this is in addition to the HTTP worker processes.
 
-.. _reference/cmdline/scaffold:
-
-Scaffolding
-===========
-
-.. program:: odoo-bin scaffold
-
-Scaffolding is the automated creation of a skeleton structure to simplify
-bootstrapping (of new modules, in the case of Odoo). While not necessary it
-avoids the tedium of setting up basic structures and looking up what all
-starting requirements are.
-
-Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
-
-.. option:: name (required)
-
-    the name of the module to create, may munged in various manners to
-    generate programmatic names (e.g. module directory name, model names, …)
-
-.. option:: destination (default=current directory)
-
-    directory in which to create the new module, defaults to the current
-    directory
-
-.. option:: -t <template>
-
-    a template directory, files are passed through jinja2_ then copied to
-    the ``destination`` directory
-
-.. code-block:: console
-
-    $ odoo_bin scaffold my_module /addons/
-
-This will create module *my_module* in directory */addons/*.
-
-Shell
-=====
-
-Odoo command-line also allows to launch odoo as a python console environment.
-This enables direct interaction with the :ref:`orm <reference/orm>` and its functionalities.
-
-
-.. code-block:: console
-
-   $ odoo_bin shell
-
-.. option:: --shell-interface (ipython|ptpython|bpython|python)
-
-    Specify a preferred REPL to use in shell mode.
-
 .. _reference/cmdline/config:
 
 Configuration file
@@ -534,3 +484,55 @@ to that file.
 .. _Werkzeug's proxy support:
     http://werkzeug.pocoo.org/docs/contrib/fixers/#werkzeug.contrib.fixers.ProxyFix
 .. _pyinotify: https://github.com/seb-m/pyinotify/wiki
+
+
+Shell
+=====
+
+Odoo command-line also allows to launch odoo as a python console environment.
+This enables direct interaction with the :ref:`orm <reference/orm>` and its functionalities.
+
+
+.. code-block:: console
+
+   $ odoo_bin shell
+
+.. option:: --shell-interface (ipython|ptpython|bpython|python)
+
+    Specify a preferred REPL to use in shell mode.
+
+
+.. _reference/cmdline/scaffold:
+
+Scaffolding
+===========
+
+.. program:: odoo-bin scaffold
+
+Scaffolding is the automated creation of a skeleton structure to simplify
+bootstrapping (of new modules, in the case of Odoo). While not necessary it
+avoids the tedium of setting up basic structures and looking up what all
+starting requirements are.
+
+Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
+
+.. option:: name (required)
+
+    the name of the module to create, may munged in various manners to
+    generate programmatic names (e.g. module directory name, model names, …)
+
+.. option:: destination (default=current directory)
+
+    directory in which to create the new module, defaults to the current
+    directory
+
+.. option:: -t <template>
+
+    a template directory, files are passed through jinja2_ then copied to
+    the ``destination`` directory
+
+.. code-block:: console
+
+    $ odoo_bin scaffold my_module /addons/
+
+This will create module *my_module* in directory */addons/*.
