@@ -226,7 +226,7 @@ class ResCompany(models.Model):
     def _validate_fiscalyear_lock(self, values):
         if values.get('fiscalyear_lock_date'):
             nb_draft_entries = self.env['account.move'].search([
-                ('company_id', 'in', [c.id for c in self]),
+                ('company_id', 'in', self.ids),
                 ('state', '=', 'draft'),
                 ('date', '<=', values['fiscalyear_lock_date'])])
             if nb_draft_entries:
