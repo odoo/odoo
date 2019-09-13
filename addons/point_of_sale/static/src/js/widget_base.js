@@ -1,11 +1,7 @@
 odoo.define('point_of_sale.BaseWidget', function (require) {
 "use strict";
 
-var field_utils = require('web.field_utils');
-var utils = require('web.utils');
 var Widget = require('web.Widget');
-
-var round_di = utils.round_decimals;
 
 // This is a base class for all Widgets in the POS. It exposes relevant data to the 
 // templates : 
@@ -27,31 +23,11 @@ var PosBaseWidget = Widget.extend({
         // 'start' lifecycle method, but point of sale actually needs it.
         this.setElement(this._makeDescriptive());
     },
-    format_currency: function(amount,precision){
-        var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
-
-        amount = this.format_currency_no_symbol(amount,precision);
-
-        if (currency.position === 'after') {
-            return amount + ' ' + (currency.symbol || '');
-        } else {
-            return (currency.symbol || '') + ' ' + amount;
-        }
+    format_currency: function(amount,precision) {
+        return this.pos.format_currency(amount, precision);
     },
     format_currency_no_symbol: function(amount, precision) {
-        var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
-        var decimals = currency.decimals;
-
-        if (precision && this.pos.dp[precision] !== undefined) {
-            decimals = this.pos.dp[precision];
-        }
-
-        if (typeof amount === 'number') {
-            amount = round_di(amount,decimals).toFixed(decimals);
-            amount = field_utils.format.float(round_di(amount, decimals), {digits: [69, decimals]});
-        }
-
-        return amount;
+        return this.pos.format_currency_no_symbol(amount, precision);
     },
     show: function(){
         this.$el.removeClass('oe_hidden');
@@ -60,8 +36,7 @@ var PosBaseWidget = Widget.extend({
         this.$el.addClass('oe_hidden');
     },
     format_pr: function(value,precision){
-        var decimals = precision > 0 ? Math.max(0,Math.ceil(Math.log(1.0/precision) / Math.log(10))) : 0;
-        return value.toFixed(decimals);
+        return this.pos.format_pr(value, precision);
     },
     format_fixed: function(value,integer_width,decimal_width){
         value = value.toFixed(decimal_width || 0);

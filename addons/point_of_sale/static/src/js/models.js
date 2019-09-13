@@ -812,18 +812,22 @@ exports.PosModel = Backbone.Model.extend({
         return Promise.all(get_image_promises).then(function () {
             var rendered_order_lines = "";
             var rendered_payment_lines = "";
-            var order_total_with_tax = self.chrome.format_currency(0);
+            var order_total_with_tax = self.format_currency(0);
 
             if (order) {
                 rendered_order_lines = QWeb.render('CustomerFacingDisplayOrderLines', {
                     'orderlines': order.get_orderlines(),
-                    'widget': self.chrome,
+                    widget: {
+                        pos: self,
+                    },
                 });
                 rendered_payment_lines = QWeb.render('CustomerFacingDisplayPaymentLines', {
                     'order': order,
-                    'widget': self.chrome,
+                    widget: {
+                        pos: self,
+                    },
                 });
-                order_total_with_tax = self.chrome.format_currency(order.get_total_with_tax());
+                order_total_with_tax = self.format_currency(order.get_total_with_tax());
             }
 
             var $rendered_html = $(rendered_html);
@@ -1204,6 +1208,37 @@ exports.PosModel = Backbone.Model.extend({
     },
 
     electronic_payment_interfaces: {},
+
+    format_currency: function(amount, precision) {
+        var currency = this.currency ? this.currency : {symbol: '$', position: 'after', rounding: 0.01, decimals: 2};
+        amount = this.format_currency_no_symbol(amount, precision);
+
+        if (currency.position === 'after') {
+            return amount + ' ' + (currency.symbol || '');
+        } else {
+            return (currency.symbol || '') + ' ' + amount;
+        }
+    },
+
+    format_currency_no_symbol: function(amount, precision) {
+        var currency = this.currency ? this.currency : {symbol: '$', position: 'after', rounding: 0.01, decimals: 2};
+        var decimals = currency.decimals;
+
+        if (precision && this.dp[precision] !== undefined) {
+            decimals = this.dp[precision];
+        }
+
+        if (typeof amount === 'number') {
+            amount = round_di(amount, decimals).toFixed(decimals);
+            amount = field_utils.format.float(round_di(amount, decimals), {digits: [69, decimals]});
+        }
+        return amount;
+    },
+
+    format_pr: function(value,precision){
+        var decimals = precision > 0 ? Math.max(0,Math.ceil(Math.log(1.0/precision) / Math.log(10))) : 0;
+        return value.toFixed(decimals);
+    },
 });
 
 /**
@@ -2415,7 +2450,7 @@ exports.Order = Backbone.Model.extend({
                     qweb.default_dict = _.clone(QWeb.default_dict);
                     qweb.add_template('<templates><t t-name="subreceipt">'+subreceipt+'</t></templates>');
 
-                return qweb.render('subreceipt',{'pos':self.pos,'widget':self.pos.chrome,'order':self, 'receipt': receipt}) ;
+                return qweb.render('subreceipt',{'pos':self.pos,'widget': { pos: self.pos },'order':self, 'receipt': receipt}) ;
             }
         }
 

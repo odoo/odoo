@@ -421,7 +421,7 @@ var Gui = core.Class.extend({
                 newbuf = '-' + newbuf;
             }
         } else if (input[0] === '+' && !isNaN(parseFloat(input))) {
-            newbuf = this.chrome.format_currency_no_symbol(newbuf_float + parseFloat(input));
+            newbuf = this.pos.format_currency_no_symbol(newbuf_float + parseFloat(input));
         } else if (!isNaN(parseInt(input))) {
             if (options.firstinput) {
                 newbuf = '' + input;
