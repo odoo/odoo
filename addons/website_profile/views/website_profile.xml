@@ -17,9 +17,6 @@
                     <!-- Desktop Mode -->
                     <nav aria-label="breadcrumb" class="col d-none d-md-flex">
                         <ol class="breadcrumb bg-transparent mb-0 pl-0 py-0">
-                            <li class="breadcrumb-item">
-                                <a t-att-href="home_url or '/'">Home</a>
-                            </li>
                             <li t-attf-class="breadcrumb-item #{'active' if not view_user else ''}">
                                 <a href="/profile/users">Users</a>
                             </li>
