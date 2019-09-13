@@ -83,9 +83,12 @@ class Product(models.Model):
              "Location with 'internal' type.")
 
     orderpoint_ids = fields.One2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules')
-    nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
-    reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
-    reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
+    nbr_reordering_rules = fields.Integer('Reordering Rules',
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
+    reordering_min_qty = fields.Float(
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
+    reordering_max_qty = fields.Float(
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'product_id', 'Putaway Rules')
 
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
@@ -594,10 +597,12 @@ class ProductTemplate(models.Model):
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
         help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc.")
-    nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
-    # TDE FIXME: really used ?
-    reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
-    reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
+    nbr_reordering_rules = fields.Integer('Reordering Rules',
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
+    reordering_min_qty = fields.Float(
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
+    reordering_max_qty = fields.Float(
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
     # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
