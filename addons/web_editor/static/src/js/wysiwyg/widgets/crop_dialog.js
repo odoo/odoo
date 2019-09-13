@@ -116,8 +116,9 @@ var CropImageDialog = Dialog.extend({
                 }
             }
             this.$cropperImage.cropper({
-                viewMode: 1,
-                autoCropArea: 1,
+                viewMode: 2,
+                dragMode: 'move',
+                autoCropArea: 1.0,
                 aspectRatio: ratio,
                 data: _.pick(data, 'x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY')
             });
