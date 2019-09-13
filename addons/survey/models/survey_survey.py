@@ -475,28 +475,31 @@ class Survey(models.Model):
         }
 
     def action_survey_user_input_completed(self):
-        action_rec = self.env.ref('survey.action_survey_user_input_notest')
+        action_rec = self.env.ref('survey.action_survey_user_input')
         action = action_rec.read()[0]
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_completed': 1})
+                    'search_default_completed': 1,
+                    'search_default_not_test': 1})
         action['context'] = ctx
         return action
 
     def action_survey_user_input_certified(self):
-        action_rec = self.env.ref('survey.action_survey_user_input_notest')
+        action_rec = self.env.ref('survey.action_survey_user_input')
         action = action_rec.read()[0]
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_quizz_passed': 1})
+                    'search_default_quizz_passed': 1,
+                    'search_default_not_test': 1})
         action['context'] = ctx
         return action
 
     def action_survey_user_input(self):
-        action_rec = self.env.ref('survey.action_survey_user_input_notest')
+        action_rec = self.env.ref('survey.action_survey_user_input')
         action = action_rec.read()[0]
         ctx = dict(self.env.context)
-        ctx.update({'search_default_survey_id': self.ids[0]})
+        ctx.update({'search_default_survey_id': self.ids[0],
+                    'search_default_not_test': 1})
         action['context'] = ctx
         return action
 
