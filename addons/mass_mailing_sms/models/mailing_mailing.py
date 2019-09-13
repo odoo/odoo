@@ -69,7 +69,7 @@ class Mailing(models.Model):
         if self.mailing_type == 'sms':
             ctx = dict(self.env.context, default_mailing_id=self.id)
             return {
-                'name': _('Test Mailing'),
+                'name': _('Test SMS marketing'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'mailing.sms.test',

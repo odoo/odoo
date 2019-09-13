@@ -25,7 +25,7 @@ class MassSMSTest(models.TransientModel):
             sanitized_numbers = [info['sanitized'] for info in sanitize_res.values() if info['sanitized']]
             invalid_numbers = [number for number, info in sanitize_res.items() if info['code']]
             if invalid_numbers:
-                raise exceptions.UserError(_('Following numbers are not correctly encoded: %s') % repr(invalid_numbers))
+                raise exceptions.UserError(_('Following numbers are not correctly encoded: %s, example : "+32 495 85 85 77, +33 545 55 55 55"') % repr(invalid_numbers))
             self.sanitized_numbers = ','.join(sanitized_numbers)
         else:
             self.sanitized_numbers = False
