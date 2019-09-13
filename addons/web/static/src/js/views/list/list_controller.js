@@ -778,6 +778,8 @@ var ListController = BasicController.extend({
                 this.multipleRecordsSavingPromise =
                     this._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
             };
+            // disable onchanges as we'll save directly
+            ev.data.notifyChange = false;
         }
         this._super.apply(this, arguments);
     },
