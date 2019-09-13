@@ -245,13 +245,11 @@ class WebsiteSlides(WebsiteProfile):
         channels_popular = channels_all.sorted('total_votes', reverse=True)[:3]
         channels_newest = channels_all.sorted('create_date', reverse=True)[:3]
 
-        # fetch 'latests achievements' for non logged people
+        achievements = request.env['gamification.badge.user'].sudo().search([('badge_id.is_published', '=', True)], limit=5)
         if request.env.user._is_public():
-            achievements = request.env['gamification.badge.user'].sudo().search([('badge_id.is_published', '=', True)], limit=5)
             challenges = None
             challenges_done = None
         else:
-            achievements = None
             challenges = request.env['gamification.challenge'].sudo().search([
                 ('category', '=', 'slides'),
                 ('reward_id.is_published', '=', True)
@@ -262,7 +260,6 @@ class WebsiteSlides(WebsiteProfile):
                 ('badge_id.is_published', '=', True)
             ]).mapped('challenge_id')
 
-        # fetch 'heroes of the week' for non logged people
         users = request.env['res.users'].sudo().search([
             ('karma', '>', 0),
             ('website_published', '=', True)], limit=5, order='karma desc')
