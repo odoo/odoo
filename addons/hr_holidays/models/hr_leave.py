@@ -664,9 +664,9 @@ class HolidaysRequest(models.Model):
         return super(HolidaysRequest, self).unlink()
 
     def copy_data(self, default=None):
-        if 'date_from' in default and 'date_to' in default:
-            default['request_date_from'] = default.get('date_from').date()
-            default['request_date_to'] = default.get('date_to').date()
+        if default and 'date_from' in default and 'date_to' in default:
+            default['request_date_from'] = default.get('date_from')
+            default['request_date_to'] = default.get('date_to')
             return super().copy_data(default)
         raise UserError(_('A leave cannot be duplicated.'))
 
