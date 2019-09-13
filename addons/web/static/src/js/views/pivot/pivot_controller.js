@@ -304,8 +304,14 @@ var PivotController = AbstractController.extend({
         } else {
             this.lastHeaderSelected = id;
             var position = $target.position();
+<<<<<<< HEAD
             var top = position.top + $target.height();
             var left = position.left + ev.offsetX;
+=======
+            var $parent = $target.offsetParent();
+            var top = position.top + $target.height() + $parent.scrollTop();
+            var left = position.left + event.offsetX + $parent.scrollLeft();
+>>>>>>> 1c4212f3c7e... temp
             this._renderFieldSelection(top, left);
             ev.stopPropagation();
         }
