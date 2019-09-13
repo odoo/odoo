@@ -293,7 +293,7 @@ list of filtered posts (by date or tag).
         <div t-if="len(blogs) > 1">in <a t-attf-href="#{blog_url(blog=blog_post.blog_id)}"><b t-field="blog.name"/></a></div>
         <div t-if="len(blog_post.tag_ids) > 0">#
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a class="badge border mr-1" t-attf-href="#{blog_url(tag=one_tag.id, date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
+                <a class="badge border mr-1" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
             </t>
         </div>
     </div>
@@ -571,7 +571,7 @@ list of filtered posts (by date or tag).
     <title t-esc="blog.name"/>
     <link t-att-href="'%s/blog/%s' % (base_url ,blog.id)"/>
     <id t-esc="'%s/blog/%s' % (base_url, blog.id)"/>
-    <updated t-esc="str((posts[0] if posts else blog).post_date).replace(' ', 'T') + 'Z'"/>
+    <updated t-esc="str(posts[0].post_date).replace(' ', 'T') + 'Z' if posts else ''"/>
     <entry t-foreach="posts" t-as="post">
         <title t-esc="post.name"/>
         <link t-att-href="'%s%s' % (base_url, post.website_url)"/>

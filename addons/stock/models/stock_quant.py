@@ -50,7 +50,7 @@ class StockQuant(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=lambda self: self._domain_product_id(),
-        ondelete='restrict', readonly=True, required=True, check_company=True)
+        ondelete='restrict', readonly=True, required=True, index=True, check_company=True)
     # so user can filter on template in webclient
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
@@ -63,7 +63,7 @@ class StockQuant(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
-        auto_join=True, ondelete='restrict', readonly=True, required=True, check_company=True)
+        auto_join=True, ondelete='restrict', readonly=True, required=True, index=True, check_company=True)
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
         ondelete='restrict', readonly=True, check_company=True,
