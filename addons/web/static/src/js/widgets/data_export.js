@@ -647,7 +647,9 @@ var DataExport = Dialog.extend({
         }
 
         var matchItems = this.$(".o_tree_column").filter(function () {
-            return this.innerText.toUpperCase().indexOf(searchText) >= 0;
+            var title = this.getAttribute('title');
+            return this.innerText.toUpperCase().indexOf(searchText) >= 0
+                || title && title.toUpperCase().indexOf(searchText) >= 0;
         }).parent();
         this.$(".o_export_tree_item").hide();
         if (matchItems.length) {
