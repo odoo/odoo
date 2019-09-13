@@ -180,7 +180,7 @@ class SurveyUserInput(models.Model):
         badge_ids = []
         for user_input in self:
             if user_input.survey_id.certificate and user_input.quizz_passed:
-                if user_input.survey_id.certification_mail_template_id:
+                if user_input.survey_id.certification_mail_template_id and not user_input.test_entry:
                     user_input.survey_id.certification_mail_template_id.send_mail(user_input.id, notif_layout="mail.mail_notification_light")
                 if user_input.survey_id.certification_give_badge:
                     badge_ids.append(user_input.survey_id.certification_badge_id.id)
