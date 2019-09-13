@@ -628,7 +628,11 @@ class Field(MetaField('DummyField', (object,), {})):
                 )
         # assign final values to records
         for record, value in zip(records, values):
-            record[self.name] = value[self.related_field.name]
+            record[self.name] = self._process_related(value[self.related_field.name])
+
+    def _process_related(self, value):
+        """No transformation by default, but allows override."""
+        return value
 
     def _inverse_related(self, records):
         """ Inverse the related field ``self`` on ``records``. """
@@ -1996,10 +2000,9 @@ class Image(Binary):
             value = image_process(value, size=(self.max_width, self.max_height))
         return value
 
-    def _compute_related(self, records):
-        super(Image, self)._compute_related(records)
-        for record in records:
-            record[self.name] = self._image_process(record[self.name])
+    def _process_related(self, value):
+        """Override to resize the related value before saving it on self."""
+        return self._image_process(super(Image, self)._process_related(value))
 
 
 class Selection(Field):
