@@ -217,7 +217,6 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     events: {
         'click .accounting_view caption .o_buttons button': '_onValidate',
         'click .accounting_view tfoot': '_onChangeTab',
-        'focus': '_onTogglePanel',
         'click': '_onTogglePanel',
         'click .o_field_widget': '_onStopPropagation',
         'click .o_notebook li a': '_onChangeTab',
@@ -481,16 +480,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
         if (this.$el.is(':focus-within')) {
             this.$('caption .o_buttons button:not(:disabled):visible').attr('accesskey', 'V');
-            this.$('.nav-match_rp').attr('accesskey', 'M');
-            this.$('.nav-match_other').attr('accesskey', 'O');
-            this.$('.nav-create').attr('accesskey', 'C');
-            this.$('input.filter.o_input').attr('accesskey', 'Z');
         } else {
             this.$('caption .o_buttons button').attr('accesskey', '');
-            this.$('.nav-match_rp').attr('accesskey', '');
-            this.$('.nav-match_other').attr('accesskey', '');
-            this.$('.nav-create').attr('accesskey', '');
-            this.$('.filter.o_input').attr('accesskey', '');
         }
     },
 
