@@ -125,7 +125,11 @@ class AccountBankStatementImport(models.TransientModel):
             raise UserError(_('This file doesn\'t contain any transaction.'))
 
     def _check_journal_bank_account(self, journal, account_number):
-        return journal.bank_account_id.sanitized_acc_number == account_number
+        # Needed for CH to accommodate for non-unique account numbers
+        sanitized_acc_number = journal.bank_account_id.sanitized_acc_number
+        if " " in sanitized_acc_number:
+            sanitized_acc_number = sanitized_acc_number.split(" ")[0]
+        return sanitized_acc_number == account_number
 
     def _find_additional_data(self, currency_code, account_number):
         """ Look for a res.currency and account.journal using values extracted from the
