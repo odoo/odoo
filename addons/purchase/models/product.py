@@ -42,7 +42,7 @@ class ProductTemplate(models.Model):
         action = self.env.ref('purchase.action_purchase_order_report_all').read()[0]
         action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
-            'graph_measure': 'unit_quantity',
+            'graph_measure': 'qty_ordered',
             'search_default_orders': 1,
             'time_ranges': {'field': 'date_approve', 'range': 'last_365_days'}
         }
@@ -77,7 +77,7 @@ class ProductProduct(models.Model):
         action['context'] = {
             'search_default_last_year_purchase': 1,
             'search_default_status': 1, 'search_default_order_month': 1,
-            'graph_measure': 'unit_quantity'
+            'graph_measure': 'qty_ordered'
         }
         return action
 

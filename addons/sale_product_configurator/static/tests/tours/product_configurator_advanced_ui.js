@@ -95,7 +95,7 @@ tour.register('sale_product_configurator_advanced_tour', {
     extra_trigger: '.oe_optional_products_modal',
     run: function () {} //check
 }, {
-    trigger: '.main_product div:contains("PA5: PAV1")',
+    trigger: '.main_product div:contains("PA7: PAV1")',
     extra_trigger: '.oe_optional_products_modal',
     run: function () {} //check
 }, {
@@ -131,27 +131,27 @@ tour.register('sale_product_configurator_advanced_tour', {
     in_modal: false,
     run: function (){} //check
 }, {
-    trigger: 'td.o_data_cell:contains("Custom: Custom 1")',
+    trigger: 'td.o_data_cell:contains("Legs: Custom: Custom 1")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){} //check
 }, {
-    trigger: 'td.o_data_cell:contains("PAV9: Custom 2")',
+    trigger: 'td.o_data_cell:contains("PA1: PAV9: Custom 2")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){} //check
 }, {
-    trigger: 'td.o_data_cell:contains("PAV9: Custom 3")',
-    extra_trigger: 'div[name="order_line"]',
-    in_modal: false,
-    run: function (){} //check
-}, {
-    trigger: 'td.o_data_cell:contains("PA5: PAV1")',
+    trigger: 'td.o_data_cell:contains("PA4: PAV9: Custom 3")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){} //check
 }, {
     trigger: 'td.o_data_cell:contains("PA5: PAV1")',
+    extra_trigger: 'div[name="order_line"]',
+    in_modal: false,
+    run: function (){} //check
+}, {
+    trigger: 'td.o_data_cell:contains("PA7: PAV1")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){} //check

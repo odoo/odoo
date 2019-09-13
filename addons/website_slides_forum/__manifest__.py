@@ -12,6 +12,7 @@
         'website_forum'
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/forum_views.xml',
         'views/slide_channel_views.xml',
         'views/website_slides_menu_views.xml',

@@ -1,22 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_wishlist
+# 	* website_sale_wishlist
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2018
-# Martin Trigaux, 2018
-# Maie <m@maie.name>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
-# Fisher <fisher@kdomi.com>, 2018
-# Youfu Sheng <wdmsyf@sina.com>, 2018
+# Jeanphy <hzh0292@qq.com>, 2019
+# e2f <projects@e2f.com>, 2019
+# Martin Trigaux, 2019
+# Maie <m@maie.name>, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# Fisher <fisher@kdomi.com>, 2019
+# Youfu Sheng <wdmsyf@sina.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Youfu Sheng <wdmsyf@sina.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +44,18 @@ msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
 msgstr "<small><i class=\"fa fa-trash-o\"/> 移除</small>"
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid ""
+"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/> "
+"Add to wishlist"
+msgstr ""
+
+#. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
 msgid "Active"
 msgstr "有效"
@@ -55,7 +72,6 @@ msgstr "将产品加入购物车但仍保留在我的愿望清单中"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to Wishlist"
 msgstr "加入到愿望清单"
 
@@ -72,7 +88,7 @@ msgstr "联系人"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_date
@@ -90,6 +106,11 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: website_sale_wishlist
+#: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
+msgid "Duplicated wishlisted product for this partner."
+msgstr ""
+
+#. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
 msgid "ID"
 msgstr "ID"
@@ -97,7 +118,7 @@ msgstr "ID"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后更改日"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_uid
@@ -107,7 +128,7 @@ msgstr "最后更新者"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "更新时间"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -140,9 +161,15 @@ msgid "Pricelist when added"
 msgstr "添加时的价位表"
 
 #. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_product
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__product_id
 msgid "Product"
 msgstr "产品"
+
+#. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_template
+msgid "Product Template"
+msgstr "产品模板"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_wishlist

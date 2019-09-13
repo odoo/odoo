@@ -265,6 +265,11 @@ class TestUi(odoo.tests.HttpCase):
         })
         env.ref('base.res_partner_18').property_product_pricelist = excluded_pricelist
 
+        partner = self.env['res.partner'].create({
+            'name': 'TEST PARTNER',
+            'email': 'test@partner.com',
+        })
+
         # set the company currency to USD, otherwise it will assume
         # euro's. this will cause issues as the sales journal is in
         # USD, because of this all products would have a different

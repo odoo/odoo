@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-12 11:32+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 08:16+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,24 +22,38 @@ msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_form_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
 msgid "Cashier"
 msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:30
-#: code:addons/pos_hr/static/src/js/screens.js:69
+#: code:addons/pos_hr/static/src/js/chrome.js:0
+#: code:addons/pos_hr/static/src/js/screens.js:0
 #, python-format
 msgid "Change Cashier"
+msgstr ""
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#, python-format
+msgid "Close session"
 msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__employee_id
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
 msgid "Employee"
+msgstr ""
+
+#. module: pos_hr
+#: code:addons/pos_hr/models/hr_employee.py:0
+#, python-format
+msgid "Employee: %s - PoS Config(s): %s \n"
 msgstr ""
 
 #. module: pos_hr
@@ -54,21 +68,21 @@ msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:60
+#: code:addons/pos_hr/static/src/js/gui.js:0
 #, python-format
 msgid "Incorrect Password"
 msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:96
+#: code:addons/pos_hr/static/src/js/chrome.js:0
 #, python-format
 msgid "Lock"
 msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:6
+#: code:addons/pos_hr/static/src/xml/pos.xml:0
 #, python-format
 msgid "Log in to"
 msgstr ""
@@ -82,7 +96,7 @@ msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:57
+#: code:addons/pos_hr/static/src/js/gui.js:0
 #, python-format
 msgid "Password ?"
 msgstr ""
@@ -121,28 +135,36 @@ msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:10
+#: code:addons/pos_hr/static/src/xml/pos.xml:0
 #, python-format
 msgid "Scan your badge"
 msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:14
+#: code:addons/pos_hr/static/src/xml/pos.xml:0
 #, python-format
 msgid "Select Cashier"
 msgstr ""
 
 #. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:32
+#: code:addons/pos_hr/static/src/js/gui.js:0
 #, python-format
 msgid "Select User"
 msgstr ""
 
 #. module: pos_hr
+#: code:addons/pos_hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"You cannot delete an employee that may be used in an active PoS session, "
+"close the session(s) first: \n"
+msgstr ""
+
+#. module: pos_hr
 #. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:12
+#: code:addons/pos_hr/static/src/xml/pos.xml:0
 #, python-format
 msgid "or"
 msgstr ""

@@ -1,16 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * calendar
+# 	* calendar
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Андрей Гусев <gaussgss@gmail.com>, 2019
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +33,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name}: обновление даты"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:741
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -39,57 +43,22 @@ msgstr ""
 "%s в %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:732
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s в (%s на %s) (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:229
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "%s has accepted invitation"
 msgstr "%s, приглашение принято"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:237
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "%s has declined invitation"
 msgstr "%s, приглашение отклонено"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_5
-msgid "1 Day(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_3
-msgid "1 Hour(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_1
-msgid "15 Minute(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_4
-msgid "2 Hour(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_1
-msgid "3 Hour(s), by e-mail"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_2
-msgid "30 Minute(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_2
-msgid "6 Hour(s), by e-mail"
-msgstr ""
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -312,18 +281,20 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
 msgstr "<span> часы</span>"
 
 #. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
 msgid "Accept"
 msgstr "Принять"
 
 #. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__accepted
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__accepted
 msgid "Accepted"
 msgstr "Принято"
 
@@ -331,6 +302,18 @@ msgstr "Принято"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
 msgid "Action Needed"
 msgstr "Требует внимания"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
@@ -355,22 +338,27 @@ msgstr "Тип действия"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:36
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
 #, python-format
 msgid "All Day"
 msgstr "Весь день"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:728
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "AllDay , %s"
 msgstr "Целый день , %s"
 
 #. module: calendar
-#: sql_constraint:calendar.contacts:0
+#: model:ir.model.constraint,message:calendar.constraint_calendar_contacts_user_id_partner_id_unique
 msgid "An user cannot have twice the same contact."
 msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Archived"
+msgstr "Архивировано"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_attachment
@@ -380,7 +368,7 @@ msgstr "Приложение"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Количество вложений"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_attendee
@@ -396,7 +384,6 @@ msgstr "Статус участника"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
 msgstr "Участники"
 
@@ -406,9 +393,9 @@ msgid "Availability"
 msgstr "Наличие"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1693
-#: selection:calendar.attendee,availability:0
-#: selection:calendar.event,show_as:0
+#: code:addons/calendar/models/calendar.py:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__busy
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__busy
 #, python-format
 msgid "Busy"
 msgstr "Занят"
@@ -443,6 +430,11 @@ msgid "Calendar Contacts"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event
+msgid "Calendar Event"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
 msgstr "Приглашение календаря"
@@ -460,16 +452,6 @@ msgid "Calendar: Event Reminder"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
-msgid "Category"
-msgstr "Категория"
-
-#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
 msgstr "Нажмите здесь, чтобы обновить только это событие, а не все обращения."
@@ -480,7 +462,7 @@ msgid "Common name"
 msgstr "Общее имя"
 
 #. module: calendar
-#: selection:calendar.event,state:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__state__open
 msgid "Confirmed"
 msgstr "Подтверждено"
 
@@ -515,8 +497,8 @@ msgid "Date"
 msgstr "Дата"
 
 #. module: calendar
-#: selection:calendar.event,month_by:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__day
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__date
 msgid "Date of month"
 msgstr "День месяца"
 
@@ -526,23 +508,27 @@ msgid "Day of Month"
 msgstr "День месяца"
 
 #. module: calendar
-#: selection:calendar.event,month_by:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__day
 msgid "Day of month"
 msgstr "День месяца"
 
 #. module: calendar
-#: selection:calendar.alarm,interval:0 selection:calendar.event,rrule_type:0
-msgid "Day(s)"
-msgstr "День (дни)"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__days
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__daily
+msgid "Days"
+msgstr "Дней"
 
 #. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
 msgid "Decline"
 msgstr "Отклонить"
 
 #. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__declined
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__declined
 msgid "Declined"
 msgstr "Отклонено"
 
@@ -553,7 +539,7 @@ msgstr "Описание"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:18
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
 #, python-format
 msgid "Details"
 msgstr "Подробная информация"
@@ -570,7 +556,6 @@ msgstr "Отображаемое Имя"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Document"
 msgstr "Документ"
 
@@ -602,10 +587,20 @@ msgid "Duration in minutes"
 msgstr "Продолжительность в минутах"
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__email
 msgid "Email"
 msgstr "Email"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1
+msgid "Email - 3 Hours"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_2
+msgid "Email - 6 Hours"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
@@ -629,7 +624,7 @@ msgid "End Datetime"
 msgstr "Время завершения"
 
 #. module: calendar
-#: selection:calendar.event,end_type:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
 msgid "End date"
 msgstr "Дата окончания"
 
@@ -637,11 +632,6 @@ msgstr "Дата окончания"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending at"
 msgstr "Заканчивается"
-
-#. module: calendar
-#: model:ir.model,name:calendar.model_calendar_event
-msgid "Event"
-msgstr "Событие"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
@@ -664,34 +654,28 @@ msgid "Event Time"
 msgstr "Время события"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1234
-#, python-format
-msgid "Event recurrence interval cannot be negative."
-msgstr "Интервал повторения не может быть отрицательным."
-
-#. module: calendar
-#: selection:calendar.event,privacy:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
 msgid "Everyone"
 msgstr "Каждый"
 
 #. module: calendar
-#: code:addons/calendar/models/mail_activity.py:38
+#: code:addons/calendar/models/mail_activity.py:0
 #, python-format
 msgid "Feedback: "
 msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__5
 msgid "Fifth"
 msgstr "Пятый"
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
 msgid "First"
 msgstr "Первый"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:998
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "Сначала вам нужно указать дату приглашения."
@@ -712,15 +696,15 @@ msgid "Followers (Partners)"
 msgstr "Подписчики (Партнеры)"
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__4
 msgid "Fourth"
 msgstr "Четвертый"
 
 #. module: calendar
-#: selection:calendar.attendee,availability:0
-#: selection:calendar.event,show_as:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
 msgid "Free"
-msgstr "Свободно"
+msgstr "Бесплатно"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
@@ -733,17 +717,17 @@ msgid "Fri"
 msgstr "Пт"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__fr
 msgid "Friday"
 msgstr "Пятница"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
-msgstr "Группировать"
+msgstr "Группировать по"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1636
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -753,12 +737,12 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "Маршрутизация HTTP"
 
 #. module: calendar
-#: selection:calendar.alarm,interval:0
-msgid "Hour(s)"
-msgstr "Час(ов)"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
+msgid "Hours"
+msgstr "Часы"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__id
@@ -840,7 +824,7 @@ msgid "Is the Event Highlighted"
 msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
 msgid "Last"
 msgstr "Последний"
 
@@ -910,14 +894,14 @@ msgid "Me"
 msgstr "Мне"
 
 #. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__mail_activity_type__category__meeting
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
-#: selection:mail.activity.type,category:0
 msgid "Meeting"
 msgstr "Встреча"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:942
-#: code:addons/calendar/models/calendar.py:947
+#: code:addons/calendar/models/calendar.py:0
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "Meeting '%s' starts '%s' and ends '%s'"
 msgstr ""
@@ -949,7 +933,6 @@ msgstr "Встреча связана"
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_notify
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Meetings"
 msgstr "Встречи"
@@ -970,9 +953,9 @@ msgid "Messages"
 msgstr "Сообщения"
 
 #. module: calendar
-#: selection:calendar.alarm,interval:0
-msgid "Minute(s)"
-msgstr "Минута(ы)"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
+msgid "Minutes"
+msgstr "Минуты"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -985,14 +968,14 @@ msgid "Mon"
 msgstr "Пн"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__mo
 msgid "Monday"
 msgstr "Понедельник"
 
 #. module: calendar
-#: selection:calendar.event,rrule_type:0
-msgid "Month(s)"
-msgstr "Месяц(ы)"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__monthly
+msgid "Months"
+msgstr "Месяцы"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1006,8 +989,8 @@ msgid "Name"
 msgstr "Название"
 
 #. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__needsaction
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__needsaction
 msgid "Needs Action"
 msgstr "Требует действия"
 
@@ -1017,9 +1000,34 @@ msgid "No I'm not going."
 msgstr "Нет, я не пойду."
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
 msgid "Notification"
 msgstr "Уведомление"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_5
+msgid "Notification - 1 Days"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_3
+msgid "Notification - 1 Hours"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_1
+msgid "Notification - 15 Minutes"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_4
+msgid "Notification - 2 Hours"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_2
+msgid "Notification - 30 Minutes"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1042,7 +1050,7 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,end_type:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__count
 msgid "Number of repetitions"
 msgstr "Количество повторов"
 
@@ -1053,18 +1061,18 @@ msgstr "Количество непрочитанных сообщений"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:17
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
 #, python-format
 msgid "OK"
 msgstr "ОК"
 
 #. module: calendar
-#: selection:calendar.event,privacy:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
 msgid "Only internal users"
 msgstr "Только внутренние пользователи"
 
 #. module: calendar
-#: selection:calendar.event,privacy:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
 msgid "Only me"
 msgstr "Только Вы"
 
@@ -1084,11 +1092,6 @@ msgid "Options"
 msgstr "Параметры"
 
 #. module: calendar
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "Другое"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Owner"
@@ -1105,7 +1108,7 @@ msgid "Partner-related data of the user"
 msgstr "Данные пользователя, относящиеся к партнеру"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1247
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "Пожалуйста, выберите правильный день месяца"
@@ -1157,11 +1160,6 @@ msgid "Remind Before"
 msgstr ""
 
 #. module: calendar
-#: selection:mail.activity.type,category:0
-msgid "Reminder"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
 msgid "Reminders"
 msgstr "Напоминания"
@@ -1198,17 +1196,12 @@ msgid "Responsible"
 msgstr "Ответственный"
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
-msgid "SMS Text Message"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sa
 msgid "Sat"
 msgstr "Сб"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__sa
 msgid "Saturday"
 msgstr "Суббота"
 
@@ -1223,7 +1216,7 @@ msgid "Search Meetings"
 msgstr "Искать встречи"
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__2
 msgid "Second"
 msgstr "Секунда"
 
@@ -1244,7 +1237,7 @@ msgstr "Показать время как"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:19
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
 #, python-format
 msgid "Snooze"
 msgstr "Повторение сигнала"
@@ -1272,7 +1265,6 @@ msgstr "День начала события, для событий «на ве�
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Starting at"
 msgstr "Начнётся"
 
@@ -1308,12 +1300,12 @@ msgid "Sun"
 msgstr "Вс"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__su
 msgid "Sunday"
 msgstr "Воскресенье"
 
 #. module: calendar
-#: sql_constraint:calendar.event.type:0
+#: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists !"
 msgstr "Такой тег уже существует!"
 
@@ -1329,7 +1321,7 @@ msgstr "Это"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/mail_activity.js:42
+#: code:addons/calendar/static/src/js/mail_activity.js:0
 #, python-format
 msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
@@ -1345,20 +1337,32 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:941
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:946
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
 msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: code:addons/calendar/models/calendar.py:0
+#, python-format
+msgid "The interval cannot be negative."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:0
+#, python-format
+msgid "The number of repetitions  cannot be negative."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
 msgid "Third"
 msgstr "Третий"
 
@@ -1373,12 +1377,17 @@ msgid "Thu"
 msgstr "Чт"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__th
 msgid "Thursday"
 msgstr "Четверг"
 
 #. module: calendar
-#: code:addons/calendar/models/res_users.py:41
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
+msgid "Timezone"
+msgstr "Часовой пояс"
+
+#. module: calendar
+#: code:addons/calendar/models/res_users.py:0
 #, python-format
 msgid "Today's Meetings"
 msgstr ""
@@ -1389,24 +1398,27 @@ msgid "Tue"
 msgstr "Вт"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__tu
 msgid "Tuesday"
 msgstr "Вторник"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__type
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
 msgid "Type"
 msgstr "Тип"
 
 #. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__tentative
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
 msgid "Uncertain"
 msgstr "Возможно"
 
 #. module: calendar
-#: selection:calendar.event,state:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__state__draft
 msgid "Unconfirmed"
 msgstr "Неподтверждённый"
 
@@ -1446,14 +1458,9 @@ msgid "Wed"
 msgstr "Ср"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__we
 msgid "Wednesday"
 msgstr "Среда"
-
-#. module: calendar
-#: selection:calendar.event,rrule_type:0
-msgid "Week(s)"
-msgstr "Неделя(и)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__week_list
@@ -1461,9 +1468,14 @@ msgid "Weekday"
 msgstr "День недели"
 
 #. module: calendar
-#: selection:calendar.event,rrule_type:0
-msgid "Year(s)"
-msgstr "Год(ы)"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__weekly
+msgid "Weeks"
+msgstr "Недели"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
+msgid "Years"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1471,7 +1483,7 @@ msgid "Yes I'm going."
 msgstr "Да, я пойду."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:159
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr "Нельзя дублировать участника календаря."
@@ -1480,9 +1492,3 @@ msgstr "Нельзя дублировать участника календар�
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
 msgstr "например бизнес-ланч"
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:1232
-#, python-format
-msgid "interval cannot be negative."
-msgstr "интервал не может быть отрицательным."

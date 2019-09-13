@@ -116,8 +116,8 @@
                         <field name="tracking" widget="radio" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
                     </group>
                      <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
-                        <field name="property_stock_production" domain="[('usage', '=', 'production')]"/>
-                        <field name="property_stock_inventory" domain="[('usage', '=', 'inventory')]"/>
+                        <field name="property_stock_production"/>
+                        <field name="property_stock_inventory"/>
                     </group>
                 </xpath>
                 <page name="inventory" position="inside">

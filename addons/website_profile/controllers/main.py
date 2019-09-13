@@ -137,10 +137,10 @@ class WebsiteProfile(http.Controller):
         }
 
         if 'clear_image' in kwargs:
-            values['image'] = False
+            values['image_1920'] = False
         elif kwargs.get('ufile'):
             image = kwargs.get('ufile').read()
-            values['image'] = base64.b64encode(image)
+            values['image_1920'] = base64.b64encode(image)
 
         if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
             values['website_published'] = kwargs.get('website_published') == 'True'

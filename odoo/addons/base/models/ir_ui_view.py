@@ -385,7 +385,10 @@ actual arch.
                 view_doc = etree.fromstring(view_arch_utf8)
                 self._check_groups_validity(view_doc, view.name)
                 # verify that all fields used are valid, etc.
-                self.postprocess_and_fields(view.model, view_doc, view.id)
+                try:
+                    self.postprocess_and_fields(view.model, view_doc, view.id)
+                except ValueError as e:
+                    raise ValidationError("%s\n\n%s" % (_("Error while validating view"), tools.ustr(e)))
                 # RNG-based validation is not possible anymore with 7.0 forms
                 view_docs = [view_doc]
                 if view_docs[0].tag == 'data':
@@ -613,7 +616,7 @@ actual arch.
         return specs_tree
 
     @api.model
-    def apply_inheritance_specs(self, source, specs_tree, inherit_id):
+    def apply_inheritance_specs(self, source, specs_tree, inherit_id, pre_locate=lambda s: True):
         """ Apply an inheriting view (a descendant of the base view)
 
         Apply to a source architecture all the spec nodes (i.e. nodes
@@ -623,6 +626,8 @@ actual arch.
         :param Element source: a parent architecture to modify
         :param Elepect specs_tree: a modifying architecture in an inheriting view
         :param inherit_id: the database id of specs_arch
+        :param (optional) pre_locate: function that is execute before locating a node.
+                                        This function receives an arch as argument.
         :return: a modified source where the specs are applied
         :rtype: Element
         """
@@ -630,7 +635,8 @@ actual arch.
         # changes to apply to some parent architecture).
         try:
             source = apply_inheritance_specs(source, specs_tree,
-                                             inherit_branding=self._context.get('inherit_branding'))
+                                             inherit_branding=self._context.get('inherit_branding'),
+                                             pre_locate=pre_locate)
         except ValueError as e:
             self.raise_view_error(str(e), inherit_id)
         return source
@@ -800,7 +806,7 @@ actual arch.
             field = Model._fields.get(node.get('name'))
             if field:
                 if field.type != 'many2one':
-                    self.raise_view_error(_('groupby can only target many2one (%(field)s') % dict(field=field.name), view_id)
+                    self.raise_view_error(_("'groupby' tags can only target many2one (%(field)s)") % dict(field=field.name), view_id)
                 attrs = fields.setdefault(node.get('name'), {})
                 children = False
                 # move all children nodes into a new node <groupby>

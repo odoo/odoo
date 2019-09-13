@@ -13,6 +13,7 @@ class TestCoursePurchaseFlow(common.SlidesCase):
             'list_price': 150,
             'type': 'service',
             'invoice_policy': 'order',
+            'is_published': True,
         })
 
         self.channel.write({

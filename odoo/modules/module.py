@@ -492,8 +492,9 @@ class OdooTestResult(unittest.result.TestResult):
         # using logger.log makes it difficult to spot-replace findCaller in
         # order to provide useful location information (the problematic spot
         # inside the test function), so use lower-level functions instead
-        record = logger.makeRecord(logger.name, level, fn, lno, msg, args, exc_info, func, extra, sinfo)
-        logger.handle(record)
+        if logger.isEnabledFor(level):
+            record = logger.makeRecord(logger.name, level, fn, lno, msg, args, exc_info, func, extra, sinfo)
+            logger.handle(record)
 
     def getDescription(self, test):
         if isinstance(test, unittest.case._SubTest):
@@ -549,6 +550,8 @@ class OdooTestResult(unittest.result.TestResult):
         """
 
         # only test case should be executed in odoo, this is only a safe guard
+        if isinstance(test, unittest.suite._ErrorHolder):
+            return
         if not isinstance(test, unittest.TestCase):
             _logger.warning('%r is not a TestCase' % test)
             return
@@ -576,10 +579,8 @@ class OdooTestRunner(object):
         start_time = time.perf_counter()
         test(result)
         time_taken = time.perf_counter() - start_time
-
-        logger = logging.getLogger(test.__module__)
         run = result.testsRun
-        logger.info("Ran %d test%s in %.3fs", run, run != 1 and "s" or "", time_taken)
+        _logger.info("Ran %d test%s in %.3fs", run, run != 1 and "s" or "", time_taken)
         return result
 
 current_test = None

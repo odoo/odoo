@@ -1,22 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * analytic
+# 	* analytic
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Zoriana Zaiats, 2018
-# Bohdan Lisnenko, 2018
-# ТАрас <tratatuta@i.ua>, 2018
-# Kateryna Onyshchenko <Katrona17@gmail.com>, 2018
-# Sergey Doroshenko <sdoroshenko@artwebny.com>, 2018
+# Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:08+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +23,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
 msgid "Action Needed"
-msgstr "Дія необхідна"
+msgstr "Необхідна дія"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
@@ -74,7 +69,7 @@ msgstr "Розподіл аналітичного рахунку"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
 msgid "Analytic Account Groups"
-msgstr "Групи Аналітичних облікових записів"
+msgstr "Групи Аналітичних рахунків"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -114,7 +109,7 @@ msgstr "Аналітичні записи"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
-msgstr "Проводка аналітики"
+msgstr "Аналітичний запис"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -134,7 +129,7 @@ msgstr "Рядки аналітики"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__name
 msgid "Analytic Tag"
-msgstr "Мітка аналітики"
+msgstr "Тег аналітики"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
@@ -142,9 +137,10 @@ msgstr "Мітка аналітики"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
 msgid "Analytic Tags"
-msgstr "Мітки аналітики"
+msgstr "Теги аналітики"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr "Заархівовано"
@@ -152,12 +148,12 @@ msgstr "Заархівовано"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
-msgstr "Асоційований партнер"
+msgstr "Доданий партнер"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
 msgid "Attachment Count"
-msgstr "Підрахунок прикріплення"
+msgstr "Підрахунок прикріплень"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
@@ -169,6 +165,11 @@ msgstr "Баланс"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
 msgstr "Баланс:"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+msgid "Category"
+msgstr "Категорія"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
@@ -183,7 +184,7 @@ msgstr "Дочірній"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr "Натисніть, щоб створити нову групу аналітичного рахунку."
+msgstr "Натисніть, щоби створити нову групу аналітичного рахунку."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -204,9 +205,19 @@ msgid "Complete Name"
 msgstr "Повна назва"
 
 #. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Конвертація між одиницями вимірювання може відбуватися лише у тому випадку, "
+"якщо вони належать до однієї і тієї ж категорії. Конвертація буде "
+"здійснюватися на основі співвідношення."
+
+#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "Cost/Revenue"
-msgstr "Витрата/Прибуток"
+msgstr "Витрати/Прибуток"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
@@ -221,7 +232,7 @@ msgid ""
 "                invoices, expenses or timesheets."
 msgstr ""
 "Витрати будуть автоматично створені, коли ви зареєструєте\n"
-"рахунок від постачальника, витрати або табель робочого часу."
+"рахунок від постачальника, витрати або табелі."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -239,7 +250,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__create_date
 msgid "Created on"
-msgstr "Створено"
+msgstr "Створено на"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
@@ -260,6 +271,7 @@ msgstr "Клієнт"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__date
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Date"
 msgstr "Дата"
 
@@ -323,12 +335,12 @@ msgstr "ID"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
 msgid "If checked new messages require your attention."
-msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
+msgstr "Якщо позначено, то повідомленя потребує вашої уваги."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
@@ -352,7 +364,7 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
-"У Odoo замовлення на продаж та проекти реалізуються за допомогою\n"
+"В Odoo замовлення на продаж та проекти реалізуються за допомогою\n"
 "аналітичних рахунків. Ви можете відстежувати витрати та доходи для аналізу\n"
 "вашої маржі легко."
 
@@ -368,7 +380,7 @@ msgstr "Стежить"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line____last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag____last_update
 msgid "Last Modified on"
-msgstr "Остання модифікація"
+msgstr "Останні зміни на"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_uid
@@ -408,7 +420,7 @@ msgstr "Повідомлення"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__name
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Name"
-msgstr "Назва"
+msgstr "Ім'я"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
@@ -438,7 +450,7 @@ msgstr "Кількість повідомлень, які потебують д�
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Кількість повідомлень з помилковою дставкою"
+msgstr "Кількість повідомлень з помилковою доставкою"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread_counter
@@ -468,7 +480,7 @@ msgstr "Партнер"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__percentage
 msgid "Percentage"
-msgstr "Процент"
+msgstr "Відсоток"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
@@ -479,7 +491,7 @@ msgstr "Кількість"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__code
 msgid "Reference"
-msgstr "Референс"
+msgstr "Посилання"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -492,7 +504,7 @@ msgid ""
 msgstr ""
 "При створенні клієнта прибутки будуть створені автоматично\n"
 "рахунки-фактури. Рахунки-фактури клієнта можуть бути створені на основі замовлень клієнта\n"
-"(фіксовані рахунки-фактури), на таблицях часу (на основі виконаної роботи) або\n"
+"(фіксовані рахунки-фактури), на табелях (на основі виконаної роботи) або\n"
 "на витрати (наприклад, повторне надання дорожніх витрат)."
 
 #. module: analytic
@@ -501,30 +513,30 @@ msgid "Search Analytic Lines"
 msgstr "Пошук аналітичних рядків"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
+msgid "Search Analytic Tags"
+msgstr "Пошук аналітичних тегів"
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
 msgstr ""
-"Встановіть активне значення \"Невірний\", щоб приховати аналітичний тег, не "
+"Встановіть активне значення \"Невірно\", щоби приховати аналітичний тег, не "
 "видаляючи його."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
 msgid "Tags"
-msgstr "Мітки"
+msgstr "Теги"
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-msgid "Tasks Date"
-msgstr "Дата завдання"
-
-#. module: analytic
-#: sql_constraint:account.analytic.distribution:0
+#: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
 msgid ""
 "The percentage of an analytic distribution should be between 0 and 100."
 msgstr "Відсоток аналітичного розподілу повинен бути від 0 до 100."
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_account.py:195
+#: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
 "The selected account belongs to another company that the one you're trying "

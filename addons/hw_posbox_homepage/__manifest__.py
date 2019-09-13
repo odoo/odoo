@@ -12,7 +12,7 @@ IoT Box Homepage
 ================
 
 This module overrides Odoo web interface to display a simple
-Homepage that explains what's the iotbox and show the status,
+Homepage that explains what's the iotbox and shows the status,
 and where to find documentation.
 
 If you activate this module, you won't be able to access the 

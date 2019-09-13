@@ -137,10 +137,13 @@
         </a>
         <ul class="collapse show p-0 m-0 list-unstyled" t-att-id="('collapse-%s') % (category.id if category else 0)" >
             <t t-foreach="category_slide_ids" t-as="aside_slide">
+                <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
+                <t t-set="is_member" t-value="aside_slide.channel_id.is_member"/>
+                <t t-set="can_access" t-value="aside_slide.is_preview or is_member or aside_slide.channel_id.can_publish"/>
                 <li class="p-0 pb-1">
-                    <a t-att-href="'/slides/slide/%s' % (slug(aside_slide))"
-                        t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-top px-2 pt-1 text-decoration-none %s' % ('bg-100 py-1 active' if aside_slide == slide else '')">
-                        <div t-if="aside_slide.channel_id.is_member" >
+                    <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
+                        t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-top px-2 pt-1 text-decoration-none %s%s' % (('bg-100 py-1 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')">
+                        <div t-if="is_member" >
                             <i t-att-id="'o_wslides_lesson_aside_slide_check_%s' % (aside_slide.id)"
                                 t-att-class="'mr-1 fa fa-fw %s' % ('text-success fa-check-circle' if channel_progress[aside_slide.id].get('completed') else 'text-600 fa-circle-o')">
                             </i>
@@ -160,15 +163,22 @@
                     <ul t-if="aside_slide.link_ids or aside_slide.question_ids" class="list-group px-2 mb-1 list-unstyled">
                         <t t-foreach="aside_slide.link_ids" t-as="resource">
                             <li class="pl-4">
-                                <a t-attf-href="#{resource.link}" target="new" class="text-decoration-none small">
+                                <a t-if="can_access" t-att-href="resource.link" target="new" class="text-decoration-none small">
                                     <i class="fa fa-link mr-1"/><span t-field="resource.name"/>
                                 </a>
+                                <span t-else="" class="text-decoration-none text-muted small">
+                                    <i class="fa fa-link mr-1"/><span t-field="resource.name"/>
+                                </span>
                             </li>
                         </t>
                         <li class="pl-4">
-                            <a t-if="aside_slide.question_ids and aside_slide.slide_type != 'quiz'" t-att-href="'/slides/slide/%s#lessonQuiz' % (slug(aside_slide))" class="o_wslides_lesson_aside_list_link text-decoration-none small text-600">
+                            <a t-if="can_access and aside_slide.question_ids and aside_slide.slide_type != 'quiz'" t-att-href="'/slides/slide/%s#lessonQuiz' % (slug(aside_slide))" class="o_wslides_lesson_aside_list_link text-decoration-none small text-600">
                                 <i class="fa fa-flag text-warning"/> Quiz
                             </a>
+                            <span t-elif="not can_access and aside_slide.question_ids and aside_slide.slide_type != 'quiz'"
+                                class="o_wslides_lesson_aside_list_link text-decoration-none small text-600 text-muted">
+                                <i class="fa fa-flag text-warning"/> Quiz
+                            </span>
                         </li>
                     </ul>
                 </li>

@@ -15,7 +15,7 @@
         <record model="ir.rule" id="res_partner_rule">
             <field name="name">res.partner company</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+            <field name="domain_force">['|', '|', ('id', '=', user.partner_id.id), ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
         </record>
 
         <record model="ir.rule" id="res_partner_portal_public_rule">
@@ -167,7 +167,7 @@
             <field name="name">user rule</field>
             <field name="model_id" ref="model_res_users"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">[('company_ids', 'in', company_ids)]</field>
+            <field name="domain_force">['|', ('id', '=', user.id), ('company_ids', 'in', company_ids)]</field>
         </record>
     </data>
 </odoo>

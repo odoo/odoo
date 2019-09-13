@@ -150,7 +150,7 @@ var PivotController = AbstractController.extend({
             url: '/web/pivot/export_xls',
             data: {data: JSON.stringify(table)},
             complete: framework.unblockUI,
-            error: () => this.call('crash_manager', 'rpc_error', ...arguments),
+            error: (error) => this.call('crash_manager', 'rpc_error', error),
         });
     },
     /**
@@ -340,6 +340,7 @@ var PivotController = AbstractController.extend({
      * @param {OdooEvent} ev
      */
     _onOpenView: function (ev) {
+        ev.stopPropagation();
         var context = ev.data.context;
         var group = ev.data.group;
         var domain = this.model._getGroupDomain(group);

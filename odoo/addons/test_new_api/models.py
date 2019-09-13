@@ -373,8 +373,8 @@ class Related(models.Model):
     related_related_name = fields.Char(related='related_name', string='A related on a related on Name', readonly=False)
 
     message = fields.Many2one('test_new_api.message')
-    message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body', readonly=False)
-    message_currency = fields.Many2one(related="message.author", string='Message Author', readonly=False)
+    message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
+    message_currency = fields.Many2one(related="message.author", string='Message Author')
 
 class ComputeProtected(models.Model):
     _name = 'test_new_api.compute.protected'
@@ -495,6 +495,27 @@ class ComputeCascade(models.Model):
             record.baz = "<%s>" % (record.bar or "")
 
 
+class ComputeOnchange(models.Model):
+    _name = 'test_new_api.compute.onchange'
+    _description = "Compute method as an onchange"
+
+    active = fields.Boolean()
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar', store=True)
+    baz = fields.Char(compute='_compute_baz', store=True, readonly=False)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = record.foo
+
+    @api.depends('active', 'foo')
+    def _compute_baz(self):
+        for record in self:
+            if record.active:
+                record.baz = record.foo
+
+
 class ModelImage(models.Model):
     _name = 'test_new_api.model_image'
     _description = 'Test Image field'
@@ -587,7 +608,7 @@ class Attachment(models.Model):
             rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
 
     # DLE P55: `test_cache_invalidation`
-    def modified(self, fnames, modified=None, create=False):
+    def modified(self, fnames, create=False):
         if not self:
             return
         comodel = self.env[self.res_model]
@@ -596,11 +617,7 @@ class Attachment(models.Model):
             record = comodel.browse(self.res_id)
             self.env.cache.invalidate([(field, record._ids)])
             record.modified(['attachment_ids'])
-            if modified is None:
-                modified = {field: record}
-            else:
-                modified[field] = modified.get(field, record) | record
-        return super(Attachment, self).modified(fnames, modified=modified)
+        return super(Attachment, self).modified(fnames, create)
 
 
 class AttachmentHost(models.Model):
@@ -637,3 +654,56 @@ class ModelB(models.Model):
     name = fields.Char()
     a_restricted_a_ids = fields.Many2many('test_new_api.model_a', relation='rel_model_a_model_b_1', ondelete='restrict')
     b_restricted_a_ids = fields.Many2many('test_new_api.model_a', relation='rel_model_a_model_b_2')
+
+
+class ModelParent(models.Model):
+    _name = 'test_new_api.model_parent'
+    _description = 'Model Multicompany parent'
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company', required=True)
+
+
+class ModelChild(models.Model):
+    _name = 'test_new_api.model_child'
+    _description = 'Model Multicompany child'
+    _check_company_auto = True
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company', required=True)
+    parent_id = fields.Many2one('test_new_api.model_parent', check_company=True)
+
+
+class ModelChildNoCheck(models.Model):
+    _name = 'test_new_api.model_child_nocheck'
+    _description = 'Model Multicompany child'
+    _check_company_auto = True
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company', required=True)
+    parent_id = fields.Many2one('test_new_api.model_parent', check_company=False)
+
+
+# model with explicit and stored field 'display_name'
+class Display(models.Model):
+    _name = 'test_new_api.display'
+    _description = 'Model that overrides display_name'
+
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = 'My id is %s' % (record.id)
+
+
+# abstract model with automatic and non-stored field 'display_name'
+class Mixin(models.AbstractModel):
+    _name = 'test_new_api.mixin'
+    _description = 'Dummy mixin model'
+
+
+# in this model extension, the field 'display_name' should not be inherited from
+# 'test_new_api.mixin'
+class ExtendedDisplay(models.Model):
+    _name = 'test_new_api.display'
+    _inherit = ['test_new_api.mixin', 'test_new_api.display']

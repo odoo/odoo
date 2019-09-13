@@ -13,7 +13,7 @@ class TestChannelAccessRights(common.BaseFunctionalTest, common.MockEmails):
     @classmethod
     def setUpClass(cls):
         super(TestChannelAccessRights, cls).setUpClass()
-        Channel = cls.env['mail.channel'].with_context(common.BaseFunctionalTest._test_context)
+        Channel = cls.env['mail.channel'].with_context(cls._test_context)
 
         cls.user_public = mail_new_test_user(cls.env, login='bert', groups='base.group_public', name='Bert Tartignole')
         cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
@@ -113,13 +113,13 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
     @classmethod
     def setUpClass(cls):
         super(TestChannelFeatures, cls).setUpClass()
-        cls.test_channel = cls.env['mail.channel'].with_context(common.BaseFunctionalTest._test_context).create({
+        cls.test_channel = cls.env['mail.channel'].with_context(cls._test_context).create({
             'name': 'Test',
             'description': 'Description',
             'alias_name': 'test',
             'public': 'public',
         })
-        cls.test_partner = cls.env['res.partner'].with_context(common.BaseFunctionalTest._test_context).create({
+        cls.test_partner = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Test Partner',
             'email': 'test@example.com',
         })
@@ -202,7 +202,7 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_channel_out_of_office(self):
         self.user_employee.out_of_office_message = 'Out'
-        test_chat = self.env['mail.channel'].with_context(common.BaseFunctionalTest._test_context).create({
+        test_chat = self.env['mail.channel'].with_context(self._test_context).create({
             'channel_partner_ids': [(4, self.user_employee.partner_id.id), (4, self.user_admin.partner_id.id)],
             'public': 'private',
             'channel_type': 'chat',
@@ -311,3 +311,24 @@ class TestChannelModeration(common.Moderation):
         self.assertEqual(accepted_messages, msg_moderator | msg_email2 | msg_notif)
         self.assertFalse(msg_admin.channel_ids)
         self.assertEqual(msg_email2.channel_ids, self.channel_1)
+
+    def test_user_is_moderator(self):
+        self.assertTrue(self.user_employee.is_moderator)
+        self.assertFalse(self.user_admin.is_moderator)
+        self.assertTrue(self.user_employee_2.is_moderator)
+
+    def test_user_moderation_counter(self):
+        self._create_new_message(self.channel_1.id, status='pending_moderation', author=self.partner_admin)
+        self._create_new_message(self.channel_1.id, status='accepted', author=self.partner_admin)
+        self._create_new_message(self.channel_1.id, status='accepted', author=self.partner_employee)
+        self._create_new_message(self.channel_1.id, status='pending_moderation', author=self.partner_employee)
+        self._create_new_message(self.channel_1.id, status='accepted', author=self.partner_employee_2)
+
+        self.assertEqual(self.user_employee.moderation_counter, 2)
+        self.assertEqual(self.user_employee_2.moderation_counter, 0)
+        self.assertEqual(self.user_admin.moderation_counter, 0)
+
+        self.channel_1.write({'channel_partner_ids': [(4, self.partner_employee_2.id)], 'moderator_ids': [(4, self.user_employee_2.id)]})
+        self.assertEqual(self.user_employee.moderation_counter, 2)
+        self.assertEqual(self.user_employee_2.moderation_counter, 0)
+        self.assertEqual(self.user_admin.moderation_counter, 0)

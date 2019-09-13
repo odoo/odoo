@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="argentinian_extra_info">
+        <li t-if="company.l10n_ar_afip_responsibility_type_id" class="list-inline-item">VAT Cond.: <span t-field="company.l10n_ar_afip_responsibility_type_id"/></li>
+        <li class="list-inline-item">Gross Income: <span t-esc="company.l10n_ar_gross_income_type == 'exempt' and 'Exento' or company.l10n_ar_gross_income_number"/></li>
+        <li t-if="company.l10n_ar_afip_start_date" class="list-inline-item">Activities Start Date: <span t-field="company.l10n_ar_afip_start_date"/></li>
+    </template>
+
+    <template id="external_layout_standard" inherit_id="web.external_layout_standard">
+        <!-- footer -->
+        <ul class="list-inline mb4" position="inside">
+            <t t-call="l10n_ar.argentinian_extra_info"/>
+        </ul>
+    </template>
+
+    <template id="external_layout_background" inherit_id="web.external_layout_background">
+        <!-- footer -->
+        <ul class="list-inline" position="inside">
+            <t t-call="l10n_ar.argentinian_extra_info"/>
+        </ul>
+    </template>
+
+    <template id="external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <!-- footer -->
+        <ul class="list-inline" position="inside">
+            <t t-call="l10n_ar.argentinian_extra_info"/>
+        </ul>
+    </template>
+
+    <template id="external_layout_clean" inherit_id="web.external_layout_clean">
+        <!-- header -->
+        <ul class="list-unstyled" position="inside">
+            <t t-call="l10n_ar.argentinian_extra_info"/>
+        </ul>
+    </template>
+
+</odoo>

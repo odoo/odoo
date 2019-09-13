@@ -317,7 +317,6 @@ class Repair(models.Model):
             else:
                 # if group == True: concatenate invoices by partner and currency
                 invoice_vals = current_invoices_list[0]
-                invoice_vals['name'] += ', ' + repair.name
                 invoice_vals['invoice_origin'] += ', ' + repair.name
                 invoice_vals['repair_ids'].append((4, repair.id))
                 if not invoice_vals['narration']:

@@ -103,6 +103,7 @@
             <tree string="Attributes" create="0" delete="0">
                 <field name="attribute_id"/>
                 <field name="name"/>
+                <field name="ptav_active" optional="hide"/>
                 <field name="price_extra"/>
             </tree>
         </field>
@@ -114,17 +115,30 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Product Attribute" create="0" delete="0">
-                <group>
-                    <field name="name" />
-                    <field name="price_extra" />
-                    <field name="exclude_for" widget="one2many" mode="tree">
-                        <tree editable="top">
-                            <field name="product_tmpl_id" />
-                            <field name="value_ids" widget="many2many_tags" options="{'no_create': true}" />
-                        </tree>
-                    </field>
-                </group>
+                <sheet>
+                    <group>
+                        <field name="ptav_active" readonly="1" attrs="{'invisible': [('ptav_active', '=', True)]}"/>
+                        <field name="name"/>
+                        <field name="price_extra" />
+                        <field name="exclude_for" widget="one2many" mode="tree">
+                            <tree editable="bottom">
+                                <field name="product_tmpl_id" />
+                                <field name="value_ids" widget="many2many_tags" options="{'no_create': true}" />
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="product_template_attribute_value_view_search" model="ir.ui.view">
+        <field name="model">product.template.attribute.value</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Active" name="active" domain="[('ptav_active', '=', True)]"/>
+                <filter string="Inactive" name="inactive" domain="[('ptav_active', '=', False)]"/>
+            </search>
         </field>
     </record>
 
@@ -138,7 +152,8 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('product.product_template_attribute_value_view_tree')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('product.product_template_attribute_value_view_form')})]" />
         <field name="context">{
-            'default_product_tmpl_id': active_id
+            'default_product_tmpl_id': active_id,
+            'search_default_active': 1,
         }</field>
     </record>
 

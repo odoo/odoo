@@ -56,6 +56,13 @@ class SurveyQuestion(models.Model):
     _rec_name = 'question'
     _order = 'sequence,id'
 
+    @api.model
+    def default_get(self, fields):
+        defaults = super(SurveyQuestion, self).default_get(fields)
+        if (not fields or 'question_type' in fields):
+            defaults['question_type'] = False if defaults.get('is_page') == True else 'free_text'
+        return defaults
+
     # Question metadata
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
@@ -64,14 +71,15 @@ class SurveyQuestion(models.Model):
     sequence = fields.Integer('Sequence', default=10)
     # Question
     is_page = fields.Boolean('Is a page?')
-    questions_selection = fields.Selection(related='survey_id.questions_selection', readonly=True,
+    questions_selection = fields.Selection(
+        related='survey_id.questions_selection', readonly=True,
         help="If randomized is selected, add the number of random questions next to the section.")
-    random_questions_count = fields.Integer('Random questions count', default=1,
+    random_questions_count = fields.Integer(
+        'Random questions count', default=1,
         help="Used on randomized sections to take X random questions from all the questions of that section.")
     title = fields.Char('Title', required=True, translate=True)
     question = fields.Char('Question', related="title")
     description = fields.Html('Description', help="Use this field to add additional explanations about your question", translate=True)
-
     question_type = fields.Selection([
         ('free_text', 'Multiple Lines Text Box'),
         ('textbox', 'Single Line Text Box'),
@@ -80,8 +88,7 @@ class SurveyQuestion(models.Model):
         ('datetime', 'Datetime'),
         ('simple_choice', 'Multiple choice: only one answer'),
         ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-        ('matrix', 'Matrix')], string='Question Type',
-        default='free_text', required=True)
+        ('matrix', 'Matrix')], string='Question Type')
     # simple choice / multiple choice / matrix
     labels_ids = fields.One2many(
         'survey.label', 'question_id', string='Types of answers', copy=True,
@@ -135,9 +142,14 @@ class SurveyQuestion(models.Model):
     ]
 
     @api.onchange('validation_email')
-    def onchange_validation_email(self):
+    def _onchange_validation_email(self):
         if self.validation_email:
             self.validation_required = False
+
+    @api.onchange('is_page')
+    def _onchange_is_page(self):
+        if self.is_page:
+            self.question_type = False
 
     # Validation methods
 

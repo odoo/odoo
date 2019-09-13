@@ -8,7 +8,7 @@ from odoo.osv import expression
 from odoo.tools.float_utils import float_round as round, float_compare
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError, ValidationError
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, tools
 from odoo.tests.common import Form
 
 TYPE_TAX_USE = [
@@ -41,7 +41,8 @@ class AccountAccountType(models.Model):
         ('expense', 'Expense'),
         ('off_balance', 'Off Balance'),
     ], string="Internal Group",
-       help="The 'Internal Group' is used to filter accounts based on the internal group set on the account type.")
+        required=True,
+        help="The 'Internal Group' is used to filter accounts based on the internal group set on the account type.")
     note = fields.Text(string='Description')
 
 
@@ -54,7 +55,7 @@ class AccountAccountTag(models.Model):
     color = fields.Integer('Color Index')
     active = fields.Boolean(default=True, help="Set active to false to hide the Account Tag without removing it.")
     tax_report_line_ids = fields.Many2many(string="Tax Report Lines", comodel_name='account.tax.report.line', relation='account_tax_report_line_tags_rel', help="The tax report lines using this tag")
-    tax_negate = fields.Boolean(string="Negate Tax Balance", help="Check this boox to negate the absolute value of the balance of the lines associated with this tag in tax report computation.")
+    tax_negate = fields.Boolean(string="Negate Tax Balance", help="Check this box to negate the absolute value of the balance of the lines associated with this tag in tax report computation.")
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="Country for which this tag is available, when applied on taxes.")
 
 
@@ -70,7 +71,8 @@ class AccountTaxReportLine(models.Model):
     report_action_id = fields.Many2one(string="Report Action", comodel_name='ir.actions.act_window', help="The optional action to call when clicking on this line in accounting reports.")
     children_line_ids = fields.One2many(string="Children Lines", comodel_name='account.tax.report.line', inverse_name='parent_id', help="Lines that should be rendered as children of this one")
     parent_id = fields.Many2one(string="Parent Line", comodel_name='account.tax.report.line')
-    sequence = fields.Integer(string='Sequence', required=True, help="Sequence determining the order of the lines in the report (smaller ones come first). This order is applied locally per section (so, chilldren of the same line are always rendered one after the other).")
+    sequence = fields.Integer(string='Sequence', required=True,
+        help="Sequence determining the order of the lines in the report (smaller ones come first). This order is applied locally per section (so, children of the same line are always rendered one after the other).")
     parent_path = fields.Char(index=True)
 
     #helper to create tags (positive and negative) on report line creation
@@ -224,6 +226,7 @@ class AccountAccount(models.Model):
         default=lambda self: self.env.company)
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     group_id = fields.Many2one('account.group')
+    root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True)
 
     opening_debit = fields.Monetary(string="Opening debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
     opening_credit = fields.Monetary(string="Opening credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
@@ -240,6 +243,14 @@ class AccountAccount(models.Model):
                     raise UserError(_('An Off-Balance account can not be reconcilable'))
                 if record.tax_ids:
                     raise UserError(_('An Off-Balance account can not have taxes'))
+
+    @api.depends('code')
+    def _compute_account_root(self):
+        # this computes the first 2 digits of the account.
+        # This field should have been a char, but the aim is to use it in a side panel view with hierarchy, and it's only supported by many2one fields so far.
+        # So instead, we make it a many2one to a psql view with what we need as records.
+        for record in self:
+            record.root_id = record.code and (ord(record.code[0]) * 1000 + ord(record.code[1])) or False
 
     @api.model
     def _search_new_account_code(self, company, digits, prefix):
@@ -542,13 +553,38 @@ class AccountGroup(models.Model):
         return self.browse(group_ids).name_get()
 
 
+class AccountRoot(models.Model):
+    _name = 'account.root'
+    _description = 'Account codes first 2 digits'
+    _auto = False
+
+    name = fields.Char()
+    parent_id = fields.Many2one('account.root')
+
+    def init(self):
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute('''
+            CREATE OR REPLACE VIEW %s AS (
+            SELECT DISTINCT ASCII(code) * 1000 + ASCII(SUBSTRING(code,2,1)) AS id,
+                   LEFT(code,2) AS name,
+                   ASCII(code) AS parent_id
+            FROM account_account WHERE code IS NOT NULL
+            UNION ALL
+            SELECT DISTINCT ASCII(code) AS id,
+                   LEFT(code,1) AS name,
+                   NULL::int AS parent_id
+            FROM account_account WHERE code IS NOT NULL
+            )''' % (self._table,)
+        )
+
+
 class AccountJournalGroup(models.Model):
     _name = 'account.journal.group'
     _description = "Account Journal Group"
 
-    name = fields.Char("Group Name", required=True, translate=True)
+    name = fields.Char("Journal Group", required=True, translate=True)
     company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
-    account_journal_ids = fields.Many2many('account.journal', string="Journals", domain="[('company_id', '=', company_id)]")
+    excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals", domain="[('company_id', '=', company_id)]")
     sequence = fields.Integer(default=10)
 
 
@@ -608,7 +644,7 @@ class AccountJournal(models.Model):
         compute='_compute_refund_seq_number_next',
         inverse='_inverse_refund_seq_number_next')
 
-    invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Free'), ('partner', 'Based on Partner'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
+    invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Free'), ('partner', 'Based on Customer'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
     invoice_reference_model = fields.Selection(string='Communication Standard', required=True, selection=[('odoo', 'Odoo'),('euro', 'European')], default='odoo', help="You can choose different models for each type of reference. The default one is the Odoo reference.")
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
@@ -639,7 +675,7 @@ class AccountJournal(models.Model):
     bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
     bank_acc_number = fields.Char(related='bank_account_id.acc_number', readonly=False)
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
-    post_at_bank_rec = fields.Boolean(string="Post At Bank Reconciliation", help="Whether or not the payments made in this journal should be generated in draft state, so that the related journal entries are only posted when performing bank reconciliation.")
+    post_at = fields.Selection([('pay_val', 'Payment Validation'), ('bank_rec', 'Bank Reconciliation')], string="Post At", default='pay_val')
 
     # alias configuration for journals
     alias_id = fields.Many2one('mail.alias', string='Alias', copy=False)
@@ -830,8 +866,8 @@ class AccountJournal(models.Model):
                     'refund_sequence_number_next': vals.get('refund_sequence_number_next', journal.refund_sequence_number_next),
                 }
                 journal.refund_sequence_id = self.sudo()._create_sequence(journal_vals, refund=True).id
-        # Changing the 'post_at_bank_rec' option will post the draft payment moves and change the related invoices' state.
-        if 'post_at_bank_rec' in vals and not vals['post_at_bank_rec']:
+        # Changing the 'post_at' option will post the draft payment moves and change the related invoices' state.
+        if 'post_at' in vals and vals['post_at'] != 'bank_rec':
             draft_moves = self.env['account.move'].search([('journal_id', 'in', self.ids), ('state', '=', 'draft')])
             pending_payments = draft_moves.mapped('line_ids.payment_id')
             pending_payments.mapped('move_line_ids.move_id').post()
@@ -1009,7 +1045,7 @@ class AccountJournal(models.Model):
         invoices = self.env['account.move']
         for attachment in attachments:
             invoice = self.env['account.move'].create({})
-            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+            attachment.write({'res_model': 'mail.compose.message'})
             invoice.message_post(attachment_ids=[attachment.id])
             invoices += invoice
 
@@ -1019,6 +1055,7 @@ class AccountJournal(models.Model):
             'res_model': 'account.move',
             'views': [[False, "tree"], [False, "form"]],
             'type': 'ir.actions.act_window',
+            'context': self._context
         }
         if len(invoices) == 1:
             action_vals.update({'res_id': invoices[0].id, 'view_mode': 'form'})
@@ -1405,20 +1442,27 @@ class AccountTax(models.Model):
         cached_tax_amounts = {}
         if handle_price_include:
             for tax in reversed(taxes):
+                tax_repartition_lines = (
+                    is_refund
+                    and tax.refund_repartition_line_ids
+                    or tax.invoice_repartition_line_ids
+                ).filtered(lambda x: x.repartition_type == "tax")
+                sum_repartition_factor = sum(tax_repartition_lines.mapped("factor"))
+
                 if tax.include_base_amount:
                     base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
                     incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
                     store_included_tax_total = True
                 if tax.price_include or self._context.get('force_price_include'):
                     if tax.amount_type == 'percent':
-                        incl_percent_amount += tax.amount
+                        incl_percent_amount += tax.amount * sum_repartition_factor
                     elif tax.amount_type == 'division':
-                        incl_division_amount += tax.amount
+                        incl_division_amount += tax.amount * sum_repartition_factor
                     elif tax.amount_type == 'fixed':
-                        incl_fixed_amount += quantity * tax.amount
+                        incl_fixed_amount += quantity * tax.amount * sum_repartition_factor
                     else:
                         # tax.amount_type == other (python)
-                        tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
+                        tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner) * sum_repartition_factor
                         incl_fixed_amount += tax_amount
                         # Avoid unecessary re-computation
                         cached_tax_amounts[i] = tax_amount
@@ -1437,6 +1481,9 @@ class AccountTax(models.Model):
         i = 0
         cumulated_tax_included_amount = 0
         for tax in taxes:
+            tax_repartition_lines = (is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids).filtered(lambda x: x.repartition_type == 'tax')
+            sum_repartition_factor = sum(tax_repartition_lines.mapped('factor'))
+
             #compute the tax_amount
             if (self._context.get('force_price_include') or tax.price_include) and total_included_checkpoints.get(i):
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
@@ -1444,13 +1491,14 @@ class AccountTax(models.Model):
                 cumulated_tax_included_amount = 0
             else:
                 tax_amount = tax.with_context(force_price_include=False)._compute_amount(
-                    base, price_unit, quantity, product, partner)
+                    base, sign * price_unit, quantity, product, partner)
 
-            # Round the tax_amount
+            # Round the tax_amount multiplied by the computed repartition lines factor.
             tax_amount = round(tax_amount, prec)
+            factorized_tax_amount = round(tax_amount * sum_repartition_factor, prec)
 
             if tax.price_include and not total_included_checkpoints.get(i):
-                cumulated_tax_included_amount += tax_amount
+                cumulated_tax_included_amount += factorized_tax_amount
 
             # If the tax affects the base of subsequent taxes, its tax move lines must
             # receive the base tags and tag_ids of these taxes, so that the tax report computes
@@ -1461,18 +1509,24 @@ class AccountTax(models.Model):
                 subsequent_taxes = taxes[i+1:]
                 subsequent_tags = subsequent_taxes.get_tax_tags(is_refund, 'base')
 
-            # Compute the tax lines
-            tax_repartition_lines = (is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids).filtered(lambda x: x.repartition_type == 'tax')
-            sum_factor = sum(tax_repartition_lines.mapped('factor'))
-            repartition_lines_to_treat = len(tax_repartition_lines)
-            total_amount = 0
-            for repartition_line in tax_repartition_lines:
-                if repartition_lines_to_treat != 1 or sum_factor != 1.0:
-                    line_amount = round(tax_amount * repartition_line.factor, prec)
-                else:
-                    # When the sum of the repartition lines factor is 100%, we need to ensure the whole tax amount has
-                    # been spread into the repartition lines.
-                    line_amount = round(tax_amount - total_amount, prec)
+            # Compute the tax line amounts by multiplying each factor with the tax amount.
+            # Then, spread the tax rounding to ensure the consistency of each line independently with the factorized
+            # amount. E.g:
+            #
+            # Suppose a tax having 4 x 50% repartition line applied on a tax amount of 0.03 with 2 decimal places.
+            # The factorized_tax_amount will be 0.06 (200% x 0.03). However, each line taken independently will compute
+            # 50% * 0.03 = 0.01 with rounding. It means there is 0.06 - 0.04 = 0.02 as total_rounding_error to dispatch
+            # in lines as 2 x 0.01.
+            repartition_line_amounts = [round(tax_amount * line.factor, prec) for line in tax_repartition_lines]
+            total_rounding_error = round(factorized_tax_amount - sum(repartition_line_amounts), prec)
+            nber_rounding_steps = int(abs(total_rounding_error / currency.rounding))
+            rounding_error = round(nber_rounding_steps and total_rounding_error / nber_rounding_steps or 0.0, prec)
+
+            for repartition_line, line_amount in zip(tax_repartition_lines, repartition_line_amounts):
+
+                if nber_rounding_steps:
+                    line_amount += rounding_error
+                    nber_rounding_steps -= 1
 
                 taxes_vals.append({
                     'id': tax.id,
@@ -1489,16 +1543,14 @@ class AccountTax(models.Model):
                     'tax_ids': subsequent_taxes.ids,
                 })
 
-                total_amount += line_amount
                 if not repartition_line.account_id:
                     total_void += line_amount
-                repartition_lines_to_treat -= 1
 
             # Affect subsequent taxes
             if tax.include_base_amount:
-                base += tax_amount
+                base += factorized_tax_amount
 
-            total_included += tax_amount
+            total_included += factorized_tax_amount
             i += 1
 
         return {
@@ -1538,7 +1590,7 @@ class AccountTaxRepartitionLine(models.Model):
     factor = fields.Float(string="Factor Ratio", compute="_compute_factor", help="Factor to apply on the account move lines generated from this repartition line")
     repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
     account_id = fields.Many2one(string="Account", comodel_name='account.account', help="Account on which to post the tax amount")
-    tag_ids = fields.Many2many(string="Tax Grid", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True)
+    tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True)
     invoice_tax_id = fields.Many2one(comodel_name='account.tax', help="The tax set to apply this repartition on invoices. Mutually exclusive with refund_tax_id")
     refund_tax_id = fields.Many2one(comodel_name='account.tax', help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_id")
     tax_id = fields.Many2one(comodel_name='account.tax', compute='_compute_tax_id')

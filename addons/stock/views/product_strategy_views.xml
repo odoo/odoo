@@ -11,7 +11,6 @@
                        attrs="{'readonly': [('category_id', '!=', False)], 'required': [('category_id', '=', False)]}"
                        options="{'no_create': True, 'no_open': True}"
                        readonly="context.get('single_product', False)"
-                       domain="[('type', '!=', 'service')]"
                        force_save="1"/>
                 <field name="category_id"
                        attrs="{'readonly': [('product_id', '!=', False)], 'required': [('product_id', '=', False)]}"
@@ -20,11 +19,10 @@
                        force_save="1"/>
                 <field name="location_in_id"
                        options="{'no_create': True}"
-                       readonly="context.get('fixed_location', False)"
-                       domain="[('child_ids', '!=', False)]"/>
+                       readonly="context.get('fixed_location', False)"/>
                 <field name="location_out_id" attrs="{'readonly': [('location_in_id', '=', False)]}"
-                       options="{'no_create': True}"
-                       domain="[('id', 'child_of', location_in_id), ('id', '!=', location_in_id)]"/>
+                       options="{'no_create': True}"/>
+                <field name="company_id" groups="stock.group_stock_multi_locations" force_save="1" readonly="context.get('fixed_location', False)"/>
             </tree>
         </field>
     </record>

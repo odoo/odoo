@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-12 11:32+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 08:16+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment_alipay
-#: code:addons/payment_alipay/models/payment.py:133
+#: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid ""
 "\n"
@@ -35,13 +35,13 @@ msgid ""
 msgstr ""
 
 #. module: payment_alipay
-#: code:addons/payment_alipay/models/payment.py:175
+#: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
 msgstr ""
 
 #. module: payment_alipay
-#: code:addons/payment_alipay/models/payment.py:172
+#: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid "; no order found"
 msgstr ""
@@ -52,12 +52,7 @@ msgid "Account"
 msgstr ""
 
 #. module: payment_alipay
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr ""
-
-#. module: payment_alipay
-#: selection:payment.acquirer,provider:0
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
 msgid "Alipay"
 msgstr ""
 
@@ -67,40 +62,30 @@ msgid "Alipay Seller Email"
 msgstr ""
 
 #. module: payment_alipay
-#: code:addons/payment_alipay/models/payment.py:184
+#: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid "Alipay: invalid sign, received %s, computed %s, for data %s"
 msgstr ""
 
 #. module: payment_alipay
-#: code:addons/payment_alipay/models/payment.py:169
+#: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid "Alipay: received data for reference %s"
 msgstr ""
 
 #. module: payment_alipay
-#: code:addons/payment_alipay/models/payment.py:165
+#: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid "Alipay: received data with missing reference (%s) or txn_id (%s)"
 msgstr ""
 
 #. module: payment_alipay
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr ""
-
-#. module: payment_alipay
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr ""
-
-#. module: payment_alipay
-#: selection:payment.acquirer,alipay_payment_method:0
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__standard_checkout
 msgid "Cross-border"
 msgstr ""
 
 #. module: payment_alipay
-#: selection:payment.acquirer,alipay_payment_method:0
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese Merchant)"
 msgstr ""
 
@@ -110,28 +95,8 @@ msgid "MD5 Signature Key"
 msgstr ""
 
 #. module: payment_alipay
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr ""
-
-#. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
 msgid "Merchant Partner ID"
-msgstr ""
-
-#. module: payment_alipay
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr ""
-
-#. module: payment_alipay
-#: selection:payment.acquirer,provider:0
-msgid "PayU Latam"
-msgstr ""
-
-#. module: payment_alipay
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
 msgstr ""
 
 #. module: payment_alipay
@@ -145,23 +110,8 @@ msgid "Payment Transaction"
 msgstr ""
 
 #. module: payment_alipay
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr ""
-
-#. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__provider
 msgid "Provider"
-msgstr ""
-
-#. module: payment_alipay
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
-msgstr ""
-
-#. module: payment_alipay
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
 msgstr ""
 
 #. module: payment_alipay
@@ -176,9 +126,4 @@ msgstr ""
 msgid ""
 "The Merchant Partner ID is used to ensure communications coming from Alipay "
 "are valid and secured."
-msgstr ""
-
-#. module: payment_alipay
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
 msgstr ""

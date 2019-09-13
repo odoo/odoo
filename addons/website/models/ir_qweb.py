@@ -4,9 +4,10 @@ import re
 from collections import OrderedDict
 
 from odoo import models
-from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.addons.website.models import ir_http
 from odoo.tools import html_escape as escape
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
@@ -47,7 +48,7 @@ class QWeb(models.AbstractModel):
            options.get('edit_translations') or options.get('debug') or (request and request.session.debug):
             return atts
 
-        website = request and getattr(request, 'website', None)
+        website = ir_http.get_request_website()
         if not website and options.get('website_id'):
             website = self.env['website'].browse(options['website_id'])
 

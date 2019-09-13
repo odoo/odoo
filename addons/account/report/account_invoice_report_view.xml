@@ -87,13 +87,24 @@
                     <filter string="Partner" name="partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Product Category" name="category_product" context="{'group_by':'product_categ_id','residual_invisible':True}"/>
                     <filter string="Status" name="status" context="{'group_by':'state'}"/>
-                    <filter string="Analytic Account" name="analytic_account_id" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting" />
                     <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical" />
                     <filter string="Date" name="invoice_date" context="{'group_by':'invoice_date'}"/>
                     <filter string="Due Date" name="duemonth" context="{'group_by':'invoice_date_due:month'}"/>
                 </group>
             </search>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_report_search_analytic_accounting" model="ir.ui.view">
+        <field name="name">account.invoice.report.search_analytic_accounting</field>
+        <field name="model">account.invoice.report</field>
+        <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
+        <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
+        <field name="arch" type="xml">
+            <filter name="status" position="after">
+                <filter string="Analytic Account" name="analytic_account_id" context="{'group_by':'analytic_account_id'}"/>
+            </filter>
         </field>
     </record>
 

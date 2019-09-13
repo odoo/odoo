@@ -48,6 +48,9 @@ var GraphView = AbstractView.extend({
 
         this.arch.children.forEach(function (field) {
             var fieldName = field.attrs.name;
+            if (fieldName === "id") {
+                return;
+            }
             var interval = field.attrs.interval;
             if (interval) {
                 fieldName = fieldName + ':' + interval;

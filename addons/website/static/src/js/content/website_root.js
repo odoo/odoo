@@ -105,7 +105,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
         var $target = $(ev.target);
         // retrieve the hash before the redirect
         var redirect = {
-            lang: $target.data('lang'),
+            lang: $target.data('url_code'),
             url: encodeURIComponent($target.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
             hash: encodeURIComponent(window.location.hash)
         };

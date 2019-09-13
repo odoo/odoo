@@ -1,28 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * portal
+# 	* portal
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Martin Trigaux, 2018
-# Luigi Di Naro <gigidn@gmail.com>, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
-# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
-# Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
-# Paolo Valier, 2018
-# Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2018
-# Pietro Della Notte <pdellanotte@gmail.com>, 2018
-# David Minneci <david@numeko.it>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
-# efraimbiffi <eab@odoo.com>, 2018
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
+# Martin Trigaux, 2019
+# Simone Bernini <simone@aperturelabs.it>, 2019
+# SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
+# Massimo Bianchi <bianchi.massimo@gmail.com>, 2019
+# Paolo Valier, 2019
+# Pietro Della Notte <pdellanotte@gmail.com>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# mymage <stefano.consolaro@mymage.it>, 2019
+# Mario Riva <mario.riva@gmail.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: efraimbiffi <eab@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,10 +31,16 @@ msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_sidebar.js:43
+#: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%d days overdue"
 msgstr "%d giorni di ritardo"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "%s is not the reference of a report"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -44,33 +49,45 @@ msgstr "<b>Accedi</b>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
-msgid "<i class=\"fa fa-arrow-right\"/> Back to edit mode"
+msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to edit mode"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil\"/> Modifica"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Filter By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">Filtra per:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">Raggruppa per:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">Ordina per:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "<strong>Open </strong>"
-msgstr ""
+msgstr "<strong>Apri </strong>"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
@@ -160,15 +177,29 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_signature.js:0
+#, python-format
+msgid "Accept & Sign"
+msgstr "Accetta e firma"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
 #: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
 msgid "Access warning"
-msgstr "Allerta di Accesso"
+msgstr "Avviso di accesso"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add a note"
-msgstr "Aggiungi un commento"
+msgstr "Aggiungi una nota"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Add attachment"
+msgstr "Aggiunge allegato"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -181,9 +212,15 @@ msgid "Add extra content to display in the email"
 msgstr ""
 
 #. module: portal
+#: code:addons/portal/controllers/mail.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
-msgstr "Salva"
+msgstr "Applica"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_archive_groups
@@ -192,7 +229,7 @@ msgstr "Archivi"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:26
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Avatar"
 msgstr "Avatar"
@@ -204,10 +241,17 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:220
+#: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
 
@@ -218,28 +262,20 @@ msgstr "Città"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_signature.xml:12
-#, python-format
-msgid "Clear"
-msgstr "Pulisci"
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/xml/portal_signature.xml:27
+#: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Click here to see your document."
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Close"
 msgstr "Chiudi"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Company Name"
-msgstr "Nome dell’azienda"
+msgstr "Nome azienda"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -247,12 +283,19 @@ msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"Conferma\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__partner_id
 msgid "Contact"
 msgstr "Contatto"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Contact Details"
+msgstr "Dettagli Contatto"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -286,12 +329,25 @@ msgstr "Creato il"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
-msgstr "Portale Clienti URL"
+msgstr "URL del portale clienti"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "Dear"
-msgstr "Egr."
+msgstr "Spett.le"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Delete"
+msgstr "Elimina"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "Details"
+msgstr "Dettagli"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
@@ -302,22 +358,20 @@ msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/xml/portal_signature.xml:14
-#, python-format
-msgid "Draw your signature"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+msgid "Documents"
+msgstr "Documenti"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_sidebar.js:41
+#: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %d days"
-msgstr "Scadenza in %d giorni"
+msgstr "Scade tra %d giorni"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_sidebar.js:39
+#: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due today"
 msgstr ""
@@ -326,24 +380,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr "Thread Email"
+msgstr "Discussione e-mail"
 
 #. module: portal
-#: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.model,name:portal.model_portal_wizard
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Portal Access"
 msgstr ""
 
 #. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+msgid "Grant portal access"
+msgstr ""
+
+#. module: portal
 #: model:ir.model,name:portal.model_ir_http
 msgid "HTTP Routing"
-msgstr "Routing HTTP"
+msgstr "Instradamento HTTP"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -361,14 +419,19 @@ msgstr "ID"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__in_portal
 msgid "In Portal"
-msgstr "Nel Portale"
+msgstr "Nel portale"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:201
+#: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
+msgstr "L'e-mail non è valida, inserire un indirizzo corretto."
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "Invalid report type: %s"
 msgstr ""
-"Indirizzo mail non valido! Per favore, inserisci un indirizzo email valido."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -381,25 +444,25 @@ msgstr "Messaggio di invito"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
 msgid "Last Modified on"
-msgstr "Data di ultima modifica"
+msgstr "Ultima modifica il"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
 msgid "Last Updated by"
-msgstr "Ultima modifica di"
+msgstr "Ultimo aggiornamento di"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_date
 msgid "Last Updated on"
-msgstr "Ultima modifica il"
+msgstr "Ultimo aggiornamento il"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:21
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Leave a comment"
 msgstr "Lascia un commento"
@@ -407,7 +470,7 @@ msgstr "Lascia un commento"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
 msgid "Link"
-msgstr "Collegamento"
+msgstr "Link"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -425,27 +488,34 @@ msgid "Message"
 msgstr "Messaggio"
 
 #. module: portal
+#: code:addons/portal/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Model %s does not support token signature, as it does not have %s field."
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
 msgid "My Account"
-msgstr "Il mio Account"
+msgstr "Il mio account"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Name"
+msgstr "Nome"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:92
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
-msgstr "Successivo"
+msgstr "Succ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
 msgid "Note"
 msgstr "Nota"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
-msgid "Odoo"
-msgstr "Odoo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -454,10 +524,12 @@ msgstr "Logo Odoo"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:39
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
+"Ops! Qualcosa è andato storto. Ricaricare la pagina e provare nuovamente ad "
+"accedere."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -467,7 +539,7 @@ msgstr "Telefono"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
-msgstr "URL di Accesso al Portale"
+msgstr "URL di accesso al portale"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -477,7 +549,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "Condivisione portale"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -485,10 +557,9 @@ msgid "Portal User Config"
 msgstr "Configurazione Utente Portale"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
-msgstr "Powered by"
+msgstr "Fornito da"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -497,14 +568,14 @@ msgstr "Prec"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:84
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Previous"
 msgstr "Precedente"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_chatter.js:109
+#: code:addons/portal/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Published on %s"
 msgstr "Pubblicato il %s"
@@ -522,7 +593,7 @@ msgstr "ID documento collegato"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_model
 msgid "Related Document Model"
-msgstr "Modello Documento correlato"
+msgstr "Modello documento collegato"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -532,7 +603,7 @@ msgstr "Ricerca"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
 msgid "Security Token"
-msgstr "Token di Sicurezza"
+msgstr "Token di sicurezza"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -547,14 +618,14 @@ msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:42
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 #, python-format
 msgid "Send"
 msgstr "Invia"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:100
+#: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Several contacts have the same email: "
 msgstr "Diversi contatti hanno la stessa email: "
@@ -563,71 +634,125 @@ msgstr "Diversi contatti hanno la stessa email: "
 #: model:ir.actions.act_window,name:portal.portal_share_action
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
-msgstr ""
+msgstr "Condividi documento"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:97
+#: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Some contacts don't have a valid email: "
 msgstr "Alcuni contatti non hanno un indirizzo email valido: "
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:103
+#: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
-"Alcuni contatti hanno lo stesso indirizzo email di un utente già esistente "
-"del portale:"
+"Alcuni contatti hanno la stessa e-mail di un utente già esistente del "
+"portale:"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:224
+#: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Alcuni campi obbligatori sono vuoti."
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_chatter.js:0
+#, python-format
+msgid "Something went wrong."
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
-msgstr "Provincia"
+msgstr "Stato / Provincia"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Street"
-msgstr "Strada/Via"
+msgstr "Indirizzo"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_signature.xml:25
+#: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
-msgid "Thank You !"
-msgstr "Grazie !"
+msgid "Thank You!"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "The attachment %s cannot be removed because it is linked to a message."
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The attachment %s cannot be removed because it is not in a pending state."
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/controllers/mail.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The attachment does not exist or you do not have the rights to access it."
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:12
+#: code:addons/portal/static/src/js/portal_chatter.js:0
+#, python-format
+msgid "The file <strong>%s</strong> could not be saved."
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "There are no comments for now."
 msgstr ""
 
 #. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "This document does not exist."
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "This is a preview of the customer portal."
-msgstr ""
+msgstr "Questa è una anteprima del portale clienti"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
-"Questo testo viene incluso nell'email inviata ai nuovi utenti del portale."
+"Questo testo è contenuto nell'e-mail inviata ai nuovi utenti del portale."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
-"Questo testo viene incluso nelle email inviate ai nuovi utenti del portale."
+"Questo testo è contenuto nell'e-mail inviata ai nuovi utenti del portale."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:106
+#: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid ""
 "To resolve this error, you can: \n"
@@ -656,9 +781,22 @@ msgstr "Partita IVA"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_thread_blacklist__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_thread_cc__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
@@ -667,29 +805,42 @@ msgstr "Messaggi sito web"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
+#: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,help:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_thread_blacklist__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_thread_cc__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
+#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
+#: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr "Storico comunicazione sito"
+msgstr "Cronologia comunicazioni sito web"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
 msgid "Wizard"
-msgstr "Procedura Guidata"
+msgstr "Procedura guidata"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:31
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Write a message..."
 msgstr "Scrivi un messaggio..."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_share.py:59
-#: code:addons/portal/wizard/portal_share.py:71
+#: code:addons/portal/wizard/portal_share.py:0
+#: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "You are invited to access %s"
 msgstr ""
@@ -701,44 +852,19 @@ msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:22
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "You must be"
 msgstr "Devi essere"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:175
+#: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
 "È necessario avere un indirizzo mail nelle Preferenze Utente per spedire "
 "email."
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "Your Contact Details"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "Your Details"
-msgstr "Il tuo Profilo"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Your Documents"
-msgstr ""
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/xml/portal_signature.xml:6
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-#, python-format
-msgid "Your Name"
-msgstr "Il tuo nome"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -757,28 +883,28 @@ msgstr "CAP"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:56
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "avatar"
 msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:9
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "comment"
 msgstr "commento"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:10
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "comments"
 msgstr "commenti"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:22
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "logged in"
 msgstr "autenticato"
@@ -795,7 +921,7 @@ msgstr "seleziona..."
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:22
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "to post a comment."
 msgstr "per inviare un commento."

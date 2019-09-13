@@ -10,6 +10,7 @@
                 <field name="name"/>
                 <field name="allocation_type"/>
                 <filter domain="[('state','in',('confirm', 'validate1'))]" string="To Approve" name="approve"/>
+                <filter domain="[('state', '=', 'validate1')]" string="Need Second Approval" name="second_approval"/>
                 <filter string="Approved Allocations" domain="[('state', '=', 'validate')]" name="validated"/>
                 <filter string="Accrual Allocations" domain="[('allocation_type', '=', 'accrual')]" name="accrual_allocation"/>
                 <separator/>
@@ -89,7 +90,7 @@
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
 
                             <field name="allocation_type" invisible="1" widget="radio"/>
-                            
+
                             <field name="number_of_days" invisible="1"/>
                             <label for="number_of_days" string="Duration" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
                             <div attrs="{'invisible': [('allocation_type', '=', 'accrual')]}">
@@ -125,10 +126,10 @@
         <field name="priority">16</field>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_confirm']" position="after">
-                <button string="Approve" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"
+                <button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight"
                     attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
-                <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
-                <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object" groups="hr_holidays.group_hr_holidays_user"
+                <button string="Validate" name="action_validate" states="validate1" type="object" class="oe_highlight"/>
+                <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"
                     attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate','validate1'))]}"/>
                 <button string="Reset to Draft" name="action_draft" type="object"
                         attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>

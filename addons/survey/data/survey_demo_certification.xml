@@ -25,6 +25,7 @@
             <field name="survey_id" ref="vendor_certification" />
             <field name="sequence">1</field>
             <field name="is_page" eval="True"/>
+            <field name="question_type" eval="False" />
             <field name="description">&lt;p&gt;Test your knowledge of your products!&lt;/p&gt;</field>
         </record>
         <!-- Question and predefined answer 1 -->
@@ -173,6 +174,7 @@
             <field name="title">Prices</field>
             <field name="survey_id" ref="vendor_certification" />
             <field name="is_page" eval="True"/>
+            <field name="question_type" eval="False" />
             <field name="sequence">7</field>
             <field name="description">&lt;p&gt;Test your knowledge of our prices.&lt;/p&gt;</field>
         </record>
@@ -297,6 +299,75 @@
             <field name="question_id" ref="vendor_certification_page_2_question_3"/>
             <field name="sequence">5</field>
             <field name="value">A lot overpriced</field>
+        </record>
+
+        <record model="survey.user_input" id="survey_vendor_certification_answer_1">
+            <field name="survey_id" ref="survey.vendor_certification" />
+            <field name="input_type">manually</field>
+            <field name="partner_id" ref="base.res_partner_address_3"/>
+            <field name="email">douglas.fletcher51@example.com</field>
+            <field name="state">done</field>
+            <field name="question_ids" eval="[
+                    ref('vendor_certification_page_1_question_1'),
+                    ref('vendor_certification_page_1_question_2'),
+                    ref('vendor_certification_page_1_question_3'),
+                    ref('vendor_certification_page_1_question_4'),
+                    ref('vendor_certification_page_1_question_5'),
+                    ref('vendor_certification_page_2_question_1'),
+                    ref('vendor_certification_page_2_question_2'),
+                    ref('vendor_certification_page_2_question_3'),
+                ]"/>
+        </record>
+        <record model="survey.user_input" id="survey_vendor_certification_answer_2">
+            <field name="survey_id" ref="survey.vendor_certification" />
+            <field name="input_type">manually</field>
+            <field name="partner_id" ref="base.res_partner_address_7"/>
+            <field name="email">billy.fox45@example.com</field>
+            <field name="state">done</field>
+            <field name="question_ids" eval="[
+                    ref('vendor_certification_page_1_question_1'),
+                    ref('vendor_certification_page_1_question_2'),
+                    ref('vendor_certification_page_1_question_3'),
+                    ref('vendor_certification_page_1_question_4'),
+                    ref('vendor_certification_page_1_question_5'),
+                    ref('vendor_certification_page_2_question_1'),
+                    ref('vendor_certification_page_2_question_2'),
+                    ref('vendor_certification_page_2_question_3'),
+                ]"/>
+        </record>
+        <record model="survey.user_input" id="survey_vendor_certification_answer_3">
+            <field name="survey_id" ref="survey.vendor_certification" />
+            <field name="input_type">manually</field>
+            <field name="partner_id" ref="base.res_partner_address_15"/>
+            <field name="email">brandon.freeman55@example.com</field>
+            <field name="state">done</field>
+            <field name="question_ids" eval="[
+                    ref('vendor_certification_page_1_question_1'),
+                    ref('vendor_certification_page_1_question_2'),
+                    ref('vendor_certification_page_1_question_3'),
+                    ref('vendor_certification_page_1_question_4'),
+                    ref('vendor_certification_page_1_question_5'),
+                    ref('vendor_certification_page_2_question_1'),
+                    ref('vendor_certification_page_2_question_2'),
+                    ref('vendor_certification_page_2_question_3'),
+                ]"/>
+        </record>
+        <record model="survey.user_input" id="survey_vendor_certification_answer_4">
+            <field name="survey_id" ref="survey.vendor_certification" />
+            <field name="input_type">manually</field>
+            <field name="partner_id" ref="base.res_partner_address_25"/>
+            <field name="email">oscar.morgan11@example.com</field>
+            <field name="state">done</field>
+            <field name="question_ids" eval="[
+                    ref('vendor_certification_page_1_question_1'),
+                    ref('vendor_certification_page_1_question_2'),
+                    ref('vendor_certification_page_1_question_3'),
+                    ref('vendor_certification_page_1_question_4'),
+                    ref('vendor_certification_page_1_question_5'),
+                    ref('vendor_certification_page_2_question_1'),
+                    ref('vendor_certification_page_2_question_2'),
+                    ref('vendor_certification_page_2_question_3'),
+                ]"/>
         </record>
     </data>
 </odoo>

@@ -840,10 +840,15 @@ table.table_desc tr td {
     &.o_slideshow {
         .carousel {
             height: 100%;
+
             .carousel-inner {
                 height: 100%;
             }
-            .carousel-item {
+            .carousel-item.active,
+            .carousel-item-next,
+            .carousel-item-prev {
+                display: flex;
+                align-items: center;
                 height: 100%;
                 padding-bottom: 64px;
             }
@@ -909,8 +914,14 @@ table.table_desc tr td {
             background-color: inherit;
         }
     }
-    &.s_parallax_is_fixed > .s_parallax_bg {
-        background-attachment: fixed;
+    @include media-breakpoint-up(xl) {
+        // Fixed backgrounds are disabled when using a mobile/tablet device,
+        // which is not a big deal but, on some of them (iOS...), defining the
+        // background as fixed breaks the background-size/position props.
+        // So we enable this only for >= XL devices.
+        &.s_parallax_is_fixed > .s_parallax_bg {
+            background-attachment: fixed;
+        }
     }
 }
 
@@ -1087,6 +1098,34 @@ table.table_desc tr td {
             box-shadow: none;
         }
     }
+}
+
+// Mega menu
+.o_mega_menu {
+    width: 100%;
+    padding: 0;
+    margin-top: 0;
+
+    .container, .container-fluid {
+        // Need to reforce those because they are removed since its a container
+        // inside another container (the one in the navbar)
+        padding-left: $grid-gutter-width / 2;
+        padding-right: $grid-gutter-width / 2;
+    }
+}
+.o_mega_menu_container_size {
+    @include media-breakpoint-up(md) {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    $-mm-max-widths: ();
+    @each $k, $v in $container-max-widths {
+        $-mm-max-widths: map-merge($-mm-max-widths, (
+            #{$k}: $v - $grid-gutter-width,
+        ));
+    }
+    @include make-container-max-widths($-mm-max-widths);
 }
 
 // Copyright

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="wysiwyg_iframe_css_assets" name="CSS assets for wysiwyg iframe content">
-</template>
-
 <template id="wysiwyg_iframe_editor_assets" name="Editor assets for wysiwyg iframe content">
     <t t-call-assets="web.assets_common"/>
     <t t-call-assets="web.assets_frontend" t-js="false"/>
@@ -22,21 +19,21 @@
     <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/cropper/css/cropper.css"/>
     <script type="text/javascript" src="/web_editor/static/lib/cropper/js/cropper.js"/>
     <script type="text/javascript" src="/web_editor/static/lib/jQuery.transfo.js"/>
+    <script type="text/javascript" src="/web_editor/static/lib/nearest/jquery.nearest.js"/>
 
     <!-- odoo utils -->
 
     <t t-call="web._assets_helpers">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_variables.scss"/>
     </t>
 
     <!-- integration -->
 
     <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg.scss"/>
     <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_iframe.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_snippets.scss"/>
 
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/fonts.js"/>
-    <script type="text/javascript" src="/web_editor/static/lib/nearest/jquery.nearest.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/base.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/editor/editor.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.js"/>
@@ -53,6 +50,9 @@
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/media_dialog.js"/>
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/widgets.js"/>
+
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.options.js"/>
 
     <!-- Launcher -->
 
@@ -113,20 +113,9 @@
     <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/summernote/src/css/summernote.css"/>
 </template>
 
-<template id="wysiwyg_snippets" inherit_id="web_editor.assets_wysiwyg" name="Wysiwyg Editor additional snippets">
-    <xpath expr="script[@src='/web_editor/static/src/js/editor/rte.summernote.js']" position="after">
-        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_snippets.scss"/>
-
-        <script type="text/javascript" src="/web_editor/static/lib/nearest/jquery.nearest.js"/>
-        <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.editor.js"/>
-        <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.options.js"/>
-    </xpath>
-</template>
-
 <template id="_assets_primary_variables" inherit_id="web._assets_primary_variables">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.variables.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_variables.scss"/>
     </xpath>
 </template>
 
@@ -168,10 +157,19 @@
     </xpath>
 </template>
 
+<template id="_assets_frontend_minimal_js" inherit_id="web._assets_frontend_minimal_js">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/src/js/frontend/loader_loading.js"/>
+    </xpath>
+</template>
+
 <template id="assets_frontend" inherit_id="web.assets_frontend" name="Web Editor Frontend Assets (used in public odoo)" priority="15">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/> <!-- not in common because compiled differently with context -->
         <link rel="stylesheet" type ="text/scss" href="/web_editor/static/src/scss/web_editor.frontend.scss"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/src/js/frontend/loader.js"/>
     </xpath>
 </template>
 

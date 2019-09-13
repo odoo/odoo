@@ -1,17 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * calendar
+# 	* calendar
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2019
+# Andy Cheng <andy.cheng@richsoda.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# bluce Lan <bluce.lan@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: bluce Lan <bluce.lan@gmail.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +33,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name}: 日期已更新"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:741
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -40,57 +43,22 @@ msgstr ""
 " %s 在 %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:732
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s 在 (%s 到 %s) (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:229
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "%s has accepted invitation"
 msgstr "%s接受了邀請"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:237
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "%s has declined invitation"
 msgstr "%s已經拒絕了邀請"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_5
-msgid "1 Day(s)"
-msgstr "1天"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_3
-msgid "1 Hour(s)"
-msgstr "1小時"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_1
-msgid "15 Minute(s)"
-msgstr "15分鐘"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_4
-msgid "2 Hour(s)"
-msgstr "2小時"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_1
-msgid "3 Hour(s), by e-mail"
-msgstr "3小時，透過信件"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_2
-msgid "30 Minute(s)"
-msgstr "30分鐘"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_2
-msgid "6 Hour(s), by e-mail"
-msgstr "6小時，透過信件"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -313,31 +281,45 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
 msgstr "<span> 小時</span>"
 
 #. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
 msgid "Accept"
 msgstr "接受"
 
 #. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__accepted
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__accepted
 msgid "Accepted"
 msgstr "已接受"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
 msgid "Action Needed"
-msgstr "需要採取行動"
+msgstr "需採取行動"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 msgid "Active"
-msgstr "有效"
+msgstr "啟用"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_ids
@@ -356,22 +338,27 @@ msgstr "活動類型"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:36
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
 #, python-format
 msgid "All Day"
 msgstr "全天"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:728
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "AllDay , %s"
 msgstr "全天，%s"
 
 #. module: calendar
-#: sql_constraint:calendar.contacts:0
+#: model:ir.model.constraint,message:calendar.constraint_calendar_contacts_user_id_partner_id_unique
 msgid "An user cannot have twice the same contact."
 msgstr "使用者不能重複創建相同的聯絡人。"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Archived"
+msgstr "封存"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_attachment
@@ -381,7 +368,7 @@ msgstr "附件"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數量"
+msgstr "附件數"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_attendee
@@ -397,7 +384,6 @@ msgstr "參會者狀態"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
 msgstr "參會者"
 
@@ -407,9 +393,9 @@ msgid "Availability"
 msgstr "可用"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1693
-#: selection:calendar.attendee,availability:0
-#: selection:calendar.event,show_as:0
+#: code:addons/calendar/models/calendar.py:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__busy
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__busy
 #, python-format
 msgid "Busy"
 msgstr "忙碌"
@@ -444,6 +430,11 @@ msgid "Calendar Contacts"
 msgstr "日曆連絡人"
 
 #. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event
+msgid "Calendar Event"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
 msgstr "日程邀請"
@@ -461,16 +452,6 @@ msgid "Calendar: Event Reminder"
 msgstr "日曆：活動提醒"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr "類別可能觸發特定行為，例如，打開日曆視圖"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
-msgid "Category"
-msgstr "類別"
-
-#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
 msgstr "點選這裡只更新此實例，不包含其它定期會議。"
@@ -481,7 +462,7 @@ msgid "Common name"
 msgstr "通用名稱"
 
 #. module: calendar
-#: selection:calendar.event,state:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__state__open
 msgid "Confirmed"
 msgstr "已確認"
 
@@ -489,7 +470,7 @@ msgstr "已確認"
 #: model:ir.model,name:calendar.model_res_partner
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__partner_id
 msgid "Contact"
-msgstr "聯絡人"
+msgstr "聯繫人"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
@@ -498,7 +479,7 @@ msgstr "聯絡人"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_uid
 msgid "Created by"
-msgstr "創建者"
+msgstr "創立者"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_date
@@ -507,17 +488,17 @@ msgstr "創建者"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_date
 msgid "Created on"
-msgstr "創建時間"
+msgstr "建立於"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_start
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Date"
-msgstr "日期   "
+msgstr "日期"
 
 #. module: calendar
-#: selection:calendar.event,month_by:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__day
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__date
 msgid "Date of month"
 msgstr "月日期"
 
@@ -527,37 +508,41 @@ msgid "Day of Month"
 msgstr "月天數"
 
 #. module: calendar
-#: selection:calendar.event,month_by:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__day
 msgid "Day of month"
 msgstr "日期"
 
 #. module: calendar
-#: selection:calendar.alarm,interval:0 selection:calendar.event,rrule_type:0
-msgid "Day(s)"
-msgstr "天"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__days
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__daily
+msgid "Days"
+msgstr "天數"
 
 #. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
 msgid "Decline"
 msgstr "拒絕"
 
 #. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__declined
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__declined
 msgid "Declined"
 msgstr "已拒絕"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
 msgid "Description"
-msgstr "描述"
+msgstr "說明"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:18
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
 #, python-format
 msgid "Details"
-msgstr "詳細信息"
+msgstr "詳細訊息"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
@@ -571,7 +556,6 @@ msgstr "顯示名稱"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Document"
 msgstr "文件"
 
@@ -603,10 +587,20 @@ msgid "Duration in minutes"
 msgstr "時長（分鐘）"
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__email
 msgid "Email"
-msgstr "電子郵箱"
+msgstr "Email"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1
+msgid "Email - 3 Hours"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_2
+msgid "Email - 6 Hours"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
@@ -622,7 +616,7 @@ msgstr "員工"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_date
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "End Date"
-msgstr "終止日期"
+msgstr "結束日期"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_datetime
@@ -630,7 +624,7 @@ msgid "End Datetime"
 msgstr "結束時間"
 
 #. module: calendar
-#: selection:calendar.event,end_type:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
 msgid "End date"
 msgstr "結束日期"
 
@@ -638,11 +632,6 @@ msgstr "結束日期"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending at"
 msgstr "結束時間"
-
-#. module: calendar
-#: model:ir.model,name:calendar.model_calendar_event
-msgid "Event"
-msgstr "活動"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
@@ -665,34 +654,28 @@ msgid "Event Time"
 msgstr "活動時間"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1234
-#, python-format
-msgid "Event recurrence interval cannot be negative."
-msgstr "事件重複間隔不能為負數。"
-
-#. module: calendar
-#: selection:calendar.event,privacy:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
 msgid "Everyone"
 msgstr "每一個人"
 
 #. module: calendar
-#: code:addons/calendar/models/mail_activity.py:38
+#: code:addons/calendar/models/mail_activity.py:0
 #, python-format
 msgid "Feedback: "
 msgstr "回饋："
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__5
 msgid "Fifth"
 msgstr "第五個"
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
 msgid "First"
 msgstr "第一個"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:998
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "首先，必須指定邀請的日期。"
@@ -700,26 +683,26 @@ msgstr "首先，必須指定邀請的日期。"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
 msgid "Followers"
-msgstr "訂閱者"
+msgstr "關注人"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "關注者(渠道)"
+msgstr "關注人（頻道）"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "關注者(業務夥伴)"
+msgstr "關注人（業務夥伴）"
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__4
 msgid "Fourth"
 msgstr "第四"
 
 #. module: calendar
-#: selection:calendar.attendee,availability:0
-#: selection:calendar.event,show_as:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
 msgid "Free"
 msgstr "免費"
 
@@ -734,17 +717,17 @@ msgid "Fri"
 msgstr "週五"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__fr
 msgid "Friday"
 msgstr "週五"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
-msgstr "分組"
+msgstr "分組按"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1636
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr "目前不支援按日期分組，使用日曆視圖來進行。"
@@ -755,8 +738,8 @@ msgid "HTTP Routing"
 msgstr "HTTP 路由"
 
 #. module: calendar
-#: selection:calendar.alarm,interval:0
-msgid "Hour(s)"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
+msgid "Hours"
 msgstr "小時"
 
 #. module: calendar
@@ -772,17 +755,17 @@ msgstr "ID"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
 msgid "If checked new messages require your attention."
-msgstr "查看是否有需要您留意的新信息。"
+msgstr "勾選代表有新訊息需要您留意。"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "如果勾選此項，有新消息會提醒您。"
+msgstr "勾選代表有新訊息需要您留意。"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
+msgstr "勾選代表有訊息發生傳送錯誤。"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -829,7 +812,7 @@ msgstr "邀請嚮導"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
 msgid "Is Follower"
-msgstr "是訂閱者"
+msgstr "是關注人"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
@@ -837,7 +820,7 @@ msgid "Is the Event Highlighted"
 msgstr "是事件高亮"
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
 msgid "Last"
 msgstr "最後"
 
@@ -849,7 +832,7 @@ msgstr "最後"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event____last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type____last_update
 msgid "Last Modified on"
-msgstr "最後修改時間"
+msgstr "最後修改於"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
@@ -858,7 +841,7 @@ msgstr "最後修改時間"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_uid
 msgid "Last Updated by"
-msgstr "最後更新人"
+msgstr "最後更新者"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
@@ -867,7 +850,7 @@ msgstr "最後更新人"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_date
 msgid "Last Updated on"
-msgstr "最後更新時間"
+msgstr "最後更新於"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
@@ -899,7 +882,7 @@ msgstr "徽標"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "附件"
+msgstr "主要附件"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__user_id
@@ -907,14 +890,14 @@ msgid "Me"
 msgstr "我"
 
 #. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__mail_activity_type__category__meeting
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
-#: selection:mail.activity.type,category:0
 msgid "Meeting"
 msgstr "會議"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:942
-#: code:addons/calendar/models/calendar.py:947
+#: code:addons/calendar/models/calendar.py:0
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "Meeting '%s' starts '%s' and ends '%s'"
 msgstr "會議'%s'開始於'%s'結束於『%s』"
@@ -946,7 +929,6 @@ msgstr "會議已連接"
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_notify
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Meetings"
 msgstr "會議"
@@ -959,16 +941,16 @@ msgstr "消息"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
 msgid "Message Delivery error"
-msgstr "消息遞送錯誤"
+msgstr "訊息遞送錯誤"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
 msgid "Messages"
-msgstr "消息"
+msgstr "訊息"
 
 #. module: calendar
-#: selection:calendar.alarm,interval:0
-msgid "Minute(s)"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
+msgid "Minutes"
 msgstr "分鐘"
 
 #. module: calendar
@@ -982,13 +964,13 @@ msgid "Mon"
 msgstr "週一"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__mo
 msgid "Monday"
 msgstr "週一"
 
 #. module: calendar
-#: selection:calendar.event,rrule_type:0
-msgid "Month(s)"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__monthly
+msgid "Months"
 msgstr "月"
 
 #. module: calendar
@@ -1000,11 +982,11 @@ msgstr "我的會議"
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
 msgid "Name"
-msgstr "名稱"
+msgstr "名称"
 
 #. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__needsaction
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__needsaction
 msgid "Needs Action"
 msgstr "需要採取行動"
 
@@ -1014,54 +996,79 @@ msgid "No I'm not going."
 msgstr "我不會去。"
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
 msgid "Notification"
 msgstr "通知"
 
 #. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_5
+msgid "Notification - 1 Days"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_3
+msgid "Notification - 1 Hours"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_1
+msgid "Notification - 15 Minutes"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_4
+msgid "Notification - 2 Hours"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_2
+msgid "Notification - 30 Minutes"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of Actions"
-msgstr "行動數量"
+msgstr "動作數量"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of error"
-msgstr "錯誤數"
+msgstr "錯誤數量"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "需要行動消息的數量"
+msgstr "需要處理的消息數量"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "遞送錯誤的消息數量"
+msgstr "有發送錯誤的郵件數量"
 
 #. module: calendar
-#: selection:calendar.event,end_type:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__count
 msgid "Number of repetitions"
 msgstr "重複的數量"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_unread_counter
 msgid "Number of unread messages"
-msgstr "未讀消息的數量"
+msgstr "未讀訊息的數量"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:17
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
 #, python-format
 msgid "OK"
-msgstr "確認"
+msgstr "OK"
 
 #. module: calendar
-#: selection:calendar.event,privacy:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
 msgid "Only internal users"
 msgstr "僅內部使用者"
 
 #. module: calendar
-#: selection:calendar.event,privacy:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
 msgid "Only me"
 msgstr "僅我"
 
@@ -1081,11 +1088,6 @@ msgid "Options"
 msgstr "選項"
 
 #. module: calendar
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "其他"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Owner"
@@ -1099,10 +1101,10 @@ msgstr "參與者"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "使用者之業務夥伴的相關數據。"
+msgstr "該使用者之業務夥伴相關的資料"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1247
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "請選擇這個月合適的一天。"
@@ -1154,11 +1156,6 @@ msgid "Remind Before"
 msgstr "提醒早於"
 
 #. module: calendar
-#: selection:mail.activity.type,category:0
-msgid "Reminder"
-msgstr "提醒"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
 msgid "Reminders"
 msgstr "提醒"
@@ -1171,7 +1168,7 @@ msgstr "重複"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
 msgid "Repeat Every"
-msgstr "重複每"
+msgstr "重複"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__final_date
@@ -1181,7 +1178,7 @@ msgstr "重複直到"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "每(日/周/月/年)重複"
+msgstr "重複間隔 (日/周/月/年)"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__count
@@ -1192,12 +1189,7 @@ msgstr "重複 x 次"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
-msgstr "負責"
-
-#. module: calendar
-#: selection:calendar.alarm,type:0
-msgid "SMS Text Message"
-msgstr "短信"
+msgstr "負責人"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sa
@@ -1205,7 +1197,7 @@ msgid "Sat"
 msgstr "週六"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__sa
 msgid "Saturday"
 msgstr "週六"
 
@@ -1220,7 +1212,7 @@ msgid "Search Meetings"
 msgstr "搜尋會議"
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__2
 msgid "Second"
 msgstr "第二個"
 
@@ -1241,7 +1233,7 @@ msgstr "顯示時間為"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:19
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
 #, python-format
 msgid "Snooze"
 msgstr "延後"
@@ -1269,7 +1261,6 @@ msgstr "一個事件的開始日期，不包括全天事件的時間"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Starting at"
 msgstr "開始時間"
 
@@ -1287,7 +1278,7 @@ msgstr "參會者的參與狀況"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
 msgid "Stop"
-msgstr "結束"
+msgstr "停止"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
@@ -1297,7 +1288,7 @@ msgstr "一個事件的結束日期，不包括全天事件的時間"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Subject"
-msgstr "主題"
+msgstr "來源"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__su
@@ -1305,19 +1296,19 @@ msgid "Sun"
 msgstr "週日"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__su
 msgid "Sunday"
 msgstr "週日"
 
 #. module: calendar
-#: sql_constraint:calendar.event.type:0
+#: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists !"
 msgstr "標籤名已存在!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
 msgid "Tags"
-msgstr "摘要"
+msgstr "標籤"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1326,7 +1317,7 @@ msgstr "此"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/mail_activity.js:42
+#: code:addons/calendar/static/src/js/mail_activity.js:0
 #, python-format
 msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
@@ -1345,20 +1336,32 @@ msgstr ""
 "            全面整合。"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:941
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
 msgstr "結束日期和時間不能早于開始日期和時間。"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:946
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
 msgstr "結束日期不能早于開始日期。"
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: code:addons/calendar/models/calendar.py:0
+#, python-format
+msgid "The interval cannot be negative."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:0
+#, python-format
+msgid "The number of repetitions  cannot be negative."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
 msgid "Third"
 msgstr "第三個"
 
@@ -1373,12 +1376,17 @@ msgid "Thu"
 msgstr "週四"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__th
 msgid "Thursday"
 msgstr "週四"
 
 #. module: calendar
-#: code:addons/calendar/models/res_users.py:41
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
+msgid "Timezone"
+msgstr "時區"
+
+#. module: calendar
+#: code:addons/calendar/models/res_users.py:0
 #, python-format
 msgid "Today's Meetings"
 msgstr "今天的會議"
@@ -1389,24 +1397,27 @@ msgid "Tue"
 msgstr "週二"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__tu
 msgid "Tuesday"
 msgstr "週二"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__type
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
 msgid "Type"
 msgstr "類型"
 
 #. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__tentative
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
 msgid "Uncertain"
 msgstr "不確定"
 
 #. module: calendar
-#: selection:calendar.event,state:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__state__draft
 msgid "Unconfirmed"
 msgstr "未確認"
 
@@ -1446,14 +1457,9 @@ msgid "Wed"
 msgstr "週三"
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__we
 msgid "Wednesday"
 msgstr "週三"
-
-#. module: calendar
-#: selection:calendar.event,rrule_type:0
-msgid "Week(s)"
-msgstr "周"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__week_list
@@ -1461,9 +1467,14 @@ msgid "Weekday"
 msgstr "工作日"
 
 #. module: calendar
-#: selection:calendar.event,rrule_type:0
-msgid "Year(s)"
-msgstr "年"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__weekly
+msgid "Weeks"
+msgstr "周"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
+msgid "Years"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1471,7 +1482,7 @@ msgid "Yes I'm going."
 msgstr "我會去。"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:159
+#: code:addons/calendar/models/calendar.py:0
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr "您不能複製日程參與者。"
@@ -1480,9 +1491,3 @@ msgstr "您不能複製日程參與者。"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
 msgstr "例如:商務午餐"
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:1232
-#, python-format
-msgid "interval cannot be negative."
-msgstr "間隔不能是負數。"

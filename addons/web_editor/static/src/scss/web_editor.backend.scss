@@ -3,7 +3,7 @@
     word-wrap: break-word;
 
     .note-editable {
-        min-height: 180px;
+        min-height: 330px;
         font: inherit !important;
         font-family: inherit !important;
         line-height: inherit !important;
@@ -23,13 +23,16 @@
         width: 100%;
         margin: 0;
         padding: 0;
-        border: 0;
         ul > li > p {
             margin: 0px;
         }
         min-height: 300px;
         min-height: -webkit-calc(100vh - 170px);
         min-height: calc(100vh - 170px);
+
+        &.o_readonly {
+            border: none;
+        }
     }
     .rounded {
         border-radius: .25rem !important;

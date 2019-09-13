@@ -1,19 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * google_drive
+# 	* google_drive
 # 
 # Translators:
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# Martin Trigaux, 2018
+# Jeanphy <hzh0292@qq.com>, 2019
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +40,33 @@ msgstr ""
 "                                - 如果你在 \"更多\" 选项中选择 \"和所有用户共享\", 谷歌文档链接就会显示给所有销售部门的用户.<br/>\n"
 "                                - 如果你没有在 \"更多\" 选项中选择 \"和所有用户共享\", 谷歌文档链接则不会显示给所有销售部门的用户.<br/>\n"
 "                                -如果筛选没有被指定, 谷歌文档的链接就会显示在 \"更多\" 选项中，以被所有用户的所有商机所使用或关联。"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Reset token"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Set up token"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; No refresh"
+" token set"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Refresh token set"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "<span>Get an authorization code and set it in the field below.</span>"
+msgstr ""
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
@@ -64,7 +94,12 @@ msgid "Add a new template"
 msgstr "添加一个新的模板"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:42
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Archived"
+msgstr "已归档"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern."
 msgstr "在谷歌驱动器名称模式中无法找到任何一个密钥。"
@@ -73,6 +108,11 @@ msgstr "在谷歌驱动器名称模式中无法找到任何一个密钥。"
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
 msgid "Authorization Code"
 msgstr "授权码"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Cancel"
+msgstr "取消日期"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config__name_template
@@ -84,12 +124,17 @@ msgstr "为谷歌云盘重新命名 。 例如 gdoc_%(field_name)s"
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置设定"
+msgstr "配置设置"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Confirm"
+msgstr "确认"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_date
@@ -97,15 +142,10 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:161
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "一次只能创建一个谷歌驱动"
-
-#. module: google_drive
-#: model:ir.filters,name:google_drive.filter_partner
-msgid "Customer"
-msgstr "客户"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
@@ -118,8 +158,8 @@ msgid "Filter"
 msgstr "筛选"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:61
-#: code:addons/google_drive/models/google_drive.py:82
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "前去配置面板"
@@ -146,8 +186,8 @@ msgid "Google Drive Templates"
 msgstr "Google Drive 模板"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:63
-#: code:addons/google_drive/models/google_drive.py:84
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr "谷歌网盘尚未配置,请与您的管理员联系。"
@@ -165,17 +205,17 @@ msgstr "ID"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后更改日"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "更新时间"
 
 #. module: google_drive
 #: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -195,10 +235,15 @@ msgid "Model"
 msgstr "模型"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:203
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Please enter a valid Google Document URL."
 msgstr "请输入一个有效的Google文档网址"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__is_google_drive_token_generated
+msgid "Refresh Token Generated"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
@@ -211,7 +256,18 @@ msgid "Resource Id"
 msgstr "资源标识"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:81
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Search Google Drive Config"
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/res_config_settings.py:0
+#, python-format
+msgid "Set up refresh token"
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid ""
 "Something went wrong during the token generation. Please request again an "
@@ -234,7 +290,7 @@ msgid "Templates"
 msgstr "模板"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:99
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
 msgstr "无法找到谷歌模板。也许它已被删除"
@@ -253,30 +309,30 @@ msgid ""
 "                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
 "所附文档的名称可以使用固定的或可变的数据。区分于\n"
-"                                使用固定文字和字段谷歌驱动器上的文件,  例如您在谷歌云盘输入字段Deco_Addict_%(name)s_Sales\n"
+"                                使用固定文字和字段谷歌驱动器上的文档,  例如您在谷歌云盘输入字段Deco_Addict_%(name)s_Sales\n"
 "                               则谷歌驱动器Odoo附件的名称字段中为\n"
 "                                'Deco_Addict_SO0001_Sales'."
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:135
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr "'所有链接人'的'读取'权限为尚未写入文件"
+msgstr "'所有链接人'的'读取'权限为尚未写入文档"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"There is no refresh code set for Google Drive. You can set it up from the "
+"configuration panel."
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
 msgid "URI"
 msgstr "URI"
-
-#. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:60
-#, python-format
-msgid ""
-"You haven't configured 'Authorization Code' generated from google, Please "
-"generate and configure it ."
-msgstr "您还没有配置从谷歌产生的“授权码”，请生成并配置它。"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form

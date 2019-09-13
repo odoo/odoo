@@ -32,7 +32,7 @@ tour.register('rte_translator', {
     timeout: 60000,
 }, {
     content: "go to english version",
-    trigger: '.js_language_selector a[data-lang="en_US"]',
+    trigger: '.js_language_selector a[data-url_code="en"]',
     extra_trigger: 'html[lang*="fr"]',
 }, {
     content: "Open new page menu",
@@ -55,7 +55,7 @@ tour.register('rte_translator', {
     run: 'drag_and_drop #wrap',
 }, {
     content: "change content",
-    trigger: '.oe_overlay_options .oe_options:visible',
+    trigger: '#wrap',
     run: function () {
         $("#wrap p:first").replaceWith('<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
                 <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
@@ -70,10 +70,10 @@ tour.register('rte_translator', {
 }, {
     content : "click language dropdown",
     trigger : '.js_language_selector .dropdown-toggle',
-    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor))',
+    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit"]',
 }, {
     content: "click on french version",
-    trigger: '.js_language_selector a[data-lang="fr_BE"]',
+    trigger: '.js_language_selector a[data-url_code="fr_BE"]',
     extra_trigger: 'html[lang*="en"]:not(:has(button[data-action=save]))',
 }, {
     content: "translate",
@@ -91,6 +91,7 @@ tour.register('rte_translator', {
         action_helper.text('translated french text');
         Wysiwyg.setRange(this.$anchor.contents()[0], 22);
         this.$anchor.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
+        this.$anchor.trigger('input');
     },
 }, {
     content: "translate text with special char",
@@ -100,6 +101,7 @@ tour.register('rte_translator', {
         this.$anchor.prepend('&lt;{translated}&gt;');
         Wysiwyg.setRange(this.$anchor.contents()[0], 0);
         this.$anchor.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
+        this.$anchor.trigger('input');
     },
 }, {
     content: "click on input",
@@ -120,6 +122,7 @@ tour.register('rte_translator', {
 }, {
     content: "check: content is translated",
     trigger: '#wrap p font:first:contains(translated french text)',
+    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit_master"]',
     run: function () {}, // it's a check
 }, {
     content: "check: content with special char is translated",
@@ -137,7 +140,7 @@ tour.register('rte_translator', {
     extra_trigger: 'html[lang*="fr"]:not(:has(#wrap p span))',
 }, {
     content: "return to english version",
-    trigger: '.js_language_selector a[data-lang="en_US"]',
+    trigger: '.js_language_selector a[data-url_code="en"]',
 }, {
     content: "edit english version",
     trigger: 'a[data-action=edit]',
@@ -168,9 +171,10 @@ tour.register('rte_translator', {
     }, {
     content : "click language dropdown",
     trigger : '.js_language_selector .dropdown-toggle',
+    extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit"]',
 }, {
     content: "return in french",
-    trigger : 'html[lang="en-US"] .js_language_selector .js_change_lang[data-lang="fr_BE"]',
+    trigger : 'html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="fr_BE"]',
 }, {
     content: "check bis: content is translated",
     trigger: '#wrap p font:first:contains(translated french text)',

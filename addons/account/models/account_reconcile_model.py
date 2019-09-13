@@ -4,6 +4,8 @@ from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
 
+import re
+
 
 class AccountReconcileModel(models.Model):
     _name = 'account.reconcile.model'
@@ -92,12 +94,15 @@ class AccountReconcileModel(models.Model):
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of balance')
+        ('percentage', 'Percentage of balance'),
+        ('regex', 'From label'),
         ], required=True, default='percentage')
     show_force_tax_included = fields.Boolean(store=False, help='Technical field used to show the force tax included button')
     force_tax_included = fields.Boolean(string='Tax Included in Price',
         help='Force the tax to be managed as a price included tax.')
     amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    amount_from_label_regex = fields.Char(string="Amount from Label (regex)", default=r"([\d\.,]+)", help="There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\d,]+)")
+    decimal_separator = fields.Char(default=lambda self: self.env['res.lang']._lang_get(self.env.user.lang).decimal_point, help="Every character that is nor a digit nor this separator will be removed from the matching string")
     tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags',
@@ -110,12 +115,14 @@ class AccountReconcileModel(models.Model):
     second_label = fields.Char(string='Second Journal Item Label')
     second_amount_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of amount')
+        ('percentage', 'Percentage of balance'),
+        ('regex', 'From label'),
         ], string="Second Amount type",required=True, default='percentage')
     show_second_force_tax_included = fields.Boolean(store=False, help='Technical field used to show the force tax included button')
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
     second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_amount_from_label_regex = fields.Char(string="Second Amount from Label (regex)", default=r"([\d\.,]+)")
     second_tax_ids = fields.Many2many('account.tax', relation='account_reconcile_model_account_tax_bis_rel', string='Second Taxes', ondelete='restrict')
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
     second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags',
@@ -231,6 +238,12 @@ class AccountReconcileModel(models.Model):
 
         if self.amount_type == 'percentage':
             line_balance = balance * (self.amount / 100.0)
+        elif self.amount_type == "regex":
+            match = re.search(self.amount_from_label_regex, st_line.name)
+            if match:
+                line_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')) * (1 if balance > 0.0 else -1)
+            else:
+                line_balance = 0
         else:
             line_balance = self.amount * (1 if balance > 0.0 else -1)
 
@@ -258,7 +271,18 @@ class AccountReconcileModel(models.Model):
 
         # Second write-off line.
         if self.has_second_line and self.second_account_id:
-            line_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
+            remaining_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
+            if self.second_amount_type == 'percentage':
+                line_balance = remaining_balance * (self.second_amount / 100.0)
+            elif self.second_amount_type == "regex":
+                match = re.search(self.second_amount_from_label_regex, st_line.name)
+                if match:
+                    line_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.'))
+                else:
+                    line_balance = 0
+            else:
+                line_balance = self.second_amount * (1 if remaining_balance > 0.0 else -1)
+
             second_writeoff_line = {
                 'name': self.second_label or st_line.name,
                 'account_id': self.second_account_id.id,
@@ -375,7 +399,7 @@ class AccountReconcileModel(models.Model):
                 query += ' AND st_line.name NOT ILIKE %s'
                 params += ['%%%s%%' % rule['match_' + field + '_param']]
             elif rule['match_' + field] == 'match_regex':
-                query += ' AND st_line.name ~ %s'
+                query += ' AND st_line.name ~* %s'
                 params += [rule['match_' + field + '_param']]
 
         # Filter on partners.
@@ -445,12 +469,23 @@ class AccountReconcileModel(models.Model):
                 aml.amount_currency                 AS aml_amount_currency,
                 account.internal_type               AS account_internal_type,
 
-                -- Determine a matching or not with the statement line communication using the move.name or move.ref.
-                regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
-                && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                -- Determine a matching or not with the statement line communication using the aml.name, move.name or move.ref.
+                (
+                    aml.name IS NOT NULL
+                    AND
+                    TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')) != ''
+                    AND
+                        regexp_split_to_array(TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                        && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                )
+                OR
+                    regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                    && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                 OR
                 (
                     move.ref IS NOT NULL
+                    AND
+                    TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')) != ''
                     AND
                         regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
                         && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
@@ -494,11 +529,22 @@ class AccountReconcileModel(models.Model):
                         TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')) != ''
                         AND
                         (
-                            regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
-                            && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                            (
+                                aml.name IS NOT NULL
+                                AND
+                                TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')) != ''
+                                AND
+                                    regexp_split_to_array(TRIM(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                                    && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                            )
+                            OR
+                                regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                                && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                             OR
                             (
                                 move.ref IS NOT NULL
+                                AND
+                                TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')) != ''
                                 AND
                                     regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
                                     && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
@@ -609,8 +655,10 @@ class AccountReconcileModel(models.Model):
 
         if line_residual > total_residual:
             amount_percentage = (total_residual / line_residual) * 100
-        else:
+        elif total_residual:
             amount_percentage = (line_residual / total_residual) * 100 if total_residual else 0
+        else:
+            return False
         return amount_percentage >= self.match_total_amount_param
 
     def _apply_rules(self, st_lines, excluded_ids=None, partner_map=None):
@@ -681,8 +729,6 @@ class AccountReconcileModel(models.Model):
                 if not grouped_candidates.get(line.id) or not grouped_candidates[line.id].get(model.id):
                     continue
 
-                excluded_lines_found = False
-
                 if model.rule_type == 'invoice_matching':
                     candidates = grouped_candidates[line.id][model.id]
 
@@ -690,18 +736,26 @@ class AccountReconcileModel(models.Model):
                     # Otherwise, suggest all invoices having the same partner.
                     # N.B: The only way to match a line without a partner is through the communication.
                     first_batch_candidates = []
+                    first_batch_candidates_proposed = []
                     second_batch_candidates = []
+                    second_batch_candidates_proposed = []
                     for c in candidates:
                         # Don't take into account already reconciled lines.
                         if c['aml_id'] in reconciled_amls_ids:
                             continue
 
                         # Dispatch candidates between lines matching invoices with the communication or only the partner.
-                        if c['communication_flag']:
-                            first_batch_candidates.append(c)
+                        elif c['communication_flag']:
+                            if c['aml_id'] in amls_ids_to_exclude:
+                                first_batch_candidates_proposed.append(c)
+                            else:
+                                first_batch_candidates.append(c)
                         elif not first_batch_candidates:
-                            second_batch_candidates.append(c)
-                    available_candidates = first_batch_candidates or second_batch_candidates
+                            if c['aml_id'] in amls_ids_to_exclude:
+                                second_batch_candidates_proposed.append(c)
+                            else:
+                                second_batch_candidates.append(c)
+                    available_candidates = first_batch_candidates + first_batch_candidates_proposed or second_batch_candidates + second_batch_candidates_proposed
 
                     # Special case: the amount are the same, submit the line directly.
                     for c in available_candidates:
@@ -717,19 +771,8 @@ class AccountReconcileModel(models.Model):
 
                         # Add candidates to the result.
                         for candidate in available_candidates:
-
-                            # Special case: the propositions match the rule but some of them are already consumed by
-                            # another one. Then, suggest the remaining propositions to the user but don't make any
-                            # automatic reconciliation.
-                            if candidate['aml_id'] in amls_ids_to_exclude:
-                                excluded_lines_found = True
-                                continue
-
                             results[line.id]['aml_ids'].append(candidate['aml_id'])
                             amls_ids_to_exclude.add(candidate['aml_id'])
-
-                        if excluded_lines_found:
-                            break
 
                         # Create write-off lines.
                         move_lines = self.env['account.move.line'].browse(results[line.id]['aml_ids'])

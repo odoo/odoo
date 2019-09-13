@@ -19,15 +19,11 @@ class ResConfigSettings(models.TransientModel):
     website_country_group_ids = fields.Many2many(related='website_id.country_group_ids', readonly=False)
     website_company_id = fields.Many2one(related='website_id.company_id', string='Website Company', readonly=False)
     website_logo = fields.Binary(related='website_id.logo', readonly=False)
-    language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang',
-        readonly=False)
+    language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang', readonly=False)
     website_language_count = fields.Integer(string='Number of languages', compute='_compute_website_language_count', readonly=True)
-    website_default_lang_id = fields.Many2one(
-        string='Default language', related='website_id.default_lang_id', readonly=False,
-        relation='res.lang')
-    website_default_lang_code = fields.Char(
-        'Default language code', related='website_id.default_lang_code', readonly=False,
-        )
+    website_default_lang_id = fields.Many2one(string='Default language', related='website_id.default_lang_id',
+                                              readonly=False, relation='res.lang')
+    website_default_lang_code = fields.Char('Default language code', related='website_id.default_lang_id.code', readonly=False)
     specific_user_account = fields.Boolean(related='website_id.specific_user_account', readonly=False,
                                            help='Are newly created user accounts website specific')
 

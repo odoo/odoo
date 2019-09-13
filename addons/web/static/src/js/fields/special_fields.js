@@ -51,7 +51,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
      * @private
      */
     _renderDateTimeTimezone: function () {
-        if (!this.mismatch) {
+        if (!this.mismatch || !this.$option.html()) {
             return;
         }
         var offset = this.recordData.tz_offset.match(/([+-])([0-9]{2})([0-9]{2})/);
@@ -76,7 +76,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         var value = this.$el.val();
         var $span = $('<span class="fa fa-exclamation-triangle o_tz_warning"/>');
 
-        if (this.$option) {
+        if (this.$option && this.$option.html()) {
             this.$option.html(this.$option.html().split(' ')[0]);
         }
 

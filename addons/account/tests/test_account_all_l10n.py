@@ -25,12 +25,7 @@ class TestAllL10n(SingleTransactionCase):
             ('state', '=', 'uninstalled'),
         ])
         _logger.info("Modules to install: %s" % [x.name for x in l10n_mods])
-        for mod in l10n_mods:
-            _logger.info('Installing l10n module %s' % mod.name)
-            try:
-                mod.button_immediate_install()
-            except Exception:
-                _logger.error('Failure during installation of module "%s"', mod.name)
+        l10n_mods.button_immediate_install()
         # Now that new modules are installed, we have to reset the environment
         api.Environment.reset()
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})

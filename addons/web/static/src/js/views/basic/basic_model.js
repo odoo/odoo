@@ -678,13 +678,14 @@ var BasicModel = AbstractModel.extend({
      */
     getName: function (id) {
         var record = this.localData[id];
+        var returnValue = '';
         if (record._changes && 'display_name' in record._changes) {
-            return record._changes.display_name;
+            returnValue = record._changes.display_name;
         }
-        if ('display_name' in record.data) {
-            return record.data.display_name;
+        else if ('display_name' in record.data) {
+            returnValue = record.data.display_name;
         }
-        return _t("New");
+        return returnValue || _t("New");
     },
     /**
      * Returns true if a record is dirty. A record is considered dirty if it has
@@ -2067,9 +2068,11 @@ var BasicModel = AbstractModel.extend({
                 if (field.onChange) {
                     hasOnchange = true;
                 }
-                _.each(fieldInfo.views, function (view) {
-                    generateSpecs(view.fieldsInfo[view.type], view.fields, key + '.');
-                });
+                if (field.type === 'one2many' || field.type === 'many2many') {
+                    _.each(fieldInfo.views, function (view) {
+                        generateSpecs(view.fieldsInfo[view.type], view.fields, key + '.');
+                    });
+                }
             });
         }
         return hasOnchange ? specs : false;

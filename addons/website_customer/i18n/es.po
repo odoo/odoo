@@ -1,21 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_customer
+# 	* website_customer
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
-# Antonio Trueba, 2018
-# Ivan Nieto <ivan.n.s@tuta.io>, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
+# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Antonio Trueba, 2019
+# Ivan Nieto <ivan.n.s@tuta.io>, 2019
+# RGB Consulting <odoo@rgbconsulting.com>, 2019
+# Hbto [ Vauxoo ] <hbto@vauxoo.com>, 2019
+# Nicolás Broggi <rnbroggi@gmail.com>, 2019
+# Rodrigo Aragon <conectacoatepec@gmail.com>, 2019
+# Carolina Gonzalez <cgo@odoo.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,26 +35,43 @@ msgid "<span class=\"fa fa-1x fa-tags\"/> All"
 msgstr "<span class=\"fa fa-1x fa-tags\"/> Todo"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
 msgid "Active"
 msgstr "Activo"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:100
+#: code:addons/website_customer/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "Todos los países"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:81
+#: code:addons/website_customer/controllers/main.py:0
 #, python-format
 msgid "All Sectors of Activity"
 msgstr "Todos los sectores de actividad"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
 msgid "Bootstrap class to customize the color"
 msgstr "Clase de Bootstrap para personalizar el color"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__can_publish
+msgid "Can Publish"
+msgstr "Puede publicar"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
@@ -73,7 +96,7 @@ msgstr "Contacto"
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Create a new contact tag"
-msgstr ""
+msgstr "Crear etiqueta de contacto"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
@@ -102,8 +125,8 @@ msgstr "Implementado por"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
-msgid "Is published"
-msgstr ""
+msgid "Is Published"
+msgstr "Esta publicado"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
@@ -126,6 +149,8 @@ msgid ""
 "Manage contact tags to better classify them for tracking and analysis "
 "purposes."
 msgstr ""
+"Administre las etiquetas de contacto para clasificarlas mejor con fines de "
+"seguimiento y análisis."
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -153,7 +178,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
 msgid "Partners"
-msgstr "Socios"
+msgstr "Empresa"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
@@ -182,6 +207,11 @@ msgid "Search"
 msgstr "Búsqueda"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
+msgid "Search Partner Tag"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
 msgid "The full URL to access the document through the website."
 msgstr "La URL completa para acceder al documento a través del sitio web."
@@ -194,7 +224,7 @@ msgstr "Con la confianza de millones en todo el mundo"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "Visible en el sitio web actual"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form

@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_gengo
+# 	* base_gengo
 # 
 # Translators:
-# Martin Trigaux, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,14 +68,19 @@ msgid "Auto Approve Translation ?"
 msgstr "自动批准翻译 ?"
 
 #. module: base_gengo
-#: selection:base.gengo.translations,sync_type:0
+#: model:ir.model,name:base_gengo.model_base_gengo_translations
+msgid "Base Gengo Translations"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields.selection,name:base_gengo.selection__base_gengo_translations__sync_type__both
 msgid "Both"
 msgstr "全部"
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Cancel"
-msgstr "取消"
+msgstr "取消日期"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_res_company__gengo_sandbox
@@ -118,7 +124,7 @@ msgstr "配置设置"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_date
@@ -168,7 +174,7 @@ msgid "Gengo Translation Service Level"
 msgstr "Gengo 翻译服务级别"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:84
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
@@ -176,7 +182,7 @@ msgid ""
 msgstr "缺少Gengo“公共密匙”或“私有密匙”。在 “设置> 公司 > Gengo参数”中输入您的Gengo身份验证参数。"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid ""
 "Gengo connection failed with this message:\n"
@@ -224,17 +230,17 @@ msgstr "语言"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后更改日"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "更新时间"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__sync_limit
@@ -247,7 +253,7 @@ msgid "Private Key"
 msgstr "私有密钥"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__pro
 msgid "Pro"
 msgstr "Pro"
 
@@ -257,7 +263,7 @@ msgid "Public Key"
 msgstr "公开密钥"
 
 #. module: base_gengo
-#: selection:base.gengo.translations,sync_type:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__base_gengo_translations__sync_type__receive
 msgid "Receive Translation"
 msgstr "接收翻译"
 
@@ -274,12 +280,12 @@ msgid "Send"
 msgstr "发送"
 
 #. module: base_gengo
-#: selection:base.gengo.translations,sync_type:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__base_gengo_translations__sync_type__send
 msgid "Send New Terms"
 msgstr "发送新术语"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__standard
 msgid "Standard"
 msgstr "标准"
 
@@ -289,7 +295,7 @@ msgid "Sync Type"
 msgstr "同步类型"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
@@ -310,7 +316,7 @@ msgid ""
 msgstr "此评论将在每次提交时自动包含并发给Gengo。"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:109
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "Gengo 翻译服务不支持这种语言."
@@ -326,12 +332,12 @@ msgid "Translation"
 msgstr "翻译"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__machine
 msgid "Translation By Machine"
 msgstr "机器翻译"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__ultra
 msgid "Ultra"
 msgstr "超级"
 
@@ -341,8 +347,3 @@ msgid ""
 "You can select here the service level you want for an automatic translation "
 "using Gengo."
 msgstr "你可以在这里选择你所需要的Gengo自动翻译级别."
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_base_gengo_translations
-msgid "base.gengo.translations"
-msgstr "base.gengo.translations"

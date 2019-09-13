@@ -35,6 +35,8 @@ class AccountAnalyticLine(models.Model):
                     elif timesheet.so_line.product_id.invoice_policy == 'order':
                         invoice_type = 'billable_fixed'
                 timesheet.timesheet_invoice_type = invoice_type
+            else:
+                timesheet.timesheet_invoice_type = False
 
     @api.onchange('employee_id')
     def _onchange_task_id_employee_id(self):

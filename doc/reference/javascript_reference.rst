@@ -1987,7 +1987,7 @@ Relational fields
 
 .. class:: web.relational_fields.FieldSelection
 
-    Supported field types: *selection*, *many2one*
+    Supported field types: *selection*
 
     .. attribute:: placeholder
 
@@ -2028,7 +2028,7 @@ Relational fields
 - many2one (FieldMany2One)
     Default widget for many2one fields.
 
-    - Supported field types: *selection, many2one*
+    - Supported field types: *many2one*
 
     Attributes:
 

@@ -92,10 +92,11 @@ odoo.define('website_slides.quiz', function (require) {
             }
             else if (alert_code === 'slide_quiz_done') {
                 message = _t('This quiz is already done. Retaking it is not possible.');
-            } else if (alert_code === 'public_user') {
-                message = _t("You must be logged to submit the quiz.");
             }
-            this.$('.o_wslides_js_lesson_quiz_error span').html(message);
+            else if (alert_code === 'public_user') {
+                message = _t('You must be logged to submit the quiz.');
+            }
+            this.$('.o_wslides_js_lesson_quiz_error span:first').html(message);
             this.$('.o_wslides_js_lesson_quiz_error').removeClass('d-none');
         },
 
@@ -112,10 +113,10 @@ odoo.define('website_slides.quiz', function (require) {
                 }
             }).then(function (quiz_data) {
                 self.quiz = {
-                    questions: quiz_data.slide_questions,
-                    quizAttemptsCount: quiz_data.quiz_attempts_count,
-                    quizKarmaGain: quiz_data.quiz_karma_gain,
-                    quizKarmaWon: quiz_data.quiz_karma_won
+                    questions: quiz_data.slide_questions || [],
+                    quizAttemptsCount: quiz_data.quiz_attempts_count || 0,
+                    quizKarmaGain: quiz_data.quiz_karma_gain || 0,
+                    quizKarmaWon: quiz_data.quiz_karma_won || 0,
                 };
             });
         },

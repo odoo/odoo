@@ -1,49 +1,87 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_form
+# 	* website_form
 # 
 # Translators:
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2019
+# Arminas Grigonis <arminas@versada.lt>, 2019
+# Anatolij, 2019
+# Rolandas <info@paninfo.lt>, 2019
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "&amp;times;"
+msgstr "&amp;times;"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:226
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:12
+#, python-format
+msgid "&times;"
+msgstr "&times;"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form.js:238
 #, python-format
 msgid "'%s' is not a correct date"
-msgstr "'%s' neteisinga data"
+msgstr "'%s' nėra teisinga data"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:221
+#: code:addons/website_form/static/src/js/website_form.js:233
 #, python-format
 msgid "'%s' is not a correct datetime"
-msgstr "'%s' neteisingas datos laikas"
+msgstr "'%s' nėra teisinga data"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:226
+#: code:addons/website_form/controllers/main.py:232
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr "<p>Prisegti failai : </p>"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_access
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Add a custom field"
+msgstr "Pridėti modifikuotą lauką"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Add an existing field"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
-msgstr "Leista naudotis formose"
+msgstr "Leidžiama naudotis formose"
 
 #. module: website_form
 #. openerp-web
@@ -53,35 +91,82 @@ msgid "An error has occured, the form has not been sent."
 msgstr "Įvyko klaida, išsiųsti formos nepavyko."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr "Įtraukti šį lauką į tinklalapio formų juodajį sąrašą"
+msgstr "Įtraukti į svetainės formų juodąjį sąrašą"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklisted in web forms"
-msgstr "Įtraukta į tinklalapio formų juodajį sąrašą"
+msgstr "Įtraukta į svetainės formų juodąjį sąrašą"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:54
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Change Form Parameters"
+msgstr "Pakeisti formos nustatymus"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Checkbox"
+msgstr "Žymimas laukas"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:21
 #, python-format
-msgid "Custom infos"
-msgstr "Atrinkta informacija"
+msgid "Close"
+msgstr "Uždaryti"
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_access
+#: model:ir.model,name:website_form.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigūracijos nustatymai"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Date"
+msgstr "Data"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Date &amp; Time"
+msgstr "Data &amp; Laikas"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Decimal Number"
+msgstr "Dešimtainis numeris"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:44
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Email"
+msgstr "El. paštas"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "Email To"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
-msgstr "Aktyvuoti formos kūrimo funkciją šiam modeliui."
+msgstr "Aktyvuokite formų kūrimo funkciją šiam modeliui."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_website_website_form_enable_metadata
-msgid "Enable writing metadata on form submit."
-msgstr "Aktyvuoti metadata rašymą formos įvykdyme."
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:14
+#: code:addons/website_form/static/src/xml/website_form.xml:21
+#, python-format
+msgid "Error"
+msgstr "Klaida"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_default_field_id
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
-msgstr "Atrinktos formos informacijos laukas."
+msgstr "Laukas papildomiems formos duomenims"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
@@ -89,29 +174,75 @@ msgid "Fields"
 msgstr "Laukai"
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_label
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "File Upload"
+msgstr "Failo įkėlimas"
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_label
 msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
-"Formos vykdymo etiketė. Pvz. crm.lead galėtų būti 'Siųsti el. laišką' ir "
+"Formos veiksmo etiketė. Pvz. crm.lead galėtų būti 'Siųsti el. laišką' ir "
 "project.issues galėtų būti 'Sukurti naują problemą'."
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_label
-msgid "Label for form action"
-msgstr "Formos vykdymo etiketė"
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Hidden"
+msgstr "Paslėpta"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:55
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
+msgid "Label for form action"
+msgstr "Etiketė formos veiksmui"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Long Text"
+msgstr "Ilgas tekstas"
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Metadata"
-msgstr "Metaduomenis"
+msgstr "Metaduomenys"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model
 msgid "Models"
 msgstr "Modeliai"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Multiple Checkboxes"
+msgstr "Įvairūs žymėjimo laukai"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:216
+#, python-format
+msgid "No matching record !"
+msgstr "Nėra susijusio objekto !"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Number"
+msgstr "Skaičius"
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:180
+#, python-format
+msgid "Other Information:"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:36
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Phone Number"
+msgstr "Telefono numeris"
 
 #. module: website_form
 #. openerp-web
@@ -121,10 +252,79 @@ msgid "Please fill in the form correctly."
 msgstr "Prašome užpildyti formą teisingai."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_default_field_id
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Radio Buttons"
+msgstr "Apvalūs mygtukai"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form_editor_registry.js:25
+#, python-format
+msgid "Recipient Email"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Required"
+msgstr "Privalomas"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:22
+#, python-format
+msgid "Save"
+msgstr "Išsaugoti"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Selection"
+msgstr "Pasirinkimas"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form
+msgid "Send"
+msgstr "Siųsti"
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
 msgid ""
 "Specify the field which will contain meta and custom form fields datas."
 msgstr ""
+"Nurodykite lauką, kuris turės metaduomenis ir pasirinktinių formos laukų "
+"duomenis."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:60
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Subject"
+msgstr "Tema"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:7
+#, python-format
+msgid "Success"
+msgstr "Pavyko"
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
+msgid "Technical data on contact form"
+msgstr "Techniniai duomenys kontaktų formoje"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Text"
+msgstr "Tekstas"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "Thanks!"
+msgstr "Ačiū!"
 
 #. module: website_form
 #. openerp-web
@@ -134,11 +334,77 @@ msgid "The form has been sent successfully."
 msgstr "Forma buvo sėkmingai išsiųsta."
 
 #. module: website_form
-#: model:ir.model,name:website_form.model_website
-msgid "Website"
-msgstr "Tinklalapis"
+#: code:addons/website_form/controllers/main.py:182
+#, python-format
+msgid "This message has been posted on your website!"
+msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_website_website_form_enable_metadata
-msgid "Write metadata"
-msgstr "Rašyti metaduomenis"
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
+msgstr ""
+"Sekite metaduomenis (IP, vartotojo naršyklė, ir t.t.) savo svetainės formose"
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_key
+msgid "Used in FormBuilder Registry"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "We will get back to you shortly."
+msgstr "Greitai susisieksime su jumis."
+
+#. module: website_form
+#: model:ir.model,name:website_form.model_website
+msgid "Website"
+msgstr "Svetainė"
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_key
+msgid "Website Form Key"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.ir_model_view
+msgid "Website Forms"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
+msgid "You can choose to log technical data like IP, User Agent ,..."
+msgstr ""
+"Galite pasirinkti sekti tokius techninius duomenis, kaip IP, vartotojo "
+"naršyklė ir t.t."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:52
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Your Company"
+msgstr "Jūsų įmonė"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:28
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Your Name"
+msgstr "Jūsų vardas"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:68
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
+msgid "Your Question"
+msgstr "Jūsų klausimas"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "Your message has been sent successfully."
+msgstr "Jūsų žinutė buvo sėkmingai išsiųsta."

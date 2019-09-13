@@ -66,6 +66,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
                         currency: content.currency,
                         position: content.position,
                         payment_id: content.payment_id,
+                        payment_method_name: content.payment_method_name,
                         move_id: content.move_id,
                         ref: content.ref,
                         account_payment_id: content.account_payment_id,

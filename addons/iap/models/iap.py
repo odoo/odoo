@@ -46,7 +46,6 @@ def jsonrpc(url, method='call', params=None, timeout=15):
         'id': uuid.uuid4().hex,
     }
 
-
     _logger.info('iap jsonrpc %s', url)
     try:
         req = requests.post(url, json=payload, timeout=timeout)

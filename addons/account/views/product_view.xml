@@ -27,9 +27,9 @@
                         <group name="accounting"/>
                     </page>
                 </page>
-                <field name="list_price" position="after">
+                <xpath expr="//div[@name='pricing']" position="after">
                     <field name="taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'sale'}"/>
-                </field>
+                </xpath>
                 <group name="bill" position="inside">
                     <field name="supplier_taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'purchase'}"/>
                 </group>
