@@ -4065,20 +4065,12 @@ Record ids: %(records)s
         :return: the qualified field name (or expression) to use for ``field``
         """
         if self.env.lang:
-            # Sub-select to return at most one translation per record.
-            # Even if it shoud probably not be the case,
-            # this is possible to have multiple translations for a same record in the same language.
-            # The parenthesis surrounding the select are important, as this is a sub-select.
-            # The quotes surrounding `ir_translation` are important as well.
-            unique_translation_subselect = """
-                (SELECT res_id, value FROM "ir_translation"
-                 WHERE type='model' AND name=%s AND lang=%s AND value!='')
-            """
             alias, alias_statement = query.add_join(
-                (table_alias, unique_translation_subselect, 'id', 'res_id', field),
+                (table_alias, 'ir_translation', 'id', 'res_id', field),
                 implicit=False,
                 outer=True,
-                extra_params=["%s,%s" % (self._name, field), self.env.lang],
+                extra='"{rhs}"."type" = \'model\' AND "{rhs}"."name" = %s AND "{rhs}"."lang" = %s AND "{rhs}"."value" != %s',
+                extra_params=["%s,%s" % (self._name, field), self.env.lang, ""],
             )
             return 'COALESCE("%s"."%s", "%s"."%s")' % (alias, 'value', table_alias, field)
         else:
