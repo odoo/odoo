@@ -107,12 +107,10 @@ class Lead(models.Model):
     is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
     phone_state = fields.Selection([
         ('correct', 'Correct'),
-        ('incorrect', 'Incorrect'),
-        ('empty', 'Empty')], string='Phone Quality', default="empty", compute="_compute_phone_state", store=True)
+        ('incorrect', 'Incorrect')], string='Phone Quality', compute="_compute_phone_state", store=True)
     email_state = fields.Selection([
         ('correct', 'Correct'),
-        ('incorrect', 'Incorrect'),
-        ('empty', 'Empty')], string='Email quality', default="empty", compute="_compute_email_state", store=True)
+        ('incorrect', 'Incorrect')], string='Email quality', compute="_compute_email_state", store=True)
 
     # Only used for type opportunity
     planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
@@ -214,7 +212,7 @@ class Lead(models.Model):
     @api.depends('phone', 'country_id.code')
     def _compute_phone_state(self):
         for lead in self:
-            phone_status = 'empty'
+            phone_status = False
             if lead.phone:
                 country_code = lead.country_id.code if lead.country_id and lead.country_id.code else None
                 try:
@@ -227,7 +225,7 @@ class Lead(models.Model):
     @api.depends('email_from')
     def _compute_email_state(self):
         for lead in self:
-            email_state = 'empty'
+            email_state = False
             if lead.email_from:
                 email_state = 'incorrect'
                 for email in email_split(lead.email_from):
@@ -1529,7 +1527,7 @@ class Lead(models.Model):
             that are defined on the model. """
         pls_fields_config = self.env['ir.config_parameter'].sudo().get_param('crm.pls_fields')
         pls_fields = pls_fields_config.split(',') if pls_fields_config else []
-        pls_safe_fields = [field for field in pls_fields if field in self._fields]
+        pls_safe_fields = [field for field in pls_fields if field in self._fields.keys()]
         return pls_safe_fields
 
     # Rebuild Frequency Table Tools
@@ -1589,7 +1587,7 @@ class Lead(models.Model):
             lost = result['count'] if result['probability'] == 0 else 0
             for field in fields:
                 value = result[field]
-                if value:
+                if value or field in ('email_state', 'phone_state'):
                     if field == 'stage_id':
                         if won:  # increment all stages if won
                             stages_to_increment = [stage['id'] for stage in stage_ids]
@@ -1683,7 +1681,7 @@ class Lead(models.Model):
                     if field == 'team_id':  # ignore team_id as stored separately in leads_values_dict[lead_id][team_id]
                         continue
                     value = lead[field]
-                    if value:
+                    if value or field in ('email_state', 'phone_state'):
                         lead_values.append((field, value))
                 leads_values_dict[lead['id']] = {'values': lead_values, 'team_id': lead['team_id']}
 
@@ -1698,7 +1696,7 @@ class Lead(models.Model):
                     if field == 'team_id':  # ignore team_id as stored separately in leads_values_dict[lead_id][team_id]
                         continue
                     value = lead[field].id if isinstance(lead[field], models.BaseModel) else lead[field]
-                    if value:
+                    if value or field in ('email_state', 'phone_state'):
                         lead_values.append((field, value))
                 for tag in lead.tag_ids:
                     lead_values.append(('tag_id', tag.id))

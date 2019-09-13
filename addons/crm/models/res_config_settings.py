@@ -15,8 +15,9 @@ class ResConfigSettings(models.TransientModel):
     module_crm_iap_lead_website = fields.Boolean("Create Leads/Opportunities from your website's traffic")
     lead_mining_in_pipeline = fields.Boolean("Create a lead mining request directly from the opportunity pipeline.", config_parameter='crm.lead_mining_in_pipeline')
     crm_phone_valid_method = fields.Selection(related="company_id.phone_international_format", required=True, readonly=False)
-    predictive_lead_scoring_start_date = fields.Date(string='Lead Scoring Starting Date', compute="_compute_pls_start_date", inverse="_inverse_pls_start_date_str")
-    predictive_lead_scoring_start_date_str = fields.Char(string='Lead Scoring Starting Date in String', default=date.today().strftime('%Y-%m-%d'), config_parameter='crm.pls_start_date')
+    predictive_lead_scoring_start_date = fields.Date(string='Lead Scoring Starting Date', compute="_compute_pls_start_date", inverse="_inverse_pls_start_date_str",
+                                                     required=True)
+    predictive_lead_scoring_start_date_str = fields.Char(string='Lead Scoring Starting Date in String', config_parameter='crm.pls_start_date')
     predictive_lead_scoring_fields = fields.Many2many('crm.lead.scoring.frequency.field', string='Lead Scoring Frequency Fields', compute="_compute_pls_fields", inverse="_inverse_pls_fields_str")
     predictive_lead_scoring_fields_str = fields.Char(string='Lead Scoring Frequency Fields in String', config_parameter='crm.pls_fields')
 
@@ -39,7 +40,8 @@ class ResConfigSettings(models.TransientModel):
         for setting in self:
             if setting.predictive_lead_scoring_fields_str:
                 names = setting.predictive_lead_scoring_fields_str.split(',')
-                setting.predictive_lead_scoring_fields = self.env['crm.lead.scoring.frequency.field'].search([('name', 'in', names)])
+                fields = self.env['ir.model.fields'].search([('name', 'in', names), ('model', '=', 'crm.lead')])
+                setting.predictive_lead_scoring_fields = self.env['crm.lead.scoring.frequency.field'].search([('field_id', 'in', fields.ids)])
             else:
                 setting.predictive_lead_scoring_fields = None
 
@@ -48,7 +50,7 @@ class ResConfigSettings(models.TransientModel):
             we store the fields with a comma separated string into a Char config field """
         for setting in self:
             if setting.predictive_lead_scoring_fields:
-                setting.predictive_lead_scoring_fields_str = ','.join(setting.predictive_lead_scoring_fields.mapped('name'))
+                setting.predictive_lead_scoring_fields_str = ','.join(setting.predictive_lead_scoring_fields.mapped('field_id.name'))
             else:
                 setting.predictive_lead_scoring_fields_str = ''
 
