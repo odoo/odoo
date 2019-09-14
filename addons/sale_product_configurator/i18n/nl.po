@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
+# dpms <pieter.van.de.wygaert@telenet.be>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# dpms <pieter.van.de.wygaert@telenet.be>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 12:27+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: dpms <pieter.van.de.wygaert@telenet.be>, 2019\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,8 +42,15 @@ msgstr "Toevoegen"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Add one"
 msgstr "Voeg één toe"
+
+#. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_attribute_value_ids
+msgid "Attribute Values"
+msgstr "Kenmerkwaardes"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
@@ -52,7 +59,7 @@ msgstr "Beschikbare opties:"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:200
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Back"
 msgstr "Terug"
@@ -64,7 +71,7 @@ msgstr "Annuleren"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:201
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Configure"
 msgstr "Configureren"
@@ -76,7 +83,7 @@ msgstr "Configureer een product"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:199
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Confirm"
 msgstr "Bevestigen"
@@ -92,20 +99,24 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
+msgid "Custom Values"
+msgstr "Aangepaste waardes"
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
+msgid "Extra Values"
+msgstr "Extra waardes"
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
 msgid "ID"
 msgstr "ID"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_product_product__has_configurable_attributes
-#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__has_configurable_attributes
-msgid "Is a configurable product"
-msgstr "Is een configureerbaar product"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
@@ -183,11 +194,6 @@ msgid "Product Template"
 msgstr "Productsjabloon"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
-msgid "Product attribute values that do not create variants"
-msgstr "Productkenmerkwaarde welke geen variant aanmaakt"
-
-#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Quantity"
@@ -196,6 +202,7 @@ msgstr "Hoeveelheid"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Remove one"
 msgstr "Verwijder één"
 
@@ -215,12 +222,6 @@ msgid "Save"
 msgstr "Opslaan"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_attribute_value_ids
-msgid "Template Attribute Values"
-msgstr "Sjabloon kenmerkwaardes"
-
-#. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This combination does not exist."
 msgstr "Deze combinatie bestaat niet."
@@ -229,8 +230,3 @@ msgstr "Deze combinatie bestaat niet."
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
 msgstr "Dit product heeft geen geldige combinatie."
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
-msgid "User entered custom product attribute values"
-msgstr "Gebruiker heeft aangepaste product waardes ingevoerd"

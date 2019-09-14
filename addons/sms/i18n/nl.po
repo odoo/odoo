@@ -3,17 +3,17 @@
 # 	* sms
 # 
 # Translators:
-# Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Thijs van Oers <thijsvanoers@yahoo.com>, 2019
+# Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-13 11:28+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -61,6 +61,27 @@ msgid ""
 msgstr ""
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid ""
+"<span class=\"o_stat_text\">Add</span>\n"
+"                                <span class=\"o_stat_text\">Context Action</span>"
+msgstr ""
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid ""
+"<span class=\"o_stat_text\">Remove</span>\n"
+"                                <span class=\"o_stat_text\">Context Action</span>"
+msgstr ""
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid ""
+"<span class=\"text-warning\" attrs=\"{'invisible':[('resource_ref','!=', "
+"False)]}\">No records</span>"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
 msgid "Action To Do"
 msgstr "Uit te voeren actie"
@@ -76,6 +97,13 @@ msgid "Active records count"
 msgstr ""
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid ""
+"Add a contextual action on the related model to open a sms composer with "
+"this template"
+msgstr ""
+
+#. module: sms
 #. openerp-web
 #: code:addons/sms/static/src/js/mail_failure.js:0
 #, python-format
@@ -84,6 +112,7 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_id
 msgid "Applies to"
 msgstr "Heeft betrekking op"
 
@@ -110,6 +139,7 @@ msgstr "Geblacklist"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
 #: model:ir.model.fields,field_description:sms.field_sms_template__body
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__body
 msgid "Body"
 msgstr "Inhoud"
 
@@ -144,6 +174,16 @@ msgid "Check"
 msgstr "Controleer"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "Choose a language:"
+msgstr "Kies een taal:"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "Choose an example"
+msgstr "Kies een voorbeeld"
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
 msgstr "Sluiten"
@@ -170,6 +210,7 @@ msgstr "Inhoud"
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_sms__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template__create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
@@ -180,6 +221,7 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_sms__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_template__create_date
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
@@ -190,8 +232,14 @@ msgstr "Klant"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__null_value
 msgid "Default Value"
 msgstr "Standaardwaarde"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "Discard"
+msgstr "Negeren"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_cancel_action
@@ -216,6 +264,7 @@ msgstr "Kennisgeving afwijzen voor opnieuw verzenden per model"
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_sms__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_template__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
@@ -280,6 +329,7 @@ msgstr "Soort mislukking"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_object_field
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_object_field
 msgid "Field"
 msgstr "Veld"
 
@@ -290,6 +340,7 @@ msgstr "Veld dat nummer bevat"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__copyvalue
+#: model:ir.model.fields,help:sms.field_sms_template_preview__copyvalue
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
@@ -338,6 +389,7 @@ msgstr "Help bericht"
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__id
 #: model:ir.model.fields,field_description:sms.field_sms_sms__id
 #: model:ir.model.fields,field_description:sms.field_sms_template__id
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__id
 msgid "ID"
 msgstr "ID"
 
@@ -362,6 +414,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_phone__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mailing_contact__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_mailing_mailing__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_request__message_has_sms_error
@@ -416,6 +469,7 @@ msgstr "Taal"
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient____last_update
 #: model:ir.model.fields,field_description:sms.field_sms_sms____last_update
 #: model:ir.model.fields,field_description:sms.field_sms_template____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
@@ -426,6 +480,7 @@ msgstr "Laatst gewijzigd op"
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_sms__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template__write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
 
@@ -436,6 +491,7 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_sms__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_template__write_date
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
@@ -500,6 +556,7 @@ msgstr "Modellen"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__name
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__name
 msgid "Name"
 msgstr "Naam"
 
@@ -521,6 +578,7 @@ msgstr "Nummer"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
+#: model:ir.model.fields,help:sms.field_sms_template_preview__null_value
 msgid "Optional value to use if the target field is empty"
 msgstr "Optioneel veld om te gebruiken als het doel veld leeg is"
 
@@ -542,6 +600,7 @@ msgstr "Telefoon blacklist Mixin"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__copyvalue
 msgid "Placeholder Expression"
 msgstr "Tijdelijke aanduiding expressie"
 
@@ -549,6 +608,16 @@ msgstr "Tijdelijke aanduiding expressie"
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
 msgstr "Plaats een document"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "Preview"
+msgstr "Voorbeeld"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "Preview of"
+msgstr "Voorbeeld van"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -578,9 +647,25 @@ msgid "Recipients (Partners)"
 msgstr "Ontvangers (relaties)"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__res_id
+msgid "Record ID"
+msgstr "Record-ID"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__resource_ref
+msgid "Record reference"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__model
 msgid "Related Document Model"
 msgstr "Gerelateerde document model"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "Remove the contextual action of the related model"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -629,6 +714,7 @@ msgstr "SMS API"
 #: model:ir.model.fields,field_description:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_phone__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mailing_contact__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_mailing_mailing__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_request__message_has_sms_error
@@ -652,6 +738,11 @@ msgstr "Mislukte SMS'en"
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
 msgid "SMS Number"
 msgstr "SMS nummer"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "SMS Preview"
+msgstr ""
 
 #. module: sms
 #. openerp-web
@@ -678,6 +769,11 @@ msgid "SMS Template"
 msgstr "SMS sjabloon"
 
 #. module: sms
+#: model:ir.model,name:sms.model_sms_template_preview
+msgid "SMS Template Preview"
+msgstr ""
+
+#. module: sms
 #: model:ir.model,name:sms.model_sms_template
 #: model:ir.ui.menu,name:sms.sms_template_menu
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -685,6 +781,11 @@ msgstr "SMS sjabloon"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_tree
 msgid "SMS Templates"
 msgstr "SMS sjablonen"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "SMS content"
+msgstr ""
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
@@ -706,6 +807,7 @@ msgstr "Zoek SMS sjablonen"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_object_field
+#: model:ir.model.fields,help:sms.field_sms_template_preview__model_object_field
 msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
@@ -722,6 +824,12 @@ msgstr "Nu verzenden"
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send SMS"
 msgstr "Verstuur SMS"
+
+#. module: sms
+#: code:addons/sms/models/sms_template.py:0
+#, python-format
+msgid "Send SMS (%s)"
+msgstr ""
 
 #. module: sms
 #. openerp-web
@@ -791,19 +899,52 @@ msgid "Server Error"
 msgstr "Server Error"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__sidebar_action_id
+msgid "Sidebar action"
+msgstr "Navigatiekolom actie"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_template__sidebar_action_id
+#: model:ir.model.fields,help:sms.field_sms_template_preview__sidebar_action_id
+msgid ""
+"Sidebar action to make this template available on records of the related "
+"document model"
+msgstr ""
+"Navigatiekolom-actie om dit sjabloon beschikbaar te maken op de regels van "
+"het gerelateerde document model"
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
 msgid "Sms Resend"
 msgstr "SMS opnieuw verzenden"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__sms_template_id
+msgid "Sms Template"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_model_object_field
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__sub_model_object_field
 msgid "Sub-field"
 msgstr "Sub-veld"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_object
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__sub_object
 msgid "Sub-model"
 msgstr "Sub-model"
+
+#. module: sms
+#: model:ir.actions.act_window,name:sms.sms_template_preview_action
+msgid "Template Preview"
+msgstr "Sjabloon voorbeeld"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
+msgid "Template Preview Language"
+msgstr "Sjabloon voorbeeld taal"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_action
@@ -812,6 +953,7 @@ msgstr "Sjablonen"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
+#: model:ir.model.fields,help:sms.field_sms_template_preview__model_id
 msgid "The type of document this template can be used with"
 msgstr "Het soort document waarvoor dit sjabloon kan worden gebruikt"
 
@@ -871,12 +1013,21 @@ msgid "Use blacklist"
 msgstr "Gebruik blacklist"
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_sms_template__lang
+msgid ""
+"Use this field to either force a specific language (ISO code) or dynamically"
+" detect the language of your recipient by a placeholder expression (e.g. "
+"${object.partner_id.lang})"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
 msgid "Visible records count"
 msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sub_model_object_field
+#: model:ir.model.fields,help:sms.field_sms_template_preview__sub_model_object_field
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
@@ -886,6 +1037,7 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sub_object
+#: model:ir.model.fields,help:sms.field_sms_template_preview__sub_object
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
@@ -916,11 +1068,21 @@ msgid "are invalid."
 msgstr "zijn foutief."
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. en_US or ${object.partner_id.lang}"
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid ""
 "recipients are valid\n"
 "                                and"
 msgstr ""
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "record:"
+msgstr "regel:"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -929,10 +1091,10 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
-msgid "to send to all"
+msgid "records selected."
 msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
-msgid "visible records selected."
+msgid "to send to all"
 msgstr ""

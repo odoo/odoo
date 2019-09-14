@@ -8,15 +8,15 @@
 # Jason Au Yeung <auyeung112002@gmail.com>, 2019
 # amos lin <seeing@edirect168.com>, 2019
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
-# Martin Trigaux, 2019
 # sejun huang <sejun.huang@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-28 10:19+0000\n"
+"POT-Creation-Date: 2019-09-13 11:38+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -211,27 +211,6 @@ msgstr ""
 "* 稅科目調整 '內稅' 和 '外稅'，用來處理POS實施中可能會碰到的一些問題。 [1] 正常情況下您不會用到這些。\n"
 "\n"
 "[1] 訪問 https://github.com/odoo/odoo/pull/6470 查看更多細節。"
-
-#. module: base
-#: model:ir.module.module,description:base.module_account_deferred_revenue
-msgid ""
-"\n"
-"\n"
-"Revenue recognitions\n"
-"====================\n"
-"Manage revenue recognitions on product sales.\n"
-"Keeps track of the revenue recognition installments, and creates corresponding journal entries.\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"\n"
-"稅收確認\n"
-"====================\n"
-"管理產品銷售的稅收確認。\n"
-"追蹤收入確認分期付款，並創建相應的日記帳分錄。\n"
-"\n"
-"    "
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -675,6 +654,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Hides attendance presence stat button when an employee is on leave.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_winbooks_import
+msgid ""
+"\n"
+"        Import Data From Winbooks\n"
 "    "
 msgstr ""
 
@@ -1186,6 +1173,14 @@ msgstr ""
 "跨專案安排團隊計劃並準確估計截至日期"
 
 #. module: base
+#: model:ir.module.module,description:base.module_planning
+msgid ""
+"\n"
+"    Schedule your teams and employees with shift.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
 msgid ""
 "\n"
@@ -1510,17 +1505,6 @@ msgstr ""
 "增加從文件模組建立憑單功能。\n"
 
 #. module: base
-#: model:ir.module.module,description:base.module_documents_product
-msgid ""
-"\n"
-"Add the ability to create products from the document module.\n"
-"and to get the option to send products' attachments to the documents app.\n"
-msgstr ""
-"\n"
-"增加從文件模組建立產品功能。\n"
-"同時獲得發送產品附件到單據程序的選項。\n"
-
-#. module: base
 #: model:ir.module.module,description:base.module_documents_sign
 msgid ""
 "\n"
@@ -1587,18 +1571,18 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_documents_product
+msgid ""
+"\n"
+"Adds the ability to create products from the document module and adds the\n"
+"option to send products' attachments to the documents app.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_voip_crm
 msgid ""
 "\n"
 "Adds the lead partner to phonecall list\n"
-"    "
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_be_intrastat_2019
-msgid ""
-"\n"
-"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 "    "
 msgstr ""
 
@@ -1631,8 +1615,8 @@ msgid ""
 "==============================\n"
 "\n"
 "This module allows customers to pay for their orders with credit\n"
-"cards. The transactions are processed by Mercury (developed by Wells\n"
-"Fargo Bank). A Mercury merchant account is necessary. It allows the\n"
+"cards. The transactions are processed by Vantiv (developed by Wells\n"
+"Fargo Bank). A Vantiv merchant account is necessary. It allows the\n"
 "following:\n"
 "\n"
 "* Fast payment by just swiping a credit card while on the payment screen\n"
@@ -1641,8 +1625,6 @@ msgid ""
 "* Supported cards: Visa, MasterCard, American Express, Discover\n"
 "    "
 msgstr ""
-"\n"
-"允許刷卡POS支付==============================該模組使客戶能夠支付他們與信用卡訂單。該交易由水星由(富國銀行開發)進行處理。水星商家帳戶是必要的。它允許以下內容：通過只刷信用卡*快速支付，而在支付螢幕*現金支付，信用卡支付*現金返還*的聯合支援的卡：VISA，萬事達，美國運通，Discover"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -2418,20 +2400,13 @@ msgstr ""
 #: model:ir.module.module,description:base.module_project_timesheet_forecast
 msgid ""
 "\n"
-"Compare timesheets and forecasts\n"
+"Compare timesheets and plannings\n"
 "================================\n"
 "\n"
-"Better plan your futur forecasts by observing the number of hours pressed\n"
-"on old forecasts.\n"
+"Better plan your futur plannings by observing the number of hours pressed\n"
+"on old plannings.\n"
 "\n"
 msgstr ""
-"\n"
-"比較時間表和預測\n"
-"================================\n"
-"\n"
-"通過觀察按下的小時數，更好地規劃您的未來預測\n"
-"在舊的預測。\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_enterprise
@@ -2883,6 +2858,20 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_documents_hr_contract
+msgid ""
+"\n"
+"Employee contracts files will be automatically integrated to the Document app.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_documents_hr_payroll
+msgid ""
+"\n"
+"Employee payslips will be automatically integrated to the Document app.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_utm
 msgid ""
 "\n"
@@ -2912,7 +2901,7 @@ msgstr ""
 " 使用街道名、門牌號以及房號將街道地址拆分成幾個字段。"
 
 #. module: base
-#: model:ir.module.module,description:base.module_snailmail_account_reports_followup
+#: model:ir.module.module,description:base.module_snailmail_account_followup
 msgid ""
 "\n"
 "Extension to send follow-up documents by post\n"
@@ -3131,12 +3120,9 @@ msgid ""
 "\n"
 "Generates Intrastat XML report for declaration\n"
 "Based on invoices.\n"
+"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 "    "
 msgstr ""
-"\n"
-"根據憑單生成 XML格式的國際間組織申報報表。\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
@@ -4040,7 +4026,7 @@ msgstr ""
 " 其負責對已發佈文件（論壇、幻燈片、博客，...）進行評論審核\n"
 
 #. module: base
-#: model:ir.module.module,description:base.module_account_reports_followup
+#: model:ir.module.module,description:base.module_account_followup
 msgid ""
 "\n"
 "Module to automate letters for unpaid invoices, with multi-level recalls.\n"
@@ -4049,30 +4035,15 @@ msgid ""
 "You can define your multiple levels of recall through the menu:\n"
 "---------------------------------------------------------------\n"
 "    Configuration / Follow-up / Follow-up Levels\n"
-"    \n"
+"\n"
 "Once it is defined, you can automatically print recalls every day through simply clicking on the menu:\n"
 "------------------------------------------------------------------------------------------------------\n"
 "    Payment Follow-Up / Send Email and letters\n"
 "\n"
-"It will generate a PDF / send emails / set manual actions according to the the different levels \n"
-"of recall defined. You can define different policies for different companies. \n"
+"It will generate a PDF / send emails / set manual actions according to the the different levels\n"
+"of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
-"\n"
-" 使用多級別催款自動標記未支付憑單。\n"
-"=========================================================================\n"
-"\n"
-" 您可以通過選單定義您的多級別催款：\n"
-"---------------------------------------------------------------\n"
-" 配置/跟進/ 跟進級別\n"
-" \n"
-" 對其進行定義後，每天只需點選選單即可自動列印催款：\n"
-"------------------------------------------------------------------------------------------------------\n"
-" 支付跟進/發送信件和信件\n"
-"\n"
-" 它將根據所定義的不同\n"
-" 催款級別生成 PDF/發送電子信件/ 設定手動操作。可為不同的公司定義不同的策略。 \n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -4858,25 +4829,6 @@ msgstr ""
 " 其會添加面板以： \n"
 " 1) 分析經常收入及其他訂閱指標\n"
 "2) 分析銷售人員所做的訂閱修改並計算該值。"
-
-#. module: base
-#: model:ir.module.module,description:base.module_hw_screen
-msgid ""
-"\n"
-"Screen Driver\n"
-"=============\n"
-"\n"
-"This module allows the POS client to send rendered HTML to a remotely\n"
-"installed screen. This module then displays this HTML using a web\n"
-"browser.\n"
-msgstr ""
-"\n"
-" 螢幕驅動程序\n"
-"=============\n"
-"\n"
-" 此模組允許 POS 客戶端發送所呈現的 HTML 以遠程\n"
-" 安裝螢幕。之後，此模組會使用 web\n"
-" 遊覽器顯示此 HTML。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
@@ -5820,12 +5772,9 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_twitter
 msgid ""
 "\n"
-"This module adds a Twitter roller building block to the website builder, so that you can display Twitter feeds on any page of your website.\n"
+"This module adds a Twitter scroller building block to the website builder, so that you can display Twitter feeds on any page of your website.\n"
 "    "
 msgstr ""
-"\n"
-"此模組將Twitter滾輪構建模組添加到網站構建器，以便您可以在網站的任何頁面上顯示Twitter訂閱源。\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
@@ -6282,6 +6231,16 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_payment_test
+msgid ""
+"\n"
+"This module implements a simple test payment acquirer flow to allow\n"
+"the testing of successful payments behaviors on e-commerce. It includes\n"
+"a protection to avoid using it in production environment. However, do\n"
+"not use it in production environment.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
 msgid ""
 "\n"
@@ -6529,6 +6488,15 @@ msgstr ""
 "取消保留分揀。"
 
 #. module: base
+#: model:ir.module.module,description:base.module_test_website_slides_full
+msgid ""
+"\n"
+"This module will test the main certification flow of Odoo.\n"
+"It will install the e-learning, survey and e-commerce apps and make a complete\n"
+"certification flow including purchase, certification, failure and success.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
 msgid ""
 "\n"
@@ -6547,6 +6515,13 @@ msgid ""
 msgstr ""
 "\n"
 "該部件允許使用 d3 庫顯示儀表。\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_documents_hr_holidays
+msgid ""
+"\n"
+"Time off documents will be automatically integrated to the Document app.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -6907,6 +6882,12 @@ msgstr ""
 #, python-format
 msgid " - %r in %s=%r"
 msgstr "- %r in %s=%r"
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_crm_livechat
+msgid ""
+" Adds a stat button on lead form view to access their livechat sessions."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_inter_company_rules
@@ -7406,12 +7387,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 
@@ -7665,153 +7646,6 @@ msgstr "<u><strong>安全</strong></u>"
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Views</strong></u>"
 msgstr "<u><strong>視圖</strong></u>"
-
-#. module: base
-#: model:ir.module.module,description:base.module_barcodes
-msgid ""
-"==============================\n"
-"Barcodes module documentation\n"
-"==============================\n"
-"\n"
-"This module brings barcode encoding logic and client-side barcode scanning utilities.\n"
-"\n"
-"\n"
-"Barcodes encoding\n"
-"==============================\n"
-"\n"
-"The Barcodes module defines barcode nomenclatures whose rules identify specific type \n"
-"of items e.g. products, locations. It contains the following features:\n"
-"\n"
-"- Patterns to identify barcodes containing a numerical value (e.g. weight, price)\n"
-"- Definition of barcode aliases that allow to identify the same product with different barcodes\n"
-"- Unlimited barcode patterns and definitions,\n"
-"- Support for encodings EAN-13, EAN-8 and UPC-A\n"
-"\n"
-"Barcode encodings\n"
-"-----------------\n"
-"\n"
-"A barcode is an arbitrary long sequence of ASCII characters. An EAN-13 barcode is a 13 digit\n"
-"barcode, whose 13th digit is the checksum. \n"
-"\n"
-"Simple barcodes and rules\n"
-"-------------------------\n"
-"\n"
-"The default nomenclature assumes an EAN-13 encoding for product barcodes. It defines a rule \n"
-"for Unit Products whose encoding is EAN-13, and whose pattern is '.', i.e. any barcode \n"
-"matches this pattern. Scanning the barcode of a product, say '5410013101703', matches this rule. \n"
-"The scanned item is thus identified as a Unit Product, and is retrieved from the product table.\n"
-"\n"
-"Note: the special character '.' in patterns is matched by any character. To explicitely specify \n"
-"the '.' character in a pattern, escape it with '\\'. The '\\' character has to be escaped as well\n"
-"('\\\\') to be explicitely specified.\n"
-"\n"
-"Let us now suppose that we identify other items with barcodes, say stock locations. We define a\n"
-"new rule in the nomenclature with the corresponding type (in our example, the type is 'Location'),\n"
-"and whose pattern is e.g. '414.', that is, any location barcode starts with '414'. Scanning a barcode\n"
-"location, say '41401', matches this Location rule, and the corresponding location is retrieved from\n"
-"the location table.\n"
-"\n"
-"Note: Rules have a sequence field which indicates the order the rules are evaluated (ASC). In our \n"
-"previous examples, the Unit Product rule should have a larger sequence that then Location rule, \n"
-"because we want the latter one to be evaluated first.\n"
-"\n"
-"Barcodes with numerical content\n"
-"--------------------------------\n"
-"\n"
-"Barcodes may encode numerical content, which is decoded by the barcodes module. To that purpose,\n"
-"one have to define a new rule for barcodes with numerical content (e.g. barcodes for Weighted \n"
-"Products). The numerical content in a pattern is specified between braces (special characters '{' and \n"
-"'}'). The content of the braces must be a sequence of 'N's (representing the whole part of the numerical \n"
-"content) followed by a sequence of 'D's (representing the decimal part of the numerical content). \n"
-"For instance, let us define a new rule for Weighted Products whose pattern is '21.....{NNDDD}.'. Since\n"
-"we assume EAN-13 encoding for product barcodes, the encoding of this rule should be EAN-13 as well.\n"
-"\n"
-"Let us now assume that we want to write a barcode for a given Weighted Product, say oranges. We first \n"
-"have to define in product oranges a barcode that will match the Weighted Product rule. This barcode \n"
-"must start with '21' and be a correct EAN-13 barcode (i.e. the 13th digit must be a correct checksum). \n"
-"Moreover, all the numerical content must be set to a '0'. For instance, let us set the barcode to \n"
-"'2100001000004'. \n"
-"\n"
-"We now want to write a barcode for 2.75kg of oranges. This barcode should be '2100001027506' (the \n"
-"numerical content of this barcode is '02750', and the correct checksum is '6'). When scanned, this \n"
-"barcode matches the Weighted Product rule (since is starts with '21'). The numerical content is extracted, \n"
-"and replaced by a sequence of '0's. The correct checksum is then computed for the obtained barcode \n"
-"('2100001000004') and the corresponding product (oranges) is retrieved from product table.\n"
-"\n"
-"Note: the special characters '{' and '}' in patterns are used to identify numerical content. To \n"
-"explicitely specify '{' or '}' in a pattern, they must be escaped.\n"
-"\n"
-"\n"
-"Strict EAN-13 field of barcode nomenclatures\n"
-"--------------------------------------------\n"
-"\n"
-"Many barcode scanners strip the leading zero when scanning EAN-13 barcodes. Barcode nomenclatures\n"
-"have a boolean field \"Use strict EAN13\". If False, when trying to match a scanned barcode with\n"
-"a rule whose encoding is EAN-13, if the barcode is of length 12 and, by prepending it by a 0,\n"
-"the last digit is the correct checksum, we automatically prepend the barcode by 0 and try to\n"
-"find a match with this new barcode. If \"Use strict EAN13\" is set to True, we look for a pattern\n"
-"matching the original, 12-digit long, barcode.\n"
-"\n"
-"\n"
-"\n"
-"Barcodes scanning\n"
-"==============================\n"
-"\n"
-"Scanning\n"
-"--------\n"
-"\n"
-"Use a USB scanner (that mimics keyboard inputs) in order to work with barcodes in Odoo.\n"
-"The scanner must be configured to use no prefix and a carriage return or tab as suffix.\n"
-"The delay between each character input must be less than or equal to 50 milliseconds.\n"
-"Most barcode scanners will work out of the box.\n"
-"However, make sure the scanner uses the same keyboard layout as the device it's plugged in.\n"
-"Either by setting the device's keyboard layout to US QWERTY (default value for most readers)\n"
-"or by changing the scanner's keyboard layout (check the manual).\n"
-"\n"
-"\n"
-"Barcode events\n"
-"------------------------------\n"
-"\n"
-"When the module barcodes is installed, it instanciate a singleton of the javascript class BarcodeEvents.\n"
-"The purpose of this component is to listen to keypresses to detect barcodes, then dispatch those barcodes\n"
-"on core.bus inside a 'barcode_event'.\n"
-"All keypress events are buffered until there is no more keypress during 50ms or a carriage return / tab is\n"
-"inputted (because most barcode scanners use this as a suffix).\n"
-"If the buffered keys looks like a barcode, an event is triggered :\n"
-"core.bus.trigger('barcode_scanned', barcode);\n"
-"Otherwise, the keypresses are 'resent'. However, for security reasons, a keypress event programmatically\n"
-"crafted doesn't trigger native browser behaviors. For this reason, BarcodeEvents doesn't intercept keypresses\n"
-"whose target is an editable element (eg. input) or when ctrl/cmd/alt is pushed.\n"
-"To catch keypresses targetting an editable element, it must have the attribute barcode_events=\"true\".\n"
-"\n"
-"\n"
-"Barcode handlers\n"
-"------------------------------\n"
-"\n"
-"To keep the web client consistent, components that want to listen to barcode events should include BarcodeHandlerMixin.\n"
-"It requires method on_barcode_scanned(barcode) to be implemented and exposes methods start_listening and stop_listening\n"
-"As long as it is the descendant of a View managed by a ViewManager is only listens while the view is attached.\n"
-"\n"
-"\n"
-"Form view barcode handler\n"
-"------------------------------\n"
-"\n"
-"It is possible for a form view to listen to barcode events, handle them client side and/or server-side.\n"
-"When the barcode is handled server-side, it works like an onchange. The relevant model must include the\n"
-"BarcodeEventsMixin and redefine method on_barcode_scanned. This method receives the barcode scanned and\n"
-"the `self` is a pseudo-record representing the content of the form view, just like in @api.onchange methods.\n"
-"Barcodes prefixed with 'O-CMD' or 'O-BTN' are reserved for special features and are never passed to on_barcode_scanned.\n"
-"The form view barcode handler can be extended to add client-side handling. Please refer to the (hopefully\n"
-"well enough) documented file for more informations.\n"
-"\n"
-"\n"
-"Button barcode handler\n"
-"------------------------------\n"
-"\n"
-"Add an attribute 'barcode_trigger' to a button to be able to trigger it by scanning a barcode. Example :\n"
-"<button name=\"validate\" type=\"object\" barcode_trigger=\"validate\"/> will be triggered when a barcode containing\n"
-"\"O-BTN.validate\" is scanned.\n"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_landing
@@ -8306,6 +8140,11 @@ msgid "Account TaxCloud - Sale"
 msgstr "科目 TaxCloud - 銷售"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_winbooks_import
+msgid "Account Winbooks Import"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_account_payment
 msgid "Account and Payment Link and Portal"
 msgstr "帳戶和付款鏈接及網站入口"
@@ -8543,11 +8382,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_sms
 msgid "Add SMS capabilities to CRM"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_hw_screen
-msgid "Add a customer facing displays for POS"
 msgstr ""
 
 #. module: base
@@ -9001,7 +8835,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_website_profile
 msgid ""
-"Allows to acces the website profile of the users and see their statistics "
+"Allows to access the website profile of the users and see their statistics "
 "(karma, badges, etc..)"
 msgstr ""
 
@@ -9801,11 +9635,6 @@ msgid "Belgian Intrastat Declaration"
 msgstr "比利時國際間組織申報"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_2019
-msgid "Belgian Intrastat Declaration - Complement for 2019"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr "比利時註冊的收銀機"
@@ -10095,7 +9924,6 @@ msgid "C5E 24  163 x 229 mm"
 msgstr "C5E 24 163 x 229 公釐"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_crm
 #: model:ir.module.category,name:base.module_category_sales_crm
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
@@ -10809,8 +10637,8 @@ msgstr "比較專案的時間表和預測"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_forecast
-msgid "Compare timesheets and forecasts"
-msgstr "比較時間表和預測"
+msgid "Compare timesheets and plannings"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__contact_address
@@ -10998,11 +10826,6 @@ msgstr "具有相同名稱的約束是每個模組唯一."
 #: model:res.partner.industry,name:base.res_partner_industry_F
 msgid "Construction"
 msgstr "施工"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_8
-msgid "Consulting Services"
-msgstr "諮詢服務"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner
@@ -11901,27 +11724,6 @@ msgid "Days"
 msgstr "天數"
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"尊敬的先生/女士，\n"
-"    我們的記錄表明，您仍有逾期待付的款項尚未付款。請查閱如明細。\n"
-"    如款項已經支付，請忽略此通知。否則，請按如下所述的總金額付款給我們。\n"
-"    如果有任何關於帳戶的疑問，請聯繫我們。\n"
-"\n"
-"    謝謝您的合作。\n"
-"    此致 ，\n"
-"           敬禮"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
 msgid "Debugging"
 msgstr "調試"
@@ -11998,11 +11800,6 @@ msgstr "預設紙張格式？"
 #: model:ir.module.module,description:base.module_theme_default
 msgid "Default website theme"
 msgstr "預設網站主題"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_account_deferred_revenue
-msgid "Deferred Revenues"
-msgstr "遞延收入"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_python
@@ -12161,11 +11958,6 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_mass_mailing
 msgid "Design, send and track emails"
 msgstr "生成、發送和追蹤電子信件"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_14
-msgid "Desk Manufacturers"
-msgstr "桌子製造商"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
@@ -12525,6 +12317,11 @@ msgid "Documents - Accounting"
 msgstr "文件 - 會計"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_hr_contract
+msgid "Documents - Contracts"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fleet
 msgid "Documents - Fleet"
 msgstr ""
@@ -12537,6 +12334,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_documents
 msgid "Documents - Human Resources"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_hr_payroll
+msgid "Documents - Payroll"
 msgstr ""
 
 #. module: base
@@ -12558,6 +12360,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_documents_sign
 msgid "Documents - Signatures"
 msgstr "文件 - 簽名"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_hr_holidays
+msgid "Documents - Time Off"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__domain
@@ -12634,174 +12441,6 @@ msgstr "E 給水；排水；廢物管理和整治行動"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_edi
 msgid "E-Invoicing, Universal Business Language (UBL 2.0), e-fff protocol"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_mx_edi_cancellation
-msgid ""
-"EDI Cancellation\n"
-"================\n"
-"\n"
-"This module adds the next features in the cancel process:\n"
-"\n"
-"1. Button to request cancellation in the SAT was added.\n"
-"2. The cancel process in Odoo, only could be executed when the SAT status\n"
-"   is cancelled.\n"
-"3. The cancel button in the invoice is dummy if the invoice is not\n"
-"   cancelled in the SAT.\n"
-"\n"
-"Which is the new flow to cancel?\n"
-"--------------------------------\n"
-"\n"
-"A new button `(Request Cancelation)` was added on the invoice view, that\n"
-"appear when the invoice is open and the `PAC status` is `Signed`\n"
-"\n"
-"When this new button is press, send the CFDI to the PAC to try cancel it\n"
-"in the SAT system. And do not allows to cancel the invoice in Odoo until\n"
-"it was properly canceled in the SAT. (This is an automatic action that\n"
-"execute the system).\n"
-"\n"
-"If any invoice is cancelled in the SAT, and the user can not wait for the\n"
-"cron, could press the `Cancel` button, and this must be cancelled.\n"
-"\n"
-"Which are the cases supported in this module?\n"
-"---------------------------------------------\n"
-"\n"
-"**Case 1**\n"
-"\n"
-"+----------+---------+\n"
-"| System   | State   |\n"
-"+==========+=========+\n"
-"| Odoo     | Open    |\n"
-"+----------+---------+\n"
-"| PAC      | Signed  |\n"
-"+----------+---------+\n"
-"| SAT      | Valid   |\n"
-"+----------+---------+\n"
-"\n"
-"This case is when the invoice is properly signed in the SAT system. To\n"
-"cancel is necessary to press the button `Request Cancelation`, that will\n"
-"to verify that effectively the CFDI is not previously canceled in the SAT\n"
-"system and will to send it to cancel in the SAT.\n"
-"\n"
-"After of request the cancelation, could be found the next cases:\n"
-"\n"
-"*The cancel process was succesful*\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Open       |\n"
-"+----------+------------+\n"
-"| PAC      | Cancelled  |\n"
-"+----------+------------+\n"
-"| SAT      | Valid      |\n"
-"+----------+------------+\n"
-"\n"
-"In this case, the system will execute the next actions:\n"
-"\n"
-"1. An action will to update the PAC status (To Canceled).\n"
-"\n"
-"2. A method will be called and will try to cancel the invoice in Odoo.\n"
-"\n"
-"\n"
-"*The cancel process cannot be completed*\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Open       |\n"
-"+----------+------------+\n"
-"| PAC      | To Cancel  |\n"
-"+----------+------------+\n"
-"| SAT      | Valid      |\n"
-"+----------+------------+\n"
-"\n"
-"In this case, the system wait for the PAC system, and will execute the next\n"
-"action:\n"
-"\n"
-"1. A method will be called to verify if the CFDI was properly cancelled in\n"
-"the SAT system, and when the SAT status is `Cancelled` will try to cancel the\n"
-"invoice in Odoo.\n"
-"\n"
-"**Case 2**\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Open       |\n"
-"+----------+------------+\n"
-"| PAC      | To Cancel  |\n"
-"+----------+------------+\n"
-"| SAT      | Valid      |\n"
-"+----------+------------+\n"
-"\n"
-"This case is the same that in the previous case when the cancel process\n"
-"cannot be completed.\n"
-"\n"
-"If the customer does not accept the CFDI cancelation, the cancel process\n"
-"must be aborted and the invoice must be returned to signed. For this, was\n"
-"added an action in the invoice `Revert CFDI cancellation`, that could be\n"
-"called in the `Actions` of it.\n"
-"\n"
-"\n"
-"**Case 3**\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Open       |\n"
-"+----------+------------+\n"
-"| PAC      | To Cancel  |\n"
-"+----------+------------+\n"
-"| SAT      | Cancelled  |\n"
-"+----------+------------+\n"
-"\n"
-"The system executes a scheduled action that will cancel the invoice in Odoo,\n"
-"and in that process, the PAC status must be updated to `Cancelled`.\n"
-"\n"
-"\n"
-"**Case 4**\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Cancel     |\n"
-"+----------+------------+\n"
-"| PAC      | Signed     |\n"
-"+----------+------------+\n"
-"| SAT      | Valid      |\n"
-"+----------+------------+\n"
-"\n"
-"The system executes a scheduled action that will check that the SAT status\n"
-"continues `Valid` and if yes, the invoice must be returned to `Open`\n"
-"(Without generate a new CFDI). For this:\n"
-"\n"
-"1. If the invoice does not has a journal entry, a new will be generated and\n"
-"the invoice state must be changed to `Open`.\n"
-"\n"
-"2. If the journal entry in the invoice has a revert, it will be cancelled\n"
-"and the invoice state must be changed to `Open`.\n"
-"\n"
-"**Case 5**\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Cancel     |\n"
-"+----------+------------+\n"
-"| PAC      | To Cancel  |\n"
-"+----------+------------+\n"
-"| SAT      | Valid      |\n"
-"+----------+------------+\n"
-"\n"
-"This is the same case that in the previous one, but extra after that the\n"
-"invoice is open again, the PAC status must be updated to 'Signed.'\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_cancellation
-msgid "EDI Cancellation for Mexican Localization"
 msgstr ""
 
 #. module: base
@@ -13025,7 +12664,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources_employees
 #: model:ir.module.module,shortdesc:base.module_hr
-#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
 msgstr "員工"
 
@@ -13049,6 +12687,11 @@ msgstr ""
 #: model:res.partner.industry,name:base.res_partner_industry_D
 msgid "Energy supply"
 msgstr "能源供應"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_crm_iap_lead_enrich
+msgid "Enrich Leads/Opportunities using email address domain"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -13127,10 +12770,10 @@ msgid "Error message returned when the constraint is violated."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
-msgid "Error while validating constraint"
-msgstr "constraint 檢查錯誤"
+msgid "Error while validating view"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_menu.py:0
@@ -13380,7 +13023,7 @@ msgid "Extension View"
 msgstr "擴展視圖"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_snailmail_account_reports_followup
+#: model:ir.module.module,summary:base.module_snailmail_account_followup
 msgid "Extension to send follow-up documents by post"
 msgstr "延期通過郵寄方式發送後續文件"
 
@@ -13829,7 +13472,7 @@ msgid ""
 "Fiscal Reports for Closing Entry\n"
 "================================\n"
 "\n"
-"Trial Balance report is complemented to allow generate the closing entry\n"
+"Trial Balance report is complemented to generate the closing entry\n"
 "(A.K.A Month 13th move)\n"
 "\n"
 "Configuration\n"
@@ -13946,16 +13589,6 @@ msgstr ""
 "對這種類型的單據，您只能訪問您自己創建的記錄。\n"
 "\n"
 " (單據類型：%s)"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_project_forecast
-msgid "Forecast"
-msgstr "預測"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_project_forecast
-msgid "Forecast your resources on project tasks"
-msgstr "預測專案任務上您的資源"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__form
@@ -14718,11 +14351,6 @@ msgstr "比利時財政數據模組的硬體驅動程序"
 #: model:ir.module.module,summary:base.module_hw_escpos
 msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
 msgstr "硬體驅動ESC/POS列印機和零用金"
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_hardware_drivers
-msgid "Hardware Drivers"
-msgstr "硬體驅動"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_drivers
@@ -15490,6 +15118,11 @@ msgid "Import CSV Bank Statement"
 msgstr "導入CSV銀行對帳單"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_account_winbooks_import
+msgid "Import Data From Winbooks"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
 msgid "Import OFX Bank Statement"
 msgstr "導入OFX銀行對帳單"
@@ -15744,6 +15377,11 @@ msgid "Integer"
 msgstr "整數"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_marketing_automation_sms
+msgid "Integrate SMS Marketing in marketing campaigns"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_sale_coupon
 msgid "Integrate coupon mechanism in sales orders."
 msgstr "在銷售訂單中整合優惠券機制。"
@@ -15752,11 +15390,6 @@ msgstr "在銷售訂單中整合優惠券機制。"
 #: model:ir.module.module,description:base.module_sale_coupon_delivery
 msgid "Integrate coupon mechanism with shipping costs."
 msgstr "將優惠券機制與運輸成本整合。"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_marketing_automation_sms
-msgid "Integrate mass SMS in marketing campaigns"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_adyen
@@ -16624,6 +16257,11 @@ msgid "Layout in Reports"
 msgstr "報表佈局"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_crm_iap_lead_enrich
+msgid "Lead Enrichment"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead
 msgid "Lead Generation"
 msgstr "線索生成"
@@ -16631,6 +16269,11 @@ msgstr "線索生成"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_website
 msgid "Lead Generation From Website Visits"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_crm_livechat
+msgid "Lead Livechat Sessions"
 msgstr ""
 
 #. module: base
@@ -17283,6 +16926,11 @@ msgid "Manage your employee payroll records"
 msgstr "管理您的員工薪資表記錄"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_planning
+msgid "Manage your employees' schedule"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Manage your fleet and track car costs"
 msgstr "追蹤管理陸運和船運的費用"
@@ -17398,11 +17046,6 @@ msgid "Mass Mailing Themes"
 msgstr "群發信件主題"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_marketing_automation_sms
-msgid "Mass SMS in Marketing Automation"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event
 msgid "Mass mailing on attendees"
 msgstr "向與會者群發信件"
@@ -17494,11 +17137,6 @@ msgstr "選單"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Menus Customization"
 msgstr "選單定制"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_pos_mercury
-msgid "Mercury Payment Services"
-msgstr "水星支付服務"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_merge
@@ -19246,7 +18884,7 @@ msgid ""
 "-----------------\n"
 "\n"
 "Easily send mass mailing to your leads, opportunities or customers\n"
-"with Odoo <a href=\"https://www.odoo.com/page/mailing#\">Mass Mailing</a>. Track\n"
+"with Odoo <a href=\"https://www.odoo.com/page/mailing#\">Email Marketing</a>. Track\n"
 "marketing campaigns performance to improve conversion rates. Design\n"
 "professional emails and reuse templates in a few clicks.\n"
 "\n"
@@ -19340,98 +18978,6 @@ msgid ""
 "emails directly into the application.\n"
 "\n"
 msgstr ""
-"Odoo 群發信件\n"
-"-----------------\n"
-"\n"
-"使用 Odoo <a href=\"https://www.odoo.com/page/mailing#\">群發信件</a>功能，輕鬆向銷售線索、潛在機會\n"
-"或現有客戶群發信件。追蹤市場行銷活動的績效，提高轉化率。\n"
-"只需點選幾下鼠標，即可設計專業電子信件和可重複使用的\n"
-"模板。\n"
-"\n"
-"發送專業電子信件\n"
-"------------------------\n"
-"\n"
-"只需點選幾下鼠標，即可導入潛在客戶資料庫，還可以篩選現有的\n"
-"銷售線索、潛在機會或特定客戶。\n"
-"\n"
-"定義電子信件模板，在時事通信中重用特定的內容或設計。\n"
-"設定包含獨立 IP /域名的多個電子信件伺服器，優化打開率。\n"
-"\n"
-"組織市場行銷活動\n"
-"----------------------------\n"
-"\n"
-"使用我們的<a href=\"https://www.odoo.com/page/mailing\">行銷線索自動化</a>應用程序，輕輕鬆鬆設計、發送和追蹤行銷活動。\n"
-"\n"
-"獲取有關行銷活動效果的及時統計信息，以提高轉化\n"
-"率。追蹤已發送、已接收或打開並回覆的信件。\n"
-"\n"
-"提供簡單易用、功能強大的平台，幫助您輕鬆管理行銷活動，\n"
-"管理討論組、銷售線索和潛在機會。\n"
-"\n"
-"與 Odoo 應用的整合\n"
-"-------------------------\n"
-"\n"
-"所有 Odoo 應用均提供群發信件功能，助您大幅改善使用者的\n"
-"通信方式。\n"
-"\n"
-"面向 Odoo <a href=\"https://www.odoo.com/page/mailing\">CRM 機會</a>發送電子信件模板，根據市場細分\n"
-"圈定銷售線索，向申請人發送<a href=\"https://www.odoo.com/page/recruitment\">工作邀請</a>並自動予以\n"
-"回覆，在銷售線索自動化市場行銷活動中重用電子信件\n"
-"模板。\n"
-"\n"
-"對您的電子信件的回覆內容會自動顯示在社交網路模組對每個文件的歷史記錄中。\n"
-"\n"
-"清理銷售線索資料庫\n"
-"------------------------\n"
-"\n"
-"整理銷售線索資料庫，在使用信件性能的同時，不斷對資料庫\n"
-"加以完善。Odoo 可以高效地處理退回的電子信件，相應地標記\n"
-"錯誤的銷售線索，並為您提供有關銷售線索品質的統計數據。\n"
-"\n"
-"一鍵發送電子信件\n"
-"---------------------\n"
-"\n"
-"行銷部門熱衷於開展行銷活動。對於其他使用者也可以考慮提供\n"
-"一鍵群發信件的功能，方便其針對潛在客戶或文件使用群發功能。\n"
-"\n"
-"選擇文件（如銷售線索、支援工票、供應商、申請人等），\n"
-"然後點選一下鼠標，即可將電子信件發送給他們的聯絡人，\n"
-"並重用現有的電子信件模板。\n"
-"\n"
-"跟進回覆\n"
-"--------------------\n"
-"\n"
-"使用聊天功能，與客戶進行更快、更有效溝通。根據在群發信件中\n"
-"對行銷活動的回覆，自動創建文件（銷售線索、機會或任務等）\n"
-"直接在 Odoo 或電子信件文件中，跟進協商討論的\n"
-"內容。\n"
-"\n"
-"把所有的協商和討論內容都附加到對應的文件上，並將特定活動\n"
-"告知相關經理。\n"
-"\n"
-"行銷活動儀表盤\n"
-"-------------------\n"
-"\n"
-"提供關於市場行銷活動的洞察信息，幫助優化決策的制定。\n"
-"追蹤所有行銷活動的統計信息，包括退回率、已發送信件、\n"
-"最佳內容等。清晰的儀表板可以讓您直觀地瞭解行銷活動的效果。\n"
-"\n"
-"全面與其他應用整合\n"
-"---------------------------------\n"
-"\n"
-"根據觸發條件（20 天內無活動， 對促銷電子信件的回覆等），\n"
-"定義自動操作（例如，要求銷售 人員打電話，發送電子信件等）\n"
-"\n"
-"從銷售線索到達成交易，在每個渠道上優化行銷活動。 更明智地\n"
-"決定投資方向，並展示您的市場行銷活動為公司帶來的利潤影響。 \n"
-"\n"
-"輕鬆在網站中建立聯絡人表單。在提交表單後，Odoo CRM\n"
-"會自動創建銷售線索。銷售線索可用於市場行銷活動。\n"
-"\n"
-"輕鬆管理您的<a href=\"https://www.odoo.com/page/crm\">銷售團隊</a>。吸引銷售線索，安排電話隨訪\n"
-"和會面。分析銷售線索的品質，做出正確決策， 並能將電子信件\n"
-"直接整合到應用程序來節省時間。\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports
@@ -20397,11 +19943,6 @@ msgid "OdooBot for livechat"
 msgstr "即時聊天使用 OdooBot"
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_12
-msgid "Office Supplies"
-msgstr "辦公用品"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "Ok"
 msgstr "確定"
@@ -21035,13 +20576,6 @@ msgstr ""
 "                                                <code>self.env</code>, 等。"
 
 #. module: base
-#: model:res.company,overdue_sms_msg:base.main_company
-msgid ""
-"Our records indicate that some payments on your account are still due.\n"
-"If you have any queries regarding your account, Please contact us. Best Regards,"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
 msgid "Outgoing Mail Server"
 msgstr "出向信件伺服器"
@@ -21423,7 +20957,7 @@ msgid "Payment Acquirer: Transfer Implementation"
 msgstr "收單：轉帳實現"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_account_reports_followup
+#: model:ir.module.module,shortdesc:base.module_account_followup
 msgid "Payment Follow-up Management"
 msgstr "付款催收管理"
 
@@ -21520,6 +21054,18 @@ msgid "Pivot"
 msgstr "樞紐分析表"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_project_forecast
+msgid "Plan your resources on project tasks"
+msgstr ""
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_human_resources_planning
+#: model:ir.module.module,shortdesc:base.module_planning
+#: model:ir.module.module,shortdesc:base.module_project_forecast
+msgid "Planning"
+msgstr "規劃"
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_pt
 msgid "Plano de contas SNC para Portugal"
 msgstr "SNC葡萄牙的方案，決算方案（為什麼會有葡萄牙語？翻譯者不懂葡萄牙語，用Google翻譯的）"
@@ -21574,12 +21120,12 @@ msgid ""
 msgstr "請使用更改密碼嚮導（在使用者個人設定或個人設定中）來更改您的密碼。"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 msgid "Point Of Sale"
 msgstr "POS"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
 msgstr "POS"
@@ -21974,11 +21520,6 @@ msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
 msgstr "基本字段的屬性不能這樣修改，請通過 Python 代碼來修改它們，更好的辦法是通過自定義模組來修改。"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_2
-msgid "Prospects"
-msgstr "潛在客戶"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__link_field_id
@@ -22890,6 +22431,11 @@ msgid "SMS Marketing"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_marketing_automation_sms
+msgid "SMS Marketing in Marketing Automation"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sms
 msgid "SMS Text Messaging"
 msgstr "短信息"
@@ -23184,11 +22730,6 @@ msgstr "調度程序使用者"
 #: model:res.partner.industry,name:base.res_partner_industry_M
 msgid "Scientific"
 msgstr "科學"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_hw_screen
-msgid "Screen Driver"
-msgstr "螢幕驅動程序"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
@@ -23537,11 +23078,6 @@ msgid "Server action"
 msgstr "伺服器動作"
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_11
-msgid "Services"
-msgstr "服務"
-
-#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__set_null
 msgid "Set NULL"
 msgstr "設定為空"
@@ -23753,7 +23289,7 @@ msgid "Snail Mail"
 msgstr "Snail Mail"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_snailmail_account_reports_followup
+#: model:ir.module.module,shortdesc:base.module_snailmail_account_followup
 msgid "Snail Mail Follow-Up"
 msgstr "snail mail跟進"
 
@@ -23771,6 +23307,17 @@ msgstr "所羅門群島"
 #: model:res.country,name:base.so
 msgid "Somalia"
 msgstr "索馬裡"
+
+#. module: base
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"Some records are incompatible with the company of the %(document_descr)s.\n"
+"\n"
+"Incompatibilities:\n"
+"Fields: %(fields)s\n"
+"Record ids: %(records)s\n"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank__bic
@@ -24050,6 +23597,21 @@ msgstr "企業股票帳戶"
 #: model:ir.module.module,shortdesc:base.module_stock_enterprise
 msgid "Stock enterprise"
 msgstr "股份制企業"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_documents_hr_contract
+msgid "Store employee contracts in the Document app"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_documents_hr_payroll
+msgid "Store employee payslips in the Document app"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_documents_hr_holidays
+msgid "Store employee's time off documents  in the Document app"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
@@ -24452,9 +24014,19 @@ msgid "Test Connection"
 msgstr "測試連接"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_website_slides_full
+msgid "Test Full eLearning Flow"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
 msgid "Test Main Flow"
 msgstr "測試主流程"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_test
+msgid "Test Payment Acquirer"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_performance
@@ -25269,8 +24841,8 @@ msgstr "工時表驗證和網格視圖"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast
-msgid "Timesheet and Forecast"
-msgstr "時間表/預測"
+msgid "Timesheet and Planning"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_holidays
@@ -25622,8 +25194,8 @@ msgstr "圖瓦魯"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter
-msgid "Twitter Roller"
-msgstr "推特滾捲條"
+msgid "Twitter Snippet"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter_wall
@@ -26339,6 +25911,11 @@ msgid "Value Text"
 msgstr "文本值"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_mercury
+msgid "Vantiv Payment Services"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.vu
 msgid "Vanuatu"
 msgstr "努瓦阿圖"
@@ -26354,11 +25931,6 @@ msgstr "變量字段也許要用到Python 代碼或Python 的表達式。以下�
 #: model:ir.model.fields,field_description:base.field_res_country__vat_label
 msgid "Vat Label"
 msgstr "增值稅標籤"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_0
-msgid "Vendor"
-msgstr "供应商"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
@@ -26443,6 +26015,11 @@ msgstr "視圖和創建的報表"
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode
 msgid "View inheritance mode"
 msgstr "檢視繼承模式"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_crm_livechat
+msgid "View livechat sessions for leads"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -27184,6 +26761,11 @@ msgstr "字元"
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__state__choose
 msgid "choose"
 msgstr "選取"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_crm
+msgid "crm"
+msgstr "客戶關係管理"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0

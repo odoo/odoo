@@ -5,7 +5,7 @@
 # Translators:
 # Bohdan Lisnenko, 2019
 # ТАрас <tratatuta@i.ua>, 2019
-# Olga Lugova <trolka.olug@gmail.com>, 2019
+# trolka <trolka.olug@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-13 11:28+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -560,11 +560,8 @@ msgid "Answered"
 msgstr "Відповів "
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_user_input
-#: model:ir.actions.act_window,name:survey.action_survey_user_input_notest
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__user_input_line_ids
-#: model:ir.ui.menu,name:survey.menu_survey_type_form1
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
@@ -597,7 +594,7 @@ msgstr "Прикріплення"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__attempt_number
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Attempt n°"
 msgstr ""
 
@@ -824,7 +821,7 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input__state__done
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Completed"
 msgstr "Завершено"
 
@@ -832,11 +829,6 @@ msgstr "Завершено"
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Compose Email"
 msgstr "Створити електронний лист"
-
-#. module: survey
-#: model:ir.ui.menu,name:survey.menu_surveys_configuration
-msgid "Configuration"
-msgstr "Налаштування"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
@@ -857,6 +849,11 @@ msgstr "Контакт"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__body
 msgid "Contents"
 msgstr "Містить"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_is_correct
+msgid "Correct"
+msgstr "Правильно"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_uid
@@ -992,12 +989,18 @@ msgstr "Опис"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
-msgid ""
-"Design easily your survey, send invitations to answer by email and analyze "
-"answers."
+msgid "Design easily your survey, send invitations and analyze answers."
 msgstr ""
-"Легко створюйте своє опитування, надсилайте запрошення, щоби відповісти "
-"електронною поштою та проаналізуйте відповіді."
+
+#. module: survey
+#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
+msgid "Detailed Answers"
+msgstr ""
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input_line
+msgid "Detailled Answers"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__display_mode
@@ -1055,7 +1058,7 @@ msgid "Edit in backend"
 msgstr "Редагувати на сервері"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Email"
 msgstr "Ел. пошта"
 
@@ -1153,7 +1156,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Group By"
 msgstr "Групувати за"
 
@@ -1189,12 +1192,8 @@ msgid "Identification token"
 msgstr "Токен ідентифікації"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Якщо позначено, то повідомленя потребує вашої уваги."
-
-#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
+#: model:ir.model.fields,help:survey.field_survey_survey__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
 
@@ -1251,12 +1250,18 @@ msgid "Input must be an email"
 msgstr "Вхід повинен бути через електронну пошту"
 
 #. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid "Invalid performance computation"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input__input_type__link
 msgid "Invitation"
 msgstr "Запрошення"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Invite"
 msgstr "Запросити"
 
@@ -1294,12 +1299,6 @@ msgstr "Досягнуто обмеження за часом?"
 #: model:ir.model.fields,field_description:survey.field_survey_label__sequence
 msgid "Label Sequence order"
 msgstr "Порядок послідовності ярликів"
-
-#. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_label_form
-#: model:ir.ui.menu,name:survey.menu_survey_label_form1
-msgid "Labels"
-msgstr "Мітки"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__labels_ids_2
@@ -1521,12 +1520,7 @@ msgid "Multiple choices per row"
 msgstr "Множинний вибір в рядку"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "My Activities"
-msgstr "Мої дії"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "New"
 msgstr "Новий"
 
@@ -1621,7 +1615,7 @@ msgstr "Кількість колонок"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr "Кількість помилок"
 
 #. module: survey
@@ -1686,8 +1680,14 @@ msgid "Outgoing mail server"
 msgstr "Сервер вихідної пошти"
 
 #. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_result.js:0
+#, python-format
+msgid "Overall Performance %.2f%s"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__page_id
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__page_id
 msgid "Page"
 msgstr "Сторінка"
 
@@ -1697,7 +1697,7 @@ msgid "Pages"
 msgstr "Сторінки"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Partially Completed"
 msgstr "Частково завершено"
 
@@ -1712,8 +1712,16 @@ msgid "Participate to ${object.survey_id.title} survey"
 msgstr "Участь в ${object.survey_id.title} опитуванні"
 
 #. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input
+#: model:ir.actions.act_window,name:survey.action_survey_user_input_notest
+#: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.menu,name:survey.survey_menu_user_inputs
+msgid "Participations"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__partner_id
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Partner"
 msgstr "Партнер"
 
@@ -1762,7 +1770,7 @@ msgstr "Попереднє запитання"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Print"
 msgstr "Друк"
 
@@ -1797,6 +1805,7 @@ msgstr "Тип запитання"
 #: model:ir.model.fields,field_description:survey.field_survey_question__question_ids
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_ids
 #: model:ir.ui.menu,name:survey.menu_survey_question_form1
+#: model:ir.ui.menu,name:survey.survey_menu_questions
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Questions"
 msgstr "Запитання"
@@ -1807,7 +1816,7 @@ msgid "Quizz Passed"
 msgstr "Пройдена вікторина"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Quizz passed"
 msgstr "Пройдена вікторина"
 
@@ -1843,7 +1852,7 @@ msgid "Resend Comment"
 msgstr "Повторно надіслати коментар"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Resend Invitation"
 msgstr "Повторно надіслати запрошення"
 
@@ -1908,6 +1917,11 @@ msgid "SMS Delivery error"
 msgstr "Помилка доставки SMS"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_score
+msgid "Score"
+msgstr "Оцінка"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__quizz_score
 msgid "Score (%)"
 msgstr "Оцінка (%)"
@@ -1916,11 +1930,6 @@ msgstr "Оцінка (%)"
 #: model:ir.model.fields,field_description:survey.field_survey_label__answer_score
 msgid "Score for this choice"
 msgstr "Оцінка для цього вибору"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_score
-msgid "Score given for this choice"
-msgstr "Оцінка дана для цього вибору"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_type
@@ -1955,7 +1964,7 @@ msgid "Search Question"
 msgstr "Шукати питання"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Search Survey"
 msgstr "Шукати опитування"
 
@@ -1965,6 +1974,7 @@ msgid "Search User input lines"
 msgstr "Шукати рядки вводу Користувача"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__page_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Section"
 msgstr "Розділ"
@@ -1997,6 +2007,7 @@ msgstr "Надіслати"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__sequence
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__question_sequence
 msgid "Sequence"
 msgstr "Послідовність"
 
@@ -2139,6 +2150,12 @@ msgid "Successfully failed"
 msgstr ""
 
 #. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_label_form
+#: model:ir.ui.menu,name:survey.menu_survey_label_form1
+msgid "Suggested Values"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested
 msgid "Suggested answer"
 msgstr "Запропонована відповідь"
@@ -2165,7 +2182,7 @@ msgstr "Пропозиція"
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_tree
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Survey"
 msgstr "Опитування"
 
@@ -2203,7 +2220,7 @@ msgid "Survey Stage"
 msgstr "Етап опитування"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
+#: model:ir.model.fields,field_description:survey.field_survey_survey__title
 msgid "Survey Title"
 msgstr "Заголовок опитування"
 
@@ -2218,13 +2235,8 @@ msgid "Survey User Input Line"
 msgstr "Рядок вводу користувача опитування"
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_user_input_line
-msgid "Survey User Input lines"
-msgstr "Рядки вводу користувача опитування"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_tree
 msgid "Survey User inputs"
 msgstr "Введенні користувачі опитування"
 
@@ -2251,7 +2263,7 @@ msgid "Test"
 msgstr "Тест"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Test Entries"
 msgstr "Тестові записи"
 
@@ -2455,7 +2467,6 @@ msgstr "Ліміт часу (у хвилинах)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__title
-#: model:ir.model.fields,field_description:survey.field_survey_survey__title
 msgid "Title"
 msgstr "Заголовок"
 
@@ -2542,11 +2553,6 @@ msgstr "Користувач"
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 msgid "User Input"
 msgstr "Введення користувача"
-
-#. module: survey
-#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
-msgid "User Input Lines"
-msgstr "Рядки введення користувача"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
@@ -2664,6 +2670,11 @@ msgstr "Ви отримали оцінку"
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "ans"
 msgstr "відп"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
+msgid "e.g. Satisfaction Survey"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.auth_required

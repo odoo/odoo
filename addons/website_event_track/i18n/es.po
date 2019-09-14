@@ -9,7 +9,6 @@
 # Ivan Nieto <ivan.n.s@tuta.io>, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
 # Gelo Joga Landoo <gj@landoo.es>, 2019
-# Miquel Torner <miq@odoo.com>, 2019
 # 966ff43e6966712895a590e7320ca288, 2019
 # Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2019
 # David Vidal <david.vidal@trespinos.es>, 2019
@@ -20,16 +19,18 @@
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
+# Jesse Garza <jga@odoo.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
+# Juan Pablo Mora <jpm@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
+"Last-Translator: Juan Pablo Mora <jpm@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"Estimado/a ${object.partner_name or \"}<br/>\n"
+"Nos complace informarle que su propuesta ${object.name} ha sido aceptada y confirmada para el evento ${object.event_id.name}.\n"
+"    <br/>\n"
+"     Puede encontrar más detalles aquí:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"      <a href=\"/event/${object.event_id.id}/track/${object.id}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"      Ver Plática\n"
+"      </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Atentamente,\n"
+"</div>\n"
+" "
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
@@ -111,6 +127,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
 "                                You can add multiple speakers by separating names, emails and phones with commas."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/>\n"
+" Puede añadir multiples ponentes separando nombres, correos electrónicos y teléfonos con comas."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda
@@ -120,7 +138,7 @@ msgstr "<span id=\"search_number\">0</span> Encontrados"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "<span>hours</span>"
-msgstr ""
+msgstr "<span>horas</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -161,7 +179,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
 msgid "About The Speaker"
-msgstr ""
+msgstr "Sobre El Ponente"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
@@ -340,6 +358,9 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving an event track."
 msgstr ""
+"Defina los pasos que se utilizarán en el evento desde la\n"
+" creación del seguimiento hasta el cierre del mismo.\n"
+"Utilizará estas etapas para supervisar el progreso de la resolución de un seguimiento de evento. "
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -455,12 +476,12 @@ msgstr "Sesión del evento"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
 msgid "Event Track Location"
-msgstr ""
+msgstr "Localización del Seguimiento de Evento"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
 msgid "Event Track Stage"
-msgstr ""
+msgstr "Etapa del Seguimiento de Evento"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag
@@ -586,12 +607,8 @@ msgid "Icon to indicate an exception activity."
 msgstr "Icono para indicar una actividad de excepción."
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
 
@@ -725,13 +742,8 @@ msgstr "Mensajes"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "My Activities"
-msgstr "Mis actividades"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "My Tracks"
-msgstr ""
+msgstr "Mis Seguimientos"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
@@ -777,6 +789,8 @@ msgstr "No se han encontrado sesiones"
 #: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
 msgid "Note that colorless tags won't be available on the website."
 msgstr ""
+"Tome en cuenta que etiquetas sin color no estarán disponibles en el sitio "
+"web."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
@@ -785,8 +799,8 @@ msgstr "Número de acciones"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
-msgid "Number of error"
-msgstr "Número de error"
+msgid "Number of errors"
+msgstr "Numero de errores"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
@@ -932,22 +946,22 @@ msgstr "Correo electrónico del ponente"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Biography"
-msgstr ""
+msgstr "Biografía del Ponente(s)"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Email"
-msgstr ""
+msgstr "Correo electrónico del Ponente(s)"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Name"
-msgstr ""
+msgstr "Nombre del Ponente(s)"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Phone"
-msgstr ""
+msgstr "Teléfono del Ponente(s)"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
@@ -1126,7 +1140,7 @@ msgstr "Seguimiento bloqueado"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
 msgid "Track Count"
-msgstr ""
+msgstr "Conteo de Seguimientos"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date
@@ -1136,7 +1150,7 @@ msgstr "Fecha de la sesión"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
 msgid "Track End Date"
-msgstr ""
+msgstr "Fecha Final del Seguimiento"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
@@ -1182,7 +1196,7 @@ msgstr "Seguimiento bloqueado"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__duration
 msgid "Track duration in hours."
-msgstr ""
+msgstr "Duración del seguimiento en horas."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
@@ -1275,7 +1289,7 @@ msgstr "Evaluaremos su propuesta y le responderemos en breve."
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
 msgid "Website Event Menu"
-msgstr ""
+msgstr "Menú de Eventos del Sitio Web"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
@@ -1310,7 +1324,7 @@ msgstr "Meta título del sitio web"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Imagen del Open Graph del sitio"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form

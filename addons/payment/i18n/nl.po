@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -158,7 +158,7 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr "Een dagboek moet worden ingesteld voor de verwerver %s."
+msgstr "Een dagboek moet worden ingesteld voor de provider %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -242,27 +242,27 @@ msgstr "Rekeningnummer:"
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Acquirer"
-msgstr "Verwerver"
+msgstr "Provider"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
 msgid "Acquirer Account"
-msgstr "Account verwerver"
+msgstr "Betaalprovider"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_ref
 msgid "Acquirer Ref."
-msgstr "Verwerver Ref."
+msgstr "Provider ref."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_reference
 msgid "Acquirer Reference"
-msgstr "Verwerver referentie"
+msgstr "Referentie betaalprovider"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
 msgid "Acquirers"
-msgstr "Verwervers"
+msgstr "Providres"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
@@ -481,6 +481,11 @@ msgid "Choose a payment method"
 msgstr "Kies een betalinsgmethode"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
+msgid "Choose your default customer payment method."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "City"
@@ -523,11 +528,6 @@ msgstr "Configuratie"
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Configure"
 msgstr "Configureren"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
-msgid "Configure your payment methods."
-msgstr "Configureer uw betalingsmtehodes."
 
 #. module: payment
 #. openerp-web
@@ -651,6 +651,11 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
 msgid "Credit Card (powered by Stripe)"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__stripe
+msgid "Credit card (via Stripe)"
 msgstr ""
 
 #. module: payment
@@ -780,7 +785,7 @@ msgstr "Vergoedingen berekening ondersteund"
 msgid "Fees amount; set by the system because depends on the acquirer"
 msgstr ""
 "Toeslagbedrag; ingesteld door het systeem omdat dit afhangt van de "
-"verwerver."
+"betaalprovider."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
@@ -832,7 +837,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Gegenereerde verkoop betaal link"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_invoice_order_generate_link
@@ -862,7 +867,7 @@ msgstr "Help berichten"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__display_as
 msgid "How the acquirer is displayed to the customers."
-msgstr "Hoe de verwerver getoond wordt aan de klanten."
+msgstr "Hoe de betaalprovider getoond wordt aan de klanten."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__paypal_user_type__new_user
@@ -953,7 +958,7 @@ msgstr "Internal server error"
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr "Ongeldig token gevonden! Token verwerver %s!= %s"
+msgstr "Ongeldig token gevonden! Token provider %s!= %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -1061,7 +1066,7 @@ msgid ""
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
 "Handmatig: Krijg betaald met contant geld, cheques of een andere methode buiten Odoo om.\n"
-"Elektronisch: Betaal automatisch via een betalingsverwerver door een transactie aan te vragen op een door de klant opgeslagen kaart bij het online kopen of abonneren van (betalingstoken).\n"
+"Elektronisch: Betaal automatisch via een betaalprovider door een transactie aan te vragen op een door de klant opgeslagen kaart bij het online kopen of abonneren van (betalingstoken).\n"
 "Batch Deposito: Verzamel meerdere klantcheques tegelijk door een batch deposito te genereren om bij uw bank in te dienen. Wanneer u de bankafschriften in Odoo ingeeft, wordt u voorgesteld om de transactie af te letteren met de batchafbetaling. Schakel deze optie in bij instellingen."
 
 #. module: payment
@@ -1271,6 +1276,11 @@ msgid "Other"
 msgstr "Overige"
 
 #. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__other
+msgid "Other payment acquirer"
+msgstr "Andere betaling verwervers"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
 msgstr "PDT identiteitstoken"
@@ -1288,20 +1298,6 @@ msgstr "Relatienaam"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__paypal
-msgid "Pay with PayPal"
-msgstr "Betaal met PayPal"
-
-#. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__other
-msgid "Pay with another payment acquirer"
-msgstr "Betaal met een andere betalingsverwerker"
-
-#. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__stripe
-msgid "Pay with credit card (via Stripe)"
-msgstr "Betaal met creditcard (via Stripe)"
-
-#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__paypal
 msgid "PayPal"
 msgstr "PayPal"
@@ -1442,7 +1438,6 @@ msgstr "Betalingsmethode ingesteld"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
-#: model:ir.ui.menu,name:payment.root_payment_menu
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form_view
 msgid "Payments"
 msgstr "Betalingen"
@@ -1568,7 +1563,7 @@ msgstr "referentie moet uniek zijn!"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr "Referentie van de TX zoals opgeslagen in de verwervers database"
+msgstr "Referentie van de TX zoals opgeslagen in de provider database"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
@@ -1741,7 +1736,7 @@ msgstr "Testmodus"
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
-msgstr "De %s betaalverwervers zijn niet toegestaan bij handmatige mode!"
+msgstr "De %s betaalproviders zijn niet toegestaan bij handmatige mode!"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
