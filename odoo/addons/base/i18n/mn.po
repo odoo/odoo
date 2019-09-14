@@ -7,19 +7,19 @@
 # nasaaskii <nasaaskii@gmail.com>, 2019
 # Minj P <pminj322@gmail.com>, 2019
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # Otgonbayar.A <gobi.mn@gmail.com>, 2019
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
-# Onii Onii <onii0223@yahoo.com>, 2019
 # Martin Trigaux, 2019
+# Onii Onii <onii0223@yahoo.com>, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-28 10:19+0000\n"
+"POT-Creation-Date: 2019-09-13 11:38+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -274,19 +274,6 @@ msgstr ""
 "[1] Дэлгэрэнгүй: https://github.com/odoo/odoo/pull/6470 \n"
 "\n"
 "    "
-
-#. module: base
-#: model:ir.module.module,description:base.module_account_deferred_revenue
-msgid ""
-"\n"
-"\n"
-"Revenue recognitions\n"
-"====================\n"
-"Manage revenue recognitions on product sales.\n"
-"Keeps track of the revenue recognition installments, and creates corresponding journal entries.\n"
-"\n"
-"    "
-msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -701,6 +688,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Hides attendance presence stat button when an employee is on leave.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_winbooks_import
+msgid ""
+"\n"
+"        Import Data From Winbooks\n"
 "    "
 msgstr ""
 
@@ -1135,6 +1130,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_planning
+msgid ""
+"\n"
+"    Schedule your teams and employees with shift.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
 msgid ""
 "\n"
@@ -1425,14 +1428,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_documents_product
-msgid ""
-"\n"
-"Add the ability to create products from the document module.\n"
-"and to get the option to send products' attachments to the documents app.\n"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_documents_sign
 msgid ""
 "\n"
@@ -1495,18 +1490,18 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_documents_product
+msgid ""
+"\n"
+"Adds the ability to create products from the document module and adds the\n"
+"option to send products' attachments to the documents app.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_voip_crm
 msgid ""
 "\n"
 "Adds the lead partner to phonecall list\n"
-"    "
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_be_intrastat_2019
-msgid ""
-"\n"
-"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 "    "
 msgstr ""
 
@@ -1535,8 +1530,8 @@ msgid ""
 "==============================\n"
 "\n"
 "This module allows customers to pay for their orders with credit\n"
-"cards. The transactions are processed by Mercury (developed by Wells\n"
-"Fargo Bank). A Mercury merchant account is necessary. It allows the\n"
+"cards. The transactions are processed by Vantiv (developed by Wells\n"
+"Fargo Bank). A Vantiv merchant account is necessary. It allows the\n"
 "following:\n"
 "\n"
 "* Fast payment by just swiping a credit card while on the payment screen\n"
@@ -1545,20 +1540,6 @@ msgid ""
 "* Supported cards: Visa, MasterCard, American Express, Discover\n"
 "    "
 msgstr ""
-"\n"
-"ПОС төлбөрийг кредит картаар хийх боломжтой\n"
-"==============================\n"
-"\n"
-"Энэ модуль нь захиалагчдыг захиалгаа кредит картаар төлөх боломжийг \n"
-"олгодог. Гүйлгээг Mercury (Wells Fargo Банк хөгжүүлсэн) - р хийдэг. \n"
-"Борлуулагчийн Mercury бүртгэл шаардлагатай. Энэ нь дараахийг \n"
-"боломжтой болгодог:\n"
-"\n"
-"* Төлбөрийн дэлгэц дээр байх үед кредит картыг уншуулж хурдан төлбөр хийх\n"
-"* Бэлэн мөнгөний болон кредит картын төлбөрийг нэгтгэдэг\n"
-"* Бэлэн мөнгөний хариулт\n"
-"* Дэмжигдсэн картууд: Visa, MasterCard, American Express, Discover\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -2199,11 +2180,11 @@ msgstr ""
 #: model:ir.module.module,description:base.module_project_timesheet_forecast
 msgid ""
 "\n"
-"Compare timesheets and forecasts\n"
+"Compare timesheets and plannings\n"
 "================================\n"
 "\n"
-"Better plan your futur forecasts by observing the number of hours pressed\n"
-"on old forecasts.\n"
+"Better plan your futur plannings by observing the number of hours pressed\n"
+"on old plannings.\n"
 "\n"
 msgstr ""
 
@@ -2560,6 +2541,20 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_documents_hr_contract
+msgid ""
+"\n"
+"Employee contracts files will be automatically integrated to the Document app.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_documents_hr_payroll
+msgid ""
+"\n"
+"Employee payslips will be automatically integrated to the Document app.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_utm
 msgid ""
 "\n"
@@ -2581,7 +2576,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_snailmail_account_reports_followup
+#: model:ir.module.module,description:base.module_snailmail_account_followup
 msgid ""
 "\n"
 "Extension to send follow-up documents by post\n"
@@ -2773,12 +2768,9 @@ msgid ""
 "\n"
 "Generates Intrastat XML report for declaration\n"
 "Based on invoices.\n"
+"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 "    "
 msgstr ""
-"\n"
-"Мэдэгдэлд интрастат XML тайлан гаргадаг\n"
-"Нэхэмжлэл дээр суурилсан.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
@@ -3464,7 +3456,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_account_reports_followup
+#: model:ir.module.module,description:base.module_account_followup
 msgid ""
 "\n"
 "Module to automate letters for unpaid invoices, with multi-level recalls.\n"
@@ -3473,13 +3465,13 @@ msgid ""
 "You can define your multiple levels of recall through the menu:\n"
 "---------------------------------------------------------------\n"
 "    Configuration / Follow-up / Follow-up Levels\n"
-"    \n"
+"\n"
 "Once it is defined, you can automatically print recalls every day through simply clicking on the menu:\n"
 "------------------------------------------------------------------------------------------------------\n"
 "    Payment Follow-Up / Send Email and letters\n"
 "\n"
-"It will generate a PDF / send emails / set manual actions according to the the different levels \n"
-"of recall defined. You can define different policies for different companies. \n"
+"It will generate a PDF / send emails / set manual actions according to the the different levels\n"
+"of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
 
@@ -4051,25 +4043,6 @@ msgid ""
 "2) Analyse the subscriptions modifications by salesman and compute their value.\n"
 "    "
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_hw_screen
-msgid ""
-"\n"
-"Screen Driver\n"
-"=============\n"
-"\n"
-"This module allows the POS client to send rendered HTML to a remotely\n"
-"installed screen. This module then displays this HTML using a web\n"
-"browser.\n"
-msgstr ""
-"\n"
-"Дэлгэцийн Драйвер\n"
-"=============\n"
-"\n"
-"Энэ модуль нь үзүүлсэн HTML - г зайнд суулгасан дэлгэц рүү илгээх боломжийг\n"
-" ПОС хэрэглэгчид олгодог. Дараа нь энэ модуль тус HTML - г вэб хөтөч ашиглан\n"
-" харуулдаг.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
@@ -4894,7 +4867,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_twitter
 msgid ""
 "\n"
-"This module adds a Twitter roller building block to the website builder, so that you can display Twitter feeds on any page of your website.\n"
+"This module adds a Twitter scroller building block to the website builder, so that you can display Twitter feeds on any page of your website.\n"
 "    "
 msgstr ""
 
@@ -5239,6 +5212,16 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_payment_test
+msgid ""
+"\n"
+"This module implements a simple test payment acquirer flow to allow\n"
+"the testing of successful payments behaviors on e-commerce. It includes\n"
+"a protection to avoid using it in production environment. However, do\n"
+"not use it in production environment.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
 msgid ""
 "\n"
@@ -5462,6 +5445,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_test_website_slides_full
+msgid ""
+"\n"
+"This module will test the main certification flow of Odoo.\n"
+"It will install the e-learning, survey and e-commerce apps and make a complete\n"
+"certification flow including purchase, certification, failure and success.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
 msgid ""
 "\n"
@@ -5477,6 +5469,13 @@ msgid ""
 msgstr ""
 "\n"
 "Энэ виджет нь d3 санг ашиглан хэмжээг харуулдаг.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_documents_hr_holidays
+msgid ""
+"\n"
+"Time off documents will be automatically integrated to the Document app.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -5790,6 +5789,12 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid " - %r in %s=%r"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_crm_livechat
+msgid ""
+" Adds a stat button on lead form view to access their livechat sessions."
 msgstr ""
 
 #. module: base
@@ -6278,12 +6283,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 
@@ -6528,153 +6533,6 @@ msgstr "<u><strong>Нууцлал</strong></u>"
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Views</strong></u>"
 msgstr "<u><strong>Харагдац</strong></u>"
-
-#. module: base
-#: model:ir.module.module,description:base.module_barcodes
-msgid ""
-"==============================\n"
-"Barcodes module documentation\n"
-"==============================\n"
-"\n"
-"This module brings barcode encoding logic and client-side barcode scanning utilities.\n"
-"\n"
-"\n"
-"Barcodes encoding\n"
-"==============================\n"
-"\n"
-"The Barcodes module defines barcode nomenclatures whose rules identify specific type \n"
-"of items e.g. products, locations. It contains the following features:\n"
-"\n"
-"- Patterns to identify barcodes containing a numerical value (e.g. weight, price)\n"
-"- Definition of barcode aliases that allow to identify the same product with different barcodes\n"
-"- Unlimited barcode patterns and definitions,\n"
-"- Support for encodings EAN-13, EAN-8 and UPC-A\n"
-"\n"
-"Barcode encodings\n"
-"-----------------\n"
-"\n"
-"A barcode is an arbitrary long sequence of ASCII characters. An EAN-13 barcode is a 13 digit\n"
-"barcode, whose 13th digit is the checksum. \n"
-"\n"
-"Simple barcodes and rules\n"
-"-------------------------\n"
-"\n"
-"The default nomenclature assumes an EAN-13 encoding for product barcodes. It defines a rule \n"
-"for Unit Products whose encoding is EAN-13, and whose pattern is '.', i.e. any barcode \n"
-"matches this pattern. Scanning the barcode of a product, say '5410013101703', matches this rule. \n"
-"The scanned item is thus identified as a Unit Product, and is retrieved from the product table.\n"
-"\n"
-"Note: the special character '.' in patterns is matched by any character. To explicitely specify \n"
-"the '.' character in a pattern, escape it with '\\'. The '\\' character has to be escaped as well\n"
-"('\\\\') to be explicitely specified.\n"
-"\n"
-"Let us now suppose that we identify other items with barcodes, say stock locations. We define a\n"
-"new rule in the nomenclature with the corresponding type (in our example, the type is 'Location'),\n"
-"and whose pattern is e.g. '414.', that is, any location barcode starts with '414'. Scanning a barcode\n"
-"location, say '41401', matches this Location rule, and the corresponding location is retrieved from\n"
-"the location table.\n"
-"\n"
-"Note: Rules have a sequence field which indicates the order the rules are evaluated (ASC). In our \n"
-"previous examples, the Unit Product rule should have a larger sequence that then Location rule, \n"
-"because we want the latter one to be evaluated first.\n"
-"\n"
-"Barcodes with numerical content\n"
-"--------------------------------\n"
-"\n"
-"Barcodes may encode numerical content, which is decoded by the barcodes module. To that purpose,\n"
-"one have to define a new rule for barcodes with numerical content (e.g. barcodes for Weighted \n"
-"Products). The numerical content in a pattern is specified between braces (special characters '{' and \n"
-"'}'). The content of the braces must be a sequence of 'N's (representing the whole part of the numerical \n"
-"content) followed by a sequence of 'D's (representing the decimal part of the numerical content). \n"
-"For instance, let us define a new rule for Weighted Products whose pattern is '21.....{NNDDD}.'. Since\n"
-"we assume EAN-13 encoding for product barcodes, the encoding of this rule should be EAN-13 as well.\n"
-"\n"
-"Let us now assume that we want to write a barcode for a given Weighted Product, say oranges. We first \n"
-"have to define in product oranges a barcode that will match the Weighted Product rule. This barcode \n"
-"must start with '21' and be a correct EAN-13 barcode (i.e. the 13th digit must be a correct checksum). \n"
-"Moreover, all the numerical content must be set to a '0'. For instance, let us set the barcode to \n"
-"'2100001000004'. \n"
-"\n"
-"We now want to write a barcode for 2.75kg of oranges. This barcode should be '2100001027506' (the \n"
-"numerical content of this barcode is '02750', and the correct checksum is '6'). When scanned, this \n"
-"barcode matches the Weighted Product rule (since is starts with '21'). The numerical content is extracted, \n"
-"and replaced by a sequence of '0's. The correct checksum is then computed for the obtained barcode \n"
-"('2100001000004') and the corresponding product (oranges) is retrieved from product table.\n"
-"\n"
-"Note: the special characters '{' and '}' in patterns are used to identify numerical content. To \n"
-"explicitely specify '{' or '}' in a pattern, they must be escaped.\n"
-"\n"
-"\n"
-"Strict EAN-13 field of barcode nomenclatures\n"
-"--------------------------------------------\n"
-"\n"
-"Many barcode scanners strip the leading zero when scanning EAN-13 barcodes. Barcode nomenclatures\n"
-"have a boolean field \"Use strict EAN13\". If False, when trying to match a scanned barcode with\n"
-"a rule whose encoding is EAN-13, if the barcode is of length 12 and, by prepending it by a 0,\n"
-"the last digit is the correct checksum, we automatically prepend the barcode by 0 and try to\n"
-"find a match with this new barcode. If \"Use strict EAN13\" is set to True, we look for a pattern\n"
-"matching the original, 12-digit long, barcode.\n"
-"\n"
-"\n"
-"\n"
-"Barcodes scanning\n"
-"==============================\n"
-"\n"
-"Scanning\n"
-"--------\n"
-"\n"
-"Use a USB scanner (that mimics keyboard inputs) in order to work with barcodes in Odoo.\n"
-"The scanner must be configured to use no prefix and a carriage return or tab as suffix.\n"
-"The delay between each character input must be less than or equal to 50 milliseconds.\n"
-"Most barcode scanners will work out of the box.\n"
-"However, make sure the scanner uses the same keyboard layout as the device it's plugged in.\n"
-"Either by setting the device's keyboard layout to US QWERTY (default value for most readers)\n"
-"or by changing the scanner's keyboard layout (check the manual).\n"
-"\n"
-"\n"
-"Barcode events\n"
-"------------------------------\n"
-"\n"
-"When the module barcodes is installed, it instanciate a singleton of the javascript class BarcodeEvents.\n"
-"The purpose of this component is to listen to keypresses to detect barcodes, then dispatch those barcodes\n"
-"on core.bus inside a 'barcode_event'.\n"
-"All keypress events are buffered until there is no more keypress during 50ms or a carriage return / tab is\n"
-"inputted (because most barcode scanners use this as a suffix).\n"
-"If the buffered keys looks like a barcode, an event is triggered :\n"
-"core.bus.trigger('barcode_scanned', barcode);\n"
-"Otherwise, the keypresses are 'resent'. However, for security reasons, a keypress event programmatically\n"
-"crafted doesn't trigger native browser behaviors. For this reason, BarcodeEvents doesn't intercept keypresses\n"
-"whose target is an editable element (eg. input) or when ctrl/cmd/alt is pushed.\n"
-"To catch keypresses targetting an editable element, it must have the attribute barcode_events=\"true\".\n"
-"\n"
-"\n"
-"Barcode handlers\n"
-"------------------------------\n"
-"\n"
-"To keep the web client consistent, components that want to listen to barcode events should include BarcodeHandlerMixin.\n"
-"It requires method on_barcode_scanned(barcode) to be implemented and exposes methods start_listening and stop_listening\n"
-"As long as it is the descendant of a View managed by a ViewManager is only listens while the view is attached.\n"
-"\n"
-"\n"
-"Form view barcode handler\n"
-"------------------------------\n"
-"\n"
-"It is possible for a form view to listen to barcode events, handle them client side and/or server-side.\n"
-"When the barcode is handled server-side, it works like an onchange. The relevant model must include the\n"
-"BarcodeEventsMixin and redefine method on_barcode_scanned. This method receives the barcode scanned and\n"
-"the `self` is a pseudo-record representing the content of the form view, just like in @api.onchange methods.\n"
-"Barcodes prefixed with 'O-CMD' or 'O-BTN' are reserved for special features and are never passed to on_barcode_scanned.\n"
-"The form view barcode handler can be extended to add client-side handling. Please refer to the (hopefully\n"
-"well enough) documented file for more informations.\n"
-"\n"
-"\n"
-"Button barcode handler\n"
-"------------------------------\n"
-"\n"
-"Add an attribute 'barcode_trigger' to a button to be able to trigger it by scanning a barcode. Example :\n"
-"<button name=\"validate\" type=\"object\" barcode_trigger=\"validate\"/> will be triggered when a barcode containing\n"
-"\"O-BTN.validate\" is scanned.\n"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_landing
@@ -7072,6 +6930,11 @@ msgid "Account TaxCloud - Sale"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_winbooks_import
+msgid "Account Winbooks Import"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_account_payment
 msgid "Account and Payment Link and Portal"
 msgstr ""
@@ -7291,11 +7154,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_sms
 msgid "Add SMS capabilities to CRM"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_hw_screen
-msgid "Add a customer facing displays for POS"
 msgstr ""
 
 #. module: base
@@ -7691,7 +7549,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_website_profile
 msgid ""
-"Allows to acces the website profile of the users and see their statistics "
+"Allows to access the website profile of the users and see their statistics "
 "(karma, badges, etc..)"
 msgstr ""
 
@@ -8503,11 +8361,6 @@ msgid "Belgian Intrastat Declaration"
 msgstr "Белги Дотоод Статистик Тунхаглал"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_2019
-msgid "Belgian Intrastat Declaration - Complement for 2019"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr ""
@@ -8797,7 +8650,6 @@ msgid "C5E 24  163 x 229 mm"
 msgstr "C5E 24 163 x 229 мм"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_crm
 #: model:ir.module.category,name:base.module_category_sales_crm
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
@@ -9525,7 +9377,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_forecast
-msgid "Compare timesheets and forecasts"
+msgid "Compare timesheets and plannings"
 msgstr ""
 
 #. module: base
@@ -9713,11 +9565,6 @@ msgstr "Ижил нэртэй хязгаарлалт модуль тус бүр�
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_F
 msgid "Construction"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_8
-msgid "Consulting Services"
 msgstr ""
 
 #. module: base
@@ -10630,25 +10477,6 @@ msgid "Days"
 msgstr "Өдөр"
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"Эрхэм Ноён/Хатагтай танд,\n"
-"\n"
-"Бидний бүртгэлээс харахад дараах төлбөрүүд нь хугацаа хэтэрсэн байдалтай байна. Хэрэв төлөгдсөн бол энэ мэдэгдлийг тоохгүй байж болно. Гэхдээ өөрийн данс, тооцоотой холбоотой аливаа асуулт байвал бидэнд хандана уу. \n"
-"\n"
-"Танд урьдчилан баярлалаа.\n"
-"Амжилт хүсье,"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
 msgid "Debugging"
 msgstr "Дебагдаж байна"
@@ -10725,11 +10553,6 @@ msgstr "Цаасны үндсэн формат ?"
 #: model:ir.module.module,description:base.module_theme_default
 msgid "Default website theme"
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_account_deferred_revenue
-msgid "Deferred Revenues"
-msgstr "Урьдчилсан орлогууд"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_python
@@ -10888,11 +10711,6 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_mass_mailing
 msgid "Design, send and track emails"
 msgstr "Зохиомж, эмэйлийг илгээх болон хөтлөх"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_14
-msgid "Desk Manufacturers"
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
@@ -11249,6 +11067,11 @@ msgid "Documents - Accounting"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_hr_contract
+msgid "Documents - Contracts"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fleet
 msgid "Documents - Fleet"
 msgstr ""
@@ -11261,6 +11084,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_documents
 msgid "Documents - Human Resources"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_hr_payroll
+msgid "Documents - Payroll"
 msgstr ""
 
 #. module: base
@@ -11281,6 +11109,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_sign
 msgid "Documents - Signatures"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_hr_holidays
+msgid "Documents - Time Off"
 msgstr ""
 
 #. module: base
@@ -11358,174 +11191,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_edi
 msgid "E-Invoicing, Universal Business Language (UBL 2.0), e-fff protocol"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_mx_edi_cancellation
-msgid ""
-"EDI Cancellation\n"
-"================\n"
-"\n"
-"This module adds the next features in the cancel process:\n"
-"\n"
-"1. Button to request cancellation in the SAT was added.\n"
-"2. The cancel process in Odoo, only could be executed when the SAT status\n"
-"   is cancelled.\n"
-"3. The cancel button in the invoice is dummy if the invoice is not\n"
-"   cancelled in the SAT.\n"
-"\n"
-"Which is the new flow to cancel?\n"
-"--------------------------------\n"
-"\n"
-"A new button `(Request Cancelation)` was added on the invoice view, that\n"
-"appear when the invoice is open and the `PAC status` is `Signed`\n"
-"\n"
-"When this new button is press, send the CFDI to the PAC to try cancel it\n"
-"in the SAT system. And do not allows to cancel the invoice in Odoo until\n"
-"it was properly canceled in the SAT. (This is an automatic action that\n"
-"execute the system).\n"
-"\n"
-"If any invoice is cancelled in the SAT, and the user can not wait for the\n"
-"cron, could press the `Cancel` button, and this must be cancelled.\n"
-"\n"
-"Which are the cases supported in this module?\n"
-"---------------------------------------------\n"
-"\n"
-"**Case 1**\n"
-"\n"
-"+----------+---------+\n"
-"| System   | State   |\n"
-"+==========+=========+\n"
-"| Odoo     | Open    |\n"
-"+----------+---------+\n"
-"| PAC      | Signed  |\n"
-"+----------+---------+\n"
-"| SAT      | Valid   |\n"
-"+----------+---------+\n"
-"\n"
-"This case is when the invoice is properly signed in the SAT system. To\n"
-"cancel is necessary to press the button `Request Cancelation`, that will\n"
-"to verify that effectively the CFDI is not previously canceled in the SAT\n"
-"system and will to send it to cancel in the SAT.\n"
-"\n"
-"After of request the cancelation, could be found the next cases:\n"
-"\n"
-"*The cancel process was succesful*\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Open       |\n"
-"+----------+------------+\n"
-"| PAC      | Cancelled  |\n"
-"+----------+------------+\n"
-"| SAT      | Valid      |\n"
-"+----------+------------+\n"
-"\n"
-"In this case, the system will execute the next actions:\n"
-"\n"
-"1. An action will to update the PAC status (To Canceled).\n"
-"\n"
-"2. A method will be called and will try to cancel the invoice in Odoo.\n"
-"\n"
-"\n"
-"*The cancel process cannot be completed*\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Open       |\n"
-"+----------+------------+\n"
-"| PAC      | To Cancel  |\n"
-"+----------+------------+\n"
-"| SAT      | Valid      |\n"
-"+----------+------------+\n"
-"\n"
-"In this case, the system wait for the PAC system, and will execute the next\n"
-"action:\n"
-"\n"
-"1. A method will be called to verify if the CFDI was properly cancelled in\n"
-"the SAT system, and when the SAT status is `Cancelled` will try to cancel the\n"
-"invoice in Odoo.\n"
-"\n"
-"**Case 2**\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Open       |\n"
-"+----------+------------+\n"
-"| PAC      | To Cancel  |\n"
-"+----------+------------+\n"
-"| SAT      | Valid      |\n"
-"+----------+------------+\n"
-"\n"
-"This case is the same that in the previous case when the cancel process\n"
-"cannot be completed.\n"
-"\n"
-"If the customer does not accept the CFDI cancelation, the cancel process\n"
-"must be aborted and the invoice must be returned to signed. For this, was\n"
-"added an action in the invoice `Revert CFDI cancellation`, that could be\n"
-"called in the `Actions` of it.\n"
-"\n"
-"\n"
-"**Case 3**\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Open       |\n"
-"+----------+------------+\n"
-"| PAC      | To Cancel  |\n"
-"+----------+------------+\n"
-"| SAT      | Cancelled  |\n"
-"+----------+------------+\n"
-"\n"
-"The system executes a scheduled action that will cancel the invoice in Odoo,\n"
-"and in that process, the PAC status must be updated to `Cancelled`.\n"
-"\n"
-"\n"
-"**Case 4**\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Cancel     |\n"
-"+----------+------------+\n"
-"| PAC      | Signed     |\n"
-"+----------+------------+\n"
-"| SAT      | Valid      |\n"
-"+----------+------------+\n"
-"\n"
-"The system executes a scheduled action that will check that the SAT status\n"
-"continues `Valid` and if yes, the invoice must be returned to `Open`\n"
-"(Without generate a new CFDI). For this:\n"
-"\n"
-"1. If the invoice does not has a journal entry, a new will be generated and\n"
-"the invoice state must be changed to `Open`.\n"
-"\n"
-"2. If the journal entry in the invoice has a revert, it will be cancelled\n"
-"and the invoice state must be changed to `Open`.\n"
-"\n"
-"**Case 5**\n"
-"\n"
-"+----------+------------+\n"
-"| System   | State      |\n"
-"+==========+============+\n"
-"| Odoo     | Cancel     |\n"
-"+----------+------------+\n"
-"| PAC      | To Cancel  |\n"
-"+----------+------------+\n"
-"| SAT      | Valid      |\n"
-"+----------+------------+\n"
-"\n"
-"This is the same case that in the previous one, but extra after that the\n"
-"invoice is open again, the PAC status must be updated to 'Signed.'\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_cancellation
-msgid "EDI Cancellation for Mexican Localization"
 msgstr ""
 
 #. module: base
@@ -11710,7 +11375,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources_employees
 #: model:ir.module.module,shortdesc:base.module_hr
-#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
 msgstr "Ажилчид"
 
@@ -11733,6 +11397,11 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_D
 msgid "Energy supply"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_crm_iap_lead_enrich
+msgid "Enrich Leads/Opportunities using email address domain"
 msgstr ""
 
 #. module: base
@@ -11809,10 +11478,10 @@ msgid "Error message returned when the constraint is violated."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:0
+#: code:addons/base/models/ir_ui_view.py:0
 #, python-format
-msgid "Error while validating constraint"
-msgstr "Хязгаарлалтыг батлах үед алдаа гарлаа"
+msgid "Error while validating view"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_menu.py:0
@@ -12061,7 +11730,7 @@ msgid "Extension View"
 msgstr "Өртөтгөл Харагдац"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_snailmail_account_reports_followup
+#: model:ir.module.module,summary:base.module_snailmail_account_followup
 msgid "Extension to send follow-up documents by post"
 msgstr ""
 
@@ -12555,7 +12224,7 @@ msgid ""
 "Fiscal Reports for Closing Entry\n"
 "================================\n"
 "\n"
-"Trial Balance report is complemented to allow generate the closing entry\n"
+"Trial Balance report is complemented to generate the closing entry\n"
 "(A.K.A Month 13th move)\n"
 "\n"
 "Configuration\n"
@@ -12679,16 +12348,6 @@ msgstr ""
 "Энэ төрлийн баримтын хувьд та зөвхөн өөрийн үүсгэсэн бичлэгүүд рүү хандах боломжтой.\n"
 "\n"
 "(Баримтын төрөл: %s)"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_project_forecast
-msgid "Forecast"
-msgstr "Урьдчилсан таамаг"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_project_forecast
-msgid "Forecast your resources on project tasks"
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__form
@@ -13393,11 +13052,6 @@ msgstr "Белги төсвийн өгөгдлийн модулиудын төх
 #: model:ir.module.module,summary:base.module_hw_escpos
 msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
 msgstr "ESC/POS хэвлэгч болон бэлэн мөнгөний хайрцгийн драйвер"
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_hardware_drivers
-msgid "Hardware Drivers"
-msgstr "Төхөөрөмжийн драйверууд"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_drivers
@@ -14198,6 +13852,11 @@ msgid "Import CSV Bank Statement"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_account_winbooks_import
+msgid "Import Data From Winbooks"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
 msgid "Import OFX Bank Statement"
 msgstr ""
@@ -14456,6 +14115,11 @@ msgid "Integer"
 msgstr "Бүхэл тоо"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_marketing_automation_sms
+msgid "Integrate SMS Marketing in marketing campaigns"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_sale_coupon
 msgid "Integrate coupon mechanism in sales orders."
 msgstr ""
@@ -14463,11 +14127,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_delivery
 msgid "Integrate coupon mechanism with shipping costs."
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_marketing_automation_sms
-msgid "Integrate mass SMS in marketing campaigns"
 msgstr ""
 
 #. module: base
@@ -15346,6 +15005,11 @@ msgid "Layout in Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_crm_iap_lead_enrich
+msgid "Lead Enrichment"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead
 msgid "Lead Generation"
 msgstr ""
@@ -15353,6 +15017,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_website
 msgid "Lead Generation From Website Visits"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_crm_livechat
+msgid "Lead Livechat Sessions"
 msgstr ""
 
 #. module: base
@@ -15966,6 +15635,11 @@ msgid "Manage your employee payroll records"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_planning
+msgid "Manage your employees' schedule"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Manage your fleet and track car costs"
 msgstr ""
@@ -16081,11 +15755,6 @@ msgid "Mass Mailing Themes"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_marketing_automation_sms
-msgid "Mass SMS in Marketing Automation"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event
 msgid "Mass mailing on attendees"
 msgstr ""
@@ -16177,11 +15846,6 @@ msgstr "Цэс"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Menus Customization"
 msgstr "Цэсийн Өөрчлөлт"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_pos_mercury
-msgid "Mercury Payment Services"
-msgstr "Mercury төлбөрийн үйлчилгээнүүд"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_merge
@@ -17626,7 +17290,7 @@ msgid ""
 "-----------------\n"
 "\n"
 "Easily send mass mailing to your leads, opportunities or customers\n"
-"with Odoo <a href=\"https://www.odoo.com/page/mailing#\">Mass Mailing</a>. Track\n"
+"with Odoo <a href=\"https://www.odoo.com/page/mailing#\">Email Marketing</a>. Track\n"
 "marketing campaigns performance to improve conversion rates. Design\n"
 "professional emails and reuse templates in a few clicks.\n"
 "\n"
@@ -18308,11 +17972,6 @@ msgid "OdooBot for livechat"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_12
-msgid "Office Supplies"
-msgstr "Оффисын Хангамжууд"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "Ok"
 msgstr "Тийм"
@@ -18801,13 +18460,6 @@ msgstr ""
 "                                    <code>self.env</code>, г.м."
 
 #. module: base
-#: model:res.company,overdue_sms_msg:base.main_company
-msgid ""
-"Our records indicate that some payments on your account are still due.\n"
-"If you have any queries regarding your account, Please contact us. Best Regards,"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
 msgid "Outgoing Mail Server"
 msgstr "Гарах Мэйл Сервер"
@@ -19189,7 +18841,7 @@ msgid "Payment Acquirer: Transfer Implementation"
 msgstr "Төлбөр хүлээн авагч: Шилжүүлэг хэрэгжүүлэгч"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_account_reports_followup
+#: model:ir.module.module,shortdesc:base.module_account_followup
 msgid "Payment Follow-up Management"
 msgstr "Төлбөрийн дараах менежмент"
 
@@ -19286,6 +18938,18 @@ msgid "Pivot"
 msgstr "Пивот"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_project_forecast
+msgid "Plan your resources on project tasks"
+msgstr ""
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_human_resources_planning
+#: model:ir.module.module,shortdesc:base.module_planning
+#: model:ir.module.module,shortdesc:base.module_project_forecast
+msgid "Planning"
+msgstr "Төлөвлөлт"
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_pt
 msgid "Plano de contas SNC para Portugal"
 msgstr "Plano de contas SNC para Portugal"
@@ -19344,12 +19008,12 @@ msgstr ""
 "менюнээс)-ыг ашиглаж өөрийн нууц үгийг солино."
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 msgid "Point Of Sale"
 msgstr "Борлуулалтын цэг"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
 msgstr "Борлуулалтын цэг"
@@ -19749,11 +19413,6 @@ msgstr ""
 "зохимжтой!"
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_2
-msgid "Prospects"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,help:base.field_ir_cron__link_field_id
 msgid ""
@@ -19962,7 +19621,7 @@ msgstr "Арга хэмжээний талаарх асуултууд"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Үнийн санал зохиомжлогч"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
@@ -20669,6 +20328,11 @@ msgid "SMS Marketing"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_marketing_automation_sms
+msgid "SMS Marketing in Marketing Automation"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sms
 msgid "SMS Text Messaging"
 msgstr ""
@@ -20965,11 +20629,6 @@ msgstr ""
 #: model:res.partner.industry,name:base.res_partner_industry_M
 msgid "Scientific"
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_hw_screen
-msgid "Screen Driver"
-msgstr "Дэлгэцийн Драйвер"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
@@ -21318,11 +20977,6 @@ msgid "Server action"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_11
-msgid "Services"
-msgstr "Үйлчилгээ"
-
-#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__set_null
 msgid "Set NULL"
 msgstr "Хоосон болгох"
@@ -21534,7 +21188,7 @@ msgid "Snail Mail"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_snailmail_account_reports_followup
+#: model:ir.module.module,shortdesc:base.module_snailmail_account_followup
 msgid "Snail Mail Follow-Up"
 msgstr ""
 
@@ -21552,6 +21206,17 @@ msgstr "Соломоны арлууд"
 #: model:res.country,name:base.so
 msgid "Somalia"
 msgstr "Сомали"
+
+#. module: base
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"Some records are incompatible with the company of the %(document_descr)s.\n"
+"\n"
+"Incompatibilities:\n"
+"Fields: %(fields)s\n"
+"Record ids: %(records)s\n"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank__bic
@@ -21835,6 +21500,21 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_enterprise
 msgid "Stock enterprise"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_documents_hr_contract
+msgid "Store employee contracts in the Document app"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_documents_hr_payroll
+msgid "Store employee payslips in the Document app"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_documents_hr_holidays
+msgid "Store employee's time off documents  in the Document app"
 msgstr ""
 
 #. module: base
@@ -22238,8 +21918,18 @@ msgid "Test Connection"
 msgstr "Холболтыг Тестлэх"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_website_slides_full
+msgid "Test Full eLearning Flow"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
 msgid "Test Main Flow"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_test
+msgid "Test Payment Acquirer"
 msgstr ""
 
 #. module: base
@@ -23081,7 +22771,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast
-msgid "Timesheet and Forecast"
+msgid "Timesheet and Planning"
 msgstr ""
 
 #. module: base
@@ -23436,8 +23126,8 @@ msgstr "Тували"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter
-msgid "Twitter Roller"
-msgstr "Жиргээний өнхрүүш"
+msgid "Twitter Snippet"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter_wall
@@ -24156,6 +23846,11 @@ msgid "Value Text"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_mercury
+msgid "Vantiv Payment Services"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.vu
 msgid "Vanuatu"
 msgstr "Вануату"
@@ -24173,11 +23868,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_country__vat_label
 msgid "Vat Label"
 msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_0
-msgid "Vendor"
-msgstr "Нийлүүлэгч"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
@@ -24262,6 +23952,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode
 msgid "View inheritance mode"
 msgstr "Харагдац удамшуулах горим"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_crm_livechat
+msgid "View livechat sessions for leads"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -25031,6 +24726,11 @@ msgstr "тэмдэгт"
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__state__choose
 msgid "choose"
 msgstr "сонгох"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_crm
+msgid "crm"
+msgstr "crm"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
