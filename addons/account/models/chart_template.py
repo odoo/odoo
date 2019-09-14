@@ -172,7 +172,7 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         # do not use `request.env` here, it can cause deadlocks
         # Ensure everything is translated to the company's language, not the user's one.
-        self = self.with_context(lang=company.partner_id.lang, company=company)
+        self = self.with_context(lang=company.partner_id.lang).with_company(company)
         if not self.env.is_admin():
             raise AccessError(_("Only administrators can load a chart of accounts"))
 
