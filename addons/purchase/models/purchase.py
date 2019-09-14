@@ -201,7 +201,7 @@ class PurchaseOrder(models.Model):
         # Ensures all properties and fiscal positions
         # are taken with the company of the order
         # if not defined, with_company doesn't change anything.
-        self = self.with_context(force_company=self.company_id.id)
+        self = self.with_company(self.company_id)
         if not self.partner_id:
             self.fiscal_position_id = False
             self.payment_term_id = False
