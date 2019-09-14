@@ -59,7 +59,7 @@ msgstr "Počet hotových pracovních příkazů"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# Read Work Orders"
-msgstr ""
+msgstr "počet přečtených pracovních příkazů"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_count
@@ -466,7 +466,7 @@ msgstr "Dostupnost"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Availability Losses"
-msgstr ""
+msgstr "Ztráty dostupnosti"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -653,7 +653,7 @@ msgstr "Struktura kusovníku a ceny"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Structure &amp; Cost"
-msgstr ""
+msgstr "Struktura kusovníku a ceny"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -1034,7 +1034,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Description of the work center..."
-msgstr ""
+msgstr "Popis pracovního centra ..."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__location_dest_id
@@ -1940,6 +1940,10 @@ msgid ""
 "                of workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"Výrobní operace jsou zpracovávány v pracovních centrech. Pracovní středisko "
+"může být složeno z pracovníků a / nebo strojů, které se používají pro "
+"kalkulaci, plánování, plánování kapacit atd. Pracovní centra jsou definována"
+" v operacích směrování."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -1948,6 +1952,10 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"Výrobní operace jsou zpracovávány v pracovních centrech. Pracovní středisko "
+"může být složeno z pracovníků a / nebo strojů, které se používají pro "
+"kalkulaci, plánování, plánování kapacit atd. Pracovní centra jsou definována"
+" v operacích směrování."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2313,7 +2321,7 @@ msgstr "Celková účinnost zařízení"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee
 msgid "Overall Equipment Effectiveness, based on the last month"
-msgstr ""
+msgstr "Celková účinnost zařízení na základě posledního měsíce"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
@@ -2433,7 +2441,7 @@ msgstr "Druh dodeje"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_ids
 msgid "Picking associated to this manufacturing order"
-msgstr ""
+msgstr "Vyzvednutí  spojené s touto výrobní zakázkou"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_loc_id
@@ -3015,6 +3023,9 @@ msgid ""
 "                done to realize a Manufacturing Order. Each operation from\n"
 "                a Routing is done at a specific Work Center and has a specific duration."
 msgstr ""
+"Směrování  definuje následné operace, které je třeba provést k realizaci "
+"výrobní zakázky. Každá operace ze směrování se provádí v určitém pracovním "
+"centru a má specifické trvání."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -3145,6 +3156,8 @@ msgid ""
 "to produce after the quantity set in 'Quantity To Process' has been "
 "produced."
 msgstr ""
+"Nastavením 'ne' naplánujete další pracovní příkaz po předchozím. Nastavit "
+"„ano“ na výrobu po vyrobení množství stanoveného v „množství zpracovat“."
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
@@ -3209,7 +3222,7 @@ msgstr "Zdroj"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
 msgid "Specify cost of work center per hour."
-msgstr ""
+msgstr "Určete náklady na pracovní centrum za jednu hodinu."
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_screw
@@ -3372,6 +3385,8 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_production__check_to_done
 msgid "Technical Field to see if we can show 'Mark as Done' button"
 msgstr ""
+"Technické pole, abychom zjistili, zda můžeme zobrazit tlačítko „Označit jako"
+" hotovo“"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line__done_wo
@@ -3409,16 +3424,18 @@ msgid ""
 "Technical field used to see if we have to display a warning or not when "
 "confirming an order."
 msgstr ""
+"Technické pole použité k tomu, abychom zjistili, zda musíme při potvrzení "
+"objednávky zobrazovat varování nebo ne."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_availability
 msgid "Technical: used in views and domains only."
-msgstr ""
+msgstr "Technické: používá se pouze v pohledech a doménách."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__working_state
 msgid "Technical: used in views only"
-msgstr ""
+msgstr "Technické: používá se pouze v zobrazení"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__product_id
@@ -3521,6 +3538,8 @@ msgid ""
 "create work orders afterwards which alters the execution of the "
 "manufacturing order."
 msgstr ""
+"Směrování obsahuje všechna použitá pracovní centra a na jak dlouho. Následně"
+" se vytvoří pracovní příkazy, které změní provedení výrobní zakázky."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:38
@@ -4138,7 +4157,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Work Instruction"
-msgstr ""
+msgstr "Pracovní instrukce"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workorder
@@ -4208,6 +4227,9 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones"
 msgstr ""
+"Pracovní příkazy jsou operace, které mají být zpracovány v pracovním centru "
+"k realizaci výrobní zakázky. Pracovní objednávky jsou spuštěny výrobními "
+"objednávkami, jsou založeny na trase definované na těchto objednávkách"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -4228,7 +4250,7 @@ msgstr "Probíhající zakázky. Klikněte pro zablokování pracovního centra.
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Workcenter"
-msgstr ""
+msgstr "Pracovní centrum"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_form_view
@@ -4248,7 +4270,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
 msgid "Workcenter Productivity Loss"
-msgstr ""
+msgstr "Ztráta produktivity pracovního centra"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss

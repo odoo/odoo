@@ -17,7 +17,6 @@
 # Vincent Hammadache <vhammadache@gmail.com>, 2018
 # Clo <clo@odoo.com>, 2018
 # Stephane DAGUET <stephane@darbtech.net>, 2018
-# adrien didenot <adrien.didenot@horanet.com>, 2018
 # Pandraghon <pandraghon@outlook.com>, 2018
 # bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Frédéric LIETART <stuff@tifred.fr>, 2018
@@ -46,6 +45,8 @@
 # William Olhasque <william.olhasque@scopea.fr>, 2019
 # Fred Gilson <fgi@odoo.com>, 2019
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
+# Nicolas Roussey <nro@odoo.com>, 2019
+# adrien didenot <adrien.didenot@horanet.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # 
 msgid ""
@@ -377,7 +378,7 @@ msgstr "<font style=\"font-size: 62px;\">Nos offres</font>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 msgid "<font style=\"font-size: 62px;\">Slide Title</font>"
-msgstr ""
+msgstr "<font style=\"font-size: 62px;\">Titre de la diapositive</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_parallax
@@ -1043,6 +1044,10 @@ msgid ""
 "or indirectly, implying any approval, association, sponsorship, endorsement,"
 " or affiliation with any linked website, unless specifically stated herein."
 msgstr ""
+"Bien que ce site Web puisse être lié à d'autres sites Web, nous ne sommes "
+"impliqués, directement ou indirectement, dans aucune approbation, "
+"association, parrainage, adhésion ou affiliation avec un site Web lié, sauf "
+"indication contraire dans la présente."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.500
@@ -1192,7 +1197,7 @@ msgstr "En boîte"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Breadcrumb"
-msgstr ""
+msgstr "Fil d'Ariane"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -1604,7 +1609,7 @@ msgstr "Langue par defaut"
 #. module: website
 #: model:website.menu,name:website.main_menu
 msgid "Default Main Menu"
-msgstr ""
+msgstr "Menu principal par défaut"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_default_image
@@ -1821,7 +1826,7 @@ msgstr "Glissez le bloc de <i>Couverture</i> et déposez-le dans votre page."
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Dropdown"
-msgstr ""
+msgstr "Menu déroulant"
 
 #. module: website
 #. openerp-web
@@ -2115,7 +2120,7 @@ msgstr "Inscription gratuite"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Full"
-msgstr ""
+msgstr "Complet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -2395,7 +2400,7 @@ msgstr "Accueil"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Home <span class=\"sr-only\">(current)</span>"
-msgstr ""
+msgstr "Accueil<span class=\"sr-only\">(actuel)</span>"
 
 #. module: website
 #. openerp-web
@@ -2859,7 +2864,7 @@ msgstr "Gérer les pages de votre site Web"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Manage multiple websites"
-msgstr ""
+msgstr "Gérer plusieurs sites web"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -2965,6 +2970,7 @@ msgstr "Modèles"
 #, python-format
 msgid "Most searched topics related to your keyword, ordered by importance"
 msgstr ""
+"Sujets les plus recherchés liés à votre mot-clé, classés par importance"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3041,7 +3047,7 @@ msgstr "Nom et favicon pour votre site web"
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Navbar"
-msgstr ""
+msgstr "Barre de navigation"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3148,17 +3154,17 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Not in main menu"
-msgstr ""
+msgstr "Pas dans le menu principal"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Not indexed"
-msgstr ""
+msgstr "Non-indexé"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Not visible"
-msgstr ""
+msgstr "Invisible"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -3545,7 +3551,7 @@ msgstr "Qweb"
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Champ Qweb de Contact"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_btn
@@ -4984,7 +4990,7 @@ msgstr "instance d'Odoo, le"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "link"
-msgstr ""
+msgstr "lien"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search

@@ -420,6 +420,8 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Lokalisasi Fiskal</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -436,11 +438,13 @@ msgid ""
 "<span class=\"o_form_label\">Rounding Method</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Metode Pembulatan</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "<span class=\"o_form_label\">of the month</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">bulan ini</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -453,6 +457,8 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr ""
+"<span class=\"text-muted\">Hanya jurnal yang belum ditautkan ke rekening "
+"bank yang diusulkan</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -460,6 +466,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Jumlah</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Harga</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -474,7 +482,7 @@ msgstr "<span role=\"separator\">Baru</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr ""
+msgstr "<span role=\"separator\">Rekonsiliasi</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -484,7 +492,7 @@ msgstr "<span role=\"separator\">Tampil</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Saldo dalam Buku Besar</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -509,7 +517,7 @@ msgstr "<span>Jumlah yang Lunas</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Balance</span>"
-msgstr ""
+msgstr "<span>Saldo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -524,7 +532,7 @@ msgstr "<span>Disk.(%)</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Import Bills</span>"
-msgstr ""
+msgstr "<span>Tagihan Impor</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -564,7 +572,7 @@ msgstr "<span>Kegiatan</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Original Amount</span>"
-msgstr ""
+msgstr "<span>Tagihan asli</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -607,6 +615,8 @@ msgid ""
 "<strong class=\"text-center\">Scan me with your banking "
 "app.</strong><br/><br/>"
 msgstr ""
+"<strong class=\"text-center\">Pindai saya dengan aplikasi perbankan "
+"Anda.</strong><br/><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -614,6 +624,8 @@ msgid ""
 "<strong class=\"text-center\">The SEPA QR Code informations are not set "
 "correctly.</strong><br/>"
 msgstr ""
+"<strong class=\"text-center\">Informasi Kode QR SEPA tidak diatur dengan "
+"benar.</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -752,7 +764,7 @@ msgstr ""
 #: code:addons/account/models/account.py:854
 #, python-format
 msgid "A bank account can belong to only one journal."
-msgstr ""
+msgstr "Rekening bank hanya dapat dimiliki oleh satu jurnal."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -768,7 +780,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account"
-msgstr ""
+msgstr "Baris pernyataan bank adalah transaksi keuangan pada rekening bank"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -831,13 +843,14 @@ msgstr ""
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
+"Posisi fiskal pajak hanya dapat didefinisikan satu kali pada pajak yang "
+"sama."
 
 #. module: account
 #: code:addons/account/models/res_users.py:17
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
@@ -888,12 +901,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr ""
+msgstr "Pembulatan Uang Tunai"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "Template Bagan Akun"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -937,12 +950,12 @@ msgstr "Pemegang Akun"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "Nama Pemilik Akun"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
 msgid "Account Invoice Send"
-msgstr ""
+msgstr "Kirim Faktur Akun"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -1417,7 +1430,7 @@ msgstr "Catatan tambahan...."
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "Adjustment"
-msgstr ""
+msgstr "Pengaturan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__tax_id

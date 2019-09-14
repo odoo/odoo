@@ -838,6 +838,10 @@ msgid ""
 "        and its mod 347 report.\n"
 "    "
 msgstr ""
+"\n"
+"        Mô-đun này thêm hỗ trợ cho dữ liệu bất động sản để bản địa hóa Tây Ban Nha,\n"
+"        và báo cáo 347 của nó.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_support
@@ -847,6 +851,10 @@ msgid ""
 "        of another database on which a counterpart addon is installed.\n"
 "    "
 msgstr ""
+"\n"
+"        Mô-đun này cho phép người dùng nhân viên giao tiếp với các nhà khai thác livechat\n"
+"        của một cơ sở dữ liệu khác trên đó một addon đối tác được cài đặt.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_zebra
@@ -854,6 +862,8 @@ msgid ""
 "\n"
 "        This module bring templates to produce labels in the Stock app (and derivatives) for Zebra printers. Those devices print thermal barcode label and shipping labels. Printers make label from ZPL script which is built in Odoo."
 msgstr ""
+"\n"
+"        Mô-đun này mang các mẫu để tạo nhãn trong ứng dụng Stock (và các dẫn xuất) cho máy in Zebra. Những thiết bị in nhãn mã vạch nhiệt và nhãn vận chuyển. Máy in tạo nhãn từ tập lệnh ZPL được xây dựng trong Odoo."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -890,6 +900,36 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+"Mô-đun này cho phép tạo các tệp XML công cụ SEPA Direct Debit (SDD) (nhất quán\n"
+"        với đặc tả đau.008.001.02) để gửi đến ngân hàng của bạn để\n"
+"        thu thập một bộ thanh toán.\n"
+"\n"
+"        Để có thể hiểu được phương thức thanh toán này, trước tiên khách hàng phải có\n"
+"        trả lại một nhiệm vụ cho công ty, đồng ý sử dụng ghi nợ trực tiếp.\n"
+"       Sự đồng ý này phải được mã hóa dưới dạng 'nhiệm vụ khách hàng' thành Odoo.\n"
+"\n"
+"        Bạn cũng cần phải đáp ứng các yêu cầu sau đây để đúng\n"
+"        tạo tệp SDD:\n"
+"        - Tài khoản công ty của bạn phải được đặt thành số IBAN hợp lệ\n"
+"                       - Tài khoản công ty của bạn phải được liên kết với ngân hàng có BIC hợp lệ\n"
+"                       - Công ty của bạn phải được cấp một mã định danh chủ nợ (điều này có thể được thực hiện trong menu 'cài đặt' của mô-đun kế toán)\n"
+"                       - Công ty của bạn phải xác định một tạp chí để nhận thanh toán SDD (một lần nữa, trong 'cài đặt' của mô-đun kế toán)\n"
+"                       - Mỗi khách hàng mà bạn tạo thanh toán phải có số tài khoản IBAN hợp lệ trong ngân hàng được liên kết với BIC chính xác.\n"
+"\n"
+"                       Odoo sẽ cho bạn biết nếu bất kỳ yêu cầu nào trong số này không được thỏa mãn.\n"
+"\n"
+"                       Bất kỳ hóa đơn nào được xác thực cho một khách hàng có nhiệm vụ sẽ được\n"
+"                       tự động được đặt ở trạng thái 'đã thanh toán' và thanh toán sẽ được tạo. An\n"
+"                       tùy chọn trong bảng điều khiển sau đó sẽ cho phép bạn xem tất cả các khoản thanh toán được tạo\n"
+"        thông qua SDD và để tạo tệp bộ sưu tập XML cho họ, nhóm chúng thành\n"
+"        bạn thấy phù hợp\n"
+"\n"
+"        Phương thức thanh toán 'Ghi nợ trực tiếp SEPA' chuyên dụng cũng có sẵn cho\n"
+"                 mở hóa đơn, khi chọn tài khoản ngân hàng trong thuật sĩ 'đăng ký thanh toán'.\n"
+"        Sử dụng nó để tạo thanh toán SDD cho hóa đơn nếu bạn đã thêm một ủy quyền\n"
+"        cho chủ sở hữu của nó sau khi xác nhận của nó. Bạn sẽ thấy một thông báo lỗi nếu bạn\n"
+"        hãy thử sử dụng phương thức này trên một hóa đơn mà thanh toán không được ủy quyền có thể được sử dụng."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -928,6 +968,8 @@ msgid ""
 "\n"
 "        Track equipments and maintenance requests"
 msgstr ""
+"\n"
+"        theo dõi thiết bị và yêu cầu bảo trì"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_plaid
@@ -983,6 +1025,8 @@ msgid ""
 "\n"
 "        Zebra printers integration for mrp module"
 msgstr ""
+"\n"
+"        Tích hợp máy in Zebra cho mô-đun mrp"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_zebra
@@ -1046,6 +1090,9 @@ msgid ""
 "    Configure IoT devices to be used in certain \n"
 "    quality steps for taking measures, taking pictures, ...\n"
 msgstr ""
+"\n"
+"    Cấu hình các thiết bị IoT sẽ được sử dụng nhất định \n"
+"    các bước chất lượng để thực hiện các biện pháp, chụp ảnh, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -1084,6 +1131,12 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"      Làm cho ngày khóa không thể đảo ngược:\n"
+"\n"
+"      * Bạn không thể xác định các điều kiện chặt chẽ hơn trên các cố vấn so với người dùng. Sau đó, ngày khóa trên trình tư vấn phải được đặt trước ngày khóa cho người dùng.\n"
+"     * Bạn không thể khóa một khoảng thời gian chưa kết thúc. Sau đó, ngày khóa cho cố vấn phải được đặt trước ngày cuối cùng của tháng trước.\n"
+"     * Ngày khóa mới cho cố vấn phải được đặt sau ngày khóa trước."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1119,6 +1172,10 @@ msgid ""
 "    currencies the Tax must be set at date of payment\n"
 "    "
 msgstr ""
+"\n"
+"    Tạo đúng mục bút toán trên cơ sở thuế tiền mặt khi sử dụng ngoại tệ\n"
+"    Thuế phải được đặt tại ngày thanh toán\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -9220,6 +9277,12 @@ msgstr "Mã vạch trong thiết bị di động"
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
 msgstr "Quét mã vạch trong thiết bị di động"
+
+#. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:603
@@ -19061,12 +19124,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project
 msgid "Organize and schedule your projects "
-msgstr ""
+msgstr "Tổ chức và lên lịch trình cho các dự án của bạn"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note
 msgid "Organize your work with memos"
-msgstr ""
+msgstr "Sắp xếp công việc của bạn với bản ghi nhớ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__orientation
@@ -19697,7 +19760,7 @@ msgstr "PostgreSQL table name implementing a many2many relation."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_predictive_bills
 msgid "Predictive vendor bill data"
-msgstr ""
+msgstr "Dữ liệu hóa đơn nhà cung cấp dự đoán"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -19722,7 +19785,7 @@ msgstr "Trình bày chi tiết nhân viên của bạn trực tuyến"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter_wall
 msgid "Pretty Way to Display Tweets for Event"
-msgstr ""
+msgstr "Cách đẹp để hiển thị Tweets cho sự kiện"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
@@ -19732,7 +19795,7 @@ msgstr "Độ chính xác của giá"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ca_check_printing
 msgid "Print CA Checks"
-msgstr ""
+msgstr "Print CA Checks"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_check_printing
@@ -20249,7 +20312,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2many
 msgid "Qweb field many2many"
-msgstr ""
+msgstr "trường Qweb many2many"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:362
@@ -20269,12 +20332,12 @@ msgstr ""
 #. module: base
 #: model:res.country,vat_label:base.mx
 msgid "RFC"
-msgstr ""
+msgstr "RFC"
 
 #. module: base
 #: model:res.country,vat_label:base.do
 msgid "RNC"
-msgstr ""
+msgstr "RNC"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__rate
@@ -20990,12 +21053,12 @@ msgstr "Lên lịch và quản lý việc bảo dưỡng máy móc và công c�
 #. module: base
 #: model:ir.module.module,summary:base.module_website_calendar
 msgid "Schedule appointments with clients"
-msgstr ""
+msgstr "Lên lịch hẹn với khách hàng"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_calendar
 msgid "Schedule employees meetings"
-msgstr ""
+msgstr "Lên lịch hẹn với nhân viên"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_holidays
@@ -22770,12 +22833,12 @@ msgstr "Kiểm tra kết nối"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
 msgid "Test Main Flow"
-msgstr ""
+msgstr "Kiểm tra luồng chính"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_performance
 msgid "Test Performance"
-msgstr ""
+msgstr "Kiểm tra hiệu năng"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_marketing_automation
@@ -23227,6 +23290,9 @@ msgid ""
 "\n"
 "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname."
 msgstr ""
+"Mẫu '%s' của báo cáo là sai, vui lòng liên hệ với quản trị viên của bạn.\n"
+"\n"
+"Không thể tách tệp để lưu dưới dạng tệp đính kèm vì mẫu của báo cáo không chứa thuộc tính 'data-oe-model' và 'data-oe-id' trên div với lớp 'article'."
 
 #. module: base
 #: code:addons/models.py:2923
@@ -23300,13 +23366,17 @@ msgid ""
 "browser PDF means the report will be rendered using Wkhtmltopdf and "
 "downloaded by the user."
 msgstr ""
+"Loại báo cáo sẽ được hiển thị, mỗi loại có phương thức kết xuất riêng. HTML "
+"có nghĩa là báo cáo sẽ được mở trực tiếp trong trình duyệt PDF của bạn có "
+"nghĩa là báo cáo sẽ được hiển thị bằng Wkhtmltopdf và được người dùng tải "
+"xuống."
 
 #. module: base
 #: code:addons/base/models/res_users.py:117
 #: code:addons/base/models/res_users.py:404
 #, python-format
 msgid "The user cannot have more than one user types."
-msgstr ""
+msgstr "Người dùng không thể có nhiều loại người dùng."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_id
@@ -23324,12 +23394,14 @@ msgid ""
 "The value for the field '%s' already exists (this is probably '%s' in the "
 "current model)."
 msgstr ""
+"Giá trị cho trường '%s' đã tồn tại (đây có thể là '%s' trong module hiện "
+"tại)."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:405
 #, python-format
 msgid "The value send to monetary field is not a number."
-msgstr ""
+msgstr "Giá trị gửi đến trường tiền tệ không phải là một con số."
 
 #. module: base
 #: code:addons/models.py:5543
