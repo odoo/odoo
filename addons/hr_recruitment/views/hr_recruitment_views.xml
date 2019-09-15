@@ -209,8 +209,6 @@
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
-                <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
-                <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
@@ -277,6 +275,7 @@
                 <field name="user_email"/>
                 <field name="partner_name"/>
                 <field name="type_id"/>
+                <field name="partner_id"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="message_needaction_counter"/>

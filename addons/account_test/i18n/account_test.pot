@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-12 11:32+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 08:16+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -55,6 +55,11 @@ msgid "Active"
 msgstr ""
 
 #. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
@@ -99,7 +104,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
 "Code should always set a variable named `result` with the result of your test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
+"a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
 "If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
@@ -137,6 +142,7 @@ msgstr ""
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
 msgid "Description"
 msgstr ""
 
@@ -174,6 +180,11 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Name"
+msgstr ""
+
+#. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
 msgstr ""
@@ -181,6 +192,11 @@ msgstr ""
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
 msgid "Python code"
+msgstr ""
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Search Account Test"
 msgstr ""
 
 #. module: account_test
@@ -236,7 +252,7 @@ msgid "Tests"
 msgstr ""
 
 #. module: account_test
-#: code:addons/account_test/report/report_account_test.py:53
+#: code:addons/account_test/report/report_account_test.py:0
 #, python-format
 msgid "The test was passed successfully"
 msgstr ""

@@ -28,6 +28,7 @@ class Lang(models.Model):
     name = fields.Char(required=True)
     code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user')
     iso_code = fields.Char(string='ISO code', help='This ISO code is the name of po files to use for translations')
+    url_code = fields.Char('URL Code', required=True, help='The Lang Code displayed in the URL')
     active = fields.Boolean()
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
@@ -50,6 +51,7 @@ class Lang(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'The name of the language must be unique !'),
         ('code_uniq', 'unique(code)', 'The code of the language must be unique !'),
+        ('url_code_uniq', 'unique(url_code)', 'The URL code of the language must be unique !'),
     ]
 
     @api.constrains('active')
@@ -181,6 +183,10 @@ class Lang(models.Model):
     def _lang_get_id(self, code):
         return self.with_context(active_test=True).search([('code', '=', code)]).id
 
+    @tools.ormcache('url_code')
+    def _lang_get_code(self, url_code):
+        return self.with_context(active_test=True).search([('url_code', '=', url_code)]).code or url_code
+
     def _lang_get(self, code):
         """ Return the language using this code if it is active """
         return self.browse(self._lang_get_id(code))
@@ -198,7 +204,7 @@ class Lang(models.Model):
     def get_available(self):
         """ Return the available languages as a list of (code, name) sorted by name. """
         langs = self.with_context(active_test=False).search([])
-        return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
+        return sorted([(lang.code, lang.url_code, lang.name) for lang in langs], key=itemgetter(2))
 
     @api.model
     @tools.ormcache()
@@ -218,6 +224,9 @@ class Lang(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches()
+        for vals in vals_list:
+            if not vals.get('url_code'):
+                vals['url_code'] = vals.get('iso_code') or vals['code']
         return super(Lang, self).create(vals_list)
 
     def write(self, vals):

@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data>
+    <record id="lunch_location_main" model="lunch.location">
+        <field name="name">HQ Office</field>
+    </record>
+
+    <record model="lunch.product.category" id="categ_sandwich">
+        <field name="name">Sandwich</field>
+    </record>
+
+    <record id="categ_pizza" model="lunch.product.category">
+        <field name="name">Pizza</field>
+        <field name="image_1920" type="base64" file="lunch/static/img/pizza.png"/>
+    </record>
+
+    <record id="categ_burger" model="lunch.product.category">
+        <field name="name">Burger</field>
+        <field name="image_1920" type="base64" file="lunch/static/img/burger.png"/>
+    </record>
+
+    <record id="categ_drinks" model="lunch.product.category">
+        <field name="name">Drinks</field>
+        <field name="image_1920" type="base64" file="lunch/static/img/drink.png"/>
+    </record>
+
+    <record id="partner_hungry_dog" model="res.partner">
+        <field name="name">Lunch Supplier</field>
+    </record>
+
+    <record id="supplier_hungry_dog" model="lunch.supplier">
+        <field name="partner_id" ref="partner_hungry_dog"/>
+        <field name="available_location_ids" eval="[
+            (6, 0, [ref('lunch_location_main')]),
+            ]"/>
+    </record>
+
     <record id="lunch_order_action_confirm" model="ir.actions.server">
         <field name="name">Lunch: Receive meals</field>
         <field name="model_id" ref="model_lunch_order"/>

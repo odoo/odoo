@@ -16,8 +16,8 @@ class ProductTemplate(models.Model):
         attribute_lines = self.valid_product_template_attribute_line_ids
 
         Attrib = self.env['product.template.attribute.value']
-        first_line_attributes = attribute_lines[0].product_template_value_ids
-        attribute_ids_by_line = [line.product_template_value_ids.ids for line in attribute_lines]
+        first_line_attributes = attribute_lines[0].product_template_value_ids._only_active()
+        attribute_ids_by_line = [line.product_template_value_ids._only_active().ids for line in attribute_lines]
 
         header = [{"name": self.display_name}] + [
             attr._grid_header_cell(

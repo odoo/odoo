@@ -5,7 +5,6 @@ import uuid
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 
@@ -22,7 +21,7 @@ class ChannelUsersRelation(models.Model):
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
-    def _compute_completion(self):
+    def _recompute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
@@ -47,16 +46,10 @@ class ChannelUsersRelation(models.Model):
         partner_karma = {partner_id: karma_to_add
                          for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0}
 
-        self._post_completion_hook()
-
         if partner_karma:
             users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
             for user in users:
                 users.add_karma(partner_karma[user.partner_id.id])
-
-
-    def _post_completion_hook(self):
-        pass
 
     def unlink(self):
         """
@@ -113,7 +106,7 @@ class Channel(models.Model):
         ('latest', 'Latest Published'),
         ('most_voted', 'Most Voted'),
         ('most_viewed', 'Most Viewed')],
-        string="Featuring Policy", default='latest', required=True)
+        string="Featured Content", default='latest', required=True)
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_presentation = fields.Integer('Presentations', compute='_compute_slides_statistics', store=True)
     nbr_document = fields.Integer('Documents', compute='_compute_slides_statistics', store=True)
@@ -137,11 +130,11 @@ class Channel(models.Model):
         help="Email template to send slide publication through email",
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_published'))
     share_template_id = fields.Many2one(
-        'mail.template', string='Shared Template',
+        'mail.template', string='Share Template',
         help="Email template used when sharing a slide",
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_shared'))
     enroll = fields.Selection([
-        ('public', 'Public'), ('invite', 'Invite')],
+        ('public', 'Public'), ('invite', 'On Invitation')],
         default='public', string='Enroll Policy', required=True,
         help='Condition to enroll: everyone, on invite, on payment (sale bridge).')
     enroll_msg = fields.Html(
@@ -149,7 +142,7 @@ class Channel(models.Model):
         default=False, translate=tools.html_translate, sanitize_attributes=False)
     enroll_group_ids = fields.Many2many('res.groups', string='Auto Enroll Groups', help="Members of those groups are automatically added as members of the channel.")
     visibility = fields.Selection([
-        ('public', 'Public'), ('members', 'Members')],
+        ('public', 'Public'), ('members', 'Members Only')],
         default='public', string='Visibility', required=True,
         help='Applied directly as ACLs. Allow to hide channels and their content for non members.')
     partner_ids = fields.Many2many(
@@ -161,7 +154,7 @@ class Channel(models.Model):
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher', depends=['partner_ids'])
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id', string='Upload Groups',
-        help="Who can publish: responsible, members of upload_group_ids if defined or website publisher group members.")
+        help="Group of users allowed to publish contents on a documentation course.")
     # not stored access fields, depending on each user
     completed = fields.Boolean('Done', compute='_compute_user_statistics', compute_sudo=False)
     completion = fields.Integer('Completion', compute='_compute_user_statistics', compute_sudo=False)
@@ -218,7 +211,11 @@ class Channel(models.Model):
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views', 'slide_ids.is_category', 'slide_ids.active')
     def _compute_slides_statistics(self):
-        result = dict((cid, dict(total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
+        default_vals = dict(total_views=0, total_votes=0, total_time=0, total_slides=0)
+        keys = ['nbr_%s' % slide_type for slide_type in self.env['slide.slide']._fields['slide_type'].get_values(self.env)]
+        default_vals.update(dict((key, 0) for key in keys))
+
+        result = dict((cid, dict(default_vals)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
             [('active', '=', True), ('is_published', '=', True), ('channel_id', 'in', self.ids), ('is_category', '=', False)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
@@ -236,7 +233,7 @@ class Channel(models.Model):
             result[cid].update(cdata)
 
         for record in self:
-            record.update(result.get(record.id, {}))
+            record.update(result.get(record.id, default_vals))
 
     def _compute_slides_statistics_type(self, read_group_res):
         """ Compute statistics based on all existing slide types """
@@ -369,7 +366,7 @@ class Channel(models.Model):
         note as we don't want all channel followers to be notified of this answer. """
         self.ensure_one()
         if kwargs.get('message_type') == 'comment' and not self.can_review:
-            raise KarmaError(_('Not enough karma to review'))
+            raise AccessError(_('Not enough karma to review'))
         if parent_id:
             parent_message = self.env['mail.message'].sudo().browse(parent_id)
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):
@@ -477,26 +474,20 @@ class Channel(models.Model):
         for channel in self:
             removed_channel_partner_domain = expression.OR([
                 removed_channel_partner_domain,
-                [('partner_id', 'in', partner_ids.ids),
+                [('partner_id', 'in', partner_ids),
                  ('channel_id', '=', channel.id)]
             ])
 
         if removed_channel_partner_domain:
             self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
 
-    def action_view(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'slide.channel',
-            'res_id': self.id,
-        }
-
     def action_view_slides(self):
         action = self.env.ref('website_slides.slide_slide_action').read()[0]
-        action['context'] = {'default_channel_id': self.id}
-        action['domain'] = [('channel_id', "=", self.id)]
+        action['context'] = {
+            'search_default_published': 1,
+            'default_channel_id': self.id
+        }
+        action['domain'] = [('channel_id', "=", self.id), ('is_category', '=', False)]
         return action
 
     def action_view_ratings(self):
@@ -526,16 +517,7 @@ class Channel(models.Model):
         all_slides = self.env['slide.slide'].sudo().search(base_domain, order=order)
         category_data = []
 
-        # First add uncategorized slides
-        uncategorized_slides = all_slides.filtered(lambda slide: not slide.category_id)
-        if uncategorized_slides or force_void:
-            category_data.append({
-                'category': False, 'id': False,
-                'name': _('Uncategorized'), 'slug_name': _('Uncategorized'),
-                'total_slides': len(uncategorized_slides),
-                'slides': uncategorized_slides[(offset or 0):(offset + limit or len(uncategorized_slides))],
-            })
-        # Then all categories by natural order
+        # First add all categories by natural order
         for category in all_categories:
             category_slides = all_slides.filtered(lambda slide: slide.category_id == category)
             if not category_slides and not force_void:
@@ -545,6 +527,15 @@ class Channel(models.Model):
                 'name': category.name, 'slug_name': slug(category),
                 'total_slides': len(category_slides),
                 'slides': category_slides[(offset or 0):(limit + offset or len(category_slides))],
+            })
+        # Then add uncategorized slides
+        uncategorized_slides = all_slides.filtered(lambda slide: not slide.category_id)
+        if uncategorized_slides or force_void:
+            category_data.append({
+                'category': False, 'id': False,
+                'name': _('Uncategorized'), 'slug_name': _('Uncategorized'),
+                'total_slides': len(uncategorized_slides),
+                'slides': uncategorized_slides[(offset or 0):(offset + limit or len(uncategorized_slides))],
             })
         return category_data
 

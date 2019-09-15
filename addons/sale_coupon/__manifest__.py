@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Sale Coupon",
-    'summary': """Allows to use discount coupons in sales orders""",
+    'summary': "Use discount coupons in sales orders",
     'description': """Integrate coupon mechanism in sales orders.""",
     'category': 'Sales',
     'version': '1.0',

@@ -212,7 +212,6 @@ class View(models.Model):
                              ('graph', 'Graph'),
                              ('pivot', 'Pivot'),
                              ('calendar', 'Calendar'),
-                             ('diagram', 'Diagram'),
                              ('gantt', 'Gantt'),
                              ('kanban', 'Kanban'),
                              ('search', 'Search'),
@@ -386,7 +385,10 @@ actual arch.
                 view_doc = etree.fromstring(view_arch_utf8)
                 self._check_groups_validity(view_doc, view.name)
                 # verify that all fields used are valid, etc.
-                self.postprocess_and_fields(view.model, view_doc, view.id)
+                try:
+                    self.postprocess_and_fields(view.model, view_doc, view.id)
+                except ValueError as e:
+                    raise ValidationError("%s\n\n%s" % (_("Error while validating view"), tools.ustr(e)))
                 # RNG-based validation is not possible anymore with 7.0 forms
                 view_docs = [view_doc]
                 if view_docs[0].tag == 'data':
@@ -614,7 +616,7 @@ actual arch.
         return specs_tree
 
     @api.model
-    def apply_inheritance_specs(self, source, specs_tree, inherit_id):
+    def apply_inheritance_specs(self, source, specs_tree, inherit_id, pre_locate=lambda s: True):
         """ Apply an inheriting view (a descendant of the base view)
 
         Apply to a source architecture all the spec nodes (i.e. nodes
@@ -624,6 +626,8 @@ actual arch.
         :param Element source: a parent architecture to modify
         :param Elepect specs_tree: a modifying architecture in an inheriting view
         :param inherit_id: the database id of specs_arch
+        :param (optional) pre_locate: function that is execute before locating a node.
+                                        This function receives an arch as argument.
         :return: a modified source where the specs are applied
         :rtype: Element
         """
@@ -631,7 +635,8 @@ actual arch.
         # changes to apply to some parent architecture).
         try:
             source = apply_inheritance_specs(source, specs_tree,
-                                             inherit_branding=self._context.get('inherit_branding'))
+                                             inherit_branding=self._context.get('inherit_branding'),
+                                             pre_locate=pre_locate)
         except ValueError as e:
             self.raise_view_error(str(e), inherit_id)
         return source
@@ -765,18 +770,7 @@ actual arch.
             self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
 
-        if node.tag in ('field', 'node', 'arrow'):
-            if node.get('object'):
-                attrs = {}
-                views = {}
-                xml_form = E.form(*(f for f in node if f.tag == 'field'))
-                xarch, xfields = self.with_context(base_model_name=model).postprocess_and_fields(node.get('object'), xml_form, view_id)
-                views['form'] = {
-                    'arch': xarch,
-                    'fields': xfields,
-                }
-                attrs = {'views': views}
-                fields = xfields
+        if node.tag == 'field':
             if node.get('name'):
                 attrs = {}
                 field = Model._fields.get(node.get('name'))
@@ -812,7 +806,7 @@ actual arch.
             field = Model._fields.get(node.get('name'))
             if field:
                 if field.type != 'many2one':
-                    self.raise_view_error(_('groupby can only target many2one (%(field)s') % dict(field=field.name), view_id)
+                    self.raise_view_error(_("'groupby' tags can only target many2one (%(field)s)") % dict(field=field.name), view_id)
                 attrs = fields.setdefault(node.get('name'), {})
                 children = False
                 # move all children nodes into a new node <groupby>
@@ -917,17 +911,7 @@ actual arch.
         if model not in self.env:
             self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
-
-        if node.tag == 'diagram':
-            if node.getchildren()[0].tag == 'node':
-                node_model = self.env[node.getchildren()[0].get('object')]
-                node_fields = node_model.fields_get(None)
-                fields.update(node_fields)
-            if node.getchildren()[1].tag == 'arrow':
-                arrow_fields = self.env[node.getchildren()[1].get('object')].fields_get(None)
-                fields.update(arrow_fields)
-        else:
-            fields = Model.fields_get(None)
+        fields = Model.fields_get(None)
 
         node = self.add_on_change(model, node)
 
@@ -971,14 +955,6 @@ actual arch.
         many2one-based grouping views. """
         Model = self.env[model]
         is_base_model = self.env.context.get('base_model_name', model) == model
-
-        if node.tag == 'diagram':
-            if node.getchildren()[0].tag == 'node':
-                node_model = self.env[node.getchildren()[0].get('object')]
-                if (not node.get("create") and
-                        not node_model.check_access_rights('create', raise_exception=False) or
-                        not self._context.get("create", True) and is_base_model):
-                    node.set("create", 'false')
 
         if node.tag in ('kanban', 'tree', 'form', 'activity'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):

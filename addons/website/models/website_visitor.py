@@ -13,7 +13,7 @@ from odoo.http import request
 class WebsitVisitorPage(models.Model):
     _name = 'website.visitor.page'
     _description = 'Visited Pages'
-    _order = 'visit_datetime ASC'
+    _order = 'visit_datetime DESC'
     _log_access = False
 
     visitor_id = fields.Many2one('website.visitor', ondelete="cascade", index=True, required=True, readonly=True)
@@ -106,7 +106,8 @@ class WebsiteVisitor(models.Model):
                 # If visitor does not exist
                 visitor_sudo = self._create_visitor(website_page.id)
                 sign = visitor_sudo._get_visitor_sign().get(visitor_sudo.id)
-                response.set_cookie('visitor_id', sign)
+                expiration_date = datetime.now() + timedelta(days=100*365)  # never expire
+                response.set_cookie('visitor_id', sign, expires=expiration_date.timestamp())
             else:
                 # Add page even if already in visitor_page_ids as checks on relations are done in many2many write method
                 vals = {
@@ -122,10 +123,9 @@ class WebsiteVisitor(models.Model):
     def _create_visitor(self, website_page_id=False):
         country_code = request.session.get('geoip', {}).get('country_code', False)
         country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id if country_code else False
-        lang_id = request.env['res.lang'].sudo().search([('code', '=', request.lang)], limit=1).id
         vals = {
             'last_connection_datetime': datetime.now(),
-            'lang_id': lang_id,
+            'lang_id': request.lang.id,
             'country_id': country_id,
             'website_id': request.website.id
         }

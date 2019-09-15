@@ -206,10 +206,12 @@ class SaleOrder(models.Model):
 
     def _get_reward_line_values(self, program):
         self.ensure_one()
+        self = self.with_context(lang=self.partner_id.lang)
+        program = program.with_context(lang=self.partner_id.lang)
         if program.reward_type == 'discount':
-            return self._get_reward_values_discount(program.with_context(lang=self.partner_id.lang))
+            return self._get_reward_values_discount(program)
         elif program.reward_type == 'product':
-            return [self._get_reward_values_product(program.with_context(lang=self.partner_id.lang))]
+            return [self._get_reward_values_product(program)]
 
     def _create_reward_line(self, program):
         self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
@@ -433,8 +435,8 @@ class SaleOrderLine(models.Model):
     # Another possibility is to add on product.product a one2many to sale.order.line 'order_line_ids',
     # and then add the depends @api.depends('discount_line_product_id.order_line_ids'),
     # but I am not sure this will as efficient as the below.
-    def modified(self, fnames, modified=None, create=False):
-        super(SaleOrderLine, self).modified(fnames, modified=modified)
+    def modified(self, fnames, create=False):
+        super(SaleOrderLine, self).modified(fnames, create)
         if 'product_id' in fnames:
             Program = self.env['sale.coupon.program']
             field_order_count = Program._fields['order_count']

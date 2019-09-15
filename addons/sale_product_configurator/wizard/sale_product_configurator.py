@@ -14,8 +14,8 @@ class SaleProductConfigurator(models.TransientModel):
     quantity = fields.Integer('Quantity')
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
     product_template_attribute_value_ids = fields.Many2many(
-        'product.template.attribute.value', 'product_configurator_template_attribute_value_rel', string='Template Attribute Values', readonly=True)
+        'product.template.attribute.value', 'product_configurator_template_attribute_value_rel', string='Attribute Values', readonly=True)
     product_custom_attribute_value_ids = fields.Many2many(
-        'product.attribute.custom.value', 'product_configurator_custom_attribute_value_rel', string='User entered custom product attribute values')
+        'product.attribute.custom.value', 'product_configurator_custom_attribute_value_rel', string="Custom Values")
     product_no_variant_attribute_value_ids = fields.Many2many(
-        'product.template.attribute.value', 'product_configurator_no_variant_attribute_value_rel', string='Product attribute values that do not create variants')
+        'product.template.attribute.value', 'product_configurator_no_variant_attribute_value_rel', string="Extra Values")

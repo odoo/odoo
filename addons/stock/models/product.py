@@ -24,7 +24,7 @@ class Product(models.Model):
     stock_move_ids = fields.One2many('stock.move', 'product_id', help='Technical: used to compute quantities.')
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
-        digits='Product Unit of Measure',
+        digits='Product Unit of Measure', compute_sudo=False,
         help="Current quantity of products.\n"
              "In a context with a single Stock Location, this includes "
              "goods stored at this Location, or any of its children.\n"
@@ -37,7 +37,7 @@ class Product(models.Model):
              "with 'internal' type.")
     virtual_available = fields.Float(
         'Forecast Quantity', compute='_compute_quantities', search='_search_virtual_available',
-        digits='Product Unit of Measure',
+        digits='Product Unit of Measure', compute_sudo=False,
         help="Forecast quantity (computed as Quantity On Hand "
              "- Outgoing + Incoming)\n"
              "In a context with a single Stock Location, this includes "
@@ -49,7 +49,7 @@ class Product(models.Model):
              "with 'internal' type.")
     free_qty = fields.Float(
         'Free To Use Quantity ', compute='_compute_quantities', search='_search_free_qty',
-        digits='Product Unit of Measure',
+        digits='Product Unit of Measure', compute_sudo=False,
         help="Forecast quantity (computed as Quantity On Hand "
              "- reserved quantity)\n"
              "In a context with a single Stock Location, this includes "
@@ -61,7 +61,7 @@ class Product(models.Model):
              "with 'internal' type.")
     incoming_qty = fields.Float(
         'Incoming', compute='_compute_quantities', search='_search_incoming_qty',
-        digits='Product Unit of Measure',
+        digits='Product Unit of Measure', compute_sudo=False,
         help="Quantity of planned incoming products.\n"
              "In a context with a single Stock Location, this includes "
              "goods arriving to this Location, or any of its children.\n"
@@ -72,7 +72,7 @@ class Product(models.Model):
              "Location with 'internal' type.")
     outgoing_qty = fields.Float(
         'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
-        digits='Product Unit of Measure',
+        digits='Product Unit of Measure', compute_sudo=False,
         help="Quantity of planned outgoing products.\n"
              "In a context with a single Stock Location, this includes "
              "goods leaving this Location, or any of its children.\n"
@@ -83,9 +83,12 @@ class Product(models.Model):
              "Location with 'internal' type.")
 
     orderpoint_ids = fields.One2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules')
-    nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
-    reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
-    reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
+    nbr_reordering_rules = fields.Integer('Reordering Rules',
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
+    reordering_min_qty = fields.Float(
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
+    reordering_max_qty = fields.Float(
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'product_id', 'Putaway Rules')
 
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
@@ -102,12 +105,13 @@ class Product(models.Model):
             product.outgoing_qty = res[product.id]['outgoing_qty']
             product.virtual_available = res[product.id]['virtual_available']
             product.free_qty = res[product.id]['free_qty']
-        for product in self - products:
-            product.qty_available = 0.0
-            product.incoming_qty = 0.0
-            product.outgoing_qty = 0.0
-            product.virtual_available = 0.0
-            product.free_qty = 0.0
+        # Services need to be set with 0.0 for all quantities
+        services = self - products
+        services.qty_available = 0.0
+        services.incoming_qty = 0.0
+        services.outgoing_qty = 0.0
+        services.virtual_available = 0.0
+        services.free_qty = 0.0
 
     def _product_available(self, field_names=None, arg=False):
         """ Compatibility method """
@@ -506,11 +510,14 @@ class Product(models.Model):
         return self.env['stock.quant'].with_context(ctx)._get_quants_action(domain)
 
     def action_update_quantity_on_hand(self):
-        return self.product_tmpl_id.with_context({'default_product_id': self.id}).action_update_quantity_on_hand()
+        return self.product_tmpl_id.with_context(default_product_id=self.id).action_update_quantity_on_hand()
 
     def action_product_forecast_report(self):
         action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
-        action['domain'] = [('product_id', '=', self.id)]
+        action['domain'] = [
+            ('product_id', '=', self.id),
+            ('warehouse_id', '!=', False),
+        ]
         return action
 
     @api.model
@@ -544,18 +551,20 @@ class Product(models.Model):
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
+    _check_company_auto = True
 
     responsible_id = fields.Many2one(
-        'res.users', string='Responsible', default=lambda self: self.env.uid,
+        'res.users', string='Responsible', default=lambda self: self.env.uid, company_dependent=True, check_company=True,
+        domain="['|', ('company_id', '=', False), ('company_ids', 'in', allowed_company_ids[0])]",
         help="This user will be responsible of the next activities related to logistic operations for this product.")
     type = fields.Selection(selection_add=[('product', 'Storable Product')])
     property_stock_production = fields.Many2one(
         'stock.location', "Production Location",
-        company_dependent=True, domain=[('usage', 'like', 'production')],
+        company_dependent=True, check_company=True, domain="[('usage', '=', 'production'), '|', ('company_id', '=', False), ('company_id', '=', allowed_company_ids[0])]",
         help="This stock location will be used, instead of the default one, as the source location for stock moves generated by manufacturing orders.")
     property_stock_inventory = fields.Many2one(
         'stock.location', "Inventory Location",
-        company_dependent=True, domain=[('usage', 'like', 'inventory')],
+        company_dependent=True, check_company=True, domain="[('usage', '=', 'inventory'), '|', ('company_id', '=', False), ('company_id', '=', allowed_company_ids[0])]",
         help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory.")
     sale_delay = fields.Float(
         'Customer Lead Time', default=0,
@@ -569,16 +578,16 @@ class ProductTemplate(models.Model):
     description_pickingin = fields.Text('Description on Receptions', translate=True)
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
-        digits='Product Unit of Measure')
+        compute_sudo=False, digits='Product Unit of Measure')
     virtual_available = fields.Float(
         'Forecasted Quantity', compute='_compute_quantities', search='_search_virtual_available',
-        digits='Product Unit of Measure')
+        compute_sudo=False, digits='Product Unit of Measure')
     incoming_qty = fields.Float(
         'Incoming', compute='_compute_quantities', search='_search_incoming_qty',
-        digits='Product Unit of Measure')
+        compute_sudo=False, digits='Product Unit of Measure')
     outgoing_qty = fields.Float(
         'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
-        digits='Product Unit of Measure')
+        compute_sudo=False, digits='Product Unit of Measure')
     # The goal of these fields is not to be able to search a location_id/warehouse_id but
     # to properly make these fields "dummy": only used to put some keys in context from
     # the search view in order to influence computed field
@@ -588,10 +597,12 @@ class ProductTemplate(models.Model):
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
         help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc.")
-    nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
-    # TDE FIXME: really used ?
-    reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
-    reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
+    nbr_reordering_rules = fields.Integer('Reordering Rules',
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
+    reordering_min_qty = fields.Float(
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
+    reordering_max_qty = fields.Float(
+        compute='_compute_nbr_reordering_rules', compute_sudo=False)
     # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
@@ -778,7 +789,10 @@ class ProductTemplate(models.Model):
 
     def action_product_tmpl_forecast_report(self):
         action = self.env.ref('stock.report_stock_quantity_action').read()[0]
-        action['domain'] = [('product_id', 'in', self.product_variant_ids.ids)]
+        action['domain'] = [
+            ('product_id', 'in', self.product_variant_ids.ids),
+            ('warehouse_id', '!=', False),
+        ]
         return action
 
 class ProductCategory(models.Model):

@@ -336,6 +336,10 @@
 
         .oe_kanban_details {
             width: 100%;
+
+            // Useful for the class 'o_text_overflow'
+            min-width: 0;
+
             ul {
                 margin-bottom: $o-kanban-inner-hmargin*0.5;;
                 padding-left: 0;
@@ -414,7 +418,6 @@
 
             &:hover .o_kanban_config, .o_kanban_config.show {
                 visibility: visible;
-                margin-left: $o-kanban-inside-hgutter;
             }
 
             .o_kanban_config {

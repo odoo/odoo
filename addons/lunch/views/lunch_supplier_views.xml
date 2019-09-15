@@ -60,8 +60,8 @@
                             <field name="delivery"/>
                             <field name="available_location_ids" widget="many2many_tags"/>
                             <field name="send_by" widget="radio"/>
-                            <label for="automatic_email_time"/>
-                            <div class="o_row"><field name="automatic_email_time" widget="float_time"/> <field name="moment"/></div>
+                            <label for="automatic_email_time" attrs="{'invisible': [('send_by', '!=', 'mail')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('send_by', '!=', 'mail')]}"><field name="automatic_email_time" widget="float_time"/> <field name="moment"/></div>
                         </group>
                     </group>
                 </sheet>

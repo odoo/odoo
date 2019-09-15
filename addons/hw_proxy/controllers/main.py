@@ -127,7 +127,7 @@ class Proxy(http.Controller):
                 %s
                 </pre>
 
-            """ % subprocess.check_output('lsusb -v', shell=True).decode('utf-8')
+            """ % subprocess.check_output(['lsusb', '-v']).decode('utf-8')
 
         return request.make_response(resp,{
             'Cache-Control': 'no-cache',

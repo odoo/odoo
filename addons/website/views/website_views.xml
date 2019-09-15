@@ -214,6 +214,7 @@
                                 <field name="name"/>
                                 <field name="url"/>
                                 <field name="page_id"/>
+                                <field name="is_mega_menu"/>
                             </group>
                             <group>
                                 <field name="new_window"/>
@@ -248,6 +249,7 @@
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                     <field name="name"/>
                     <field name="url"/>
+                    <field name="is_mega_menu"/>
                     <field name="new_window"/>
                     <field name="parent_id" context="{'display_website': True}"/>
                     <field name="group_ids" widget="many2many_tags"/>

@@ -356,38 +356,35 @@ class Module(models.Model):
                 msg = _('Unable to process module "%s" because an external dependency is not met: %s')
             raise UserError(msg % (module_name, e.args[0]))
 
-    def _state_update(self, newstate, states_to_update, level=100, checked=False):
+    def _state_update(self, newstate, states_to_update, level=100):
         if level < 1:
             raise UserError(_('Recursion error in modules dependencies !'))
 
         # whether some modules are installed with demo data
         demo = False
-        if not checked:
-            checked = self.browse()
-        for module in (self - checked):
+
+        for module in self:
             # determine dependency modules to update/others
             update_mods, ready_mods = self.browse(), self.browse()
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
                     raise UserError(_("You try to install module '%s' that depends on module '%s'.\nBut the latter module is not available in your system.") % (module.name, dep.name,))
                 if dep.depend_id.state == newstate:
-                    ready_mods |= dep.depend_id
+                    ready_mods += dep.depend_id
                 else:
-                    update_mods |= dep.depend_id
+                    update_mods += dep.depend_id
 
             # update dependency modules that require it, and determine demo for module
-            update_demo, now_checked = update_mods._state_update(
-                newstate, states_to_update, level=level-1, checked=checked)
+            update_demo = update_mods._state_update(newstate, states_to_update, level=level-1)
             module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
             demo = demo or module_demo
-            checked |= now_checked
 
             # check dependencies and update module itself
             self.check_external_dependencies(module.name, newstate)
             if module.state in states_to_update:
                 module.write({'state': newstate, 'demo': module_demo})
 
-        return demo, checked | self
+        return demo
 
     @assert_log_admin_access
     def button_install(self):
@@ -919,7 +916,8 @@ class ModuleDependency(models.Model):
     module_id = fields.Many2one('ir.module.module', 'Module', ondelete='cascade')
 
     # the module corresponding to the dependency, and its status
-    depend_id = fields.Many2one('ir.module.module', 'Dependency', compute='_compute_depend')
+    depend_id = fields.Many2one('ir.module.module', 'Dependency',
+                                compute='_compute_depend', search='_search_depend')
     state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
 
     auto_install_required = fields.Boolean(
@@ -938,6 +936,12 @@ class ModuleDependency(models.Model):
         for dep in self:
             dep.depend_id = name_mod.get(dep.name)
 
+    def _search_depend(self, operator, value):
+        assert operator == 'in'
+        modules = self.env['ir.module.module'].browse(set(value))
+        return [('name', 'in', modules.mapped('name'))]
+
+    @api.depends('depend_id.state')
     def _compute_state(self):
         for dependency in self:
             dependency.state = dependency.depend_id.state or 'unknown'
@@ -953,8 +957,9 @@ class ModuleExclusion(models.Model):
     # the module that excludes it
     module_id = fields.Many2one('ir.module.module', 'Module', ondelete='cascade')
 
-    # the module corresponding to the exclusion, and its status, must be stored as it's used in a @depends
-    exclusion_id = fields.Many2one('ir.module.module', 'Exclusion Module', compute='_compute_exclusion')
+    # the module corresponding to the exclusion, and its status
+    exclusion_id = fields.Many2one('ir.module.module', 'Exclusion Module',
+                                   compute='_compute_exclusion', search='_search_exclusion')
     state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
 
     @api.depends('name')
@@ -968,6 +973,12 @@ class ModuleExclusion(models.Model):
         for excl in self:
             excl.exclusion_id = name_mod.get(excl.name)
 
+    def _search_exclusion(self, operator, value):
+        assert operator == 'in'
+        modules = self.env['ir.module.module'].browse(set(value))
+        return [('name', 'in', modules.mapped('name'))]
+
+    @api.depends('exclusion_id.state')
     def _compute_state(self):
         for exclusion in self:
             exclusion.state = exclusion.exclusion_id.state or 'unknown'

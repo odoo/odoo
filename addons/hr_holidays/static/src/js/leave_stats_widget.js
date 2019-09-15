@@ -112,6 +112,7 @@ odoo.define('hr_holidays.LeaveStatsWidget', function (require) {
                     return _.extend(leave, {
                         date_from: moment(leave.date_from).format(dateFormat),
                         date_to: moment(leave.date_to).format(dateFormat),
+                        number_of_days: moment(leave.date_to).diff(moment(leave.date_from), 'days'),
                     });
                 });
             });

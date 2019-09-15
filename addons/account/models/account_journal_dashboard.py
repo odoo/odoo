@@ -40,6 +40,7 @@ class account_journal(models.Model):
                     act_type.name as act_type_name,
                     act_type.category as activity_category,
                     act.date_deadline,
+                    m.date,
                     CASE WHEN act.date_deadline < CURRENT_DATE THEN 'late' ELSE 'future' END as status
                 FROM account_move m
                     LEFT JOIN mail_activity act ON act.res_id = m.id
@@ -54,7 +55,7 @@ class account_journal(models.Model):
                     'res_id': activity.get('res_id'),
                     'res_model': activity.get('res_model'),
                     'status': activity.get('status'),
-                    'name': activity.get('summary') or activity.get('act_type_name'),
+                    'name': (activity.get('summary') or activity.get('act_type_name')) + '(' + format_date(activity.get('date'), 'MMM', locale=self._context.get('lang') or 'en_US') + ')',
                     'activity_category': activity.get('activity_category'),
                     'date': odoo_format_date(self.env, activity.get('date_deadline'))
                 })
@@ -276,10 +277,10 @@ class account_journal(models.Model):
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
-            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount'], 'journal_id', lazy=False)
+            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total'], 'journal_id', lazy=False)
             if read:
                 number_to_check = read[0]['__count']
-                to_check_balance = read[0]['amount']
+                to_check_balance = read[0]['amount_total']
 
         difference = currency.round(last_balance-account_sum) + 0.0
 

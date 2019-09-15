@@ -85,6 +85,8 @@ class MaintenanceRequest(models.Model):
                 r.owner_user_id = r.employee_id.user_id.id
             elif r.equipment_id.equipment_assign_to == 'department':
                 r.owner_user_id = r.department_id.manager_id.user_id.id
+            else:
+                r.owner_user_id = False
 
     @api.onchange('employee_id', 'department_id')
     def onchange_department_or_employee_id(self):

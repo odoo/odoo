@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Partner Autocomplete",
-    'summary': """
-        Auto-complete partner companies' data""",
+    'summary': "Auto-complete partner companies' data",
     'description': """
        Auto-complete partner companies' data
     """,

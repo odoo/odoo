@@ -31,6 +31,7 @@
             var odoo = <t t-raw="json.dumps({
                 'csrf_token': request.csrf_token(None),
                 'session_info': session_info,
+                'login_number': login_number,
                 'debug': debug,
             })"/>;
         </script>
@@ -75,7 +76,7 @@
     </script>
 </template>
 
-<template id="pos_editor_assets" inherit_id="web_editor.wysiwyg_snippets">
+<template id="pos_editor_assets" inherit_id="web_editor.assets_wysiwyg">
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/point_of_sale/static/src/js/pos.web_editor.js"/>
     </xpath>

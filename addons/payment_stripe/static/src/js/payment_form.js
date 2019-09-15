@@ -84,7 +84,7 @@ PaymentForm.include({
             self.displayError(
                 _t('Unable to save card'),
                 _t("We are not able to add your payment method at the moment. ") +
-                    this._parseError(error)
+                    self._parseError(error)
             );
         });
     },

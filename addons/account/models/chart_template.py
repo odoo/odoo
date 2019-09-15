@@ -57,6 +57,7 @@ class AccountAccountTemplate(models.Model):
             "to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times).")
     tag_ids = fields.Many2many('account.account.tag', 'account_account_template_account_tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
     group_id = fields.Many2one('account.group')
+    root_id = fields.Many2one('account.root')
 
     @api.depends('name', 'code')
     def name_get(self):
@@ -652,10 +653,10 @@ class AccountChartTemplate(models.Model):
         sale_tax = self.env['account.tax.template'].search([('type_tax_use', '=', 'sale'), ('chart_template_id', 'in', all_parents)], limit=1)
         purchase_tax = self.env['account.tax.template'].search([('type_tax_use', '=', 'purchase'), ('chart_template_id', 'in', all_parents)], limit=1)
         for account_template in acc_template:
-            # Adding a tax by default on each income or expense account.
-            if account_template.user_type_id.internal_group == 'income':
+            # Adding a tax by default on each income or expense account, if they are not used for exchange difference.
+            if account_template.user_type_id.internal_group == 'income' and account_template != self.income_currency_exchange_account_id:
                 account_template.tax_ids = sale_tax
-            elif account_template.user_type_id.internal_group == 'expense':
+            elif account_template.user_type_id.internal_group == 'expense' and account_template != self.expense_currency_exchange_account_id:
                 account_template.tax_ids = purchase_tax
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
@@ -1046,8 +1047,8 @@ class AccountFiscalPositionTemplate(models.Model):
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
         help="Apply only if delivery or invoicing country match the group.")
     state_ids = fields.Many2many('res.country.state', string='Federal States')
-    zip_from = fields.Integer(string='Zip Range From', default=0)
-    zip_to = fields.Integer(string='Zip Range To', default=0)
+    zip_from = fields.Char(string='Zip Range From')
+    zip_to = fields.Char(string='Zip Range To')
 
 
 class AccountFiscalPositionTaxTemplate(models.Model):
@@ -1154,9 +1155,12 @@ class AccountReconcileModelTemplate(models.Model):
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of balance')
+        ('percentage', 'Percentage of balance'),
+        ('regex', 'From label'),
         ], required=True, default='percentage')
     amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    amount_from_label_regex = fields.Char(string="Amount from Label (regex)", default=r"([\d\.,]+)")
+    decimal_separator = fields.Char(help="Every character that is nor a digit nor this separator will be removed from the matching string")
     force_tax_included = fields.Boolean(string='Tax Included in Price',
         help='Force the tax to be managed as a price included tax.')
     # Second part fields.
@@ -1166,9 +1170,11 @@ class AccountReconcileModelTemplate(models.Model):
     second_label = fields.Char(string='Second Journal Item Label')
     second_amount_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of amount')
+        ('percentage', 'Percentage of amount'),
+        ('regex', 'From label'),
         ], string="Second Amount type",required=True, default='percentage')
     second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_amount_from_label_regex = fields.Char(string="Second Amount from Label (regex)", default=r"([\d\.,]+)")
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')

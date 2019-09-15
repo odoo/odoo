@@ -6,14 +6,14 @@
         <field name="arch" type="xml">
             <form string="Replenish wizard">
                 <p>
-                Use this assistant to replenish your stock. 
+                Use this assistant to replenish your stock.
                 Depending on your product configuration, launching a replenishment may trigger a request for quotation,
                 a manufacturing order or a transfer.
                 </p>
                 <group>
                     <field name="product_tmpl_id" invisible="1"/>
                     <field name="product_has_variants" invisible="1"/>
-                    <field name="product_id" 
+                    <field name="product_id"
                         domain="[('product_tmpl_id', '=', product_tmpl_id)]"
                         attrs="{'readonly': [('product_has_variants', '=', False)]}"/>
                     <field name="product_uom_category_id" invisible="1"/>
@@ -23,20 +23,21 @@
                         <field name="product_uom_id"
                             domain="[('category_id', '=', product_uom_category_id)]"
                             groups="uom.group_uom"/>
-                    </div>      
-                    <field name="date_planned"/>              
+                    </div>
+                    <field name="date_planned"/>
                     <field name="warehouse_id"
                         groups="stock.group_stock_multi_warehouses"/>
                     <field name="route_ids"
                         groups="stock.group_adv_location"
                         widget="many2many_tags"/>
+                    <field name="company_id" invisible="1"/>
                 </group>
                 <footer>
-                    <button name="launch_replenishment" 
-                        string="Confirm" 
-                        type="object" 
+                    <button name="launch_replenishment"
+                        string="Confirm"
+                        type="object"
                         class="btn-primary"/>
-                    <button string="Discard" 
+                    <button string="Discard"
                         class="btn-secondary"
                         special="cancel" />
                 </footer>

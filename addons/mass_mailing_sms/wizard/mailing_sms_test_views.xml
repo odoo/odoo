@@ -6,11 +6,11 @@
         <field name="arch" type="xml">
             <form string="Send a Sample SMS">
                 <p class="text-muted">
-                    Send a sample SMS for testing purpose to the numbers below.
+                    Send a sample SMS for testing purpose to the numbers below (comma-separated list).
                 </p>
                 <group>
-                    <field name="numbers"/>
-                    <field name="sanitized_numbers" invisible="0"/>
+                    <field name="numbers" placeholder="+32 495 85 85 77, +33 545 55 55 55"/>
+                    <field name="sanitized_numbers" invisible="1"/>
                     <field name="mailing_id" invisible="1"/>
                 </group>
                 <footer>
@@ -22,7 +22,7 @@
     </record>
 
     <record id="mailing_sms_test_action" model="ir.actions.act_window">
-        <field name="name">Test SMS Mailing</field>
+        <field name="name">Test SMS Marketing</field>
         <field name="res_model">mailing.sms.test</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

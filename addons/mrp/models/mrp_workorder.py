@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
+from math import floor
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -18,9 +19,14 @@ class MrpWorkorder(models.Model):
     name = fields.Char(
         'Work Order', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    company_id = fields.Many2one(
+        'res.company', 'Company',
+        default=lambda self: self.env.company,
+        required=True, index=True, readonly=True)
     workcenter_id = fields.Many2one(
         'mrp.workcenter', 'Work Center', required=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        check_company=True)
     working_state = fields.Selection(
         'Workcenter Status', related='workcenter_id.working_state', readonly=False,
         help='Technical: used in views only')
@@ -50,7 +56,8 @@ class MrpWorkorder(models.Model):
         default='pending')
     leave_id = fields.Many2one(
         'resource.calendar.leaves',
-        help='Slot into workcenter calendar once planned')
+        help='Slot into workcenter calendar once planned',
+        check_company=True)
     date_planned_start = fields.Datetime(
         'Scheduled Date Start',
         compute='_compute_dates_planned',
@@ -83,9 +90,12 @@ class MrpWorkorder(models.Model):
     duration_percent = fields.Integer(
         'Duration Deviation (%)', compute='_compute_duration',
         group_operator="avg", readonly=True, store=True)
+    progress = fields.Float('Progress Done (%)', digits=(16, 2), compute='_compute_progress')
 
     operation_id = fields.Many2one(
-        'mrp.routing.workcenter', 'Operation')  # Should be used differently as BoM can change in the meantime
+        'mrp.routing.workcenter', 'Operation',
+        check_company=True)
+        # Should be used differently as BoM can change in the meantime
     worksheet = fields.Binary(
         'Worksheet', related='operation_id.worksheet', readonly=True)
     worksheet_type = fields.Selection(
@@ -102,8 +112,8 @@ class MrpWorkorder(models.Model):
         'stock.move.line', 'workorder_id', 'Moves to Track',
         help="Inventory moves for which you must scan a lot number at this work order")
     finished_lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial Number', domain="[('product_id', '=', product_id)]",
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        'stock.production.lot', 'Lot/Serial Number', domain="[('id', 'in', allowed_lots_domain)]",
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, check_company=True)
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id')
     is_user_working = fields.Boolean(
@@ -112,7 +122,7 @@ class MrpWorkorder(models.Model):
     working_user_ids = fields.One2many('res.users', string='Working user on this work order.', compute='_compute_working_users')
     last_working_user_id = fields.One2many('res.users', string='Last user that worked on this work order.', compute='_compute_working_users')
 
-    next_work_order_id = fields.Many2one('mrp.workorder', "Next Work Order")
+    next_work_order_id = fields.Many2one('mrp.workorder', "Next Work Order", check_company=True)
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     production_date = fields.Datetime('Production Date', related='production_id.date_planned_start', store=True, readonly=False)
@@ -146,14 +156,6 @@ class MrpWorkorder(models.Model):
             'date_to': date_to,
         })
 
-    @api.onchange('date_planned_start')
-    def _onchange_date_planned_start(self):
-        if self.duration_expected:
-            time_delta = timedelta(minutes=self.duration_expected)
-        else:
-            time_delta = timedelta(hours=1)
-        self.update({'date_planned_finished': self.date_planned_start + time_delta})
-
     @api.onchange('finished_lot_id')
     def _onchange_finished_lot_id(self):
         """When the user changes the lot being currently produced, suggest
@@ -165,6 +167,12 @@ class MrpWorkorder(models.Model):
             line = previous_wo.finished_workorder_line_ids.filtered(lambda line: line.product_id == self.product_id and line.lot_id == self.finished_lot_id)
             if line:
                 self.qty_producing = line.qty_done
+
+    @api.onchange('date_planned_finished')
+    def _onchange_date_planned_finished(self):
+        if self.date_planned_start and self.date_planned_finished:
+            diff = self.date_planned_finished - self.date_planned_start
+            self.duration_expected = diff.total_seconds() / 60
 
     @api.depends('production_id.workorder_ids.finished_workorder_line_ids',
     'production_id.workorder_ids.finished_workorder_line_ids.qty_done',
@@ -194,7 +202,10 @@ class MrpWorkorder(models.Model):
             qty_produced = sum([max(qty_dones) for qty_dones in qties_done_per_lot.values()])
             if float_compare(qty_produced, qty_to_produce, precision_rounding=rounding) < 0:
                 # If we haven't produced enough, all lots are available
-                allowed_lot_ids = self.env['stock.production.lot'].search([('product_id', '=', production.product_id.id)])
+                allowed_lot_ids = self.env['stock.production.lot'].search([
+                    ('product_id', '=', production.product_id.id),
+                    ('company_id', '=', production.company_id.id),
+                ])
             else:
                 # If we produced enough, only the already produced lots are available
                 allowed_lot_ids = self.env['stock.production.lot'].browse(qties_done_per_lot.keys())
@@ -232,6 +243,16 @@ class MrpWorkorder(models.Model):
             else:
                 order.duration_percent = 0
 
+    @api.depends('duration', 'duration_expected', 'state')
+    def _compute_progress(self):
+        for order in self:
+            if order.state == 'done':
+                order.progress = 100
+            elif order.duration_expected:
+                order.progress = order.duration * 100 / order.duration_expected
+            else:
+                order.progress = 0
+
     def _compute_working_users(self):
         """ Checks whether the current user is working, all the users currently working and the last user that worked. """
         for order in self:
@@ -262,9 +283,9 @@ class MrpWorkorder(models.Model):
             order.color = 2
 
     @api.onchange('date_planned_start', 'duration_expected')
-    def _onchange_date_planned_finished(self):
+    def _onchange_date_planned_start(self):
         if self.date_planned_start and self.duration_expected:
-            self.date_planned_finished = self.date_planned_start  + relativedelta(minutes=self.duration_expected)
+            self.date_planned_finished = self.date_planned_start + relativedelta(minutes=self.duration_expected)
 
     def write(self, values):
         if list(values.keys()) != ['time_ids'] and any(workorder.state == 'done' for workorder in self):
@@ -363,6 +384,7 @@ class MrpWorkorder(models.Model):
             return True
 
         self.ensure_one()
+        self._check_company()
         if float_compare(self.qty_producing, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
 
@@ -497,7 +519,8 @@ class MrpWorkorder(models.Model):
             'description': _('Time Tracking: ')+self.env.user.name,
             'loss_id': loss_id[0].id,
             'date_start': datetime.now(),
-            'user_id': self.env.user.id
+            'user_id': self.env.user.id,  # FIXME sle: can be inconsistent with company_id
+            'company_id': self.company_id.id,
         })
         return self.write({'state': 'progress',
                     'date_start': datetime.now(),

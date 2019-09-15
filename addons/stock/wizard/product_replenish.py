@@ -18,16 +18,19 @@ class ProductReplenish(models.TransientModel):
     product_uom_id = fields.Many2one('uom.uom', string='Unity of measure', required=True)
     quantity = fields.Float('Quantity', default=1, required=True)
     date_planned = fields.Datetime('Scheduled Date', required=True, help="Date at which the replenishment should take place.")
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=True)
-    route_ids = fields.Many2many('stock.location.route', string='Preferred Routes',
-        help="Apply specific route(s) for the replenishment instead of product's default routes.")
+    warehouse_id = fields.Many2one(
+        'stock.warehouse', string='Warehouse', required=True,
+        domain="[('company_id', '=', company_id)]")
+    route_ids = fields.Many2many(
+        'stock.location.route', string='Preferred Routes',
+        help="Apply specific route(s) for the replenishment instead of product's default routes.",
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    company_id = fields.Many2one('res.company')
 
     @api.model
     def default_get(self, fields):
         res = super(ProductReplenish, self).default_get(fields)
-        company_user = self.env.company
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
-        product_tmpl_id = False
+        product_tmpl_id = self.env['product.template']
         if 'product_id' in fields:
             if self.env.context.get('default_product_id'):
                 product_id = self.env['product.product'].browse(self.env.context['default_product_id'])
@@ -39,10 +42,14 @@ class ProductReplenish(models.TransientModel):
                 res['product_tmpl_id'] = product_tmpl_id.id
                 res['product_id'] = product_tmpl_id.product_variant_id.id
                 if len(product_tmpl_id.product_variant_ids) > 1:
-                    res['product_has_variants'] = True 
+                    res['product_has_variants'] = True
+        company = product_tmpl_id.company_id or self.env.company
         if 'product_uom_id' in fields:
             res['product_uom_id'] = product_tmpl_id.uom_id.id
+        if 'company' in fields:
+            res['company_id'] = company.id
         if 'warehouse_id' in fields:
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
             res['warehouse_id'] = warehouse.id
         if 'date_planned' in fields:
             res['date_planned'] = datetime.datetime.now()
@@ -69,7 +76,7 @@ class ProductReplenish(models.TransientModel):
 
     def _prepare_run_values(self):
         replenishment = self.env['procurement.group'].create({
-            'partner_id': self.product_id.responsible_id.partner_id.id,
+            'partner_id': self.product_id.with_context(force_company=self.company_id.id).responsible_id.partner_id.id,
         })
 
         values = {

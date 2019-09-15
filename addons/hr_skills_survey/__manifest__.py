@@ -11,7 +11,7 @@
 Certification and Skills for HR
 ===============================
 
-This module add certification to resumé for employees.
+This module adds certification to resumé for employees.
         """,
     'depends': ['hr_skills', 'survey'],
     'data': [

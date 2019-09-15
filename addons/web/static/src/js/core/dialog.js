@@ -21,6 +21,7 @@ var Dialog = Widget.extend({
     xmlDependencies: ['/web/static/src/xml/dialog.xml'],
     custom_events: _.extend({}, Widget.prototype.custom_events, {
         focus_control_button: '_onFocusControlButton',
+        close_dialog: '_onCloseDialog',
     }),
     events: _.extend({}, Widget.prototype.events, {
         'keydown .modal-footer button': '_onFooterButtonKeyDown',
@@ -157,33 +158,7 @@ var Dialog = Widget.extend({
      * @param {Object[]} buttons - @see init
      */
     set_buttons: function (buttons) {
-        var self = this;
-        this.$footer.empty();
-        _.each(buttons, function (buttonData) {
-            var $button = dom.renderButton({
-                attrs: {
-                    class: buttonData.classes || (buttons.length > 1 ? 'btn-secondary' : 'btn-primary'),
-                    disabled: buttonData.disabled,
-                },
-                icon: buttonData.icon,
-                text: buttonData.text,
-            });
-            $button.on('click', function (e) {
-                var def;
-                if (buttonData.click) {
-                    def = buttonData.click.call(self, e);
-                }
-                if (buttonData.close) {
-                    self.onForceClose = false;
-                    Promise.resolve(def).then(self.close.bind(self)).guardedCatch(self.close.bind(self));
-                }
-            });
-            if (self.technical) {
-                self.$footer.append($button);
-            } else {
-                self.$footer.prepend($button);
-            }
-        });
+        this._setButtonsTo(this.$footer, buttons);
     },
 
     set_title: function (title, subtitle) {
@@ -303,9 +278,52 @@ var Dialog = Widget.extend({
     _focusOnClose: function() {
         return false;
     },
+    /**
+     * Render and set the given buttons into a target element
+     *
+     * @private
+     * @param {jQueryElement} $target The destination of the rendered buttons
+     * @param {Array} buttons The array of buttons to render
+     */
+    _setButtonsTo($target, buttons) {
+        var self = this;
+        $target.empty();
+        _.each(buttons, function (buttonData) {
+            var $button = dom.renderButton({
+                attrs: {
+                    class: buttonData.classes || (buttons.length > 1 ? 'btn-secondary' : 'btn-primary'),
+                    disabled: buttonData.disabled,
+                },
+                icon: buttonData.icon,
+                text: buttonData.text,
+            });
+            $button.on('click', function (e) {
+                var def;
+                if (buttonData.click) {
+                    def = buttonData.click.call(self, e);
+                }
+                if (buttonData.close) {
+                    self.onForceClose = false;
+                    Promise.resolve(def).then(self.close.bind(self)).guardedCatch(self.close.bind(self));
+                }
+            });
+            if (self.technical) {
+                $target.append($button);
+            } else {
+                $target.prepend($button);
+            }
+        });
+    },
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+    /**
+     * @private
+     */
+    _onCloseDialog: function (ev) {
+        ev.stopPropagation();
+        this.close();
+    },
     /**
      * Moves the focus to the first button primary in the footer of the dialog
      *

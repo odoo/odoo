@@ -12,6 +12,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var FieldManagerMixin = require('web.FieldManagerMixin');
 var Pager = require('web.Pager');
+var TranslationDialog = require('web.TranslationDialog');
 
 var _t = core._t;
 
@@ -330,6 +331,23 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
 
         var state = this.model.get(this.handle);
         return this.renderer.confirmChange(state, id, fields, e);
+    },
+    /**
+     * Ask the user to confirm he wants to save the record
+     * @private
+     */
+    _confirmSaveNewRecord: function () {
+        var self = this;
+        var def = new Promise(function (resolve, reject) {
+            var message = _t("You need to save this new record before editing the translation. Do you want to proceed?");
+            var dialog = Dialog.confirm(self, message, {
+                title: _t("Warning"),
+                confirm_callback: resolve.bind(self, true),
+                cancel_callback: reject,
+            });
+            dialog.on('closed', self, reject);
+        });
+        return def;
     },
     /**
      * Delete records (and ask for confirmation if necessary)
@@ -789,28 +807,35 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @private
      * @param {OdooEvent} ev
      */
-    _onTranslate: function (ev) {
+    _onTranslate: async function (ev) {
         ev.stopPropagation();
-        var self = this;
-        var record = this.model.get(ev.data.id, {raw: true});
-        this._rpc({
+
+        if (this.model.isNew(ev.data.id)) {
+            await this._confirmSaveNewRecord();
+            var updatedFields = await this.saveRecord(ev.data.id, { stayInEdit: true });
+            await this._confirmChange(ev.data.id, updatedFields, ev);
+        }
+        var record = this.model.get(ev.data.id, { raw: true });
+        var result = await this._rpc({
             route: '/web/dataset/call_button',
             params: {
                 model: 'ir.translation',
                 method: 'translate_fields',
                 args: [record.model, record.res_id, ev.data.fieldName],
-                kwargs: {context: record.getContext()},
+                kwargs: { context: record.getContext() },
             }
-        }).then(function (result) {
-            self.do_action(result, {
-                on_reverse_breadcrumb: function () {
-                    if (!_.isEmpty(self.renderer.alertFields)) {
-                        self.renderer.displayTranslationAlert();
-                    }
-                    return false;
-                },
-            });
         });
+
+        this.translationDialog = new TranslationDialog(this, {
+            domain: result.domain,
+            searchName: result.context.search_default_name,
+            fieldName: record.fieldsInfo[record.viewType][ev.data.fieldName].name,
+            userLanguageValue: ev.target.value || '',
+            dataPointID: record.id,
+            isComingFromTranslationAlert: ev.data.isComingFromTranslationAlert,
+            isText: record.fields[ev.data.fieldName].type === 'text',
+        });
+        return this.translationDialog.open();
     },
 });
 

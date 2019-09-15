@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <search string="UTM Campaigns">
                 <field name="name" string="Campaigns"/>
-                <field name="tag_ids"/>
+                <field name="tag_ids" widget="many2many_tags"/>
                 <field name="user_id"/>
                 <group expand="0" string="Group By">
                     <filter string="Stage" name="group_stage_id"
@@ -46,7 +46,7 @@
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="stage_id"/>
-                <field name="tag_ids"/>
+                <field name="tag_ids" widget="many2many_tags"/>
             </tree>
         </field>
     </record>
@@ -120,6 +120,8 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Add a new tag
+            </p><p>
+            Use tags to organize campaigns and easily filter them.
             </p>
         </field>
     </record>
@@ -153,7 +155,9 @@
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-            Create a new utm stage
+            Create a stage for your campaigns
+            </p><p>
+            Stages allow you to organize your workflow  (e.g. : plan, design, in progress,  done, …).
             </p>
         </field>
     </record>

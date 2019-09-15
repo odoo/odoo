@@ -12,6 +12,7 @@ from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.osv.expression import AND
+import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -39,6 +40,7 @@ class PosOrder(models.Model):
             'session_id':   ui_order['pos_session_id'],
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
             'pos_reference': ui_order['name'],
+            'sequence_number': ui_order['sequence_number'],
             'partner_id':   ui_order['partner_id'] or False,
             'date_order':   ui_order['creation_date'].replace('T', ' ')[:19],
             'fiscal_position_id': ui_order['fiscal_position_id'],
@@ -59,6 +61,8 @@ class PosOrder(models.Model):
             'amount': ui_paymentline['amount'] or 0.0,
             'payment_date': payment_date,
             'payment_method_id': ui_paymentline['payment_method_id'],
+            'card_type': ui_paymentline.get('card_type'),
+            'transaction_id': ui_paymentline.get('transaction_id'),
             'pos_order_id': order.id,
         }
 
@@ -603,6 +607,34 @@ class PosOrder(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'current',
         }
+
+    @api.model
+    def action_receipt_to_customer(self, name, client, ticket, invoice_id=False):
+        template_obj = self.env['mail.mail']
+        message = "<p>Dear %s,<br/>Here is your electronic ticket from the %s. </p>" % (client['name'], name)
+        template_data = {
+            'subject': 'Receipt %s' % name,
+            'body_html': message + '<img src="data:image/jpeg;base64,%s"/>' % ticket,
+            'email_from': self.env.company.email,
+            'email_to': client['email']
+        }
+
+        if invoice_id:
+            report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(invoice_id)
+            attachment = self.env['ir.attachment'].create({
+                'name': name,
+                'type': 'binary',
+                'datas': base64.b64encode(report[0]),
+                'datas_fname': name + '.pdf',
+                'store_fname': name,
+                'res_model': 'account.move',
+                'res_id': invoice_id,
+                'mimetype': 'application/x-pdf'
+            })
+            template_data['attachment_ids'] = attachment
+
+        template_id = template_obj.create(template_data)
+        template_obj.send(template_id)
 
     @api.model
     def remove_from_ui(self, server_ids):

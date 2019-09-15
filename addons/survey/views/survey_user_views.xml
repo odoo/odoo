@@ -2,8 +2,8 @@
 <odoo>
 <data>
     <!-- USER INPUTS -->
-    <record id="survey_user_input_search" model="ir.ui.view">
-        <field name="name">survey_user_input_search</field>
+    <record id="survey_user_input_view_search" model="ir.ui.view">
+        <field name="name">survey.user_input.view.search</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
             <search string="Search Survey">
@@ -17,7 +17,9 @@
                 <filter string="Invite" name="invite" domain="[('input_type', '=', 'link')]"/>
                 <separator/>
                 <filter string="Quizz passed" name="quizz_passed" domain="[('quizz_passed','=', True)]"/>
+                <separator/>
                 <filter string="Test Entries" name="test" domain="[('test_entry','=', True)]"/>
+                <filter string="Except Test Entries" name="not_test" domain="[('test_entry','=', False)]" invisible="1"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
                     <filter string="Email" name="group_by_email" domain="[]" context="{'group_by': 'email'}"/>
@@ -26,8 +28,9 @@
             </search>
         </field>
     </record>
-    <record model="ir.ui.view" id="survey_user_input_form">
-        <field name="name">survey_user_input_form</field>
+
+    <record id="survey_user_input_view_form" model="ir.ui.view">
+        <field name="name">survey.user_input.view.form</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
             <form string="Survey User inputs" create="false">
@@ -65,19 +68,23 @@
                     </group>
                     <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
                         <tree>
+                            <field name="question_sequence" invisible="1"/>
                             <field name="question_id"/>
+                            <field name="page_id"/>
                             <field name="answer_type"/>
                             <field name="skipped"/>
                             <field name="create_date"/>
-                            <field name="answer_score" groups="base.group_no_one"/>
+                            <field name="answer_is_correct"/>
+                            <field name="answer_score"/>
                         </tree>
                     </field>
                 </sheet>
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="survey_user_input_tree">
-        <field name="name">survey_user_input_tree</field>
+
+    <record id="survey_user_input_view_tree" model="ir.ui.view">
+        <field name="name">survey.user_input.view.tree</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
             <tree string="Survey User inputs" decoration-muted="test_entry == True" create="false">
@@ -96,8 +103,8 @@
         </field>
     </record>
 
-    <record id="view_survey_user_input_kanban" model="ir.ui.view">
-        <field name="name">survey.user_input.kanban</field>
+    <record id="survey_user_input_viuew_kanban" model="ir.ui.view">
+        <field name="name">survey.user_input.view.kanban</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
             <kanban create="false">
@@ -132,26 +139,12 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_survey_user_input">
-        <field name="name">Answers</field>
+        <field name="name">Participations</field>
         <field name="res_model">survey.user_input</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="view_id" ref="survey_user_input_tree"></field>
-        <field name="search_view_id" ref="survey_user_input_search"/>
+        <field name="view_id" ref="survey_user_input_view_tree"></field>
+        <field name="search_view_id" ref="survey_user_input_view_search"/>
         <field name="context">{'search_default_group_by_survey': True}</field>
-        <field name="help" type="html">
-          <p class="o_view_nocontent_empty_folder">
-            Nobody has replied to your surveys yet
-          </p>
-        </field>
-    </record>
-    <record model="ir.actions.act_window" id="action_survey_user_input_notest">
-        <field name="name">Answers</field>
-        <field name="res_model">survey.user_input</field>
-        <field name="view_mode">tree,kanban,form</field>
-        <field name="view_id" ref="survey_user_input_tree"></field>
-        <field name="search_view_id" ref="survey_user_input_search"/>
-        <field name="context">{'search_default_group_by_survey': True}</field>
-        <field name="domain">[('test_entry', '=', False)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
             Nobody has replied to your surveys yet
@@ -218,7 +211,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_survey_user_input_line">
-        <field name="name">Survey User Input lines</field>
+        <field name="name">Detailled Answers</field>
         <field name="res_model">survey.user_input_line</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="survey_response_line_search"/>
@@ -230,7 +223,16 @@
         </field>
     </record>
 
-    <menuitem name="Answers" id="menu_survey_type_form1" action="action_survey_user_input" parent="menu_surveys" sequence="1"/>
-    <menuitem name="User Input Lines" id="menu_survey_response_line_form" action="action_survey_user_input_line" parent="menu_surveys_configuration" sequence="4"/>
+    <menuitem name="Participations"
+        id="menu_survey_type_form1"
+        action="action_survey_user_input"
+        parent="survey_menu_user_inputs"
+        sequence="1"/>
+    <menuitem name="Detailed Answers"
+        id="menu_survey_response_line_form"
+        action="action_survey_user_input_line"
+        parent="survey_menu_user_inputs"
+        sequence="4"
+        groups="base.group_no_one"/>
 </data>
 </odoo>

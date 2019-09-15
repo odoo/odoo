@@ -171,7 +171,7 @@
                                 <div class="form-group col-12">
                                     <label class="mb-1 text-primary" for="description"><span class="font-weight-bold">Biography</span></label>
                                     <textarea name="description" id="description" style="min-height: 120px"
-                                        class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
+                                        class="form-control o_wysiwyg_loader"><t t-esc="user.partner_id.website_description"/></textarea>
                                 </div>
                                 <div class="col">
                                     <button type="submit" class="btn btn-primary o_wprofile_submit_btn">Update</button>
@@ -514,7 +514,9 @@
         <div class="card text-center mb-2 border-bottom-0 o_wprofile_pointer">
             <div class="card-body">
                 <div class="d-inline-block position-relative">
-                    <img class="rounded-circle img-fluid" t-att-src="'/profile/avatar/%s?field=image_128%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
+                    <img class="rounded-circle img-fluid"
+                        style="width: 128px; height: 128px; object-fit: cover;"
+                        t-att-src="'/profile/avatar/%s?field=image_256%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
                     <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user_index + 1}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
                 <h3 class="mt-2 mb-0" t-esc="user['name']"></h3>

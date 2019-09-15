@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+import json
+
 from odoo import models, api, fields, _
 from odoo.exceptions import UserError
-import json
 
 
 class WebsiteVisitor(models.Model):
@@ -99,4 +101,5 @@ class WebsiteVisitor(models.Model):
                     "uuid": chat_request_channel.uuid,
                     "type": "chat_request"
                 })
-                response.set_cookie('im_livechat_session', livechat_session)
+                expiration_date = datetime.now() + timedelta(days=100*365)  # never expire
+                response.set_cookie('im_livechat_session', livechat_session, expires=expiration_date.timestamp())

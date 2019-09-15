@@ -16,17 +16,16 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
     def setUpClass(cls):
         super(TestMessageValues, cls).setUpClass()
 
-        cls.alias_record = cls.env['mail.test'].with_context(common.BaseFunctionalTest._test_context).create({
+        cls._init_mail_gateway()
+        cls.alias_record = cls.env['mail.test'].with_context(cls._test_context).create({
             'name': 'Pigs',
             'alias_name': 'pigs',
             'alias_contact': 'followers',
         })
-
         cls.Message = cls.env['mail.message'].with_user(cls.user_employee)
 
-    def test_mail_message_values_basic(self):
-        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
-
+    @mute_logger('odoo.models.unlink')
+    def test_mail_message_values_no_document_values(self):
         msg = self.Message.create({
             'reply_to': 'test.reply@example.com',
             'email_from': 'test.from@example.com',
@@ -35,39 +34,45 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(msg.reply_to, 'test.reply@example.com')
         self.assertEqual(msg.email_from, 'test.from@example.com')
 
-    def test_mail_message_values_default(self):
-        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
-
-        msg = self.Message.create({})
-        self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-
     @mute_logger('odoo.models.unlink')
-    def test_mail_message_values_alias(self):
-        alias_domain = 'example.com'
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', alias_domain)
-        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
-
+    def test_mail_message_values_no_document(self):
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-
-    def test_mail_message_values_alias_catchall(self):
-        alias_domain = 'example.com'
-        alias_catchall = 'pokemon'
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', alias_domain)
-        self.env['ir.config_parameter'].set_param('mail.catchall.alias', alias_catchall)
-
-        msg = self.Message.create({})
-        self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        reply_to_name = self.env.company.name
-        reply_to_email = '%s@%s' % (alias_catchall, alias_domain)
+        reply_to_name = self.env.user.company_id.name
+        reply_to_email = '%s@%s' % (self.alias_catchall, self.alias_domain)
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
-    def test_mail_message_values_document_no_alias(self):
+        # no alias domain -> author
+        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
+
+        msg = self.Message.create({})
+        self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
+        self.assertEqual(msg.reply_to, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+
+        # no alias catchall, no alias -> author
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
+        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
+
+        msg = self.Message.create({})
+        self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
+        self.assertEqual(msg.reply_to, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+
+    @mute_logger('odoo.models.unlink')
+    def test_mail_message_values_document_alias(self):
+        msg = self.Message.create({
+            'model': 'mail.test',
+            'res_id': self.alias_record.id
+        })
+        self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
+        reply_to_name = '%s %s' % (self.env.user.company_id.name, self.alias_record.name)
+        reply_to_email = '%s@%s' % (self.alias_record.alias_name, self.alias_domain)
+        self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
+        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+
+        # no alias domain -> author
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
 
         msg = self.Message.create({
@@ -75,13 +80,11 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
-    @mute_logger('odoo.models.unlink')
-    def test_mail_message_values_document_alias(self):
-        alias_domain = 'example.com'
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', alias_domain)
+        # no catchall -> don't care, alias
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
 
         msg = self.Message.create({
@@ -90,25 +93,45 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
         reply_to_name = '%s %s' % (self.env.company.name, self.alias_record.name)
-        reply_to_email = '%s@%s' % (self.alias_record.alias_name, alias_domain)
+        reply_to_email = '%s@%s' % (self.alias_record.alias_name, self.alias_domain)
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
-    def test_mail_message_values_document_alias_catchall(self):
-        alias_domain = 'example.com'
-        alias_catchall = 'pokemon'
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', alias_domain)
-        self.env['ir.config_parameter'].set_param('mail.catchall.alias', alias_catchall)
+    @mute_logger('odoo.models.unlink')
+    def test_mail_message_values_document_no_alias(self):
+        test_record = self.env['mail.test.simple'].create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
         msg = self.Message.create({
-            'model': 'mail.test',
-            'res_id': self.alias_record.id
+            'model': 'mail.test.simple',
+            'res_id': test_record.id
         })
-        self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        reply_to_name = '%s %s' % (self.env.company.name, self.alias_record.name)
-        reply_to_email = '%s@%s' % (self.alias_record.alias_name, alias_domain)
+        self.assertIn('-openerp-%d-mail.test.simple' % test_record.id, msg.message_id.split('@')[0])
+        reply_to_name = '%s %s' % (self.env.user.company_id.name, test_record.name)
+        reply_to_email = '%s@%s' % (self.alias_catchall, self.alias_domain)
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+
+    @mute_logger('odoo.models.unlink')
+    def test_mail_message_values_document_manual_alias(self):
+        test_record = self.env['mail.test.simple'].create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        alias = self.env['mail.alias'].create({
+            'alias_name': 'MegaLias',
+            'alias_user_id': False,
+            'alias_model_id': self.env['ir.model']._get('mail.test.simple').id,
+            'alias_parent_model_id': self.env['ir.model']._get('mail.test.simple').id,
+            'alias_parent_thread_id': test_record.id,
+        })
+
+        msg = self.Message.create({
+            'model': 'mail.test.simple',
+            'res_id': test_record.id
+        })
+
+        self.assertIn('-openerp-%d-mail.test.simple' % test_record.id, msg.message_id.split('@')[0])
+        reply_to_name = '%s %s' % (self.env.user.company_id.name, test_record.name)
+        reply_to_email = '%s@%s' % (alias.alias_name, self.alias_domain)
+        self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
+        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
     def test_mail_message_values_no_auto_thread(self):
         msg = self.Message.create({
@@ -139,7 +162,7 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         cls.user_public = mail_new_test_user(cls.env, login='bert', groups='base.group_public', name='Bert Tartignole')
         cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
-        Channel = cls.env['mail.channel'].with_context(common.BaseFunctionalTest._test_context)
+        Channel = cls.env['mail.channel'].with_context(cls._test_context)
         # Pigs: base group for tests
         cls.group_pigs = Channel.create({
             'name': 'Pigs',

@@ -48,6 +48,7 @@
         <field name="name">Forecasted Inventory</field>
         <field name="res_model">report.stock.quantity</field>
         <field name="view_mode">graph</field>
+        <field name="domain">[('warehouse_id', '!=', False)]</field>
         <field name="context">{
             'search_default_filter_forecast': 1,
             'graph_groupbys': ['date:day', 'state', 'product_id'],

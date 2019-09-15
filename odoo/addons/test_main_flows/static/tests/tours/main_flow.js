@@ -525,7 +525,7 @@ tour.register('main_flow_tour', {
     content: _t('go to Vendor Bills'),
     position: 'bottom',
 }, {
-    trigger: ".o_statusbar_buttons > button:enabled:contains('Validate')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Post')",
     content: _t("Try to send it to email"),
     position: "bottom",
 }, {
@@ -660,7 +660,7 @@ tour.register('main_flow_tour', {
     content: _t("Create and View Invoices"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button:enabled:contains('Validate')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Post')",
     content: _t("Validate"),
     position: "bottom",
 }, {

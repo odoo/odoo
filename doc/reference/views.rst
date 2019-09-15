@@ -1076,8 +1076,8 @@ Possible children of the view element are:
     the progressbar
 
   ``colors`` (required)
-    JSON mapping the above field values to either "danger", "warning" or
-    "success" colors
+    JSON mapping the above field values to either "danger", "warning", "success"
+    or "muted" colors
 
   ``sum_field`` (optional)
     the name of the field whose column's records' values will be summed and
@@ -1388,50 +1388,6 @@ take the following attributes:
 
 
 will display the users avatars next to their names when grouped by user_id
-
-.. _reference/views/diagram:
-
-Diagram
-=======
-
-The diagram view can be used to display directed graphs of records. The root
-element is ``<diagram>`` and takes no attributes.
-
-Possible children of the diagram view are:
-
-``node`` (required, 1)
-    Defines the nodes of the graph. Its attributes are:
-
-    ``object``
-      the node's Odoo model
-    ``shape``
-      conditional shape mapping similar to colors and fonts in :ref:`the list
-      view <reference/views/list>`. The only valid shape is ``rectangle`` (the
-      default shape is an ellipsis)
-    ``bgcolor``
-      same as ``shape``, but conditionally maps a background color for
-      nodes. The default background color is white, the only valid alternative
-      is ``grey``.
-``arrow`` (required, 1)
-    Defines the directed edges of the graph. Its attributes are:
-
-    ``object`` (required)
-      the edge's Odoo model
-    ``source`` (required)
-      :class:`~odoo.fields.Many2one` field of the edge's model pointing to
-      the edge's source node record
-    ``destination`` (required)
-      :class:`~odoo.fields.Many2one` field of the edge's model pointing to
-      the edge's destination node record
-    ``label``
-      Python list of attributes (as quoted strings). The corresponding
-      attributes's values will be concatenated and displayed as the edge's
-      label
-
-``label``
-    Explanatory note for the diagram, the ``string`` attribute defines the
-    note's content. Each ``label`` is output as a paragraph in the diagram
-    header, easily visible but without any special emphasis.
 
 .. _reference/views/dashboard:
 

@@ -480,7 +480,10 @@ class OdooTestResult(unittest.result.TestResult):
         (fn, lno, func, sinfo) (logger.findCaller format), see logger.log for
         the other parameters.
         """
-        logger = logging.getLogger((test or self).__module__)  # test should be always set
+        test = test or self
+        if isinstance(test, unittest.case._SubTest) and test.test_case:
+            test = test.test_case
+        logger = logging.getLogger(test.__module__)
         try:
             caller_infos = caller_infos or logger.findCaller(stack_info)
         except ValueError:
@@ -489,10 +492,13 @@ class OdooTestResult(unittest.result.TestResult):
         # using logger.log makes it difficult to spot-replace findCaller in
         # order to provide useful location information (the problematic spot
         # inside the test function), so use lower-level functions instead
-        record = logger.makeRecord(logger.name, level, fn, lno, msg, args, exc_info, func, extra, sinfo)
-        logger.handle(record)
+        if logger.isEnabledFor(level):
+            record = logger.makeRecord(logger.name, level, fn, lno, msg, args, exc_info, func, extra, sinfo)
+            logger.handle(record)
 
     def getDescription(self, test):
+        if isinstance(test, unittest.case._SubTest):
+            return 'Subtest %s' % test._subDescription()
         if isinstance(test, unittest.TestCase):
             # since we have the module name in the logger, this will avoid to duplicate module info in log line
             # we only apply this for TestCase since we can receive error handler or other special case
@@ -544,6 +550,8 @@ class OdooTestResult(unittest.result.TestResult):
         """
 
         # only test case should be executed in odoo, this is only a safe guard
+        if isinstance(test, unittest.suite._ErrorHolder):
+            return
         if not isinstance(test, unittest.TestCase):
             _logger.warning('%r is not a TestCase' % test)
             return
@@ -571,10 +579,8 @@ class OdooTestRunner(object):
         start_time = time.perf_counter()
         test(result)
         time_taken = time.perf_counter() - start_time
-
-        logger = logging.getLogger(test.__module__)
         run = result.testsRun
-        logger.info("Ran %d test%s in %.3fs", run, run != 1 and "s" or "", time_taken)
+        _logger.info("Ran %d test%s in %.3fs", run, run != 1 and "s" or "", time_taken)
         return result
 
 current_test = None
