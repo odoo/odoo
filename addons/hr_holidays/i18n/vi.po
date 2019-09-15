@@ -8,8 +8,9 @@
 # fanha99 <fanha99@hotmail.com>, 2017
 # Martin Trigaux, 2017
 # Tri Bui <tribd@trobz.com>, 2018
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2018
+# Chinh Chinh <trinhttp@trobz.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:18+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
+"Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -747,6 +748,8 @@ msgid ""
 "Leave request state must be \"Refused\" or \"To Approve\" in order to reset "
 "to Draft."
 msgstr ""
+"Trạng thái yêu cầu để lại phải là \"Từ chối\" hoặc \"Cần phê duyệt\" để được"
+" đặt lại thành bản nháp."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_leave_to_approve_count
@@ -866,7 +869,7 @@ msgstr "Nghỉ phép/Phân bổ được Duyệt lần đầu"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2019"
-msgstr ""
+msgstr "Ngày nghỉ có phép 2018"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1028,6 +1031,10 @@ msgid ""
 "                type (recuperation, legal leaves, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
+"Một khi bạn đã ghi lại yêu cầu nghỉ phép của bạn, nó sẽ được gửi\n"
+"                 để một người quản lý xác nhận. Hãy chắc chắn để thiết lập nghỉ phép\n"
+"                 loại (hồi phục, nghỉ phép năm, nghỉ bệnh) và số ngày chính xác\n"
+"                 liên quan đến nghỉ phép của bạn."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:477
@@ -1276,6 +1283,10 @@ msgid ""
 "The status is 'Refused', when leave request is refused by manager.\n"
 "The status is 'Approved', when leave request is approved by manager."
 msgstr ""
+"Trạng thái được đặt thành 'Gửi', khi yêu cầu nghỉ được tạo.\n"
+"Trạng thái là 'Cần phê duyệt', khi yêu cầu nghỉ phép được xác nhận bởi người dùng.\n"
+"Trạng thái là 'Từ chối', khi người quản lý yêu cầu từ chối.\n"
+"Trạng thái là 'Đã phê duyệt', khi yêu cầu nghỉ phép được người quản lý chấp thuận."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_first_approver_id
@@ -1304,13 +1315,14 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
 msgid ""
 "This value is given by the sum of all leaves requests with a negative value."
-msgstr ""
+msgstr "Giá trị này được tính bằng tổng của tất cả các yêu cầu có giá trị âm."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_max_leaves
 msgid ""
 "This value is given by the sum of all leaves requests with a positive value."
 msgstr ""
+"Giá trị này được tính bằng tổng của tất cả các yêu cầu có giá trị dương."
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0

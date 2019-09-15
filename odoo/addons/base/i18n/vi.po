@@ -16,6 +16,7 @@
 # Minh Nguyen <ndminh210994@gmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2019
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Chinh Chinh <trinhttp@trobz.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:05+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
+"Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -852,6 +853,36 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+"Mô-đun này cho phép tạo các tệp XML công cụ SEPA Direct Debit (SDD) (nhất quán\n"
+"        với đặc tả đau.008.001.02) để gửi đến ngân hàng của bạn để\n"
+"        thu thập một bộ thanh toán.\n"
+"\n"
+"        Để có thể hiểu được phương thức thanh toán này, trước tiên khách hàng phải có\n"
+"        trả lại một nhiệm vụ cho công ty, đồng ý sử dụng ghi nợ trực tiếp.\n"
+"       Sự đồng ý này phải được mã hóa dưới dạng 'nhiệm vụ khách hàng' thành Odoo.\n"
+"\n"
+"        Bạn cũng cần phải đáp ứng các yêu cầu sau đây để đúng\n"
+"        tạo tệp SDD:\n"
+"        - Tài khoản công ty của bạn phải được đặt thành số IBAN hợp lệ\n"
+"        - Tài khoản công ty của bạn phải được liên kết với ngân hàng có BIC hợp lệ\n"
+"        - Công ty của bạn phải được cấp một mã định danh chủ nợ (điều này có thể được thực hiện trong menu 'cài đặt' của mô-đun kế toán)\n"
+"        - Công ty của bạn phải xác định một tạp chí để nhận thanh toán SDD (một lần nữa, trong 'cài đặt' của mô-đun kế toán)\n"
+"        - Mỗi khách hàng mà bạn tạo thanh toán phải có số tài khoản IBAN hợp lệ trong ngân hàng được liên kết với BIC chính xác.\n"
+"\n"
+"        Odoo sẽ cho bạn biết nếu bất kỳ yêu cầu nào trong số này không được thỏa mãn.\n"
+"\n"
+"        Bất kỳ hóa đơn nào được xác thực cho một khách hàng có nhiệm vụ sẽ được\n"
+"        tự động được đặt ở trạng thái 'đã thanh toán' và thanh toán sẽ được tạo. An\n"
+"        tùy chọn trong bảng điều khiển sau đó sẽ cho phép bạn xem tất cả các khoản thanh toán được tạo\n"
+"        thông qua SDD và để tạo tệp bộ sưu tập XML cho họ, nhóm chúng thành\n"
+"        bạn thấy phù hợp\n"
+"\n"
+"        Phương thức thanh toán 'Ghi nợ trực tiếp SEPA' chuyên dụng cũng có sẵn cho\n"
+"        mở hóa đơn, khi chọn tài khoản ngân hàng trong thuật sĩ 'đăng ký thanh toán'.\n"
+"        Sử dụng nó để tạo thanh toán SDD cho hóa đơn nếu bạn đã thêm một ủy quyền\n"
+"        cho chủ sở hữu của nó sau khi xác nhận của nó. Bạn sẽ thấy một thông báo lỗi nếu bạn\n"
+"        hãy thử sử dụng phương thức này trên một hóa đơn mà thanh toán không được ủy quyền có thể được sử dụng."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -1013,6 +1044,12 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"      Làm cho ngày khóa không thể đảo ngược:\n"
+"\n"
+"      * Bạn không thể xác định các điều kiện chặt chẽ hơn trên các cố vấn so với người dùng. Sau đó, ngày khóa trên trình tư vấn phải được đặt trước ngày khóa cho người dùng.\n"
+"     * Bạn không thể khóa một khoảng thời gian chưa kết thúc. Sau đó, ngày khóa cho cố vấn phải được đặt trước ngày cuối cùng của tháng trước.\n"
+"     * Ngày khóa mới cho cố vấn phải được đặt sau ngày khóa trước."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1048,6 +1085,10 @@ msgid ""
 "    currencies the Tax must be set at date of payment\n"
 "    "
 msgstr ""
+"\n"
+"    Tạo đúng mục bút toán trên cơ sở thuế tiền mặt khi sử dụng ngoại tệ\n"
+"    Thuế phải được đặt tại ngày thanh toán\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -19024,12 +19065,12 @@ msgstr ""
 #. module: base
 #: model:res.country,vat_label:base.mx
 msgid "RFC"
-msgstr ""
+msgstr "RFC"
 
 #. module: base
 #: model:res.country,vat_label:base.do
 msgid "RNC"
-msgstr ""
+msgstr "RNC"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_rate
@@ -21412,12 +21453,12 @@ msgstr "Kiểm thử Kết nối"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
 msgid "Test Main Flow"
-msgstr ""
+msgstr "Kiểm tra luồng chính"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_performance
 msgid "Test Performance"
-msgstr ""
+msgstr "Kiểm tra hiệu năng"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
@@ -21916,6 +21957,8 @@ msgid ""
 "The value for the field '%s' already exists (this is probably '%s' in the "
 "current model)."
 msgstr ""
+"Giá trị cho trường '%s' đã tồn tại (đây có thể là '%s' trong module hiện "
+"tại)."
 
 #. module: base
 #: code:addons/models.py:5350
