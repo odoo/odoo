@@ -153,12 +153,12 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Inventory - %s' % (object.name)"
-msgstr ""
+msgstr "'Inventario- %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr ""
+msgstr "'Ubicación- %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
@@ -168,7 +168,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
 msgid "'Operation-type - %s' % object.name"
-msgstr ""
+msgstr "'Tipo de operación - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
@@ -244,6 +244,8 @@ msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
 " to bring products in this location."
 msgstr ""
+"<br>Si los productos no están disponibles en <b>%s</b>, se activará una "
+"regla para llevar productos a esta ubicación."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_view_kanban
@@ -325,7 +327,7 @@ msgstr "<span class=\"o_stat_text\">A Mano</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Operaciones</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -396,7 +398,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Counted Quantity</strong>"
-msgstr ""
+msgstr "<strong>Cantidad contada</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -437,7 +439,7 @@ msgstr "<strong>Min cant :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr ""
+msgstr "<strong>Cantidad disponible</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -682,12 +684,12 @@ msgstr "Todas las devoluciones"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
 msgid "Allowed Location"
-msgstr ""
+msgstr "Ubicación permitida"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
 msgid "Allows to start with an empty inventory."
-msgstr ""
+msgstr "Permite comenzar con un inventario vacío."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -765,7 +767,7 @@ msgstr "Asignar propietario"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_responsible
 msgid "Assign Responsible"
-msgstr ""
+msgstr "Asignar responsable"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_assign_responsible_action
@@ -889,7 +891,7 @@ msgstr "Lector de códigos de barras"
 #. module: stock
 #: model:ir.actions.report,name:stock.label_transfer_template
 msgid "Barcodes (ZPL)"
-msgstr ""
+msgstr "Código de barras del paquete (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -992,7 +994,7 @@ msgstr "Cancelar el inventario"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_cancel
 msgid "Cancel Next Move"
-msgstr ""
+msgstr "Cancelar siguiente movimiento"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1234,7 +1236,7 @@ msgstr "Contenido"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Continue Inventory"
-msgstr ""
+msgstr "Continuar inventario"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
@@ -1296,7 +1298,7 @@ msgstr "Cuenta de operaciones pendientes"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_qty
 msgid "Counted Quantity"
-msgstr ""
+msgstr "Cantidade contada"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -1970,7 +1972,7 @@ msgstr "Mostrar Numero de Lote/Serie en los Vales de Entrega"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_level_tree_view_picking
 msgid "Display package content"
-msgstr ""
+msgstr "Mostrar contenido del paquete"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__qty_done
@@ -2022,7 +2024,7 @@ msgstr "Fecha efectiva"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__start_empty
 msgid "Empty Inventory"
-msgstr ""
+msgstr "Inventario Vacío"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -2166,7 +2168,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_all_product
 #: model:ir.ui.menu,name:stock.menu_forecast_inventory
 msgid "Forecasted Inventory"
-msgstr ""
+msgstr "Inventario previsto"
 
 #. module: stock
 #: code:addons/stock/models/product.py:384
@@ -2566,6 +2568,8 @@ msgid ""
 "Indicates the gap between the product's theoretical quantity and its newest "
 "quantity."
 msgstr ""
+"Indica la diferencia entre la cantidad teórica del producto y su cantidad "
+"más reciente."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
@@ -2787,7 +2791,7 @@ msgstr "Inventario a fecha"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__is_editable
 msgid "Is Editable"
-msgstr ""
+msgstr "Es editable"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_is_follower
@@ -2988,7 +2992,7 @@ msgstr "Última actualización el"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__inventory_date
 msgid "Last date at which the On Hand Quantity has been computed."
-msgstr ""
+msgstr "Última fecha en que se calculó la cantidad disponible."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:75
@@ -3049,7 +3053,7 @@ msgstr "Movimientos enlazados"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of operations"
-msgstr ""
+msgstr "Vista de lista de operaciones"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -3110,12 +3114,12 @@ msgstr "Ubicación donde el sistema almacenará los productos finalizados."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 msgid "Location: Store to"
-msgstr ""
+msgstr "Ubicación: Almacenar en"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 msgid "Location: When arrives to"
-msgstr ""
+msgstr "Ubicación: cuando llega a"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -3467,7 +3471,7 @@ msgstr "Mis actividades"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Transfers"
-msgstr ""
+msgstr "Mis transferencias"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__name
@@ -3667,7 +3671,7 @@ msgstr "OK"
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "On Hand Quantity"
-msgstr ""
+msgstr "Cantidad disponible"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -4381,7 +4385,7 @@ msgstr "Empaquetados del producto"
 #: code:addons/stock/models/stock_quant.py:487
 #, python-format
 msgid "Product Quantity Updated"
-msgstr ""
+msgstr "Cantidad de producto actualizada"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_replenish
@@ -4835,7 +4839,7 @@ msgstr "Recepciones"
 #. module: stock
 #: model:ir.actions.server,name:stock.model_stock_inventory_line_action_recompute_quantity
 msgid "Recompute On Hand Quantity"
-msgstr ""
+msgstr "Recalcule la cantidad disponible"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__name
@@ -5354,7 +5358,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.model_stock_inventory_line_action_reset_product_qty
 msgid "Set counted quantities to 0"
-msgstr ""
+msgstr "Establecer cantidades contadas a 0"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

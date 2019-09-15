@@ -20,8 +20,8 @@
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Maxim Vandenbroucke <mxv@odoo.com>, 2019\n"
+"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2329,7 +2329,7 @@ msgstr "Ontvangen BTW grondslagrekening"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__repartition_type
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__repartition_type
 msgid "Base on which the factor will be applied."
-msgstr ""
+msgstr "Basis waarop de factor zal worden toegepast."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__repartition_type
@@ -4595,6 +4595,8 @@ msgid ""
 "Factor to apply on the account move lines generated from this repartition "
 "line, in percents"
 msgstr ""
+"Factor die moet worden toegepast op de accountverplaatsingsregels die zijn "
+"gegenereerd op basis van deze verdeling lijn, in procenten"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -4717,6 +4719,9 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"Fiscale posities worden gebruikt om belastingen en rekeningen voor bepaalde "
+"klanten of verkooporders / facturen aan te passen. De standaardwaarde komt "
+"van de klant."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -5242,6 +5247,8 @@ msgid ""
 "If tags are defined for a tax report line, only two are allowed on it: a "
 "positive and a negative one."
 msgstr ""
+"Als tags zijn gedefinieerd voor een belastingrapportregel, zijn er slechts "
+"twee toegestaan: een positieve en een negatieve."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -5269,6 +5276,8 @@ msgid ""
 "If this checkbox is ticked, this entry will be automatically posted at its "
 "date."
 msgstr ""
+"Indien deze checkbox is aangevinkt zal deze boeking automatisch tegengeboekt"
+" worden op de datum die u heeft opgegeven."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5742,12 +5751,12 @@ msgstr "Invoice Tax"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_vendor_display_name
 msgid "Invoice Vendor Display Name"
-msgstr ""
+msgstr "Factuur Leverancier Weergave Naam"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_vendor_icon
 msgid "Invoice Vendor Icon"
-msgstr ""
+msgstr "Factuur Leverancier Icoon"
 
 #. module: account
 #: code:addons/account/models/account.py:1102
@@ -5765,6 +5774,7 @@ msgstr ""
 msgid ""
 "Invoice and credit note repartition should have the same number of lines."
 msgstr ""
+"De verdeling van factuur en creditnota moet hetzelfde aantal regels hebben."
 
 #. module: account
 #: code:addons/account/models/account.py:1118
@@ -5773,6 +5783,8 @@ msgid ""
 "Invoice and credit note repartitions should match (same percentages, in the "
 "same order)."
 msgstr ""
+"De verdeling van facturen en creditnota's moet overeenkomen (dezelfde "
+"percentages, in dezelfde volgorde)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_line_ids
@@ -5836,7 +5848,7 @@ msgstr "Facturen"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "Invoices &amp; Bills"
-msgstr ""
+msgstr "Verkoopfacturen &amp; Inkoopfacturen"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -5873,7 +5885,7 @@ msgstr "Te valideren facturen"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
-msgstr ""
+msgstr "Facturen waarvan de boekingen zijn afgeletterd met deze betaling."
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -5945,6 +5957,8 @@ msgstr "Dit is de standaard rekening voor het debet bedrag"
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
 msgstr ""
+"Het maakt concept verkoopfacturen en leveranciersfacturen bij het versturen "
+"van een e-mail."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_sent
@@ -6123,6 +6137,8 @@ msgstr "Naam dagboek"
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Journal group are used in reporting to display relevant data together."
 msgstr ""
+"Journaal groep wordt gebruikt in de rapportage om relevante gegevens samen "
+"weer te geven."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -6483,7 +6499,7 @@ msgstr "Layout"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
 msgid "Ledgers"
-msgstr ""
+msgstr "Grootboeken"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -7306,6 +7322,7 @@ msgstr "Alleen administrators kunnen een lijst met accounts laden"
 #, python-format
 msgid "Only cancelled journal entries can be reset to draft."
 msgstr ""
+"Alleen geannuleerde journaalboekingen kunnen worden gereset naar concept."
 
 #. module: account
 #: code:addons/account/models/account_move.py:2008
@@ -7320,6 +7337,8 @@ msgstr "Alleen facturen konden afgedrukt worden."
 msgid ""
 "Only posted journal entries being not already a refund can be reversed."
 msgstr ""
+"Alleen geboekte journaalboekingen die nog niet zijn terugbetaald, kunnen "
+"worden teruggedraaid."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -7952,25 +7971,25 @@ msgstr ""
 #: code:addons/account/models/account_move.py:1897
 #, python-format
 msgid "Please define a sequence on your journal."
-msgstr ""
+msgstr "Definieer een reeks voor dit journaal."
 
 #. module: account
 #: code:addons/account/models/account_move.py:59
 #, python-format
 msgid "Please define an accounting miscellaneous journal in your company"
-msgstr ""
+msgstr "Definieer een boekhoudkundig divers journaal in uw bedrijf"
 
 #. module: account
 #: code:addons/account/models/account_move.py:63
 #, python-format
 msgid "Please define an accounting purchase journal in your company"
-msgstr ""
+msgstr "Definieer een boekhoudkundig aankoop journaal in uw bedrijf"
 
 #. module: account
 #: code:addons/account/models/account_move.py:61
 #, python-format
 msgid "Please define an accounting sale journal in your company"
-msgstr ""
+msgstr "Definieer een boekhoudkundig verkoop journaal in uw bedrijf"
 
 #. module: account
 #: code:addons/account/models/company.py:370
@@ -8057,6 +8076,7 @@ msgstr "Geboekte boekingsregels"
 #, python-format
 msgid "Posted journal entry must have an unique sequence number per company."
 msgstr ""
+"Geposte journaalboekingen moeten een uniek volgnummer per bedrijf hebben."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__bank_account_code_prefix
@@ -8461,7 +8481,7 @@ msgstr "Datum creditering"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__refund_tax_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__refund_tax_id
 msgid "Refund Tax"
-msgstr ""
+msgstr "Restitutie belasting"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:401
@@ -8509,32 +8529,32 @@ msgstr "Gerelateerde document model"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Repartition for Credit Notes"
-msgstr ""
+msgstr "Verdeling voor creditnota's"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Repartition for Invoices"
-msgstr ""
+msgstr "Verdeling voor facturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template__refund_repartition_line_ids
 msgid "Repartition for Refund Invoices"
-msgstr ""
+msgstr "Verdeling voor terugbetalingsfacturen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
 #: model:ir.model.fields,help:account.field_account_tax_template__refund_repartition_line_ids
 msgid "Repartition when the tax is used on a refund"
-msgstr ""
+msgstr "Verdeling wanneer de belasting wordt gebruikt voor een terugbetaling"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__invoice_repartition_line_ids
 #: model:ir.model.fields,help:account.field_account_tax_template__invoice_repartition_line_ids
 msgid "Repartition when the tax is used on an invoice"
-msgstr ""
+msgstr "Verdeling wanneer de belasting wordt gebruikt voor een factuur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_dest_id
@@ -8677,7 +8697,7 @@ msgstr "Waardevermindering van: %s"
 #: code:addons/account/wizard/account_move_reversal.py:54
 #, python-format
 msgid "Reversal of: %s, %s"
-msgstr ""
+msgstr "Omkering van: %s, %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -8693,7 +8713,7 @@ msgstr "Omkering mutatie"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr ""
+msgstr "Omkering Journaalboeking"
 
 #. module: account
 #: code:addons/account/models/account_move.py:2070
@@ -9533,7 +9553,7 @@ msgstr "Onderwerp..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
 msgid "Sublines"
-msgstr ""
+msgstr "Sublijnen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__subtotal
@@ -11020,7 +11040,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:1887
 #, python-format
 msgid "This move is configured to be auto-posted on {}"
-msgstr ""
+msgstr "Deze stap is geconfigureerd om automatisch geplaatst te worden op  {}"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__chart_template_id
@@ -11219,7 +11239,7 @@ msgstr "Totaal te ontvangen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_signed
 msgid "Total Signed"
-msgstr ""
+msgstr "Totaal Getekend"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
@@ -11506,6 +11526,10 @@ msgid ""
 "                               with the current invoice. A new draft invoice will be created\n"
 "                               so that you can edit it."
 msgstr ""
+"Gebruik deze optie om de factuur te annuleren en een nieuwe aan\n"
+"                                 te maken. De creditfactuur wordt aangemaakt, geboekt en afgeletterd\n"
+"                                met de huidige factuur. Er wordt een nieuwe conceptfactuur gemaakt\n"
+"                                zodat je deze kan bewerken."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -11514,6 +11538,9 @@ msgid ""
 "                               have issued. The credit note will be created, validated and reconciled\n"
 "                               with the invoice. You will not be able to modify the credit note."
 msgstr ""
+"Gebruik deze optie indien  u een factuur wilt annuleren, welke niet gemaakt had\n"
+"                                    mogen worden. de creditfactuur wordt aangemaakt, goedgekeurd en afgeletterd\n"
+"                                    met de factuur. U heeft niet de mogelijkheid om de creditfactuur te bewerken."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type__include_initial_balance
@@ -11855,6 +11882,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
+"U kunt verschillende modellen kiezen voor elk type referentie. De standaard "
+"is de Odoo-referentie."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:76
@@ -11883,6 +11912,8 @@ msgid ""
 "You can only register at the same time for payment that are all inbound or "
 "all outbound"
 msgstr ""
+"U kunt alleen tegelijkertijd registreren voor betalingen die allemaal "
+"inkomend of allemaal uitgaand zijn"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:102
@@ -12180,7 +12211,7 @@ msgstr "Uw moet een eerste verrichting definieren/boeken."
 #: code:addons/account/models/account_move.py:1861
 #, python-format
 msgid "You need to add a line before posting."
-msgstr ""
+msgstr "Je moet een regel toevoegen voordat je kunt posten."
 
 #. module: account
 #. openerp-web
@@ -12233,6 +12264,9 @@ msgid ""
 "                               waiting for the document to be issued by\n"
 "                               your supplier/customer."
 msgstr ""
+"U heeft de mogelijkheid om deze credit factuur\n"
+"direct de bewerken en te bevestigen of deze in concept te laten staan en \n"
+"te wachten totdat u het document ontvangt van uw klant of leverancier."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

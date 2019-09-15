@@ -25,10 +25,10 @@
 # Johannes Croe <jcr@odoo.com>, 2019
 # Joshua Streitz <joshua.streitz@streitzgroup.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
-# Leon Grill <leg@odoo.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # Martin Trigaux, 2019
 # Andi, 2019
+# Leon Grill <leg@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Andi, 2019\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -216,7 +216,7 @@ msgstr "Schüttgewicht"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
 msgid "Can Generate Return"
-msgstr ""
+msgstr "Kann eine Rückgabe generieren"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -523,7 +523,7 @@ msgstr "Kostenfrei, wenn Bestellmenge größer ist als"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "Generate Return Label"
-msgstr ""
+msgstr "Rücksendeetikett generieren"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -828,12 +828,12 @@ msgstr "Versandkosten neuberechnen"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
-msgstr ""
+msgstr "Rücksendeaufkleber"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr ""
+msgstr "Rücksendeetikett aus dem Kundenportal zugänglich"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -884,7 +884,7 @@ msgstr "Reihenfolge"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
 msgid "Service Product"
-msgstr ""
+msgstr "Serviceprodukt"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
@@ -925,7 +925,7 @@ msgstr "Versandmethode"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr ""
+msgstr "Versandmethoden"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
@@ -946,6 +946,8 @@ msgid ""
 "Standardized code for international shipping and goods declaration. At the "
 "moment, only used for the FedEx shipping provider."
 msgstr ""
+"Standardisierter Code für den internationalen Versand und die "
+"Warendeklaration. Im Moment nur für den FedEx-Versand verwendet."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -983,11 +985,13 @@ msgstr "Testumgebung"
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
 msgstr ""
+"Der Rücksendeetikett kann vom Kunden über das Kundenportal heruntergeladen "
+"werden."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
-msgstr ""
+msgstr "Der Rücksendeetikett wird bei der Lieferung automatisch generiert."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:158
@@ -1175,6 +1179,8 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__partner_id
 msgid "You can find a customer from their name, email, tax ID or reference."
 msgstr ""
+"Sie können einen Kunden anhand seines Namens, seiner E-Mail-Adresse, seiner "
+"Steuernummer oder seiner Referenz finden."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
