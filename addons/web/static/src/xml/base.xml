@@ -1540,7 +1540,7 @@
 
 <t t-name="FieldColor">
     <div>
-        <button class="o_field_color"></button>
+        <button class="o_field_color" t-attf-tabindex="#{widget.mode === 'edit' ? 0 : -1}"></button>
     </div>
 </t>
 
