@@ -43,12 +43,7 @@ class StockPicking(models.Model):
         return super(StockPicking, self).action_cancel()
 
     def action_done(self):
-        # action_done with an extra move will trigger two methods that
-        # create/modify a subcontracting order, _action_confirm and a write on
-        # product_uom_qty. This context will be used by _action_confirm and it
-        # will not create a subcontract order. Instead the existing order will
-        # be updated in the stock.move write during the merge move.
-        res = super(StockPicking, self.with_context(do_not_create_subcontract_order=True)).action_done()
+        res = super(StockPicking, self).action_done()
         productions = self.env['mrp.production']
         for picking in self:
             for move in picking.move_lines:
@@ -56,8 +51,8 @@ class StockPicking(models.Model):
                     continue
                 production = move.move_orig_ids.production_id
                 if move._has_tracked_subcontract_components():
-                    move.move_orig_ids.move_line_ids.unlink()
-                    move_finished_ids = move.move_orig_ids
+                    move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel')).move_line_ids.unlink()
+                    move_finished_ids = move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
                     for ml in move.move_line_ids:
                         ml.copy({
                             'picking_id': False,
@@ -81,7 +76,10 @@ class StockPicking(models.Model):
                         produce._record_production()
                 productions |= production
             for subcontracted_production in productions:
-                subcontracted_production.button_mark_done()
+                if subcontracted_production.state == 'progress':
+                    subcontracted_production.post_inventory()
+                else:
+                    subcontracted_production.button_mark_done()
                 # For concistency, set the date on production move before the date
                 # on picking. (Tracability report + Product Moves menu item)
                 minimum_date = min(picking.move_line_ids.mapped('date'))
