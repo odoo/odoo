@@ -29,7 +29,7 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Mailings">
-                    <field name="name"/>
+                    <field name="subject"/>
                     <field name="mailing_type" invisible="1"/>
                     <field name="sent"/>
                     <field name="delivered"/>
@@ -134,7 +134,7 @@
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="name" required="1" string="Name"/>
+                            <field name="name" required="False" groups="base.group_no_one" string="Name"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"
                                 attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                             <field name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
@@ -284,7 +284,7 @@
                                     <div class="o_kanban_record_top">
                                         <div class="o_kanban_record_headings">
                                             <h3 class="mt4 mb4">
-                                                <field name="name"/>
+                                                <field name="subject"/>
                                             </h3>
                                             <field name="mailing_type" invisible="1"/>
                                             <div class="o_kanban_record_subtitle" attrs="{'invisible': [('sent_date', '=', False)]}">
