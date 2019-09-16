@@ -634,6 +634,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """For each recordset in `records_list`, write the respective value in
         `value_list`."""
         # group record ids by vals, to update in batch when possible
+        value_list = [value if type(value) != dict else frozendict(value) for value in value_list]
         updates = OrderedDict([(value, records_list[0].browse()) for value in value_list])
         for records, value in zip(records_list, value_list):
             updates[value] += records
