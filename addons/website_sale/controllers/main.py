@@ -880,7 +880,7 @@ class WebsiteSale(http.Controller):
             order.amount_total,
             order.pricelist_id.currency_id.id,
             values={
-                'return_url': '/shop/payment/validate',
+                'return_url': kwargs.get('return_url', '/shop/payment/validate'),
                 'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
                 'billing_partner_id': order.partner_invoice_id.id,
             },

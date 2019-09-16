@@ -61,7 +61,7 @@ function _redirectToStripeCheckout() {
 $('#pay_stripe').on('click', function(e) {
     e.preventDefault();
     var $form = $(e.currentTarget).parents('form');
-    var acquirer = $(e.currentTarget).parents('div.oe_sale_acquirer_button').first();
+    var acquirer = $(e.currentTarget).closest('div.oe_sale_acquirer_button,div.oe_quote_acquirer_button,div.o_website_payment_new_payment');
     var acquirer_id = acquirer.data('id') || acquirer.data('acquirer_id');;
 
     if (! acquirer_id) {
@@ -108,7 +108,8 @@ $('#pay_stripe').on('click', function(e) {
 
         ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {
                 so_id: so_id,
-                so_token: so_token
+                so_token: so_token,
+                return_url: $("input[name='return_url']").val()
             }, {'async': false}).then(function (data) {
             var $pay_stripe = $('#pay_stripe').detach();
             $form.html($(data).find('script[src="/payment_stripe_sca/static/src/js/stripe_sca.js"]').remove().end().html());

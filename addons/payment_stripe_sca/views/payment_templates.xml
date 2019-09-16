@@ -4,6 +4,7 @@
        <template id="stripe_acquirer_button" inherit_id="payment_stripe.stripe_acquirer_button">
             <xpath expr="//script" position="before">
                 <input type='hidden' name='session_id' t-att-value='session_id'/>
+                <input type='hidden' name='return_url' t-att-value='return_url'/>
             </xpath>
             <xpath expr="//script" position="replace">
                 <script type="text/javascript" src="https://js.stripe.com/v3/"/>
