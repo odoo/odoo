@@ -26,7 +26,6 @@ class AccountBankStatementImport(models.TransientModel):
     _description = 'Import Bank Statement'
 
     attachment_ids = fields.Many2many('ir.attachment', string='Files', required=True, help='Get you bank statements in electronic format from your bank and select them here.')
-    filename = fields.Char()
 
     def import_file(self):
         """ Process the file chosen in the wizard, create bank statement(s) and go to reconciliation. """
