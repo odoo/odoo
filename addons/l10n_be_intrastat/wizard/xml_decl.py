@@ -129,9 +129,9 @@ class XmlDeclaration(models.TransientModel):
         if extendedmode:
             self._set_Dim(item, 'EXTPC', text_type(linekey.EXTPC))
             self._set_Dim(item, 'EXDELTRM', text_type(linekey.EXDELTRM))
-        self._set_Dim(item, 'EXTXVAL', text_type(_round(value, 0)).replace(".", ","))
-        self._set_Dim(item, 'EXWEIGHT', text_type(_round(weight, 0)).replace(".", ","))
-        self._set_Dim(item, 'EXUNITS', text_type(_round(supply_units, 0)).replace(".", ","))
+        self._set_Dim(item, 'EXTXVAL', text_type(_round(value)).replace(".", ","))
+        self._set_Dim(item, 'EXWEIGHT', text_type(_round(weight)).replace(".", ","))
+        self._set_Dim(item, 'EXUNITS', text_type(_round(supply_units)).replace(".", ","))
 
     def _get_intrastat_linekey(self, declcode, inv_line, dispatchmode, extendedmode):
         IntrastatRegion = self.env['l10n_be_intrastat.region']
