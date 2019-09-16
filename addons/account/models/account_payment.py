@@ -408,6 +408,10 @@ class account_payment(models.Model):
     _description = "Payments"
     _order = "payment_date desc, name desc"
 
+    @api.model
+    def _get_move_name_transfer_separator(self):
+        return '§§'
+
     @api.multi
     @api.depends('move_line_ids.reconciled')
     def _get_move_reconciled(self):
@@ -606,7 +610,6 @@ class account_payment(models.Model):
                 move.unlink()
             rec.write({
                 'state': 'cancelled',
-                'move_name': False,
             })
 
     @api.multi
@@ -656,6 +659,7 @@ class account_payment(models.Model):
             # Create the journal entry
             amount = rec.amount * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)
             move = rec._create_payment_entry(amount)
+            persist_move_name = move.name
 
             # In case of a transfer, the first journal entry created debited the source liquidity account and credited
             # the transfer account. Now we debit the transfer account and credit the destination liquidity account.
@@ -663,8 +667,9 @@ class account_payment(models.Model):
                 transfer_credit_aml = move.line_ids.filtered(lambda r: r.account_id == rec.company_id.transfer_account_id)
                 transfer_debit_aml = rec._create_transfer_entry(amount)
                 (transfer_credit_aml + transfer_debit_aml).reconcile()
+                persist_move_name += self._get_move_name_transfer_separator() + transfer_debit_aml.move_id.name
 
-            rec.write({'state': 'posted', 'move_name': move.name})
+            rec.write({'state': 'posted', 'move_name': persist_move_name})
         return True
 
     @api.multi
@@ -768,14 +773,30 @@ class account_payment(models.Model):
         """ Return dict to create the payment move
         """
         journal = journal or self.journal_id
+
         move_vals = {
             'date': self.payment_date,
             'ref': self.communication or '',
             'company_id': self.company_id.id,
             'journal_id': journal.id,
         }
+
+        name = False
         if self.move_name:
-            move_vals['name'] = self.move_name
+            names = self.move_name.split(self._get_move_name_transfer_separator())
+            if self.payment_type == 'transfer':
+                if journal == self.destination_journal_id and len(names) == 2:
+                    name = names[1]
+                elif journal == self.destination_journal_id and len(names) != 2:
+                    # We are probably transforming a classical payment into a transfer
+                    name = False
+                else:
+                    name = names[0]
+            else:
+                name = names[0]
+
+        if name:
+            move_vals['name'] = name
         return move_vals
 
     def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id, invoice_id=False):

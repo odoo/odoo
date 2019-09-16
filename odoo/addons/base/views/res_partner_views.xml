@@ -508,7 +508,7 @@
                                         <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'image_small', record.parent_id.raw_value)"/>
                                     </div>
                                 </t>
-                                <t t-elif="record.is_company.raw_value">
+                                <t t-elif="record.image_small.raw_value &amp;&amp; record.is_company.raw_value">
                                     <img class="o_kanban_image" t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)" t-att-alt="record.display_name"/>
                                 </t>
                                 <t t-else="">
