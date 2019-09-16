@@ -108,5 +108,28 @@
             <value eval="[ref('demo_bank_statement_line_5')]"/>
         </function>
 
+        <!-- Also create a pdf attachment in chatter -->
+
+        <record id="ir_attachment_bank_statement_1" model="ir.attachment">
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/bank_statement_yourcompany_1.pdf"/>
+            <field name="name">bank_statement_yourcompany_demo.pdf</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="res_id" ref="demo_bank_statement_1"/>
+        </record>
+
+        <record id="demo_bank_statement_1" model="account.bank.statement">
+            <field name="message_main_attachment_id" ref="ir_attachment_bank_statement_1"/>
+        </record>
+
+        <record id="mail_message_bank_statement_1" model="mail.message">
+            <field name="model">account.bank.statement</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_bank_statement_1"/>
+            <field name="body">Bank statement attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_bank_statement_1')])]"/>
+        </record>
+
     </data>
 </odoo>
