@@ -35,7 +35,6 @@ class PosOrder(models.Model):
     def _order_fields(self, ui_order):
         process_line = partial(self.env['pos.order.line']._order_line_fields, session_id=ui_order['pos_session_id'])
         return {
-            'name':         ui_order['name'],
             'user_id':      ui_order['user_id'] or False,
             'session_id':   ui_order['pos_session_id'],
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
@@ -322,11 +321,18 @@ class PosOrder(models.Model):
 
     @api.model
     def _complete_values_from_session(self, session, values):
-        values['name'] = session.config_id.sequence_id._next()
+        if values.get('state') and values['state'] == 'paid':
+            values['name'] = session.config_id.sequence_id._next()
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
         values.setdefault('company_id', session.config_id.company_id.id)
         return values
+
+    def write(self, vals):
+        for order in self:
+            if vals.get('state') and vals['state'] == 'paid' and order.name == '/':
+                vals['name'] = order.config_id.sequence_id._next()
+        return super(PosOrder, self).write(vals)
 
     def action_view_invoice(self):
         return {
