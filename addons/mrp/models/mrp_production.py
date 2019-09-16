@@ -341,6 +341,7 @@ class MrpProduction(models.Model):
     def _onchange_bom_id(self):
         self.product_qty = self.bom_id.product_qty
         self.product_uom_id = self.bom_id.product_uom_id.id
+        self.picking_type_id = self.bom_id.picking_type_id
 
     @api.onchange('picking_type_id')
     def onchange_picking_type(self):
