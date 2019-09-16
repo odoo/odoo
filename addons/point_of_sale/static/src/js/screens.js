@@ -551,7 +551,9 @@ var OrderWidget = PosBaseWidget.extend({
                 selected_orderline.price_manually_set = true;
                 selected_orderline.set_unit_price(val);
             }
-            this.pos.send_current_order_to_customer_facing_display();
+            if (this.pos.config.iface_customer_facing_display) {
+                this.pos.send_current_order_to_customer_facing_display();
+            }
     	}
     },
     change_selected_order: function() {
