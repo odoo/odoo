@@ -3580,7 +3580,8 @@ Record ids: %(records)s
                     _logger.warning("%s.create() with unknown fields: %s", self._name, key)
                     continue
                 if field.company_dependent:
-                    cached_def = field.convert_to_cache(field.default(self), self)
+                    irprop_def = self.env['ir.property'].get(key, self._name)
+                    cached_def = field.convert_to_cache(irprop_def, self)
                     cached_val = field.convert_to_cache(val, self)
                     if cached_val == cached_def:
                         # val is the same as the default value defined in
