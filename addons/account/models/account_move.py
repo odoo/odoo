@@ -430,7 +430,7 @@ class AccountMove(models.Model):
         # are already done. Then, this query MUST NOT depend of computed stored fields (e.g. balance).
         # It happens as the ORM makes the create with the 'no_recompute' statement.
         self._cr.execute('''
-            SELECT line.move_id
+            SELECT line.move_id, ROUND(SUM(debit - credit), currency.decimal_places)
             FROM account_move_line line
             JOIN account_move move ON move.id = line.move_id
             JOIN account_journal journal ON journal.id = move.journal_id
@@ -441,8 +441,12 @@ class AccountMove(models.Model):
             HAVING ROUND(SUM(debit - credit), currency.decimal_places) != 0.0;
         ''', [tuple(self.ids)])
 
-        if self._cr.fetchone():
-            raise UserError(_("Cannot create unbalanced journal entry."))
+        res = self._cr.fetchone()
+        if res:
+            raise UserError(
+                _("Cannot create unbalanced journal entry.") +
+                "\n\n{}{}".format(_('Difference debit - credit: '), res[1])
+            )
         return True
 
     @api.multi
