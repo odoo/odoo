@@ -556,6 +556,15 @@ class PaymentTransaction(models.Model):
         }
         return self.acquirer_id.render(None, None, None, values=values)
 
+    @api.multi
+    def _get_json_info(self):
+        self.ensure_one()
+        return {
+            'state': self.state,
+            'acquirer_reference': self.acquirer_reference,
+            'reference': self.reference,
+        }
+
     @api.model
     def form_feedback(self, data, acquirer_name):
         invalid_parameters, tx = None, None

@@ -1671,6 +1671,7 @@
                                                 <form action="/shop/payment/transaction_token/confirm" method='POST'>
                                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                                     <input type='hidden' name='tx' t-att-value='tx.id'/>
+                                                    <input type="hidden" name="provider" t-att-value="tx.acquirer_id.provider"/>
                                                     <a class="btn btn-success btn-md js_btn_valid_tx">Yes, pay with this card</a>
                                                     <a href='/shop/payment' class="btn btn-danger btn-md">No, choose another method</a>
                                                 </form>

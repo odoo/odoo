@@ -114,6 +114,17 @@ class PaymentTransactionStripeSCA(models.Model):
     _inherit = "payment.transaction"
 
     stripe_payment_intent = fields.Char(string="Stripe Payment Intent ID", readonly=True)
+    stripe_payment_intent_secret = fields.Char(string="Stripe Payment Intent Secret", readonly=True)
+
+    def _get_json_info(self):
+        res = super(PaymentTransactionStripeSCA, self)._get_json_info()
+        if self.acquirer_id.provider == 'stripe':
+            res.update({
+                'stripe_payment_intent': self.stripe_payment_intent,
+                'stripe_payment_intent_secret': self.stripe_payment_intent_secret,
+                'stripe_publishable_key': self.acquirer_id.stripe_publishable_key,
+            })
+        return res
 
     def _create_stripe_charge(self, acquirer_ref=None, tokenid=None, email=None):
         raise NotImplementedError("This method can no longer be used with the payment_stripe_sca module.")
@@ -139,6 +150,7 @@ class PaymentTransactionStripeSCA(models.Model):
             "currency": self.currency_id.name.lower(),
             "setup_future_usage": "off_session",
             "confirm": True,
+            "description": self.reference,
             "payment_method": self.payment_token_id.stripe_payment_method,
             "customer": self.payment_token_id.acquirer_ref,
         }
@@ -190,13 +202,14 @@ class PaymentTransactionStripeSCA(models.Model):
 
     def _stripe_s2s_validate_tree(self, tree):
         self.ensure_one()
-        if self.state != "draft":
+        if self.state not in ["draft", "pending"]:
             _logger.info("Stripe: trying to validate an already validated tx (ref %s)", self.reference)
             return True
 
         status = tree.get("status")
         tx_id = tree.get("id")
-        vals = {"date_validate": fields.Datetime.now(), "acquirer_reference": tx_id}
+        tx_secret = tree.get("client_secret")
+        vals = {"date_validate": fields.Datetime.now(), "acquirer_reference": tx_id, "stripe_payment_intent": tx_id, "stripe_payment_intent_secret": tx_secret}
         if status == "succeeded":
             vals.update({'state': 'done'})
             self.write(vals)

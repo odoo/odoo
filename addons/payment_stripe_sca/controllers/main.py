@@ -42,6 +42,10 @@ class StripeControllerSCA(StripeController):
         res = acquirer._create_setup_intent(kwargs)
         return res.get('client_secret')
 
+    @route('/payment/stripe/s2s/process_payment_intent', type='json', auth='public')
+    def stripe_s2s_confirm_payment_intent(self, **post):
+        return request.env['payment.transaction'].sudo().form_feedback(post, 'stripe')
+
     # These routes are deprecated, let's remove them for security's sake
     def stripe_s2s_create_json(self, **post):
         raise werkzeug.exceptions.NotFound()

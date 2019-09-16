@@ -61,25 +61,6 @@ $(document).ready(function () {
       return false;
     });
 
-    $('div.oe_pay_token').on('click', 'a.js_btn_valid_tx', function() {
-      $('div.js_token_load').toggle();
-
-      var $form = $(this).parents('form');
-      ajax.jsonRpc($form.attr('action'), 'call', $.deparam($form.serialize())).then(function (data) {
-        if (data.url) {
-          window.location = data.url;
-        }
-        else {
-          $('div.js_token_load').toggle();
-          if (!data.success && data.error) {
-            $('div.oe_pay_token div.panel-body p').html(data.error + "<br/><br/>" + _('Retry ? '));
-            $('div.oe_pay_token div.panel-body').parents('div').removeClass('panel-info').addClass('panel-danger');
-          }
-        }
-      });
-
-    });
-
 });
 
 });

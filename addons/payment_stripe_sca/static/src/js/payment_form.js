@@ -83,6 +83,53 @@ PaymentForm.include({
             });
         });
     },
+    _chargePaymentToken: function (ev, provider) {
+        ev.preventDefault();
+        this.$('div.js_token_load').toggle();
+        var $form = this.$('form');
+        var formData = $.deparam($form.serialize());
+        var final_redirect;
+        var account_id;
+        if (formData.provider == 'stripe' || provider == 'stripe') {
+            return ajax.rpc(this._guessJsonRoute($form.attr('action')), formData)
+                .then(function (result) {
+                var tx_info = result.tx_info;
+                final_redirect = result.redirect;
+                if (tx_info.state === 'done') {
+                    window.location = final_redirect;
+                } else if (tx_info.state === 'pending' && tx_info.stripe_payment_intent_secret) {
+                    account_id = result.account_id
+                    var stripe = new Stripe(tx_info.stripe_publishable_key);
+                    return $.Deferred(function(defer) {
+                        stripe.handleCardPayment(tx_info.stripe_payment_intent_secret).then(function (result) {defer.resolve(result)});
+                    });
+                }
+            }).then(function (result) {
+                if (result.error) {
+                    return $.Deferred().reject({"message": {"data": { "message": result.error.message}}});
+                } else {
+                    return ajax.rpc('/payment/stripe/s2s/process_payment_intent', _.extend({}, result.paymentIntent, {reference: result.paymentIntent.description, account_id: account_id}));
+                }
+            }).then(function (result) {
+                window.location = result.redirect || final_redirect;
+            });
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
+     /**
+     * guess the json route to call for an interrupted payment flow
+     * 
+     * @private
+     */
+    _guessJsonRoute: function (route) {
+        var json_route = route.replace('token', 'json_token');
+        if (json_route.indexOf('token') === -1) {
+            // special case: subscription payment routes don't have 'token' in the url -_-
+            json_route = route.replace('payment', 'json_payment');
+        }
+        return json_route;
+    },
     /**
      * called when clicking a Stripe radio if configured for s2s flow; instanciates the card and bind it to the widget.
      *
@@ -128,7 +175,7 @@ PaymentForm.include({
             this.acquirer_id = this.$('select[name="pm_acquirer_id"] :selected').val();
         } else {
             this.provider  = this.$('.acquirer').attr('provider');
-            this.acquirer_id = this.$('.acquirer').data().acquirerId;
+            this.acquirer_id = this.$('.acquirer').data() && this.$('.acquirer').data().acquirerId;
         }
     },
     /**
@@ -156,6 +203,8 @@ PaymentForm.include({
         this._getAcquirerData();
         if (this.provider === 'stripe' && (!ev.currentTarget.dataset.type && !this.$el.find('select[name="pay_meth"]').length) || (this.$el.find('select[name="pay_meth"]').length && this.$el.find('select[name="pay_meth"] :selected').val() == "-1")) {
             return this._createStripeToken(ev);
+        } else if (this.$el.find('select[name="pay_meth"]').length && this.$el.find('select[name="pay_meth"] :selected').val() != "-1" && this.$el.find('select[name="pay_meth"] :selected').attr('provider') == 'stripe') {
+            return this._chargePaymentToken(ev, this.$el.find('select[name="pay_meth"] :selected').attr('provider'));
         } else {
             return this._super.apply(this, arguments);
         }
