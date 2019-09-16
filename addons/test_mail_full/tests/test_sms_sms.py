@@ -102,7 +102,7 @@ class TestSMSPost(test_mail_full_common.BaseFunctionalTest, sms_common.MockSMS, 
 
     def test_sms_body_link_shorten_suffix(self):
         mailing = self.env['mailing.mailing'].create({
-            'name': 'Minimal mailing',
+            'subject': 'Minimal mailing',
             'mailing_model_id': self.env['ir.model']._get('mail.test.sms').id,
             'mailing_type': 'sms',
         })

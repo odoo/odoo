@@ -85,12 +85,6 @@
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
             <!-- Form -->
-            <xpath expr="//field[@name='subject']" position="attributes">
-                <attribute name="attrs">{
-                    'invisible': [('mailing_type', '!=', 'mail')], 
-                    'readonly': [('state', 'in', ('sending', 'done'))]}
-                </attribute>
-            </xpath>
             <xpath expr="//page[@name='mail_body']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
