@@ -877,7 +877,6 @@ var StatementModel = BasicModel.extend({
             l.__focus = false;
             return !l.invalid;
         });
-        return this._computeLine(line);
     },
     /**
      * When changing partner, read property_account_receivable and payable
