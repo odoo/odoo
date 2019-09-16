@@ -300,7 +300,7 @@
                     <field name="default_code" optional="show"/>
                     <field name="barcode" optional="hide"/>
                     <field name="name"/>
-                    <field name="product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
+                    <field name="product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="lst_price" optional="show" string="Sales Price"/>
                     <field name="standard_price" optional="show"/>
