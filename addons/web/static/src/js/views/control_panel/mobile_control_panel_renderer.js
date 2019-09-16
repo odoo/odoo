@@ -9,9 +9,9 @@ if (!config.device.isMobile) {
 }
 
 ControlPanelRenderer.include({
-    template:'MobileControlPanel',
     events:_.extend({}, ControlPanelRenderer.prototype.events, {
-        'click .o_mobile_search_close, .o_mobile_search_show_result, .o_enable_searchview': '_toggleMobileSearchView',
+        'click .o_mobile_search_close, .o_mobile_search_show_result, .o_toggle_searchview_full': '_toggleMobileSearchView',
+        'click .o_enable_searchview': '_toggleMobileQuickSearchView',
         'click': '_onOpenMobileSearchView',
         'click .o_mobile_search_clear_facets': '_onEmptyAll',
         'show.bs.dropdown .o_mobile_search_filter .o_dropdown': '_onDropdownToggle',
@@ -49,8 +49,16 @@ ControlPanelRenderer.include({
     _renderSearchBar: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            self.searchBar.$el.detach().insertAfter(self.$('.o_mobile_search_header'));
+            self._renderSearchviewInput();
         });
+    },
+    _renderSearchviewInput: function () {
+        if (this.$('.o_toggle_searchview_full').is(':visible') && !this.$('.o_mobile_search').is(':visible')) {
+            this.$('.o_toggle_searchview_full').toggleClass('btn-secondary', !!this.state.query.length);
+            this.searchBar.$el.detach().insertAfter(this.$('.o_mobile_search'));
+        } else {
+            this.searchBar.$el.detach().insertAfter(this.$('.o_mobile_search_header'));
+        }
     },
     /**
      * Toggles mobile search view screen.
@@ -58,8 +66,23 @@ ControlPanelRenderer.include({
      * @private
      */
     _toggleMobileSearchView: function () {
-        this.$('.o_enable_searchview').toggleClass('btn-secondary', !!this.state.query.length);
         this.$('.o_mobile_search').toggleClass('o_hidden');
+        this._renderSearchviewInput();
+    },
+    /**
+     * Toggles mobile quick search view on screen.
+     *
+     * @private
+     */
+    _toggleMobileQuickSearchView: function () {
+        this.$('.o_cp_searchview').toggleClass('o_searchview_quick');
+        this.$('.breadcrumb').toggleClass('o_hidden',
+            this.$('.o_cp_searchview').hasClass('o_searchview_quick'));
+        this.$('.o_toggle_searchview_full')
+            .toggleClass('o_hidden')
+            .toggleClass('btn-secondary', !!this.state.query.length);
+        this._renderSearchviewInput();
+        this.$('.o_enable_searchview').toggleClass("fa-search").toggleClass("fa-close");
     },
 
     //--------------------------------------------------------------------------
