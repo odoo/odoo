@@ -149,7 +149,7 @@
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
                     <field name="type"/>
-                    <field name="journal_group_ids" widget="many2many_tags"/>
+                    <field name="journal_group_ids" widget="many2many_tags" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -1810,7 +1810,7 @@ action = model.setting_init_bank_account_action()
                 <tree string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
-                    <field name="product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
+                    <field name="product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant" readonly="1"/>
                     <field name="lst_price"/>
                     <field name="taxes_id" widget="many2many_tags"/>
                     <field name="supplier_taxes_id" widget="many2many_tags"/>

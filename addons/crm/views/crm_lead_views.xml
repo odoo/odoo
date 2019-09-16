@@ -592,11 +592,11 @@
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
                     <field name="activity_date_deadline" optional="show"/>
-                    <field name="activity_summary" optional="show"/>
+                    <field name="activity_summary" optional="show" readonly="1"/>
                     <field name="medium_id" invisible="1"/>
                     <field name="campaign_id" invisible="1"/>
                     <field name="source_id" invisible="1"/>
-                    <field name="stage_id" optional="show"/>
+                    <field name="stage_id" required="1" optional="show"/>
                     <field name="planned_revenue" sum="Expected Revenues" optional="show"/>
                     <field name="probability" avg="Avg. of Probability" optional="show"/>
                     <field name="user_id" optional="hide"/>
@@ -646,7 +646,7 @@
                     <field name="activity_date_deadline"/>
                     <field name="activity_type_id"/>
                     <field name="activity_summary"/>
-                    <field name="stage_id"/>
+                    <field name="stage_id" required="1"/>
                     <field name="planned_revenue"/>
                     <field name="date_deadline"/>
                 </tree>
