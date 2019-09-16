@@ -5558,7 +5558,7 @@ Record ids: %(records)s
                     real_records = self - new_records
                     records = model.browse()
                     if real_records:
-                        records |= model.sudo().search([(key.name, 'in', real_records.ids)])
+                        records |= model.search([(key.name, 'in', real_records.ids)])
                     if new_records:
                         cache_records = self.env.cache.get_records(model, key)
                         records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
