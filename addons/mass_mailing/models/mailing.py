@@ -10,6 +10,7 @@ import re
 import threading
 from ast import literal_eval
 from base64 import b64encode
+from datetime import datetime
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError
@@ -229,24 +230,14 @@ class MassMailing(models.Model):
         if self.mailing_type == 'mail' and not self.medium_id:
             self.medium_id = self.env.ref('utm.utm_medium_email').id
 
-    @api.onchange('subject')
-    def _onchange_subject(self):
-        if self.subject and not self.name:
-            self.name = self.subject
-
-    @api.onchange('name')
-    def _onchange_name(self):
-        if self.name and not self.subject:
-            self.subject = self.name
-
     # ------------------------------------------------------
     # ORM
     # ------------------------------------------------------
 
     @api.model
     def create(self, values):
-        if values.get('name') and not values.get('subject'):
-            values['subject'] = values['name']
+        if values.get('subject') and not values.get('name'):
+            values['name'] = "%s %s" % (values['subject'], datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
         if 'medium_id' not in values and values.get('mailing_type', 'mail') == 'mail':
