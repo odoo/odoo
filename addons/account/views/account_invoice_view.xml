@@ -21,8 +21,10 @@
                 <pivot string="Invoices" display_quantity="true">
                     <field name="partner_id"/>
                     <field name="amount_total_company_signed" type="measure"/>
+                    <field name="amount_tax" invisible="1"/>
                     <field name="amount_total_signed" invisible="1"/>
                     <field name="amount_total" invisible="1"/>
+                    <field name="amount_untaxed" invisible="1"/>
                     <field name="residual_signed" invisible="1"/>
                     <field name="residual" invisible="1"/>
                 </pivot>
