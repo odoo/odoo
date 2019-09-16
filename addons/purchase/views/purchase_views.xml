@@ -470,7 +470,7 @@
                 <tree decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" string="Purchase Order">
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
-                    <field name="name" string="Reference"/>
+                    <field name="name" string="Reference" readonly="1"/>
                     <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
                     <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="partner_id"/>
@@ -495,7 +495,7 @@
                 <tree decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" string="Purchase Order">
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
-                    <field name="name" string="Reference"/>
+                    <field name="name" string="Reference" readonly="1"/>
                     <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
                     <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="partner_id"/>

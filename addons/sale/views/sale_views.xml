@@ -214,7 +214,7 @@
             <field name="arch" type="xml">
                 <tree string="Quotation" class="o_sale_order" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
                     <field name="message_needaction" invisible="1"/>
-                    <field name="name" string="Quotation Number"/>
+                    <field name="name" string="Quotation Number" readonly="1"/>
                     <field name="create_date" string="Create Date"/>
                     <field name="commitment_date"/>
                     <field name="expected_date"/>
