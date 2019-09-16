@@ -436,6 +436,7 @@ var StatementModel = BasicModel.extend({
                var analyticTagIds = [];
                 for (var i=0; i<reconcileModels.length; i++) {
                     var modelTags = reconcileModels[i].analytic_tag_ids || [];
+                    modelTags = modelTags.concat(reconcileModels[i].second_analytic_tag_ids);
                     for (var j=0; j<modelTags.length; j++) {
                         if (analyticTagIds.indexOf(modelTags[j]) === -1) {
                             analyticTagIds.push(modelTags[j]);
@@ -446,12 +447,19 @@ var StatementModel = BasicModel.extend({
                     for (var i=0; i<reconcileModels.length; i++) {
                         var recModel = reconcileModels[i];
                         var analyticTagData = [];
+                        var secondAnalyticTagData = [];
                         var modelTags = reconcileModels[i].analytic_tag_ids || [];
                         for (var j=0; j<modelTags.length; j++) {
                             var tagId = modelTags[j];
                             analyticTagData.push([tagId, self.analyticTags[tagId].display_name])
                         }
+                        var modelTags = reconcileModels[i].second_analytic_tag_ids || [];
+                        for (var j=0; j<modelTags.length; j++) {
+                            var tagId = modelTags[j];
+                            secondAnalyticTagData.push([tagId, self.analyticTags[tagId].display_name]);
+                        }
                         recModel.analytic_tag_ids = analyticTagData;
+                        recModel.second_analytic_tag_ids = secondAnalyticTagData;
                     }
                     self.reconcileModels = reconcileModels;
                 });
