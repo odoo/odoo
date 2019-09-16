@@ -558,7 +558,7 @@ class PosConfig(models.Model):
         if not companies:
             companies = self.env['res.company'].search([])
         for company in companies:
-            if company.chart_template_id:
+            if company.chart_template_id and not self.env['pos.payment.method'].search([('company_id', '=', company.id)], limit=1):
                 cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
                 pos_receivable_account = company.account_default_pos_receivable_account_id
                 payment_methods = self.env['pos.payment.method']
