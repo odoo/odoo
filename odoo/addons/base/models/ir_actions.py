@@ -154,7 +154,7 @@ class IrActionsActWindow(models.Model):
             can be set on the action.
         """
         for act in self:
-            act.views = [(view.view_id.id, view.view_mode) for view in act.view_ids]
+            views = [(view.view_id.id, view.view_mode) for view in act.view_ids]
             got_modes = [view.view_mode for view in act.view_ids]
             all_modes = act.view_mode.split(',')
             missing_modes = [mode for mode in all_modes if mode not in got_modes]
@@ -162,8 +162,9 @@ class IrActionsActWindow(models.Model):
                 if act.view_id.type in missing_modes:
                     # reorder missing modes to put view_id first if present
                     missing_modes.remove(act.view_id.type)
-                    act.views.append((act.view_id.id, act.view_id.type))
-                act.views.extend([(False, mode) for mode in missing_modes])
+                    views.append((act.view_id.id, act.view_id.type))
+                views.extend([(False, mode) for mode in missing_modes])
+            act.views = tuple(views)
 
     @api.depends('res_model', 'search_view_id')
     def _compute_search_view(self):
