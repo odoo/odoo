@@ -12,8 +12,61 @@ class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = 'product.template'
 
+<<<<<<< HEAD
     cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
     valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
+=======
+    property_valuation = fields.Selection([
+        ('manual_periodic', 'Periodic (manual)'),
+        ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
+        company_dependent=True, copy=True, default='manual_periodic',
+        help="""Manual: The accounting entries to value the inventory are not posted automatically.
+        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.""")
+    valuation = fields.Char(compute='_compute_valuation_type', inverse='_set_valuation_type', search='_search_valuation')
+    property_cost_method = fields.Selection([
+        ('standard', 'Standard Price'),
+        ('fifo', 'First In First Out (FIFO)'),
+        ('average', 'Average Cost (AVCO)')], string='Costing Method',
+        company_dependent=True, copy=True,
+        help="""Standard Price: The products are valued at their standard cost defined on the product.
+        Average Cost (AVCO): The products are valued at weighted average cost.
+        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.""")
+    cost_method = fields.Char(compute='_compute_cost_method', inverse='_set_cost_method')
+    property_stock_account_input = fields.Many2one(
+        'account.account', 'Stock Input Account',
+        company_dependent=True, domain=[('deprecated', '=', False)],
+        help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
+             "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used.")
+    property_stock_account_output = fields.Many2one(
+        'account.account', 'Stock Output Account',
+        company_dependent=True, domain=[('deprecated', '=', False)],
+        help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
+             "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used.")
+
+    @api.one
+    @api.depends('property_valuation', 'categ_id.property_valuation')
+    def _compute_valuation_type(self):
+        self.valuation = self.property_valuation or self.categ_id.property_valuation
+
+    @api.one
+    def _set_valuation_type(self):
+        return self.write({'property_valuation': self.valuation})
+
+    def _search_valuation(self, operator, value):
+        # The search is rather limited since 'property_valuation' is a Selection field, meaning that
+        # the user must search on the technical name of the field, in this case 'manual_periodic' or
+        # 'real_time'.
+        return [
+            '|',
+                '&', ('property_valuation', '!=', False), ('property_valuation', operator, value),
+                '&', ('property_valuation', '=', False), ('categ_id.property_valuation', operator, value)
+        ]
+
+    @api.one
+    @api.depends('property_cost_method', 'categ_id.property_cost_method')
+    def _compute_cost_method(self):
+        self.cost_method = self.property_cost_method or self.categ_id.property_cost_method
+>>>>>>> 8241068f7be... temp
 
     def _is_cost_method_standard(self):
         return self.categ_id.property_cost_method == 'standard'
