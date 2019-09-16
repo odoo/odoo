@@ -6442,7 +6442,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('Field Color: default widget state', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var form = await createView({
             View: FormView,
@@ -6466,6 +6466,46 @@ QUnit.module('basic_fields', {
             "Opacity input should not be present");
 
         await testUtils.dom.click($('.modal .btn:contains("Discard")'));
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_color')[0],
+            "Focus should go back to the color field");
+
+        form.destroy();
+    });
+
+    QUnit.test('Field Color: behaviour in different views', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].p = [4, 2];
+        this.data.partner.records[1].hex_color = '#ff0080';
+
+        const form = await createView({
+            arch: '<form>' +
+                    '<field name="hex_color" widget="color"/>' +
+                    '<field name="p">' +
+                        '<tree editable="top">' +
+                            '<field name="display_name"/>' +
+                            '<field name="hex_color" widget="color"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            data: this.data,
+            model: 'partner',
+            res_id: 1,
+            View: FormView,
+        });
+
+        await testUtils.dom.click(form.$('.o_field_color:first()'));
+        assert.containsNone($(document.body), '.modal',
+            "Color field in readonly shouldn't be editable");
+
+        const rowInitialHeight = form.$('.o_data_row:first()').height();
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_data_row:first() .o_data_cell:first()'));
+
+        assert.strictEqual(rowInitialHeight, form.$('.o_data_row:first()').height(),
+            "Color field shouldn't change the color height when edited");
 
         form.destroy();
     });
