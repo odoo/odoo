@@ -438,7 +438,7 @@ class SaleOrderLine(models.Model):
     def modified(self, fnames, create=False):
         super(SaleOrderLine, self).modified(fnames, create)
         if 'product_id' in fnames:
-            Program = self.env['sale.coupon.program']
+            Program = self.env['sale.coupon.program'].sudo()
             field_order_count = Program._fields['order_count']
             programs = self.env.cache.get_records(Program, field_order_count)
             if programs:
