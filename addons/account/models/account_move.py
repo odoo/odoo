@@ -1225,14 +1225,14 @@ class AccountMove(models.Model):
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
                 res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
             res = sorted(res.items(), key=lambda l: l[0].sequence)
-            move.amount_by_group = [(
+            move.amount_by_group = ((
                 group.name, amounts['amount'],
                 amounts['base'],
                 formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
                 formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
                 len(res),
                 group.id
-            ) for group, amounts in res]
+            ) for group, amounts in res)
 
 
     # -------------------------------------------------------------------------

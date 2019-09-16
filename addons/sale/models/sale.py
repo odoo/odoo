@@ -741,11 +741,11 @@ class SaleOrder(models.Model):
                             res[group]['amount'] += t['amount']
                             res[group]['base'] += t['base']
             res = sorted(res.items(), key=lambda l: l[0].sequence)
-            order.amount_by_group = [(
+            order.amount_by_group = ((
                 l[0].name, l[1]['amount'], l[1]['base'],
                 fmt(l[1]['amount']), fmt(l[1]['base']),
                 len(res),
-            ) for l in res]
+            ) for l in res)
 
     def order_lines_layouted(self):
         """
