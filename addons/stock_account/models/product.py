@@ -18,7 +18,7 @@ class ProductTemplate(models.Model):
         company_dependent=True, copy=True, default='manual_periodic',
         help="""Manual: The accounting entries to value the inventory are not posted automatically.
         Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.""")
-    valuation = fields.Char(compute='_compute_valuation_type', inverse='_set_valuation_type')
+    valuation = fields.Char(compute='_compute_valuation_type', inverse='_set_valuation_type', search='_search_valuation')
     property_cost_method = fields.Selection([
         ('standard', 'Standard Price'),
         ('fifo', 'First In First Out (FIFO)'),
@@ -47,6 +47,16 @@ class ProductTemplate(models.Model):
     @api.one
     def _set_valuation_type(self):
         return self.write({'property_valuation': self.valuation})
+
+    def _search_valuation(self, operator, value):
+        # The search is rather limited since 'property_valuation' is a Selection field, meaning that
+        # the user must search on the technical name of the field, in this case 'manual_periodic' or
+        # 'real_time'.
+        return [
+            '|',
+                '&', ('property_valuation', '!=', False), ('property_valuation', operator, value),
+                '&', ('property_valuation', '=', False), ('categ_id.property_valuation', operator, value)
+        ]
 
     @api.one
     @api.depends('property_cost_method', 'categ_id.property_cost_method')
