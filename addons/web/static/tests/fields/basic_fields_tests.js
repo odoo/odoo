@@ -12,6 +12,7 @@ var session = require('web.session');
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
 var field_registry = require('web.field_registry');
+var testUtilsDom = require('web.test_utils_dom');
 
 var createView = testUtils.createView;
 var createAsyncView = testUtils.createAsyncView;
@@ -530,6 +531,42 @@ QUnit.module('basic_fields', {
         });
         assert.strictEqual(form.$('span.o_field_number:contains(0.4)').length, 1,
                             "should contain a number rounded to 1 decimal");
+        form.destroy();
+    });
+
+    QUnit.test('float field in list view no widget', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" digits="[5,3]"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.ok(!form.$('.o_field_widget').hasClass('o_field_empty'),
+            'Float field should be considered set for value 0.');
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '0.000',
+            'The value should be displayed properly.');
+
+        testUtilsDom.click(form.$buttons.find('.o_form_button_edit'));
+        assert.strictEqual(form.$('input').val(), '0.000',
+            'The value should be rendered with correct precision.');
+
+        form.$('input').val('108.2458938598598').trigger('input');
+        assert.strictEqual(form.$('input').val(), '108.2458938598598',
+            'The value should not be formated yet.');
+
+        form.$('input').val('18.8958938598598').trigger('input');
+        testUtilsDom.click(form.$buttons.find('.o_form_button_save'));
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '18.896',
+            'The new value should be rounded properly.');
+
         form.destroy();
     });
 
