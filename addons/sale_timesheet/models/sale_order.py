@@ -223,7 +223,7 @@ class SaleOrderLine(models.Model):
             'planned_hours': planned_hours,
             'remaining_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
-            'description': self.name + '<br/>',
+            'description': self.name.replace('\n','<br />') + '<br />',
             'project_id': project.id,
             'sale_line_id': self.id,
             'company_id': self.company_id.id,
