@@ -618,7 +618,10 @@ class TestSaleStock(TestSale):
         warehouse1 = self.env.ref('stock.warehouse0')
         self.env['stock.quant']._update_available_quantity(item1, warehouse1.lot_stock_id, 10)
         self.env['stock.quant']._update_reserved_quantity(item1, warehouse1.lot_stock_id, 3)
-        warehouse2 = self.env['stock.warehouse'].search([('id', '!=', warehouse1.id)], limit=1)
+        warehouse2 = self.env['stock.warehouse'].create({
+            'partner_id': self.env.ref('base.main_partner').id,
+            'code': 'Test',
+        })
         self.env['stock.quant']._update_available_quantity(item1, warehouse2.lot_stock_id, 5)
         so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
