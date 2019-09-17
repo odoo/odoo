@@ -164,7 +164,7 @@
             <field name="model">account.move.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" expand="context.get('expand', False)" default_order="credit">
+                <tree string="Journal Items" create="false" expand="context.get('expand', False)">
                     <field name="date" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="ref" optional="hide"/>
                     <field name="move_id" optional="show" readonly="1"/>
