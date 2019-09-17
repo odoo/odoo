@@ -21,6 +21,7 @@ class SaleOrder(models.Model):
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
+    _check_company_auto = True
 
     def _default_validity_date(self):
         if self.env['ir.config_parameter'].sudo().get_param('sale.use_quotation_validity_days'):
@@ -142,14 +143,40 @@ class SaleOrder(models.Model):
         help='Request an online payment to the customer in order to confirm orders automatically.')
     remaining_validity_days = fields.Integer(compute='_compute_remaining_validity_days', string="Remaining Days Before Expiration")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
-    user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=2, default=lambda self: self.env.user)
-    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, tracking=1, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="You can find a customer from their name, email, tax ID or reference.")
-    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Invoice address for current sales order.")
-    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Delivery address for current sales order.")
 
-    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Pricelist for current order. If you change the pricelist, only new lines will consider this pricelist.")
+    user_id = fields.Many2one(
+        'res.users', string='Salesperson', index=True, tracking=2, default=lambda self: self.env.user,
+        domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman').id)])
+    partner_id = fields.Many2one(
+        'res.partner', string='Customer', readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        required=True, change_default=True, index=True, tracking=1,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="You can find a customer from their name, email, tax ID or reference.")
+    partner_invoice_id = fields.Many2one(
+        'res.partner', string='Invoice Address',
+        readonly=True, required=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="Invoice address for current sales order.")
+    partner_shipping_id = fields.Many2one(
+        'res.partner', string='Delivery Address', readonly=True, required=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="Delivery address for current sales order.")
+
+    pricelist_id = fields.Many2one(
+        'product.pricelist', string='Pricelist', check_company=True,  # Unrequired company
+        required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="Pricelist for current order. If you change the pricelist, only new lines will consider this pricelist.")
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
-    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="The analytic account related to a sales order.", copy=False)
+    analytic_account_id = fields.Many2one(
+        'account.analytic.account', 'Analytic Account',
+        readonly=True, copy=False, check_company=True,  # Unrequired company
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="The analytic account related to a sales order.")
 
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
 
@@ -170,10 +197,20 @@ class SaleOrder(models.Model):
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', tracking=4)
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=(12, 6), readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
 
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Payment terms applies to all invoices issued from this order.")
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="[('company_id', '=', company_id)]", help=" Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices. The default value comes from the customer.")
-    company_id = fields.Many2one('res.company', 'Company', required=True, default=lambda self: self.env.company)
-    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    payment_term_id = fields.Many2one(
+        'account.payment.term', string='Payment Terms', check_company=True,  # Unrequired company
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="Payment terms applies to all invoices issued from this order.")
+    fiscal_position_id = fields.Many2one(
+        'account.fiscal.position', string='Fiscal Position',
+        domain="[('company_id', '=', company_id)]", check_company=True,
+        help="Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices."
+        "The default value comes from the customer.")
+    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company)
+    team_id = fields.Many2one(
+        'crm.team', 'Sales Team',
+        change_default=True, default=_get_default_team, check_company=True,  # Unrequired company
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
     signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
@@ -918,6 +955,7 @@ class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
     _order = 'order_id, sequence, id'
+    _check_company_auto = True
 
     @api.depends('state', 'product_uom_qty', 'qty_delivered', 'qty_to_invoice', 'qty_invoiced')
     def _compute_invoice_status(self):
@@ -1133,8 +1171,12 @@ class SaleOrderLine(models.Model):
 
     discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
 
-    product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict')
-    product_template_id = fields.Many2one('product.template', string='Product Template', related="product_id.product_tmpl_id", domain=[('sale_ok', '=', True)])
+    product_id = fields.Many2one(
+        'product.product', string='Product', domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        change_default=True, ondelete='restrict', check_company=True)  # Unrequired company
+    product_template_id = fields.Many2one(
+        'product.template', string='Product Template',
+        related="product_id.product_tmpl_id", domain=[('sale_ok', '=', True)])
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', readonly=True, default=True)
     product_uom_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
@@ -1168,9 +1210,11 @@ class SaleOrderLine(models.Model):
 
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', readonly=True)
     currency_id = fields.Many2one(related='order_id.currency_id', depends=['order_id'], store=True, string='Currency', readonly=True)
-    company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, readonly=True)
+    company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, readonly=True, index=True)
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', readonly=False)
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
+    analytic_tag_ids = fields.Many2many(
+        'account.analytic.tag', string='Analytic Tags',
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     analytic_line_ids = fields.One2many('account.analytic.line', 'so_line', string="Analytic lines")
     is_expense = fields.Boolean('Is expense', help="Is true if the sales order line comes from an expense or a vendor bills")
     is_downpayment = fields.Boolean(

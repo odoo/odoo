@@ -12,9 +12,9 @@ class SaleOrder(models.Model):
     generated_coupon_ids = fields.One2many('sale.coupon', 'order_id', string="Offered Coupons", copy=False)
     reward_amount = fields.Float(compute='_compute_reward_total')
     no_code_promo_program_ids = fields.Many2many('sale.coupon.program', string="Applied Immediate Promo Programs",
-        domain=[('promo_code_usage', '=', 'no_code_needed')], copy=False)
+        domain="[('promo_code_usage', '=', 'no_code_needed'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", copy=False)
     code_promo_program_id = fields.Many2one('sale.coupon.program', string="Applied Promo Program",
-        domain=[('promo_code_usage', '=', 'code_needed')], copy=False)
+        domain="[('promo_code_usage', '=', 'code_needed'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", copy=False)
     promo_code = fields.Char(related='code_promo_program_id.promo_code', help="Applied program code", readonly=False)
 
     @api.depends('order_line')

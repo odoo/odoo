@@ -10,6 +10,11 @@ class SaleCouponReward(models.Model):
     _description = "Sales Coupon Reward"
     _rec_name = 'reward_description'
 
+    # VFE FIXME multi company
+    """Rewards are not restricted to a company...
+    You could have a reward_product_id limited to a specific company A.
+    But still use this reward as reward of a program of company B...
+    """
     reward_description = fields.Char('Reward Description')
     reward_type = fields.Selection([
         ('discount', 'Discount'),
