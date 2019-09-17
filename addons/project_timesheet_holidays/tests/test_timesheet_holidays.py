@@ -31,7 +31,7 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
                              company_ids=[(6, 0, main_company.ids)])
         Company = self.env['res.company']
         Company = Company.with_user(user)
-        Company = Company.with_context(allowed_company_ids=main_company.ids)
+        Company = Company.with_company(main_company)
         company = Company.create({'name': "Wall Company"})
         self.assertEqual(company.leave_timesheet_project_id.sudo().company_id, company, "It should have created a project for the company")
 
