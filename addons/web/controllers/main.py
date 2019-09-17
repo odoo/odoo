@@ -1833,8 +1833,11 @@ class ReportController(http.Controller):
                     response = self.report_routes(reportname, docids=docids, converter=converter, context=context)
                 else:
                     # Particular report:
-                    data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
-                    response = self.report_routes(reportname, converter=converter, context=context, **dict(data))
+                    data = dict(url_decode(url.split('?')[1]).items())  # decoding the args represented in JSON
+                    if 'context' in data:
+                        context, data_context = json.loads(context or '{}'), json.loads(data.pop('context'))
+                        context = json.dumps({**context, **data_context})
+                    response = self.report_routes(reportname, converter=converter, context=context, **data)
 
                 report = request.env['ir.actions.report']._get_report_from_name(reportname)
                 filename = "%s.%s" % (report.name, extension)
