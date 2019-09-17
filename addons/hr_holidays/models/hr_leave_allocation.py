@@ -89,7 +89,7 @@ class HolidaysAllocation(models.Model):
         help='This area is automatically filled by the user who validate the allocation')
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
-        help='This area is automaticly filled by the user who validate the allocation with second level (If allocation type need second validation)')
+        help='This area is automatically filled by the user who validate the allocation with second level (If allocation type need second validation)')
     validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type', readonly=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
@@ -550,7 +550,7 @@ class HolidaysAllocation(models.Model):
 
             if state == 'validate' and val_type == 'both':
                 if not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                    raise UserError(_('Only an time off Manager can apply the second approval on allocation requests.'))
+                    raise UserError(_('Only a Time off Manager can apply the second approval on allocation requests.'))
 
     # ------------------------------------------------------------
     # Activity methods
