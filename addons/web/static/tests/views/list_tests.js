@@ -1073,6 +1073,49 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('head selector is toggled by the other selectors', async function (assert) {
+        assert.expect(6);
+
+        const list = await createView({
+            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            data: this.data,
+            groupBy: ['bar'],
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.ok(!list.$('thead .o_list_record_selector input')[0].checked,
+            "Head selector should be unchecked");
+
+        await testUtils.dom.click(list.$('.o_group_header:first()'));
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        assert.containsN(list, 'tbody .o_list_record_selector input:checked',
+            3, "All visible checkboxes should be checked");
+
+        await testUtils.dom.click(list.$('.o_group_header:last()'));
+
+        assert.ok(!list.$('thead .o_list_record_selector input')[0].checked,
+            "Head selector should be unchecked");
+
+        await testUtils.dom.click(list.$('tbody .o_list_record_selector input:last()'));
+
+        assert.ok(list.$('thead .o_list_record_selector input')[0].checked,
+            "Head selector should be checked");
+
+        await testUtils.dom.click(list.$('tbody .o_list_record_selector:first() input'));
+
+        assert.ok(!list.$('thead .o_list_record_selector input')[0].checked,
+            "Head selector should be unchecked");
+
+        await testUtils.dom.click(list.$('.o_group_header:first()'));
+
+        assert.ok(list.$('thead .o_list_record_selector input')[0].checked,
+            "Head selector should be checked");
+
+        list.destroy();
+    });
+
     QUnit.test('selection is reset on reload', async function (assert) {
         assert.expect(5);
 
