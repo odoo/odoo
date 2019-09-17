@@ -481,6 +481,58 @@ class TestTranslationWrite(TransactionCase):
         ])
       
 
+    def test_05_remove_multi(self):
+        self.env['res.lang'].load_lang('fr_FR')
+
+        langs = self.env['res.lang'].get_installed()
+        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
+            "Test did not started with expected languages")
+
+        belgium = self.env.ref('base.be')
+        # vat_label is translatable and not required
+        belgium.with_context(lang='en_US').write({'vat_label': 'VAT'})
+
+        # create translations if not exists
+        self.env['ir.translation']._upsert_translations([{
+            'type': 'model',
+            'name': 'res.country,vat_label',
+            'lang': 'en_US',
+            'res_id': belgium.id,
+            'src': 'VAT',
+            'value': 'VAT',
+            'state': 'translated',
+        }, {
+            'type': 'model',
+            'name': 'res.country,vat_label',
+            'lang': 'fr_FR',
+            'res_id': belgium.id,
+            'src': 'VAT',
+            'value': 'TVA',
+            'state': 'translated',
+        }])
+
+        # remove the value
+        belgium.with_context(lang='fr_FR').write({'vat_label': False})
+        # should recover the initial value from db
+        self.assertEqual(
+            False, belgium.with_context(lang='fr_FR').vat_label,
+            "Value was not reset"
+        )
+        self.assertEqual(
+            False, belgium.with_context(lang='en_US').vat_label,
+            "Value was not reset in other languages"
+        )
+        self.assertEqual(
+            False, belgium.with_context(lang=None).vat_label,
+            "Value was not reset on the field model"
+        )
+
+        translations = self.env['ir.translation'].search([
+            ('name', '=', 'res.country,vat_label'),
+            ('res_id', '=', belgium.id),
+        ])
+        self.assertEqual(len(translations), 0, "Translations were not removed")
+
     def test_field_selection(self):
         """ Test translations of field selections. """
         field = self.env['ir.model']._fields['state']
