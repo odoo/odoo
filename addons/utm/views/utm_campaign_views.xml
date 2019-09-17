@@ -100,17 +100,13 @@
     </record>
 
     <!--  CAMPAIGN TAGS !-->
-    <record id="utm_tag_view_form" model="ir.ui.view">
-        <field name="name">utm.tag.view.form</field>
+    <record id="utm_tag_view_tree" model="ir.ui.view">
+        <field name="name">utm.tag.view.tree</field>
         <field name="model">utm.tag</field>
         <field name="arch" type="xml">
-            <form string="Campaign Tags">
-                <sheet>
-                    <group>
-                        <field name="name"/>
-                    </group>
-                </sheet>
-            </form>
+            <tree string="Campaign Tags" editable="top">
+                <field name="name"/>
+            </tree>
         </field>
     </record>
 
