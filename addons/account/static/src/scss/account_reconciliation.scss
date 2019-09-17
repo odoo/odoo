@@ -234,6 +234,14 @@
         &:not(:focus-within) .o_web_accesskey_overlay {
             display: none;
         }
+        &:focus caption .o_buttons button {
+            outline: none;
+            box-shadow: 4px 4px 4px 0px $o-enterprise-color;
+        }
+        &:focus{
+            outline: none;
+            box-shadow: 0 0 0 0;
+        }
     }
 
     .o_reconcile_models .btn-primary {
