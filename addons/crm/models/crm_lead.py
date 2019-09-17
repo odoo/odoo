@@ -229,7 +229,7 @@ class Lead(models.Model):
             if lead.email_from:
                 email_state = 'incorrect'
                 for email in email_split(lead.email_from):
-                    if tools.email_validate(email):
+                    if tools.email_normalize(email):
                         email_state = 'correct'
                         break
             lead.email_state = email_state
