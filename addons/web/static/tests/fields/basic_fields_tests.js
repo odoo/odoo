@@ -2635,7 +2635,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldDateRange');
 
     QUnit.test('Datetime field', async function (assert) {
-        assert.expect(19);
+        assert.expect(20);
 
         this.data.partner.fields.datetime_end = {string: 'Datetime End', type: 'datetime'};
         this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
@@ -2684,6 +2684,8 @@ QUnit.module('basic_fields', {
             "active end date hour should be '5' in date range picker");
         assert.strictEqual($('.daterangepicker:first .drp-calendar.right .minuteselect').val(), '30',
             "active end date minute should be '30' in date range picker");
+        assert.containsN($('.daterangepicker:first .drp-calendar.left .minuteselect'), 'option', 12,
+            "minute selection should contain 12 options (1 for each 5 minutes)");
 
         // Close picker
         await testUtils.dom.click($('.daterangepicker:first .cancelBtn'));
