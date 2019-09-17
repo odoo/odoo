@@ -30,7 +30,7 @@
         </xpath>
     </template>
 
-    <template id="product_attributes_body" inherit_id="website_sale.product" customize_show="True" name="Product attributes table">
+    <template id="product_attributes_body" inherit_id="website_sale.product" customize_show="True" name="Product attributes table" priority="30">
         <xpath expr="//div[@id='product_attributes_simple']" position="replace"/>
         <xpath expr="//div[@id='product_full_description']" position="after">
             <section class="container" id="product_full_spec">
