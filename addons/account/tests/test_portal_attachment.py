@@ -10,7 +10,7 @@ from odoo.tools import mute_logger
 @tests.tagged('post_install', '-at_install')
 class TestUi(tests.HttpCase):
 
-    @mute_logger('odoo.addons.website.models.ir_http', 'odoo.http')
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_01_portal_attachment(self):
         """Test the portal chatter attachment route."""
 
