@@ -184,13 +184,13 @@ var DateTime = Field.extend({
         type: 'datetime'
     },
     operators: [
+        {value: "between", text: _lt("is between")},
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
         {value: ">", text: _lt("is after")},
         {value: "<", text: _lt("is before")},
         {value: ">=", text: _lt("is after or equal to")},
         {value: "<=", text: _lt("is before or equal to")},
-        {value: "between", text: _lt("is between")},
         {value: "∃", text: _lt("is set")},
         {value: "∄", text: _lt("is not set")}
     ],
@@ -216,15 +216,9 @@ var DateTime = Field.extend({
         this._super.apply(this, arguments);
 
         if ($operator.val() === "between") {
-            if (!this.datewidget_1) {
-                this._create_new_widget("datewidget_1");
-            } else {
-                this.datewidget_1.do_show();
-            }
+            this.datewidget_1.do_show();
         } else {
-            if (this.datewidget_1) {
-                this.datewidget_1.do_hide();
-            }
+            this.datewidget_1.do_hide();
         }
     },
     toString: function () {
@@ -238,13 +232,18 @@ var DateTime = Field.extend({
     start: function () {
         return Promise.all([
             this._super.apply(this, arguments),
-            this._create_new_widget("datewidget_0")
-        ]);
+            this._create_new_widget("datewidget_0", '00:00:00', 'hh:mm:ss'),
+            this._create_new_widget("datewidget_1", '23:59:59', 'hh:mm:ss'),
+        ]).then(() => {
+            if (this.operators[0].value !== "between") {
+                this.datewidget_1.do_hide();
+            }
+        });
     },
-    _create_new_widget: function (name) {
+    _create_new_widget: function (name, ...time) {
         this[name] = new (this._get_widget_class())(this);
         return this[name].appendTo(this.$el).then((function () {
-            this[name].setValue(moment());
+            this[name].setValue(moment(...time));
         }).bind(this));
     },
     _get_widget_class: function () {
@@ -256,6 +255,17 @@ var Date = DateTime.extend({
     attributes: {
         type: 'date'
     },
+    operators: [
+        {value: "=", text: _lt("is equal to")},
+        {value: "!=", text: _lt("is not equal to")},
+        {value: ">", text: _lt("is after")},
+        {value: "<", text: _lt("is before")},
+        {value: ">=", text: _lt("is after or equal to")},
+        {value: "<=", text: _lt("is before or equal to")},
+        {value: "between", text: _lt("is between")},
+        {value: "∃", text: _lt("is set")},
+        {value: "∄", text: _lt("is not set")}
+    ],
     get_value: function (index) {
         // retrieve the datepicker value
         return this["datewidget_" + (index || 0)].getValue();
