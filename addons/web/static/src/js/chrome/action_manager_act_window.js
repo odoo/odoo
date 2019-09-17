@@ -616,7 +616,10 @@ ActionManager.include({
 
         // determine the action to execute according to the actionData
         if (actionData.special) {
-            def = Promise.resolve({type: 'ir.actions.act_window_close', infos: 'special'});
+            def = Promise.resolve({
+                type: 'ir.actions.act_window_close',
+                infos: { special: true },
+            });
         } else if (actionData.type === 'object') {
             // call a Python Object method, which may return an action to execute
             var args = recordID ? [[recordID]] : [env.resIDs];
