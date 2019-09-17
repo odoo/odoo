@@ -877,11 +877,18 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      */
     _updateSelection: function () {
-        var $selectedRows = this.$('tbody .o_list_record_selector input:checked')
-            .closest('tr');
-        this.selection = _.map($selectedRows, function (row) {
-            return $(row).data('id');
+        this.selection = [];
+        var self = this;
+        var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
+        var allChecked = $inputs.length > 0;
+        $inputs.each(function (index, input) {
+            if (input.checked) {
+                self.selection.push($(input).closest('tr').data('id'));
+            } else {
+                allChecked = false;
+            }
         });
+        this.$('thead .o_list_record_selector input').prop('checked', allChecked);
         this.trigger_up('selection_changed', { selection: this.selection });
         this._updateFooter();
     },
@@ -1012,9 +1019,6 @@ var ListRenderer = BasicRenderer.extend({
     _onSelectRecord: function (ev) {
         ev.stopPropagation();
         this._updateSelection();
-        if (!$(ev.currentTarget).find('input').prop('checked')) {
-            this.$('thead .o_list_record_selector input').prop('checked', false);
-        }
     },
     /**
      * @private
@@ -1031,11 +1035,13 @@ var ListRenderer = BasicRenderer.extend({
     _onToggleGroup: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
+        var self = this;
         var group = $(ev.currentTarget).closest('tr').data('group');
         if (group.count) {
             this.trigger_up('toggle_group', {
                 group: group,
                 onSuccess: function() {
+                    self._updateSelection();
                     // Refocus the header after re-render unless the user
                     // already focused something else by now
                     if (document.activeElement.tagName === 'BODY') {
