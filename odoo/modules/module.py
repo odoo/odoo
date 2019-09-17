@@ -30,92 +30,14 @@ README = ['README.rst', 'README.md', 'README.txt']
 
 _logger = logging.getLogger(__name__)
 
-# addons path as a list
-# ad_paths is a deprecated alias, please use odoo.addons.__path__
-@tools.lazy
-def ad_paths():
-    _logger.warning('"odoo.modules.module.ad_paths" is a deprecated '
-                    'proxy to "odoo.addons.__path__". Please consider '
-                    'using the latter as the former is going to be '
-                    'removed in the next version.',
-                    exc_info=DeprecationWarning(), stack_info=True)
-    return odoo.addons.__path__
-hooked = False
-
 # Modules already loaded
 loaded = []
 
-class AddonsHook(object):
-    """ Makes modules accessible through openerp.addons.* """
-
-    def find_module(self, name, path=None):
-        if name.startswith('openerp.addons.') and name.count('.') == 2:
-            _logger.warning('"openerp.addons" is a deprecated alias to '
-                            '"odoo.addons". Please consider using the '
-                            'latter as the former is going to be removed '
-                            'in the next version.',
-                            exc_info=DeprecationWarning(), stack_info=True)
-            return self
-
-    def load_module(self, name):
-        assert name not in sys.modules
-
-        odoo_name = re.sub(r'^openerp.addons.(\w+)$', r'odoo.addons.\g<1>', name)
-
-        odoo_module = sys.modules.get(odoo_name)
-        if not odoo_module:
-            odoo_module = importlib.import_module(odoo_name)
-
-        sys.modules[name] = odoo_module
-
-        return odoo_module
-
-# need to register loader with setuptools as Jinja relies on it when using
-# PackageLoader
-pkg_resources.register_loader_type(AddonsHook, pkg_resources.DefaultProvider)
-
-class OdooHook(object):
-    """ Makes odoo package also available as openerp """
-
-    def find_module(self, name, path=None):
-        # openerp.addons.<identifier> should already be matched by AddonsHook,
-        # only framework and subdirectories of modules should match
-        if re.match(r'^openerp\b', name):
-            _logger.warning('openerp is a deprecated alias to odoo. '
-                            'Please consider using the latter as the '
-                            'former is going to be removed in the next '
-                            'version.',
-                            exc_info=DeprecationWarning(), stack_info=True)
-            return self
-
-    def load_module(self, name):
-        assert name not in sys.modules
-
-        canonical = re.sub(r'^openerp(.*)', r'odoo\g<1>', name)
-
-        if canonical in sys.modules:
-            mod = sys.modules[canonical]
-        else:
-            # probable failure: canonical execution calling old naming -> corecursion
-            mod = importlib.import_module(canonical)
-
-        # just set the original module at the new location. Don't proxy,
-        # it breaks *-import (unless you can find how `from a import *` lists
-        # what's supposed to be imported by `*`, and manage to override it)
-        sys.modules[name] = mod
-
-        return sys.modules[name]
-
 def initialize_sys_path():
     """
-    Setup an import-hook to be able to import OpenERP addons from the different
-    addons paths.
-
-    This ensures something like ``import crm`` (or even
-    ``import odoo.addons.crm``) works even if the addons are not in the
-    PYTHONPATH.
+    Setup the addons path ``odoo.addons.__path__`` with various defaults
+    and explicit directories.
     """
-    global hooked
 
     dd = os.path.normcase(tools.config.addons_data_dir)
     if os.access(dd, os.R_OK) and dd not in odoo.addons.__path__:
@@ -130,11 +52,6 @@ def initialize_sys_path():
     base_path = os.path.normcase(os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons')))
     if base_path not in odoo.addons.__path__ and os.path.isdir(base_path):
         odoo.addons.__path__.append(base_path)
-
-    if not hooked:
-        sys.meta_path.insert(0, OdooHook())
-        sys.meta_path.insert(0, AddonsHook())
-        hooked = True
 
 def get_module_path(module, downloaded=False, display_warning=True):
     """Return the path of the given module.
