@@ -113,7 +113,7 @@ ProductConfiguratorWidget.include({
         this.do_action('event_sale.event_configurator_action', {
             additional_context: data,
             on_close: function (result) {
-                if (result && result !== 'special') {
+                if (result && !result.special) {
                     self.trigger_up('field_changed', {
                         dataPointID: dataPointId,
                         changes: result.eventConfiguration,

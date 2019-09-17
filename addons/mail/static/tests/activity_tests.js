@@ -457,5 +457,64 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
     activity.destroy();
 });
 
+QUnit.test('Activity view: discard an activity creation dialog', async function (assert) {
+    assert.expect(2);
+
+    var actionManager = await createActionManager({
+        actions: [{
+            id: 1,
+            name: 'Task Action',
+            res_model: 'task',
+            type: 'ir.actions.act_window',
+            views: [[false, 'activity']],
+        }],
+        archs: {
+            'task,false,activity': `
+                <activity string="Task">
+                    <templates>
+                        <div t-name="activity-box">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
+                </activity>`,
+            'task,false,search': '<search></search>',
+            'mail.activity,false,form': `
+                <form>
+                    <field name="display_name"/>
+                    <footer>
+                        <button string="Discard" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>`
+        },
+        data: this.data,
+        intercepts: {
+            do_action(ev) {
+                actionManager.doAction(ev.data.action, ev.data.options);
+            }
+        },
+        async mockRPC(route, args) {
+            if (args.method === 'check_access_rights') {
+                return true;
+            }
+            return this._super(...arguments);
+        },
+    });
+    await actionManager.doAction(1);
+
+    await testUtils.dom.click(actionManager.$('.o_activity_view .o_data_row .o_activity_empty_cell')[0]);
+    assert.containsOnce(
+        $,
+        '.modal.o_technical_modal.show',
+        "Activity Modal should be opened");
+
+    await testUtils.dom.click($('.modal.o_technical_modal.show button[special="cancel"]'));
+    assert.containsNone(
+        $,
+        '.modal.o_technical_modal.show',
+        "Activity Modal should be closed");
+
+    actionManager.destroy();
+});
+
 });
 });
