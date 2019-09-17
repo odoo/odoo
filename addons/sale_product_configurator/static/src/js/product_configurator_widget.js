@@ -149,7 +149,7 @@ ProductConfiguratorWidget.include({
         this.do_action('sale_product_configurator.sale_product_configurator_action', {
             additional_context: data,
             on_close: function (result) {
-                if (result && result !== 'special') {
+                if (result && !result.special) {
                     self._addProducts(result, dataPointId);
                 } else {
                     // is this restoreProductTemplateId ability useful ???
