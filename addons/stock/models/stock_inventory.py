@@ -469,16 +469,20 @@ class InventoryLine(models.Model):
             })]
         }
 
+    def _get_virtual_location(self):
+        return self.product_id.with_context(force_company=self.company_id.id).property_stock_inventory
+
     def _generate_moves(self):
         vals_list = []
         for line in self:
+            virtual_location = line._get_virtual_location()
             rounding = line.product_id.uom_id.rounding
             if float_is_zero(line.difference_qty, precision_rounding=rounding):
                 continue
             if line.difference_qty > 0:  # found more than expected
-                vals = line._get_move_values(line.difference_qty, line.product_id.with_context(force_company=line.company_id.id).property_stock_inventory.id, line.location_id.id, False)
+                vals = line._get_move_values(line.difference_qty, virtual_location.id, line.location_id.id, False)
             else:
-                vals = line._get_move_values(abs(line.difference_qty), line.location_id.id, line.product_id.with_context(force_company=line.company_id.id).property_stock_inventory.id, True)
+                vals = line._get_move_values(abs(line.difference_qty), line.location_id.id, virtual_location.id, True)
             vals_list.append(vals)
         return self.env['stock.move'].create(vals_list)
 
