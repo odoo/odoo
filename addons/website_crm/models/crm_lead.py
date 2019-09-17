@@ -31,7 +31,7 @@ class Lead(models.Model):
         action = self.env.ref('website.website_visitor_page_action').read()[0]
         action['domain'] = [('visitor_id', 'in', visitors.ids)]
         # avoid grouping if only few records
-        if len(visitors.visitor_page_ids.ids) > 15 and len(visitors.page_ids.ids) > 1:
+        if len(visitors.website_track_ids.ids) > 15 and len(visitors.page_ids.ids) > 1:
             action['context'] = {'search_default_group_by_page': '1'}
         return action
 
