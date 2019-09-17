@@ -136,12 +136,20 @@ class TestCalendar(TransactionCase):
             (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
             "Sanity check"
         )
+        partner0 = self.env['res.partner'].create({
+            'name': 'Leo',
+            'email': u'leo@example.com'
+        })
+        partner1 = self.env['res.partner'].create({
+            'name': 'Brad',
+            'email': u'brad@example.com'
+        })
         values = {
             'allday': False,
             'name': u'wheee',
             'attendee_ids': [
-                (0, 0, {'state': u'needsAction', 'partner_id': 8, 'email': u'bob@example.com'}),
-                (0, 0, {'state': u'needsAction', 'partner_id': 10, 'email': u'ed@example.com'}),
+                (0, 0, {'state': u'needsAction', 'partner_id': partner0.id, 'email': u'leo@example.com'}),
+                (0, 0, {'state': u'needsAction', 'partner_id': partner1.id, 'email': u'brad@example.com'}),
             ],
             'recurrency': True,
             'privacy': u'public',
@@ -150,7 +158,7 @@ class TestCalendar(TransactionCase):
             'start': '2017-07-10 15:30:00',
             'location': u"XXX",
             'duration': 0.5,
-            'partner_ids': [(4, 10), (4, 8)],
+            'partner_ids': [(4, partner0.id), (4, partner1.id)],
             'description': u"A thing"
         }
 
@@ -225,7 +233,13 @@ class TestCalendar(TransactionCase):
             'name': 'Test',
         })
         now = datetime.now()
-        test_user = self.env.ref('base.user_demo')
+        test_user = self.env['res.users'].create({
+            'name': 'Leo',
+            'email': 'leo@gmail.com',
+            'login': 'demo1',
+            'password': 'demouser123',
+            'partner_id': test_record.id,
+            })
         test_name, test_description, test_description2 = 'Test-Meeting', '<p>Test-Description</p>', '<p>NotTest</p>'
 
         # create using default_* keys
@@ -264,7 +278,7 @@ class TestCalendar(TransactionCase):
         self.assertEqual(self.env['calendar.event'], self.env['calendar.event'].search([('name', '=', test_name)]))
 
         # create using active_model keys
-        test_event = self.env['calendar.event'].with_user(self.env.ref('base.user_demo')).with_context(
+        test_event = self.env['calendar.event'].with_user(test_user).with_context(
             active_model=test_record._name,
             active_id=test_record.id,
         ).create({
@@ -322,11 +336,15 @@ class TestCalendar(TransactionCase):
             'category': 'meeting'
         })
 
+        test_user = self.env['res.partner'].create({
+            'name': 'Leo',
+            })
+
         activity_id = self.env['mail.activity'].create({
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
             'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
-            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Deco Addict')], limit=1).id,
+            'res_id': test_user.id,
         })
 
         calendar_event = self.env['calendar.event'].create({
@@ -355,11 +373,15 @@ class TestCalendar(TransactionCase):
             'category': 'meeting'
         })
 
+        test_user = self.env['res.partner'].create({
+            'name': 'Leo',
+            })
+
         activity_id = self.env['mail.activity'].create({
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
             'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
-            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Deco Addict')], limit=1).id,
+            'res_id': test_user.id,
         })
 
         calendar_event = self.env['calendar.event'].create({
