@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
 
     sale_order_template_id = fields.Many2one(
         'sale.order.template', 'Quotation Template',
-        readonly=True,
+        readonly=True, check_company=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     sale_order_option_ids = fields.One2many(
