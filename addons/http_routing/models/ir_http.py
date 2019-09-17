@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import re
+import traceback
 import unicodedata
 import werkzeug
 
@@ -15,8 +16,9 @@ except ImportError:
     slugify_lib = None
 
 import odoo
-from odoo import api, models
+from odoo import api, models, registry, exceptions
 from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
+from odoo.addons.base.models.qweb import QWebException
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import config, ustr, pycompat
@@ -540,3 +542,87 @@ class IrHttp(models.AbstractModel):
                 if request.httprequest.query_string:
                     path += '?' + request.httprequest.query_string.decode('utf-8')
                 return werkzeug.utils.redirect(path, code=301)
+
+    @classmethod
+    def _get_exception_code_values(cls, exception):
+        """ Return a tuple with the error code following by the values matching the exception"""
+        code = 500  # default code
+        values = dict(
+            exception=exception,
+            traceback=traceback.format_exc(),
+        )
+        # only except_orm exceptions contain a message
+        if isinstance(exception, exceptions.except_orm):
+            values['error_message'] = exception.name
+            code = 400
+            if isinstance(exception, exceptions.AccessError):
+                code = 403
+
+        elif isinstance(exception, QWebException):
+            values.update(qweb_exception=exception)
+
+            if type(exception.error) == exceptions.AccessError:
+                code = 403
+
+        elif isinstance(exception, werkzeug.exceptions.HTTPException):
+            code = exception.code
+
+        values.update(
+            status_message=werkzeug.http.HTTP_STATUS_CODES[code],
+            status_code=code,
+        )
+
+        return (code, values)
+
+    @classmethod
+    def _get_values_500_error(cls, env, values, exception):
+        values['view'] = env["ir.ui.view"]
+        return values
+
+    @classmethod
+    def _get_error_html(cls, env, code, values):
+        return env['ir.ui.view'].render_template('http_routing.%s' % code, values)
+
+    @classmethod
+    def _handle_exception(cls, exception):
+        is_frontend_request = bool(getattr(request, 'is_frontend', False))
+        if not is_frontend_request:
+            # Don't touch non frontend requests exception handling
+            return super(IrHttp, cls)._handle_exception(exception)
+        try:
+            response = super(IrHttp, cls)._handle_exception(exception)
+
+            if isinstance(response, Exception):
+                exception = response
+            else:
+                # if parent excplicitely returns a plain response, then we don't touch it
+                return response
+        except Exception as e:
+            if 'werkzeug' in config['dev_mode']:
+                raise e
+            exception = e
+
+        code, values = cls._get_exception_code_values(exception)
+
+        if code is None:
+            # Hand-crafted HTTPException likely coming from abort(),
+            # usually for a redirect response -> return it directly
+            return exception
+
+        if not request.uid:
+            cls._auth_method_public()
+        with registry(request.env.cr.dbname).cursor() as cr:
+            env = api.Environment(cr, request.uid, request.env.context)
+            if code == 500:
+                _logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
+                values = cls._get_values_500_error(env, values, exception)
+            elif code == 403:
+                _logger.warn("403 Forbidden:\n\n%s", values['traceback'])
+            elif code == 400:
+                _logger.warn("400 Bad Request:\n\n%s", values['traceback'])
+            try:
+                html = cls._get_error_html(env, code, values)
+            except Exception:
+                html = env['ir.ui.view'].render_template('http_routing.http_error', values)
+
+        return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
