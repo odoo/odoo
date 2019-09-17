@@ -135,6 +135,7 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false">
                     <field name="date" optional="show"/>
+                    <field name="move_id" optional="show"/>
                     <field name="journal_id" options='{"no_open":True}'/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="name" optional="show"/>
@@ -163,7 +164,7 @@
             <field name="model">account.move.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" expand="context.get('expand', False)">
+                <tree string="Journal Items" create="false" expand="context.get('expand', False)" default_order="credit">
                     <field name="date" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="ref" optional="hide"/>
                     <field name="move_id" optional="show" readonly="1"/>
