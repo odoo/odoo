@@ -493,4 +493,13 @@
             </body>
         </t>
     </template>
+
+    <template id="portal_404" inherit_id="http_routing.404">
+        <xpath expr="//p" position="after">
+            <p>Maybe you were looking for one of these popular pages ?</p>
+            <ul>
+                <li><a href="/my">Documents</a></li>
+            </ul>
+        </xpath>
+    </template>
 </odoo>
