@@ -211,6 +211,7 @@ class AccountAccount(models.Model):
         help="Forces all moves for this account to have this account currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
+    used = fields.Boolean(store=False, search='_search_used')
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True,
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
@@ -251,6 +252,17 @@ class AccountAccount(models.Model):
         # So instead, we make it a many2one to a psql view with what we need as records.
         for record in self:
             record.root_id = record.code and (ord(record.code[0]) * 1000 + ord(record.code[1])) or False
+
+    def _search_used(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        if operator != '=':
+            value = not value
+        self._cr.execute("""
+            SELECT id FROM account_account account
+            WHERE EXISTS (SELECT * FROM account_move_line aml WHERE aml.account_id = account.id LIMIT 1)
+        """)
+        return [('id', 'in' if value else 'not in', [r[0] for r in self._cr.fetchall()])]
 
     @api.model
     def _search_new_account_code(self, company, digits, prefix):
@@ -560,6 +572,7 @@ class AccountRoot(models.Model):
 
     name = fields.Char()
     parent_id = fields.Many2one('account.root')
+    company_id = fields.Many2one('res.company')
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
@@ -567,12 +580,14 @@ class AccountRoot(models.Model):
             CREATE OR REPLACE VIEW %s AS (
             SELECT DISTINCT ASCII(code) * 1000 + ASCII(SUBSTRING(code,2,1)) AS id,
                    LEFT(code,2) AS name,
-                   ASCII(code) AS parent_id
+                   ASCII(code) AS parent_id,
+                   company_id
             FROM account_account WHERE code IS NOT NULL
             UNION ALL
             SELECT DISTINCT ASCII(code) AS id,
                    LEFT(code,1) AS name,
-                   NULL::int AS parent_id
+                   NULL::int AS parent_id,
+                   company_id
             FROM account_account WHERE code IS NOT NULL
             )''' % (self._table,)
         )
