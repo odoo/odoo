@@ -84,7 +84,8 @@ class MailChannel(models.Model):
         message_author_id = message.author_id
         visitor = self.livechat_visitor_id
         if len(self) == 1 and visitor and message_author_id != self.livechat_operator_id:
-            visitor.sudo().write({
-                'last_connection_datetime': fields.datetime.now(),
+            self.env['website.visitor.lastconnection'].create({
+                'visitor_id': visitor.id,
+                'connection_datetime': fields.datetime.now()
             })
         return message
