@@ -214,7 +214,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'res.country',
-        fields: ['name', 'vat_label'],
+        fields: ['name', 'vat_label', 'code'],
         loaded: function(self,countries){
             self.countries = countries;
             self.company.country = null;
@@ -909,14 +909,14 @@ exports.PosModel = Backbone.Model.extend({
                                 self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
                                     active_ids:order_server_id,
                                 }}).then(function () {
-                                    resolveInvoiced();
+                                    resolveInvoiced(order_server_id);
                                     resolveDone();
                                 }).guardedCatch(function (error) {
                                     rejectInvoiced({code:401, message:'Backend Invoice', data:{order: order}});
                                     rejectDone();
                                 });
                             } else if (order_server_id.length) {
-                                resolveInvoiced(order_server_id[0]);
+                                resolveInvoiced(order_server_id);
                                 resolveDone();
                             } else {
                                 // The order has been pushed separately in batch when
@@ -3012,6 +3012,9 @@ exports.Order = Backbone.Model.extend({
     //see set_screen_data
     get_screen_data: function(key){
         return this.screen_data[key];
+    },
+    wait_for_push_order: function () {
+        return this.is_to_email();
     },
 });
 
