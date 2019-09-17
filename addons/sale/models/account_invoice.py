@@ -43,11 +43,11 @@ class AccountMove(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         # OVERRIDE
-        res = super(AccountMove, self)._onchange_partner_id()
-
         # Recompute 'partner_shipping_id' based on 'partner_id'.
         addr = self.partner_id.address_get(['delivery'])
         self.partner_shipping_id = addr and addr.get('delivery')
+
+        res = super(AccountMove, self)._onchange_partner_id()
 
         # Recompute 'narration' based on 'company.invoice_terms'.
         if self.type == 'out_invoice':
