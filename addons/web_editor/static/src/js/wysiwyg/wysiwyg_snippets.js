@@ -20,8 +20,6 @@ Wysiwyg.include({
             await this.editor.prependTo(this.$editor[0].ownerDocument.body);
             this.options.toolbarHandler.append(this.editor.$el);
             this.$el.on('content_changed', function (e) {
-                var $editable = $(e.target).closest('[data-oe-model], .o_editable');
-                $editable.addClass('o_dirty');
                 self.trigger_up('wysiwyg_change');
             });
         } else {

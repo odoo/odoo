@@ -124,17 +124,23 @@ var WysiwygMultizone = Wysiwyg.extend({
      */
     _saveElement: function (outerHTML, recordInfo, editable) {
         var promises = [];
+
         var $el = $(editable);
-        promises.push(this._rpc({
-            model: 'ir.ui.view',
-            method: 'save',
-            args: [
-                $el.data('oe-id'),
-                outerHTML,
-                $el.data('oe-xpath') || null,
-            ],
-            context: recordInfo.context,
-        }));
+
+        var viewID = $el.data('oe-id');
+        if (viewID) {
+            promises.push(this._rpc({
+                model: 'ir.ui.view',
+                method: 'save',
+                args: [
+                    viewID,
+                    outerHTML,
+                    $el.data('oe-xpath') || null,
+                ],
+                context: recordInfo.context,
+            }));
+        }
+
         if ($el.data('oe-field') === 'mega_menu_content') {
             // On top of saving the mega menu content like any other field
             // content, we must save the custom classes that were set on the
@@ -153,6 +159,7 @@ var WysiwygMultizone = Wysiwyg.extend({
                 ],
             }));
         }
+
         return Promise.all(promises);
     },
     /**
