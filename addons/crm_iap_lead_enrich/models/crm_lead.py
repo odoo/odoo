@@ -22,7 +22,7 @@ class Lead(models.Model):
         leads = self.search([
             ('iap_enrich_done', '=', False),
             ('reveal_id', '=', False),
-            ('probability', 'not in', ('0', 100)),
+            ('probability', 'not in', (0, 100)),
             ('create_date', '>', timeDelta)
         ])
         leads._iap_enrich(from_cron=True)
@@ -75,7 +75,7 @@ class Lead(models.Model):
 
             values = {'iap_enrich_done': True}
             lead_fields = ['description', 'partner_name', 'reveal_id', 'street', 'city', 'zip']
-            iap_fields = ['description', 'name', 'clearbit_id', 'location', 'city', 'city', 'postal_code']
+            iap_fields = ['description', 'name', 'clearbit_id', 'location', 'city', 'postal_code']
             for lead_field, iap_field in zip(lead_fields, iap_fields):
                 if not lead[lead_field] and iap_data.get(iap_field):
                     values[lead_field] = iap_data[iap_field]
