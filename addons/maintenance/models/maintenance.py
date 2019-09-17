@@ -244,6 +244,7 @@ class MaintenanceEquipment(models.Model):
             'user_id': self.technician_user_id.id,
             'maintenance_team_id': self.maintenance_team_id.id,
             'duration': self.maintenance_duration,
+            'company_id': self.company_id.id or self.env.company.id
             })
 
     @api.model
