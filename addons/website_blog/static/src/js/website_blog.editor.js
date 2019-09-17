@@ -116,22 +116,28 @@ WysiwygMultizone.include({
             this.__savedCoversPostIDs.push(postID);
         }
 
+        var model = postID ? 'blog.post' : blogID ? 'blog.blog' : false;
+        if (!model) {
+            return prom;
+        }
+
         var cssBgImage = $(el.querySelector('.o_blog_cover_image')).css('background-image');
+        var coverProps = {
+            'background-image': cssBgImage.replace(/"/g, '').replace(window.location.protocol + "//" + window.location.host, ''),
+            'background-color': el.dataset.filterColor,
+            'opacity': el.dataset.filterValue,
+            'resize_class': el.dataset.coverClass,
+            'text_size_class': el.dataset.textSizeClass,
+            'text_align_class': el.dataset.textAlignClass,
+        };
 
         var prom2 = this._rpc({
-            route: '/blog/post_change_background',
-            params: {
-                'blog_id': blogID,
-                'post_id': postID,
-                'cover_properties': {
-                    'background-image': cssBgImage.replace(/"/g, '').replace(window.location.protocol + "//" + window.location.host, ''),
-                    'background-color': el.dataset.filterColor,
-                    'opacity': el.dataset.filterValue,
-                    'resize_class': el.dataset.coverClass,
-                    'text_size_class': el.dataset.textSizeClass,
-                    'text_align_class': el.dataset.textAlignClass,
-                },
-            },
+            model: model,
+            method: 'write',
+            args: [
+                postID || blogID,
+                {'cover_properties': JSON.stringify(coverProps)}
+            ],
         });
 
         return Promise.all([prom, prom2]);

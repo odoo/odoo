@@ -290,14 +290,6 @@ class WebsiteBlog(http.Controller):
         new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).browse(int(blog_post_id)).copy()
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
-    @http.route('/blog/post_change_background', type='json', auth="public", website=True)
-    def change_bg(self, blog_id=False, post_id=False, cover_properties={}, **post):
-        if post_id:
-            model, id = 'blog.post', int(post_id)
-        else:
-            model, id = 'blog.blog', int(blog_id)
-        return request.env[model].browse(id).write({'cover_properties': json.dumps(cover_properties)})
-
     @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
     def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):
         posts = request.env['blog.post'].search(domain, limit=limit, order=order)
