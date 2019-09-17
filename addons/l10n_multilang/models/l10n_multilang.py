@@ -125,6 +125,9 @@ class AccountChartTemplate(models.Model):
             in_xml_ids = {xml_id.name: xml_id for xml_id in in_xml_ids}
 
             for name, xml_id in expected_in_xml_id_names.items():
+                # ignore nonconforming customized data
+                if name not in in_xml_ids:
+                    continue
                 in_records += self.env[model + '.template'].browse(in_xml_ids[name].res_id)
                 out_records += self.env[model].browse(xml_id.res_id)
 

@@ -9,6 +9,8 @@ var Widget = require('web.Widget');
 var SearchBar = Widget.extend({
     template: 'SearchView.SearchBar',
     events: _.extend({}, Widget.prototype.events, {
+        'compositionend .o_searchview_input': '_onCompositionendInput',
+        'compositionstart .o_searchview_input': '_onCompositionstartInput',
         'keydown': '_onKeydown',
     }),
     /**
@@ -34,6 +36,7 @@ var SearchBar = Widget.extend({
 
         this.autoCompleteSources = [];
         this.searchFacets = [];
+        this._isInputComposing = false;
     },
     /**
      * @override
@@ -208,10 +211,27 @@ var SearchBar = Widget.extend({
         }
     },
     /**
+     * @rivate
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionendInput: function () {
+        this._isInputComposing = false;
+    },
+    /**
+     * @rivate
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionstartInput: function () {
+        this._isInputComposing = true;
+    },
+    /**
      * @private
      * @param {KeyEvent} e
      */
     _onKeydown: function (e) {
+        if (this._isInputComposing) {
+            return;
+        }
         switch(e.which) {
             case $.ui.keyCode.LEFT:
                 this._focusPreceding();

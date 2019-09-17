@@ -204,7 +204,7 @@ class ResPartner(models.Model):
 
     @api.multi
     def _credit_debit_get(self):
-        tables, where_clause, where_params = self.env['account.move.line'].with_context(company_id=self.env.company.id)._query_get()
+        tables, where_clause, where_params = self.env['account.move.line'].with_context(state='posted', company_id=self.env.company.id)._query_get()
         where_params = [tuple(self.ids)] + where_params
         if where_clause:
             where_clause = 'AND ' + where_clause
@@ -238,9 +238,11 @@ class ResPartner(models.Model):
             SELECT partner.id
             FROM res_partner partner
             LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
+            JOIN account_move move ON move.id = aml.move_id
             RIGHT JOIN account_account acc ON aml.account_id = acc.id
             WHERE acc.internal_type = %s
               AND NOT acc.deprecated AND acc.company_id = %s
+              AND move.state == 'posted'
             GROUP BY partner.id
             HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, self.env.user.company_id.id, sign, operand))
         res = self._cr.fetchall()
@@ -308,7 +310,14 @@ class ResPartner(models.Model):
             partner.contracts_count = AccountAnalyticAccount.search_count([('partner_id', '=', partner.id)])
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
-        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.company.id)]
+        domain = [
+            ('reconciled', '=', False),
+            ('account_id.deprecated', '=', False),
+            ('account_id.internal_type', '=', 'receivable'),
+            '|', ('debit', '!=', 0), ('credit', '!=', 0),
+            ('company_id', '=', self.env.company.id),
+            ('move_id.state', '=', 'posted'),
+        ]
         if only_unblocked:
             domain += [('blocked', '=', False)]
         if self.ids:

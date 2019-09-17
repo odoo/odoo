@@ -330,6 +330,10 @@ class account_payment(models.Model):
     def name_get(self):
         return [(payment.id, payment.name or _('Draft Payment')) for payment in self]
 
+    @api.model
+    def _get_move_name_transfer_separator(self):
+        return '§§'
+
     @api.multi
     @api.depends('move_line_ids.reconciled')
     def _get_move_reconciled(self):
@@ -457,7 +461,6 @@ class account_payment(models.Model):
                 move.unlink()
             rec.write({
                 'state': 'cancelled',
-                'move_name': False,
             })
 
     @api.multi
