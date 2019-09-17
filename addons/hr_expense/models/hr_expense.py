@@ -181,15 +181,21 @@ class HrExpense(models.Model):
         if any(attachment.res_id or attachment.res_model != 'hr.expense' for attachment in attachments):
             raise UserError(_("Invalid attachments!"))
 
+        product = self.env['product.product'].search([('default_code', '=', 'EXP_GEN')])
+
         for attachment in attachments:
             expense = self.env['hr.expense'].create({
                 'name': attachment.name.split('.')[0],
                 'unit_amount': 0,
+                'product_id': product.id
             })
-            attachment.write({'res_id': expense.id})
-            expense.message_post(body=_('Uploaded Attachment'), attachment_ids=[attachment.id])
+            expense.message_post(body=_('Uploaded Attachment'))
+            attachment.write({
+                'res_model': 'hr.expense',
+                'res_id': expense.id,
+            })
+            attachment.register_as_main_attachment()
             expenses += expense
-
         if len(expenses) == 1:
             return {
                 'name': _('Generated Expense'),
