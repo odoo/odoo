@@ -64,7 +64,7 @@ class WebsiteLivechat(http.Controller):
          in conversation with an operator, it's not possible to send the visitor a chat request."""
         mail_channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)])
         if mail_channel:
-            mail_channel.close_livechat_request_session(_('has left the conversation.'))
+            mail_channel.close_livechat_request_session()
 
     @http.route('/im_livechat/close_empty_livechat', type='json', auth="public")
     def close_empty_livechat(self, uuid):

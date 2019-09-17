@@ -2,12 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from hashlib import sha256
-import hmac
 import uuid
 
 from odoo import fields, models, api, _
-from odoo.tools.misc import _consteq, _format_time_ago
+from odoo.exceptions import UserError
+from odoo.tools.misc import _format_time_ago
 from odoo.http import request
 from odoo.osv import expression
 
@@ -42,17 +41,25 @@ class WebsiteVisitor(models.Model):
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
     user_partner_id = fields.Many2one('res.partner', string="Linked Partner", help="Partner of the last logged in user.")
-    create_date = fields.Datetime('First connection date', readonly=True)
-    last_connection_datetime = fields.Datetime('Last Connection', compute="_compute_time_statistics", help="Last page view date", search='_search_last_connection', readonly=True)
-    last_connections_ids = fields.One2many('website.visitor.lastconnection', 'visitor_id', readonly=True)
+
+    # localisation and info
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
     country_flag = fields.Binary(related="country_id.image", string="Country Flag")
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when visitor has been created")
+    email = fields.Char(string='Email', compute='_compute_email_phone')
+    mobile = fields.Char(string='Mobile Phone', compute='_compute_email_phone')
+
+    # Visit fields
     visit_count = fields.Integer('Number of visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 24 hours ago.")
     website_track_ids = fields.One2many('website.track', 'visitor_id', string='Visited Pages History', readonly=True)
     visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics", help="Total number of visits on tracked pages")
     page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics")
     page_count = fields.Integer('# Visited Pages', compute="_compute_page_statistics", help="Total number of tracked page visited")
+
+    # Time fields
+    create_date = fields.Datetime('First connection date', readonly=True)
+    last_connection_datetime = fields.Datetime('Last Connection', compute="_compute_time_statistics", help="Last page view date", search='_search_last_connection', readonly=True)
+    last_connections_ids = fields.One2many('website.visitor.lastconnection', 'visitor_id', readonly=True)
     time_since_last_action = fields.Char('Last action', compute="_compute_time_statistics", help='Time since last page view. E.g.: 2 minutes ago')
     is_connected = fields.Boolean('Is connected ?', compute='_compute_time_statistics', help='A visitor is considered as connected if his last page view was within the last 5 minutes.')
 
@@ -76,6 +83,23 @@ class WebsiteVisitor(models.Model):
             ORDER BY v.connection_datetime
         """ % (operator,)
         return [('id', 'inselect', (query, [value]))]
+
+    @api.depends('user_partner_id.email_normalized', 'user_partner_id.mobile')
+    def _compute_email_phone(self):
+        results = self.env['res.partner'].search_read(
+            [('id', 'in', self.user_partner_id.ids)],
+            ['id', 'email_normalized', 'mobile'],
+        )
+        mapped_data = {
+            result['id']: {
+                'email_normalized': result['email_normalized'],
+                'mobile': result['mobile']
+            } for result in results
+        }
+
+        for visitor in self:
+            visitor.email = mapped_data.get(visitor.user_partner_id.id, {}).get('email_normalized')
+            visitor.mobile = mapped_data.get(visitor.user_partner_id.id, {}).get('mobile')
 
     @api.depends('website_track_ids')
     def _compute_page_statistics(self):
@@ -106,6 +130,40 @@ class WebsiteVisitor(models.Model):
                 visitor.last_connection_datetime = last_connection_datetime
                 visitor.time_since_last_action = _format_time_ago(self.env, (datetime.now() - last_connection_datetime))
                 visitor.is_connected = (datetime.now() - last_connection_datetime) < timedelta(minutes=5)
+
+    def _prepare_visitor_send_mail_values(self):
+        if self.user_partner_id.email:
+            return {
+                'res_model': 'res.partner',
+                'res_id': self.user_partner_id.id,
+                'partner_ids': [self.user_partner_id.id],
+            }
+        return {}
+
+    def action_send_mail(self):
+        self.ensure_one()
+        visitor_mail_values = self._prepare_visitor_send_mail_values()
+        if not visitor_mail_values:
+            raise UserError(_("There is no email linked this visitor."))
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+        ctx = dict(
+            default_model=visitor_mail_values.get('res_model'),
+            default_res_id=visitor_mail_values.get('res_id'),
+            default_use_template=False,
+            default_partner_ids=[(6, 0, visitor_mail_values.get('partner_ids'))],
+            default_composition_mode='comment',
+            default_reply_to=self.env.user.partner_id.email,
+        )
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }
 
     def _get_visitor_from_request(self, with_previous_visitors=False):
         if not request:
@@ -147,6 +205,8 @@ class WebsiteVisitor(models.Model):
             response.set_cookie('visitor_id', visitor_sudo.access_token, expires=expiration_date)
         else:
             visitor_sudo._add_tracking(domain, website_track_values)
+            if visitor_sudo.lang_id.id != request.lang.id:
+                visitor_sudo.write({'lang_id': request.lang.id})
 
     def _add_tracking(self, domain, website_track_values):
         """ Update the visitor when a website_track is added"""
@@ -155,8 +215,10 @@ class WebsiteVisitor(models.Model):
         if not last_view or last_view.visit_datetime < datetime.now() - timedelta(minutes=30):
             website_track_values['visitor_id'] = self.id
             self.env['website.track'].create(website_track_values)
-        self.env['website.visitor.lastconnection'].create({'visitor_id': self.id,
-        'connection_datetime': website_track_values['visit_datetime']})
+        self.env['website.visitor.lastconnection'].create({
+            'visitor_id': self.id,
+            'connection_datetime': website_track_values['visit_datetime']
+        })
 
     def _create_visitor(self, website_track_values=None):
         """ Create a visitor and add a track to it if website_track_values is set."""
@@ -165,6 +227,7 @@ class WebsiteVisitor(models.Model):
         vals = {
             'lang_id': request.lang.id,
             'country_id': country_id,
+            'website_id': request.website.id,
             'last_connections_ids': [(0, 0, {'connection_datetime': website_track_values['visit_datetime'] or datetime.now()})],
         }
         if not self.env.user._is_public():
