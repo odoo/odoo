@@ -754,6 +754,29 @@ var ListController = BasicController.extend({
         this._toggleSidebar();
     },
     /**
+     * If the record is set as dirty while in multiple record edition,
+     * we want to immediatly discard the change.
+     *
+     * @private
+     * @override
+     * @param {OdooEvent} ev
+     */
+    _onSetDirty: function (ev) {
+        var self = this;
+        var recordId = ev.data.dataPointID;
+        if (this.renderer.inMultipleRecordEdition(recordId)) {
+            ev.stopPropagation();
+            Dialog.alert(this, _t("No valid record to save"), {
+                confirm_callback: function () {
+                    self.model.discardChanges(recordId);
+                    self._confirmSave(recordId);
+                },
+            });
+        } else {
+            this._super.apply(this, arguments);
+        }
+    },
+    /**
      * When the user clicks on one of the sortable column headers, we need to
      * tell the model to sort itself properly, to update the pager and to
      * rerender the view.
