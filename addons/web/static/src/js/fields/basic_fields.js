@@ -588,7 +588,7 @@ var FieldDateRange = InputField.extend({
                 timePicker: !this.isDateField,
                 timePicker24Hour: _t.database.parameters.time_format.search('%H') !== -1,
                 autoUpdateInput: false,
-                timePickerIncrement: 10,
+                timePickerIncrement: 5,
                 locale: {
                     format: this.isDateField ? time.getLangDateFormat() : time.getLangDatetimeFormat(),
                 },
