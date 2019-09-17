@@ -1110,6 +1110,7 @@ options.registry.gallery = options.Class.extend({
             }
             self._reset();
             self.trigger_up('cover_update');
+            this._setActive();
         });
         dialog.open();
     },
@@ -1266,11 +1267,12 @@ options.registry.gallery = options.Class.extend({
         var urls = _.map(this._getImages(), function (img) {
             return $(img).attr('src');
         });
+        var currentInterval = this.$target.find('.carousel:first').attr('data-interval');
         var params = {
             srcs : urls,
             index: 0,
             title: "",
-            interval : this.$target.data('interval') || false,
+            interval : currentInterval || this.$target.data('interval') || 0,
             id: 'slideshow_' + new Date().getTime(),
             userStyle: imgStyle,
         },
@@ -1408,7 +1410,7 @@ options.registry.gallery = options.Class.extend({
             .data('mode');
 
         var carousel = this.$target[0].querySelector('.carousel');
-        var activeInterval = carousel ? carousel.dataset.interval : undefined;
+        var activeInterval = carousel ? (carousel.dataset.interval || 0) : undefined;
         var $intervalOptions = this.$el.find('[data-interval]');
         $intervalOptions.removeClass('active')
             .filter('[data-interval="' + activeInterval + '"]')
@@ -1430,14 +1432,19 @@ options.registry.gallery = options.Class.extend({
         var $stylingOptions = this.$el.find('[data-styling]');
         $stylingOptions.removeClass('active');
         var img = this.$target[0].querySelector('img');
+        var activeStyleSelectors = [];
         if (img) {
-            var activeStyleSelectors = [];
             for (const className of img.classList) {
                 activeStyleSelectors.push('[data-styling="' + className + '"]');
             }
-            $stylingOptions.filter(activeStyleSelectors.join(', '))
-                .addClass('active');
         }
+        var $toEnable = activeStyleSelectors.length
+            ? $stylingOptions.filter(activeStyleSelectors.join(', '))
+            : null;
+        if (!$toEnable || !$toEnable.length) {
+            $toEnable = $stylingOptions.first();
+        }
+        $toEnable.addClass('active');
     },
 });
 
