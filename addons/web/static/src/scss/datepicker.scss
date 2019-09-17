@@ -84,6 +84,20 @@ div.dropdown-menu.bootstrap-datetimepicker-widget{
     }
 }
 
+.picker-switch {
+    span.fa {
+        margin: 0;
+        @include transition($btn-transition);
+        &.primary {
+            background-color: $o-brand-primary;
+            color: white;
+            &:hover {
+                background-color: darken($o-brand-primary, 10%);
+            }
+        }
+    }
+}
+
 // This is rtl language specific fix
 // it will fix the user agent stylesheet padding
 // and transform the prev and next icons
