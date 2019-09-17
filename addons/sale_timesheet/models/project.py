@@ -112,8 +112,8 @@ class Project(models.Model):
         }
 
     @api.model
-    def _map_tasks_default_valeus(self, task):
-        defaults = super(Project, self)._map_tasks_default_valeus(task)
+    def _map_tasks_default_valeus(self, task, project):
+        defaults = super(Project, self)._map_tasks_default_valeus(task, project)
         defaults['sale_line_id'] = False
         return defaults
 
