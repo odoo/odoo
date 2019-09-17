@@ -63,6 +63,28 @@ class AccountAnalyticDefault(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super(AccountInvoiceLine, self).default_get(fields_list)
+        if set(['account_analytic_id', 'analytic_tag_ids']) & set(fields_list):
+            rec = self.env['account.analytic.default'].account_get(
+                self.product_id.id,
+                self.invoice_id.commercial_partner_id.id,
+                self.invoice_id.user_id.id or self.env.uid,
+                fields.Date.today(),
+                company_id=self.company_id.id
+            )
+            if rec:
+                if 'account_analytic_id' in fields_list:
+                    defaults.update({
+                        'account_analytic_id': rec.analytic_id.id,
+                    })
+                if 'analytic_tag_ids' in fields_list:
+                    defaults.update({
+                        'analytic_tag_ids': rec.analytic_tag_ids.ids,
+                    })
+        return defaults
+
     @api.onchange('product_id')
     def _onchange_product_id(self):
         res = super(AccountInvoiceLine, self)._onchange_product_id()
