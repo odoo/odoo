@@ -59,14 +59,14 @@ class Picking(models.Model):
             ('res_id', 'in', self.ids),
             ('model', '=', 'stock.picking')]).ids
         if self.env['ir.config_parameter'].sudo().get_param('stock_sms.already_notified', False):
-            if self.env['sms.sms'].search_count([
+            if self.env['sms.sms'].sudo().search_count([
                     ('mail_message_id', 'in', mail_message_ids),
                     ('state', '=', 'sent'),
                     ('error_code', '=', False)]):
                 # The SMS is sent, the company has again credits
                 self.env['ir.config_parameter'].sudo().set_param('stock_sms.already_notified', False)
         else:
-            if self.env['sms.sms'].search_count([
+            if self.env['sms.sms'].sudo().search_count([
                     ('mail_message_id', 'in', mail_message_ids),
                     ('error_code', '=', 'sms_credit')]):
                 # The SMS is sent, the company has no more credits
@@ -76,6 +76,6 @@ class Picking(models.Model):
                         'model': 'res.users',
                         'res_id': admin.id,
                     }
-                    mail_template.send_mail(admin.id, email_values=email_values, notif_layout='mail.mail_notification_light')
+                    mail_template.sudo().send_mail(admin.id, email_values=email_values, notif_layout='mail.mail_notification_light')
 
                 self.env['ir.config_parameter'].sudo().set_param('stock_sms.already_notified', True)
