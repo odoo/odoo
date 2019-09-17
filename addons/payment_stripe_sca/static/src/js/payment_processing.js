@@ -1,11 +1,12 @@
 odoo.define('payment_stripe_sca.processing', function (require) {
     'use strict';
 
+    var publicWidget = require('web.public.widget');
     var ajax = require('web.ajax');
-    var rpc = require('web.rpc')
-    var PaymentProcessing = require('payment.processing');
+    var rpc = require('web.rpc');
+    require('payment.processing');
 
-    return PaymentProcessing.include({
+    publicWidget.registry.PaymentProcessing.include({
         init: function () {
             this._super.apply(this, arguments);
             this._authInProgress = false;
