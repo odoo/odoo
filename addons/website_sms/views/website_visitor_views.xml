@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+     <record id="website_visitor_view_form" model="ir.ui.view">
+        <field name="name">website.visitor.view.form.inherit.website.mass.mailing.sms</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_send_sms" type="object" class="btn btn-primary"
+                        attrs="{'invisible': [('mobile', '=', False)]}" string="Send SMS"/>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>
