@@ -57,14 +57,17 @@ var StatementAction = AbstractAction.extend({
         var widget = false;
         switch (ev.data.direction) {
             case 'up':
-            case 'previous':
                 ev.stopPropagation();
                 widget = this._getWidget(non_reconciled_keys[currentIndex-1]);
                 break;
             case 'down':
-            case 'next':
                 ev.stopPropagation();
                 widget = this._getWidget(non_reconciled_keys[currentIndex+1]);
+                break;
+            case 'validate':
+                ev.stopPropagation();
+                widget = this._getWidget(non_reconciled_keys[currentIndex]);
+                widget.$('caption .o_buttons button:visible').click();
                 break;
         }
         if (widget) widget.$el.focus();
@@ -259,7 +262,10 @@ var StatementAction = AbstractAction.extend({
                 self._getWidget(handle).update(line);
             }).guardedCatch(function(){
                 self._getWidget(handle).update(line);
-            });
+            }).then(function() {
+                self._getWidget(handle).$el.focus();
+            }
+            );
         }
         return handle;
     },
