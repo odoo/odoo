@@ -363,6 +363,7 @@ var ListRenderer = BasicRenderer.extend({
             data: record.data,
             escape: true,
             isPassword: 'password' in node.attrs,
+            digits: node.attrs.digits ? JSON.parse(node.attrs.digits) : undefined,
         });
         this._handleAttributes($td, node);
         var title = field.type !== 'boolean' ? formattedValue : '';
