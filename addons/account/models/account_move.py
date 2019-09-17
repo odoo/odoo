@@ -132,13 +132,13 @@ class AccountMove(models.Model):
     amount_residual = fields.Monetary(string='Amount Due', store=True,
         compute='_compute_amount')
     amount_untaxed_signed = fields.Monetary(string='Untaxed Amount Signed', store=True, readonly=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_tax_signed = fields.Monetary(string='Tax Signed', store=True, readonly=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_total_signed = fields.Monetary(string='Total Signed', store=True, readonly=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_residual_signed = fields.Monetary(string='Amount Due Signed', store=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_by_group = fields.Binary(string="Tax amount by group",
         compute='_compute_invoice_taxes_by_group',
         help="Technical field used by web_studio to allow an easy edition of the invoice report by drag/drop of the field. Return type: [(name, amount, base, formated amount, formated base)]")
@@ -2698,7 +2698,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.balance = line.debit - line.credit
 
-    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'move_id.state')
+    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'move_id.state', 'move_id.company_id')
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconcilable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconcilable account, the original line amount
@@ -2749,7 +2749,7 @@ class AccountMoveLine(models.Model):
                     reconciled = True
             line.reconciled = reconciled
 
-            line.amount_residual = line.move_id.company_id.currency_id.round(amount * sign)
+            line.amount_residual = line.move_id.company_id.currency_id.round(amount * sign) if line.move_id.company_id else amount * sign
             line.amount_residual_currency = line.currency_id and line.currency_id.round(amount_residual_currency * sign) or 0.0
 
     @api.depends('tax_repartition_line_id.invoice_tax_id', 'tax_repartition_line_id.refund_tax_id')
