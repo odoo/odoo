@@ -1376,7 +1376,8 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         res = {}
-        account = self.product_id.property_account_income_id or self.product_id.categ_id.property_account_income_categ_id
+        product = self.product_id.with_context(force_company=self.company_id.id)
+        account = product.property_account_income_id or product.categ_id.property_account_income_categ_id
 
         if not account and self.product_id:
             raise UserError(_('Please define income account for this product: "%s" (id:%d) - or for its category: "%s".') %
