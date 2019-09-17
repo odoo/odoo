@@ -697,7 +697,7 @@ class MrpProduction(models.Model):
         # Schedule all work orders (new ones and those already created)
         start_date = self._get_start_date()
         for workorder in self.workorder_ids:
-            workcenters = workorder.workcenter_id | workorder.workcenter_id.alternative_workcenter_ids
+            workcenters = [workorder.workcenter_id] + list(workorder.workcenter_id.alternative_workcenter_ids)
 
             best_finished_date = datetime.datetime.max
             vals = {}
