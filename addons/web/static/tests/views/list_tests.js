@@ -4613,7 +4613,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list view: multi edition error and cancellation handling', async function (assert) {
-        assert.expect(8);
+        assert.expect(12);
 
         var list = await createView({
             View: ListView,
@@ -4621,6 +4621,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree editable="bottom">' +
                         '<field name="foo" required="1"/>' +
+                        '<field name="int_field"/>' +
                     '</tree>',
         });
 
@@ -4635,7 +4636,16 @@ QUnit.module('Views', {
         assert.containsNone(list, '.o_list_record_selector input:enabled');
         await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=foo]'), "abc");
         await testUtils.dom.click($('.modal .btn:contains("Cancel")'));
-        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop', "first cell should have discarded any change");
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop10', "first cell should have discarded any change");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
+        // edit a line with an invalid format type
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        assert.containsNone(list, '.o_list_record_selector input:enabled');
+        await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=int_field]'), "hahaha");
+        assert.containsOnce(document.body, '.modal', "there should be an opened modal");
+        await testUtils.dom.click($('.modal .btn-primary'));
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop10', "changes should be discarded");
         assert.containsN(list, '.o_list_record_selector input:enabled', 5);
 
         // edit a line with an invalid value
@@ -4644,7 +4654,7 @@ QUnit.module('Views', {
         await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=foo]'), "");
         assert.containsOnce(document.body, '.modal', "there should be an opened modal");
         await testUtils.dom.click($('.modal .btn-primary'));
-        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop', "changes should be discarded");
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop10', "changes should be discarded");
         assert.containsN(list, '.o_list_record_selector input:enabled', 5);
 
         list.destroy();
