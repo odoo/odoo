@@ -529,6 +529,42 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float field in list view no widget', async function (assert) {
+        assert.expect(5);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" digits="[5,3]"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.doesNotHaveClass(form.$('.o_field_widget'), 'o_field_empty',
+            'Float field should be considered set for value 0.');
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '0.000',
+            'The value should be displayed properly.');
+
+        await testUtils.form.clickEdit(form);
+        assert.strictEqual(form.$('input[name=qux]').val(), '0.000',
+            'The value should be rendered with correct precision.');
+
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '108.2458938598598');
+        assert.strictEqual(form.$('input[name=qux]').val(), '108.2458938598598',
+            'The value should not be formated yet.');
+
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '18.8958938598598');
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '18.896',
+            'The new value should be rounded properly.');
+
+        form.destroy();
+    });
+
     QUnit.test('float field in form view', async function (assert) {
         assert.expect(5);
 
