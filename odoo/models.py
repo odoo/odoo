@@ -2822,7 +2822,9 @@ Fields:
             elif field.compute:
                 # optimization: prefetch direct field dependencies
                 for dotname in field.depends:
-                    stored_fields.add(dotname.split('.')[0])
+                    f = self._fields[dotname.split('.')[0]]
+                    if f.prefetch and (not f.groups or self.user_has_groups(f.groups)):
+                        stored_fields.add(f.name)
         self._read(stored_fields)
 
         # retrieve results from records; this takes values from the cache and
