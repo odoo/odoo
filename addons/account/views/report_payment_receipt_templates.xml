@@ -2,7 +2,7 @@
 <odoo>
     <template id="report_payment_receipt_document">
         <t t-call="web.external_layout">
-            <t t-set="o" t-value="o.with_context({'lang': lang})"/>
+            <t t-set="o" t-value="o.with_context(lang=lang)"/>
             <div class="page">
                 <h3><strong>Payment Receipt: <span t-field="o.name"/></strong></h3>
                 <div class="row mt64">

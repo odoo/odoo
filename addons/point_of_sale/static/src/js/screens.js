@@ -1737,7 +1737,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             var invoiced = self.pos.push_and_invoice_order(order);
             self.invoicing = true;
 
-            invoiced.fail(self._handleFailedPushForInvoice.bind(self, order, true)); // refresh
+            invoiced.catch(self._handleFailedPushForInvoice.bind(self, order, true)); // refresh
 
             invoiced.then(function(){
                 self.invoicing = false;

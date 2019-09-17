@@ -143,3 +143,21 @@ class TestHasGroup(TransactionCase):
              })
         with self.assertRaises(ValidationError):
             self.grp_internal.users = [(4, test_user.id)]
+
+    def test_two_user_types_implied_groups(self):
+        """Contrarily to test_two_user_types, we simply add an implied_id to a group.
+           This will trigger the addition of the relevant users to the relevant groups;
+           if, say, this was done in SQL and thus bypassing the ORM, it would bypass the constraints
+           and thus give us a case uncovered by the aforementioned test.
+        """
+        grp_test = self.env["res.groups"].create(
+            {"name": "test", "implied_ids": [(6, 0, [self.grp_internal.id])]})
+
+        test_user = self.env['res.users'].create({
+            'login': 'test_user_portal',
+            'name': "Test User with one user types",
+            'groups_id': [(6, 0, [grp_test.id])]
+        })
+
+        with self.assertRaises(ValidationError):
+            grp_test.write({'implied_ids': [(4, self.grp_portal.id)]})

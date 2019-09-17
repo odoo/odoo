@@ -13,7 +13,7 @@
     </div>
 </template>
 <template id="contact">
-    <address t-ignore="true" class="d-inline-block mb-0" itemscope="itemscope" itemtype="http://schema.org/Organization">
+    <address t-ignore="true" class="mb-0" itemscope="itemscope" itemtype="http://schema.org/Organization">
         <div t-if="not (('name' in fields) or (address and 'address' in fields) or (city and 'city' in fields) or (mobile and 'mobile' in fields) or (website and 'website' in fields) or (email and 'email' in fields))" class="css_non_editable_mode_hidden">
             --<span class="text-muted" t-esc="name"/>--
         </div>
@@ -23,7 +23,7 @@
         <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
             <div t-if="address and 'address' in fields" class="d-flex align-items-baseline">
                 <i t-if="not options.get('no_marker')" class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
-                <span itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or ('&lt;br/&gt;%s' % ('' if options.get('no_marker') else '')))"/>
+                <div class="w-100" itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or ('&lt;br/&gt;%s' % ('' if options.get('no_marker') else '')))"/>
             </div>
             <div t-if="city and 'city' in fields" class="d-flex align-items-baseline">
                 <i t-if="not options.get('no_marker')" class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>

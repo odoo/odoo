@@ -125,7 +125,7 @@ var LivechatButton = Widget.extend({
         var message = new WebsiteLivechatMessage(this, data, options);
 
         var hasAlreadyMessage = _.some(this._messages, function (msg) {
-            return message.id === msg.id;
+            return message.getID() === msg.getID();
         });
         if (hasAlreadyMessage) {
             return;

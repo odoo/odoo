@@ -238,7 +238,7 @@ var WysiwygMultizone = Wysiwyg.extend({
             this.savingMutex.exec(this._saveCroppedImages.bind(this));
         }
         var _super = this._super.bind(this);
-        return this.savingMutex.lock.then(function () {
+        return this.savingMutex.getUnlockedDef().then(function () {
             return _super().then(function (res) {
                 this._summernote.layoutInfo.editable.html(res.html);
 
@@ -250,7 +250,7 @@ var WysiwygMultizone = Wysiwyg.extend({
                 $areaDirty.each(function (index, editable) {
                     this.savingMutex.exec(this._saveEditable.bind(this, editable));
                 }.bind(this));
-                return this.savingMutex.lock.then(function () {
+                return this.savingMutex.getUnlockedDef().then(function () {
                     return { isDirty: true };
                 });
             }.bind(this));
@@ -415,8 +415,8 @@ var WysiwygMultizone = Wysiwyg.extend({
      */
     _saveCroppedImages: function () {
         var self = this;
-        var $area = $(this.selectorEditableArea, this.$target);
-        var defs = $area.find('.o_cropped_img_to_save').map(function () {
+        var $editable = this._getEditableArea();
+        var defs = $editable.find('.o_cropped_img_to_save').map(function () {
             var $croppedImg = $(this);
             $croppedImg.removeClass('o_cropped_img_to_save');
             var resModel = $croppedImg.data('crop:resModel');

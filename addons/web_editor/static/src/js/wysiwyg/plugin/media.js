@@ -76,7 +76,7 @@ var MediaPlugin = AbstractPlugin.extend({
             mediaWidth: mediaWidth,
             onlyImages: $mediaParent.data('oeField') === 'image' || $mediaParent.data('oeType') === 'image',
         },
-            $(media).clone()[0]
+            $(media).clone(true, true)[0]
         );
 
         mediaDialog.on('save', this, function (element) {
@@ -708,7 +708,7 @@ var ImagePlugin = AbstractMediaPlugin.extend({
 
         var media = this.context.invoke('editor.restoreTarget');
         var cropImageDialog = new weWidgets.CropImageDialog(this.options.parent, {},
-            $(media).clone()[0]
+            $(media).clone(true, true)[0]
         );
         cropImageDialog.on('save', this, function (img) {
             this.context.invoke('MediaPlugin.insertMedia', media, img);
@@ -727,7 +727,7 @@ var ImagePlugin = AbstractMediaPlugin.extend({
 
         var media = this.context.invoke('editor.restoreTarget');
         var altDialog = new weWidgets.AltDialog(this.options.parent, {},
-            $(media).clone()[0]
+            $(media).clone(true, true)[0]
         );
         altDialog.on('save', this, this._wrapCommand(function (img) {
             $(media).attr('alt', img.alt)
