@@ -220,7 +220,8 @@ class HrEmployeePrivate(models.Model):
 
     @api.onchange('department_id')
     def _onchange_department(self):
-        self.parent_id = self.department_id.manager_id
+        if self.department_id.manager_id:
+            self.parent_id = self.department_id.manager_id
 
     @api.onchange('user_id')
     def _onchange_user(self):
