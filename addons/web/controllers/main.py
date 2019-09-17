@@ -1031,6 +1031,7 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
+<<<<<<< HEAD
                       download=None, width=0, height=0, crop=False, access_token=None, avoid_if_small=False,
                       upper_limit=False, **kwargs):
         # other kwargs are ignored on purpose
@@ -1044,6 +1045,11 @@ class Binary(http.Controller):
                        download=None, width=0, height=0, crop=False, access_token=None, avoid_if_small=False,
                        upper_limit=False, placeholder='placeholder.png', **kwargs):
         status, headers, content = request.env['ir.http'].binary_content(
+=======
+                      download=None, width=0, height=0, crop=False, related_id=None, access_mode=None,
+                      access_token=None, avoid_if_small=False, upper_limit=False, signature=False, **kw):
+        status, headers, content = binary_content(
+>>>>>>> 7b7ea5dbf15... temp
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype='image/png', access_token=access_token)
