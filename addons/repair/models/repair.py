@@ -199,6 +199,8 @@ class Repair(models.Model):
 
     def action_validate(self):
         self.ensure_one()
+        if self.product_id.type == 'consu':
+            return self.action_repair_confirm()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         available_qty_owner = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, owner_id=self.partner_id, strict=True)
         available_qty_noown = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
