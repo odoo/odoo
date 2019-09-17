@@ -320,10 +320,8 @@ class account_payment(models.Model):
             move_currency = self.env['res.currency'].browse(res['currency_id'])
             if move_currency == currency and move_currency != company.currency_id:
                 total += res['residual_currency']
-            elif move_currency == currency == company.currency_id:
-                total += res['amount_residual']
             else:
-                total += move_currency._convert(res['amount_residual'], currency, company, date)
+                total += company.currency_id._convert(res['amount_residual'], currency, company, date)
         return total
 
     @api.multi
