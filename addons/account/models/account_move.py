@@ -2053,7 +2053,6 @@ class AccountMove(models.Model):
         """
         if any(not move.is_invoice(include_receipts=True) for move in self):
             raise UserError(_("Only invoices could be printed."))
-        self._check_tax_lock_date()
 
         self.filtered(lambda inv: not inv.invoice_sent).write({'invoice_sent': True})
         if self.user_has_groups('account.group_account_invoice'):

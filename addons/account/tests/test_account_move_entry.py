@@ -60,6 +60,7 @@ class TestAccountMove(InvoiceTestCommon):
             self.env['account.move'].create(self.test_move.copy_data())
 
     def test_misc_tax_lock_date_1(self):
+        self.test_move.post()
         # Set the tax lock date after the journal entry date.
         self.test_move.company_id.tax_lock_date = fields.Date.from_string('2017-01-01')
 
