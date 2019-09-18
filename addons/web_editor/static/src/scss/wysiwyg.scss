@@ -19,9 +19,25 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 }
 
 // EDITOR TOP BAR AND POPOVER
-body.editor_enable {
-    padding-top: var(--o-we-toolbar-height) !important;
+.note-popover .popover {
+    max-width: 350px;
+    left: 50% !important;
+    transform: translate(-50%, 0);
+    .popover-body {
+        white-space: normal;
+    }
 }
+
+.editor_enable {
+    padding-top: var(--o-we-toolbar-height) !important;
+    .note-popover .popover .popover-body {
+        height: var(--o-we-toolbar-height);
+    }
+    .note-popover .popover  {
+        transform: none;
+    }
+}
+
 #web_editor-top-edit {
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
@@ -34,6 +50,7 @@ body.editor_enable {
         left: 0 !important;
         right: 0 !important;
         border: none !important;
+        max-width: none;
     }
 }
 
@@ -45,12 +62,10 @@ body.editor_enable {
 }
 .note-popover .popover .popover-body,
 .panel-heading.note-toolbar {
-    height: var(--o-we-toolbar-height);
     padding-bottom: 0;
     border-bottom: $o-we-border-width solid $o-we-border-color;
     background-color: var(--o-we-bg-color);
     font-family: $o-we-font-family;
-    white-space: nowrap;
 
     // Main layout of buttons
     .btn-group, .btn {
@@ -152,6 +167,9 @@ body.editor_enable {
             border: 1px solid var(--o-we-dropdown-bg-color);
         }
     }
+}
+.panel-heading.note-toolbar {
+    white-space: nowrap;
 }
 
 // ANIMATIONS
