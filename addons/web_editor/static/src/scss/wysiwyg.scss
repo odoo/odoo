@@ -416,3 +416,22 @@ img.o_we_selected_image {
 img.o_we_custom_image.mx-auto {
     display: block;
 }
+
+@include media-breakpoint-down(md) {
+    #web_editor-top-edit {
+        position: initial !important;
+        height: initial !important;
+        top: initial !important;
+        left: initial !important;
+
+        #web_editor-toolbars .popover-body {
+            display: flex;
+            width: 100%;
+            overflow-x: auto;
+
+            .btn-group {
+                position: static;
+            }
+        }
+    }
+}
