@@ -22,6 +22,9 @@ var ListController = BasicController.extend({
      * the list view. It can be overridden to add buttons in specific child views.
      */
     buttons_template: 'ListView.buttons',
+    events: _.extend({}, BasicController.prototype.events, {
+        'click .o_list_export_xlsx': '_onDirectExportData',
+    }),
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         activate_next_widget: '_onActivateNextWidget',
         add_record: '_onAddRecord',
@@ -69,14 +72,11 @@ var ListController = BasicController.extend({
      * @returns {Promise<array[]>} a promise that resolve to the active domain
      */
     getActiveDomain: function () {
-        // TODO: this method should be synchronous...
         var self = this;
         if (this.$('thead .o_list_record_selector input').prop('checked')) {
             var searchQuery = this._controlPanel ? this._controlPanel.getSearchQuery() : {};
             var record = self.model.get(self.handle, {raw: true});
-            return Promise.all(record.getDomain().concat(searchQuery.domain || []));
-        } else {
-            return Promise.resolve();
+            return record.getDomain().concat(searchQuery.domain || []);
         }
     },
     /*
@@ -341,6 +341,17 @@ var ListController = BasicController.extend({
         });
     },
     /**
+     * @returns {DataExport} the export dialog widget
+     * @private
+     */
+    _getExportDialogWidget() {
+        let state = this.model.get(this.handle);
+        let defaultExportFields = this.renderer.columns.map(field => field.attrs.name);
+        let groupedBy = this.renderer.state.groupedBy;
+        return new DataExport(this, state, defaultExportFields, groupedBy,
+            this.getActiveDomain(), this.getSelectedIds());
+    },
+    /**
      * @override
      * @private
      */
@@ -499,6 +510,8 @@ var ListController = BasicController.extend({
      * @returns {Promise}
      */
     _update: function () {
+        let visilibityFunction = this.renderer.state.count ? 'show' : 'hide'
+        this.$('.o_list_export_xlsx')[visilibityFunction]()
         return this._super.apply(this, arguments)
             .then(this._toggleSidebar.bind(this))
             .then(this._toggleCreateButton.bind(this))
@@ -640,11 +653,15 @@ var ListController = BasicController.extend({
      * @private
      */
     _onExportData: function () {
-        var record = this.model.get(this.handle);
-        var defaultExportFields = _.map(this.renderer.columns, function (field) {
-            return field.attrs.name;
-        });
-        new DataExport(this, record, defaultExportFields).open();
+        this._getExportDialogWidget().open();
+    },
+    /**
+     * Export Records in a xls file
+     *
+     * @private
+     */
+    _onDirectExportData() {
+        this._getExportDialogWidget().export();
     },
     /**
      * Opens the related form view.
