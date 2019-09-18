@@ -395,7 +395,7 @@ class HolidaysRequest(models.Model):
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         self._sync_employee_details()
-        if self.employee_id.user_id != self.env.user:
+        if self.employee_id.user_id != self.env.user and self._origin.employee_id != self.employee_id:
             self.holiday_status_id = False
 
     @api.onchange('date_from', 'date_to', 'employee_id')
