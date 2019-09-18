@@ -118,7 +118,7 @@ class TestFloatPrecision(TransactionCase):
                     for x in range(0, 10000, 97):
                         n = x * 10 ** magnitude
                         f = sign * (n + frac)
-                        f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp
+                        f_exp = ('-' if sign == -1 else '') + str(n) + exp
                         try_round(f, f_exp, digits=prec)
 
         def try_zero(amount, expected):

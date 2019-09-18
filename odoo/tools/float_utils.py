@@ -55,7 +55,7 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
                                              precision_rounding=precision_rounding)
-    if rounding_factor == 0 or value == 0: return 0.0
+    if rounding_factor == 0 or value == 0: return value
 
     # NORMALIZE - ROUND - DENORMALIZE
     # In order to easily support rounding to arbitrary 'steps' (e.g. coin values),
@@ -123,7 +123,7 @@ def float_is_zero(value, precision_digits=None, precision_rounding=None):
     """
     epsilon = _float_check_precision(precision_digits=precision_digits,
                                              precision_rounding=precision_rounding)
-    return abs(float_round(value, precision_rounding=epsilon)) < epsilon
+    return value == 0 or abs(float_round(value, precision_rounding=epsilon)) < epsilon
 
 def float_compare(value1, value2, precision_digits=None, precision_rounding=None):
     """Compare ``value1`` and ``value2`` after rounding them according to the
