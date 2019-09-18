@@ -61,6 +61,40 @@ class TestFields(common.TransactionCase):
         record.priority = 4
         self.assertEqual(record.priority, 5)
 
+    def test_05_unknown_fields(self):
+        """ test ORM operations with unknown fields """
+        cat = self.env['test_new_api.category'].create({'name': 'Foo'})
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.search([('zzz', '=', 42)])
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.search([], order='zzz')
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read(['zzz'])
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read_group([('zzz', '=', 42)], fields=['color'], groupby=['parent'])
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read_group([], fields=['zzz'], groupby=['parent'])
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read_group([], fields=['zzz:sum'], groupby=['parent'])
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read_group([], fields=['color'], groupby=['zzz'])
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.read_group([], fields=['color'], groupby=['parent'], orderby='zzz')
+        # exception: accept '__count' as field to aggregate
+        cat.read_group([], fields=['__count'], groupby=['parent'])
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.create({'name': 'Foo', 'zzz': 42})
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.write({'zzz': 42})
+
+        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+            cat.new({'name': 'Foo', 'zzz': 42})
+
     def test_10_computed(self):
         """ check definition of computed fields """
         # by default function fields are not stored and readonly
