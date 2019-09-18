@@ -333,6 +333,15 @@ ListRenderer.include({
         $row.find('.o_data_cell')[cellIndex].focus();
     },
     /**
+     * Returns the name of a given column as displayed by the renderer.
+     *
+     * @param {Object} column
+     * @returns {string}
+     */
+    getColumnDisplayedName: function (column) {
+        return this.$(`th[data-name="${column.attrs.name}"]`).text();
+    },
+    /**
      * Returns the recordID associated to the line which is currently in edition
      * or null if there is no line in edition.
      *

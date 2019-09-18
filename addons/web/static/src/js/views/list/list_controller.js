@@ -11,6 +11,7 @@ var core = require('web.core');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
 var Dialog = require('web.Dialog');
+var ListConfirmDialog = require('web.ListConfirmDialog');
 var Sidebar = require('web.Sidebar');
 
 var _t = core._t;
@@ -395,50 +396,43 @@ var ListController = BasicController.extend({
             }
             return result;
         }, []);
-        const nbInvalid = recordIds.length - validRecordIds.length;
-
         return new Promise((resolve, reject) => {
-            const rejectAndDiscard = () => {
+            const discardAndReject = () => {
                 this.model.discardChanges(recordId);
-                return this._confirmSave(recordId).then(reject);
+                this._confirmSave(recordId).then(() => {
+                    this.renderer.focusCell(recordId, node);
+                    reject();
+                });
             };
-            let dialog;
             if (validRecordIds.length > 0) {
-                let message;
-                if (nbInvalid === 0) {
-                    message = _.str.sprintf(
-                        _t("Do you want to set the value on the %d selected records?"),
-                        validRecordIds.length);
-                } else {
-                    message = _.str.sprintf(
-                        _t("Do you want to set the value on the %d valid selected records? (%d invalid)"),
-                        validRecordIds.length, nbInvalid);
-                }
-                dialog = Dialog.confirm(this, message, {
+                const dialogOptions = {
                     confirm_callback: () => {
-                        return this.model.saveRecords(recordId, validRecordIds, fieldName)
+                        this.model.saveRecords(recordId, validRecordIds, fieldName)
                             .then(async () => {
                                 this._updateButtons('readonly');
                                 const state = this.model.get(this.handle);
-                                await this.renderer.updateState(state, {keepWidths: true});
+                                await this.renderer.updateState(state, { keepWidths: true });
+                                await this.renderer.focusCell(recordId, node);
                                 resolve(Object.keys(changes));
                             })
-                            .guardedCatch(rejectAndDiscard);
+                            .guardedCatch(discardAndReject);
                     },
-                    cancel_callback: rejectAndDiscard,
-                });
+                    cancel_callback: discardAndReject,
+                };
+                const dialogChanges = {
+                    all: recordIds.length,
+                    field: this.renderer.getColumnDisplayedName(node),
+                    node: node.attrs.name,
+                    valid: validRecordIds.length,
+                };
+                const record = this.model.get(recordId);
+                new ListConfirmDialog(this, dialogOptions, record, dialogChanges)
+                    .open({ shouldFocusButtons: true });
             } else {
-                dialog = Dialog.alert(this, _t("No valid record to save"), {
-                    confirm_callback: rejectAndDiscard,
+                Dialog.alert(this, _t("No valid record to save"), {
+                    confirm_callback: discardAndReject,
                 });
             }
-            dialog.on('closed', this, async () => {
-                // we need to wait for the dialog to be actually closed, but
-                // the 'closed' event is triggered just before, and it prevents
-                // from focussing the cell
-                await Promise.resolve();
-                this.renderer.focusCell(recordId, node);
-            });
         });
     },
     /**
@@ -737,14 +731,15 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onSetDirty: function (ev) {
-        var self = this;
         var recordId = ev.data.dataPointID;
         if (this.renderer.inMultipleRecordEdition(recordId)) {
             ev.stopPropagation();
             Dialog.alert(this, _t("No valid record to save"), {
-                confirm_callback: function () {
-                    self.model.discardChanges(recordId);
-                    self._confirmSave(recordId);
+                confirm_callback: () => {
+                    this.model.discardChanges(recordId);
+                    this._confirmSave(recordId).then(() => {
+                        this.renderer.focusCell(recordId, ev.target.__node);
+                    });
                 },
             });
         } else {
