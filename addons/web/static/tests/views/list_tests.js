@@ -5726,6 +5726,100 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: multi edition server error handling', async function (assert) {
+        assert.expect(3);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="foo" required="1"/>' +
+                    '</tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    return Promise.reject();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        // edit a line and confirm
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=foo]'), "abc");
+        await testUtils.dom.click('body');
+        await testUtils.dom.click($('.modal .btn-primary'));
+        // Server error: if there was a crash manager, there would be an open error at this point...
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop',
+            "first cell should have discarded any change");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), 'blip',
+            "second selected record should not have changed");
+        assert.containsNone(list, '.o_data_cell input.o_field_widget',
+            "no field should be editable anymore");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable readonly list view: navigation', async function (assert) {
+        assert.expect(6);
+
+        const list = await createView({
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+            data: this.data,
+            intercepts: {
+                switch_view: function (event) {
+                    assert.strictEqual(event.data.res_id, 3,
+                        "'switch_view' event has been triggered");
+                },
+            },
+            model: 'foo',
+            View: ListView,
+        });
+
+        // select 2 records
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(3) .o_list_record_selector input'));
+
+        // toggle a row mode
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:eq(1)'));
+        assert.hasClass(list.$('.o_data_row:eq(1)'), 'o_selected_row',
+            "the second row should be selected");
+
+        // Keyboard navigation only interracts with selected elements
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input.o_field_widget'), 'enter');
+        assert.hasClass(list.$('.o_data_row:eq(3)'), 'o_selected_row',
+            "the fourth row should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.hasClass(list.$('.o_data_row:eq(1)'), 'o_selected_row',
+            "the second row should be selected again");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.hasClass(list.$('.o_data_row:eq(3)'), 'o_selected_row',
+            "the fourth row should be selected again");
+
+        await testUtils.dom.click(list.$('.o_data_row:eq(2) .o_data_cell:eq(0)'));
+        assert.containsNone(list, '.o_data_cell input.o_field_widget',
+            "no row should be editable anymore");
+        // Clicking on an unselected record while no row is being edited will open the record (switch_view)
+        await testUtils.dom.click(list.$('.o_data_row:eq(2) .o_data_cell:eq(0)'));
+
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(3) .o_list_record_selector input'));
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: multi edition: edit and validate last row', async function (assert) {
         assert.expect(3);
 
@@ -5757,6 +5851,160 @@ QUnit.module('Views', {
 
         assert.containsN(list, '.o_data_row', 4,
             "should not create a new row as we were in multi edition");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable readonly list view: navigation in grouped list', async function (assert) {
+        assert.expect(6);
+
+        const list = await createView({
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                </tree>`,
+            data: this.data,
+            groupBy: ['bar'],
+            intercepts: {
+                switch_view: function (event) {
+                    assert.strictEqual(event.data.res_id, 3,
+                        "'switch_view' event has been triggered");
+                },
+            },
+            model: 'foo',
+            View: ListView,
+        });
+
+        // Open both groups
+        await testUtils.dom.click(list.$('.o_group_header:first'));
+        await testUtils.dom.click(list.$('.o_group_header:last'));
+
+        // select 2 records
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(3) .o_list_record_selector input'));
+
+        // toggle a row mode
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:eq(0)'));
+        assert.hasClass(list.$('.o_data_row:eq(1)'), 'o_selected_row',
+            "the second row should be selected");
+
+        // Keyboard navigation only interracts with selected elements
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input.o_field_widget'), 'enter');
+        assert.hasClass(list.$('.o_data_row:eq(3)'), 'o_selected_row',
+            "the fourth row should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.hasClass(list.$('.o_data_row:eq(1)'), 'o_selected_row',
+            "the second row should be selected again");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.hasClass(list.$('.o_data_row:eq(3)'), 'o_selected_row',
+            "the fourth row should be selected again");
+
+        await testUtils.dom.click(list.$('.o_data_row:eq(2) .o_data_cell:eq(0)'));
+        assert.containsNone(list, '.o_data_cell input.o_field_widget', "no row should be editable anymore");
+        await testUtils.dom.click(list.$('.o_data_row:eq(2) .o_data_cell:eq(0)'));
+
+        list.destroy();
+    });
+
+    QUnit.test('editable readonly list view: single edition', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch: `
+                <tree>
+                    <field name="foo" required="1"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // select a record
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+
+        // edit a field (invalid input)
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), "");
+        await testUtils.dom.click('body');
+
+        assert.hasClass(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'), 'o_invalid_cell',
+            "like in standard single edit, field is marked as invalid");
+
+        // edit a field
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), "bar");
+        await testUtils.fields.triggerKeydown(list.$('.o_field_widget[name=foo]'), 'enter');
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "bar",
+            "the first row should be updated");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable readonly list view: multi edition', async function (assert) {
+        assert.expect(14);
+
+        const list = await createView({
+            arch:
+                `<tree>
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args, [[1, 2], { int_field: 666 }],
+                        "should write on multi records");
+                } else if (args.method === 'read') {
+                    if (args.args[0].length !== 1) {
+                        assert.deepEqual(args.args, [[1, 2], ['foo', 'int_field']],
+                            "should batch the read");
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.verifySteps(['/web/dataset/search_read']);
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        // edit a field
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+
+        assert.containsOnce(document.body, '.modal',
+            "modal appears when switching cells");
+
+        await testUtils.dom.click($('.modal .btn:contains(Cancel)'));
+
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop10',
+            "changes have been discarded and row is back to readonly");
+
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:eq(0)'));
+
+        assert.containsOnce(document.body, '.modal',
+            "there should be an opened modal");
+        assert.ok($('.modal').text().includes('those 2 records'),
+            "the number of records should be correctly displayed");
+
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.verifySteps(['write', 'read']);
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "yop666",
+            "the first row should be updated");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "blip666",
+            "the second row should be updated");
+        assert.containsNone(list, '.o_data_cell input.o_field_widget',
+            "no field should be editable anymore");
 
         list.destroy();
     });
