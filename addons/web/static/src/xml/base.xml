@@ -281,6 +281,34 @@
     </div>
 </t>
 
+<t t-name="ListView.confirmModal">
+    <main role="alert">
+        <p>
+            <t t-if="changes.nbRecords != changes.nbValidRecords">
+                Among the <t t-raw="changes.nbRecords"/> selected records,
+                <t t-raw="changes.nbValidRecords"/> are valid for this update.<br/>
+            </t>
+            Are you sure you want to perform the following update on those <t t-raw="changes.nbValidRecords"/> records ?
+        </p>
+        <div class="table-responsive">
+            <table class="o_modal_changes">
+                <tbody>
+                    <tr>
+                        <td>Field:</td>
+                        <td><t t-raw="changes.fieldLabel"/></td>
+                    </tr>
+                    <tr>
+                        <td>Update to:</td>
+                        <td>
+                            <div class="o_changes_widget"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</t>
+
 <t t-name="FormView.buttons">
     <div class="o_form_buttons_view" role="toolbar" aria-label="Main actions">
         <button t-if="widget.is_action_enabled('edit')" type="button"
