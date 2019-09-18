@@ -97,7 +97,7 @@ class Web_Editor(http.Controller):
 
         li = htmlelem.find(".//li[@id='checklist-id-" + str(checklistId) + "']")
 
-        if not self._update_checklist_recursive(li, checked, children=True, ancestors=True):
+        if not li or not self._update_checklist_recursive(li, checked, children=True, ancestors=True):
             return value
 
         value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6]
