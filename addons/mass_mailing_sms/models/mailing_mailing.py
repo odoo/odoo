@@ -19,7 +19,7 @@ class Mailing(models.Model):
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')
     sms_has_insufficient_credit = fields.Boolean(
         'Insufficient IAP credits', compute='_compute_sms_has_insufficient_credit',
-        help='UX Field to propose to buy IAP credits') 
+        help='UX Field to propose to buy IAP credits')
     # opt_out_link
     sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=True)
 
@@ -182,7 +182,7 @@ class Mailing(models.Model):
             if not res_ids:
                 raise UserError(_('There is no recipients selected.'))
 
-            composer = self.env['sms.composer'].create(mailing._send_sms_get_composer_values(res_ids))
+            composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
             # extra_context = self._get_mass_mailing_context()
 
             # auto-commit except in testing mode
