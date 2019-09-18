@@ -2679,13 +2679,6 @@ exports.Order = Backbone.Model.extend({
             this.selected_orderline = undefined;
         }
     },
-    deselect_orderline: function(){
-        if(this.selected_orderline){
-            this.selected_orderline.set_selected(false);
-            this.selected_orderline = undefined;
-        }
-    },
-
     display_lot_popup: function() {
         var order_line = this.get_selected_orderline();
         if (order_line){
