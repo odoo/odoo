@@ -60,25 +60,25 @@ class SendSMS(models.TransientModel):
     res_id = fields.Integer('Document ID')
     res_ids = fields.Char('Document IDs')
     res_ids_count = fields.Integer(
-        'Visible records count', compute='_compute_recipients_count',
+        'Visible records count', compute='_compute_recipients_count', compute_sudo=False,
         help='UX field computing the number of recipients in mass mode without active domain')
     use_active_domain = fields.Boolean('Use active domain')
     active_domain = fields.Text('Active domain', readonly=True)
     active_domain_count = fields.Integer(
-        'Active records count', compute='_compute_recipients_count',
+        'Active records count', compute='_compute_recipients_count', compute_sudo=False,
         help='UX field computing the number of recipients in mass mode based on given active domain')
     # options for comment and mass mode
     mass_keep_log = fields.Boolean('Keep a note on document', default=True)
     mass_force_send = fields.Boolean('Send directly', default=False)
     mass_use_blacklist = fields.Boolean('Use blacklist', default=True)
     # recipients
-    recipient_description = fields.Text('Recipients (Partners)', compute='_compute_recipients')
-    recipient_count = fields.Integer('# Valid recipients', compute='_compute_recipients')
-    recipient_invalid_count = fields.Integer('# Invalid recipients', compute='_compute_recipients')
+    recipient_description = fields.Text('Recipients (Partners)', compute='_compute_recipients', compute_sudo=False)
+    recipient_count = fields.Integer('# Valid recipients', compute='_compute_recipients', compute_sudo=False)
+    recipient_invalid_count = fields.Integer('# Invalid recipients', compute='_compute_recipients', compute_sudo=False)
     number_field_name = fields.Char(string='Field holding number')
     partner_ids = fields.Many2many('res.partner')
     numbers = fields.Char('Recipients (Numbers)')
-    sanitized_numbers = fields.Char('Sanitized Number', compute='_compute_sanitized_numbers')
+    sanitized_numbers = fields.Char('Sanitized Number', compute='_compute_sanitized_numbers', compute_sudo=False)
     # content
     template_id = fields.Many2one('sms.template', string='Use Template', domain="[('model', '=', res_model)]")
     body = fields.Text('Message', required=True)

@@ -161,7 +161,7 @@
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
             <xpath expr="//div[@name='div_total_model']" position="after">
-                <div class="alert alert-warning" role="alert" attrs="{'invisible': ['&amp;',('sms_has_insufficient_credit', '=', False), ('mailing_type', '!=', 'mail')]}">
+                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('sms_has_insufficient_credit', '=', False)]}">
                     <a name="action_buy_sms_credits" type="object">Insufficient credits</a>
                 </div>
             </xpath>
