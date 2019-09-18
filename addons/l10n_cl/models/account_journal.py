@@ -17,7 +17,7 @@ class AccountJournal(models.Model):
         documents = self.env['l10n_latam.document.type'].search(domain)
         sequences = self.env['ir.sequence']
         for document in documents:
-            sequences |= self.env['ir.sequence'].create(document.get_document_sequence_vals(self))
+            sequences |= self.env['ir.sequence'].create(document._get_document_sequence_vals(self))
         self.write({'l10n_cl_sequence_ids': [(4, s.id) for s in sequences]})
 
     def create_document_sequences_cl(self):
