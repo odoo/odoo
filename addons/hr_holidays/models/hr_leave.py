@@ -558,14 +558,15 @@ class HolidaysRequest(models.Model):
                         _('%s are only valid until %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_stop))
 
-    def _check_double_validation_rules(self, employee, state):
+    def _check_double_validation_rules(self, employees, state):
         if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
             return
 
         is_leave_user = self.user_has_groups('hr_holidays.group_hr_holidays_user')
         if state == 'validate1':
-            if employee.leave_manager_id != self.env.user and not is_leave_user:
-                raise AccessError(_('You cannot first approve a leave for %s, because you are not his leave manager' % (employee.name,)))
+            employees = employees.filtered(lambda employee: employee.leave_manager_id != self.env.user)
+            if employees and not is_leave_user:
+                raise AccessError(_('You cannot first approve a leave for %s, because you are not his leave manager' % (employees[0].name,)))
         elif state == 'validate' and not is_leave_user:
             # Is probably handled via ir.rule
             raise AccessError(_('You don\'t have the rights to apply second approval on a leave request'))
@@ -646,7 +647,11 @@ class HolidaysRequest(models.Model):
             if values.get('state'):
                 self._check_approval_update(values['state'])
                 if any(holiday.validation_type == 'both' for holiday in self):
-                    self._check_double_validation_rules(self.env['hr.employee'].browse(values.get('employee_id', self.employee_id.id)), values['state'])
+                    if values.get('employee_id'):
+                        employees = self.env['hr.employee'].browse(values.get('employee_id'))
+                    else:
+                        employees = self.mapped('employee_id')
+                    self._check_double_validation_rules(employees, values['state'])
             if 'date_from' in values:
                 values['request_date_from'] = values['date_from']
             if 'date_to' in values:
