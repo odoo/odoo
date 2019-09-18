@@ -46,6 +46,7 @@ var ActivityController = BasicController.extend({
             title: _.str.sprintf(_t("Search: %s"), this.renderer.arch.attrs.string),
             no_create: !this.activeActions.create,
             disable_multiple_selection: true,
+            context: state.context,
             on_selected: function (record) {
                 var fakeRecord = self.renderer.getKanbanActivityData({}, record[0]);
                 var widget = new KanbanActivity(self, 'activity_ids', fakeRecord, {});
