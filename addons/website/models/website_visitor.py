@@ -37,7 +37,7 @@ class WebsiteVisitor(models.Model):
     _description = 'Website Visitor'
     _order = 'create_date DESC'
 
-    name = fields.Char('Name', default=_('Website Visitor'))
+    name = fields.Char('Name', default=lambda self: _('Website Visitor'))
     access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, index=True, copy=False, groups='base.group_website_publisher')
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
@@ -67,11 +67,10 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('name')
     def name_get(self):
-        ret_list = []
-        for record in self:
-            name = '%s #%d' % (record.name, record.id)
-            ret_list.append((record.id, name))
-        return ret_list
+        return [(
+            record.id,
+            '%s #%d' % (record.name, record.id) if record.name == _('Website Visitor') else record.name
+        ) for record in self]
 
     @api.model
     def _search_last_connection(self, operator, value):
