@@ -367,7 +367,8 @@ var ProxyStatusWidget = StatusWidget.extend({
             }
             if( this.pos.config.iface_print_via_proxy || 
                 this.pos.config.iface_cashdrawer ){
-                if(!this.is_printer_connected(status.drivers.printer)){
+                var printer = status.drivers.printer ? status.drivers.printer.status : false;
+                if (printer != 'connected' && printer != 'connecting') {
                     warning = true;
                     msg = msg ? msg + ' & ' : msg;
                     msg += _t('Printer');
@@ -385,11 +386,8 @@ var ProxyStatusWidget = StatusWidget.extend({
             msg = msg ? msg + ' ' + _t('Offline') : msg;
             this.set_status(warning ? 'warning' : 'connected', msg);
         }else{
-            this.set_status(status.status,'');
+            this.set_status(status.status, status.msg || '');
         }
-    },
-    is_printer_connected: function (printer) {
-        return printer && printer.status === 'connected';
     },
     start: function(){
         var self = this;

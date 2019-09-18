@@ -74,17 +74,20 @@
 
     <t t-name="ProxyStatusWidget">
         <div class="oe_status js_proxy">
-            <span class='js_msg oe_orange oe_hidden'></span>
-            <div class="js_connected oe_icon oe_green">
+            <div class="js_connected oe_green">
+                <span class="js_msg oe_hidden"></span>
                 <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Connected" title="Proxy Connected"></i>
             </div>
-            <div class="js_connecting oe_icon oe_hidden">
+            <div class="js_connecting oe_hidden">
+                <span class="js_msg oe_hidden"></span>
                 <i class='fa fa-fw fa-spin fa-spinner' role="img" aria-label="Connecting to Proxy" title="Connecting to Proxy"></i>
             </div>
-            <div class="js_warning oe_icon oe_orange oe_hidden">
+            <div class="js_warning oe_orange oe_hidden">
+                <span class="js_msg oe_hidden"></span>
                 <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Warning" title="Proxy Warning"></i>
             </div>
-            <div class="js_disconnected oe_icon oe_red oe_hidden">
+            <div class="js_disconnected oe_red oe_hidden">
+                <span class="js_msg oe_hidden"></span>
                 <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Disconnected" title="Proxy Disconnected"></i>
             </div>
         </div>

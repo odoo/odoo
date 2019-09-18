@@ -152,32 +152,32 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="is_posbox" string="IoT Box Devices"/>
-                                <div class="text-muted">
+                                <div class="text-muted mb16">
                                     Connect devices to your PoS through an IoT Box
                                 </div>
-                                <div class="content-group" attrs="{'invisible' : [('is_posbox', '=', False)]}">
-                                    <div class="row mt16">
-                                        <label string="IoT Box IP Address" for="proxy_ip" class="col-lg-3 o_light_label"/>
+                                <div class="content-group pos_iot_config" attrs="{'invisible' : [('is_posbox', '=', False)]}">
+                                    <div class="row">
+                                        <label string="IoT Box IP Address" for="proxy_ip" class="col-lg-4 o_light_label"/>
                                         <field name="proxy_ip"/>
                                     </div>
-                                    <div class="row">
-                                        <label string="Barcode Scanner" for="iface_scan_via_proxy" class="col-lg-3 o_light_label"/>
+                                    <div class="row iot_barcode_scanner">
+                                        <label string="Barcode Scanner" for="iface_scan_via_proxy" class="col-lg-4 o_light_label"/>
                                         <field name="iface_scan_via_proxy"/>
                                     </div>
                                     <div class="row">
-                                        <label string="Electronic Scale" for="iface_electronic_scale" class="col-lg-3 o_light_label"/>
+                                        <label string="Electronic Scale" for="iface_electronic_scale" class="col-lg-4 o_light_label"/>
                                         <field name="iface_electronic_scale"/>
                                     </div>
                                     <div class="row">
-                                        <label string="Receipt Printer" for="iface_print_via_proxy" class="col-lg-3 o_light_label"/>
+                                        <label string="Receipt Printer" for="iface_print_via_proxy" class="col-lg-4 o_light_label"/>
                                         <field name="iface_print_via_proxy"/>
                                     </div>
                                     <div class="row" attrs="{'invisible': [('iface_print_via_proxy', '=', False)]}">
-                                        <label string="Cashdrawer" for="iface_cashdrawer" class="col-lg-3 o_light_label"/>
+                                        <label string="Cashdrawer" for="iface_cashdrawer" class="col-lg-4 o_light_label"/>
                                         <field name="iface_cashdrawer"/>
                                     </div>
                                     <div class="row">
-                                        <label string="Customer Display" for="iface_customer_facing_display" class="col-lg-3 o_light_label"/>
+                                        <label string="Customer Display" for="iface_customer_facing_display" class="col-lg-4 o_light_label"/>
                                         <field name="iface_customer_facing_display"/>
                                     </div>
                                     <field name="customer_facing_display_html" invisible="1"/>
