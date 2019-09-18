@@ -4582,6 +4582,12 @@ var Dropzone = /** @class */ (function () {
                 });
             }
         }).on('dragover', false); // prevent default dragover event
+        // remove dragover class from $editor if dragged object is droped somewhere else
+        $('body').on("drop", function (ev) {
+            ev.preventDefault();
+            collection = $$1();
+            _this.$editor.removeClass('dragover');
+        });
     };
     Dropzone.prototype.destroy = function () {
         var _this = this;
