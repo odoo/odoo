@@ -14,5 +14,6 @@ List of contributors:
 
 Àngel Manonelles amanonelles@planetatic.com https://github.com/AManonelles-PlanetaTIC
 Francisco Fernández ffernandez@planetatic.com https://github.com/FFernandez-PlanetaTIC
+Josep Maria Pinyol Ferret jmpinyol@planetatic.com https://github.com/JMPinyol-PlanetaTIC
 Lluís Rovira Olivé lrovira@planetatic.com https://github.com/LRovira-PlanetaTIC
 Marc Poch mpoch@planetatic.com https://github.com/MPoch-PlanetaTIC
