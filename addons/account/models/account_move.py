@@ -510,11 +510,24 @@ class AccountMove(models.Model):
         account_asset.
         '''
         records = self.search([
+<<<<<<< HEAD
             ('state', '=', 'draft'),
             ('date', '<=', fields.Date.today()),
             ('auto_post', '=', True),
         ])
         records.post()
+=======
+            ('state', '=', 'posted'),
+            ('auto_reverse', '=', True),
+            ('reverse_date', '<=', fields.Date.today()),
+            ('reverse_entry_id', '=', False)])
+        for move in records:
+            date = None
+            company = move.company_id or self.env.user.company_id
+            if move.reverse_date and (not company.period_lock_date or move.reverse_date > company.period_lock_date):
+                date = move.reverse_date
+            move.reverse_moves(date=date, auto=True)
+>>>>>>> 27437870d4d... temp
 
     @api.multi
     def action_view_reverse_entry(self):
