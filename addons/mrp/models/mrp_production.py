@@ -511,6 +511,10 @@ class MrpProduction(models.Model):
                 move[0]._recompute_state()
                 move[0]._action_assign()
                 move[0].unit_factor = quantity / move[0].raw_material_production_id.product_qty
+                if float_compare(move[0].raw_material_production_id.product_qty,
+                                 move[0].raw_material_production_id.qty_produced,
+                                 precision_rounding=move[0].product_uom.rounding) > 0:
+                    move[0].unit_factor = quantity / (move[0].raw_material_production_id.product_qty - move[0].raw_material_production_id.qty_produced)
                 return move[0], old_qty, quantity
             else:
                 if move[0].quantity_done > 0:
