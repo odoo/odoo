@@ -183,6 +183,8 @@ class SaleOrder(models.Model):
         help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
     expected_date_manual = fields.Datetime('Expected date',
         help="Delivery date you can promise to the customer, set manually.")
+    is_expected_date_manual = fields.Boolean(compute='_compute_expected_date', string='Expected Date set manually',
+        help='Technical field that indicates wich expected_date must be used')
 
     amount_undiscounted = fields.Float('Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
 
@@ -193,8 +195,6 @@ class SaleOrder(models.Model):
     authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
                                                   string='Authorized Transactions', copy=False, readonly=True)
 
-    is_expected_date_manual = fields.Boolean(compute='_compute_expected_date', string='Expected Date set manually',
-        help='Technical field that indicates wich expected_date must be used')
 
     _sql_constraints = [
         ('date_order_conditional_required', "CHECK( (state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
