@@ -1890,6 +1890,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             elif order_field in aggregated_fields:
                 order_split[0] = '"%s"' % order_field
                 orderby_terms.append(' '.join(order_split))
+            elif order_field not in self._fields:
+                raise ValueError("Invalid field %r on model %r" % (order_field, self._name))
             else:
                 # Cannot order by a field that will not appear in the results (needs to be grouped or aggregated)
                 _logger.warn('%s: read_group order by `%s` ignored, cannot sort on empty columns (not grouped/aggregated)',
@@ -1904,7 +1906,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             field name, type, time information, qualified name, ...
         """
         split = gb.split(':')
-        field_type = self._fields[split[0]].type
+        field = self._fields.get(split[0])
+        if not field:
+            raise ValueError("Invalid field %r on model %r" % (split[0], self._name))
+        field_type = field.type
         gb_function = split[1] if len(split) == 2 else None
         temporal = field_type in ('date', 'datetime')
         tz_convert = field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones
@@ -2117,6 +2122,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for fspec in fields:
             if fspec == 'sequence':
                 continue
+            if fspec == '__count':
+                # the web client sometimes adds this pseudo-field in the list
+                continue
 
             match = regex_field_agg.match(fspec)
             if not match:
@@ -2126,7 +2134,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if func:
                 # we have either 'name:func' or 'name:func(fname)'
                 fname = fname or name
-                field = self._fields[fname]
+                field = self._fields.get(fname)
+                if not field:
+                    raise ValueError("Invalid field %r on model %r" % (fname, self._name))
                 if not (field.base_field.store and field.base_field.column_type):
                     raise UserError(_("Cannot aggregate field %r.") % fname)
                 if func not in VALID_AGGREGATE_FUNCTIONS:
@@ -2134,7 +2144,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             else:
                 # we have 'name', retrieve the aggregator on the field
                 field = self._fields.get(name)
-                if not (field and field.base_field.store and
+                if not field:
+                    raise ValueError("Invalid field %r on model %r" % (name, self._name))
+                if not (field.base_field.store and
                         field.base_field.column_type and field.group_operator):
                     continue
                 func, fname = field.group_operator, name
@@ -2817,7 +2829,9 @@ Fields:
         # fetch stored fields from the database to the cache
         stored_fields = set()
         for name in fields:
-            field = self._fields[name]
+            field = self._fields.get(name)
+            if not field:
+                raise ValueError("Invalid field %r on model %r" % (name, self._name))
             if field.store:
                 stored_fields.add(name)
             elif field.compute:
@@ -3391,7 +3405,9 @@ Record ids: %(records)s
         protected = set()
         check_company = False
         for fname in vals:
-            field = self._fields[fname]
+            field = self._fields.get(fname)
+            if not field:
+                raise ValueError("Invalid field %r on model %r" % (fname, self._name))
             if field.inverse:
                 if field.type in ('one2many', 'many2many'):
                     # The written value is a list of commands that must applied
@@ -3605,8 +3621,7 @@ Record ids: %(records)s
                     continue
                 field = self._fields.get(key)
                 if not field:
-                    _logger.warning("%s.create() with unknown fields: %s", self._name, key)
-                    continue
+                    raise ValueError("Invalid field %r on model %r" % (key, self._name))
                 if field.company_dependent:
                     irprop_def = self.env['ir.property'].get(key, self._name)
                     cached_def = field.convert_to_cache(irprop_def, self)
@@ -4161,7 +4176,7 @@ Record ids: %(records)s
 
             field = self._fields.get(order_field)
             if not field:
-                raise ValueError(_("Sorting field %s not found on model %s") % (order_field, self._name))
+                raise ValueError("Invalid field %r on model %r" % (order_field, self._name))
 
             if order_field == 'id':
                 order_by_elements.append('"%s"."%s" %s' % (alias, order_field, order_direction))
@@ -4249,7 +4264,8 @@ Record ids: %(records)s
         order_spec = order or self._order
         for order_part in order_spec.split(','):
             order_field = order_part.split()[0]
-            to_flush[self._name].add(order_field)
+            if order_field in self._fields:
+                to_flush[self._name].add(order_field)
 
         if 'active' in self:
             to_flush[self._name].add('active')
@@ -4993,7 +5009,10 @@ Record ids: %(records)s
         self.ensure_one()
         cache = self.env.cache
         fields = self._fields
-        field_values = [(fields[name], value) for name, value in values.items()]
+        try:
+            field_values = [(fields[name], value) for name, value in values.items()]
+        except KeyError as e:
+            raise ValueError("Invalid field %r on model %r" % (e.args[0], self._name))
 
         # convert monetary fields last in order to ensure proper rounding
         for field, value in sorted(field_values, key=is_monetary):
