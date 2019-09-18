@@ -28,22 +28,33 @@ var AbstractGroupedOne2ManyRenderer = ListRenderer.extend({
     dataRowTemplate: '',    // Template used to render a record
     addLineButtonTemplate: 'group_add_item',
 
-     /**
+    /**
+     * Don't freeze the columns because as the header is empty, the algorithm
+     * won't work.
+     *
      * @override
      * @private
-     * Don't render any header
+     */
+    _freezeColumnWidths: function () {},
+
+     /**
+     * Renders a empty header
+     *
+     * @override
+     * @private
      */
     _renderHeader: function () {
-        return $('<div>');
+        return $('<thead/>');
     },
 
      /**
+     * Renders a empty footer
+     *
      * @override
      * @private
-     * Don't render any footer
      */
     _renderFooter: function () {
-        return $('<div>');
+        return $('<tfoot/>');
     },
 
     /**

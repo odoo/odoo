@@ -55,19 +55,10 @@ var ListController = BasicController.extend({
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
         this.fieldChangedPrevented = false;
-        this._onMouseupWindowDiscard = null;
-    },
-
-    /**
-     * Overriden to properly unbind any mouseup listeners still bound to the window
-     *
-     * @override
-     */
-    destroy: function () {
-        if (this._onMouseupWindowDiscard) {
-            window.removeEventListener('mouseup', this._onMouseupWindowDiscard, true);
-        }
-        return this._super.apply(this, arguments);
+        Object.defineProperty(this, 'mode', {
+            get: () => this.renderer.isEditable() ? 'edit' : 'readonly',
+            set: () => {},
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -455,7 +446,7 @@ var ListController = BasicController.extend({
      */
     _saveRecord: function (recordId) {
         var record = this.model.get(recordId, { raw: true });
-        if (record.isDirty() && this.renderer.inMultipleRecordEdition(recordId)) {
+        if (record.isDirty() && this.renderer.isInMultipleRecordEdition(recordId)) {
             // do not save the record (see _saveMultipleRecords)
             const prom = this.multipleRecordsSavingPromise || Promise.reject();
             this.multipleRecordsSavingPromise = null;
@@ -498,7 +489,7 @@ var ListController = BasicController.extend({
     _toggleCreateButton: function () {
         if (this.$buttons) {
             var state = this.model.get(this.handle);
-            var createHidden = this.editable && state.groupedBy.length && state.data.length;
+            var createHidden = this.renderer.isEditable() && state.groupedBy.length && state.data.length;
             this.$buttons.find('.o_list_button_add').toggleClass('o_hidden', !!createHidden);
         }
     },
@@ -516,8 +507,6 @@ var ListController = BasicController.extend({
      * @returns {Promise}
      */
     _update: function () {
-        let visilibityFunction = this.renderer.state.count ? 'show' : 'hide'
-        this.$('.o_list_export_xlsx')[visilibityFunction]()
         return this._super.apply(this, arguments)
             .then(this._toggleSidebar.bind(this))
             .then(this._toggleCreateButton.bind(this))
@@ -532,6 +521,12 @@ var ListController = BasicController.extend({
     _updateButtons: function (mode) {
         if (this.$buttons) {
             this.$buttons.toggleClass('o-editing', mode === 'edit');
+            const state = this.model.get(this.handle, {raw: true});
+            if (state.count) {
+                this.$('.o_list_export_xlsx').show();
+            } else {
+                this.$('.o_list_export_xlsx').hide();
+            }
         }
     },
 
@@ -548,7 +543,7 @@ var ListController = BasicController.extend({
      */
     _onActivateNextWidget: function (ev) {
         ev.stopPropagation();
-        this.renderer.editFirstRecord();
+        this.renderer.editFirstRecord(ev);
     },
     /**
      * Add a record to the list
@@ -701,12 +696,14 @@ var ListController = BasicController.extend({
 
         if (this.fieldChangedPrevented) {
             this.fieldChangedPrevented = ev;
-        } else if (this.renderer.inMultipleRecordEdition(recordId)) {
-            // deal with edition of multiple lines
-            ev.data.onSuccess = () => {
+        } else if (this.renderer.isInMultipleRecordEdition(recordId)) {
+            const saveMulti = () => {
                 this.multipleRecordsSavingPromise =
                     this._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
             };
+            // deal with edition of multiple lines
+            ev.data.onSuccess = saveMulti; // will ask confirmation, and save
+            ev.data.onFailure = saveMulti; // will show the appropriate dialog
             // disable onchanges as we'll save directly
             ev.data.notifyChange = false;
         }
@@ -744,7 +741,7 @@ var ListController = BasicController.extend({
      */
     _onSetDirty: function (ev) {
         var recordId = ev.data.dataPointID;
-        if (this.renderer.inMultipleRecordEdition(recordId)) {
+        if (this.renderer.isInMultipleRecordEdition(recordId)) {
             ev.stopPropagation();
             Dialog.alert(this, _t("No valid record to save"), {
                 confirm_callback: async () => {
