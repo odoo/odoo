@@ -2278,7 +2278,7 @@ class AccountMoveLine(models.Model):
         ),
         (
             'check_accountable_required_fields',
-             "CHECK(display_type IN ('line_section', 'line_note') OR account_id IS NOT NULL)",
+             "CHECK(COALESCE(display_type IN ('line_section', 'line_note'), 'f') OR account_id IS NOT NULL)",
              "Missing required account on accountable invoice line."
         ),
         (
