@@ -52,6 +52,7 @@ var ListView = BasicView.extend({
             }
         });
 
+        this.controllerParams.activeActions.export_xlsx = this.arch.attrs.export_xlsx ? !!JSON.parse(this.arch.attrs.export_xlsx): true;
         this.controllerParams.editable = (!this.arch.attrs.edit || !!JSON.parse(this.arch.attrs.edit)) ?
             this.arch.attrs.editable : false;
         this.controllerParams.hasSidebar = params.hasSidebar;

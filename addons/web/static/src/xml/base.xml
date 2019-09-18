@@ -275,6 +275,9 @@
                 Create
             </button>
         </t>
+        <t t-if="widget.is_action_enabled('export_xlsx')">
+            <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" title="Export All"/>
+        </t>
     </div>
 </t>
 
