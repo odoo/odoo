@@ -658,6 +658,7 @@ QUnit.test('dashboard intercepts custom events triggered by sub controllers', as
     testUtils.mock.patch(ListController, {
         start: function () {
             this.trigger_up('update_filters');
+            return this._super.apply(this, arguments);
         },
     });
 
