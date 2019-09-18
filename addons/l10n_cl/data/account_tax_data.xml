@@ -20,6 +20,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('account_210710'),
                 'plus_report_line_ids': [ref('tax_report_iva_debito_fiscal')],
             }),
         ]"/>
@@ -32,6 +33,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('account_210710'),
                 'minus_report_line_ids': [ref('tax_report_iva_debito_fiscal')],
             }),
         ]"/>
@@ -93,6 +95,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
                 'plus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
             }),
         ]"/>
@@ -105,6 +108,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('account_210740'),
                 'minus_report_line_ids': [ref('tax_report_retencion_segunda_categ')],
             }),
         ]"/>
@@ -128,6 +132,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('account_420220'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -138,6 +143,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('account_420220'),
             }),
         ]"/>
     </record>
@@ -162,6 +168,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('tax_report_compras_iva_activo_fijo')],
+                'account_id': ref('account_110730'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -174,6 +181,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('tax_report_compras_iva_activo_fijo')],
+                'account_id': ref('account_110730'),
             }),
         ]"/>
     </record>
@@ -198,6 +206,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('tax_report_compras_iva_activo_fijo_uso_comun')],
+                'account_id': ref('account_110730'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -210,6 +219,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('tax_report_compras_iva_activo_fijo_uso_comun')],
+                'account_id': ref('account_110730'),
             }),
         ]"/>
     </record>
@@ -234,6 +244,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('tax_report_compras_iva_activo_fijo_no_recup')],
+                'account_id': ref('account_110730'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -246,6 +257,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('tax_report_compras_iva_activo_fijo_no_recup')],
+                'account_id': ref('account_110730'),
             }),
         ]"/>
     </record>
