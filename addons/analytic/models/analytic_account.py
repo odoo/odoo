@@ -102,8 +102,11 @@ class AccountAnalyticAccount(models.Model):
         )
         data_credit = defaultdict(float)
         for l in credit_groups:
-            data_credit[l['account_id'][0]] += Curr.browse(l['currency_id'][0])._convert(
-                l['amount'], user_currency, self.env.user.company_id, fields.Date.today())
+            if l['currency_id']:
+                data_credit[l['account_id'][0]] += Curr.browse(l['currency_id'][0])._convert(
+                    l['amount'], user_currency, self.env.user.company_id, fields.Date.today())
+            else:
+                data_credit[l['account_id'][0]] += l['amount']
 
         debit_groups = analytic_line_obj.read_group(
             domain=domain + [('amount', '<', 0.0)],
@@ -113,8 +116,11 @@ class AccountAnalyticAccount(models.Model):
         )
         data_debit = defaultdict(float)
         for l in debit_groups:
-            data_debit[l['account_id'][0]] += Curr.browse(l['currency_id'][0])._convert(
-                l['amount'], user_currency, self.env.user.company_id, fields.Date.today())
+            if l['currency_id']:
+                data_debit[l['account_id'][0]] += Curr.browse(l['currency_id'][0])._convert(
+                    l['amount'], user_currency, self.env.user.company_id, fields.Date.today())
+            else:
+                data_debit[l['account_id'][0]] += l['amount']
 
         for account in self:
             account.debit = abs(data_debit.get(account.id, 0.0))
