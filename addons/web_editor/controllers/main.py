@@ -143,7 +143,7 @@ class Web_Editor(http.Controller):
                 ul = ul.getparent()
 
             for child in ul.getchildren():
-                if child.tag == 'li' and 'o_checked' not in child.get('class', ''):
+                if child.tag == 'li' and 'checklist-id' in child.get('id', '') and 'o_checked' not in child.get('class', ''):
                     allSelected = False
 
             node = ul.getprevious()
