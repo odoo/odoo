@@ -27,7 +27,13 @@
     'category': 'Hidden',
     'summary': 'Payment Acquirer: Stripe Implementation for the EU PSD2',
     'version': '1.0',
-    'description': """Stripe Payment Acquirer - Strong Customer Authentication Update""",
+    'description': """
+Stripe Payment Acquirer - Strong Customer Authentication Update
+===============================================================
+
+**WARNING**: the existing credit card information recorded for Stripe will be deactivated.
+Customers will have to add their credit card details back.
+    """,
     'depends': ['payment_stripe'],
     'auto_install': True,
     'data': [
@@ -35,4 +41,5 @@
         'views/payment_templates.xml',
     ],
     'images': ['static/description/icon.png'],
+    'post_init_hook': 'post_init_hook',
 }
