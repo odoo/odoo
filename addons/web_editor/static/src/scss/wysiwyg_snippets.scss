@@ -16,6 +16,11 @@ body.editor_enable.editor_has_snippets {
         // just for fake backdrop effect
         background-color: rgba(66, 66, 66, 0.4);
     }
+
+    .modal-backdrop {
+        // forces the backdrop just below the modal dialog
+        z-index: $o-we-overlay-zindex - 2;
+    }
 }
 
 // SNIPPET PANEL
