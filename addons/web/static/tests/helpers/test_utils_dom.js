@@ -40,6 +40,7 @@ var concurrency = require('web.concurrency');
  * @param {jQuery|HTMLElement} [options.mousedownTarget=undefined] target of the mousedown event
  * @param {jQuery|HTMLElement} [options.mousemoveTarget=undefined] target of the mousemove event
  * @param {jQuery|HTMLElement} [options.mouseupTarget=undefined] target of the mouseup event
+ * @param {jQuery|HTMLElement} [options.ctrlKey=undefined] if the ctrl key should be considered pressed at the time of mouseup
  * @returns {Promise}
  */
 function dragAndDrop($el, $to, options) {
@@ -102,7 +103,8 @@ function dragAndDrop($el, $to, options) {
         triggerEvent(options.mouseupTarget || el || $el, 'mouseup', {
             which: 1,
             pageX: toOffset.left,
-            pageY: toOffset.top
+            pageY: toOffset.top,
+            ctrlKey: options.ctrlKey,
         });
         if (options.withTrailingClick) {
             triggerEvent(options.mouseupTarget || el || $el, 'click');
