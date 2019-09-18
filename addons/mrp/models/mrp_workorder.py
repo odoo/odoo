@@ -141,7 +141,7 @@ class MrpWorkorder(models.Model):
     @api.depends('production_id.product_qty', 'qty_produced')
     def _compute_is_produced(self):
         rounding = self.production_id.product_uom_id.rounding
-        self.is_produced = float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0
+        self.is_produced = float_compare(self.qty_produced, self.qty_production, precision_rounding=rounding) >= 0
 
     @api.multi
     def _compute_is_first_wo(self):
@@ -405,20 +405,20 @@ class MrpWorkorder(models.Model):
 
         # Set a qty producing
         rounding = self.production_id.product_uom_id.rounding
-        if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
+        if float_compare(self.qty_produced, self.qty_production, precision_rounding=rounding) >= 0:
             self.qty_producing = 0
         elif self.production_id.product_id.tracking == 'serial':
             self._assign_default_final_lot_id()
             self.qty_producing = 1.0
             self._generate_lot_ids()
         else:
-            self.qty_producing = float_round(self.production_id.product_qty - self.qty_produced, precision_rounding=rounding)
+            self.qty_producing = float_round(self.qty_production - self.qty_produced, precision_rounding=rounding)
             self._generate_lot_ids()
 
         if self.next_work_order_id and self.next_work_order_id.state not in ['done', 'cancel'] and self.production_id.product_id.tracking != 'none':
             self.next_work_order_id._assign_default_final_lot_id()
 
-        if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
+        if float_compare(self.qty_produced, self.qty_production, precision_rounding=rounding) >= 0:
             self.button_finish()
         return True
 
