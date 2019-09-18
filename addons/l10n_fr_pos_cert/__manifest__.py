@@ -29,6 +29,7 @@ The module adds following features:
         'views/pos_inalterability_menuitem.xml',
         'views/account_views.xml',
         'views/l10n_fr_pos_cert_templates.xml',
+        'views/pos_views.xml',
     ],
     'qweb': ['static/src/xml/pos.xml'],
     'post_init_hook': '_setup_inalterability',
