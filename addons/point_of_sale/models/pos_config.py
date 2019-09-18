@@ -457,16 +457,22 @@ class PosConfig(models.Model):
                 config.fiscal_position_ids = [(5, 0, 0)]
 
     def _check_modules_to_install(self):
-        module_installed = False
-        for pos_config in self:
-            for field_name in [f for f in pos_config.fields_get_keys() if f.startswith('module_')]:
-                module_name = field_name.split('module_')[1]
-                module_to_install = self.env['ir.module.module'].sudo().search([('name', '=', module_name)])
-                if getattr(pos_config, field_name) and module_to_install.state not in ('installed', 'to install', 'to upgrade'):
-                    module_to_install.button_immediate_install()
-                    module_installed = True
-        # just in case we want to do something if we install a module. (like a refresh ...)
-        return module_installed
+        # determine modules to install
+        expected = [
+            fname[7:]           # 'module_account' -> 'account'
+            for fname in self.fields_get_keys()
+            if fname.startswith('module_')
+            if any(pos_config[fname] for pos_config in self)
+        ]
+        if expected:
+            STATES = ('installed', 'to install', 'to upgrade')
+            modules = self.env['ir.module.module'].sudo().search([('name', 'in', expected)])
+            modules = modules.filtered(lambda module: module.state not in STATES)
+            if modules:
+                modules.button_immediate_install()
+                # just in case we want to do something if we install a module. (like a refresh ...)
+                return True
+        return False
 
     def _check_groups_implied(self):
         for pos_config in self:
