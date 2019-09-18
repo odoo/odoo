@@ -179,7 +179,7 @@ class SaleOrder(models.Model):
     signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
     signed_on = fields.Datetime('Signed On', help='Date of the signature.', copy=False)
 
-    commitment_date = fields.Datetime('Commitment Date',
+    commitment_date = fields.Datetime('Delivery Date',
                                       states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
                                       copy=False, readonly=True,
                                       help="This is the delivery date promised to the customer. "
@@ -367,8 +367,8 @@ class SaleOrder(models.Model):
             return {
                 'warning': {
                     'title': _('Requested date is too soon.'),
-                    'message': _("The commitment date is sooner than the expected date."
-                                 "You may be unable to honor the commitment date.")
+                    'message': _("The delivery date is sooner than the expected date."
+                                 "You may be unable to honor the delivery date.")
                 }
             }
 
