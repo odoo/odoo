@@ -73,6 +73,7 @@ var DiscountButton = screens.ActionButtonWidget.extend({
         if( discount < 0 ){
             order.add_product(product, {
                 price: discount,
+                lst_price: discount,
                 extras: {
                     price_manually_set: true,
                 },
