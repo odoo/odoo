@@ -1790,6 +1790,7 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
     }
     r.clean().select();
     event.preventDefault();
+
     return false;
 };
 $.summernote.pluginEvents.insertOrderedList = function (event, editor, layoutInfo) {
@@ -1797,6 +1798,7 @@ $.summernote.pluginEvents.insertOrderedList = function (event, editor, layoutInf
 };
 $.summernote.pluginEvents.insertCheckList = function (event, editor, layoutInfo) {
     $.summernote.pluginEvents.insertUnorderedList(event, editor, layoutInfo, "checklist");
+    $(range.create().sc.parentNode).trigger('input'); // to update checklist-id
 };
 $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent) {
     var $editable = layoutInfo.editable();
