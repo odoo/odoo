@@ -7,7 +7,7 @@ import uuid
 from odoo import fields, models, api, registry, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.tools.misc import _format_time_ago, format_time
+from odoo.tools.misc import _format_time_ago
 from odoo.http import request
 from odoo.osv import expression
 
@@ -22,6 +22,7 @@ class WebsiteTrack(models.Model):
     page_id = fields.Many2one('website.page', index=True, ondelete='cascade', readonly=True)
     url = fields.Text('Url', index=True)
     visit_datetime = fields.Datetime('Visit Date', default=fields.Datetime.now, required=True, readonly=True)
+
 
 class WebsiteVisitor(models.Model):
     _name = 'website.visitor'
@@ -56,6 +57,11 @@ class WebsiteVisitor(models.Model):
     last_connection_datetime = fields.Datetime('Last Connection', default=fields.Datetime.now, help="Last page view date", readonly=True)
     time_since_last_action = fields.Char('Last action', compute="_compute_time_statistics", help='Time since last page view. E.g.: 2 minutes ago')
     is_connected = fields.Boolean('Is connected ?', compute='_compute_time_statistics', help='A visitor is considered as connected if his last page view was within the last 5 minutes.')
+
+    _sql_constraints = [
+        ('access_token_unique', 'unique(access_token)', 'Access token should be unique.'),
+        ('partner_uniq', 'unique(user_partner_id)', 'A partner is linked to only one visitor.'),
+    ]
 
     @api.depends('name')
     def name_get(self):
@@ -95,7 +101,7 @@ class WebsiteVisitor(models.Model):
             mapped_data[result['visitor_id'][0]] = visitor_info
 
         for visitor in self:
-            visitor_info = mapped_data.get(visitor.id, {'page_ids': [], 'page_count': 0})
+            visitor_info = mapped_data.get(visitor.id, {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
             visitor.page_ids = [(6, 0, visitor_info['page_ids'])]
             visitor.visitor_page_count = visitor_info['visitor_page_count']
             visitor.page_count = visitor_info['page_count']
@@ -103,8 +109,8 @@ class WebsiteVisitor(models.Model):
     @api.depends('website_track_ids.page_id')
     def _compute_last_visited_page_id(self):
         results = self.env['website.track'].read_group([('visitor_id', 'in', self.ids)],
-                                                                        ['visitor_id', 'page_id', 'visit_datetime:max'],
-                                                                        ['visitor_id', 'page_id'], lazy=False)
+                                                       ['visitor_id', 'page_id', 'visit_datetime:max'],
+                                                       ['visitor_id', 'page_id'], lazy=False)
         mapped_data = {result['visitor_id'][0]: result['page_id'][0] for result in results if result['page_id']}
         for visitor in self:
             visitor.last_visited_page_id = mapped_data.get(visitor.id, False)
@@ -153,23 +159,43 @@ class WebsiteVisitor(models.Model):
             'context': ctx,
         }
 
-    def _get_visitor_from_request(self, with_previous_visitors=False):
+    def _get_visitor_from_request(self):
+        """ Return the visitor as sudo from the request if there is a visitor_uuid cookie.
+            It is possible that the partner has changed or has disconnected.
+            In that case the cookie is still referencing the old visitor and need to be replaced
+            with the one of the visitor returned !!!. """
         if not request:
             return None
-        if with_previous_visitors and not request.env.user._is_public():
+        Visitor = self.env['website.visitor'].sudo()
+        visitor = Visitor
+        access_token = request.httprequest.cookies.get('visitor_uuid')
+        if access_token:
+            visitor = Visitor.with_context(active_test=False).search([('access_token', '=', access_token)])
+
+        if not request.env.user._is_public():
             partner_id = request.env.user.partner_id
-            # Retrieve all the previous partner's visitors to have full history of his last products viewed.
-            return request.env['website.visitor'].sudo().with_context(active_test=False).search([('user_partner_id', '=', partner_id.id)])
-        else:
-            visitor = self.env['website.visitor']
-            access_token = request.httprequest.cookies.get('visitor_id')
-            if access_token:
-                visitor = visitor.sudo().with_context(active_test=False).search([('access_token', '=', access_token)])
-            return visitor
+            if not visitor or visitor.user_partner_id != partner_id:
+                # Partner and no cookie or wrong cookie
+                visitor = Visitor.with_context(active_test=False).search([('user_partner_id', '=', partner_id.id)])
+        elif visitor and visitor.user_partner_id:
+            # Cookie associated to a Partner
+            visitor = Visitor
+        return visitor
+
+    def _get_visitor_from_request_or_create(self):
+        """ Return a tuple (visitor, response), see _get_visitor_from_request
+            If there is no visitor creates it and ensure the consistancy of the cookie. """
+        visitor_sudo = self._get_visitor_from_request()
+        if not visitor_sudo:
+            visitor_sudo = self._create_visitor()
+        return visitor_sudo
 
     def _handle_webpage_dispatch(self, response, website_page):
         # get visitor. Done here to avoid having to do it multiple times in case of override.
-        visitor_sudo = self._get_visitor_from_request()
+        visitor_sudo = self._get_visitor_from_request_or_create()
+        if request.httprequest.cookies.get('visitor_uuid', '') != visitor_sudo.access_token:
+            expiration_date = datetime.now() + timedelta(days=365)
+            response.set_cookie('visitor_uuid', visitor_sudo.access_token, expires=expiration_date)
         self._handle_website_page_visit(response, website_page, visitor_sudo)
 
     def _handle_website_page_visit(self, response, website_page, visitor_sudo):
@@ -187,17 +213,12 @@ class WebsiteVisitor(models.Model):
             domain = [('page_id', '=', website_page.id)]
         else:
             domain = [('url', '=', url)]
-        if not visitor_sudo:
-            visitor_sudo = self._create_visitor(website_track_values)
-            expiration_date = datetime.now() + timedelta(days=365)
-            response.set_cookie('visitor_id', visitor_sudo.access_token, expires=expiration_date)
-        else:
-            visitor_sudo._add_tracking(domain, website_track_values)
-            if visitor_sudo.lang_id.id != request.lang.id:
-                visitor_sudo.write({'lang_id': request.lang.id})
+        visitor_sudo._add_tracking(domain, website_track_values)
+        if visitor_sudo.lang_id.id != request.lang.id:
+            visitor_sudo.write({'lang_id': request.lang.id})
 
     def _add_tracking(self, domain, website_track_values):
-        """ Update the visitor when a website_track is added"""
+        """ Add the track and update the visitor"""
         domain = expression.AND([domain, [('visitor_id', '=', self.id)]])
         last_view = self.env['website.track'].sudo().search(domain, limit=1)
         if not last_view or last_view.visit_datetime < datetime.now() - timedelta(minutes=30):

@@ -553,6 +553,9 @@ a.no-decoration {
             height: 12rem;
         }
     }
+    .o_carousel_product_img_link:hover + .o_carousel_product_remove {
+        display: block;
+    }
 }
 
 .o_carousel_product_card_wrap {
@@ -567,4 +570,16 @@ a.no-decoration {
     width: 2rem;
     border-radius: 5px;
     background-color: $o-enterprise-primary-color;
+}
+
+.o_carousel_product_remove {
+    position: absolute;
+    display: none;
+    cursor: pointer;
+    right: 5%;
+    top: 5%;
+}
+
+.o_carousel_product_remove:hover {
+    display: block;
 }
