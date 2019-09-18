@@ -2261,8 +2261,6 @@ exports.Order = Backbone.Model.extend({
 
         if (this.pos.config.iface_customer_facing_display) {
             this.paymentlines.on('change', this.pos.send_current_order_to_customer_facing_display, this.pos);
-            // removing last paymentline does not trigger change event
-            this.paymentlines.on('remove', this.pos.send_current_order_to_customer_facing_display, this.pos);
         }
 
         this.init_locked = false;
