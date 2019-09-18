@@ -498,6 +498,7 @@ class account_payment(models.Model):
         all_move_vals = []
         for payment in self:
             company_currency = payment.company_id.currency_id
+            move_names = payment.move_name.split(payment._get_move_name_transfer_separator()) if payment.move_name else None
 
             # Compute amounts.
             write_off_amount = payment.payment_difference_handling == 'reconcile' and -payment.payment_difference or 0.0
@@ -605,6 +606,9 @@ class account_payment(models.Model):
                     'payment_id': payment.id,
                 }))
 
+            if move_names:
+                move_vals['name'] = move_names[0]
+
             all_move_vals.append(move_vals)
 
             # ==== 'transfer' ====
@@ -647,6 +651,9 @@ class account_payment(models.Model):
                         }),
                     ],
                 }
+
+                if move_names and len(move_names) == 2:
+                    transfer_move_vals['name'] = move_names[1]
 
                 all_move_vals.append(transfer_move_vals)
         return all_move_vals
@@ -692,7 +699,8 @@ class account_payment(models.Model):
             moves.filtered(lambda move: not move.journal_id.post_at_bank_rec).post()
 
             # Update the state / move before performing any reconciliation.
-            rec.write({'state': 'posted', 'move_name': moves[0].name})
+            move_name = self._get_move_name_transfer_separator().join(moves.mapped('name'))
+            rec.write({'state': 'posted', 'move_name': move_name})
 
             if rec.payment_type in ('inbound', 'outbound'):
                 # ==== 'inbound' / 'outbound' ====
