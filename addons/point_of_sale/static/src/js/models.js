@@ -277,7 +277,6 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self,configs){
             self.config = configs[0];
             self.config.use_proxy = self.config.is_posbox && (
-                                    self.config.iface_payment_terminal ||
                                     self.config.iface_electronic_scale ||
                                     self.config.iface_print_via_proxy  ||
                                     self.config.iface_scan_via_proxy   ||
