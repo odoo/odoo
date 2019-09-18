@@ -270,6 +270,14 @@ class ProductTemplate(models.Model):
         price_without_discount = list_price if pricelist and pricelist.discount_policy == 'without_discount' else price
         has_discounted_price = (pricelist or product_template).currency_id.compare_amounts(price_without_discount, price) == 1
 
+        # On a SO line, the price is always recomputed based on the discount value. To make sure
+        # we are consistent, we need to do it as well here, otherwise the price displayed on the
+        # product form view will be different when it is added in the cart.
+        if has_discounted_price:
+            prec = self.env['decimal.precision'].precision_get('Discount')
+            discount = float_round((list_price - price) / list_price * 100, precision_digits=prec)
+            price = list_price * (1.0 - discount / 100.0)
+
         return {
             'product_id': product.id,
             'product_template_id': product_template.id,
