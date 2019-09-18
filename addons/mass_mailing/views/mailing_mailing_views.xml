@@ -260,6 +260,8 @@
                     <field name='failed'/>
                     <field name='total'/>
                     <field name='mailing_model_id'/>
+                    <field name='mailing_model_name'/>
+                    <field name='contact_list_count'/>
                     <field name='sent_date'/>
                     <field name='active'/>
                     <templates>
@@ -332,7 +334,7 @@
                                 </div>
                                 <div name="div_total_model" class="oe_clear text-muted" style="display: inline;">
                                     <field name='total'/>
-                                    <field name='mailing_model_id'/>
+                                    <field name='mailing_model_id'/><span attrs="{'invisible':  [('mailing_model_name', '!=', 'mailing.list')]}"> Contacts</span>
                                 </div>
                             </div>
                         </t>
