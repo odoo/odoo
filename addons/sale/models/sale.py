@@ -234,6 +234,10 @@ class SaleOrder(models.Model):
             take the picking_policy of SO into account.
         """
         for order in self:
+            if not order.id:
+                order.expected_date = False
+                order.is_expected_date_manual = False
+                continue
             dates_list = []
             order.expected_date = False
             confirm_date = fields.Datetime.from_string(order.date_order if order.state in ['sale', 'done'] else fields.Datetime.now())
@@ -244,7 +248,7 @@ class SaleOrder(models.Model):
                 order.expected_date = fields.Datetime.to_string(min(dates_list))
 
             order.is_expected_date_manual = False
-            if order.expected_date and order.expected_date_manual and order.expected_date.date() != order.expected_date_manual.date():
+            if order.expected_date and order.expected_date_manual:
                 order.is_expected_date_manual = True
 
     def _inverse_expected_date(self):
