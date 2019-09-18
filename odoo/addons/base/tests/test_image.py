@@ -6,6 +6,7 @@ import binascii
 from PIL import Image, ImageDraw, PngImagePlugin
 
 from odoo import tools
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
 
@@ -54,10 +55,10 @@ class TestImage(TransactionCase):
         self.assertEqual(type(image), PngImagePlugin.PngImageFile, "base64 as string, correct format")
         self.assertEqual(image.size, (1, 1), "base64 as string, correct size")
 
-        with self.assertRaises(binascii.Error, msg="wrong base64: binascii.Error: Incorrect padding"):
+        with self.assertRaises(UserError, msg="This file could not be decoded as an image file. Please try with a different file."):
             image = tools.base64_to_image(b'oazdazpodazdpok')
 
-        with self.assertRaises(OSError, msg="wrong base64: OSError: cannot identify image file"):
+        with self.assertRaises(UserError, msg="This file could not be decoded as an image file. Please try with a different file."):
             image = tools.base64_to_image(b'oazdazpodazdpokd')
 
     def test_01_image_to_base64(self):
@@ -74,10 +75,10 @@ class TestImage(TransactionCase):
         self.assertEqual(tools.image_process(self.base64_svg), self.base64_svg, "return base64_source if format is SVG")
 
         # in the following tests, pass `quality` to force the processing
-        with self.assertRaises(binascii.Error, msg="wrong base64: binascii.Error: Incorrect padding"):
+        with self.assertRaises(UserError, msg="This file could not be decoded as an image file. Please try with a different file."):
             tools.image_process(wrong_base64, quality=95)
 
-        with self.assertRaises(OSError, msg="wrong base64: OSError: cannot identify image file"):
+        with self.assertRaises(UserError, msg="This file could not be decoded as an image file. Please try with a different file."):
             tools.image_process(b'oazdazpodazdpokd', quality=95)
 
         image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg, quality=95))

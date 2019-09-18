@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import binascii
 import io
 
 from PIL import Image
@@ -9,6 +10,7 @@ from PIL import IcoImagePlugin
 
 from random import randrange
 
+from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 
@@ -49,8 +51,7 @@ class ImageProcess():
         :rtype: ImageProcess
 
         :raise: ValueError if `verify_resolution` is True and the image is too large
-        :raise: binascii.Error: if the base64 is incorrect
-        :raise: OSError if the image can't be identified by PIL
+        :raise: UserError if the base64 is incorrect or the image can't be identified by PIL
         """
         self.base64_source = base64_source or False
         self.operationsCount = 0
@@ -339,10 +340,12 @@ def base64_to_image(base64_source):
     :return: the PIL image
     :rtype: PIL.Image
 
-    :raise: binascii.Error: if the base64 is incorrect
-    :raise: OSError if the image can't be identified by PIL
+    :raise: UserError if the base64 is incorrect or the image can't be identified by PIL
     """
-    return Image.open(io.BytesIO(base64.b64decode(base64_source)))
+    try:
+        return Image.open(io.BytesIO(base64.b64decode(base64_source)))
+    except (OSError, binascii.Error):
+        raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
 
 
 def image_to_base64(image, format, **params):
