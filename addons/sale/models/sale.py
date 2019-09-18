@@ -242,10 +242,17 @@ class SaleOrder(models.Model):
                 dates_list.append(dt)
             if dates_list:
                 order.expected_date = fields.Datetime.to_string(min(dates_list))
-            
+
             order.is_expected_date_manual = False
             if order.expected_date and order.expected_date_manual and order.expected_date.date() != order.expected_date_manual.date():
                 order.is_expected_date_manual = True
+
+    def _inverse_expected_date(self):
+        """ When writing on expected_date, we set the date inserted on expected_date_manual,
+        _compute_expected_date will determine if it should be used.
+        """
+        for order in self:
+            order.expected_date_manual = order.expected_date
 
     def _compute_remaining_validity_days(self):
         for record in self:
@@ -326,13 +333,6 @@ class SaleOrder(models.Model):
         # Use team of salesman if any otherwise leave as-is
         values['team_id'] = partner_user.team_id.id if partner_user and partner_user.team_id else self.team_id
         self.update(values)
-
-    def _inverse_expected_date(self):
-        """ When writing on expected_date, we set the date inserted on expected_date_manual,
-        _compute_expected_date will determine if it should be used.
-        """
-        for order in self:
-            order.expected_date_manual = order.expected_date
 
     @api.onchange('user_id')
     def onchange_user_id(self):
