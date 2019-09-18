@@ -5430,7 +5430,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
         await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
         await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:eq(0)'));
-        assert.ok($('.modal').text().includes('2 selected records'), "the number of records should be correctly displayed");
+        assert.ok($('.modal').text().includes('those 2 records'), "the number of records should be correctly displayed");
         await testUtils.dom.click($('.modal .btn-primary'));
         assert.containsNone(list, '.o_data_cell input.o_field_widget', "no field should be editable anymore");
         assert.verifySteps(['write', 'read']);
@@ -5660,7 +5660,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list view: multi edition with readonly modifiers', async function (assert) {
-        assert.expect(5);
+        assert.expect(4);
 
         var list = await createView({
             View: ListView,
@@ -5686,17 +5686,19 @@ QUnit.module('Views', {
         // edit a field
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
         await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
-        assert.ok($('.modal').text().includes('2 valid'),
-            "the number of records should be correctly displayed (only 2 not readonly)");
-        assert.ok($('.modal').text().includes('2 invalid'),
-            "should display the number of invalid records");
+
+        const modalText = $('.modal-body').text()
+            .split(" ").filter(w => w.trim() !== '').join(" ")
+            .split("\n").join('');
+        assert.strictEqual(modalText,
+            "Among the 4 selected records, 2 are valid for this update. Are you sure you want to " +
+            "perform the following update on those 2 records ? Field: int_field Update to: 666");
 
         await testUtils.dom.click($('.modal .btn-primary'));
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "1yop666",
             "the first row should be updated");
         assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "2blip666",
             "the second row should be updated");
-
         list.destroy();
     });
 
