@@ -832,7 +832,7 @@ class IrTranslation(models.Model):
         :return: action definition to open the list of available translations
         """
         fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
-        selection_ids = [field.selection_ids.ids for field in fields if field.ttype == 'selection']
+        selection_ids = tools.flatten([field.selection_ids.ids for field in fields if field.ttype == 'selection'])
         view = self.env.ref("base.view_translation_tree", False) or self.env['ir.ui.view']
         return {
             'name': _("Technical Translations"),
