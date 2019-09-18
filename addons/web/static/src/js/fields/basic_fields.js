@@ -1164,6 +1164,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
      */
     _onKeydown: function (ev) {
         if (ev.which === $.ui.keyCode.ENTER) {
+            ev.stopPropagation();
             return;
         }
         this._super.apply(this, arguments);
