@@ -68,9 +68,9 @@ class DisplayDriver(Driver):
 
     def run(self):
         while True:
+            time.sleep(60)
             if self.url != 'http://localhost:8069/point_of_sale/display/':
                 # Refresh the page every minute
-                time.sleep(60)
                 self.call_xdotools('F5')
 
     def update_url(self, url=None):

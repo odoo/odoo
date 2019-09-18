@@ -449,6 +449,8 @@ class Picking(models.Model):
 
     def _set_scheduled_date(self):
         for picking in self:
+            if picking.state in ('done', 'cancel'):
+                raise UserError(_("You cannot change the Scheduled Date on a done or cancelled transfer."))
             picking.move_lines.write({'date_expected': picking.scheduled_date})
 
     def _has_scrap_move(self):
@@ -547,7 +549,7 @@ class Picking(models.Model):
 
         # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
         # As it is a create the format will be a list of (0, 0, dict)
-        moves = vals.get('move_lines') or vals.get('move_ids_without_package')
+        moves = vals.get('move_lines', []) + vals.get('move_ids_without_package', [])
         if moves and vals.get('location_id') and vals.get('location_dest_id'):
             for move in moves:
                 if len(move) == 3 and move[0] == 0:
@@ -1149,12 +1151,16 @@ class Picking(models.Model):
     def put_in_pack(self):
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            move_line_ids = self.move_line_ids.filtered(lambda ml:
+            picking_move_lines = self.move_line_ids
+            if not self.picking_type_id.show_reserved:
+                picking_move_lines = self.move_line_nosuggest_ids
+
+            move_line_ids = picking_move_lines.filtered(lambda ml:
                 float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
                 and not ml.result_package_id
             )
             if not move_line_ids:
-                move_line_ids = self.move_line_ids.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
+                move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) == 0)
                 for line in move_line_ids:

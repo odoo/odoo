@@ -104,6 +104,19 @@ QUnit.module('Views', {
                     {id: 14, display_name: "silver", color: 5},
                 ]
             },
+            "ir.translation": {
+                fields: {
+                    lang_code: {type: "char"},
+                    value: {type: "char"},
+                    res_id: {type: "integer"}
+                },
+                records: [{
+                    id: 99,
+                    res_id: 12,
+                    value: '',
+                    lang_code: 'en_US'
+                }]
+            },
         };
         this.actions = [{
             id: 1,
@@ -477,8 +490,10 @@ QUnit.module('Views', {
                             'The correct _view_ref should have been sent to the server, first time');
                     }
                     if (args.model === 'partner_type') {
-                        assert.deepEqual(context, {tree_view_ref: 'some_other_tree_view'},
-                            'The correct _view_ref should have been sent to the server for the subview');
+                        assert.deepEqual(context, {
+                            base_model_name: 'product',
+                            tree_view_ref: 'some_other_tree_view',
+                        }, 'The correct _view_ref should have been sent to the server for the subview');
                     }
                 }
                 return this._super.apply(this, arguments);
@@ -4744,6 +4759,35 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('non inline subview and create=0 in action context', async function (assert) {
+        // the create=0 should apply on the main view (form), but not on subviews
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="product_ids" mode="kanban"/></form>',
+            archs: {
+                "product,false,kanban": `<kanban>
+                                            <templates><t t-name="kanban-box">
+                                                <div><field name="name"/></div>
+                                            </t></templates>
+                                        </kanban>`,
+            },
+            res_id: 1,
+            viewOptions: {
+                context: {create: false},
+                mode: 'edit',
+            },
+        });
+
+        assert.containsNone(form, '.o_form_button_create');
+        assert.containsOnce(form, '.o-kanban-button-new');
+
+        form.destroy();
+    });
+
     QUnit.test('readonly fields with modifiers may be saved', async function (assert) {
         // the readonly property on the field description only applies on view,
         // this is not a DB constraint. It should be seen as a default value,
@@ -6135,10 +6179,17 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/product/get_formview_id') {
                     return Promise.resolve(false);
-                } else if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                }
+                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
                     assert.deepEqual(args.args, ["product",37,"name"], 'should call "call_button" route');
                     nbTranslateCalls++;
-                    return Promise.resolve();
+                    return Promise.resolve({
+                        domain: [],
+                        context: {search_default_name: 'partnes,foo'},
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([["en_US"], ["fr_BE"]]);
                 }
                 return this._super.apply(this, arguments);
             },
@@ -6146,12 +6197,10 @@ QUnit.module('Views', {
 
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('[name="product_id"] .o_external_button'));
-
-        assert.strictEqual($('.modal-body .o_field_translate').length, 1,
+        assert.containsOnce($('.modal-body'), 'span.o_field_translate',
             "there should be a translate button in the modal");
 
-        await testUtils.dom.click($('.modal-body .o_field_translate'));
-
+        await testUtils.dom.click($('.modal-body span.o_field_translate'));
         assert.strictEqual(nbTranslateCalls, 1, "should call_button translate once");
 
         form.destroy();
@@ -8010,6 +8059,46 @@ QUnit.module('Views', {
         assert.containsOnce(document.body, '.modal');
         assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 0,
             "shouldn't have a 'remove' button on new records");
+
+        form.destroy();
+    });
+
+    QUnit.test('edit a record in readonly and switch to edit before it is actually saved', async function (assert) {
+        assert.expect(3);
+
+        const prom = testUtils.makeTestPromise();
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form>
+                    <field name="foo"/>
+                    <field name="bar" widget="toggle_button"/>
+                </form>`,
+            mockRPC: function (route, args) {
+                const result = this._super.apply(this, arguments);
+                if (args.method === 'write') { // delay the write RPC
+                    assert.deepEqual(args.args[1], {bar: false});
+                    return prom.then(_.constant(result));
+                }
+                return result;
+            },
+            res_id: 1,
+        });
+
+        // edit the record (in readonly) with toogle_button widget (and delay the write RPC)
+        await testUtils.dom.click(form.$('.o_field_widget[name=bar]'));
+
+        // switch to edit mode
+        await testUtils.form.clickEdit(form);
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_readonly'); // should wait for the RPC to return
+
+        // make write RPC return
+        prom.resolve();
+        await testUtils.nextTick();
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
 
         form.destroy();
     });

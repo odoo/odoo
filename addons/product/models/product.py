@@ -23,7 +23,7 @@ class ProductCategory(models.Model):
     _rec_name = 'complete_name'
     _order = 'complete_name'
 
-    name = fields.Char('Name', index=True, required=True, translate=True)
+    name = fields.Char('Name', index=True, required=True)
     complete_name = fields.Char(
         'Complete Name', compute='_compute_complete_name',
         store=True)
@@ -579,7 +579,7 @@ class ProductProduct(models.Model):
                 'target': 'new'}
 
     def _prepare_sellers(self, params):
-        return self.seller_ids
+        return self.seller_ids.sorted(lambda s: (s.sequence, -s.min_qty, s.price))
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()

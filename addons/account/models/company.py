@@ -63,15 +63,6 @@ class ResCompany(models.Model):
     property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation")
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
-    overdue_msg = fields.Text(string='Overdue Payments Message', translate=True,
-        default=lambda s: _('''Dear Sir/Madam,
-
-Our records indicate that some payments on your account are still due. Please find details below.
-If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.
-If you have any queries regarding your account, Please contact us.
-
-Thank you in advance for your cooperation.
-Best Regards,'''))
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
     account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold", help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
                                                                                                        This is useful if you install accounting after having used invoicing for some time and
@@ -148,12 +139,19 @@ Best Regards,'''))
     def get_and_update_account_dashboard_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
             are displayed only one time. """
-        return self.get_and_update_onbarding_state('account_dashboard_onboarding_state', [
+        return self.get_and_update_onbarding_state(
+            'account_dashboard_onboarding_state',
+            self.get_account_dashboard_onboarding_steps_states_names()
+        )
+
+    def get_account_dashboard_onboarding_steps_states_names(self):
+        """ Necessary to add/edit steps from other modules (account_winbooks_import in this case). """
+        return [
             'base_onboarding_company_state',
             'account_setup_bank_data_state',
             'account_setup_fy_data_state',
             'account_setup_coa_state',
-        ])
+        ]
 
     def _check_lock_dates(self, vals):
         '''Check the lock dates for the current companies. This can't be done in a api.constrains because we need

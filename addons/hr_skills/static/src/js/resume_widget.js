@@ -65,10 +65,11 @@ var AbstractGroupedOne2ManyRenderer = ListRenderer.extend({
         return data;
     },
 
-    _renderRow: function (record) {
+    _renderRow: function (record, isLast) {
         return $(qweb.render(this.dataRowTemplate, {
             id: record.id,
             data: this._formatData(record.data),
+            is_last: isLast,
         }));
     },
 
@@ -116,14 +117,15 @@ var AbstractGroupedOne2ManyRenderer = ListRenderer.extend({
             $body.append($title_row);
 
             // Render each rows
-            group.forEach(function (record) {
-                var $row = self._renderRow(record);
+            group.forEach(function (record, index) {
+                var isLast = (index + 1 === group.length);
+                var $row = self._renderRow(record, isLast);
                 if (self.addTrashIcon) $row.append(self._renderTrashIcon());
                 $body.append($row);
             });
 
             if (self.addCreateLine) {
-                $body.append(self._renderAddItemButton(group));
+                $title_row.find('.o_group_name').append(self._renderAddItemButton(group));
             }
         }
 
@@ -160,7 +162,7 @@ var ResumeLineRenderer = AbstractGroupedOne2ManyRenderer.extend({
         var self = this;
         return this._super().then(function () {
             self.$el.find('table').removeClass('table-striped o_list_table_ungrouped');
-            self.$el.find('table').addClass('o_resume_table');
+            self.$el.find('table').addClass('o_resume_table table-borderless');
         });
     },
 });
@@ -186,6 +188,13 @@ var SkillsRenderer = AbstractGroupedOne2ManyRenderer.extend({
     _getCreateLineContext: function (group) {
         var ctx = this._super(group);
         return group ? _.extend({ default_skill_type_id: group[0].data[this.groupBy].data.id }, ctx) : ctx;
+    },
+
+    _render: function () {
+        var self = this;
+        return this._super().then(function () {
+            self.$el.find('table').toggleClass('table-striped');
+        });
     },
 });
 

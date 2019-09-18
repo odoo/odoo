@@ -29,6 +29,102 @@ options.Class.include({
     },
 });
 
+options.registry.background.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _getEditableMedia: function () {
+        if (!this._hasBgvideo()) {
+            return this._super(...arguments);
+        }
+        return this.$('.o_bg_video_iframe')[0];
+    },
+    /**
+     * @override
+     */
+    _getMediaDialogOptions: function () {
+        return _.extend(this._super(...arguments), {
+            // For now, disable the possibility to have a parallax video bg
+            noVideos: this.$target.is('.parallax, .s_parallax_bg'),
+            isForBgVideo: true,
+        });
+    },
+    /**
+     * @override
+     */
+    _setActive: function () {
+        this._super(...arguments);
+        if (this._hasBgvideo()) {
+            this.$el.find('[data-choose-image]').addClass('active');
+        }
+    },
+    /**
+     * Updates the background video used by the snippet.
+     *
+     * @private
+     * @see this.selectClass for parameters
+     */
+    _setBgVideo: function (previewMode, value) {
+        this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
+
+        if (previewMode !== false) {
+            return;
+        }
+
+        var target = this.$target[0];
+        target.classList.toggle('o_background_video', !!(value && value.length));
+        if (value && value.length) {
+            target.dataset.bgVideoSrc = value;
+        } else {
+            delete target.dataset.bgVideoSrc;
+        }
+        this._refreshPublicWidgets();
+        this._setActive();
+    },
+    /**
+     * Returns whether the current target has a background video or not.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _hasBgvideo: function () {
+        return this.$target[0].classList.contains('o_background_video');
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+     _onBackgroundColorUpdate: function (ev, previewMode) {
+        var ret = this._super(...arguments);
+        if (ret) {
+            this._setBgVideo(previewMode);
+        }
+        return ret;
+    },
+    /**
+     * @override
+     */
+    _onSaveMediaDialog: function (data) {
+        if (!data.bgVideoSrc) {
+            this._setBgVideo(false);
+            this._super(...arguments);
+            return;
+        }
+        // if the user chose a video, only add the video without removing the
+        // background
+        this._setBgVideo(false, data.bgVideoSrc);
+    },
+});
+
 options.registry.menu_data = options.Class.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
 
@@ -1014,6 +1110,7 @@ options.registry.gallery = options.Class.extend({
             }
             self._reset();
             self.trigger_up('cover_update');
+            this._setActive();
         });
         dialog.open();
     },
@@ -1170,11 +1267,12 @@ options.registry.gallery = options.Class.extend({
         var urls = _.map(this._getImages(), function (img) {
             return $(img).attr('src');
         });
+        var currentInterval = this.$target.find('.carousel:first').attr('data-interval');
         var params = {
             srcs : urls,
             index: 0,
             title: "",
-            interval : this.$target.data('interval') || false,
+            interval : currentInterval || this.$target.data('interval') || 0,
             id: 'slideshow_' + new Date().getTime(),
             userStyle: imgStyle,
         },
@@ -1297,35 +1395,56 @@ options.registry.gallery = options.Class.extend({
      * @override
      */
     _setActive: function () {
-        this._super();
-        var classes = _.uniq((this.$target.attr('class').replace(/(^|\s)o_/g, ' ') || '').split(/\s+/));
-        this.$el.find('[data-mode]')
-            .removeClass('active')
-            .filter('[data-mode="' + classes.join('"], [data-mode="') + '"]').addClass('active');
-        var mode = this.$el.find('[data-mode].active').data('mode');
+        this._super(...arguments);
 
-        classes = _.uniq((this.$('img:first').attr('class') || '').split(/\s+/));
-        this.$el.find('[data-styling]')
+        var activeModeSelectors = [];
+        for (const className of this.$target[0].classList) {
+            if (className.startsWith('o_')) {
+                activeModeSelectors.push('[data-mode="' + className.substring(2) + '"]');
+            }
+        }
+        var activeMode = this.$el.find('[data-mode]')
             .removeClass('active')
-            .filter('[data-styling="' + classes.join('"], [data-styling="') + '"]').addClass('active');
+            .filter(activeModeSelectors.join(', '))
+            .addClass('active')
+            .data('mode');
 
-        this.$el.find('[data-interval]').removeClass('active')
-            .filter('[data-interval='+this.$target.find('.carousel:first').attr('data-interval')+']')
+        var carousel = this.$target[0].querySelector('.carousel');
+        var activeInterval = carousel ? (carousel.dataset.interval || 0) : undefined;
+        var $intervalOptions = this.$el.find('[data-interval]');
+        $intervalOptions.removeClass('active')
+            .filter('[data-interval="' + activeInterval + '"]')
             .addClass('active');
-
-        var interval = this.$target.find('.carousel:first').attr('data-interval');
-        this.$el.find('[data-interval]')
-            .removeClass('active')
-            .filter('[data-interval=' + interval + ']').addClass('active');
+        $intervalOptions.closest('we-collapse-area')[0]
+            .classList.toggle('d-none', activeMode !== 'slideshow');
 
         var columns = this._getColumns();
-        this.$el.find('[data-columns]')
-            .removeClass('active')
-            .filter('[data-columns=' + columns + ']').addClass('active');
+        var $columnOptions = this.$el.find('[data-columns]');
+        $columnOptions.removeClass('active')
+            .filter('[data-columns="' + columns + '"]')
+            .addClass('active');
+        $columnOptions.closest('we-collapse-area')[0]
+            .classList.toggle('d-none', !(activeMode === 'grid' || activeMode === 'masonry'));
 
-        this.$el.find('[data-columns]:first, [data-select-class="spc-none"]')
-            .parent().parent().toggle(['grid', 'masonry'].indexOf(mode) !== -1);
-        this.$el.find('[data-interval]:first').parent().parent().toggle(mode === 'slideshow');
+        this.el.querySelector('.o_w_image_spacing_option')
+            .classList.toggle('d-none', activeMode === 'slideshow');
+
+        var $stylingOptions = this.$el.find('[data-styling]');
+        $stylingOptions.removeClass('active');
+        var img = this.$target[0].querySelector('img');
+        var activeStyleSelectors = [];
+        if (img) {
+            for (const className of img.classList) {
+                activeStyleSelectors.push('[data-styling="' + className + '"]');
+            }
+        }
+        var $toEnable = activeStyleSelectors.length
+            ? $stylingOptions.filter(activeStyleSelectors.join(', '))
+            : null;
+        if (!$toEnable || !$toEnable.length) {
+            $toEnable = $stylingOptions.first();
+        }
+        $toEnable.addClass('active');
     },
 });
 
@@ -1492,6 +1611,13 @@ options.registry.anchorName = options.Class.extend({
             click: function () {
                 var $input = this.$('.o_input_anchor_name');
                 var anchorName = $input.val().trim().replace(/\s/g, '_');
+                if (self.$target[0].id === anchorName) {
+                    // If the chosen anchor name is already the one used by the
+                    // element, close the dialog and do nothing else
+                    this.close();
+                    return;
+                }
+
                 var isValid = /^[\w-]+$/.test(anchorName);
                 var alreadyExists = isValid && $('#' + anchorName).length > 0;
                 var anchorOK = isValid && !alreadyExists;
@@ -1519,7 +1645,7 @@ options.registry.anchorName = options.Class.extend({
             });
         }
         new Dialog(this, {
-            title: _t("Anchor Name"),
+            title: _t("Link Anchor"),
             $content: $(qweb.render('website.dialog.anchorName', {
                 currentAnchor: this.$target.attr('id'),
             })),

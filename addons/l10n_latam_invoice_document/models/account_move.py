@@ -10,7 +10,6 @@ class AccountMove(models.Model):
 
     _inherit = "account.move"
 
-    l10n_latam_amount_tax = fields.Monetary(compute='_compute_l10n_latam_amount_and_taxes')
     l10n_latam_amount_untaxed = fields.Monetary(compute='_compute_l10n_latam_amount_and_taxes')
     l10n_latam_tax_ids = fields.One2many(compute="_compute_l10n_latam_amount_and_taxes", comodel_name='account.move.line')
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_documents')
@@ -67,7 +66,6 @@ class AccountMove(models.Model):
             included_taxes = invoice.l10n_latam_document_type_id and \
                 invoice.l10n_latam_document_type_id._filter_taxes_included(tax_lines.mapped('tax_line_id'))
             if not included_taxes:
-                l10n_latam_amount_tax = invoice.amount_tax
                 l10n_latam_amount_untaxed = invoice.amount_untaxed
                 not_included_invoice_taxes = tax_lines
             else:
@@ -77,13 +75,10 @@ class AccountMove(models.Model):
                     sign = -1
                 else:
                     sign = 1
-                l10n_latam_amount_tax = sign * sum(not_included_invoice_taxes.mapped('balance'))
                 l10n_latam_amount_untaxed = invoice.amount_untaxed + sign * sum(included_invoice_taxes.mapped('balance'))
-            invoice.l10n_latam_amount_tax = l10n_latam_amount_tax
             invoice.l10n_latam_amount_untaxed = l10n_latam_amount_untaxed
             invoice.l10n_latam_tax_ids = not_included_invoice_taxes
         remaining = self - recs_invoice
-        remaining.l10n_latam_amount_tax = False
         remaining.l10n_latam_amount_untaxed = False
         remaining.l10n_latam_tax_ids = []
 
@@ -111,8 +106,8 @@ class AccountMove(models.Model):
         try:
             return super(AccountMove, self - vendor)._check_unique_sequence_number()
         except ValidationError:
-            raise ValidationError(_('Duplicated invoice number detected. You probably add twice the same customer'
-                                    ' invoice/debit note.'))
+            raise ValidationError(_('Duplicated invoice number detected. You probably added twice the same vendor'
+                                    ' bill/debit note.'))
 
     @api.constrains('state', 'l10n_latam_document_type_id')
     def _check_l10n_latam_documents(self):

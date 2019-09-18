@@ -32,14 +32,14 @@
             <td class="text-center"><i class="js_seo_keyword_title fa fa-check" style="visibility: hidden;" t-attf-title="{{ widget.keyword }} is used in page title"/></td>
             <td class="text-center"><i class="js_seo_keyword_description fa fa-check" style="visibility: hidden;" t-attf-title="{{ widget.keyword }} is used in page description"/></td>
             <td class="text-center"><i t-if="widget.used_content" class="fa fa-check" t-attf-title="{{ widget.keyword }} is used in page content"/></td>
-            <td class="js_seo_keyword_suggestion"/>
+            <td class="o_seo_keyword_suggestion"/>
             <td class="text-center"><a href="#" class="oe_remove" data-action="remove-keyword" t-attf-title="Remove {{ widget.keyword }}"><i class="fa fa-trash"/></a></td>
         </tr>
     </t>
 
     <t t-name="website.seo_suggestion">
         <li class="list-inline-item">
-            <span class="js_seo_suggestion badge badge-info" t-att-data-keyword="widget.keyword" t-esc="widget.keyword"/>
+            <span class="o_seo_suggestion badge badge-info" t-att-data-keyword="widget.keyword" t-attf-title="Add {{ widget.keyword }}" t-esc="widget.keyword"/>
         </li>
     </t>
 

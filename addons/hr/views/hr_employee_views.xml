@@ -149,11 +149,6 @@
                                         <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
                                         <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
                                     </group>
-                                    <group string="Education">
-                                        <field name="certificate"/>
-                                        <field name="study_field"/>
-                                        <field name="study_school"/>
-                                    </group>
                                     <group string="Dependant">
                                         <field name="children"/>
                                     </group>
@@ -255,7 +250,7 @@
                                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="hr.group_hr_manager"/>
                                <ul>
                                    <li id="last_login"/>
-                                   <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
+                                   <li t-if="record.work_email.raw_value" class="o_text_overflow"><field name="work_email" /></li>
                                    <li t-if="record.work_phone.raw_value"><field name="work_phone" /></li>
                                </ul>
                            </div>
@@ -346,7 +341,7 @@
             <field name="view_mode">kanban,form,tree</field>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="context">{
-                "search_default_department_id": [active_id],
+                "searchpanel_default_department_id": active_id,
                 "default_department_id": active_id}
             </field>
             <field name="help" type="html">

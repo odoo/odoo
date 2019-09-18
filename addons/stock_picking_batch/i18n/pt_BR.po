@@ -8,20 +8,20 @@
 # Martin Trigaux, 2019
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2019
 # Emanuel Martins <emanuel.breno@gmail.com>, 2019
-# Mateus Lopes <mateus1@gmail.com>, 2019
 # Adriel Kotviski <kotviski@gmail.com>, 2019
 # falexandresilva <falexandresilva@gmail.com>, 2019
 # grazziano <gra.negocia@gmail.com>, 2019
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2019
 # Silmar <pinheirosilmar@gmail.com>, 2019
+# Mateus Lopes <mateus1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Silmar <pinheirosilmar@gmail.com>, 2019\n"
+"Last-Translator: Mateus Lopes <mateus1@gmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,6 +145,11 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Confirm"
 msgstr "Confirmar"
@@ -237,12 +242,8 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Se marcado, novas mensagens solicitarão sua atenção."
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Se marcado novas mensagens solicitarão sua atenção."
 
@@ -349,8 +350,8 @@ msgstr "Número de ações"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
-msgid "Number of error"
-msgstr "Número do erro"
+msgid "Number of errors"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction_counter

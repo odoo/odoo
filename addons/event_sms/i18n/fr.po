@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
+# Celia Tydgat <cty@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # 
 msgid ""
@@ -28,6 +29,10 @@ msgid ""
 "${object.event_id.name} event is starting ${object.get_date_range_str()}. We"
 " confirm your registration and hope to meet you there."
 msgstr ""
+"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name}: Nous sommes ravis de vous rappeler que l'évènement"
+"   ${object.event_id.name}  aura lieu le ${object.get_date_range_str()}. "
+"Nous confirmons votre inscription et espérons vous y rencontrer."
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -36,6 +41,9 @@ msgid ""
 "user.env.company.name}: We are happy to confirm your registration for the "
 "${object.event_id.name} event."
 msgstr ""
+"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name}: Nous sommes heureux de confirmer votre inscription "
+"pour l'évènement ${object.event_id.name}."
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
@@ -50,17 +58,17 @@ msgstr "Inscription à l'évènement"
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr ""
+msgstr "Évènement: inscription"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "Evènement: rappel"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "Planification d'e-mails en fonction de la catégorie d'évènement"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
@@ -77,7 +85,7 @@ msgstr "SMS"
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__sms_template_id
 #: model:ir.model.fields,field_description:event_sms.field_event_type_mail__sms_template_id
 msgid "SMS Template"
-msgstr ""
+msgstr "Template SMS"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
@@ -90,4 +98,4 @@ msgstr "Envoyer"
 #: model:ir.model.fields,help:event_sms.field_event_type_mail__sms_template_id
 msgid ""
 "This field contains the template of the SMS that will be automatically sent"
-msgstr ""
+msgstr "Ce champ contient le modèle du SMS qui sera envoyé automatiquement "

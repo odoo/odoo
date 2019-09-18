@@ -134,7 +134,7 @@
     </section>
 </template>
 
-<template id="s_three_columns" name="Three Columns">
+<template id="s_three_columns" name="Columns">
     <section class="s_three_columns bg-200 pt32 pb32">
         <div class="container">
             <div class="row d-flex align-items-stretch">
@@ -899,12 +899,12 @@
                     <i class="fa fa-th-large"/> Structure
                 </div>
                 <div class="o_panel_body">
-                    <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/snippets_thumbs/s_title.png"/>
+                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/snippets_thumbs/s_banner.png"/>
                     <t t-snippet="website.s_cover" t-thumbnail="/website/static/src/img/snippets_thumbs/s_cover.png"/>
                     <t t-snippet="website.s_text_image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_image.png"/>
                     <t t-snippet="website.s_image_text" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image_text.png"/>
+                    <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/snippets_thumbs/s_title.png"/>
                     <t t-snippet="website.s_text_block" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_block.png"/>
-                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/snippets_thumbs/s_banner.png"/>
                     <t t-snippet="website.s_picture" t-thumbnail="/website/static/src/img/snippets_thumbs/s_picture.png"/>
                     <t t-snippet="website.s_carousel" t-thumbnail="/website/static/src/img/snippets_thumbs/s_carousel.png"/>
                     <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/snippets_thumbs/s_features.png"/>
@@ -967,6 +967,7 @@
         <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/snippets_thumbs/s_twitter_scroll.png"/>
         <t t-install="website_form" string="Form Builder" t-thumbnail="/website/static/src/img/s_website_form.png"/>
         <t id="s_products_searchbar" t-install="website_sale" string="Products Search" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_searchbar.png"/>
+        <t id="s_products_recently_viewed" t-install="website_sale" string="Products Recently Viewed" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_recently_viewed.png"/>
     </xpath>
     <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
         <t t-install="website_event" string="Local Events" t-thumbnail="/website/static/src/img/snippets_thumbs/s_local_events.png"/>
@@ -1157,7 +1158,7 @@
             <i class="fa fa-fw fa-trash-o"/> Remove Slide
         </we-button>
         <we-collapse-area>
-            <we-toggler><i class="fa fa-fw fa-clone"/>Transition</we-toggler>
+            <we-toggler><i class="fa fa-fw fa-clone"/> Transition</we-toggler>
             <we-collapse>
                 <we-button data-select-class="slide">Slide</we-button>
                 <we-button data-select-class="carousel-fade slide">Fade</we-button>
@@ -1198,7 +1199,7 @@
     </div>
 
     <div data-js="gallery" data-selector=".o_gallery">
-        <we-button class="we-button-hover-icon" data-add-images="true" data-no-preview="true">
+        <we-button data-add-images="true" data-no-preview="true">
             <i class="fa fa-fw fa-plus-circle"/> Add images
         </we-button>
         <we-button data-remove-all-images="true" data-no-preview="true">
@@ -1236,7 +1237,7 @@
                 <we-button data-columns="12">12</we-button>
             </we-collapse>
         </we-collapse-area>
-        <we-collapse-area>
+        <we-collapse-area class="o_w_image_spacing_option">
             <we-toggler><i class="fa fa-fw fa-arrows-h"/> Images spacing</we-toggler>
             <we-collapse>
                 <we-button data-select-class="o_spc-none">None</we-button>
@@ -1271,7 +1272,7 @@
 
     <!-- Facebook Page -->
     <div data-js="facebookPage" data-selector=".o_facebook_page">
-        <we-button class="we-button-hover-icon" data-fb-page-options="true" data-no-preview="true">
+        <we-button data-fb-page-options="true" data-no-preview="true">
             <i class="fa fa-fw fa-facebook"/> Options
         </we-button>
     </div>
@@ -1315,15 +1316,15 @@
     <div data-js="background"
         data-selector="section, .parallax, :not(.o_gallery > .container) > .carousel"
         data-exclude=".s_hr, .s_image_gallery">
-        <we-button class="we-button-hover-icon" data-choose-image="true" data-no-preview="true">
-            <i class="fa fa-fw fa-picture-o"/> Background Image
+        <we-button data-choose-image="true" data-no-preview="true">
+            <i class="fa fa-fw fa-picture-o"/> Background
         </we-button>
     </div>
 
     <!-- Background Image -->
     <div data-js="background_position"
         data-selector="section, .parallax, :not(.o_gallery > .container) > .carousel">
-        <we-button class="we-button-hover-icon" data-background-position="true" data-no-preview="true">
+        <we-button data-background-position="true" data-no-preview="true">
             <i class="fa fa-fw fa-arrows"/> Background Image Sizing
         </we-button>
     </div>
@@ -1444,10 +1445,10 @@
 
     <!-- Anchor Name -->
     <div data-js="anchorName"
-        data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *, .row > div"
+        data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *"
         data-exclude=".modal *">
-        <we-button class="we-button-hover-icon" data-no-preview="true" data-open-anchor-dialog="">
-            <i class="fa fa-fw fa-anchor"/> Anchor Name
+        <we-button data-no-preview="true" data-open-anchor-dialog="">
+            <i class="fa fa-fw fa-anchor"/> Link Anchor
         </we-button>
     </div>
 

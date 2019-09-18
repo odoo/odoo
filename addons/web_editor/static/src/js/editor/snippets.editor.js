@@ -22,9 +22,6 @@ var globalSelector = {
 var SnippetEditor = Widget.extend({
     template: 'web_editor.snippet_overlay',
     xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
-    events: {
-        'mousedown': '_onUIMouseDown',
-    },
     custom_events: {
         'option_update': '_onOptionUpdate',
     },
@@ -91,13 +88,30 @@ var SnippetEditor = Widget.extend({
             $customize.find('.oe_snippet_remove').addClass('d-none');
         }
 
+        var _animationsCount = 0;
+        var postAnimationCover = _.throttle(() => this.cover(), 100);
         this.$target.on('transitionstart.snippet_editor, animationstart.snippet_editor', () => {
-            this._targetIsAnimated = true;
+            // We cannot rely on the fact each transition/animation start will
+            // trigger a transition/animation end as the element may be removed
+            // from the DOM before or it could simply be an infinite animation.
+            //
+            // By simplicity, for each start, we add a delayed operation that
+            // will decrease the animation counter after a fixed duration and
+            // do the post animation cover if none is registered anymore.
+            _animationsCount++;
+            setTimeout(() => {
+                if (!--_animationsCount) {
+                    postAnimationCover();
+                }
+            }, 500); // This delay have to be huge enough to take care of long
+                     // animations which will not trigger an animation end event
+                     // but if it is too small for some, this is the job of the
+                     // animation creator to manually ask for a re-cover
         });
-        this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', () => {
-            this._targetIsAnimated = false;
-            this.cover();
-        });
+        // On top of what is explained above, do the post animation cover for
+        // each detected transition/animation end so that the user does not see
+        // a flickering when not needed.
+        this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', postAnimationCover);
 
         return Promise.all(defs);
     },
@@ -140,10 +154,7 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
-        if (this._targetIsAnimated || !this.isShown() || !this.$target.length) {
-            // Do not cover a target being animated, it will be covered once the
-            // animation is completed. Also ignore if the overlay is not shown
-            // yet or that the $target element has been removed.
+        if (!this.isShown() || !this.$target.length) {
             return;
         }
         var offset = this.$target.offset();
@@ -159,22 +170,10 @@ var SnippetEditor = Widget.extend({
         this.$el.toggleClass('o_top_cover', offset.top < this.$editable.offset().top);
     },
     /**
-     * @returns {boolean}
-     */
-    isOpened: function () {
-        return this.$el && this.$el.hasClass('o_we_options_opened');
-    },
-    /**
      * @return {boolean}
      */
     isShown: function () {
         return this.$el && this.$el.parent().length && this.$el.hasClass('oe_active');
-    },
-    /**
-     * @return {boolean}
-     */
-    isSticky: function () {
-        return this.$el && this.$el.hasClass('o_we_sticky');
     },
     /**
      * Removes the associated snippet from the DOM and destroys the associated
@@ -241,17 +240,55 @@ var SnippetEditor = Widget.extend({
      *
      * @param {boolean} focus - true to display, false to hide
      * @param {boolean} [previewMode=false]
-     * @param {boolean} [onlyOverlay=false]
      */
-    toggleFocus: function (focus, previewMode, onlyOverlay) {
+    toggleFocus: function (focus, previewMode) {
         if (!this.$el) {
             return;
         }
 
-        if (!previewMode && !onlyOverlay) {
-            this._toggleOptions(focus ? (this._customize$Elements.length - 1) : false);
+        if (previewMode) {
+            // In preview mode, the sticky classes are left untouched, we only
+            // add/remove the preview class when toggling/untoggling
+            this.$el.toggleClass('o_we_overlay_preview', focus);
+        } else {
+            // In non preview mode, the preview class is always removed, and the
+            // sticky class is added/removed when toggling/untoggling
+            this.$el.removeClass('o_we_overlay_preview');
+            this.$el.toggleClass('o_we_overlay_sticky', focus);
         }
-        this._toggleOverlay(!!focus, previewMode ? undefined : !!focus);
+
+        focus = this.$el.hasClass('o_we_overlay_sticky') ? true : focus;
+
+        // Show/hide overlay in preview mode or not
+        this.$el.toggleClass('oe_active', focus);
+        this.cover();
+
+        // In non-preview mode, update the options panel if necessary
+        if (previewMode) {
+            return;
+        }
+        var lastIndex = this._customize$Elements.length - 1;
+        var optionsAlreadyShown = !!this._customize$Elements[lastIndex].parent().length;
+        if (optionsAlreadyShown === focus) {
+            return;
+        }
+        this.trigger_up('update_customize_elements', {
+            customize$Elements: focus ? this._customize$Elements : [],
+        });
+        this._customize$Elements.forEach(($el, i) => {
+            var editor = $el.data('editor');
+            var styles = _.values(editor.styles);
+            $el.toggleClass('d-none', styles.length === 0);
+            _.sortBy(styles, '__order').reverse().forEach(style => {
+                if (focus) {
+                    style.$el.appendTo($el);
+                    style.onFocus();
+                } else {
+                    style.$el.detach();
+                    style.onBlur();
+                }
+            });
+        });
     },
     /**
      * @param {boolean} [isTextEdition=false]
@@ -347,52 +384,6 @@ var SnippetEditor = Widget.extend({
         this.$el.find('[data-toggle="dropdown"]').dropdown();
 
         return Promise.all(defs);
-    },
-    /**
-     * @private
-     * @param {integer|false} index
-     */
-    _toggleOptions: function (index) {
-        if (index === false || !this._customize$Elements[index].parent().length) {
-            this.trigger_up('update_customize_elements', {
-                customize$Elements: index !== false ? this._customize$Elements : [],
-            });
-        }
-        this._customize$Elements.forEach(($el, i) => {
-            var open = (i === index);
-
-            $el.toggleClass('o_we_closed', !open);
-
-            var editor = $el.data('editor');
-            editor.$el.toggleClass('o_we_options_opened', open);
-
-            var styles = _.values(editor.styles);
-            $el.toggleClass('d-none', styles.length === 0);
-            _.each(_.sortBy(styles, '__order').reverse(), function (style) {
-                if (open) {
-                    style.$el.appendTo($el);
-                    style.onFocus();
-                } else {
-                    style.$el.detach();
-                    style.onBlur();
-                }
-            });
-        });
-    },
-    /**
-     * @private
-     * @param {boolean} show - whether the overlay should be shown or not
-     * @param {boolean} [sticky]
-     *        whether the overlay should be sticky or not (if the value is
-     *        undefined, the stickyness is left unchanged)
-     */
-    _toggleOverlay: function (show, sticky) {
-        this.$el.toggleClass('oe_active', show);
-        this.cover();
-
-        if (sticky !== undefined) {
-            this.$el.toggleClass('o_we_sticky', sticky);
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -547,11 +538,6 @@ var SnippetEditor = Widget.extend({
      * @private
      */
     _onOptionsSectionMouseOver: function (ev) {
-        var $optionsSection = $(ev.currentTarget);
-        if (!$optionsSection.hasClass('o_we_closed')) {
-            return;
-        }
-
         this.trigger_up('activate_snippet', {
             $snippet: this.$target,
             previewMode: true,
@@ -570,19 +556,10 @@ var SnippetEditor = Widget.extend({
      * @private
      */
     _onOptionsSectionClick: function (ev) {
-        var $optionsSection = $(ev.currentTarget);
-        if (!$optionsSection.hasClass('o_we_closed')) {
-            return;
-        }
-
         this.trigger_up('activate_snippet', {
             $snippet: this.$target,
             previewMode: false,
-            onlyOverlay: true,
         });
-        var $neighbors = $optionsSection.nextAll('we-customizeblock-options');
-        var editor = $neighbors.length ? $neighbors.last().data('editor') : this;
-        editor._toggleOptions($optionsSection.index());
     },
     /**
      * Called when a child editor/option asks for another option to perform a
@@ -626,20 +603,6 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('request_history_undo_record', {$target: this.$target});
         this.removeSnippet();
     },
-    /**
-     * The UI is displayed on hover and become sticky once the related target is
-     * clicked. If we click the UI while it is not sticky, it should become
-     * sticky.
-     *
-     * @private
-     */
-    _onUIMouseDown: function (ev) {
-        if (!this.isOpened()) {
-            this.trigger_up('activate_snippet', {
-                $snippet: this.$target,
-            });
-        }
-    }
 });
 
 /**
@@ -902,9 +865,6 @@ var SnippetsMenu = Widget.extend({
      */
     _activateInsertionZones: function ($selectorSiblings, $selectorChildren) {
         var self = this;
-        var zoneTemplate = $('<div/>', {
-            class: 'oe_drop_zone oe_insert',
-        });
 
         function isFullWidth($elem) {
             return $elem.parent().width() === $elem.outerWidth(true);
@@ -913,49 +873,50 @@ var SnippetsMenu = Widget.extend({
         if ($selectorChildren) {
             $selectorChildren.each(function () {
                 var $zone = $(this);
+                var style;
+                var vertical;
+                var node;
                 var css = self.window.getComputedStyle(this);
                 var parentCss = self.window.getComputedStyle($zone.parent()[0]);
                 var float = css.float || css.cssFloat;
                 var parentDisplay = parentCss.display;
                 var parentFlex = parentCss.flexDirection;
-                var $drop = zoneTemplate.clone();
 
-                $zone.append($drop);
-                var node = $drop[0].previousSibling;
+                style = {};
+                vertical = false;
+                node = $zone[0].lastChild;
                 var test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) || node.tagName === 'BR'));
                 if (test) {
-                    $drop.addClass('oe_vertical').css({
-                        height: parseInt(self.window.getComputedStyle($zone[0]).lineHeight),
-                        float: 'none',
-                        display: 'inline-block',
-                    });
+                    vertical = true;
+                    style['float'] = 'none';
+                    style['height'] = parseInt(self.window.getComputedStyle($zone[0]).lineHeight) + 'px';
+                    style['display'] = 'inline-block';
                 } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                    $drop.css('float', float);
+                    style['float'] = float;
                     if (!isFullWidth($zone)) {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
+                        vertical = true;
+                        style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
                     }
                 }
+                self._insertDropzone($('<we-hook/>').appendTo($zone), vertical, style);
 
-                $drop = $drop.clone();
-
-                $zone.prepend($drop);
-                node = $drop[0].nextSibling;
+                style = {};
+                vertical = false;
+                node = $zone[0].firstChild;
                 test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) || node.tagName === 'BR'));
                 if (test) {
-                    $drop.addClass('oe_vertical').css({
-                        height: parseInt(self.window.getComputedStyle($zone[0]).lineHeight),
-                        float: 'none',
-                        display: 'inline-block'
-                    });
+                    vertical = true;
+                    style['float'] = 'none';
+                    style['height'] = parseInt(self.window.getComputedStyle($zone[0]).lineHeight) + 'px';
+                    style['display'] = 'inline-block';
                 } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                    $drop.css('float', float);
+                    style['float'] = float;
                     if (!isFullWidth($zone)) {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
+                        vertical = true;
+                        style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
                     }
                 }
-                if (test) {
-                    $drop.css({'float': 'none', 'display': 'inline-block'});
-                }
+                self._insertDropzone($('<we-hook/>').prependTo($zone), vertical, style);
             });
 
             // add children near drop zone
@@ -965,7 +926,8 @@ var SnippetsMenu = Widget.extend({
         if ($selectorSiblings) {
             $selectorSiblings.filter(':not(.oe_drop_zone):not(.oe_drop_clone)').each(function () {
                 var $zone = $(this);
-                var $drop;
+                var style;
+                var vertical;
                 var css = self.window.getComputedStyle(this);
                 var parentCss = self.window.getComputedStyle($zone.parent()[0]);
                 var float = css.float || css.cssFloat;
@@ -973,24 +935,28 @@ var SnippetsMenu = Widget.extend({
                 var parentFlex = parentCss.flexDirection;
 
                 if ($zone.prev('.oe_drop_zone:visible').length === 0) {
-                    $drop = zoneTemplate.clone();
+                    style = {};
+                    vertical = false;
                     if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                        $drop.css('float', float);
+                        style['float'] = float;
                         if (!isFullWidth($zone)) {
-                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
+                            vertical = true;
+                            style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
                         }
                     }
-                    $zone.before($drop);
+                    self._insertDropzone($('<we-hook/>').insertBefore($zone), vertical, style);
                 }
                 if ($zone.next('.oe_drop_zone:visible').length === 0) {
-                    $drop = zoneTemplate.clone();
+                    style = {};
+                    vertical = false;
                     if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                        $drop.css('float', float);
+                        style['float'] = float;
                         if (!isFullWidth($zone)) {
-                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
+                            vertical = true;
+                            style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
                         }
                     }
-                    $zone.after($drop);
+                    self._insertDropzone($('<we-hook/>').insertAfter($zone), vertical, style);
                 }
             });
         }
@@ -1041,18 +1007,14 @@ var SnippetsMenu = Widget.extend({
      *        The DOM element whose editor (and its parent ones) need to be
      *        enabled. Only disable the current one if false is given.
      * @param {boolean} [previewMode=false]
-     * @param {boolean} [onlyOverlay=false]
      * @returns {Promise<SnippetEditor>}
      *          (might be async when an editor must be created)
      */
-    _activateSnippet: function ($snippet, previewMode, onlyOverlay) {
+    _activateSnippet: function ($snippet, previewMode) {
         return this._activateSnippetMutex.exec(() => {
-            // First disable all shown editors and also sticky ones if not in
-            // preview mode (so new sticky ones have to be shown)
+            // First disable all editors if necessary
             this.snippetEditors.forEach(editor => {
-                if (!previewMode || editor.isShown() && !editor.isSticky()) {
-                    editor.toggleFocus(false, previewMode, onlyOverlay);
-                }
+                editor.toggleFocus(false, previewMode);
             });
             // Take the first parent of the provided DOM (or itself) which
             // should have an associated snippet editor and create + enable it.
@@ -1062,7 +1024,7 @@ var SnippetsMenu = Widget.extend({
                     return Promise.resolve(null);
                 }
                 return this._createSnippetEditor($snippet).then(editor => {
-                    editor.toggleFocus(true, previewMode, onlyOverlay);
+                    editor.toggleFocus(true, previewMode);
                     return editor;
                 });
             }
@@ -1411,6 +1373,26 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /**
+     * Creates a dropzone element and inserts it by replacing the given jQuery
+     * location. This allows to add data on the dropzone depending on the hook
+     * environment.
+     *
+     * @private
+     * @param {jQuery} $hook
+     * @param {boolean} [vertical=false]
+     * @param {Object} [style]
+     */
+    _insertDropzone: function ($hook, vertical, style) {
+        var $dropzone = $('<div/>', {
+            'class': 'oe_drop_zone oe_insert' + (vertical ? ' oe_vertical' : ''),
+        });
+        if (style) {
+            $dropzone.css(style);
+        }
+        $hook.replaceWith($dropzone);
+        return $dropzone;
+    },
+    /**
      * Make given snippets be draggable/droppable thanks to their thumbnail.
      *
      * @private
@@ -1572,7 +1554,7 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onActivateSnippet: function (ev) {
-        this._activateSnippet(ev.data.$snippet, ev.data.previewMode, ev.data.onlyOverlay);
+        this._activateSnippet(ev.data.$snippet, ev.data.previewMode);
     },
     /**
      * Called when a child editor asks to operate some operation on all child

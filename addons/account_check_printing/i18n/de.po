@@ -77,7 +77,7 @@ msgstr "Scheck-Layout"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 msgid "Check Left Margin"
-msgstr ""
+msgstr "Linken Rand prüfen"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
@@ -97,7 +97,7 @@ msgstr "Scheckdruck-Zahlungsweg ausgewählt"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 msgid "Check Right Margin"
-msgstr ""
+msgstr "Rechten Rand prüfen"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
@@ -108,7 +108,7 @@ msgstr "Scheck-Nummernfolge"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
 msgid "Check Top Margin"
-msgstr ""
+msgstr "Oberen Rand prüfen"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -153,7 +153,7 @@ msgstr "Unternehmen"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
 msgid "Company Country code"
-msgstr ""
+msgstr "Unternehmen Ländercode"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
@@ -219,7 +219,7 @@ msgstr "Manuelle Nummerierungen"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr ""
+msgstr "Mehrseitiger Check Stub"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
@@ -232,7 +232,7 @@ msgstr "Nächste Schecknummer"
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr ""
+msgstr "Die nächste Schecknummer sollte nur Zahlen enthalten."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -281,7 +281,7 @@ msgstr "Scheck drucken"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid "Print Date Label"
-msgstr ""
+msgstr "Datumsaufkleber drucken "
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -299,7 +299,7 @@ msgstr "Einzahlung erfassen"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
-msgstr ""
+msgstr "Rechter Rand"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
@@ -308,6 +308,8 @@ msgid ""
 "Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
+"Wählen Sie das Format aus, das dem Kontrollpapier entspricht, auf dem Sie Ihre Schecks drucken möchten.\n"
+"Um die Druckfunktion zu deaktivieren, wählen Sie \"Keine\"."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
@@ -361,6 +363,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
+"Mit dieser Option können Sie Scheckdetails (Stub) auf mehreren Seiten "
+"drucken, wenn sie nicht auf eine einzige Seite passen."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -369,6 +373,9 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA. "
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"Mit dieser Option können Sie das Datumsetikett auf dem Scheck gemäß CPA "
+"drucken. Deaktivieren Sie dies, wenn Ihr vorgedruckter Scheck das "
+"Datumsetikett enthält."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -390,18 +397,20 @@ msgid ""
 "You have to choose a check layout. For this, go in Apps, search for 'Checks "
 "layout' and install one."
 msgstr ""
+"Sie müssen ein Schecklayout auswählen. Gehen Sie dazu in Apps, suchen Sie "
+"nach 'Layout prüfen' und installieren Sie eines."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_middle
 msgid "check in middle"
-msgstr ""
+msgstr "Check in der Mitte"
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_bottom
 msgid "check on bottom"
-msgstr ""
+msgstr "Check unten"
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_top
 msgid "check on top"
-msgstr ""
+msgstr "Check oben"

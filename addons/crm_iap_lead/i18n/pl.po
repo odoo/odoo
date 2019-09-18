@@ -15,6 +15,7 @@
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
 # Paweł Wodyński <pw@myodoo.pl>, 2019
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2019
+# Natalia Gros <nag@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Wiktor Kaźmierczak <wik92tor@wp.pl>, 2019\n"
+"Last-Translator: Natalia Gros <nag@odoo.com>, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,27 +35,27 @@ msgstr ""
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "%d credits will be consumed to find %d companies."
-msgstr ""
+msgstr "%d kredyt będzie zużyty by znaleźć %d firm."
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "(Time Now)"
-msgstr ""
+msgstr "(Aktualny czas)"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "<b>Contacts</b>"
-msgstr ""
+msgstr "<b>Kontakty</b>"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "<b>Phone :</b>"
-msgstr ""
+msgstr "<b>Telefon :</b>"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "<b>Timezone : </b>"
-msgstr ""
+msgstr "<b>Strefa czasowa : </b>"
 
 #. module: crm_iap_lead
 #: model:mail.template,body_html:crm_iap_lead.lead_generation_no_credits
@@ -67,6 +68,13 @@ msgid ""
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Szanowny kliencie,</p>\n"
+"    <p>Kredyt został wyczerpany na Twoim koncie IAP Lead Generation.<br/>\n"
+"    Możesz doładować swoje konto IAP Lead Generation w ustawieniach modułu CRM.<br/></p>\n"
+"    <p>Z poważaniem,</p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
@@ -78,6 +86,11 @@ msgid ""
 "            No leads could be generated according to your search criteria\n"
 "        </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_empty_folder\">\n"
+"            Nie znaleziono potencjalnych szans\n"
+"        </p><p>\n"
+"            Potencjalne szanse nie zostały znalezione bazując na kryteriach wyszukiwania\n"
+"        </p>"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
@@ -89,21 +102,26 @@ msgid ""
 "            No opportunities could be generated according to your search criteria\n"
 "        </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_empty_folder\">\n"
+"            Nie znaleziono szans\n"
+"        </p><p>\n"
+"            Szanse nie zostały znalezione bazując na kryteriach wyszukiwania\n"
+"        </p>"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "<span class=\"o_stat_text\">Leads</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Potencjalne szanse</span>"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "<span class=\"o_stat_text\">Opportunities</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Szanse</span>"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_238
 msgid "Automobiles & Components"
-msgstr ""
+msgstr "Samochody & Części składowe"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_157
@@ -113,7 +131,7 @@ msgstr "Banki"
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_mining_request
 msgid "CRM Lead Mining Request"
-msgstr ""
+msgstr "Żądanie wydobycia danych potencjalnych klientów w CRM"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
@@ -123,7 +141,7 @@ msgstr "Anuluj"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_162
 msgid "Capital Goods"
-msgstr ""
+msgstr "Dobra inwestycyjne"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__color
@@ -134,7 +152,7 @@ msgstr "Indeks kolorów"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_163
 msgid "Commercial & Professional Services"
-msgstr ""
+msgstr "Usługi komercyjne & profesjonalne"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__search_type__companies
@@ -145,37 +163,37 @@ msgstr "Firmy"
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__search_type__people
 msgid "Companies and their Contacts"
-msgstr ""
+msgstr "Firmy i ich kontakty"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__company_size_max
 msgid "Company Size Max"
-msgstr ""
+msgstr "Maksymalny rozmiar firmy"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_167
 msgid "Construction Materials"
-msgstr ""
+msgstr "Materiały konstrukcyjne"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_30
 msgid "Consumer Discretionary"
-msgstr ""
+msgstr "Dyspozycyjność kosumenta"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_239
 msgid "Consumer Durables & Apparel"
-msgstr ""
+msgstr "Artykuły trwałego użytku & odzież"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_150
 msgid "Consumer Services"
-msgstr ""
+msgstr "Usługi konsumenta "
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_33
 msgid "Consumer Staples"
-msgstr ""
+msgstr "Podstawowe produkty konsumpcyjne"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
@@ -191,7 +209,7 @@ msgstr "Kraje"
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Create a Lead Mining Request"
-msgstr ""
+msgstr "Utwórz żądanie wydobycia danych potencjalnych klientów"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__create_uid
@@ -223,17 +241,17 @@ msgstr "Nazwa wyświetlana"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_151
 msgid "Diversified Consumer Services"
-msgstr ""
+msgstr "Zróżnicowane usługi konsumenta"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_158
 msgid "Diversified Financial Services"
-msgstr ""
+msgstr "Zróżnicowane usługi finansowe "
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_159
 msgid "Diversified Financials"
-msgstr ""
+msgstr "Zróżnicowane finanse "
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__done
@@ -255,7 +273,7 @@ msgstr "E-mail"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_156
 msgid "Energy Equipment & Services"
-msgstr ""
+msgstr "Wyposażenie energetyczne & usługi"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__error
@@ -272,17 +290,17 @@ msgstr "Filtr włączony"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__filter_on_size
 msgid "Filter on Size"
-msgstr ""
+msgstr "Rozmiar filtru"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_153
 msgid "Food & Staples Retailing"
-msgstr ""
+msgstr "Sprzedaż detaliczna jedzenia & surowców"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_154
 msgid "Food, Beverage & Tobacco"
-msgstr ""
+msgstr "Żywność, napoje & tytoń"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
@@ -294,18 +312,19 @@ msgstr "Od"
 #: code:addons/crm_iap_lead/static/src/xml/leads_tree_generate_leads_views.xml:0
 #, python-format
 msgid "Generate Leads"
-msgstr ""
+msgstr "Generacja potencjalnych szans"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Generate new leads based on their country, industry, size, etc."
 msgstr ""
+"Wygeneruj potencjalne szanse bazując na ich kraju, sektorze, rozmiarze itp."
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_ids
 msgid "Generated Lead / Opportunity"
-msgstr ""
+msgstr "Wygeneruj potencjalne szanse / szanse"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
@@ -315,22 +334,22 @@ msgstr "Grupuj wg"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_160
 msgid "Health Care Equipment & Services"
-msgstr ""
+msgstr "Wyposażenie w sprzęt medyczny & usługi"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_helpers
 msgid "Helper methods for crm_iap_lead modules"
-msgstr ""
+msgstr "Metody pomocy dla modułu crm_iap_lead"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_155
 msgid "Household & Personal Products"
-msgstr ""
+msgstr "Przedmioty gospodarstwa domowego & osobiste"
 
 #. module: crm_iap_lead
 #: model:mail.template,subject:crm_iap_lead.lead_generation_no_credits
 msgid "IAP Lead Generation Notification"
-msgstr ""
+msgstr "Powiadomienie o generowaniu potencjalnych szans IAP"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__id
@@ -344,27 +363,27 @@ msgstr "ID"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_168
 msgid "Independent Power and Renewable Electricity Producers"
-msgstr ""
+msgstr "Producenci energii odnawialnej oraz niezależnej"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_146
 msgid "Industrials"
-msgstr ""
+msgstr "Przemysł"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__industry_ids
 msgid "Industries"
-msgstr ""
+msgstr "Gałęzie przemysłu"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_industry
 msgid "Industry Tag"
-msgstr ""
+msgstr "Znacznik przemysłu"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_69
 msgid "Insurance"
-msgstr ""
+msgstr "Ubezpieczenie "
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers____last_update
@@ -401,39 +420,39 @@ msgstr "Sygnał"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
-msgstr ""
+msgstr "Kredyty kontaktów potencjalnych szans"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_credits
 msgid "Lead Credits"
-msgstr ""
+msgstr "Kredyty potencjalnych szans"
 
 #. module: crm_iap_lead
 #: model:ir.ui.menu,name:crm_iap_lead.crm_menu_lead_generation
 msgid "Lead Generation"
-msgstr ""
+msgstr "Generacja potencjalnych szans"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "Lead Information"
-msgstr ""
+msgstr "Informacje o potencjalnych szansach"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__lead_mining_request_id
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Lead Mining Request"
-msgstr ""
+msgstr "Żądanie wydobycia informacji o potencjalncyh szansach"
 
 #. module: crm_iap_lead
 #: model:ir.actions.act_window,name:crm_iap_lead.crm_iap_lead_mining_request_action
 #: model:ir.ui.menu,name:crm_iap_lead.crm_iap_lead_mining_request_menu_action
 msgid "Lead Mining Requests"
-msgstr ""
+msgstr "Żądanie wydobycia informacji o potencjalncyh szansach"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_total_credits
 msgid "Lead Total Credits"
-msgstr ""
+msgstr "Kredyty potencjalnych szans"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_lead
@@ -451,16 +470,17 @@ msgid ""
 "Make sure you know if you have to be GDPR compliant for storing personal "
 "data."
 msgstr ""
+"Upewnij się czy musisz być zgodny z RODO aby przechowywać dane osobiste. "
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_148
 msgid "Materials"
-msgstr ""
+msgstr "Materiały"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_86
 msgid "Media"
-msgstr ""
+msgstr "Media"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__name
@@ -471,7 +491,7 @@ msgstr "Nazwa"
 #. module: crm_iap_lead
 #: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_seniority_name_uniq
 msgid "Name already exists!"
-msgstr ""
+msgstr "Nazwa już istnieje!"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
@@ -490,12 +510,12 @@ msgstr "Liczba kontaktów"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__leads_count
 msgid "Number of Generated Leads"
-msgstr ""
+msgstr "Liczba wygenerowanych potencjalnych szans"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_number
 msgid "Number of Leads"
-msgstr ""
+msgstr "Liczba potencjalnych szans"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
@@ -510,27 +530,27 @@ msgstr "Szansa"
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "Opportunity created by Odoo Lead Generation"
-msgstr ""
+msgstr "Szansa stworzona przez generowanie potencjalnych szans Odoo "
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__role_ids
 msgid "Other Roles"
-msgstr ""
+msgstr "Inne role"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_role
 msgid "People Role"
-msgstr ""
+msgstr "Role ludzi"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_seniority
 msgid "People Seniority"
-msgstr ""
+msgstr "Staż pracy"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_161
 msgid "Pharmaceuticals, Biotechnology & Life Sciences"
-msgstr ""
+msgstr "Farmaceutyka, Biotechnologia & Nauki Przyrodnicze"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
@@ -540,7 +560,7 @@ msgstr "Telefon"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__preferred_role_id
 msgid "Preferred Role"
-msgstr ""
+msgstr "Preferowana rola"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_114
@@ -555,12 +575,12 @@ msgstr "Zgłoszenie"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__name
 msgid "Request Number"
-msgstr ""
+msgstr "Żądanie numeru"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_152
 msgid "Retailing"
-msgstr ""
+msgstr "Sprzedaż detaliczna"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
@@ -572,12 +592,12 @@ msgstr "Ponów"
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__reveal_id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__reveal_id
 msgid "Reveal"
-msgstr ""
+msgstr "Odkryj"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__reveal_id
 msgid "Reveal ID"
-msgstr ""
+msgstr "Odkryj ID"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__contact_filter_type__role
@@ -587,12 +607,12 @@ msgstr "Rola"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__name
 msgid "Role Name"
-msgstr ""
+msgstr "Nazwa pozycji"
 
 #. module: crm_iap_lead
 #: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_role_name_uniq
 msgid "Role name already exists!"
-msgstr ""
+msgstr "Nazwa pozycji już istnieje!"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__team_id
@@ -609,13 +629,13 @@ msgstr "Sprzedawca"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_164
 msgid "Semiconductors & Semiconductor Equipment"
-msgstr ""
+msgstr "Półprzewodniki & Wyposażenie półprzewodników"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__seniority_id
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__contact_filter_type__seniority
 msgid "Seniority"
-msgstr ""
+msgstr "Staż pracy"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__company_size_min
@@ -625,7 +645,7 @@ msgstr "Rozmiar"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_165
 msgid "Software & Services"
-msgstr ""
+msgstr "Software & Usługi"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__state_ids
@@ -665,23 +685,23 @@ msgstr "Cel"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_166
 msgid "Technology Hardware & Equipment"
-msgstr ""
+msgstr "Technologia sprzęty & Wyposażenie"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
 msgid "Technology Used :"
-msgstr ""
+msgstr "Zastosowana technologia:"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_149
 msgid "Telecommunication Services"
-msgstr ""
+msgstr "Usługi telekomunikacyjne"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "This makes a total of %d credits for this request."
-msgstr ""
+msgstr "To tworzy %d kredytu dla tego żądania."
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
@@ -706,141 +726,142 @@ msgid ""
 "Up to %d additional credits will be consumed to identify %d contacts per "
 "company."
 msgstr ""
+"Do %d dodatkowego kredytu będzie zużyte by rozpoznać %d kontaktów tej firmy."
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138
 msgid "Utilities"
-msgstr ""
+msgstr "Narzędzia"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_1
 msgid "ceo"
-msgstr ""
+msgstr "CEO"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_2
 msgid "communications"
-msgstr ""
+msgstr "komunikacja"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_3
 msgid "consulting"
-msgstr ""
+msgstr "konsultacja"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_4
 msgid "customer_service"
-msgstr ""
+msgstr "serwis_klienta"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_1
 msgid "director"
-msgstr ""
+msgstr "dyrektor"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_5
 msgid "education"
-msgstr ""
+msgstr "edukacja"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "employees"
-msgstr ""
+msgstr "pracownicy"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_6
 msgid "engineering"
-msgstr ""
+msgstr "inżynieria"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_2
 msgid "executive"
-msgstr ""
+msgstr "zarządzający"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_7
 msgid "finance"
-msgstr ""
+msgstr "finanse"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_8
 msgid "founder"
-msgstr ""
+msgstr "założyciel"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_9
 msgid "health_professional"
-msgstr ""
+msgstr "pracownik_służby_zdrowia"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_10
 msgid "human_resources"
-msgstr ""
+msgstr "zasoby_ludzkie"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_11
 msgid "information_technology"
-msgstr ""
+msgstr "technologia_informacyjna"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_12
 msgid "legal"
-msgstr ""
+msgstr "prawne"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_3
 msgid "manager"
-msgstr ""
+msgstr "Menedżer"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_13
 msgid "marketing"
-msgstr ""
+msgstr "marketing"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_14
 msgid "operations"
-msgstr ""
+msgstr "działania"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_15
 msgid "owner"
-msgstr ""
+msgstr "właściciel"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_16
 msgid "president"
-msgstr ""
+msgstr "prezydent"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_17
 msgid "product"
-msgstr ""
+msgstr "produkt"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_18
 msgid "public_relations"
-msgstr ""
+msgstr "wizerunek_firmy"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_19
 msgid "real_estate"
-msgstr ""
+msgstr "nieruchomości"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_20
 msgid "recruiting"
-msgstr ""
+msgstr "rekrutacja"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_21
 msgid "research"
-msgstr ""
+msgstr "badanie"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_22
 msgid "sale"
-msgstr ""
+msgstr "sprzedaż"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form

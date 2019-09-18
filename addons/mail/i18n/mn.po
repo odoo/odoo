@@ -7,17 +7,17 @@
 # Baasansuren Sharavsuren <baasansuren@bumanit.mn>, 2019
 # Otgonbayar.A <gobi.mn@gmail.com>, 2019
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # Martin Trigaux, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +55,7 @@ msgstr "%d Мессежүүд"
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "%d days overdue"
-msgstr ""
+msgstr "%d өдөр үлдлээ"
 
 #. module: mail
 #. openerp-web
@@ -1088,6 +1088,12 @@ msgid "Canned Response / Shortcode"
 msgstr "Бэлдсэн хариу / богино код"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__canned_response_ids
+#: model:ir.model.fields,field_description:mail.field_mail_message__canned_response_ids
+msgid "Canned Responses"
+msgstr "Бэлдсэн Хариултууд"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
 msgid "Carbon copy message recipients"
 msgstr "Зурвасын хуулбар хүлээн авагчид"
@@ -1878,7 +1884,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "Due in %d days"
-msgstr ""
+msgstr "%d хоногийн дотор дуусна"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
@@ -2595,24 +2601,20 @@ msgid "Idle"
 msgstr "Сул зогссон"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread
-#: model:ir.model.fields,help:mail.field_mail_channel__message_unread
-#: model:ir.model.fields,help:mail.field_mail_thread__message_unread
-#: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_unread
-#: model:ir.model.fields,help:mail.field_mail_thread_cc__message_unread
-#: model:ir.model.fields,help:mail.field_res_partner__message_unread
-#: model:ir.model.fields,help:mail.field_res_users__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Хэрэв сонгогдсон тохиолдолд шинэ зурвасууд таны анхаарлыг шаардана."
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_thread_cc__message_unread
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,help:mail.field_res_partner__message_unread
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction
+#: model:ir.model.fields,help:mail.field_res_users__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Хэрэв сонгогдсон бол, шинэ зурвасууд таны анхаарлыг шаардана."
 
@@ -3321,7 +3323,7 @@ msgstr "Хийхээр тэмдэглэх"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Mark as done"
-msgstr ""
+msgstr "Дууссанд тооцох"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
@@ -3484,6 +3486,7 @@ msgstr "Зурвас-Id"
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_ids
+#: model:ir.model.fields,field_description:mail.field_mail_shortcode__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_ids
@@ -4025,8 +4028,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
-msgid "Number of error"
-msgstr "Алдааны тоо"
+msgid "Number of errors"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction_counter
@@ -4279,9 +4282,12 @@ msgid "Outgoing mail server"
 msgstr "Гарах имэйл сервер"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__overdue
+#, python-format
 msgid "Overdue"
 msgstr "Хугацаа хэтэрсэн"
 
@@ -4427,9 +4433,12 @@ msgid "Placeholder Expression"
 msgstr "Байрлал тогтоогчийн Илэрхийллийг"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__planned
+#, python-format
 msgid "Planned"
 msgstr "Төлөвлөсөн"
 
@@ -4550,7 +4559,7 @@ msgstr "Дараахыг урьдчилан харах"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "Өмнөх"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
@@ -5599,6 +5608,7 @@ msgstr "Хэнд:"
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: code:addons/mail/static/src/xml/systray.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today
@@ -5998,7 +6008,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "View %s"
-msgstr ""
+msgstr "%s харах"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__view_mode

@@ -608,7 +608,7 @@ class Attachment(models.Model):
             rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
 
     # DLE P55: `test_cache_invalidation`
-    def modified(self, fnames, modified=None, create=False):
+    def modified(self, fnames, create=False):
         if not self:
             return
         comodel = self.env[self.res_model]
@@ -617,11 +617,7 @@ class Attachment(models.Model):
             record = comodel.browse(self.res_id)
             self.env.cache.invalidate([(field, record._ids)])
             record.modified(['attachment_ids'])
-            if modified is None:
-                modified = {field: record}
-            else:
-                modified[field] = modified.get(field, record) | record
-        return super(Attachment, self).modified(fnames, modified=modified)
+        return super(Attachment, self).modified(fnames, create)
 
 
 class AttachmentHost(models.Model):
@@ -686,3 +682,28 @@ class ModelChildNoCheck(models.Model):
     name = fields.Char()
     company_id = fields.Many2one('res.company', required=True)
     parent_id = fields.Many2one('test_new_api.model_parent', check_company=False)
+
+
+# model with explicit and stored field 'display_name'
+class Display(models.Model):
+    _name = 'test_new_api.display'
+    _description = 'Model that overrides display_name'
+
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = 'My id is %s' % (record.id)
+
+
+# abstract model with automatic and non-stored field 'display_name'
+class Mixin(models.AbstractModel):
+    _name = 'test_new_api.mixin'
+    _description = 'Dummy mixin model'
+
+
+# in this model extension, the field 'display_name' should not be inherited from
+# 'test_new_api.mixin'
+class ExtendedDisplay(models.Model):
+    _name = 'test_new_api.display'
+    _inherit = ['test_new_api.mixin', 'test_new_api.display']

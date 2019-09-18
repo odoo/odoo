@@ -23,6 +23,7 @@ class View(models.Model):
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
+    track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
 
     def _compute_first_page_id(self):
         for view in self:
@@ -336,18 +337,19 @@ class View(models.Model):
                 qcontext['main_object'] = self
 
             cur = Website.get_current_website()
-            qcontext['multi_website_websites_current'] = {'website_id': cur.id, 'name': cur.name, 'domain': cur.domain}
-            qcontext['multi_website_websites'] = [
-                {'website_id': website.id, 'name': website.name, 'domain': website.domain}
-                for website in Website.search([]) if website != cur
-            ]
+            if self.env.user.has_group('website.group_website_publisher') and self.env.user.has_group('website.group_multi_website'):
+                qcontext['multi_website_websites_current'] = {'website_id': cur.id, 'name': cur.name, 'domain': cur.domain}
+                qcontext['multi_website_websites'] = [
+                    {'website_id': website.id, 'name': website.name, 'domain': website.domain}
+                    for website in Website.search([]) if website != cur
+                ]
 
-            cur_company = self.env.company
-            qcontext['multi_website_companies_current'] = {'company_id': cur_company.id, 'name': cur_company.name}
-            qcontext['multi_website_companies'] = [
-                {'company_id': comp.id, 'name': comp.name}
-                for comp in self.env.user.company_ids if comp != cur_company
-            ]
+                cur_company = self.env.company
+                qcontext['multi_website_companies_current'] = {'company_id': cur_company.id, 'name': cur_company.name}
+                qcontext['multi_website_companies'] = [
+                    {'company_id': comp.id, 'name': comp.name}
+                    for comp in self.env.user.company_ids if comp != cur_company
+                ]
 
             qcontext.update(dict(
                 self._context.copy(),

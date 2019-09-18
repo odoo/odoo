@@ -115,8 +115,7 @@ exports.PosModel = Backbone.Model.extend({
     destroy: function(){
         // FIXME, should wait for flushing, return a deferred to indicate successfull destruction
         // this.flush();
-        this.proxy.close();
-        this.barcode_reader.disconnect();
+        this.proxy.disconnect();
         this.barcode_reader.disconnect_from_proxy();
     },
 
@@ -240,10 +239,23 @@ exports.PosModel = Backbone.Model.extend({
                     return self.taxes_by_id[child_tax_id];
                 });
             });
+            return new Promise(function (resolve, reject) {
+              var tax_ids = _.pluck(self.taxes, 'id');
+              rpc.query({
+                  model: 'account.tax',
+                  method: 'get_real_tax_amount',
+                  args: [tax_ids],
+              }).then(function (taxes) {
+                  _.each(taxes, function (tax) {
+                      self.taxes_by_id[tax.id].amount = tax.amount;
+                  resolve();
+                  });
+              });
+            });
         },
     },{
         model:  'pos.session',
-        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'login_number', 'payment_method_ids'],
+        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'payment_method_ids'],
         domain: function(self){
             var domain = [
                 ['state','=','opened'],
@@ -254,6 +266,7 @@ exports.PosModel = Backbone.Model.extend({
         },
         loaded: function(self, pos_sessions, tmp){
             self.pos_session = pos_sessions[0];
+            self.pos_session.login_number = odoo.login_number;
             self.config_id = self.config_id || self.pos_session && self.pos_session.config_id[0];
             tmp.payment_method_ids = pos_sessions[0].payment_method_ids;
         },
@@ -263,12 +276,12 @@ exports.PosModel = Backbone.Model.extend({
         domain: function(self){ return [['id','=', self.config_id]]; },
         loaded: function(self,configs){
             self.config = configs[0];
-            self.config.use_proxy = self.config.iface_payment_terminal ||
+            self.config.use_proxy = self.config.is_posbox && (
+                                    self.config.iface_payment_terminal ||
                                     self.config.iface_electronic_scale ||
                                     self.config.iface_print_via_proxy  ||
                                     self.config.iface_scan_via_proxy   ||
-                                    self.config.iface_cashdrawer       ||
-                                    self.config.iface_customer_facing_display;
+                                    self.config.iface_customer_facing_display);
 
             self.db.set_uuid(self.config.uuid);
             self.set_cashier(self.get_cashier());
@@ -652,7 +665,9 @@ exports.PosModel = Backbone.Model.extend({
         var order = new exports.Order({},{pos:this});
         this.get('orders').add(order);
         this.set('selectedOrder', order);
-        this.send_current_order_to_customer_facing_display();
+        if (this.config.iface_customer_facing_display) {
+            this.send_current_order_to_customer_facing_display();
+        }
         return order;
     },
     /**
@@ -848,7 +863,7 @@ exports.PosModel = Backbone.Model.extend({
             self.flush_mutex.exec(function () {
                 var flushed = self._flush_orders(self.db.get_orders(), opts);
 
-                flushed.then(resolve, resolve);
+                flushed.then(resolve, reject);
 
                 return flushed;
             });
@@ -929,8 +944,9 @@ exports.PosModel = Backbone.Model.extend({
         return this._save_to_server(orders, options).then(function (server_ids) {
             self.set_synch('connected');
             return _.pluck(server_ids, 'id');
-        }).catch(function(){
+        }).catch(function(error){
             self.set_synch(self.get('failed') ? 'error' : 'disconnected');
+            return Promise.reject(error);
         });
     },
 
@@ -1410,7 +1426,6 @@ exports.Orderline = Backbone.Model.extend({
         this.set_quantity(1);
         this.discount = 0;
         this.discountStr = '0';
-        this.type = 'unit';
         this.selected = false;
         this.id = orderline_id++;
         this.price_manually_set = false;
@@ -1448,7 +1463,6 @@ exports.Orderline = Backbone.Model.extend({
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;
         orderline.price = this.price;
-        orderline.type = this.type;
         orderline.selected = false;
         orderline.price_manually_set = this.price_manually_set;
         return orderline;
@@ -1470,9 +1484,6 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_discount_str: function(){
         return this.discountStr;
-    },
-    get_product_type: function(){
-        return this.type;
     },
     // sets the quantity of the product. The quantity will be rounded according to the
     // product's unity of measure properties. Quantities greater than zero will not get
@@ -1592,8 +1603,6 @@ exports.Orderline = Backbone.Model.extend({
         if( this.get_product().id !== orderline.get_product().id){    //only orderline of the same product can be merged
             return false;
         }else if(!this.get_unit() || !this.get_unit().is_pos_groupable){
-            return false;
-        }else if(this.get_product_type() !== orderline.get_product_type()){
             return false;
         }else if(this.get_discount() > 0){             // we don't merge discounted orderlines
             return false;
@@ -2653,8 +2662,9 @@ exports.Order = Backbone.Model.extend({
         if(line.has_product_lot){
             this.display_lot_popup();
         }
-
-        this.pos.send_current_order_to_customer_facing_display();
+        if (this.pos.config.iface_customer_facing_display) {
+            this.pos.send_current_order_to_customer_facing_display();
+        }
     },
     get_selected_orderline: function(){
         return this.selected_orderline;

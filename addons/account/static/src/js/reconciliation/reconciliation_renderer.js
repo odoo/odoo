@@ -217,7 +217,6 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     events: {
         'click .accounting_view caption .o_buttons button': '_onValidate',
         'click .accounting_view tfoot': '_onChangeTab',
-        'focus': '_onTogglePanel',
         'click': '_onTogglePanel',
         'click .o_field_widget': '_onStopPropagation',
         'click .o_notebook li a': '_onChangeTab',
@@ -481,16 +480,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
         if (this.$el.is(':focus-within')) {
             this.$('caption .o_buttons button:not(:disabled):visible').attr('accesskey', 'V');
-            this.$('.nav-match_rp').attr('accesskey', 'M');
-            this.$('.nav-match_other').attr('accesskey', 'O');
-            this.$('.nav-create').attr('accesskey', 'C');
-            this.$('input.filter.o_input').attr('accesskey', 'Z');
         } else {
             this.$('caption .o_buttons button').attr('accesskey', '');
-            this.$('.nav-match_rp').attr('accesskey', '');
-            this.$('.nav-match_other').attr('accesskey', '');
-            this.$('.nav-create').attr('accesskey', '');
-            this.$('.filter.o_input').attr('accesskey', '');
         }
     },
 
@@ -902,40 +893,19 @@ var ManualLineRenderer = LineRenderer.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            var defs = [];
-            var def;
-            if (self._initialState.partner_id) {
-                def = self._makePartnerRecord(self._initialState.partner_id, self._initialState.partner_name).then(function (recordID) {
-                    self.fields.partner_id = new relational_fields.FieldMany2One(self,
-                        'partner_id',
-                        self.model.get(recordID),
-                        {mode: 'readonly'}
-                    );
-                });
-                defs.push(def);
-            } else {
-                def = self.model.makeRecord('account.move.line', [{
-                    relation: 'account.account',
-                    type: 'many2one',
-                    name: 'account_id',
-                    value: [self._initialState.account_id.id, self._initialState.account_id.display_name],
-                }]).then(function (recordID) {
-                    self.fields.title_account_id = new relational_fields.FieldMany2One(self,
-                        'account_id',
-                        self.model.get(recordID),
-                        {mode: 'readonly'}
-                    );
-                });
-                defs.push(def);
-            }
-
-            return Promise.all(defs).then(function () {
-                if (!self.fields.title_account_id) {
-                    return self.fields.partner_id.prependTo(self.$('.accounting_view thead td:eq(0) span:first'));
-                } else {
-                    self.fields.partner_id.destroy();
-                    return self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(0) span:first'));
-                }
+            return self.model.makeRecord('account.move.line', [{
+                relation: 'account.account',
+                type: 'many2one',
+                name: 'account_id',
+                value: [self._initialState.account_id.id, self._initialState.account_id.display_name],
+            }]).then(function (recordID) {
+                self.fields.title_account_id = new relational_fields.FieldMany2One(self,
+                    'account_id',
+                    self.model.get(recordID),
+                    {mode: 'readonly'}
+                );
+            }).then(function () {
+                return self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(0) span:first'));
             });
         });
     },

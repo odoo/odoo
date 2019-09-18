@@ -420,3 +420,79 @@ class TestSMSComposerMass(test_mail_full_common.BaseFunctionalTest, sms_common.M
         for record in self.records:
             self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
             self.assertSMSLogged(record, 'Dear %s this is an SMS.' % record.display_name)
+
+    def test_composer_template_context_action(self):
+        """ Test the context action from a SMS template (Add context action button)
+        and the usage with the sms composer """
+        # Create the lang info
+        self.env.ref('base.lang_fr').write({'active': True})
+        self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'sms.template,body',
+            'lang': 'fr_FR',
+            'res_id': self.sms_template.id,
+            'src': self.sms_template.body,
+            'value': "Hello ${object.display_name} ceci est en français.",
+        })
+        # set template to try to use customer lang
+        self.sms_template.write({
+            'lang': '${object.customer_id.lang}',
+        })
+        # create a second record linked to a customer in another language
+        self.partners[2].write({'lang': 'fr_FR'})
+        test_record_2 = self.env['mail.test.sms'].create({
+            'name': 'Test',
+            'customer_id': self.partners[2].id,
+        })
+        test_record_1 = self.env['mail.test.sms'].create({
+            'name': 'Test',
+            'customer_id': self.partners[1].id,
+        })
+        # Composer creation with context from a template context action (simulate) - comment (single recipient)
+        with self.sudo('employee'):
+            composer = self.env['sms.composer'].with_context(
+                default_composition_mode='guess',
+                default_res_ids=[test_record_2.id],
+                default_res_id=test_record_2.id,
+                active_ids=[test_record_2.id],
+                active_id=test_record_2.id,
+                active_model='mail.test.sms',
+                default_template_id=self.sms_template.id,
+            ).create({
+                'mass_keep_log': False,
+            })
+            # Call manually the onchange
+            composer._onchange_template_id()
+            self.assertEquals(composer.composition_mode, "comment")
+            self.assertEquals(composer.body, "Hello %s ceci est en français." % test_record_2.display_name)
+
+            with self.mockSMSGateway():
+                messages = composer._action_send_sms()
+
+        number = self.partners[2].phone_get_sanitized_number()
+        self.assertSMSNotification([{'partner': test_record_2.customer_id, 'number': number}], "Hello %s ceci est en français." % test_record_2.display_name, messages)
+
+        # Composer creation with context from a template context action (simulate) - mass (multiple recipient)
+        with self.sudo('employee'):
+            composer = self.env['sms.composer'].with_context(
+                default_composition_mode='guess',
+                default_res_ids=[test_record_1.id, test_record_2.id],
+                default_res_id=test_record_1.id,
+                active_ids=[test_record_1.id, test_record_2.id],
+                active_id=test_record_1.id,
+                active_model='mail.test.sms',
+                default_template_id=self.sms_template.id,
+            ).create({
+                'mass_keep_log': True,
+            })
+            # Call manually the onchange
+            composer._onchange_template_id()
+            self.assertEquals(composer.composition_mode, "mass")
+            # In english because by default but when sinding depending of record
+            self.assertEquals(composer.body, "Dear ${object.display_name} this is an SMS.")
+
+            with self.mockSMSGateway():
+                composer.action_send_sms()
+
+        self.assertSMSOutgoing(test_record_1.customer_id, None, 'Dear %s this is an SMS.' % test_record_1.display_name)
+        self.assertSMSOutgoing(test_record_2.customer_id, None, "Hello %s ceci est en français." % test_record_2.display_name)

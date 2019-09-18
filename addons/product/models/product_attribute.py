@@ -530,7 +530,7 @@ class ProductTemplateAttributeValue(models.Model):
 class ProductTemplateAttributeExclusion(models.Model):
     _name = "product.template.attribute.exclusion"
     _description = 'Product Template Attribute Exclusion'
-    _order = 'product_tmpl_id, value_ids, id'
+    _order = 'product_tmpl_id, id'
 
     product_template_attribute_value_id = fields.Many2one(
         'product.template.attribute.value', string="Attribute Value", ondelete='cascade', index=True)

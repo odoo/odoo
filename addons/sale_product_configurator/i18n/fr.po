@@ -7,19 +7,19 @@
 # Cécile Collart <cco@odoo.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
-# Martin Trigaux, 2019
 # Richard Mathot <rim@odoo.com>, 2019
 # Fred Gilson <fgi@odoo.com>, 2019
 # LEONARD Jean-Christophe <jean-christophe.leonard@myceliandre.fr>, 2019
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 12:27+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Sébastien BÜHL <buhlsebastien@gmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,8 +45,15 @@ msgstr "Ajouter"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Add one"
 msgstr "Ajouter"
+
+#. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_attribute_value_ids
+msgid "Attribute Values"
+msgstr "Valeurs de caractéristique"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
@@ -55,7 +62,7 @@ msgstr "Options disponibles:"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:200
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Back"
 msgstr "Retour"
@@ -67,7 +74,7 @@ msgstr "Annuler"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:201
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Configure"
 msgstr "Configurer"
@@ -79,7 +86,7 @@ msgstr "Configurez un article"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:199
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Confirm"
 msgstr "Confirmer"
@@ -95,20 +102,24 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
+msgid "Custom Values"
+msgstr ""
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
 msgid "Display Name"
 msgstr "Afficher Nom"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
+msgid "Extra Values"
+msgstr ""
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
 msgid "ID"
 msgstr "ID"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_product_product__has_configurable_attributes
-#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__has_configurable_attributes
-msgid "Is a configurable product"
-msgstr ""
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
@@ -185,11 +196,6 @@ msgid "Product Template"
 msgstr "Modèle d'article"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
-msgid "Product attribute values that do not create variants"
-msgstr ""
-
-#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Quantity"
@@ -198,6 +204,7 @@ msgstr "Quantité"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Remove one"
 msgstr "Supprimer"
 
@@ -217,12 +224,6 @@ msgid "Save"
 msgstr "Sauvegarder"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_attribute_value_ids
-msgid "Template Attribute Values"
-msgstr ""
-
-#. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This combination does not exist."
 msgstr "Cette combinaison n'existe pas."
@@ -230,9 +231,4 @@ msgstr "Cette combinaison n'existe pas."
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
-msgstr ""
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
-msgid "User entered custom product attribute values"
 msgstr ""

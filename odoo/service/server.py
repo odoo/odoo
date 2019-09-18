@@ -210,7 +210,7 @@ class FSWatcherBase(object):
 class FSWatcherWatchdog(FSWatcherBase):
     def __init__(self):
         self.observer = Observer()
-        for path in odoo.modules.module.ad_paths:
+        for path in odoo.addons.__path__:
             _logger.info('Watching addons folder %s', path)
             self.observer.schedule(self, path, recursive=True)
 
@@ -236,7 +236,7 @@ class FSWatcherInotify(FSWatcherBase):
         inotify.adapters._LOGGER.setLevel(logging.ERROR)
         # recreate a list as InotifyTrees' __init__ deletes the list's items
         paths_to_watch = []
-        for path in odoo.modules.module.ad_paths:
+        for path in odoo.addons.__path__:
             paths_to_watch.append(path)
             _logger.info('Watching addons folder %s', path)
         self.watcher = InotifyTrees(paths_to_watch, mask=INOTIFY_LISTEN_EVENTS, block_duration_s=.5)

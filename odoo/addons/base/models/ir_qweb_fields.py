@@ -510,7 +510,7 @@ class DurationConverter(models.AbstractModel):
         options.update(
             digital=dict(type="boolean", string=_('Digital formatting')),
             unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='second', required=True),
-            round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formating."), default_value='second'),
+            round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formatting."), default_value='second'),
         )
         return options
 

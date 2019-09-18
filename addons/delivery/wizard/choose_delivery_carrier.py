@@ -19,7 +19,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     )
     delivery_type = fields.Selection(related='carrier_id.delivery_type')
     delivery_price = fields.Float()
-    display_price = fields.Float(string='Cost')
+    display_price = fields.Float(string='Cost', readonly=True)
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     company_id = fields.Many2one('res.company', related='order_id.company_id')
     available_carrier_ids = fields.Many2many("delivery.carrier", compute='_compute_available_carrier', string="Available Carriers")
@@ -67,8 +67,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     def _get_shipment_rate(self):
         vals = self.carrier_id.rate_shipment(self.order_id)
         if vals.get('success'):
-            if vals.get('warning_message'):
-                self.delivery_message = vals['warning_message']
+            self.delivery_message = vals.get('warning_message', False)
             self.delivery_price = vals['price']
             self.display_price = vals['carrier_price']
             return {}
@@ -88,7 +87,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         }
 
     def button_confirm(self):
-        self.order_id.set_delivery_line(self.carrier_id, self.display_price)
+        self.order_id.set_delivery_line(self.carrier_id, self.delivery_price)
         self.order_id.write({
             'recompute_delivery_price': False,
             'delivery_message': self.delivery_message,

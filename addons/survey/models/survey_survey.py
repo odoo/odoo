@@ -123,7 +123,11 @@ class Survey(models.Model):
 
     @api.depends('user_input_ids.state', 'user_input_ids.test_entry', 'user_input_ids.quizz_score', 'user_input_ids.quizz_passed')
     def _compute_survey_statistic(self):
-        stat = dict((cid, dict(answer_count=0, answer_done_count=0, success_count=0, answer_score_avg_total=0.0)) for cid in self.ids)
+        default_vals = {
+            'answer_count': 0, 'answer_done_count': 0, 'success_count': 0,
+            'answer_score_avg': 0.0, 'success_ratio': 0.0
+        }
+        stat = dict((cid, dict(default_vals, answer_score_avg_total=0.0)) for cid in self.ids)
         UserInput = self.env['survey.user_input']
         base_domain = ['&', ('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
 
@@ -136,11 +140,13 @@ class Survey(models.Model):
             if item['quizz_passed']:
                 stat[item['survey_id'][0]]['success_count'] += item['__count']
 
+        for survey_id, values in stat.items():
+            avg_total = stat[survey_id].pop('answer_score_avg_total')
+            stat[survey_id]['answer_score_avg'] = avg_total / (stat[survey_id]['answer_done_count'] or 1)
+            stat[survey_id]['success_ratio'] = (stat[survey_id]['success_count'] / (stat[survey_id]['answer_done_count'] or 1.0))*100
+
         for survey in self:
-            avg_total = stat[survey.id].pop('answer_score_avg_total')
-            stat[survey.id]['answer_score_avg'] = avg_total / (stat[survey.id]['answer_done_count'] or 1)
-            stat[survey.id]['success_ratio'] = (stat[survey.id]['success_count'] / (stat[survey.id]['answer_done_count'] or 1.0))*100
-            survey.update(stat[survey.id])
+            survey.update(stat.get(survey._origin.id, default_vals))
 
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
@@ -469,28 +475,31 @@ class Survey(models.Model):
         }
 
     def action_survey_user_input_completed(self):
-        action_rec = self.env.ref('survey.action_survey_user_input_notest')
+        action_rec = self.env.ref('survey.action_survey_user_input')
         action = action_rec.read()[0]
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_completed': 1})
+                    'search_default_completed': 1,
+                    'search_default_not_test': 1})
         action['context'] = ctx
         return action
 
     def action_survey_user_input_certified(self):
-        action_rec = self.env.ref('survey.action_survey_user_input_notest')
+        action_rec = self.env.ref('survey.action_survey_user_input')
         action = action_rec.read()[0]
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_quizz_passed': 1})
+                    'search_default_quizz_passed': 1,
+                    'search_default_not_test': 1})
         action['context'] = ctx
         return action
 
     def action_survey_user_input(self):
-        action_rec = self.env.ref('survey.action_survey_user_input_notest')
+        action_rec = self.env.ref('survey.action_survey_user_input')
         action = action_rec.read()[0]
         ctx = dict(self.env.context)
-        ctx.update({'search_default_survey_id': self.ids[0]})
+        ctx.update({'search_default_survey_id': self.ids[0],
+                    'search_default_not_test': 1})
         action['context'] = ctx
         return action
 

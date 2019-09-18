@@ -14,7 +14,7 @@ $-font-numbers: (
         $-seen: append($-seen, $-number);
         $-theme-font: nth($o-theme-font-urls, $-number);
         @if $-theme-font {
-            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}&display=swap");
         }
     }
 }
@@ -255,6 +255,26 @@ font[class*='bg-'] {
     &.o_bg_img_opt_repeat_y {
         background-repeat: repeat-y;
     }
+}
+
+// Background videos
+.o_background_video {
+    position: relative;
+
+    > * {
+        position: relative;
+    }
+}
+.o_bg_video_container {
+    @include o-position-absolute(0, 0 ,0 ,0);
+    overflow: hidden;
+}
+.o_bg_video_iframe {
+    position: relative;
+    pointer-events: none !important;
+}
+.o_bg_video_loading {
+    @include o-position-absolute(0, 0 ,0 ,0);
 }
 
 // Probably outdated
@@ -840,10 +860,15 @@ table.table_desc tr td {
     &.o_slideshow {
         .carousel {
             height: 100%;
+
             .carousel-inner {
                 height: 100%;
             }
-            .carousel-item {
+            .carousel-item.active,
+            .carousel-item-next,
+            .carousel-item-prev {
+                display: flex;
+                align-items: center;
                 height: 100%;
                 padding-bottom: 64px;
             }
@@ -909,8 +934,14 @@ table.table_desc tr td {
             background-color: inherit;
         }
     }
-    &.s_parallax_is_fixed > .s_parallax_bg {
-        background-attachment: fixed;
+    @include media-breakpoint-up(xl) {
+        // Fixed backgrounds are disabled when using a mobile/tablet device,
+        // which is not a big deal but, on some of them (iOS...), defining the
+        // background as fixed breaks the background-size/position props.
+        // So we enable this only for >= XL devices.
+        &.s_parallax_is_fixed > .s_parallax_bg {
+            background-attachment: fixed;
+        }
     }
 }
 

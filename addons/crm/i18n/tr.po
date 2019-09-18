@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"POT-Creation-Date: 2019-09-09 12:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -258,11 +258,6 @@ msgstr "Aktivite Analizi"
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_done
 msgid "Activities Done Target"
 msgstr "Aktivite Tamamlama Hedefi"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Activities Todo"
-msgstr "Aktivite Listesi"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -954,6 +949,20 @@ msgid "Empty"
 msgstr "Boş"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Enrich your leads automatically with company data based on their email "
+"address"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_lead_enrich
+msgid ""
+"Enrich your leads automatically with company data based on their email "
+"address."
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
 msgid ""
 "Enter here the internal requirements for this stage (ex: Offer sent to "
@@ -1139,12 +1148,8 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_lead__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
+#: model:ir.model.fields,help:crm.field_crm_lead__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 
@@ -1333,6 +1338,11 @@ msgstr "Aday"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__lead_count
 msgid "Lead Count"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Lead Enrichment"
 msgstr ""
 
 #. module: crm
@@ -1767,8 +1777,8 @@ msgstr "Eylemlerin Sayısı"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error_counter
-msgid "Number of error"
-msgstr "Hata Sayısı"
+msgid "Number of errors"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter

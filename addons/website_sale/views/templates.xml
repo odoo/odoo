@@ -31,6 +31,7 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_utils.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_recently_viewed.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
         </xpath>
     </template>
@@ -463,7 +464,7 @@
         </xpath>
     </template>
 
-    <template id="product" name="Product">
+    <template id="product" name="Product" track="1">
 
         <t t-set="combination" t-value="product._get_first_possible_combination()"/>
         <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
@@ -472,7 +473,7 @@
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
-                <section t-attf-class="container py-2 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail">
+                <section t-attf-class="container py-2 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail" t-att-data-view-track="view_track and '1' or '0'">
                     <div class="row">
                         <div class="col-md-4">
                             <ol class="breadcrumb">
@@ -595,8 +596,14 @@
         </xpath>
     </template>
 
+    <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="True" customize_show="True" name="Recently Viewed Products" priority="16">
+        <xpath expr="//div[@t-field='product.website_description']" position="after">
+            <t t-call="website_sale.s_products_recently_viewed"/>
+        </xpath>
+    </template>
+
     <!-- Product options: OpenChatter -->
-    <template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating">
+    <template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating" priority="15">
         <xpath expr="//div[@t-field='product.website_description']" position="after">
             <div class="o_shop_discussion_rating">
                 <section class="container mt16 mb16">
@@ -936,7 +943,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-xl-4">
+                        <div class="col-12 col-xl-4" id="o_cart_summary">
                             <t t-call="website_sale.short_cart_summary"/>
                             <div class="d-xl-none mt8">
                                 <a role="button" href="/shop" class="btn btn-secondary mb32">
@@ -1011,9 +1018,7 @@
                             <div class="text-muted d-none d-md-block" t-field="product.description_sale" />
                         </td>
                         <td class='td-price'>
-                            <t t-if="True"><!-- compatibility 12.0 -->
-                                <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                            </t>
+                            <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             <span t-esc="combination_info['price']" style="white-space: nowrap;" t-options="{'widget': 'monetary','display_currency': website.currency_id}"/>
                         </td>
                         <td class="w-25 text-center">
@@ -1627,7 +1632,7 @@
                 <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference" class="card-body">
                     <b>Communication: </b><span t-esc='order.reference'/>
                 </div>
-                <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.acquirer_id.provider == 'transfer') and (payment_tx_id.partner_id.country_id.code in ['BE', 'AT', 'DE', 'FI', 'NL']) and (payment_tx_id.currency_id.name == 'EUR')">
+                <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.acquirer_id.provider == 'transfer') and (payment_tx_id.currency_id.name == 'EUR')">
                     <div class="card-body" t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid">
                         <h3>Or scan me with your banking app.</h3>
                         <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference)"/>

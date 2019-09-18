@@ -123,6 +123,7 @@ var config = require('web.config');
 var concurrency = require('web.concurrency');
 var publicWidget = require('web.public.widget');
 var VariantMixin = require('sale.VariantMixin');
+var wSaleUtils = require('website_sale.utils');
 require("web.zoomodoo");
 
 var qweb = core.qweb;
@@ -169,25 +170,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @override
      */
     start: function () {
+        var self = this;
         var def = this._super.apply(this, arguments);
 
-        var hash = window.location.hash.substring(1);
-        if (hash) {
-            var params = $.deparam(hash);
-            if (params['attr']) {
-                var attributeIds = params['attr'].split(',');
-                var $inputs = this.$('input.js_variant_change, select.js_variant_change option');
-                _.each(attributeIds, function (id) {
-                    var $toSelect = $inputs.filter('[data-value_id="' + id + '"]');
-                    if ($toSelect.is('input[type="radio"]')) {
-                        $toSelect.prop('checked', true);
-                    } else if ($toSelect.is('option')) {
-                        $toSelect.prop('selected', true);
-                    }
-                });
-                this._changeColorAttribute();
-            }
-        }
+        this._applyHash();
 
         _.each(this.$('div.js_product'), function (product) {
             $('input.js_product_change', product).first().trigger('change');
@@ -207,6 +193,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         });
 
         this._startZoom();
+
+        window.addEventListener('hashchange', function (e) {
+            self._applyHash();
+            self.triggerVariantChange($(self.el));
+        });
 
         return def;
     },
@@ -228,6 +219,26 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    _applyHash: function () {
+        var hash = window.location.hash.substring(1);
+        if (hash) {
+            var params = $.deparam(hash);
+            if (params['attr']) {
+                var attributeIds = params['attr'].split(',');
+                var $inputs = this.$('input.js_variant_change, select.js_variant_change option');
+                _.each(attributeIds, function (id) {
+                    var $toSelect = $inputs.filter('[data-value_id="' + id + '"]');
+                    if ($toSelect.is('input[type="radio"]')) {
+                        $toSelect.prop('checked', true);
+                    } else if ($toSelect.is('option')) {
+                        $toSelect.prop('selected', true);
+                    }
+                });
+                this._changeColorAttribute();
+            }
+        }
+    },
 
     /**
      * Sets the url hash from the selected product options.
@@ -278,20 +289,12 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
                 $input.trigger('change');
                 return;
             }
-            var $q = $(".my_cart_quantity");
-            if (data.cart_quantity) {
-                $q.parents('li:first').removeClass('d-none');
+            if (!data.cart_quantity) {
+                return window.location = '/shop/cart';
             }
-            else {
-                window.location = '/shop/cart';
-            }
-
-            $q.html(data.cart_quantity).hide().fadeIn(600);
+            wSaleUtils.updateCartNavBar(data);
             $input.val(data.quantity);
             $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
-
-            $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
-            $(".js_cart_summary").first().before(data['website_sale.short_cart_summary']).end().remove();
 
             if (data.warning) {
                 var cart_alert = $('.oe_cart').parent().find('#data_warning');
@@ -414,56 +417,21 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @override
      * @private
      */
-    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, new_carousel, isCombinationPossible) {
-        var $img;
+    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newCarousel, isCombinationPossible) {
         var $carousel = $productContainer.find('#o-carousel-product');
-
-        if (isCombinationPossible === undefined) {
-            isCombinationPossible = this.isSelectedVariantAllowed;
+        // When using the web editor, don't reload this or the images won't
+        // be able to be edited depending on if this is done loading before
+        // or after the editor is ready.
+        if (window.location.search.indexOf('enable_editor') === -1) {
+            var $newCarousel = $(newCarousel);
+            $carousel.after($newCarousel);
+            $carousel.remove();
+            $carousel = $newCarousel;
+            $carousel.carousel(0);
+            this._startZoom();
+            // fix issue with carousel height
+            this.trigger_up('widgets_start_request', {$target: $carousel});
         }
-
-        if (new_carousel) {
-            // When using the web editor, don't reload this or the images won't
-            // be able to be edited depending on if this is done loading before
-            // or after the editor is ready.
-            if (window.location.search.indexOf('enable_editor') === -1) {
-                var $new_carousel = $(new_carousel);
-                $carousel.after($new_carousel);
-                $carousel.remove();
-                $carousel = $new_carousel;
-                $carousel.carousel(0);
-                this._startZoom();
-                // fix issue with carousel height
-                this.trigger_up('widgets_start_request', {$target: $carousel});
-            }
-        }
-        else { // compatibility 12.0
-            var model = productId ? 'product.product' : 'product.template';
-            var modelId = productId || productTemplateId;
-            var imageSrc = '/web/image/{0}/{1}/image_1024'
-                .replace("{0}", model)
-                .replace("{1}", modelId);
-
-            $img = $productContainer.find('img.js_variant_img');
-            $img.attr("src", imageSrc);
-            $img.parent().attr('data-oe-model', model).attr('data-oe-id', modelId)
-                .data('oe-model', model).data('oe-id', modelId);
-
-            var $thumbnail = $productContainer.find('img.js_variant_img_small');
-            if ($thumbnail.length !== 0) { // if only one, thumbnails are not displayed
-                $thumbnail.attr("src", "/web/image/{0}/{1}/image_128/90x90"
-                    .replace('{0}', model)
-                    .replace('{1}', modelId));
-                $('.carousel').carousel(0);
-            }
-
-            // reset zooming constructs
-            $img.filter('[data-zoom-image]').attr('data-zoom-image', $img.attr('src'));
-            if ($img.data('zoomOdoo') !== undefined) {
-                $img.data('zoomOdoo').isReady = false;
-            }
-        }
-
         $carousel.toggleClass('css_not_available', !isCombinationPossible);
     },
     /**

@@ -61,6 +61,9 @@
                                         <field name="currency_id" invisible="1"/>
                                         <field name="amount_currency"/>
                                     </group>
+                                    <group string="Product" attrs="{'invisible': [('product_id', '=', False)]}">
+                                        <field name="product_id"/>
+                                    </group>
                                     <group string="States">
                                         <field name="blocked"/>
                                     </group>
@@ -486,9 +489,9 @@
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('invoice_payment_state', '!=', 'not_paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"
                                 string="Register Payment"
                                 groups="account.group_account_invoice"/>
-                        <!-- Preview (only invoices) -->
+                        <!-- Preview (only customer invoices) -->
                         <button name="preview_invoice" type="object" string="Preview"
-                                attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                                attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
                                 type="action" groups="account.group_account_invoice"
@@ -611,7 +614,7 @@
                                     <label for="invoice_date" string="Bill Date" style="font-weight:bold;"
                                            attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
                                 </div>
-                                <field name="invoice_date" nolabel="1"
+                                <field name="invoice_date" nolabel="1" options="{'datepicker': {'warn_future': true}}"
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
 
                                 <field name="date" string="Accounting Date"
@@ -636,6 +639,8 @@
                                        groups="account.group_account_user"
                                        options="{'no_create': True}"
                                        domain="[('type', '=?', invoice_filter_type_domain)]"/>
+
+                                <field name="company_id" groups="base.group_multi_company"/>
 
                                 <field name="currency_id"
                                        groups="base.group_multi_currency"
@@ -848,10 +853,9 @@
                                     <group string="Invoice"
                                            name="sale_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
-                                        <field name="company_id" groups="base.group_multi_company"/>
                                         <field name="invoice_user_id"/>
                                         <field name="invoice_origin" string="Source Document"
-                                               attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                                               attrs="{'invisible': [('invoice_origin', '=', False)]}"/>
                                     </group>
                                     <group string="Accounting"
                                            name="accounting_info_group"
@@ -880,6 +884,8 @@
                                                attrs="{'invisible': [('type', '!=', 'entry')], 'readonly': [('reversed_entry_id', '!=', False)]}"/>
                                         <field name="reversed_entry_id"
                                                attrs="{'invisible': [('type', '!=', 'entry')]}"/>
+                                        <field name="to_check"
+                                               attrs="{'invisible': [('type', '!=', 'entry')]}" />
                                     </group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company" required="1"/>
@@ -1012,7 +1018,7 @@
         </record>
 
         <record id="action_accrual_entry" model="ir.actions.server">
-            <field name="name">Change Period</field>
+            <field name="name">Create Accrual Entry</field>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field name="binding_model_id" ref="account.model_account_move_line"/>
             <field name="state">code</field>

@@ -94,6 +94,30 @@ QUnit.module('Views', {
                     {id: "2-20170808020000", name: "virtual"},
                 ]
             },
+            "ir.translation": {
+                fields: {
+                    lang_code: {type: "char"},
+                    value: {type: "char"},
+                    res_id: {type: "integer"},
+                    name: {type: "char"},
+                    lang: {type: "char"},
+                },
+                records: [{
+                    id: 99,
+                    res_id: 1,
+                    value: '',
+                    lang_code: 'en_US',
+                    lang: 'en_US',
+                    name: 'foo,foo'
+                },{
+                    id: 100,
+                    res_id: 1,
+                    value: '',
+                    lang_code: 'fr_BE',
+                    lang: 'fr_BE',
+                    name: 'foo,foo'
+                }]
+            },
         };
     }
 }, function () {
@@ -2007,6 +2031,48 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('fields are translatable in list view', async function (assert) {
+        assert.expect(3);
+
+        var multiLang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+        this.data.foo.fields.foo.translate = true;
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                    return Promise.resolve({
+                        domain: [],
+                        context: {search_default_name: 'foo,foo'},
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([["en_US","English"], ["fr_BE", "Frenglish"]]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            arch: '<tree editable="top">' +
+                        '<field name="foo" required="1"/>' +
+                    '</tree>',
+        });
+
+        await testUtils.dom.click(list.$('.o_data_row:first > td:not(.o_list_record_selector)').first());
+        assert.hasClass(list.$('.o_data_row:first'), 'o_selected_row');
+
+        await testUtils.dom.click(list.$('input.o_field_translate+span.o_field_translate'));
+        await testUtils.nextTick();
+
+        assert.containsOnce($('body'), '.o_translation_dialog');
+        assert.containsN($('.o_translation_dialog'), '.translation>input.o_field_char', 2,
+            'modal should have 2 languages to translate');
+
+        _t.database.multi_lang = multiLang;
+        list.destroy();
+    });
+
     QUnit.test('long words in text cells should break into smaller lines', async function (assert) {
         assert.expect(2);
 
@@ -2813,6 +2879,7 @@ QUnit.module('Views', {
             intercepts: {
                 do_action: function (event) {
                     assert.deepEqual(event.data.action, {
+                        context: {create: false},
                         res_id: 2,
                         res_model: 'res_currency',
                         type: 'ir.actions.act_window',
@@ -2823,6 +2890,42 @@ QUnit.module('Views', {
             },
         });
         await testUtils.dom.click(list.$('.o_group_header:eq(0) button'));
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with subfields, and onchange', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.onchanges = {
+            foo: function () {},
+        };
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree editable="bottom" expand="1">
+                    <field name="foo"/>
+                    <field name="currency_id"/>
+                    <groupby name="currency_id">
+                        <field name="position" invisible="1"/>
+                    </groupby>
+                </tree>`,
+            groupBy: ['currency_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.deepEqual(args.args[3], {
+                        foo: "1",
+                        currency_id: "",
+                    }, 'onchange spec should not follow relation of many2one fields');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:first'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), "new value");
+
         list.destroy();
     });
 
@@ -3292,6 +3395,193 @@ QUnit.module('Views', {
             "should contain 2 groups at first level");
         assert.containsN(list, '.o_group_name .fa-caret-right', 2,
             "the carret of closed groups should be right");
+
+        list.destroy();
+    });
+
+    QUnit.test('export list view to xls with nested groups', async function (assert) {
+        assert.expect(5);
+
+        let currencies = {};
+        _.each(this.data.res_currency.records, function (currency) {
+            currencies[currency.id] = currency;
+        });
+
+        let list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree download="1">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field" sum="Total"/>
+                    <field name="datetime"/>
+                    <field name="amount" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="o2m"/>
+                    <field name="m2o"/>
+                    <field name="m2m"/>
+                </tree>`,
+            groupBy: ['foo', 'bar'],
+            session: {
+                currencies: currencies,
+                get_file(args) {
+                    let data = JSON.parse(args.data.data);
+                    assert.strictEqual(args.url, '/web/list/export_xls',
+                        "should call get_file with the correct url");
+                    assert.deepEqual(data.columns, [
+                        {field: "foo", string: "Foo"},
+                        {field: "bar", string: "Bar"},
+                        {field: "int_field", aggregateValue: 32, string: "int_field"},
+                        {field: "datetime", string: "Datetime Field"},
+                        {field: "amount", string: "Monetary field"},
+                        {field: "o2m", string: "O2M field"},
+                        {field: "m2o", string: "M2O field"},
+                        {field: "m2m", string: "M2M field"},
+                    ], "columns should be in the correct order with the string and aggregate value")
+                    assert.deepEqual(data.groups[0], {
+                        // Group "yop"
+                        isGrouped: true,
+                        count: 1,
+                        aggregateValues: {int_field: 10},
+                        hideHeader: false,
+                        value: "yop",
+                        data: [{
+                            // Group "yop > true"
+                            isGrouped: false,
+                            count: 1,
+                            aggregateValues: {int_field: 10},
+                            hideHeader: false,
+                            value: "true",
+                            data: [{
+                                // Record "yop > true"
+                                foo: "yop",
+                                bar: "True",
+                                int_field: "10",
+                                datetime: "12/12/2016 10:55:05",
+                                amount: "1200.00€",
+                                m2m: "2 records",
+                                m2o: "Value 1",
+                                o2m: "No records",
+                            }]
+                        }]
+                    });
+                    assert.deepEqual(data.groups[1], {
+                        // Group "blip"
+                        isGrouped: true,
+                        count: 2,
+                        aggregateValues: {int_field: 5},
+                        hideHeader: false,
+                        value: "blip",
+                        data: [{
+                            // Group "blip > true"
+                            isGrouped: false,
+                            count: 1,
+                            aggregateValues: {int_field: 9},
+                            hideHeader: false,
+                            value: "true",
+                            data: [],
+                        }, {
+                            // Group "blip > false"
+                            isGrouped: false,
+                            count: 1,
+                            aggregateValues: {int_field: -4},
+                            hideHeader: false,
+                            value: "false",
+                            data: [],
+                        }]
+                    });
+                    assert.deepEqual(data.groups[2], {
+                        // Group "gnap"
+                        isGrouped: true,
+                        count: 1,
+                        aggregateValues: {int_field: 17},
+                        hideHeader: false,
+                        value: "gnap",
+                        data: [],
+                    });
+                    args.complete();
+                },
+            },
+        });
+
+        // open the first group
+        await testUtils.dom.click(list.$('.o_group_header:first'));
+
+        // open subgroup
+        let $openGroup = list.$('tbody:nth(1)');
+        await testUtils.dom.click($openGroup.find('.o_group_header:first'));
+
+        // open the second group
+        await testUtils.dom.click(list.$('.o_group_header:nth(2)'));
+
+        // Download
+        await testUtils.dom.click(list.$buttons.find('.o_list_download'));
+
+        list.destroy();
+    });
+
+    QUnit.test('export list view to xls', async function (assert) {
+        assert.expect(3);
+
+        let currencies = {};
+        _.each(this.data.res_currency.records, function (currency) {
+            currencies[currency.id] = currency;
+        });
+
+        let list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field" sum="Total"/>
+                    <field name="datetime"/>
+                    <field name="amount" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="o2m"/>
+                    <field name="m2o"/>
+                    <field name="m2m"/>
+                </tree>`,
+            session: {
+                currencies: currencies,
+                get_file(args) {
+                    let data = JSON.parse(args.data.data);
+                    assert.strictEqual(args.url, '/web/list/export_xls',
+                        "should call get_file with the correct url");
+                    assert.deepEqual(data.columns, [
+                        {field: "foo", string: "Foo"},
+                        {field: "bar", string: "Bar"},
+                        {field: "int_field", aggregateValue: 32, string: "int_field"},
+                        {field: "datetime", string: "Datetime Field"},
+                        {field: "amount", string: "Monetary field"},
+                        {field: "o2m", string: "O2M field"},
+                        {field: "m2o", string: "M2O field"},
+                        {field: "m2m", string: "M2M field"},
+                    ], "columns should be in the correct order with the string and aggregate value")
+                    assert.deepEqual(data.groups[0], {
+                        isGrouped: false,
+                        count: 4,
+                        aggregateValues: {},
+                        hideHeader: true,
+                        value: "Undefined",
+                        data: [
+                            {foo: "yop", bar: "True", int_field: "10", datetime: "12/12/2016 10:55:05", amount: "1200.00€", m2m: "2 records", m2o: "Value 1", o2m: "No records"},
+                            {foo: "blip", bar: "True", int_field: "9", datetime: "", amount: "$500.00", m2m: "3 records", m2o: "Value 2", o2m: "No records"},
+                            {foo: "gnap", bar: "True", int_field: "17", datetime: "", amount: "$300.00", m2m: "No records", m2o: "Value 1", o2m: "No records"},
+                            {foo: "blip", bar: "False", int_field: "-4", datetime: "", amount: "$0.00", m2m: "1 record", m2o: "Value 1", o2m: "No records"},
+                        ],
+                    });
+                    args.complete();
+                },
+            },
+        });
+
+        // Download
+        await testUtils.dom.click(list.$buttons.find('.o_list_download'));
 
         list.destroy();
     });
@@ -4362,6 +4652,58 @@ QUnit.module('Views', {
         }).length;
         assert.strictEqual(nbInputRight, 2,
             "there should be two right-aligned input");
+
+        list.destroy();
+    });
+
+    QUnit.test('grouped list with another grouped list parent, click unfold', async function (assert) {
+        assert.expect(3);
+        this.data.bar.fields = {
+            cornichon: {string: 'cornichon', type: 'char'},
+        };
+
+        var rec = this.data.bar.records[0];
+        // create records to have the search more button
+        var newRecs = [];
+        for (var i=0; i<8; i++) {
+            var newRec = _.extend({}, rec);
+            newRec.id = 10 + i;
+            newRec.cornichon = 'extra fin';
+            newRecs.push(newRec);
+        }
+        this.data.bar.records = newRecs;
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/><field name="m2o"/></tree>',
+            groupBy: ['bar'],
+            archs: {
+                'bar,false,list': '<tree><field name="cornichon"/></tree>',
+                'bar,false,search': '<search><filter context="{\'group_by\': \'cornichon\'}" string="cornichon"/></search>',
+            },
+        });
+
+        await list.update({groupBy: []});
+
+        await testUtils.dom.click(list.$('.o_data_cell:eq(0)'));
+
+        await testUtils.dom.click(list.$('.o_selected_row .o_data_cell .o_field_many2one input'));
+        await testUtils.dom.triggerEvents($('.ui-autocomplete a:contains(Search More)'),
+            ['mouseenter', 'click']);
+
+        assert.containsOnce($('body'), '.modal-content');
+
+        assert.containsNone($('body'), '.modal-content .o_group_name', 'list in modal not grouped');
+
+        await testUtils.dom.click($('body .modal-content button:contains(Group By)'));
+
+        await testUtils.dom.click($('body .modal-content .o_menu_item a:contains(cornichon)'));
+
+        await testUtils.dom.click($('body .modal-content .o_group_header'));
+
+        assert.containsOnce($('body'), '.modal-content .o_group_open');
 
         list.destroy();
     });

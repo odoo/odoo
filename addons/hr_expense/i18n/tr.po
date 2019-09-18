@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-09 12:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -222,6 +222,12 @@ msgid "An expense account is expected"
 msgstr "Masraf hesabı gerekiyor"
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "An expense report must contain only lines from the same company."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_account_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Analytic Account"
@@ -313,11 +319,6 @@ msgstr "Doğru ve uygun sertifikalı,<br/>(Tarih ve imza).<br/><br/>"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Company"
 msgstr "Şirket"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__company_id
-msgid "Company related to this journal"
-msgstr "Bu yevmiyeyle ilişkili şirket"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
@@ -546,6 +547,7 @@ msgstr "Gider Kaydı Ödeme Sihirbazı"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__expense_sheet_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Report"
@@ -802,14 +804,10 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_unread
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_unread
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 
@@ -1046,8 +1044,8 @@ msgstr "Eklentilerin Sayısı"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error_counter
-msgid "Number of error"
-msgstr "Hata Sayısı"
+msgid "Number of errors"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
@@ -1505,6 +1503,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "The journal linked to the expense report must be in the same company."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
 msgid "The journal must be set on posted expense"
 msgstr ""
@@ -1700,6 +1704,12 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "You can now submit it to the manager from the following link."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/wizard/hr_expense_sheet_register_payment.py:0
+#, python-format
+msgid "You can only apply this action from an expense report."
 msgstr ""
 
 #. module: hr_expense

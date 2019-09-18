@@ -7,19 +7,19 @@
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
 # Onii Onii <onii0223@yahoo.com>, 2019
 # nasaaskii <nasaaskii@gmail.com>, 2019
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Otgonbayar.A <gobi.mn@gmail.com>, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-13 11:26+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -471,7 +471,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attribute_value_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 msgid "Apply on Variants"
 msgstr ""
 
@@ -558,9 +558,9 @@ msgid "BOM Product Variants"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line__attribute_value_ids
-msgid "BOM Product Variants needed form apply this line."
-msgstr "Орцын Барааны Хувилбарт энэ мөрийг хэрэглэх маягт хэрэгцээтэй."
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
+msgid "BOM Product Variants needed to apply this line."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
@@ -724,6 +724,14 @@ msgid "BoM Type"
 msgstr "Орцын Төрөл"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"BoM cannot concern product %s and have a line with attributes (%s) at the "
+"same time."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "BoM details"
 msgstr "Орцын дэлгэрэнгүй"
@@ -731,8 +739,8 @@ msgstr "Орцын дэлгэрэнгүй"
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #, python-format
-msgid "BoM line product %s should not be same as BoM product."
-msgstr "Орцын мөрийн %s бараа нь Орцын бараатай ижил байж болохгүй."
+msgid "BoM line product %s should not be the same as BoM product."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_byproducts
@@ -854,12 +862,22 @@ msgid "Companies"
 msgstr "Компаниуд"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder__company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder_line__company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing__company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__company_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Company"
 msgstr "Компани"
@@ -869,6 +887,11 @@ msgstr "Компани"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Component"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Component Available"
 msgstr ""
 
 #. module: mrp
@@ -922,6 +945,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Confirmed"
 msgstr "Батлагдсан"
+
+#. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
+msgid ""
+"Consume components and build finished products using bills of materials"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder_line__qty_done
@@ -1305,7 +1334,7 @@ msgstr "Дуусах огноо"
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__product_tracking
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_line__product_tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr ""
+msgstr "Агуулахын нөөцөнд байгаа барааг мөшгин шалгах боломж"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1593,18 +1622,14 @@ msgstr ""
 "боломжтой."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread
-#: model:ir.model.fields,help:mrp.field_mrp_production__message_unread
-#: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_unread
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Хэрэв сонгогдсон тохиолдолд шинэ зурвасууд таны анхаарлыг шаардана."
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
+#: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction
+#: model:ir.model.fields,help:mrp.field_mrp_production__message_unread
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_unread
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_needaction
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Хэрэв сонгогдсон бол, шинэ зурвасууд таны анхаарлыг шаардана."
 
@@ -1725,7 +1750,7 @@ msgstr "Мэдээллэх, тулгалтанд хэрэглэгдэхгүй"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "Insufficient Quantity"
-msgstr ""
+msgstr "Тоо хэмжээ хүрэлцэхгүй"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
@@ -1938,6 +1963,11 @@ msgstr "Түгжих"
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr "Алдагдлын Шалтгаан"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
+msgid "Lot"
+msgstr "Сери"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_production_lot
@@ -2185,11 +2215,6 @@ msgid "Material Availability"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-msgid "Material Available"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_has_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error
@@ -2243,11 +2268,6 @@ msgstr "Хөтлөх Хөдөлгөөн"
 #: model:ir.actions.server,name:mrp.production_order_server_action
 msgid "Mrp: Plan Production Orders"
 msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-msgid "My Activities"
-msgstr "Миний ажилбар"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__name
@@ -2373,8 +2393,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_has_error_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_error_counter
-msgid "Number of error"
-msgstr "Алдааны тоо"
+msgid "Number of errors"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
@@ -2707,6 +2727,11 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__possible_bom_product_template_attribute_value_ids
+msgid "Possible Bom Product Template Attribute Value"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Post Inventory"
 msgstr "Бараа материалыг Илгээх"
@@ -2776,12 +2801,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
-msgid ""
-"Produce finished products and consume components based on bill of materials."
-msgstr ""
-
-#. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
 msgid "Produce residual products"
 msgstr ""
@@ -2826,9 +2845,14 @@ msgid "Product"
 msgstr "Бараа"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "Product Attachments"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "Product Cost"
-msgstr ""
+msgstr "Барааны өртөг"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_plm
@@ -2948,7 +2972,6 @@ msgstr "Бүтээмж"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_loss_action
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_blocked
-#: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_loss
 msgid "Productivity Losses"
 msgstr "Бүтээмжийн Алдагдал"
 
@@ -2962,6 +2985,11 @@ msgstr "Бараа"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Products to Consume"
 msgstr "Хангах Бараанууд"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
+msgid "Progress Done (%)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date
@@ -2987,7 +3015,7 @@ msgstr "Чанарын Алдагдал"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__quant_ids
 msgid "Quant"
-msgstr ""
+msgstr "Нөөц"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_qty
@@ -3006,6 +3034,11 @@ msgid "Quantity"
 msgstr "Тоо хэмжээ"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
+msgid "Quantity Done"
+msgstr "Боловсруулсан тоо"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__lot_produced_qty
 msgid "Quantity Finished Product"
 msgstr "Эцсийн Бүтээгдэхүүний Тоо хэмжээ"
@@ -3017,8 +3050,18 @@ msgid "Quantity Produced"
 msgstr "Үйлдвэрлэсэн Тоо хэмжээ"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
+msgid "Quantity Reserved"
+msgstr "Нөөцлөгдсөн тоо хэмжээ"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
 msgid "Quantity To Be Produced"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
+msgid "Quantity To Consume"
 msgstr ""
 
 #. module: mrp
@@ -3182,6 +3225,7 @@ msgstr "Хариуцсан хэрэглэгч"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing__name
@@ -3584,11 +3628,6 @@ msgid "Technical Field to order moves"
 msgstr "Хөдөлгөөнийг эрэмбэлэх Техникийн Талбар"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line__valid_product_attribute_value_ids
-msgid "Technical compute"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__is_user_working
 msgid "Technical field indicating whether the current user is working. "
 msgstr "Одоогийн хэрэглэгч ажиллаж байгаа эсэхийг заадаг техникийн талбар."
@@ -3634,6 +3673,13 @@ msgid ""
 msgstr ""
 "Таны сонгосон Барааны Хэмжих Нэгж нь барааны маягтан дээр сонгосон хэмжих "
 "нэгжээс ялгаатай ангилалтай байна."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The attribute value %s set on product %s does not match the BoM product %s."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -3690,6 +3736,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__routing_id
+#: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__routing_id
 msgid ""
 "The operations for producing this BoM.  When a routing is specified, the "
 "production orders will  be executed through work orders, otherwise "
@@ -4164,11 +4211,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__valid_product_attribute_value_ids
-msgid "Valid Product Attribute Values"
-msgstr ""
-
-#. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
@@ -4210,7 +4252,7 @@ msgstr "Материал Хүлээж буй"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-msgid "Waiting for Material"
+msgid "Waiting for Component"
 msgstr ""
 
 #. module: mrp
@@ -4491,7 +4533,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__working_state
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_state
 msgid "Workcenter Status"
-msgstr ""
+msgstr "Дамжлагын статус"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -4502,11 +4544,6 @@ msgstr "Дамжлага хоригдсон, хориог чөлөөлөх бо�
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_calendar_id
 msgid "Working Hours"
 msgstr "Ажлын цаг"
-
-#. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
-msgid "Working Times"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_user_ids
@@ -4708,11 +4745,6 @@ msgstr ""
 msgid ""
 "You will get here statistics about the\n"
 "              work orders duration related to this routing."
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-msgid "attachment"
 msgstr ""
 
 #. module: mrp

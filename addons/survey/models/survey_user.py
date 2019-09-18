@@ -180,7 +180,7 @@ class SurveyUserInput(models.Model):
         badge_ids = []
         for user_input in self:
             if user_input.survey_id.certificate and user_input.quizz_passed:
-                if user_input.survey_id.certification_mail_template_id:
+                if user_input.survey_id.certification_mail_template_id and not user_input.test_entry:
                     user_input.survey_id.certification_mail_template_id.send_mail(user_input.id, notif_layout="mail.mail_notification_light")
                 if user_input.survey_id.certification_give_badge:
                     badge_ids.append(user_input.survey_id.certification_badge_id.id)
@@ -253,23 +253,18 @@ class SurveyUserInputLine(models.Model):
             if not fields_type.get(uil.answer_type, True):
                 raise ValidationError(_('The answer must be in the right type'))
 
-    def _get_mark(self, value_suggested):
-        label = self.env['survey.label'].browse(int(value_suggested))
-        mark = label.answer_score if label.exists() else 0.0
-        return mark
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             value_suggested = vals.get('value_suggested')
             if value_suggested:
-                vals.update({'answer_score': self._get_mark(value_suggested)})
+                vals.update({'answer_score': self.env['survey.label'].browse(int(value_suggested)).answer_score})
         return super(SurveyUserInputLine, self).create(vals_list)
 
     def write(self, vals):
         value_suggested = vals.get('value_suggested')
         if value_suggested:
-            vals.update({'answer_score': self._get_mark(value_suggested)})
+            vals.update({'answer_score': self.env['survey.label'].browse(int(value_suggested)).answer_score})
         return super(SurveyUserInputLine, self).write(vals)
 
     @api.model

@@ -31,60 +31,45 @@ README = ['README.rst', 'README.md', 'README.txt']
 _logger = logging.getLogger(__name__)
 
 # addons path as a list
-ad_paths = []
+# ad_paths is a deprecated alias, please use odoo.addons.__path__
+@tools.lazy
+def ad_paths():
+    _logger.warning('"odoo.modules.module.ad_paths" is a deprecated '
+                    'proxy to "odoo.addons.__path__". Please consider '
+                    'using the latter as the former is going to be '
+                    'removed in the next version.',
+                    exc_info=DeprecationWarning(), stack_info=True)
+    return odoo.addons.__path__
 hooked = False
 
 # Modules already loaded
 loaded = []
 
 class AddonsHook(object):
-    """ Makes modules accessible through openerp.addons.* and odoo.addons.* """
+    """ Makes modules accessible through openerp.addons.* """
 
     def find_module(self, name, path=None):
-        if name.startswith(('odoo.addons.', 'openerp.addons.'))\
-                and name.count('.') == 2:
+        if name.startswith('openerp.addons.') and name.count('.') == 2:
+            _logger.warning('"openerp.addons" is a deprecated alias to '
+                            '"odoo.addons". Please consider using the '
+                            'latter as the former is going to be removed '
+                            'in the next version.',
+                            exc_info=DeprecationWarning(), stack_info=True)
             return self
 
     def load_module(self, name):
         assert name not in sys.modules
 
-        # get canonical names
         odoo_name = re.sub(r'^openerp.addons.(\w+)$', r'odoo.addons.\g<1>', name)
-        openerp_name = re.sub(r'^odoo.addons.(\w+)$', r'openerp.addons.\g<1>', odoo_name)
 
-        assert odoo_name not in sys.modules
-        assert openerp_name not in sys.modules
+        odoo_module = sys.modules.get(odoo_name)
+        if not odoo_module:
+            odoo_module = importlib.import_module(odoo_name)
 
-        # get module name in addons paths
-        _1, _2, addon_name = name.split('.')
-        # load module
-        f, path, (_suffix, _mode, type_) = imp.find_module(addon_name, ad_paths)
-        if f: f.close()
+        sys.modules[name] = odoo_module
 
-        # TODO: fetch existing module from sys.modules if reloads permitted
-        # create empty odoo.addons.* module, set name
-        new_mod = types.ModuleType(odoo_name)
-        new_mod.__loader__ = self
+        return odoo_module
 
-        # module top-level can only be a package
-        assert type_ == imp.PKG_DIRECTORY, "Odoo addon top-level must be a package"
-        modfile = opj(path, '__init__.py')
-        new_mod.__file__ = modfile
-        new_mod.__path__ = [path]
-        new_mod.__package__ = odoo_name
-
-        # both base and alias should be in sys.modules to handle recursive and
-        # corecursive situations
-        sys.modules[odoo_name] = sys.modules[openerp_name] = new_mod
-
-        # execute source in context of module *after* putting everything in
-        # sys.modules, so recursive import works
-        exec(open(modfile, 'rb').read(), new_mod.__dict__)
-
-        # people import openerp.addons and expect openerp.addons.<module> to work
-        setattr(odoo.addons, addon_name, new_mod)
-
-        return sys.modules[name]
 # need to register loader with setuptools as Jinja relies on it when using
 # PackageLoader
 pkg_resources.register_loader_type(AddonsHook, pkg_resources.DefaultProvider)
@@ -96,6 +81,11 @@ class OdooHook(object):
         # openerp.addons.<identifier> should already be matched by AddonsHook,
         # only framework and subdirectories of modules should match
         if re.match(r'^openerp\b', name):
+            _logger.warning('openerp is a deprecated alias to odoo. '
+                            'Please consider using the latter as the '
+                            'former is going to be removed in the next '
+                            'version.',
+                            exc_info=DeprecationWarning(), stack_info=True)
             return self
 
     def load_module(self, name):
@@ -125,28 +115,21 @@ def initialize_sys_path():
     ``import odoo.addons.crm``) works even if the addons are not in the
     PYTHONPATH.
     """
-    global ad_paths
     global hooked
 
     dd = os.path.normcase(tools.config.addons_data_dir)
-    if os.access(dd, os.R_OK) and dd not in ad_paths:
-        ad_paths.append(dd)
+    if os.access(dd, os.R_OK) and dd not in odoo.addons.__path__:
+        odoo.addons.__path__.append(dd)
 
     for ad in tools.config['addons_path'].split(','):
         ad = os.path.normcase(os.path.abspath(tools.ustr(ad.strip())))
-        if ad not in ad_paths:
-            ad_paths.append(ad)
+        if ad not in odoo.addons.__path__:
+            odoo.addons.__path__.append(ad)
 
     # add base module path
     base_path = os.path.normcase(os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons')))
-    if base_path not in ad_paths and os.path.isdir(base_path):
-        ad_paths.append(base_path)
-
-    # add odoo.addons.__path__
-    for ad in __import__('odoo.addons').addons.__path__:
-        ad = os.path.abspath(ad)
-        if ad not in ad_paths and os.path.isdir(ad):
-            ad_paths.append(ad)
+    if base_path not in odoo.addons.__path__ and os.path.isdir(base_path):
+        odoo.addons.__path__.append(base_path)
 
     if not hooked:
         sys.meta_path.insert(0, OdooHook())
@@ -162,7 +145,7 @@ def get_module_path(module, downloaded=False, display_warning=True):
 
     """
     initialize_sys_path()
-    for adp in ad_paths:
+    for adp in odoo.addons.__path__:
         files = [opj(adp, module, manifest) for manifest in MANIFEST_NAMES] +\
                 [opj(adp, module + '.zip')]
         if any(os.path.exists(f) for f in files):
@@ -241,7 +224,7 @@ def get_resource_from_path(path):
     :return: tuple(module_name, relative_path, os_relative_path) if possible, else None
     """
     resource = False
-    for adpath in ad_paths:
+    for adpath in odoo.addons.__path__:
         # force trailing separator
         adpath = os.path.join(adpath, "")
         if os.path.commonprefix([adpath, path]) == adpath:
@@ -338,8 +321,8 @@ def load_information_from_description_file(module, mod_path=None):
             readme_path = [opj(mod_path, x) for x in README
                            if os.path.isfile(opj(mod_path, x))]
             if readme_path:
-                readme_text = tools.file_open(readme_path[0]).read()
-                info['description'] = readme_text
+                with tools.file_open(readme_path[0]) as fd:
+                    info['description'] = fd.read()
 
         # auto_install is set to `False` if disabled, and a set of
         # auto_install dependencies otherwise. That way, we can set
@@ -418,7 +401,7 @@ def get_modules():
 
     plist = []
     initialize_sys_path()
-    for ad in ad_paths:
+    for ad in odoo.addons.__path__:
         plist.extend(listdir(ad))
     return list(set(plist))
 

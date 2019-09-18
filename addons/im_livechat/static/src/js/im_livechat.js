@@ -123,6 +123,14 @@ var LivechatButton = Widget.extend({
             serverURL: this._serverURL,
         });
         var message = new WebsiteLivechatMessage(this, data, options);
+
+        var hasAlreadyMessage = _.some(this._messages, function (msg) {
+            return message.getID() === msg.getID();
+        });
+        if (hasAlreadyMessage) {
+            return;
+        }
+
         if (this._livechat) {
             this._livechat.addMessage(message);
         }
@@ -232,7 +240,9 @@ var LivechatButton = Widget.extend({
                     data: livechatData
                 });
                 return self._openChatWindow().then(function () {
-                    self._sendWelcomeMessage();
+                    if (!self._history) {
+                        self._sendWelcomeMessage();
+                    }
                     self._renderMessages();
                     self.call('bus_service', 'addChannel', self._livechat.getUUID());
                     self.call('bus_service', 'startPolling');

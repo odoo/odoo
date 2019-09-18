@@ -153,7 +153,7 @@ class LunchSupplier(models.Model):
         for supplier in self:
             now = now.astimezone(pytz.timezone(supplier.tz))
 
-            if supplier.recurrency_end_date and now.date() > supplier.recurrency_end_date:
+            if supplier.recurrency_end_date and now.date() >= supplier.recurrency_end_date:
                 supplier.available_today = False
             else:
                 fieldname = 'recurrency_%s' % (WEEKDAY_TO_NAME[now.weekday()])

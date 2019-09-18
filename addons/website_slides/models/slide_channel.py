@@ -5,7 +5,7 @@ import uuid
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
+from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 
 
@@ -366,7 +366,7 @@ class Channel(models.Model):
         note as we don't want all channel followers to be notified of this answer. """
         self.ensure_one()
         if kwargs.get('message_type') == 'comment' and not self.can_review:
-            raise KarmaError(_('Not enough karma to review'))
+            raise AccessError(_('Not enough karma to review'))
         if parent_id:
             parent_message = self.env['mail.message'].sudo().browse(parent_id)
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):
@@ -474,25 +474,19 @@ class Channel(models.Model):
         for channel in self:
             removed_channel_partner_domain = expression.OR([
                 removed_channel_partner_domain,
-                [('partner_id', 'in', partner_ids.ids),
+                [('partner_id', 'in', partner_ids),
                  ('channel_id', '=', channel.id)]
             ])
 
         if removed_channel_partner_domain:
             self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
 
-    def action_view(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'slide.channel',
-            'res_id': self.id,
-        }
-
     def action_view_slides(self):
         action = self.env.ref('website_slides.slide_slide_action').read()[0]
-        action['context'] = {'default_channel_id': self.id}
+        action['context'] = {
+            'search_default_published': 1,
+            'default_channel_id': self.id
+        }
         action['domain'] = [('channel_id', "=", self.id), ('is_category', '=', False)]
         return action
 

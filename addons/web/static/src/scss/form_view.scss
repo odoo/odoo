@@ -575,14 +575,19 @@
     }
 
     // Translate icon
-    .o_field_translate {
-        padding: 0;
-        cursor: pointer;
-        width: 35px !important;
-        vertical-align: top;
-        &::before { // seems to be useful for some old browser
+    span.o_field_translate {
+            padding: 0 $o-form-spacing-unit 0 0 !important;
+            vertical-align: top;
             position: relative;
-            content: attr(data-code);
+            margin-left: -35px;
+            width: 35px !important; // important is usefull for textarea
+            display: inline-block;
+            text-align: right;
+            border: none;  // usefull for textarea
+    }
+    input, textarea {
+        &.o_field_translate {
+            padding-right: 25px;
         }
     }
 

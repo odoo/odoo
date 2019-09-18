@@ -51,7 +51,7 @@ from decorator import decorate, decorator
 from werkzeug.local import Local, release_local
 
 import odoo
-from odoo.tools import frozendict, classproperty, StackMap
+from odoo.tools import frozendict, classproperty, lazy_property, StackMap
 from odoo.exceptions import CacheMiss
 
 _logger = logging.getLogger(__name__)
@@ -213,9 +213,9 @@ def depends(*args):
 
 
 def depends_context(*args):
-    """ Return a decorator that specifies the context  dependencies of a non-stored "compute"
-        method (for new-style function fields). Each argument must be a string
-        that consists in a key in the context::
+    """ Return a decorator that specifies the context dependencies of a
+        non-stored "compute" method.  Each argument is a key in the context's
+        dictionary::
 
             price = fields.Float(compute='_compute_product_price')
 
@@ -227,6 +227,12 @@ def depends_context(*args):
                     else:
                         pricelist = self.env['product.pricelist'].get_default_pricelist()
                     product.price = pricelist.get_products_price(product).get(product.id, 0.0)
+
+        All dependencies must be hashable.  The following keys have special
+        support:
+         - 'force_company' (value in context or current company id),
+         - 'uid' (current user id and superuser flag),
+         - 'active_test' (value in env.context or value in field.context).
     """
     return attrsetter('_depends_context', args)
 
@@ -518,12 +524,12 @@ class Environment(Mapping):
             superuser mode. """
         return self.su or self.user._is_system()
 
-    @property
+    @lazy_property
     def user(self):
         """ return the current user (as an instance) """
         return self(su=True)['res.users'].browse(self.uid)
 
-    @property
+    @lazy_property
     def company(self):
         """ return the company in which the user is logged in (as an instance) """
         company_ids = self.context.get('allowed_company_ids', False)
@@ -533,7 +539,7 @@ class Environment(Mapping):
                 return self['res.company'].browse(company_id)
         return self.user.company_id
 
-    @property
+    @lazy_property
     def companies(self):
         """ return a recordset of the enabled companies by the user """
         try:  # In case the user tries to bidouille the url (eg: cids=1,foo,bar)
@@ -636,14 +642,16 @@ class Environment(Mapping):
         """ Return whether ``field`` must be computed on ``record``. """
         return record.id in self.all.tocompute.get(field, ())
 
+    def not_to_compute(self, field, records):
+        """ Return the subset of ``records`` for which ``field`` must not be computed. """
+        ids = self.all.tocompute.get(field, ())
+        return records.browse(id_ for id_ in records._ids if id_ not in ids)
+
     def add_to_compute(self, field, records):
-        """ Mark ``field`` to be computed on ``records``, return newly added records. """
+        """ Mark ``field`` to be computed on ``records``. """
         if not records:
             return records
-        ids = self.all.tocompute[field]
-        added_ids = [id_ for id_ in records._ids if id_ not in ids]
-        ids.update(added_ids)
-        return records.browse(added_ids)
+        self.all.tocompute[field].update(records._ids)
 
     def remove_to_compute(self, field, records):
         """ Mark ``field`` as computed on ``records``. """
@@ -691,25 +699,10 @@ class Cache(object):
         # {field: {record_id: value}}
         self._data = defaultdict(dict)
 
-    def _get_context_key(self, env, field):
-        get_context = env.context.get
-
-        def get(key):
-            if key == 'force_company':
-                return get_context('force_company') or env.company.id
-            elif key == 'uid':
-                return (env.uid, env.su)
-            elif key == 'active_test':
-                return get_context('active_test', field.context.get('active_test', True))
-            else:
-                return get_context(key)
-
-        return tuple(get(key) for key in field.depends_context)
-
     def contains(self, record, field):
         """ Return whether ``record`` has a value for ``field``. """
         if field.depends_context:
-            key = self._get_context_key(record.env, field)
+            key = field.cache_key(record.env)
             return key in self._data.get(field, {}).get(record.id, {})
         return record.id in self._data.get(field, ())
 
@@ -718,8 +711,7 @@ class Cache(object):
         try:
             value = self._data[field][record._ids[0]]
             if field.depends_context:
-                key = self._get_context_key(record.env, field)
-                value = value[key]
+                value = value[field.cache_key(record.env)]
             return value
         except KeyError:
             if default is NOTHING:
@@ -729,7 +721,7 @@ class Cache(object):
     def set(self, record, field, value):
         """ Set the value of ``field`` for ``record``. """
         if field.depends_context:
-            key = self._get_context_key(record.env, field)
+            key = field.cache_key(record.env)
             self._data[field].setdefault(record._ids[0], {})[key] = value
         else:
             self._data[field][record._ids[0]] = value
@@ -737,7 +729,7 @@ class Cache(object):
     def update(self, records, field, values):
         """ Set the values of ``field`` for several ``records``. """
         if field.depends_context:
-            key = self._get_context_key(records.env, field)
+            key = field.cache_key(records.env)
             field_cache = self._data[field]
             for record_id, value in zip(records._ids, values):
                 field_cache.setdefault(record_id, {})[key] = value
@@ -754,23 +746,45 @@ class Cache(object):
     def get_values(self, records, field):
         """ Return the cached values of ``field`` for ``records``. """
         field_cache = self._data[field]
-        key = self._get_context_key(records.env, field) if field.depends_context else None
+        key = field.cache_key(records.env) if field.depends_context else None
         for record_id in records._ids:
             try:
-                if key:
+                if key is not None:
                     yield field_cache[record_id][key]
                 else:
                     yield field_cache[record_id]
             except KeyError:
                 pass
 
+    def get_records_different_from(self, records, field, value):
+        """ Return the subset of ``records`` that has not ``value`` for ``field``. """
+        field_cache = self._data[field]
+        key = field.cache_key(records.env) if field.depends_context else None
+        ids = []
+        for record_id in records._ids:
+            try:
+                if key is not None:
+                    val = field_cache[record_id][key]
+                else:
+                    val = field_cache[record_id]
+            except KeyError:
+                ids.append(record_id)
+            else:
+                if val != value:
+                    ids.append(record_id)
+        return records.browse(ids)
+
     def get_fields(self, record):
         """ Return the fields with a value for ``record``. """
         for name, field in record._fields.items():
-            values = self._data.get(field, ())
-            key = self._get_context_key(record.env, field) if field.depends_context else None
-            if name != 'id' and record.id in values and (not key or key in values[record.id]):
-                yield field
+            if name == 'id':
+                continue
+            values = self._data.get(field, {})
+            if record.id not in values:
+                continue
+            if field.depends_context and field.cache_key(record.env) not in values[record.id]:
+                continue
+            yield field
 
     def get_records(self, model, field):
         """ Return the records of ``model`` that have a value for ``field``. """

@@ -331,14 +331,18 @@ class WebRequest(object):
         if self.endpoint.first_arg_is_req:
             args = (request,) + args
 
+        first_time = True
+
         # Correct exception handling and concurency retry
         @service_model.check
         def checked_call(___dbname, *a, **kw):
+            nonlocal first_time
             # The decorator can call us more than once if there is an database error. In this
             # case, the request cursor is unusable. Rollback transaction to create a new one.
-            if self._cr:
+            if self._cr and not first_time:
                 self._cr.rollback()
                 self.env.clear()
+            first_time = False
             result = self.endpoint(*a, **kw)
             if isinstance(result, Response) and result.is_qweb:
                 # Early rendering of lazy responses to benefit from @service_model.check protection
@@ -633,7 +637,7 @@ class JsonRequest(WebRequest):
             error = {
                 'code': 200,
                 'message': "Odoo Server Error",
-                'data': request.registry['ir.http'].serialize_exception(exception),
+                'data': serialize_exception(exception),
             }
             if isinstance(exception, werkzeug.exceptions.NotFound):
                 error['http_status'] = 404
@@ -682,6 +686,33 @@ class JsonRequest(WebRequest):
             return self._json_response(result)
         except Exception as e:
             return self._handle_exception(e)
+
+
+def serialize_exception(e):
+    tmp = {
+        "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
+        "debug": traceback.format_exc(),
+        "message": ustr(e),
+        "arguments": e.args,
+        "exception_type": "internal_error"
+    }
+    if isinstance(e, odoo.exceptions.UserError):
+        tmp["exception_type"] = "user_error"
+    elif isinstance(e, odoo.exceptions.Warning):
+        tmp["exception_type"] = "warning"
+    elif isinstance(e, odoo.exceptions.RedirectWarning):
+        tmp["exception_type"] = "warning"
+    elif isinstance(e, odoo.exceptions.AccessError):
+        tmp["exception_type"] = "access_error"
+    elif isinstance(e, odoo.exceptions.MissingError):
+        tmp["exception_type"] = "missing_error"
+    elif isinstance(e, odoo.exceptions.AccessDenied):
+        tmp["exception_type"] = "access_denied"
+    elif isinstance(e, odoo.exceptions.ValidationError):
+        tmp["exception_type"] = "validation_error"
+    elif isinstance(e, odoo.exceptions.except_orm):
+        tmp["exception_type"] = "except_orm"
+    return tmp
 
 
 class HttpRequest(WebRequest):
@@ -1268,14 +1299,15 @@ class Root(object):
         controllers and configure them.  """
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
-        for addons_path in odoo.modules.module.ad_paths:
+        for addons_path in odoo.addons.__path__:
             for module in sorted(os.listdir(str(addons_path))):
                 if module not in addons_manifest:
                     mod_path = opj(addons_path, module)
                     manifest_path = module_manifest(mod_path)
                     path_static = opj(addons_path, module, 'static')
                     if manifest_path and os.path.isdir(path_static):
-                        manifest_data = open(manifest_path, 'rb').read()
+                        with open(manifest_path, 'rb') as fd:
+                            manifest_data = fd.read()
                         manifest = ast.literal_eval(pycompat.to_text(manifest_data))
                         if not manifest.get('installable', True):
                             continue

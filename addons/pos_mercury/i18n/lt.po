@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"POT-Creation-Date: 2019-09-13 11:26+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -32,18 +32,12 @@ msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Pirkti kortelių skaitytuvą"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"<i>Mercury Configurations</i> define what Mercury account will be used when\n"
-"                                processing credit card transactions in the Point Of Sale. Setting up a Mercury\n"
+"<i>Vantiv Configurations</i> define what Vantiv account will be used when\n"
+"                                processing credit card transactions in the Point Of Sale. Setting up a Vantiv\n"
 "                                configuration will enable you to allow payments with various credit cards\n"
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
-"<i>Mercury nustatymai</i> nurodo, kokia Mercury sąskaita bus naudojama\n"
-"apdorojant kortelių operacijas pardavimo taške. Mercury konfigūracijos\n"
-"nustatymas įgalins jus įjungti mokėjimus įvairiomis kortelėmis (pvz.,\n"
-"Visa, MasterCard, Discovery, American Express, ...). Po šios \n"
-"konfigūracijos nustatymo turėtumėte ją susieti su pardavimo\n"
-"taško mokėjimo būdu."
 
 #. module: pos_mercury
 #. openerp-web
@@ -201,16 +195,14 @@ msgstr "Pardavėjo ID jo identifikavimui tiekėjo serveryje"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
+"If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
-"Jei dar neturite Mercury sąskaitos, susisiekite su Mercury telefonu \n"
-"+1 (800) 846-4472, kad ją sukurtumėte."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
-msgid "Invoice number from Mercury Pay"
-msgstr "Sąskaitos numeris iš Mercury Pay"
+msgid "Invoice number from Vantiv Pay"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration____last_update
@@ -241,45 +233,19 @@ msgid "Merchant Password"
 msgstr "Pardavėjo slaptažodis"
 
 #. module: pos_mercury
-#: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
-#: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
-msgid "Mercury Configurations"
-msgstr "Mercury konfigūracijos"
-
-#. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
-msgid "Mercury Credentials"
-msgstr "Mercury duomenys"
-
-#. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
-msgid "Mercury invoice number"
-msgstr "Mercury sąskaitos numeris"
-
-#. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
-msgid "Mercury record number"
-msgstr "Mercury įrašo numeris"
-
-#. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
-msgid "Mercury reference number"
-msgstr "Mercury nuorodos numeris"
-
-#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__name
 msgid "Name"
 msgstr "Vardas"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
-msgid "Name of this Mercury configuration"
-msgstr "Šios Mercury konfigūracijos pavadinimas"
+msgid "Name of this Vantiv configuration"
+msgstr ""
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
-msgid "No Mercury configuration associated with the payment method."
+msgid "No Vantiv configuration associated with the payment method."
 msgstr ""
 
 #. module: pos_mercury
@@ -292,8 +258,8 @@ msgstr "Vartotojui %s nerasta atidarytų pardavimo taško sesijų."
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
-msgid "No response from Mercury (Mercury down?)"
-msgstr "Jokio atsakymo iš Mercury (Mercury neveikia?)"
+msgid "No response from Vantiv (Vantiv down?)"
+msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
@@ -346,30 +312,20 @@ msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
-msgid "Payment record number from Mercury Pay"
-msgstr "Mokėjimo įrašo numeris iš Mercury Pay"
+msgid "Payment record number from Vantiv Pay"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_ref_no
-msgid "Payment reference number from Mercury Pay"
-msgstr "Mokėjimo nuorodos numeris iš Mercury Pay"
+msgid "Payment reference number from Vantiv Pay"
+msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
-msgid "Please setup your Mercury merchant account."
-msgstr "Nustatykite savo Mercury pardavėjo sąskaitą."
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
-msgid "Point of Sale Mercury Configuration"
-msgstr "Pardavimo taško Mercury konfigūracija"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
-msgid "Point of Sale Mercury Transaction"
-msgstr "Pardavimo taško Mercury operacija"
+msgid "Please setup your Vantiv merchant account."
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -384,6 +340,16 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment
 msgid "Point of Sale Payments"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
+msgid "Point of Sale Vantiv Configuration"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
+msgid "Point of Sale Vantiv Transaction"
 msgstr ""
 
 #. module: pos_mercury
@@ -433,8 +399,8 @@ msgstr "Kortelės numeris, naudojamas mokėjimui."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment_method__pos_mercury_config_id
-msgid "The configuration of Mercury used for this journal"
-msgstr "Mercury konfigūracija, naudojama šiam žurnalui"
+msgid "The configuration of Vantiv used for this journal"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
@@ -472,21 +438,42 @@ msgstr "Tipas"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"Using the Mercury integration in the Point Of Sale is easy: just press the\n"
+"Using the Vantiv integration in the Point Of Sale is easy: just press the\n"
 "                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
-"Mercury integracija į pardavimo tašką yra paprasta: tiesiog paspauskite\n"
-"susijusį mokėjimo būdą. Po to suma galės būti pakoreguojama (pvz.,\n"
-"grąžinimui),\n"
-"kaip ir bet kuriam kitam mokėjimo įrašui. Kai mokėjimo įrašas nustatomas,\n"
-"galima kortele perbraukti kortelių skaitytuvą."
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
 msgstr "Vantiv sąskaitos"
+
+#. module: pos_mercury
+#: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
+#: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
+msgid "Vantiv Configurations"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
+msgid "Vantiv Credentials"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
+msgid "Vantiv invoice number"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
+msgid "Vantiv record number"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
+msgid "Vantiv reference number"
+msgstr ""
 
 #. module: pos_mercury
 #. openerp-web

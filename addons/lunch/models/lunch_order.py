@@ -66,6 +66,7 @@ class LunchOrder(models.Model):
         self._check_wallet()
 
     def _check_wallet(self):
+        self.flush()
         for line in self:
             if self.env['lunch.cashmove'].get_wallet_balance(line.user_id) < 0:
                 raise ValidationError(_('Your wallet does not contain enough money to order that.'

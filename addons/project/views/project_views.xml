@@ -451,7 +451,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="project_id" domain="[('active', '=', True), ('company_id', '=', company_id)]" options="{'no_create': True}"/>
+                            <field name="project_id" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
                             <field name="active" invisible="1"/>
                             <field name="user_id"
                                 class="o_task_user_field"
@@ -539,7 +539,7 @@
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project">
                     <field name="color"/>
                     <field name="priority"/>
-                    <field name="stage_id"/>
+                    <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
                     <field name="user_id"/>
                     <field name="partner_id"/>
                     <field name="sequence"/>

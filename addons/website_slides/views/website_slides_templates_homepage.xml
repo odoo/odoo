@@ -14,8 +14,8 @@
                     <div class="ml-4 ml-md-2 mt-3">
                         <t t-foreach="top3_users" t-as="user">
                             <img class="rounded-circle img-fluid shadow ml-n4"
-                                style="border: 6px solid white; max-width: 40%"
-                                t-attf-src="/web/image/res.users/#{user['id']}/image_128"/>
+                                style="width: 140px; height: 140px; max-width: 40%; max-height: 40%; object-fit: cover; border: 6px solid white;"
+                                t-attf-src="/web/image/res.users/#{user['id']}/image_256"/>
                         </t>
                     </div>
                 </div>
@@ -81,25 +81,30 @@
 
             <div class="container o_wslides_home_main">
                 <div class="row">
-                    <div t-if="is_public_user" class="col-lg-3 order-3 order-lg-2">
-                        <div class="row">
-                            <div class="col-12 col-md-7 col-lg-12">
-                                <t t-call="website_slides.slides_home_achievements_small"/>
-                            </div>
-                            <div class="col-12 col-md-5 col-lg-12 mt-5 mt-md-0">
-                                <div class="pl-md-5 pl-lg-0 mt-lg-4">
-                                    <t t-call="website_slides.slides_home_users_small"/>
+                    <t t-set="is_achievements_active" t-value="request.website.viewref('website_slides.toggle_latest_achievements').active"/>
+                    <t t-set="has_side_column" t-value="request.website.viewref('website_slides.toggle_leaderboard').active or is_achievements_active"/>
+                    <t t-if="is_public_user">
+                        <div t-if="has_side_column" class="col-lg-3 order-3 order-lg-2">
+                            <div class="row">
+                                <div class="col-12 col-md-7 col-lg-12">
+                                    <t t-call="website_slides.slides_home_achievements_small"/>
+                                </div>
+                                <div class="col-12 col-md-5 col-lg-12 mt-5 mt-md-0">
+                                    <div t-att-class="'pl-md-5 pl-lg-0 mt-lg-4' if is_achievements_active else 'pl-md-5 pl-lg-0'">
+                                        <t t-call="website_slides.slides_home_users_small"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </t>
                     <div t-else="" class="col-lg-3 order-lg-2">
+                        <t t-set="has_side_column" t-value="True"/>
                         <div class="o_wslides_home_aside_loggedin card p-3 p-lg-0 mb-4">
                             <div class="o_wslides_home_aside_title">
                                 <div class="d-flex align-items-center">
                                     <t t-call="website_slides.slides_misc_user_image">
                                         <t t-set="img_class" t-value="'rounded-circle mr-1'"/>
-                                        <t t-set="img_style" t-value="'height: 22px'"/>
+                                        <t t-set="img_style" t-value="'width: 22px; height: 22px; object-fit: cover;'"/>
                                     </t>
                                     <h5 t-esc="user.name" class="d-flex flex-grow-1 mb-0"/>
                                     <a class="d-none d-lg-block" t-att-href="'/profile/user/%s' % user.id">View</a>
@@ -116,6 +121,9 @@
                                     <div class="col-12 col-sm-6 col-lg-12 d-flex align-items-center">
                                         <t t-call="website_slides.slides_home_user_achievements_small"/>
                                     </div>
+                                    <div class="col-12 col-md-7 col-lg-12 pl-md-5 pl-lg-0 mt-lg-4">
+                                        <t t-call="website_slides.slides_home_achievements_small"/>
+                                    </div>
                                     <div class="col-12 col-sm-6 col-lg-12 pl-md-5 pl-lg-0 mt-lg-4">
                                         <t t-call="website_slides.slides_home_users_small"/>
                                     </div>
@@ -123,7 +131,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-9 pr-lg-5 order-lg-1">
+                    <div t-att-class="'col-lg-9 pr-lg-5 order-lg-1' if has_side_column else 'col-lg pr-lg'">
                         <div class="o_wslides_home_content_section mb-3"
                             t-if="not channels_popular">
                             <p class="h2">No Course created yet.</p>
@@ -336,8 +344,13 @@
     </div>
 </template>
 
-<template id='slides_home_achievements_small' name="Latest Achievements">
-    <div class="o_wslides_home_aside">
+<template id='slides_home_achievements_small' name="Users">
+    <t class="o_wslides_home_aside">
+    </t>
+</template>
+
+<template id="toggle_latest_achievements" inherit_id="website_slides.slides_home_achievements_small" active="True" customize_show="True" name='Display Achievements'>
+    <xpath expr="//t[hasclass('o_wslides_home_aside')]" position="inside">
         <div class="row o_wslides_home_aside_title">
             <div class="col">
                 <h5 class="m-0">Latest achievements</h5>
@@ -354,7 +367,7 @@
             </t>
             <t t-else=""><p class="col mt8">No achievements currently :(</p></t>
         </div>
-    </div>
+    </xpath>
 </template>
 
 <template id='achievement_card' name="Achivement Card">
@@ -451,7 +464,7 @@
 
 <template id='slides_misc_user_image' name="User Avatar">
     <img t-att-class="img_class if img_class else 'rounded-circle float-left'"
-        t-att-style="img_style if img_style else 'max-height: 32px;'"
+        t-att-style="img_style if img_style else 'width: 32px; height: 32px; object-fit: cover;'"
         t-att-src="'/profile/avatar/%s?field=image_128' % user.id"
         t-att-alt="user.name"/>
 </template>

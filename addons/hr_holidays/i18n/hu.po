@@ -10,14 +10,15 @@
 # krnkris, 2019
 # gezza <geza.nagy@oregional.hu>, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-13 11:27+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"Last-Translator: Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -479,7 +480,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
-msgid "<span class=\"o_stat_text\">Days Allocated</span>"
+msgid "<span class=\"o_stat_text\">Group Days Allocated</span>"
 msgstr ""
 
 #. module: hr_holidays
@@ -519,12 +520,6 @@ msgstr "<strong>Osztályok és Munkavállalók</strong>"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "A leave cannot be duplicated."
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, python-format
-msgid "A time off cannot be duplicated."
 msgstr ""
 
 #. module: hr_holidays
@@ -760,6 +755,43 @@ msgid "Allocation of %s : %.2f %s to %s"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Allocation request must be confirmed (\"To Approve\") in order to approve "
+"it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "Allocation request must be confirmed in order to approve it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Allocation request must be confirmed or validated in order to refuse it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Allocation request must be in Draft state (\"To Submit\") in order to "
+"confirm it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Allocation request state must be \"Refused\" or \"To Approve\" in order to "
+"reset to Draft."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
 msgid "Allocation to Approve"
 msgstr "Kiosztás jóváhagyásra"
@@ -970,12 +1002,6 @@ msgid "Color in Report"
 msgstr "Jelentés színe"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager_approve
-msgid "Comment by Manager"
-msgstr "Vezetői megjegyzés"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__mode_company_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__mode_company_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__company_id
@@ -1118,12 +1144,9 @@ msgid "Delete"
 msgstr "Törlés"
 
 #. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__department_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__department_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__department_id
-#, python-format
 msgid "Department"
 msgstr "Részleg"
 
@@ -1442,14 +1465,10 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_unread
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_unread
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_needaction
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
 
@@ -1481,10 +1500,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
-#, python-format
 msgid "In"
 msgstr "Ebben"
 
@@ -1630,6 +1646,12 @@ msgid "Manager Approval"
 msgstr ""
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager_approve
+msgid "Manager's Comment"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_approvals
 msgid "Managers"
 msgstr "Igazgatók"
@@ -1738,6 +1760,12 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Time Off"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Need Second Approval"
 msgstr ""
 
 #. module: hr_holidays
@@ -1851,8 +1879,8 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error_counter
-msgid "Number of error"
-msgstr "Hibák száma"
+msgid "Number of errors"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours_display
@@ -1914,7 +1942,7 @@ msgstr "Online"
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
-msgid "Only a Leave Manager can approve its own requests."
+msgid "Only a Leave Manager can approve/refuse its own requests."
 msgstr ""
 
 #. module: hr_holidays
@@ -1944,21 +1972,23 @@ msgstr ""
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
-msgid "Only a time off Manager can reset other people time off."
+msgid "Only a time off Manager can reset other people allocation."
 msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
-"Only a time off Officer or Manager can approve or refuse time off requests."
+"Only a time off Officer/Responsible or Manager can approve or refuse time "
+"off requests."
 msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
-"Only an time off Manager can apply the second approval on time off requests."
+"Only an time off Manager can apply the second approval on allocation "
+"requests."
 msgstr ""
 
 #. module: hr_holidays
@@ -2303,12 +2333,20 @@ msgstr "A kezdő dátumumnak a vég dátum előbbinek kell lennie."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
 msgid ""
 "The status is set to 'To Submit', when a time off request is created.\n"
 "The status is 'To Approve', when time off request is confirmed by user.\n"
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
+msgid ""
+"The status is set to 'To Submit', when an allocation request is created.\n"
+"The status is 'To Approve', when an allocation request is confirmed by user.\n"
+"The status is 'Refused', when an allocation request is refused by manager.\n"
+"The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
 
 #. module: hr_holidays
@@ -2324,15 +2362,26 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__first_approver_id
+msgid ""
+"This area is automatically filled by the user who validate the allocation"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
 msgid ""
 "This area is automatically filled by the user who validate the time off"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
+msgid ""
+"This area is automaticly filled by the user who validate the allocation with"
+" second level (If allocation type need second validation)"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
 msgid ""
 "This area is automaticly filled by the user who validate the time off with "
 "second level (If time off type need second validation)"
@@ -2494,13 +2543,6 @@ msgid "Time Off of Your Team Member"
 msgstr ""
 
 #. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:0
-#, python-format
-msgid "Time Off taken by"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
 msgid "Time Off to Approve"
 msgstr ""
@@ -2533,7 +2575,6 @@ msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
 "Time off request must be confirmed (\"To Approve\") in order to approve it."
@@ -2541,21 +2582,18 @@ msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Time off request must be confirmed in order to approve it."
 msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Time off request must be confirmed or validated in order to refuse it."
 msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
 "Time off request must be in Draft state (\"To Submit\") in order to confirm "
@@ -2568,14 +2606,6 @@ msgstr ""
 msgid ""
 "Time off request state must be \"Refused\" or \"To Approve\" in order to be "
 "reset to draft."
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, python-format
-msgid ""
-"Time off request state must be \"Refused\" or \"To Approve\" in order to "
-"reset to Draft."
 msgstr ""
 
 #. module: hr_holidays
@@ -2879,10 +2909,9 @@ msgid "You cannot delete a time off which is in %s state"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
-msgid "You cannot delete a time off which is in %s state."
+msgid "You cannot delete an allocation request which is in %s state."
 msgstr ""
 
 #. module: hr_holidays
@@ -2891,12 +2920,6 @@ msgstr ""
 msgid ""
 "You cannot first approve a leave for %s, because you are not his leave "
 "manager"
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "You cannot update a leave that already begun"
 msgstr ""
 
 #. module: hr_holidays
@@ -2916,6 +2939,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You must be either %s's manager or time off manager to approve this time off"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You must have manager rights to modify/validate a time off that already "
+"begun"
 msgstr ""
 
 #. module: hr_holidays
@@ -2941,6 +2972,14 @@ msgid "by Type"
 msgstr ""
 
 #. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:0
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:0
+#, python-format
+msgid "day(s)"
+msgstr "nap(ok)"
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
@@ -2959,13 +2998,6 @@ msgid "e.g. Report to the next month..."
 msgstr "pl. A következő hónapon jelentse..."
 
 #. module: hr_holidays
-#. openerp-web
-#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:0
-#, python-format
-msgid "for"
-msgstr ""
-
-#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
@@ -2974,6 +3006,7 @@ msgstr "órák"
 
 #. module: hr_holidays
 #. openerp-web
+#: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:0
 #: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:0
 #, python-format
 msgid "in"

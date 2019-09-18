@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import openerp
+import odoo
 import time
-from openerp import fields
-
-from openerp.tests import common
-
+from odoo import fields
+from odoo.tests import common
 
 class TestAngloSaxonCommon(common.TransactionCase):
 
@@ -57,6 +55,7 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.pos_config.write({'payment_method_ids': [(6, 0, self.cash_payment_method.ids)]})
 
 
+@odoo.tests.tagged('post_install', '-at_install')
 class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
     def test_create_account_move_line(self):

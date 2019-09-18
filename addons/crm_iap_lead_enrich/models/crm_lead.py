@@ -22,7 +22,7 @@ class Lead(models.Model):
         leads = self.search([
             ('iap_enrich_done', '=', False),
             ('reveal_id', '=', False),
-            ('probability', 'not in', ('0', 100)),
+            ('probability', 'not in', (0, 100)),
             ('create_date', '>', timeDelta)
         ])
         leads._iap_enrich(from_cron=True)
@@ -68,14 +68,14 @@ class Lead(models.Model):
         :param iap_response: dict{lead_id: company data or False}
         """
         for lead in self.search([('id', 'in', list(iap_response.keys()))]):  # handle unlinked data by performing a search
-            iap_data = iap_response.get(lead.id)
+            iap_data = iap_response.get(str(lead.id))
             if not iap_data:
                 lead.message_post_with_view('crm_iap_lead_enrich.mail_message_lead_enrich_notfound', subtype_id=self.env.ref('mail.mt_note').id)
                 continue
 
             values = {'iap_enrich_done': True}
             lead_fields = ['description', 'partner_name', 'reveal_id', 'street', 'city', 'zip']
-            iap_fields = ['description', 'name', 'clearbit_id', 'location', 'city', 'city', 'postal_code']
+            iap_fields = ['description', 'name', 'clearbit_id', 'location', 'city', 'postal_code']
             for lead_field, iap_field in zip(lead_fields, iap_fields):
                 if not lead[lead_field] and iap_data.get(iap_field):
                     values[lead_field] = iap_data[iap_field]

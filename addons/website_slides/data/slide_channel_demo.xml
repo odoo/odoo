@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data noupdate="1">
 
+    <!-- This channel will gain a forum -->
     <record id="slide_channel_demo_0_gard_0" model="slide.channel">
         <field name="name">Basics of Gardening</field>
         <field name="user_id" ref="base.user_admin"/>
@@ -37,6 +38,7 @@
         <field name="create_date" eval="DateTime.now() - relativedelta(days=7)"/>
     </record>
 
+    <!-- This channel will gain a forum -->
     <record id="slide_channel_demo_2_gard2" model="slide.channel">
         <field name="name">Trees, Wood and Gardens</field>
         <field name="user_id" ref="base.user_admin"/>
@@ -65,7 +67,7 @@
         <field name="promote_strategy">latest</field>
         <field name="is_published" eval="True"/>
         <field name="tag_ids" eval="[(5, 0),
-                                     (4, ref('website_slides.slide_channel_tag_level_intermediate')),
+                                     (4, ref('website_slides.slide_channel_tag_level_basic')),
                                      (4, ref('website_slides.slide_channel_tag_role_gardener')),
                                      (4, ref('website_slides.slide_channel_tag_role_carpenter')),
                                      (4, ref('website_slides.slide_channel_tag_role_furniture')),
@@ -85,13 +87,14 @@ will learn the basics of wood characteristics.</field>
         <field name="promote_strategy">most_voted</field>
         <field name="is_published" eval="True"/>
         <field name="tag_ids" eval="[(5, 0),
-                                     (4, ref('website_slides.slide_channel_tag_level_basic')),
+                                     (4, ref('website_slides.slide_channel_tag_level_intermediate')),
                                      (4, ref('website_slides.slide_channel_tag_role_furniture'))]"/>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/channel_demo_furniture.jpg"/>
         <field name="description">If you are looking for technical specifications, have a look at this documentation.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
     </record>
 
+    <!-- This channel will gain a certification slide -->
     <record id="slide_channel_demo_5_furn2" model="slide.channel">
         <field name="name">Basics of Furniture Creation</field>
         <field name="user_id" ref="base.user_admin"/>
@@ -110,7 +113,8 @@ will learn the basics of wood characteristics.</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=3)"/>
     </record>
 
-    <!-- This channel will be set on payment and receive certifications capabilities -->
+    <!-- This channel will be set on payment -->
+    <!-- This channel will gain a certification slide -->
     <record id="slide_channel_demo_6_furn3" model="slide.channel">
         <field name="name">DIY Furniture</field>
         <field name="user_id" ref="base.user_admin"/>
