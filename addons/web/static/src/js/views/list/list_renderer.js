@@ -39,10 +39,10 @@ var ListRenderer = BasicRenderer.extend({
         "click .o_optional_columns_dropdown .dropdown-item": "_onToggleOptionalColumn",
         "click .o_optional_columns_dropdown_toggle": "_onToggleOptionalColumnDropdown",
         'click tbody tr': '_onRowClicked',
-        'click tbody .o_list_record_selector': '_onSelectRecord',
+        'change tbody .o_list_record_selector': '_onSelectRecord',
         'click thead th.o_column_sortable': '_onSortColumn',
         'click .o_group_header': '_onToggleGroup',
-        'click thead .o_list_record_selector input': '_onToggleSelection',
+        'change thead .o_list_record_selector input': '_onToggleSelection',
         'keypress thead tr td': '_onKeyPress',
         'keydown td': '_onKeyDown',
         'keydown th': '_onKeyDown',
@@ -994,6 +994,7 @@ var ListRenderer = BasicRenderer.extend({
      * the aggregates.
      *
      * @private
+     * @returns {Promise}
      */
     _updateSelection: function () {
         this.selection = [];
@@ -1010,6 +1011,8 @@ var ListRenderer = BasicRenderer.extend({
         this.$('thead .o_list_record_selector input').prop('checked', allChecked);
         this.trigger_up('selection_changed', { selection: this.selection });
         this._updateFooter();
+
+        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------
@@ -1179,7 +1182,7 @@ var ListRenderer = BasicRenderer.extend({
     _onRowClicked: function (ev) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (!$(ev.target).prop('special_click')) {
+        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click')) {
             var id = $(ev.currentTarget).data('id');
             if (id) {
                 this.trigger_up('open_record', { id: id, target: ev.target });
@@ -1192,7 +1195,11 @@ var ListRenderer = BasicRenderer.extend({
      */
     _onSelectRecord: function (ev) {
         ev.stopPropagation();
-        this._updateSelection();
+        this._updateSelection().then(() => {
+            if (!$(ev.currentTarget).find('input').prop('checked')) {
+                this.$('thead .o_list_record_selector input').prop('checked', false);
+            }
+        });
     },
     /**
      * @private

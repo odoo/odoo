@@ -45,6 +45,24 @@ QUnit.module('Dashboard', {
                 }],
             },
         };
+        /**
+         * Currently, `testUtils.createView` only calls `appendTo` on the main view, triggering
+         * the `_widgetRenderAndInsert` on itself, its controller/renderer but not its children.
+         * In this test suite, some child actions are simulated but they are never properly
+         * instantiated and some renderers end up not having a `$el`. The current fix forces an
+         * element on the renderer (this was only causing issues in the list).
+         * TODO: find another way to fix this.
+         */
+        testUtils.mock.patch(ListRenderer, {
+            on_attach_callback: function () {
+                if (!this.$el) {
+                    this.$el = $();
+                }
+            }
+        });
+    },
+    afterEach: function () {
+        testUtils.mock.unpatch(ListRenderer);
     },
 });
 
@@ -643,9 +661,6 @@ QUnit.test('subviews are aware of attach in or detach from the DOM', async funct
     });
 
     assert.verifySteps(['subview on_attach_callback']);
-
-    // restore on_attach_callback of ListRenderer
-    testUtils.mock.unpatch(ListRenderer);
 
     form.destroy();
 });

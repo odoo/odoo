@@ -30,6 +30,7 @@ var ListController = BasicController.extend({
         activate_next_widget: '_onActivateNextWidget',
         add_record: '_onAddRecord',
         button_clicked: '_onButtonClicked',
+        change_mode: '_onChangeMode',
         group_edit_button_clicked: '_onEditGroupClicked',
         edit_line: '_onEditLine',
         save_line: '_onSaveLine',
@@ -486,7 +487,7 @@ var ListController = BasicController.extend({
     _toggleCreateButton: function () {
         if (this.$buttons) {
             var state = this.model.get(this.handle);
-            var createHidden = this.editable && state.groupedBy.length && state.data.length;
+            var createHidden = this.renderer.isEditable() && state.groupedBy.length && state.data.length;
             this.$buttons.find('.o_list_button_add').toggleClass('o_hidden', !!createHidden);
         }
     },
@@ -536,7 +537,7 @@ var ListController = BasicController.extend({
      */
     _onActivateNextWidget: function (ev) {
         ev.stopPropagation();
-        this.renderer.editFirstRecord();
+        this.renderer.editFirstRecord(ev);
     },
     /**
      * Add a record to the list
@@ -564,6 +565,23 @@ var ListController = BasicController.extend({
     _onButtonClicked: function (ev) {
         ev.stopPropagation();
         this._callButtonAction(ev.data.attrs, ev.data.record);
+    },
+    /**
+     * Toggles list mode between edit and readonly
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onChangeMode: function (ev) {
+        ev.stopPropagation();
+        this.mode = ev.data.mode;
+        const recordID = ev.data.recordID;
+        if (recordID) {
+            this.model.discardChanges(recordID);
+            this._confirmSave(recordID).then(ev.data.onSuccess);
+        } else {
+            ev.data.onSuccess();
+        }
     },
     /**
      * When the user clicks on the 'create' button, two things can happen. We
