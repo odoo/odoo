@@ -8,6 +8,9 @@
                 <label class="col-form-label" t-att-for="field.name">
                     <t t-esc="field.string"/>
                 </label>
+                <span t-if="field.name == 'email_cc'" title="Separate email addresses with a comma.">
+                    <i class="fa fa-info-circle"/>
+                </span>
             </div>
             <div t-att-class="field.formatInfo and field.formatInfo.contentClass || 'col-lg-7 col-md-8'">
                 <t t-raw="0"/>
