@@ -262,6 +262,8 @@ class PurchaseOrder(models.Model):
         ctx = dict(self.env.context or {})
         ctx.update({
             'default_model': 'purchase.order',
+            'active_model': 'purchase.order',
+            'active_id': self.ids[0],
             'default_res_id': self.ids[0],
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
