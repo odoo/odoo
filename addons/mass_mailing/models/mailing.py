@@ -103,6 +103,7 @@ class MassMailing(models.Model):
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
     contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel',
         string='Mailing Lists')
+    contact_list_count = fields.Integer('# Contact List', compute='_compute_contact_list_count')
     contact_ab_pc = fields.Integer(string='A/B Testing percentage',
         help='Percentage of the contacts that will be mailed. Recipients will be taken randomly.', default=100)
     unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=False,
@@ -127,6 +128,10 @@ class MassMailing(models.Model):
     replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
     bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
     next_departure = fields.Datetime(compute="_compute_next_departure", string='Scheduled date')
+
+    def _compute_contact_list_count(self):
+        for mass_mailing in self:
+            mass_mailing.contact_list_count = len(mass_mailing.contact_list_ids)
 
     def _compute_total(self):
         for mass_mailing in self:
@@ -209,14 +214,12 @@ class MassMailing(models.Model):
                 if self.mailing_model_name == 'mailing.list':
                     if self.contact_list_ids:
                         mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
-                    else:
-                        mailing_domain = [(0, '=', 1)]
-                elif self.mailing_model_name == 'res.partner':
+                elif self.mailing_model_name == 'res.partner' and 'customer_rank' in self.env['res.partner']._fields:
                     mailing_domain = [('customer_rank', '>', 0)]
                 elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
                     mailing_domain = [('opt_out', '=', False)]
         else:
-            mailing_domain = [(0, '=', 1)]
+            mailing_domain = []
         self.mailing_domain = repr(mailing_domain)
 
     @api.onchange('mailing_type')

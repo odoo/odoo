@@ -86,7 +86,8 @@ class SendSMS(models.TransientModel):
     @api.depends('res_model', 'res_ids', 'active_domain')
     def _compute_recipients_count(self):
         self.res_ids_count = len(literal_eval(self.res_ids)) if self.res_ids else 0
-        self.active_domain_count = self.env[self.res_model].search_count(safe_eval(self.active_domain or '[]'))
+        # Sudo(False) to avoid take in account record from other company (no activated) leading to a miscount
+        self.active_domain_count = self.env[self.res_model].sudo(False).search_count(safe_eval(self.active_domain or '[]'))
 
     @api.depends('partner_ids', 'res_model', 'res_id', 'res_ids', 'use_active_domain', 'composition_mode', 'number_field_name', 'sanitized_numbers')
     def _compute_recipients(self):
@@ -257,7 +258,7 @@ class SendSMS(models.TransientModel):
             result[record.id] = {
                 'body': all_bodies[record.id],
                 'partner_id': recipients['partner'].id,
-                'number': sanitized if sanitized else recipients['number'],
+                'number': sanitized or recipients['number'] or '', # To avoid block message due to sql constraint
                 'state': state,
                 'error_code': error_code,
             }
