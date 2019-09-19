@@ -3,6 +3,7 @@
 
 import logging
 
+from ast import literal_eval
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
@@ -51,7 +52,7 @@ class Employee(models.AbstractModel):
 
 
         # Check on IP
-        if self.env['ir.config_parameter'].sudo().get_param('hr_presence.hr_presence_control_ip'):
+        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_ip', 'False')):
             ip_list = company.hr_presence_control_ip_list
             ip_list = ip_list.split(',') if ip_list else []
             ip_employees = self.env['hr.employee']
@@ -67,7 +68,7 @@ class Employee(models.AbstractModel):
             employees = employees - ip_employees
 
         # Check on sent emails
-        if self.env['ir.config_parameter'].sudo().get_param('hr_presence.hr_presence_control_email'):
+        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_email', 'False')):
             email_employees = self.env['hr.employee']
             threshold = company.hr_presence_control_email_amount
             for employee in employees:
