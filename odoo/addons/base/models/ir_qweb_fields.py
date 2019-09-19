@@ -632,9 +632,22 @@ class Contact(models.AbstractModel):
     @api.model
     def get_available_options(self):
         options = super(Contact, self).get_available_options()
+        contact_fields = [
+            {'field_name': 'name', 'label': _('Name'), 'default': True},
+            {'field_name': 'address', 'label': _('Address'), 'default': True},
+            {'field_name': 'phone', 'label': _('Phone'), 'default': True},
+            {'field_name': 'mobile', 'label': _('Mobile'), 'default': True},
+            {'field_name': 'email', 'label': _('Email'), 'default': True},
+            {'field_name': 'vat', 'label': _('VAT')},
+        ]
+        separator_params = dict(
+            type='selection',
+            selection=[[" ", _("Space")], [",", _("Comma")], ["-", _("Dash")], ["|", _("Vertical bar")], ["/", _("Slash")]],
+            placeholder=_('Linebreak'),
+        )
         options.update(
-            fields=dict(type='array', params=dict(type='selection', params=["name", "address", "city", "country_id", "phone", "mobile", "email", "fax", "karma", "website"]), string=_('Displayed fields'), description=_('List of contact fields to display in the widget'), default_value=["name", "address", "phone", "mobile", "email"]),
-            separator=dict(type='string', string=_('Address separator'), description=_('Separator use to split the address from the display_name.'), default_value="\\n"),
+            fields=dict(type='array', params=dict(type='selection', params=contact_fields), string=_('Displayed fields'), description=_('List of contact fields to display in the widget'), default_value=[param.get('field_name') for param in contact_fields if param.get('default')]),
+            separator=dict(type='selection', params=separator_params, string=_('Address separator'), description=_('Separator use to split the address from the display_name.'), default_value=False),
             no_marker=dict(type='boolean', string=_('Hide badges'), description=_("Don't display the font awesome marker")),
             no_tag_br=dict(type='boolean', string=_('Use comma'), description=_("Use comma instead of the <br> tag to display the address")),
             phone_icons=dict(type='boolean', string=_('Display phone icons'), description=_("Display the phone icons even if no_marker is True")),
@@ -661,6 +674,8 @@ class Contact(models.AbstractModel):
             'country_id': value.country_id.display_name,
             'website': value.website,
             'email': value.email,
+            'vat': value.vat,
+            'vat_label': value.country_id.vat_label or _('VAT'),
             'fields': opf,
             'object': value,
             'options': options

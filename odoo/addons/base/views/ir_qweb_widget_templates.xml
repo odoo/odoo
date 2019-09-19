@@ -43,6 +43,7 @@
             </div>
             <div t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class='far fa-envelope fa-fw' role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-esc="email"/></div>
         </div>
+        <div t-if="vat and 'vat' in fields"><span t-esc="vat_label"/>: <span itemprop="vatID" t-esc="vat"/></div>
         <t t-if="object.country_id and object.country_id.name_position == 'after'">
             <t t-call="base.contact_name"/>
         </t>
