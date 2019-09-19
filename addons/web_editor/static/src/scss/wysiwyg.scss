@@ -60,6 +60,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     margin: 0;
     padding: 0;
 }
+// avoid popover bar over its opened modal
+.note-popover .popover {
+    z-index: $o-we-overlay-zindex;
+}
 .note-popover .popover .popover-body,
 .panel-heading.note-toolbar {
     padding-bottom: 0;
