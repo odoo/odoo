@@ -1106,6 +1106,47 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test("many2many tags widget: save&new in edit mode doesn't close edit window", async function (assert) {
+          assert.expect(5);
+          for (var i = 1; i <= 10; i++) {
+              this.data.partner_type.records.push({ id: 100 + i, display_name: "Partner" + i});
+          }
+          var form = await createView({
+              View: FormView,
+              model: 'partner',
+              data: this.data,
+              arch: '<form string="Partners">' +
+                  '<field name="display_name"/>' +
+                  '<field name="timmy" widget="many2many_tags"/>' +
+                  '</form>',
+              res_id: 1,
+              archs: {
+                  'partner_type,false,list': '<tree><field name="display_name"/></tree>',
+                  'partner_type,false,search': '<search><field name="display_name"/></search>',
+                  'partner_type,false,form': '<form><field name="display_name"/></form>'
+              },
+          });
+          await testUtils.form.clickEdit(form);
+
+          await testUtils.fields.many2one.clickOpenDropdown('timmy');
+          await testUtils.fields.many2one.clickItem('timmy','Create and Edit');
+          assert.containsOnce($(document), '.modal .o_form_view', "should have opened the modal");
+
+          // Create multiple records with save & new
+          await testUtils.fields.editInput($('.modal input:first'), 'Ralts');
+          await testUtils.dom.click($('.modal .btn-primary:nth-child(2)'));
+          assert.containsOnce($(document), '.modal .o_form_view', "modal should still be open");
+          assert.equal($('.modal input:first')[0].value, '', "input should be empty")
+
+          // Create another record and click save & close
+          await testUtils.fields.editInput($('.modal input:first'), 'Pikachu');
+          await testUtils.dom.click($('.modal .btn-primary:first'));
+          assert.containsNone($(document),'.modal .o_list_view', "should have closed the modal");
+          assert.containsN(form, '.o_field_many2manytags[name="timmy"] .badge', 2, "many2many tag should now contain 2 records");
+
+          form.destroy();
+        });
+
         QUnit.test('many2many list add *many* records, remove, re-add', async function (assert) {
             assert.expect(5);
 
