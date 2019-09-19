@@ -287,7 +287,14 @@ var ListRenderer = BasicRenderer.extend({
                 if (c.attrs.name in columnInvisibleFields) {
                     reject = columnInvisibleFields[c.attrs.name];
                 }
-
+               if (c.attrs.class) {
+                    if (c.attrs.class.match(/\boe_edit_only\b/)) {
+                        c.attrs.editOnly = true;
+                    }
+                    if (c.attrs.class.match(/\boe_read_only\b/)) {
+                        c.attrs.readOnly = true;
+                    }
+                }
                 if (!reject && c.attrs.widget === 'handle') {
                     self.handleField = c.attrs.name;
                     if (self.isGrouped) {
@@ -330,6 +337,12 @@ var ListRenderer = BasicRenderer.extend({
             var $cell = $('<td>');
             if (config.isDebug()) {
                 $cell.addClass(column.attrs.name);
+            }
+            if (column.attrs.editOnly) {
+                $cell.addClass('oe_edit_only');
+            }
+            if (column.attrs.readOnly) {
+                $cell.addClass('oe_read_only');
             }
             if (column.attrs.name in aggregateValues) {
                 var field = self.state.fields[column.attrs.name];
@@ -393,6 +406,12 @@ var ListRenderer = BasicRenderer.extend({
             if (node.attrs.widget) {
                 tdClassName += (' o_' + node.attrs.widget + '_cell');
             }
+        }
+        if (node.attrs.editOnly) {
+            tdClassName += ' oe_edit_only';
+        }
+        if (node.attrs.readOnly) {
+            tdClassName += ' oe_read_only';
         }
         var $td = $('<td>', { class: tdClassName, tabindex: -1 });
 
@@ -748,13 +767,11 @@ var ListRenderer = BasicRenderer.extend({
         if (name) {
             $th.attr('data-name', name);
         }
-        if (node.attrs.class) {
-            if (node.attrs.class.indexOf('oe_edit_only') !== -1) {
-                $th.addClass('oe_edit_only');
-            }
-            if (node.attrs.class.indexOf('oe_read_only') !== -1) {
-                $th.addClass('oe_read_only');
-            }
+        if (node.attrs.editOnly) {
+            $th.addClass('oe_edit_only');
+        }
+        if (node.attrs.readOnly) {
+            $th.addClass('oe_read_only');
         }
         if (!field) {
             return $th;

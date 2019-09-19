@@ -1006,6 +1006,17 @@ ListRenderer.include({
         return $body;
     },
     /**
+     * @override
+     * @private
+     */
+    _renderFooter: function () {
+        const $footer = this._super.apply(this, arguments);
+        if (this.addTrashIcon) {
+            $footer.find('tr').append($('<td>'));
+        }
+        return $footer;
+    },
+    /**
      * Override to optionally add a th in the header for the remove icon column.
      *
      * @override
