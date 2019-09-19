@@ -407,7 +407,7 @@ class Survey(http.Controller):
                 go_back = False
                 answer_sudo._send_certification()
                 vals = {'state': 'done'}
-            else:
+            elif 'button_submit' in post:
                 go_back = post['button_submit'] == 'previous'
                 next_page, last = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id, go_back=go_back)
                 vals = {'last_displayed_page_id': page_or_question_id}
@@ -418,10 +418,13 @@ class Survey(http.Controller):
                 else:
                     vals.update({'state': 'skip'})
 
-            answer_sudo.write(vals)
-            ret['redirect'] = '/survey/fill/%s/%s' % (survey_sudo.access_token, answer_token)
-            if go_back:
-                ret['redirect'] += '?prev=prev'
+            if 'breadcrumb_redirect' in post:
+                ret['redirect'] = post['breadcrumb_redirect']
+            else:
+                answer_sudo.write(vals)
+                ret['redirect'] = '/survey/fill/%s/%s' % (survey_sudo.access_token, answer_token)
+                if go_back:
+                    ret['redirect'] += '?prev=prev'
 
         return json.dumps(ret)
 
