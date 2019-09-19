@@ -200,17 +200,6 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         self.assertEqual(image.size, (128, 72))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
-        # Verify 64 size: keep aspect ratio
-        image = Image.open(io.BytesIO(base64.b64decode(template.image_64)))
-        self.assertEqual(image.size, (64, 36))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = Image.open(io.BytesIO(base64.b64decode(product_red.image_64)))
-        self.assertEqual(image.size, (64, 40))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = Image.open(io.BytesIO(base64.b64decode(product_green.image_64)))
-        self.assertEqual(image.size, (64, 36))
-        self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
-
         # self.env.cr.commit()  # uncomment to save the product to test in browser
 
         self.start_tour("/", 'shop_zoom', login="admin")

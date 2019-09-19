@@ -2381,7 +2381,7 @@ var FieldMany2ManyTagsAvatar = FieldMany2ManyTags.extend({
     _getRenderTagsContext: function () {
         var result = this._super.apply(this, arguments);
         result.avatarModel = this.nodeOptions.avatarModel || this.field.relation;
-        result.avatarField = this.nodeOptions.avatarField || 'image_64';
+        result.avatarField = this.nodeOptions.avatarField || 'image_128';
         return result;
     },
 });

@@ -363,7 +363,7 @@
                     <i class='fa fa-camera' role="img" aria-label="Picture" title="Picture"></i>
                 </t>
                 <t t-if='partner.id'>
-                    <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner"/>
+                    <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner" style="width: 64px; height: 64px; object-fit: cover;"/>
                 </t>
                 <input type='file' class='image-uploader'></input>
             </div>
@@ -445,7 +445,7 @@
     <t t-name="ClientDetails">
         <section class='client-details'>
             <div class='client-picture'>
-                <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner logo"/>
+                <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner logo" style="width: 64px; height: 64px; object-fit: cover;"/>
             </div>
             <div class='client-name'><t t-esc='partner.name' /></div>
             <div class='edit-buttons'>
