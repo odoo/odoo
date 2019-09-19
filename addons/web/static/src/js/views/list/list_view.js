@@ -40,6 +40,7 @@ var ListView = BasicView.extend({
         var self = this;
         this._super.apply(this, arguments);
         var selectedRecords = []; // there is no selected records by default
+        var selectedGroups = [];
 
         var mode = this.arch.attrs.editable && !params.readonly ? "edit" : "readonly";
         var pyevalContext = py.dict.fromJSON(_.pick(params.context, function(value, key, object) {return !_.isUndefined(value)}) || {});
@@ -58,6 +59,7 @@ var ListView = BasicView.extend({
         this.controllerParams.toolbarActions = viewInfo.toolbar;
         this.controllerParams.mode = mode;
         this.controllerParams.selectedRecords = selectedRecords;
+        this.controllerParams.selectedGroups = selectedGroups;
 
         this.rendererParams.arch = this.arch;
         this.rendererParams.groupbys = this.groupbys;
@@ -71,6 +73,7 @@ var ListView = BasicView.extend({
         this.rendererParams.addCreateLineInGroups = this.rendererParams.editable && this.controllerParams.activeActions.create;
 
         this.modelParams.groupbys = this.groupbys;
+        this.rendererParams.selectedGroups = selectedGroups;
 
         this.loadParams.limit = this.loadParams.limit || 80;
         this.loadParams.openGroupByDefault = expandGroups;
