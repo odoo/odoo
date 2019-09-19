@@ -97,7 +97,7 @@ class AccountReconcileModel(models.Model):
         ('percentage', 'Percentage of balance'),
         ('regex', 'From label'),
         ], required=True, default='percentage')
-    show_force_tax_included = fields.Boolean(store=False, help='Technical field used to show the force tax included button')
+    show_force_tax_included = fields.Boolean(compute='_compute_show_force_tax_included', help='Technical field used to show the force tax included button')
     force_tax_included = fields.Boolean(string='Tax Included in Price',
         help='Force the tax to be managed as a price included tax.')
     amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
@@ -118,7 +118,7 @@ class AccountReconcileModel(models.Model):
         ('percentage', 'Percentage of balance'),
         ('regex', 'From label'),
         ], string="Second Amount type",required=True, default='percentage')
-    show_second_force_tax_included = fields.Boolean(store=False, help='Technical field used to show the force tax included button')
+    show_second_force_tax_included = fields.Boolean(compute='_compute_show_second_force_tax_included', help='Technical field used to show the force tax included button')
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
     second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
@@ -159,17 +159,25 @@ class AccountReconcileModel(models.Model):
     def _onchange_tax_ids(self):
         # Multiple taxes with force_tax_included results in wrong computation, so we
         # only allow to set the force_tax_included field if we have one tax selected
-        self.show_force_tax_included = False if len(self.tax_ids) != 1 else True
         if len(self.tax_ids) != 1:
             self.force_tax_included = False
+
+    @api.depends('tax_ids')
+    def _compute_show_force_tax_included(self):
+        for record in self:
+            record.show_force_tax_included = False if len(record.tax_ids) != 1 else True
 
     @api.onchange('second_tax_ids')
     def _onchange_second_tax_ids(self):
         # Multiple taxes with force_tax_included results in wrong computation, so we
         # only allow to set the force_tax_included field if we have one tax selected
-        self.show_second_force_tax_included = False if len(self.second_tax_ids) != 1 else True
         if len(self.second_tax_ids) != 1:
             self.force_second_tax_included = False
+
+    @api.depends('second_tax_ids')
+    def _compute_show_second_force_tax_included(self):
+        for record in self:
+            record.show_second_force_tax_included = False if len(record.second_tax_ids) != 1 else True
 
     @api.onchange('match_total_amount_param')
     def _onchange_match_total_amount_param(self):
