@@ -1295,8 +1295,11 @@ class AccountMove(models.Model):
                 AND move2.id != move.id
             WHERE move.id IN %s
         ''', [tuple(moves.ids)])
-        if self._cr.fetchone():
-            raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note.'))
+        duplicated_moves = self.browse([r[0] for r in self._cr.fetchall()])
+        if duplicated_moves:
+            raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n%s') % "\n".join(
+                duplicated_moves.mapped(lambda m: "%(partner)s - %(ref)s - %(date)s" % {'ref': m.ref, 'partner': m.partner_id.display_name, 'date': format_date(self.env, m.date)})
+            ))
 
     def _check_balanced(self):
         ''' Assert the move is fully balanced debit = credit.
