@@ -71,6 +71,10 @@ exports.PosModel = Backbone.Model.extend({
         var given_config = new RegExp('[\?&]config_id=([^&#]*)').exec(window.location.href);
         this.config_id = given_config && given_config[1] && parseInt(given_config[1]) || false;
 
+        // Sync chunk size set to 2
+        // Better if this can be set in the backend and loaded here.
+        this.sync_chunk_size = 2;
+
         // these dynamic attributes can be watched for change by other models or widgets
         this.set({
             'synch':            { state:'connected', pending:0 },
@@ -862,13 +866,34 @@ exports.PosModel = Backbone.Model.extend({
             this.db.add_order(order.export_as_JSON());
         }
 
+        this.set_synch('connecting', self.db.get_orders().length);
+
         return new Promise(function (resolve, reject) {
-            self.flush_mutex.exec(function () {
-                var flushed = self._flush_orders(self.db.get_orders(), opts);
-
-                flushed.then(resolve, reject);
-
-                return flushed;
+            var not_syncing_orders = self.db.get_orders().filter(function (order) {
+                return !order.syncing;
+            });
+            var chunk_size = self.sync_chunk_size; // 2 by default, syncing 2 at a time.
+            var n = Math.ceil(not_syncing_orders.length / chunk_size);
+            var chunked_orders = [];
+            for (var i=0; i < n; i++) {
+                chunked_orders.push(not_syncing_orders.slice(i*chunk_size, (i+1)*chunk_size));
+            }
+            if (chunked_orders.length == 0) {
+                // necessary so that flush_mutex is called at least once.
+                // It is important to call flush_mutex.exec once so that
+                // the chain that this promise returns is not broken.
+                // e.g. in closing the session.
+                chunked_orders.push([]);
+            }
+            chunked_orders.forEach(function (orders) {
+                orders.forEach(function(order) {
+                    order.syncing = true;
+                });
+                self.flush_mutex.exec(() => {
+                    var flushed = self._flush_orders(orders, opts);
+                    flushed.then(resolve, reject);
+                    return flushed;
+                });
             });
         });
     },
@@ -889,7 +914,7 @@ exports.PosModel = Backbone.Model.extend({
             }
             else {
                 var order_id = self.db.add_order(order.export_as_JSON());
-
+                order_id.syncing = true;
                 self.flush_mutex.exec(function () {
                     var done =  new Promise(function (resolveDone, rejectDone) {
                         // send the order to the server
@@ -942,13 +967,16 @@ exports.PosModel = Backbone.Model.extend({
     // wrapper around the _save_to_server that updates the synch status widget
     _flush_orders: function(orders, options) {
         var self = this;
-        this.set_synch('connecting', orders.length);
+        this.set_synch('connecting', self.db.get_orders().length);
 
         return this._save_to_server(orders, options).then(function (server_ids) {
             self.set_synch('connected');
             return _.pluck(server_ids, 'id');
         }).catch(function(error){
             self.set_synch(self.get('failed') ? 'error' : 'disconnected');
+            orders.forEach(function (order) {
+                order.syncing = false;
+            });
             return Promise.reject(error);
         });
     },
