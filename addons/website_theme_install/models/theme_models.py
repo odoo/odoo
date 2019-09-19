@@ -41,6 +41,14 @@ class ThemeView(models.Model):
                 # inherit_id not yet created, add to the queue
                 return False
 
+        if inherit and inherit.website_id != website:
+            website_specific_inherit = self.env['ir.ui.view'].with_context(active_test=False).search([
+                ('key', '=', inherit.key),
+                ('website_id', '=', website.id)
+            ], limit=1)
+            if website_specific_inherit:
+                inherit = website_specific_inherit
+
         new_view = {
             'type': self.type or 'qweb',
             'name': self.name,
