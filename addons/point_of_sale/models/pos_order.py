@@ -20,7 +20,7 @@ _logger = logging.getLogger(__name__)
 class PosOrder(models.Model):
     _name = "pos.order"
     _description = "Point of Sale Orders"
-    _order = "id desc"
+    _order = "date_order desc, name desc, id desc"
 
     @api.model
     def _amount_line_tax(self, line, fiscal_position_id):
