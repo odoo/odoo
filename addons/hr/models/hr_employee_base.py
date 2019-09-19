@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import api, fields, models
 from pytz import timezone, UTC
 from odoo.tools import format_time
@@ -45,7 +47,7 @@ class HrEmployeeBase(models.AbstractModel):
         presence criterions. e.g. hr_attendance, hr_holidays
         """
         # Check on login
-        check_login = self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_login')
+        check_login = literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_login', 'False'))
         for employee in self:
             state = 'to_define'
             if check_login:
