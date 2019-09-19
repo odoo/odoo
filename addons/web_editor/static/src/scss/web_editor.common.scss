@@ -403,6 +403,14 @@ a.o_underline {
 }
 
 @include media-breakpoint-down(sm) {
+    odoo-wysiwyg-container {
+        .panel-heading.note-toolbar {
+            overflow-x: auto;
+        }
+        .btn-group {
+            position: static;
+        }
+    }
     // modal select media
     .o_technical_modal {
         // see template 'web_editor.FieldTextHtml.fullscreen'
