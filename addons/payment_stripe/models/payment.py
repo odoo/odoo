@@ -3,6 +3,7 @@
 import logging
 import requests
 import pprint
+from requests.exceptions import HTTPError
 from werkzeug import urls
 
 from odoo import api, fields, models, _
@@ -61,8 +62,12 @@ class PaymentAcquirerStripe(models.Model):
         resp = requests.request(method, url, data=data, headers=headers)
         try:
             resp.raise_for_status()
-        except:
-            _logger.error(resp.text)
+        except HTTPError:
+            _logger.error("Here are some more information for the "
+                          "following HTTP error on %s:\n"
+                          "Request data:\n%s\n"
+                          "Response body:\n%s",
+                          url, pprint.pformat(data), resp.text)
             raise
         return resp.json()
 
@@ -187,7 +192,7 @@ class PaymentTransactionStripe(models.Model):
     def _stripe_form_get_tx_from_data(self, data):
         """ Given a data dict coming from stripe, verify it and find the related
         transaction record. """
-        reference = data.get('reference')
+        reference = data.get('metadata', {}).get('reference')
         if not reference:
             stripe_error = data.get('error', {}).get('message', '')
             _logger.error('Stripe: invalid reply received from stripe API, looks like '
