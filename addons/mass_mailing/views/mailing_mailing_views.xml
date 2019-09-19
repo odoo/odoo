@@ -142,7 +142,7 @@
                             <div>
                                 <div class="row">
                                     <div class="col-xs-12 col-md-3" >
-                                        <field name="mailing_model_id" widget="selection"
+                                        <field name="mailing_model_id" widget="selection" required="True"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                     </div>
                                     <div attrs="{'invisible': [('mailing_model_name', '!=', 'mailing.list')]}" class="col-xs-12 col-md-9 pt-1">
@@ -158,12 +158,10 @@
 
                                 <field name="mailing_model_name" invisible="1"/>
                                 <field name="mailing_model_real" invisible="1"/>
-                                <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_real'}"
-                                    attrs="{
-                                        'invisible': [('mailing_model_name', '=', 'mailing.list')],
-                                        'readonly': [('state', 'in', ('sending', 'done'))]
-                                }">
-                                </field>
+                                <div attrs="{'invisible': [('mailing_model_name', '=', 'mailing.list')]}">
+                                    <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_real'}"
+                                    attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                </div>
                             </div>
                         </group>
                         <notebook>
@@ -186,7 +184,6 @@
                                 <group>
                                     <group>
                                         <field name="user_id"/>
-                                        <field name="unique_ab_testing" groups="base.group_no_one" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="reply_to"/>
                                         <div name="reply_to_details">
@@ -215,7 +212,8 @@
                                         <field name="campaign_id"
                                             string="Mailing Campaign"
                                             groups="mass_mailing.group_mass_mailing_campaign"
-                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))],
+                                                    'required': [('unique_ab_testing', '=', True)]}"/>
                                         <field name="source_id"
                                             string="Source"
                                             readonly="1"
@@ -227,6 +225,9 @@
                                              required="True"
                                              groups="base.group_no_one"
                                              attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                        <field name="unique_ab_testing" 
+                                            groups="mass_mailing.group_mass_mailing_campaign"
+                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="contact_ab_pc" groups="mass_mailing.group_mass_mailing_campaign"/>
                                         <div groups="mass_mailing.group_mass_mailing_campaign">
                                             <field name="contact_ab_pc"
