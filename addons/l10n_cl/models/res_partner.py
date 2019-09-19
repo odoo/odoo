@@ -27,4 +27,5 @@ class ResPartner(models.Model):
         help='1 - VAT Affected (1st Category) (Most of the cases)\n'
              '2 - Fees Receipt Issuer (Applies to suppliers who issue fees receipt)\n'
              '3 - End consumer (only receipts)\n'
+             '4 - Foreigner'
     )
