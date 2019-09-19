@@ -42,6 +42,7 @@ class WebsiteVisitor(models.Model):
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
     user_partner_id = fields.Many2one('res.partner', string="Linked Partner", help="Partner of the last logged in user.")
+    partner_image = fields.Binary(related='user_partner_id.image_1920')
 
     # localisation and info
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
@@ -57,6 +58,7 @@ class WebsiteVisitor(models.Model):
     visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics", help="Total number of visits on tracked pages")
     page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics")
     page_count = fields.Integer('# Visited Pages', compute="_compute_page_statistics", help="Total number of tracked page visited")
+    last_visited_page_id = fields.Many2one('website.page', string="Last Visited Page", compute="_compute_last_visited_page_id")
 
     # Time fields
     create_date = fields.Datetime('First connection date', readonly=True)
@@ -120,6 +122,15 @@ class WebsiteVisitor(models.Model):
             visitor.page_ids = [(6, 0, visitor_info['page_ids'])]
             visitor.visitor_page_count = visitor_info['visitor_page_count']
             visitor.page_count = visitor_info['page_count']
+
+    @api.depends('website_track_ids.page_id')
+    def _compute_last_visited_page_id(self):
+        results = self.env['website.track'].read_group([('visitor_id', 'in', self.ids)],
+                                                                        ['visitor_id', 'page_id', 'visit_datetime:max'],
+                                                                        ['visitor_id', 'page_id'], lazy=False)
+        mapped_data = {result['visitor_id'][0]: result['page_id'][0] for result in results if result['page_id']}
+        for visitor in self:
+            visitor.last_visited_page_id = mapped_data.get(visitor.id, False)
 
     @api.depends('last_connections_ids')
     def _compute_time_statistics(self):
