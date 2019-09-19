@@ -729,7 +729,12 @@
         </select>
     </t>
 </t>
-<t t-name="FieldMany2ManyTag">
+<t t-name="FieldMany2ManyTags">
+    <div class="o_field_many2manytags">
+        <div class="o_m2m_tags"></div>
+    </div>
+</t>
+<t t-name="Many2ManyTags">
     <t t-foreach="elements" t-as="el">
         <t t-set="color" t-value="el[colorField] || 0"/>
         <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
@@ -749,7 +754,12 @@
         </div>
     </t>
 </t>
-<t t-name="FieldMany2ManyTagAvatar" t-extend="FieldMany2ManyTag">
+<t t-name="FieldMany2ManyTagsAvatar" t-extend="FieldMany2ManyTags">
+    <t t-jquery="div.o_field_many2manytags" t-operation="attributes">
+        <attribute name="class" value="o_field_many2manytags avatar" />
+    </t>
+</t>
+<t t-name="Many2ManyTagAvatar" t-extend="Many2ManyTags">
     <t t-jquery="span:first" t-operation="prepend">
         <img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" class="rounded-circle"/>
     </t>
