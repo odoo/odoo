@@ -186,4 +186,4 @@ class BaseDocumentLayout(models.TransientModel):
 
     def document_layout_save(self):
         # meant to be overridden
-        pass
+        return self.env.context.get('report_action') or {'type': 'ir.actions.act_window_close'}

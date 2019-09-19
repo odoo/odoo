@@ -488,7 +488,7 @@ class ResCompany(models.Model):
 
     def action_save_onboarding_invoice_layout(self):
         """ Set the onboarding step as done """
-        if bool(self.logo) and self.logo != self._get_logo():
+        if bool(self.external_report_layout_id):
             self.set_onboarding_step_done('account_onboarding_invoice_layout_state')
 
     def action_save_onboarding_sale_tax(self):
