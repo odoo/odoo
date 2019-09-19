@@ -527,9 +527,7 @@ ListRenderer.include({
         // There are some cases where a record is added to an invisible list
         // e.g. set a quotation template with optionnal products
         if (params.keepWidths && this.$el.is(':visible')) {
-            this.columnWidths = this.$('thead th').toArray().map(function (th) {
-                return $(th).outerWidth();
-            });
+            this._storeColumnWidths();
         }
         if (params.noRender) {
             // the state changed, but we won't do a re-rendering right now, so
@@ -1228,6 +1226,10 @@ ListRenderer.include({
         if (rowIndex === this.currentRow) {
             return Promise.resolve();
         }
+        if (!this.columnWidths) {
+            // we don't want the column widths to change when selecting rows
+            this._storeColumnWidths();
+        }
         this._freezeColumnWidths();
         var recordId = this._getRecordID(rowIndex);
         // To select a row, the currently selected one must be unselected first
@@ -1252,6 +1254,14 @@ ListRenderer.include({
                     },
                 });
             });
+        });
+    },
+    /**
+     * @private
+     */
+    _storeColumnWidths: function () {
+        this.columnWidths = this.$('thead th').toArray().map(function (th) {
+            return $(th).outerWidth();
         });
     },
 
