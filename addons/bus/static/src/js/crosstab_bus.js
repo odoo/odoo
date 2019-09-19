@@ -1,6 +1,15 @@
 odoo.define('bus.CrossTab', function (require) {
 "use strict";
 
+const CrossTab2 = require('bus.CrossTab2');
+
+if (
+    !window.isOdooTestEnvironment &&
+    window.SharedWorker
+) {
+    return CrossTab2;
+}
+
 var Longpolling = require('bus.Longpolling');
 
 var session = require('web.session');

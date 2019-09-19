@@ -39,7 +39,8 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
         this._channels = [];
 
         // bus presence
-        this._lastPresenceTime = new Date().getTime();
+        this._lastPresenceTime = null;
+        this._updateLastPresenceTime();
         $(window).on("focus." + this._longPollingBusId, this._onFocusChange.bind(this, {focus: true}));
         $(window).on("blur." + this._longPollingBusId, this._onFocusChange.bind(this, {focus: false}));
         $(window).on("unload." + this._longPollingBusId, this._onFocusChange.bind(this, {focus: false}));
@@ -158,6 +159,25 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
         return this._lastPresenceTime;
     },
     /**
+     * @private
+     * @param {Object[]} notifications
+     * @return {Array[]}
+     */
+    _parseAndTriggerNotifications(notifications) {
+        const notifs = notifications
+            .filter(notif =>
+                !this._lastNotificationId ||
+                notif.id > this._lastNotificationId)
+            .map(notif => {
+                if (notif.id > this._lastNotificationID) {
+                    this._lastNotificationID = notif.id;
+                }
+                return [notif.channel, notif.message];
+            });
+        this.trigger('notification', notifs);
+        return notifs;
+    },
+    /**
      * Continually start a poll:
      *
      * A poll is a connection that is kept open for a relatively long period
@@ -199,6 +219,21 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
             }
         });
     },
+    /**
+     * @private
+     * @param {integer|null} [lastPresenceTime=null]
+     */
+    _updateLastPresenceTime(lastPresenceTime=null) {
+        this._lastPresenceTime = lastPresenceTime ? lastPresenceTime : Date.now();
+    },
+    /**
+     * @private
+     * @param {boolean} focus
+     */
+    _updateOdooFocus(focus) {
+        this._isOdooFocused = focus;
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -211,9 +246,9 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      * @param {Boolean} params.focus
      */
     _onFocusChange: function (params) {
-        this._isOdooFocused = params.focus;
+        this._updateOdooFocus(params.focus);
         if (params.focus) {
-            this._lastPresenceTime = new Date().getTime();
+            this._updateLastPresenceTime();
             this.trigger('window_focus', this._isOdooFocused);
         }
     },
@@ -227,14 +262,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      * @returns {Array[]} Output arrays have notification's channel and message
      */
     _onPoll: function (notifications) {
-        var self = this;
-        var notifs = _.map(notifications, function (notif) {
-            if (notif.id > self._lastNotificationID) {
-                self._lastNotificationID = notif.id;
-            }
-            return [notif.channel, notif.message];
-        });
-        this.trigger("notification", notifs);
+        const notifs = this._parseAndTriggerNotifications(notifications);
         return notifs;
     },
     /**
@@ -244,7 +272,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      * @private
      */
     _onPresence: function () {
-        this._lastPresenceTime = new Date().getTime();
+        this._updateLastPresenceTime();
     },
 });
 

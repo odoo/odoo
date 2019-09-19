@@ -575,6 +575,9 @@
     </template>
 
     <template id="web.js_tests_assets">
+        <script type="text/javascript">
+            window.isOdooTestEnvironment = true;
+        </script>
         <t t-call-assets="web.assets_common" t-js="false"/>
         <t t-call-assets="web.assets_backend" t-js="false"/>
         <t t-call-assets="web.assets_common" t-css="false"/>
