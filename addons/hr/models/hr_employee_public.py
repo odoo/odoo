@@ -38,7 +38,6 @@ class HrEmployeePublic(models.Model):
     image_512 = fields.Image("Image 512", compute='_compute_image', compute_sudo=True)
     image_256 = fields.Image("Image 256", compute='_compute_image', compute_sudo=True)
     image_128 = fields.Image("Image 128", compute='_compute_image', compute_sudo=True)
-    image_64 = fields.Image("Image 64", compute='_compute_image', compute_sudo=True)
     parent_id = fields.Many2one('hr.employee.public', 'Manager', readonly=True)
     coach_id = fields.Many2one('hr.employee.public', 'Coach', readonly=True)
 
@@ -51,7 +50,6 @@ class HrEmployeePublic(models.Model):
             employee.image_512 = employee_id.image_512
             employee.image_256 = employee_id.image_256
             employee.image_128 = employee_id.image_128
-            employee.image_64 = employee_id.image_64
 
     @api.model
     def _get_fields(self):

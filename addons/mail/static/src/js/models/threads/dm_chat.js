@@ -91,7 +91,7 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
      */
     getPreview: function () {
         var result = this._super.apply(this, arguments);
-        result.imageSRC = '/web/image/res.partner/' + this.getDirectPartnerID() + '/image_64';
+        result.imageSRC = '/web/image/res.partner/' + this.getDirectPartnerID() + '/image_128';
         return result;
     },
     /**

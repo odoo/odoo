@@ -161,13 +161,13 @@
                                     t-attf-style="background-image:url('#{kanban_image('slide.slide', 'image_128', record.id.raw_value,  placeholder)}')">
                                     <img class="o_kanban_image_inner_pic"
                                         t-att-alt="record.channel_id.value"
-                                        t-att-src="kanban_image('slide.channel', 'image_64', record.channel_id.raw_value)"/>
+                                        t-att-src="kanban_image('slide.channel', 'image_128', record.channel_id.raw_value)"/>
                                 </div>
                                 <div class="o_kanban_image rounded-circle d-md-none"
                                     t-attf-style="background-image:url('#{kanban_image('slide.slide', 'image_128', record.id.raw_value,  placeholder)}')">
                                     <img class="o_kanban_image_inner_pic"
                                         t-att-alt="record.channel_id.value"
-                                        t-att-src="kanban_image('slide.channel', 'image_64', record.channel_id.raw_value)"/>
+                                        t-att-src="kanban_image('slide.channel', 'image_128', record.channel_id.raw_value)"/>
                                 </div>
                                 <div class="oe_kanban_details d-flex flex-column">
                                     <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
@@ -203,7 +203,7 @@
                                             <t t-else=""><i class="fa fa-file-pdf-o mr-2" aria-label="Document" role="img" title="Document"/></t>
                                             <field name="slide_type"/>
                                         </span>
-                                        <img t-att-src="kanban_image('res.users', 'image_64', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_24_cover"/>
                                     </div>
                                 </div>
                             </div>

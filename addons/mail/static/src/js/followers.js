@@ -36,7 +36,7 @@ var Followers = AbstractField.extend({
     init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
 
-        this.image = this.attrs.image || 'image_64';
+        this.image = this.attrs.image || 'image_128';
         this.comment = this.attrs.help || false;
 
         this.followers = [];
@@ -120,7 +120,7 @@ var Followers = AbstractField.extend({
             }
 
             $follower_li = $(QWeb.render('mail.Followers.partner', {
-                'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_64'}),
+                'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_128'}),
                 'widget': self})
             );
             $follower_li.appendTo($followers_list);
