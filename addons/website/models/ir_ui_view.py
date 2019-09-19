@@ -157,7 +157,7 @@ class View(models.Model):
 
         specific_views = self.env['ir.ui.view']
         if self and self.pool._init:
-            for view in self:
+            for view in self.filtered(lambda v: v.xml_id):
                 specific_views += view._get_specific_views()
 
         result = super(View, self + specific_views).unlink()

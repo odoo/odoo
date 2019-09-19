@@ -811,6 +811,27 @@ class TestCowViewSaving(common.TransactionCase):
         all_title_updated = specific_view.website_meta_title == self.base_view.website_meta_title == "A bug got fixed by updating this field"
         self.assertEqual(all_title_updated, True, "Update on top level generic views should also be applied on specific views")
 
+    def test_module_new_inherit_view_on_parent_already_forked_INSTALL(self):
+        """ This test is following the previous one, it basically test the flow
+            during module install which is altered by condition on `self.pool._init`.
+            See commit message.
+        """
+        # Indirectly simulate module install, this will be enough to test code behavior
+        Website = self.env['website']
+        View = self.env['ir.ui.view']
+        View.pool._init = True
+
+        # Trigger cow on child view for website 1
+        self.inherit_view.with_context(website_id=1).write({'name': 'Extension FORK'})
+        # Trigger cow on parent view for website 1. This is the real test, this is typically
+        # done during theme install on `post_copy` to enable a view.
+        self.base_view.with_context(website_id=1).write({'name': 'Product (W1)'})
+
+        specific_view = Website.with_context(website_id=1).viewref(self.base_view.key)
+        self.assertNotEquals(self.base_view, specific_view)
+        self.assertTrue(self.inherit_view.key in self.base_view.inherit_children_ids.mapped('key'), "Generic tree should still have its child view")
+        self.assertTrue(self.inherit_view.key in specific_view.inherit_children_ids.mapped('key'), "Specific tree should have its own child view")
+
     def test_module_new_inherit_view_on_parent_already_forked_xpath_replace(self):
         """ Deeper, more specific test of above behavior.
             A module install should add/update the COW view (if allowed fields,
