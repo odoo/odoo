@@ -439,7 +439,9 @@
                         </div>
                         <div class="col-md-8">
                             <div class="form-inline justify-content-end">
-                                <t t-call="website_sale.search"/>
+                                <t t-call="website_sale.search">
+                                    <t t-set="search" t-value="False"/>
+                                </t>
                                 <t t-call="website_sale.pricelist_list">
                                     <t t-set="_classes">ml-2</t>
                                 </t>
