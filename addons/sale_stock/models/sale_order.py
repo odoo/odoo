@@ -207,7 +207,7 @@ class SaleOrderLine(models.Model):
     scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
     free_qty_today = fields.Float(compute='_compute_qty_at_date')
     qty_available_today = fields.Float(compute='_compute_qty_at_date')
-    warehouse_id = fields.Many2one(related='order_id.warehouse_id')
+    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_qty_at_date')
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
@@ -236,13 +236,13 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.display_qty_widget:
                 continue
-            warehouse = line.order_id.warehouse_id
+            line.warehouse_id = line.order_id.warehouse_id
             if line.order_id.commitment_date:
                 date = line.order_id.commitment_date
             else:
                 confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else datetime.now()
                 date = confirm_date + timedelta(days=line.customer_lead or 0.0)
-            grouped_lines[(warehouse.id, date)] |= line
+            grouped_lines[(line.warehouse_id.id, date)] |= line
 
         treated = self.browse()
         for (warehouse, scheduled_date), lines in grouped_lines.items():
@@ -268,6 +268,7 @@ class SaleOrderLine(models.Model):
         remaining.scheduled_date = False
         remaining.free_qty_today = False
         remaining.qty_available_today = False
+        remaining.warehouse_id = False
 
     @api.depends('product_id', 'route_id', 'order_id.warehouse_id', 'product_id.route_ids')
     def _compute_is_mto(self):
