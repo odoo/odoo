@@ -1538,7 +1538,7 @@ QUnit.module('Views', {
 
     QUnit.test('width of some of the fields should be hardcoded if no data', async function (assert) {
         const assertions = [
-            { field: 'bar', expected: 40, type: 'Boolean' },
+            { field: 'bar', expected: 50, type: 'Boolean' },
             { field: 'int_field', expected: 74, type: 'Integer' },
             { field: 'qux', expected: 92, type: 'Float' },
             { field: 'date', expected: 92, type: 'Date' },
@@ -1578,7 +1578,7 @@ QUnit.module('Views', {
 
     QUnit.test('width of some fields should be hardcoded if no data, and list initially invisible', async function (assert) {
         const assertions = [
-            { field: 'bar', expected: 40, type: 'Boolean' },
+            { field: 'bar', expected: 50, type: 'Boolean' },
             { field: 'int_field', expected: 74, type: 'Integer' },
             { field: 'qux', expected: 92, type: 'Float' },
             { field: 'date', expected: 92, type: 'Date' },
@@ -1908,7 +1908,7 @@ QUnit.module('Views', {
 
     QUnit.test('width of some of the fields should be hardcoded if no data (grouped case)', async function (assert) {
         const assertions = [
-            { field: 'bar', expected: 40, type: 'Boolean' },
+            { field: 'bar', expected: 50, type: 'Boolean' },
             { field: 'int_field', expected: 74, type: 'Integer' },
             { field: 'qux', expected: 92, type: 'Float' },
             { field: 'date', expected: 92, type: 'Date' },

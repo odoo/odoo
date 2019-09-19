@@ -664,7 +664,7 @@ ListRenderer.include({
             return '1';
         }
         const fixedWidths = {
-            boolean: '40px',
+            boolean: '50px',
             date: '92px',
             datetime: '146px',
             float: '92px',
