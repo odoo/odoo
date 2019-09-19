@@ -10,7 +10,7 @@ class L10nInAccountInvoiceReport(models.Model):
     _auto = False
     _order = 'date desc'
 
-    account_move_id = fields.Many2one('account.move', string="Account Move")
+    move_id = fields.Many2one('account.move', string="Account Move")
     company_id = fields.Many2one('res.company', string="Company")
     date = fields.Date(string="Accounting Date")
     name = fields.Char(string="Invoice Number")
@@ -65,7 +65,6 @@ class L10nInAccountInvoiceReport(models.Model):
         select_str = """
             SELECT min(sub.id) as id,
             sub.move_id,
-            sub.account_move_id,
             sub.name,
             sub.state,
             sub.partner_id,
@@ -114,7 +113,6 @@ class L10nInAccountInvoiceReport(models.Model):
             SELECT aml.id AS id,
                 aml.move_id,
                 aml.partner_id,
-                am.id AS account_move_id,
                 am.name,
                 am.state,
                 am.date,
@@ -259,14 +257,12 @@ class L10nInAccountInvoiceReport(models.Model):
 
     def _where(self):
         return """
-                WHERE am.state = 'posted'
-                    AND tag_rep_ln.account_tax_report_line_id in (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('tax_report_line_igst','tax_report_line_cgst','tax_report_line_sgst'))
+                WHERE tag_rep_ln.account_tax_report_line_id in (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('tax_report_line_igst','tax_report_line_cgst','tax_report_line_sgst'))
         """
 
     def _group_by(self):
         group_by_str = """
         GROUP BY sub.move_id,
-            sub.account_move_id,
             sub.name,
             sub.state,
             sub.partner_id,

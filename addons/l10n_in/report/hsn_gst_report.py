@@ -10,7 +10,7 @@ class L10nInProductHsnReport(models.Model):
     _auto = False
     _order = 'date desc'
 
-    account_move_id = fields.Many2one('account.move', string="Account Move")
+    move_id = fields.Many2one('account.move', string="Account Move")
     partner_id = fields.Many2one('res.partner', string="Customer")
     product_id = fields.Many2one("product.product", string="Product")
     uom_id = fields.Many2one('uom.uom', string="UOM")
@@ -32,7 +32,7 @@ class L10nInProductHsnReport(models.Model):
 
     def _select(self):
         select_str = """SELECT aml.id AS id,
-            aml.move_id AS account_move_id,
+            aml.move_id,
             aml.partner_id AS partner_id,
             aml.product_id,
             aml.product_uom_id AS uom_id,

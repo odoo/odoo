@@ -8,7 +8,7 @@ class L10nInPaymentReport(models.AbstractModel):
     _name = "l10n_in.payment.report"
     _description = "Indian accounting payment report"
 
-    account_move_id = fields.Many2one('account.move', string="Account Move")
+    move_id = fields.Many2one('account.move', string="Account Move")
     payment_id = fields.Many2one('account.payment', string='Payment')
     currency_id = fields.Many2one('res.currency', string="Currency")
     amount = fields.Float(string="Amount")
@@ -58,7 +58,7 @@ class L10nInPaymentReport(models.AbstractModel):
 
     def _select(self):
         return """SELECT aml.id AS id,
-            aml.move_id as account_move_id,
+            aml.move_id,
             ap.id AS payment_id,
             ap.payment_type,
             tax.id as l10n_in_tax_id,

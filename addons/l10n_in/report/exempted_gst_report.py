@@ -9,7 +9,7 @@ class L10nInExemptedReport(models.Model):
     _description = "Exempted Gst Supplied Statistics"
     _auto = False
 
-    account_move_id = fields.Many2one('account.move', string="Account Move")
+    move_id = fields.Many2one('account.move', string="Account Move")
     partner_id = fields.Many2one('res.partner', string="Customer")
     out_supply_type = fields.Char(string="Outward Supply Type")
     in_supply_type = fields.Char(string="Inward Supply Type")
@@ -27,7 +27,7 @@ class L10nInExemptedReport(models.Model):
             aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END) AS price_total,
             am.journal_id,
             aj.company_id,
-            aml.move_id as account_move_id,
+            aml.move_id,
 
             (CASE WHEN p.state_id = cp.state_id
                 THEN (CASE WHEN p.vat IS NOT NULL
