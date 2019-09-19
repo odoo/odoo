@@ -744,11 +744,29 @@ class PreforkServer(CommonServer):
         for (pid, worker) in self.workers.items():
             if worker.watchdog_timeout is not None and \
                     (now - worker.watchdog_time) >= worker.watchdog_timeout:
-                _logger.error("%s (%s) timeout after %ss",
-                              worker.__class__.__name__,
-                              pid,
-                              worker.watchdog_timeout)
-                self.worker_kill(pid, signal.SIGKILL)
+                if not worker.stack_dumped:
+                    _logger.error("%s (%s) timeout after %ss",
+                                  worker.__class__.__name__,
+                                  pid,
+                                  worker.watchdog_timeout)
+                    _logger.info("Giving %s (%s) %ss to dump stacktrace ",
+                                 worker.__class__.__name__,
+                                 pid,
+                                 self.beat)
+                    self.worker_kill(pid, signal.SIGQUIT)
+                    worker.stack_dumped = now
+                elif worker.stack_dumped and worker.stack_dumped > now - self.beat:
+                    pass
+                else:
+                    _logger.info("Killing %s (%s)",
+                                 worker.__class__.__name__,
+                                 pid)
+                    self.worker_kill(pid, signal.SIGKILL)
+            elif worker.stack_dumped:
+                _logger.info("%s (%s) just finished, keeping it alive",
+                             worker.__class__.__name__,
+                             pid)
+                worker.stack_dumped = None
 
     def process_spawn(self):
         if config['http_enable']:
@@ -867,6 +885,7 @@ class Worker(object):
         self.ppid = os.getpid()
         self.pid = None
         self.alive = True
+        self.stack_dumped = None
         # should we rename into lifetime ?
         self.request_max = multi.limit_request
         self.request_count = 0
