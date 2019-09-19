@@ -2020,6 +2020,34 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('column widths are kept when switching records in edition', async function (assert) {
+        assert.expect(4);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree editable="bottom">
+                    <field name="m2o"/>
+                    <field name="text"/>
+                </tree>`,
+        });
+
+        const width = list.$('th[data-name="m2o"]')[0].offsetWidth;
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:first'));
+
+        assert.hasClass(list.$('.o_data_row:first'), 'o_selected_row');
+        assert.strictEqual(list.$('th[data-name="m2o"]')[0].offsetWidth, width);
+
+        await testUtils.dom.click(list.$('.o_data_row:nth(1) .o_data_cell:first'));
+
+        assert.hasClass(list.$('.o_data_row:nth(1)'), 'o_selected_row');
+        assert.strictEqual(list.$('th[data-name="m2o"]')[0].offsetWidth, width);
+
+        list.destroy();
+    });
+
     QUnit.test('column widths are re-computed on window resize', async function (assert) {
         assert.expect(2);
 
