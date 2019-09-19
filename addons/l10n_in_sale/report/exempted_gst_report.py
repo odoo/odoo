@@ -4,7 +4,7 @@
 from odoo import models
 
 
-class L10nInExemptedReport(models.Model):
+class L10nInExemptedReport(models.AbstractModel):
     _inherit = "l10n_in.exempted.report"
 
     def _from(self):

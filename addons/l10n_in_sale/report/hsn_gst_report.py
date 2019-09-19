@@ -4,7 +4,7 @@
 from odoo import models
 
 
-class L10nInProductHsnReport(models.Model):
+class L10nInProductHsnReport(models.AbstractModel):
     _inherit = "l10n_in.product.hsn.report"
 
     def _from(self):
