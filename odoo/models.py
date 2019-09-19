@@ -4870,6 +4870,15 @@ Fields:
             prefetch_ids = self._ids
         return self._browse(self.env, self._ids, prefetch_ids)
 
+    def prefetch_fields(self, fields):
+        """Prefetch fields manually in case they are missing.
+
+        :param list fields: List of fields to be prefetched in current recordset.
+        """
+        _fields = [field for field in fields if field not in self._cache]
+        if _fields:
+            self.browse(self.ids).read(_fields)
+
     def _update_cache(self, values, validate=True):
         """ Update the cache of ``self`` with ``values``.
 
