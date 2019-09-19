@@ -10,6 +10,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
     events:  _.extend({}, Dialog.prototype.events, VariantMixin.events, {
         'click a.js_add, a.js_remove': '_onAddOrRemoveOption',
         'click button.js_add_cart_json': 'onClickAddCartJSON',
+        'change .js_product input[name="add_qty"]': '_onChangeAddQuantity',
         'change .in_cart input.js_quantity': '_onChangeQuantity',
         'change .js_raw_price': '_computePriceTotal'
     }),
@@ -54,7 +55,6 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
 
         this.context = params.context;
         this.rootProduct = params.rootProduct;
-        this.container = parent;
         this.pricelistId = params.pricelistId;
         this.previousModalHeight = params.previousModalHeight;
         this.dialogClass = 'oe_optional_products_modal';
@@ -99,33 +99,6 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         return Promise.all([getModalContent, parentInit]);
     },
 
-    /**
-     * This is overridden to append the modal to the provided container (see init("parent")).
-     * We need this to have the modal contained in the web shop product form.
-     * The additional products data will then be contained in the form and sent on submit.
-     *
-     * @override
-     */
-    open: function (options) {
-        $('.tooltip').remove(); // remove open tooltip if any to prevent them staying when modal is opened
-
-        var self = this;
-        this.appendTo($('<div/>')).then(function () {
-            if (!self.preventOpening) {
-                self.$modal.find(".modal-body").replaceWith(self.$el);
-                self.$modal.attr('open', true);
-                self.$modal.removeAttr("aria-hidden");
-                self.$modal.modal().appendTo(self.container);
-                self.$modal.focus();
-                self._openedResolver();
-            }
-        });
-        if (options && options.shouldFocusButtons) {
-            self._onFocusControlButton();
-        }
-
-        return self;
-    },
     /**
      * Will update quantity input to synchronize with previous window
      *
@@ -201,6 +174,14 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
     // ------------------------------------------
     // Private
     // ------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeAddQuantity: function (ev) {
+        this.onChangeAddQuantity(ev);
+    },
 
     /**
      * Adds the product image and updates the product description
