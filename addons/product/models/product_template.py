@@ -390,7 +390,6 @@ class ProductTemplate(models.Model):
                 'image_512',
                 'image_256',
                 'image_128',
-                'image_64',
                 'can_image_1024_be_zoomed',
             ])
         return res

@@ -128,7 +128,6 @@ class ProductProduct(models.Model):
     image_variant_512 = fields.Image("Variant Image 512", related="image_variant_1920", max_width=512, max_height=512, store=True)
     image_variant_256 = fields.Image("Variant Image 256", related="image_variant_1920", max_width=256, max_height=256, store=True)
     image_variant_128 = fields.Image("Variant Image 128", related="image_variant_1920", max_width=128, max_height=128, store=True)
-    image_variant_64 = fields.Image("Variant Image 64", related="image_variant_1920", max_width=64, max_height=64, store=True)
     can_image_variant_1024_be_zoomed = fields.Boolean("Can Variant Image 1024 be zoomed", compute='_compute_can_image_variant_1024_be_zoomed', store=True)
 
     # Computed fields that are used to create a fallback to the template if
@@ -138,7 +137,6 @@ class ProductProduct(models.Model):
     image_512 = fields.Image("Image 512", compute='_compute_image_512')
     image_256 = fields.Image("Image 256", compute='_compute_image_256')
     image_128 = fields.Image("Image 128", compute='_compute_image_128')
-    image_64 = fields.Image("Image 64", compute='_compute_image_64')
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed')
 
     @api.depends('image_variant_1920', 'image_variant_1024')
@@ -190,11 +188,6 @@ class ProductProduct(models.Model):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
             record.image_128 = record.image_variant_128 or record.product_tmpl_id.image_128
-
-    def _compute_image_64(self):
-        """Get the image from the template if no image is set on the variant."""
-        for record in self:
-            record.image_64 = record.image_variant_64 or record.product_tmpl_id.image_64
 
     def _compute_can_image_1024_be_zoomed(self):
         """Get the image from the template if no image is set on the variant."""

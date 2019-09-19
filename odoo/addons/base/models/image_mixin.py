@@ -17,4 +17,3 @@ class ImageMixin(models.AbstractModel):
     image_512 = fields.Image("Image 512", related="image_1920", max_width=512, max_height=512, store=True)
     image_256 = fields.Image("Image 256", related="image_1920", max_width=256, max_height=256, store=True)
     image_128 = fields.Image("Image 128", related="image_1920", max_width=128, max_height=128, store=True)
-    image_64 = fields.Image("Image 64", related="image_1920", max_width=64, max_height=64, store=True)

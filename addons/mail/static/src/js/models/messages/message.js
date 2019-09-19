@@ -95,7 +95,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         if (this._isOdoobotAuthor()) {
             return '/mail/static/src/img/odoobot.png';
         } else if (this.hasAuthor()) {
-            return '/web/image/res.partner/' + this.getAuthorID() + '/image_64';
+            return '/web/image/res.partner/' + this.getAuthorID() + '/image_128';
         } else if (this.getType() === 'email') {
             return '/mail/static/src/img/email_icon.png';
         }

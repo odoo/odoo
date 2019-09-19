@@ -103,7 +103,7 @@
                 <t t-set="current_subtotal" t-value="current_subtotal + ol.price_total" groups="account.group_show_line_subtotals_tax_included"/>
                 <div t-if="not ol.display_type" class="row purchases_vertical_align">
                   <div class="col-lg-1 text-center">
-                      <img t-att-src="image_data_uri(resize_to_48(ol.product_id.image_64))" alt="Product"/>
+                      <img t-att-src="image_data_uri(resize_to_48(ol.product_id.image_128))" alt="Product"/>
                   </div>
                   <div id='product_name' class="col-lg-5">
                     <span t-esc="ol.product_id.name"/>

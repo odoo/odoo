@@ -19,23 +19,18 @@ class TestImage(HttpCase):
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (150, 150))
 
-        # CASE: resize placeholder to small
-        response = self.url_open('/web/image/fake/0/image_64')
-        image = Image.open(io.BytesIO(response.content))
-        self.assertEqual(image.size, (64, 64))
-
-        # CASE: resize placeholder to medium
+        # CASE: resize placeholder to 128
         response = self.url_open('/web/image/fake/0/image_128')
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (128, 128))
 
-        # CASE: resize placeholder to large
+        # CASE: resize placeholder to 256
         response = self.url_open('/web/image/fake/0/image_256')
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (256, 256))
 
-        # CASE: resize placeholder to big (but placeholder image is too small)
-        response = self.url_open('/web/image/fake/0/image')
+        # CASE: resize placeholder to 1024 (but placeholder image is too small)
+        response = self.url_open('/web/image/fake/0/image_1024')
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (256, 256))
 

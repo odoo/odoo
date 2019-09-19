@@ -129,12 +129,8 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
         run: function () {},
     },
     {
-        content: "remove one product from compare table",
-        trigger: '#o_comparelist_table',
-        run: function () {
-            // the content of the link is just a float, and the tour manager considers it invisible
-            $('#o_comparelist_table td:contains("Customizable Desk (Steel, Black)") .o_comparelist_remove').click();
-        },
+        content: "remove Customizable Desk (Steel, Black) from compare table",
+        trigger: '#o_comparelist_table .o_comparelist_remove:eq(2)',
     },
     {
         content: "check customizable table with black variant is removed",

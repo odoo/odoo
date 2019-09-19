@@ -580,7 +580,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides/slide/<int:slide_id>/get_image', type='http', auth="public", website=True, sitemap=False)
     def slide_get_image(self, slide_id, field='image_128', width=0, height=0, crop=False):
         # Protect infographics by limiting access to 256px (large) images
-        if field not in ('image_64', 'image_128', 'image_256', 'image_512', 'image_1024', 'image_1920'):
+        if field not in ('image_128', 'image_256', 'image_512', 'image_1024', 'image_1920'):
             return werkzeug.exceptions.Forbidden()
 
         slide = request.env['slide.slide'].sudo().browse(slide_id).exists()
