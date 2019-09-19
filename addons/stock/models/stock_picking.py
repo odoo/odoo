@@ -528,7 +528,6 @@ class Picking(models.Model):
             if self.state == 'draft':
                 self.location_id = location_id
                 self.location_dest_id = location_dest_id
-                self.company_id = self.picking_type_id.company_id
 
         # TDE CLEANME move into onchange_partner_id
         if self.partner_id and self.partner_id.picking_warn:
@@ -561,6 +560,14 @@ class Picking(models.Model):
                 if len(move) == 3 and move[0] == 0:
                     move[2]['location_id'] = vals['location_id']
                     move[2]['location_dest_id'] = vals['location_dest_id']
+                    # When creating a new picking, a move can have no `company_id` (create before
+                    # picking type was defined) or a different `company_id` (the picking type was
+                    # changed for an another company picking type after the move was created).
+                    # So, we define the `company_id` in one of these cases.
+                    picking_type = self.env['stock.picking.type'].browse(vals['picking_type_id'])
+                    if 'picking_type_id' not in move[2] or move[2]['picking_type_id'] != picking_type.id:
+                        move[2]['picking_type_id'] = picking_type.id
+                        move[2]['company_id'] = picking_type.company_id.id
         res = super(Picking, self).create(vals)
         res._autoconfirm_picking()
         return res
