@@ -33,8 +33,9 @@ class AccountMoveLine(models.Model):
                 l10n_latam_price_unit = included_taxes.compute_all(
                     line.price_unit, invoice.currency_id, 1.0, line.product_id, invoice.partner_id)['total_included']
                 l10n_latam_price_net = l10n_latam_price_unit * (1 - (line.discount or 0.0) / 100.0)
+                price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
                 l10n_latam_price_subtotal = included_taxes.compute_all(
-                    line.price_unit, invoice.currency_id, line.quantity, line.product_id,
+                    price, invoice.currency_id, line.quantity, line.product_id,
                     invoice.partner_id)['total_included']
 
             line.l10n_latam_price_subtotal = l10n_latam_price_subtotal
