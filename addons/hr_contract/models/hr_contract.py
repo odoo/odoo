@@ -47,7 +47,7 @@ class Contract(models.Model):
             * red = Shows a warning on the employees kanban view
     """
     kanban_state = fields.Selection([
-        ('normal', 'Grey'), 
+        ('normal', 'Grey'),
         ('done', 'Green'),
         ('blocked', 'Red')
     ], string='Kanban State', default='normal', tracking=True)
@@ -74,6 +74,7 @@ class Contract(models.Model):
             self.job_id = self.employee_id.job_id
             self.department_id = self.employee_id.department_id
             self.resource_calendar_id = self.employee_id.resource_calendar_id
+            self.company_id = self.employee_id.company_id
 
     @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
     def _check_current_contract(self):
