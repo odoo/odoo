@@ -763,7 +763,7 @@ class PosOrder(models.Model):
         for order in self:
             if order.lines and not order.amount_total:
                 continue
-            if (not order.lines) or (not order.statement_ids) or (abs(order.amount_total - order.amount_paid) > 0.00001):
+            if (not order.lines) or (not order.statement_ids) or (not float_is_zero((order.amount_total - order.amount_paid), precision_rounding=order.pricelist_id.currency_id.rounding)):
                 return False
         return True
 
