@@ -410,6 +410,16 @@
                         </select>
                     </div>
                 </div>
+                 <div class='client-detail'>
+                    <span class='label'>Language</span>
+                    <select class='detail client-lang needsclick' name='lang'>
+                        <t t-foreach='widget.pos.langs' t-as='lang'>
+                            <option t-att-value='lang.code' t-att-selected="partner.lang ? ((lang.code === partner.lang) ? true : undefined) : lang.code === widget.pos.user.lang? true : undefined">
+                                <t t-esc='lang.name'/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
                 <div class='client-details-right'>
                     <div class='client-detail'>
                         <span class='label'>Email</span>
