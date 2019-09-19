@@ -20,9 +20,9 @@ function getNavBarButton(selector) {
 }
 
 function animateClone($cart, $elem, offsetTop, offsetLeft) {
-    $cart.find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function(){
+    $cart.find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function () {
         $(this).removeClass("o_shadow_animation").dequeue();
-    }).delay(2000).queue(function(){
+    }).delay(2000).queue(function () {
         $(this).removeClass("o_red_highlight").dequeue();
     });
     var $imgtodrag = $elem.find('img').eq(0);
