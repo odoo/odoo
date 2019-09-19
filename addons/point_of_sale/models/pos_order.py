@@ -627,12 +627,13 @@ class PosOrder(models.Model):
 
         if order_ids and self.env['pos.order'].browse(order_ids[0]).account_move:
             report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(order_ids[0])
+            filename = name + '.pdf'
             attachment = self.env['ir.attachment'].create({
-                'name': name,
+                'name': filename,
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
-                'datas_fname': name + '.pdf',
-                'store_fname': name,
+                'datas_fname': filename,
+                'store_fname': filename,
                 'res_model': 'account.move',
                 'res_id': order_ids[0],
                 'mimetype': 'application/x-pdf'
