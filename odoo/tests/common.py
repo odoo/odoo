@@ -330,7 +330,9 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                             if record_currency else candidate_value != record_value:
                         return False
                 elif field_type == 'float' and field.get_digits(record.env):
-                    return not float_compare(candidate_value, record_value, precision_digits=field.get_digits(record.env)[1])
+                    prec = field.get_digits(record.env)[1]
+                    if float_compare(candidate_value, record_value, precision_digits=prec) != 0:
+                        return False
                 elif field_type in ('one2many', 'many2many'):
                     # Compare x2many relational fields.
                     # Empty comparison must be an empty list to be True.
