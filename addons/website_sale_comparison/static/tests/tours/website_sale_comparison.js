@@ -87,7 +87,11 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     {
         content: "check limit is not reached",
         trigger: ':not(.o_comparelist_limit_warning)',
-        run: function () {},
+        run: function () {
+            $('.product_id').on('change', function () {
+                $('<div id="button_loaded_all_good"/>').appendTo('body');
+            });
+        },
     },
     {
         content: "select 3nd variant(Custom)",
@@ -95,7 +99,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     },
     {
         content: "click on compare button to add in comparison list when variant changed",
-        extra_trigger: 'body:not(:has(.carousel-indicators))', // there is 1 image on the custom variant
+        extra_trigger: '#button_loaded_all_good',
         trigger: '.o_add_compare_dyn',
     },
     {

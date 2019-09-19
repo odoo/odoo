@@ -91,14 +91,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     handleCompareAddition: function ($elem) {
         var self = this;
         if (this.comparelist_product_ids.length < this.product_compare_limit) {
-            var productId = $elem.data('product-product-id');
-            if ($elem.hasClass('o_add_compare_dyn')) {
-                productId = $elem.parent().find('.product_id').val();
-                if (!productId) { // case List View Variants
-                    productId = $elem.parent().find('input:checked').first().val();
-                }
-            }
-
+            var productId = $elem[0].dataset.productProductId;
             this.selectOrCreateProduct(
                 $elem.closest('form'),
                 productId,
@@ -200,10 +193,14 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         this.guard.exec(this._removeFromComparelistImpl.bind(this, e));
     },
     _removeFromComparelistImpl: function (e) {
-        var target = $(e.target.closest('.o_comparelist_remove, .o_remove'));
-        this.comparelist_product_ids = _.without(this.comparelist_product_ids, target.data('product_product_id'));
-        target.parents('.o_product_row').remove();
+        var $target = $(e.target.closest('.o_comparelist_remove, .o_remove'));
+        var productId = $target.data('product_product_id');
+        this.comparelist_product_ids = _.without(this.comparelist_product_ids, productId);
+        $target.parents('.o_product_row').remove();
         this._updateCookie();
+        this.trigger_up('on_click_remove_compare', {
+            productId: productId,
+        });
         $('.o_comparelist_limit_warning').hide();
         this._updateContent('show');
     },
@@ -246,17 +243,37 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
 
 publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
+    custom_events: {
+        on_click_remove_compare: '_onClickRemoveCompare',
+    },
     events: {
         'click .o_add_compare, .o_add_compare_dyn': '_onClickAddCompare',
         'click #o_comparelist_table tr': '_onClickComparelistTr',
+        'change .js_main_product input.product_id': '_onChangeVariant',
+    },
+
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.comparelistProductIds = JSON.parse(utils.get_cookie('comparelist_product_ids') || '[]');
     },
 
     /**
      * @override
      */
     start: function () {
+        var self = this;
         var def = this._super.apply(this, arguments);
         this.productComparison = new ProductComparison(this);
+        var compareButtons = this.$('.o_add_compare, .o_add_compare_dyn');
+        _.each(compareButtons, function (button) {
+            var productId = parseInt(button.dataset.productProductId, 10);
+            if (self.comparelistProductIds.includes(productId)) {
+                $(button).prop('disabled', true).addClass('disabled').attr('disabled', 'disabled');
+            }
+        });
         return Promise.all([def, this.productComparison.appendTo(this.$el)]);
     },
 
@@ -269,7 +286,18 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickAddCompare: function (ev) {
+        var productId = parseInt(ev.currentTarget.dataset.productProductId, 10);
         this.productComparison.handleCompareAddition($(ev.currentTarget));
+        $('[data-action="o_comparelist"][data-product-product-id="' + productId + '"]').prop('disabled', true).addClass('disabled').attr('disabled', 'disabled');
+        this.comparelistProductIds.push(productId);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickRemoveCompare: function (ev) {
+        $('[data-action="o_comparelist"][data-product-product-id="' + ev.data.productId + '"]').prop('disabled', false).removeClass('disabled').removeAttr('disabled');
+        this.comparelistProductIds = _.without(this.comparelistProductIds, ev.data.productId);
     },
     /**
      * @private
@@ -279,6 +307,21 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
         var $target = $(ev.currentTarget);
         $($target.data('target')).children().slideToggle(100);
         $target.find('.fa-chevron-circle-down, .fa-chevron-circle-right').toggleClass('fa-chevron-circle-down fa-chevron-circle-right');
+    },
+    /**
+     * @private
+     */
+    _onChangeVariant: function (ev) {
+        var $input = $(ev.target);
+        var productId = parseInt($input.val(), 10);
+        var $parent = $input.closest('.js_product');
+        var $el = $parent.find('[data-action="o_comparelist"]');
+        if (!_.contains(this.comparelistProductIds, productId)) {
+            $el.prop('disabled', false).removeClass('disabled').removeAttr('disabled');
+        } else {
+            $el.prop('disabled', true).addClass('disabled').attr('disabled', 'disabled');
+        }
+        $el[0].dataset.productProductId = productId;
     },
 });
 });
