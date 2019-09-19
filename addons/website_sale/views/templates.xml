@@ -969,30 +969,32 @@
           Your cart is empty!
         </div>
         <t t-if="website_sale_order and website_sale_order.website_order_line">
-            <t t-foreach="website_sale_order.website_order_line" t-as="line">
-                <div class="row mb8 cart_line">
-                    <div class="col-3 text-center">
-                        <span t-field="line.product_id.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max mb-2'}" />
-                    </div>
-                    <div class="col-9">
-                        <div>
-                            <t t-call="website_sale.cart_line_product_link">
-                                <span class="h6" t-esc="line.name_short" />
-                            </t>
+            <div class="o_wsale_cart_popover_product_lines">
+                <t t-foreach="website_sale_order.website_order_line" t-as="line">
+                    <div class="row mb8 cart_line">
+                        <div class="col-3 text-center">
+                            <span t-field="line.product_id.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max mb-2'}" />
                         </div>
-                        Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
-                    </div>
-                </div>
-            </t>
-            <div class="text-center">
-                <span class="h6">
-                    <t t-call="website_sale.total">
-                        <t t-set='hide_coupon'>True</t>
+                        <div class="col-9">
+                            <div>
+                                <t t-call="website_sale.cart_line_product_link">
+                                    <span class="h6" t-esc="line.name_short" />
+                                </t>
+                            </div>
+                            Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
+                        </div>
                     </t>
-                </span>
-                <a role="button" class="btn btn-primary" href="/shop/cart">
-                       View Cart (<t t-esc="website_sale_order.cart_quantity" /> items)
-                     </a>
+                </div>
+                <div class="text-center">
+                    <span class="h6">
+                        <t t-call="website_sale.total">
+                            <t t-set='hide_coupon'>True</t>
+                        </t>
+                    </span>
+                    <a role="button" class="btn btn-primary" href="/shop/cart">
+                        View Cart (<t t-esc="website_sale_order.cart_quantity" /> items)
+                        </a>
+                </div>
             </div>
         </t>
     </template>
