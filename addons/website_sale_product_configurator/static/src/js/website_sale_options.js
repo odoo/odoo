@@ -64,7 +64,7 @@ publicWidget.registry.WebsiteSale.include({
      * @private
      * @param {Boolean} goToShop Triggers a page refresh to the url "shop/cart"
      */
-    _onModalSubmit: function (goToShop){
+    _onModalSubmit: function (goToShop) {
         var customValues = JSON.stringify(
             this.optionalProductsModal.getSelectedProducts()
         );
@@ -81,7 +81,7 @@ publicWidget.registry.WebsiteSale.include({
                     window.location.pathname = path;
                 }
                 var $quantity = $(".my_cart_quantity");
-                $quantity.parent().parent().removeClass("d-none", !quantity);
+                $quantity.parent().parent().removeClass('d-none');
                 $quantity.html(quantity).hide().fadeIn(600);
             }
         });
