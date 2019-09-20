@@ -123,11 +123,7 @@ class LivechatController(http.Controller):
                 # if logged in user, set its partner on rating
                 values['partner_id'] = request.env.user.partner_id.id if request.session.uid else False
                 # create the rating
-
-                channel.write({
-                    'rating_ids': [(0, False, values)]
-                })
-                rating = channel.rating_ids[0]
+                rating = request.env['rating.rating'].sudo().create(values)
             else:
                 rating = channel.rating_ids[0]
                 rating.write(values)
