@@ -524,7 +524,7 @@
                                         <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'image_128', record.parent_id.raw_value)"/>
                                     </div>
                                 </t>
-                                <t t-else="">
+                                <t t-elif="record.image_128.raw_value">
                                     <t t-set="placeholder" t-value="'/base/static/img/company_image.png'"/>
                                     <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('res.partner', 'image_128', record.id.raw_value, placeholder)})" role="img"/>
                                 </t>
