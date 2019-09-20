@@ -315,7 +315,13 @@ class Product(models.Model):
             dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, other_locations.ids)]
         usage = self._context.get('quantity_available_locations_domain')
         if usage:
-            stock_loc_domain = expression.AND([domain + loc_domain, [('location_id.usage', 'in', usage)]])
+            if 'transit' in usage:
+                usage.remove('transit')
+                default_loc_domain = expression.AND([loc_domain, [('location_id.usage', 'in', usage)]])
+                transit_loc_domain = expression.OR([default_loc_domain, [('location_id.usage', '=', 'transit')]])
+                stock_loc_domain = expression.AND([domain, transit_loc_domain])
+            else:
+                stock_loc_domain = expression.AND([domain + loc_domain, [('location_id.usage', 'in', usage)]])
         else:
             stock_loc_domain = domain + loc_domain
         return (
