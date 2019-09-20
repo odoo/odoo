@@ -98,6 +98,7 @@ QUnit.module('Views', {
             "ir.translation": {
                 fields: {
                     lang_code: {type: "char"},
+                    src: {type: "char"},
                     value: {type: "char"},
                     res_id: {type: "integer"},
                     name: {type: "char"},

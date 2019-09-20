@@ -833,7 +833,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             userLanguageValue: ev.target.value || '',
             dataPointID: record.id,
             isComingFromTranslationAlert: ev.data.isComingFromTranslationAlert,
-            isText: record.fields[ev.data.fieldName].type === 'text',
+            isText: result.context.translation_type === 'text',
+            showSrc: result.context.translation_show_src,
         });
         return this.translationDialog.open();
     },

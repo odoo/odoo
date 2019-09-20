@@ -745,6 +745,7 @@ class IrTranslation(models.Model):
             'target': 'current',
             'flags': {'search_view': True, 'action_buttons': True},
             'domain': domain,
+            'context': {},
         }
         if field:
             fld = record._fields[field]
@@ -763,8 +764,11 @@ class IrTranslation(models.Model):
                     pass
 
             action['target'] = 'new'
+            action['context']['translation_type'] = 'text' if fld.type in ['text', 'html'] else 'char'
+            action['context']['translation_show_src'] = False
             if callable(fld.translate):
                 action['view_id'] = self.env.ref('base.view_translation_lang_src_value_tree').id,
+                action['context']['translation_show_src'] = True
             else:
                 action['view_id'] = self.env.ref('base.view_translation_lang_value_tree').id,
 
