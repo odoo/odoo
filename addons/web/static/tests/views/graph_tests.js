@@ -133,7 +133,7 @@ QUnit.module('Views', {
                 data: [3,5],
                 label: "Count",
                 originIndex: 0,
-                stack: undefined,
+                stack: "",
             }
         );
         assert.checkLegend(graph, 'Count');
