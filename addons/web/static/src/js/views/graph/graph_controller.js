@@ -177,7 +177,7 @@ var GraphController = AbstractController.extend(GroupByMenuMixin,{
             .find('.o_graph_button[data-mode="stack"]')
             .data('stacked', state.stacked)
             .toggleClass('active', state.stacked)
-            .toggleClass('o_hidden', state.mode !== 'bar' || !this.renderer.isStackable);
+            .toggleClass('o_hidden', state.mode !== 'bar');
         _.each(this.$measureList.find('.dropdown-item'), function (item) {
             var $item = $(item);
             $item.toggleClass('selected', $item.data('field') === state.measure);
