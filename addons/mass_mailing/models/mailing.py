@@ -45,7 +45,7 @@ class MassMailing(models.Model):
     _period_number = 6
     _order = 'sent_date DESC'
     _inherits = {'utm.source': 'source_id'}
-    _rec_name = "source_id"
+    _rec_name = "subject"
 
     @api.model
     def _get_default_mail_server_id(self):
