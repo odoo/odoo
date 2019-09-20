@@ -189,7 +189,6 @@ class StockMove(models.Model):
                 move.state in ('partially_available', 'assigned') and
                 move.picking_type_id.use_create_lots and
                 not move.picking_type_id.use_existing_lots and
-                move.picking_type_id.show_operations and
                 not move.picking_type_id.show_reserved
             )
 
