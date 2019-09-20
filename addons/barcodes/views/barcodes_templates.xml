@@ -3,6 +3,7 @@
 
        <template id="assets_backend" name="barcodes assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/barcodes/static/src/scss/barcodes.scss" />
                 <script type="text/javascript" src="/barcodes/static/src/js/barcode_parser.js"></script>
                 <script type="text/javascript" src="/barcodes/static/src/js/barcode_events.js"></script>
                 <script type="text/javascript" src="/barcodes/static/src/js/barcode_form_view.js"></script>

@@ -1,0 +1,32 @@
+.o_barcodes_main_menu {
+    flex: 0 1 550px;
+    text-align: center;
+    background-color: #fff;
+    padding: 24px 16px 0;
+    font-size: 1.2em;
+    overflow: auto;
+    border-radius: 4px;
+    margin: 0 5px;
+    @include media-breakpoint-up(md) {
+        margin-top: -24px;
+    }
+
+    .o_barcodes_container {
+        position: relative;
+        flex: 0 0 auto;
+        padding-right: 15px;
+        padding-left: 15px;
+
+        span.o_barcodes_laser {
+            @include o-position-absolute(50%, 0, auto, 0);
+            height: 5px;
+            background: rgba(red, 0.6);
+            box-shadow: 0 1px 10px 1px rgba(red, 0.8);
+            animation: o_barcode_scanner_intro 1s cubic-bezier(0.6, -0.28, 0.735, 0.045) 0.4s;
+        }
+
+        img {
+            width: 200px;
+        }
+    }
+}
