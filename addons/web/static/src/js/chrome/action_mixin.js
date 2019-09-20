@@ -92,10 +92,11 @@ var ActionMixin = {
      * promise is successfully resolved, then we can destroy the current action,
      * otherwise, we need to stop.
      *
+     * @param {Object} options
      * @returns {Promise} resolved if the action can be removed, rejected
      *   otherwise
      */
-    canBeRemoved: function () {
+    canBeRemoved: function (options) {
         return Promise.resolve();
     },
     /**
