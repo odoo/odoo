@@ -28,6 +28,7 @@ QUnit.module('basic_fields', {
                 fields: {
                     date: {string: "A date", type: "date", searchable: true},
                     datetime: {string: "A datetime", type: "datetime", searchable: true},
+                    datetime_end: {string: 'Datetime End', type: 'datetime', searchable: true},
                     display_name: {string: "Displayed name", type: "char", searchable: true},
                     foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true, trim: true},
                     bar: {string: "Bar", type: "boolean", default: true, searchable: true},
@@ -49,6 +50,7 @@ QUnit.module('basic_fields', {
                     id: 1,
                     date: "2017-02-03",
                     datetime: "2017-02-08 10:00:00",
+                    datetime_end: "2017-02-09 10:00:00",
                     display_name: "first record",
                     bar: true,
                     foo: "yop",
@@ -2796,36 +2798,118 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldDateRange');
 
-    QUnit.test('Datetime field', async function (assert) {
-        assert.expect(20);
+    QUnit.test('Datetime field in new record', async function (assert) {
+        assert.expect(13);
 
-        this.data.partner.fields.datetime_end = {string: 'Datetime End', type: 'datetime'};
-        this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
+        this.data.partner.fields.datetime.default = "2019-09-25 10:00:00";
 
         var form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch: '<form>' +
+                '<field name="display_name"/>' +
+                '<field name="datetime" widget="daterange" options="{\'related_end_date\': \'datetime_end\'}"/>' +
+                '<field name="datetime_end" widget="daterange" options="{\'related_start_date\': \'datetime\'}"/>' +
+                '</form>',
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            session: {
+                getTZOffset: function () {
+                    return 0;
+                },
+            },
+        });
+
+        // datetime should have default value and datetime_end should be blank until datetime picker opened
+        assert.strictEqual(form.$('.o_field_date_range:first').val(), '09/25/2019 10:00:00',
+            "the start date should be correctly displayed in new record");
+        assert.strictEqual(form.$('.o_field_date_range:last').val(), '',
+            "the end date should be correctly displayed in new record");
+
+        await testUtils.dom.click(form.$('.o_field_date_range:first'));
+        // Check date set correctly once datetime picker is opened
+        assert.strictEqual(form.$('.o_field_date_range:first').val(), '09/25/2019 10:00:00',
+            "the start date should be correctly set once datetime picker is opened");
+        // when datetime picker is opened it sets end date where end date is start date + 24 hours
+        assert.strictEqual(form.$('.o_field_date_range:last').val(), '09/26/2019 10:00:00',
+            "the end date should be correctly set once datetime picker is opened");
+
+        var $startContainer = form.$('.o_field_date_range:first').data('daterangepicker').container;
+        var $endContainer = form.$('.o_field_date_range:last').data('daterangepicker').container;
+        assert.containsN(document.body, '.daterangepicker', 2,
+            "should initialize 2 date range picker");
+        assert.strictEqual($startContainer.css('display'), 'block',
+            "date range picker should be opened initially");
+        assert.strictEqual($endContainer.css('display'), 'none',
+            "date range picker should be closed initially");
+
+        // clicking date will directly change input value
+        await testUtils.dom.triggerMouseEvent($startContainer.find('.drp-calendar.left .available:contains("11")'), 'mousedown');
+        await testUtils.dom.triggerMouseEvent($startContainer.find('.drp-calendar.left .available:contains("12")'), 'mousedown');
+        assert.strictEqual(form.$('.o_field_date_range:first').val(), '09/11/2019 10:00:00',
+            "the date should be '09/11/2019 10:00:00'");
+        assert.strictEqual(form.$('.o_field_date_range:last').val(), '09/12/2019 10:00:00',
+            "'the date should be '09/12/2019 10:00:00'");
+
+        // changing time will directly change input value
+        $startContainer.find('.drp-calendar.left .hourselect').val(18).trigger('change');
+        $startContainer.find('.drp-calendar.right .hourselect').val(20).trigger('change');
+        await testUtils.nextTick();
+        assert.strictEqual(form.$('.o_field_date_range:first').val(), '09/11/2019 18:00:00',
+            "the date should be '09/11/2019 18:00:00'");
+        assert.strictEqual(form.$('.o_field_date_range:last').val(), '09/12/2019 20:00:00',
+            "'the date should be '09/12/2019 20:00:00'");
+
+        // click on off day, i.e. day of previous/next month in current month picker
+        $startContainer = form.$('.o_field_date_range:first').data('daterangepicker').container;
+        $endContainer = form.$('.o_field_date_range:last').data('daterangepicker').container;
+        await testUtils.dom.triggerMouseEvent($startContainer.find('.drp-calendar.left .off.available:contains("26")'), 'mousedown');
+        assert.strictEqual($startContainer.find('.month:eq(0)').text(), "Aug 2019", "start month should be August");
+        assert.strictEqual($startContainer.find('.month:eq(1)').text(), "Sep 2019", "end month should be September");
+
+        form.destroy();
+    });
+
+    QUnit.test('Datetime field', async function (assert) {
+        assert.expect(20);
+
+        this.data.partner.records[0].datetime = '2019-09-25 10:00:00';
+        this.data.partner.records[0].datetime_end = '2019-09-26 10:00:00';
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="display_name"/>' +
                     '<field name="datetime" widget="daterange" options="{\'related_end_date\': \'datetime_end\'}"/>' +
                     '<field name="datetime_end" widget="daterange" options="{\'related_start_date\': \'datetime\'}"/>' +
                 '</form>',
             res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
             session: {
                 getTZOffset: function () {
-                    return 330;
+                    return 0;
                 },
             },
         });
 
         // Check date display correctly in readonly
-        assert.strictEqual(form.$('.o_field_date_range:first').text(), '02/08/2017 15:30:00',
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '09/25/2019 10:00:00',
             "the start date should be correctly displayed in readonly");
-        assert.strictEqual(form.$('.o_field_date_range:last').text(), '03/13/2017 05:30:00',
+        assert.strictEqual(form.$('.o_field_date_range:last').text(), '09/26/2019 10:00:00',
             "the end date should be correctly displayed in readonly");
 
         // Edit
         await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_field_date_range:first'));
+        var $startContainer = form.$('.o_field_date_range:first').data('daterangepicker').container;
 
         // Check date range picker initialization
         assert.containsN(document.body, '.daterangepicker', 2,
@@ -2834,42 +2918,43 @@ QUnit.module('basic_fields', {
             "date range picker should be opened initially");
         assert.strictEqual($('.daterangepicker:last').css('display'), 'none',
             "date range picker should be closed initially");
-        assert.strictEqual($('.daterangepicker:first .drp-calendar.left .active.start-date').text(), '8',
-            "active start date should be '8' in date range picker");
-        assert.strictEqual($('.daterangepicker:first .drp-calendar.left .hourselect').val(), '15',
-            "active start date hour should be '15' in date range picker");
-        assert.strictEqual($('.daterangepicker:first .drp-calendar.left .minuteselect').val(), '30',
-            "active start date minute should be '30' in date range picker");
-        assert.strictEqual($('.daterangepicker:first .drp-calendar.right .active.end-date').text(), '13',
-            "active end date should be '13' in date range picker");
-        assert.strictEqual($('.daterangepicker:first .drp-calendar.right .hourselect').val(), '5',
-            "active end date hour should be '5' in date range picker");
-        assert.strictEqual($('.daterangepicker:first .drp-calendar.right .minuteselect').val(), '30',
-            "active end date minute should be '30' in date range picker");
+        assert.strictEqual($('.daterangepicker:first .drp-calendar.left .active.start-date').text(), '25',
+            "active start date should be '25' in date range picker");
+        assert.strictEqual($('.daterangepicker:first .drp-calendar.left .hourselect').val(), '10',
+            "active start date hour should be '10' in date range picker1");
+        assert.strictEqual($('.daterangepicker:first .drp-calendar.left .minuteselect').val(), '0',
+            "active start date minute should be '0' in date range picker");
+        assert.strictEqual($('.daterangepicker:first .drp-calendar.left .active.end-date').text(), '26',
+            "active end date should be '26' in date range picker1");
+        assert.strictEqual($('.daterangepicker:first .drp-calendar.right .hourselect').val(), '10',
+            "active end date hour should be '10' in date range picker");
+        assert.strictEqual($('.daterangepicker:first .drp-calendar.right .minuteselect').val(), '0',
+            "active end date minute should be '0' in date range picker");
         assert.containsN($('.daterangepicker:first .drp-calendar.left .minuteselect'), 'option', 12,
             "minute selection should contain 12 options (1 for each 5 minutes)");
 
         // Close picker
-        await testUtils.dom.click($('.daterangepicker:first .cancelBtn'));
-        assert.strictEqual($('.daterangepicker:first').css('display'), 'none',
+        await testUtils.dom.click($startContainer.find('.cancelBtn'));
+        assert.strictEqual($startContainer.css('display'), 'none',
             "date range picker should be closed");
 
         // Try to check with end date
         await testUtils.dom.click(form.$('.o_field_date_range:last'));
-        assert.strictEqual($('.daterangepicker:last').css('display'), 'block',
+        var $container = form.$('.o_field_date_range:last').data('daterangepicker').container;
+        assert.strictEqual($container.css('display'), 'block',
             "date range picker should be opened");
-        assert.strictEqual($('.daterangepicker:last .drp-calendar.left .active.start-date').text(), '8',
-            "active start date should be '8' in date range picker");
-        assert.strictEqual($('.daterangepicker:last .drp-calendar.left .hourselect').val(), '15',
-            "active start date hour should be '15' in date range picker");
-        assert.strictEqual($('.daterangepicker:last .drp-calendar.left .minuteselect').val(), '30',
-            "active start date minute should be '30' in date range picker");
-        assert.strictEqual($('.daterangepicker:last .drp-calendar.right .active.end-date').text(), '13',
-            "active end date should be '13' in date range picker");
-        assert.strictEqual($('.daterangepicker:last .drp-calendar.right .hourselect').val(), '5',
-            "active end date hour should be '5' in date range picker");
-        assert.strictEqual($('.daterangepicker:last .drp-calendar.right .minuteselect').val(), '30',
-            "active end date minute should be '30' in date range picker");
+        assert.strictEqual($container.find('.drp-calendar.left .active.start-date').text(), '25',
+            "active start date should be '25' in date range picker");
+        assert.strictEqual($container.find('.drp-calendar.left .hourselect').val(), '10',
+            "active start date hour should be '10' in date range picker2");
+        assert.strictEqual($container.find('.drp-calendar.left .minuteselect').val(), '0',
+            "active start date minute should be '0' in date range picker");
+        assert.strictEqual($container.find('.drp-calendar.left .active.end-date').text(), '26',
+            "active end date should be '26' in date range picker2");
+        assert.strictEqual($container.find('.drp-calendar.right .hourselect').val(), '10',
+            "active end date hour should be '10' in date range picker");
+        assert.strictEqual($container.find('.drp-calendar.right .minuteselect').val(), '0',
+            "active end date minute should be '0' in date range picker");
 
         form.destroy();
     });
@@ -2904,26 +2989,31 @@ QUnit.module('basic_fields', {
 
         // Edit
         await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_field_date_range:first'));
 
         // Check date range picker initialization
+        var $startContainer = form.$('.o_field_date_range:first').data('daterangepicker').container;
+        var $endContainer = form.$('.o_field_date_range:last').data('daterangepicker').container;
         assert.containsN(document.body, '.daterangepicker', 2,
             "should initialize 2 date range picker");
-        assert.strictEqual($('.daterangepicker:first').css('display'), 'block',
+        assert.strictEqual($startContainer.css('display'), 'block',
             "date range picker should be opened initially");
-        assert.strictEqual($('.daterangepicker:last').css('display'), 'none',
+        assert.strictEqual($endContainer.css('display'), 'none',
             "date range picker should be closed initially");
-        assert.strictEqual($('.daterangepicker:first .active.start-date').text(), '3',
+        assert.strictEqual($startContainer.find('.active.start-date').text(), '3',
             "active start date should be '3' in date range picker");
-        assert.strictEqual($('.daterangepicker:first .active.end-date').text(), '8',
+        assert.strictEqual($startContainer.find('.active.end-date').text(), '8',
             "active end date should be '8' in date range picker");
 
         // Change date
-        await testUtils.dom.triggerMouseEvent($('.daterangepicker:first .drp-calendar.left .available:contains("16")'), 'mousedown');
-        await testUtils.dom.triggerMouseEvent($('.daterangepicker:first .drp-calendar.right .available:contains("12")'), 'mousedown');
-        await testUtils.dom.click($('.daterangepicker:first .applyBtn'));
+        await testUtils.dom.triggerMouseEvent($startContainer.find('.drp-calendar.left .available:contains("16")'), 'mousedown');
+        await testUtils.dom.triggerMouseEvent($startContainer.find('.drp-calendar.right .available:contains("12")'), 'mousedown');
+        await testUtils.dom.click($startContainer.find('.applyBtn'));
 
         // Check date after change
-        assert.strictEqual($('.daterangepicker:first').css('display'), 'none',
+        $startContainer = form.$('.o_field_date_range:first').data('daterangepicker').container;
+        $endContainer = form.$('.o_field_date_range:last').data('daterangepicker').container;
+        assert.strictEqual($startContainer.css('display'), 'none',
             "date range picker should be closed");
         assert.strictEqual(form.$('.o_field_date_range:first').val(), '02/16/2017',
             "the date should be '02/16/2017'");
@@ -2932,20 +3022,22 @@ QUnit.module('basic_fields', {
 
         // Try to change range with end date
         await testUtils.dom.click(form.$('.o_field_date_range:last'));
-        assert.strictEqual($('.daterangepicker:last').css('display'), 'block',
+        assert.strictEqual($endContainer.css('display'), 'block',
             "date range picker should be opened");
-        assert.strictEqual($('.daterangepicker:last .active.start-date').text(), '16',
+        assert.strictEqual($endContainer.find('.active.start-date').text(), '16',
             "start date should be a 16 in date range picker");
-        assert.strictEqual($('.daterangepicker:last .active.end-date').text(), '12',
+        assert.strictEqual($endContainer.find('.active.end-date').text(), '12',
             "end date should be a 12 in date range picker");
 
         // Change date
-        await testUtils.dom.triggerMouseEvent($('.daterangepicker:last .drp-calendar.left .available:contains("13")'), 'mousedown');
-        await testUtils.dom.triggerMouseEvent($('.daterangepicker:last .drp-calendar.right .available:contains("18")'), 'mousedown');
-        await testUtils.dom.click($('.daterangepicker:last .applyBtn'));
+        await testUtils.dom.triggerMouseEvent($endContainer.find('.drp-calendar.left .available:contains("13")'), 'mousedown');
+        await testUtils.dom.triggerMouseEvent($endContainer.find('.drp-calendar.right .available:contains("18")'), 'mousedown');
+        await testUtils.dom.click($endContainer.find('.applyBtn'));
 
         // Check date after change
-        assert.strictEqual($('.daterangepicker:last').css('display'), 'none',
+        $startContainer = form.$('.o_field_date_range:first').data('daterangepicker').container;
+        $endContainer = form.$('.o_field_date_range:last').data('daterangepicker').container;
+        assert.strictEqual($endContainer.css('display'), 'none',
             "date range picker should be closed");
         assert.strictEqual(form.$('.o_field_date_range:first').val(), '02/13/2017',
             "the start date should be '02/13/2017'");

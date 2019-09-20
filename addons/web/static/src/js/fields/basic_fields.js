@@ -619,7 +619,9 @@ var FieldDateRange = InputField.extend({
     _applyChanges: function (ev, picker) {
         var changes = {};
         var displayStartDate = field_utils.format[this.formatType](picker.startDate, {}, {timezone: false});
-        var displayEndDate = field_utils.format[this.formatType](picker.endDate, {}, {timezone: false});
+        if (picker.endDate !== null) {
+            var displayEndDate = field_utils.format[this.formatType](picker.endDate, {}, {timezone: false});
+        }
         var changedStartDate = picker.startDate;
         var changedEndDate = picker.endDate;
         if (this.isDateField) {
@@ -627,7 +629,9 @@ var FieldDateRange = InputField.extend({
             // time at 00:00:00. So, Odoo will consider it as UTC. To fix this added browser
             // timezone offset in dates to get a correct selected date.
             changedStartDate = picker.startDate.add(session.getTZOffset(picker.startDate), 'minutes');
-            changedEndDate = picker.endDate.startOf('day').add(session.getTZOffset(picker.endDate), 'minutes');
+            if (picker.endDate !== null) {
+                changedEndDate = picker.endDate.startOf('day').add(session.getTZOffset(picker.endDate), 'minutes');
+            }
         }
         if (this.relatedEndDate) {
             this.$el.val(displayStartDate);
@@ -662,10 +666,13 @@ var FieldDateRange = InputField.extend({
             endDate = this._formatValue(this.value);
         }
         this.dateRangePickerOptions.startDate = startDate || moment();
-        this.dateRangePickerOptions.endDate = endDate || moment();
+        this.dateRangePickerOptions.endDate = endDate || (startDate && moment(startDate) || moment()).add(24, 'hour');
 
         this.$el.daterangepicker(this.dateRangePickerOptions);
         this.$el.on('apply.daterangepicker', this._applyChanges.bind(this));
+        this.$el.on('show.daterangepicker', this._applyChanges.bind(this));
+        this.$el.on('clickDate.daterangepicker', this._applyChanges.bind(this));
+        this.$el.on('timeChanged.daterangepicker', this._applyChanges.bind(this));
         this.$el.off('keyup.daterangepicker');
         this.$pickerContainer = this.$el.data('daterangepicker').container;
 
