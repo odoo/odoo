@@ -31,6 +31,7 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_utils.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_recently_viewed.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
         </xpath>
     </template>
@@ -463,7 +464,7 @@
         </xpath>
     </template>
 
-    <template id="product" name="Product">
+    <template id="product" name="Product" track="1">
 
         <t t-set="combination" t-value="product._get_first_possible_combination()"/>
         <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
@@ -472,7 +473,7 @@
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
-                <section t-attf-class="container py-2 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail">
+                <section t-attf-class="container py-2 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail" t-att-data-view-track="view_track and '1' or '0'">
                     <div class="row">
                         <div class="col-md-4">
                             <ol class="breadcrumb">
@@ -580,8 +581,8 @@
                             <div class="mt16 text-center" style="height: 100%;">
                                 <t t-set="combination_info" t-value="alt_product._get_combination_info()"/>
                                 <t t-set="product_variant" t-value="alt_product.env['product.product'].browse(combination_info['product_id'])"/>
-                                <div t-if="product_variant" t-field="product_variant.image_64" t-options="{'widget': 'image', 'class': 'rounded shadow o_alternative_product' }" />
-                                <div t-else="" t-field="alt_product.image_64" t-options="{'widget': 'image', 'class': 'rounded shadow o_alternative_product' }" />
+                                <div t-if="product_variant" t-field="product_variant.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded shadow o_alternative_product o_image_64_max' }" />
+                                <div t-else="" t-field="alt_product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded shadow o_alternative_product o_image_64_max' }" />
                                 <h6>
                                     <a t-att-href="alt_product.website_url" style="display: block">
                                         <span t-att-title="alt_product.name" t-field="alt_product.name" class="o_text_overflow" style="display: block;" />
@@ -595,8 +596,14 @@
         </xpath>
     </template>
 
+    <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="True" customize_show="True" name="Recently Viewed Products" priority="16">
+        <xpath expr="//div[@t-field='product.website_description']" position="after">
+            <t t-call="website_sale.s_products_recently_viewed"/>
+        </xpath>
+    </template>
+
     <!-- Product options: OpenChatter -->
-    <template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating">
+    <template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating" priority="15">
         <xpath expr="//div[@t-field='product.website_description']" position="after">
             <div class="o_shop_discussion_rating">
                 <section class="container mt16 mb16">
@@ -844,7 +851,7 @@
                     <tr t-att-class="'optional_product info' if line.linked_line_id else None">
                         <td colspan="2" t-if="not line.product_id.product_tmpl_id" class='td-img'></td>
                         <td align="center" t-if="line.product_id.product_tmpl_id" class='td-img'>
-                            <span t-field="line.product_id.image_64" t-options="{'widget': 'image', 'class': 'rounded'}" />
+                            <span t-field="line.product_id.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" />
                         </td>
                         <td t-if="line.product_id.product_tmpl_id" class='td-product_name'>
                             <div>
@@ -936,7 +943,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-xl-4">
+                        <div class="col-12 col-xl-4" id="o_cart_summary">
                             <t t-call="website_sale.short_cart_summary"/>
                             <div class="d-xl-none mt8">
                                 <a role="button" href="/shop" class="btn btn-secondary mb32">
@@ -965,7 +972,7 @@
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <div class="row mb8 cart_line">
                     <div class="col-3 text-center">
-                        <span t-field="line.product_id.image_64" t-options="{'widget': 'image', 'class': 'rounded'}" />
+                        <span t-field="line.product_id.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max mb-2'}" />
                     </div>
                     <div class="col-9">
                         <div>
@@ -997,9 +1004,9 @@
                 <tbody>
                     <tr t-foreach="suggested_products" t-as="product">
                         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
-                        <td class='td-img'>
+                        <td class='td-img text-center'>
                             <a t-att-href="product.website_url">
-                                <span t-field="product.image_64" t-options="{'widget': 'image', 'class': 'rounded'}" />
+                                <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" />
                             </a>
                         </td>
                         <td class='td-product_name'>
@@ -1444,7 +1451,7 @@
                             <tr t-foreach="website_sale_order.website_order_line" t-as="line">
                                 <td class='' colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
                                 <td class='td-img text-center' t-if="line.product_id.product_tmpl_id">
-                                    <span t-field="line.product_id.image_64" t-options="{'widget': 'image', 'class': 'rounded'}" />
+                                    <span t-field="line.product_id.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" />
                                 </td>
                                 <td class='td-product_name' t-if="line.product_id.product_tmpl_id">
                                     <div>
@@ -1737,7 +1744,7 @@
             <div t-ignore="True" class="d-none d-md-block text-center">
                 <ol t-if="len(product_images) > 1" class="carousel-indicators d-inline-block position-static mx-auto my-0 p-1 text-left">
                     <t t-foreach="product_images" t-as="product_image"><li t-attf-class="d-inline-block m-1 align-top {{'active' if product_image_first else ''}}" data-target="#o-carousel-product" t-att-data-slide-to="str(product_image_index)">
-                        <div t-field="product_image.image_64" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "alt-field": "name"}'/>
+                        <div t-field="product_image.image_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_contain", "alt-field": "name"}'/>
                         <i t-if="product_image._name == 'product.image' and product_image.embed_code" class="fa fa-2x fa-play-circle-o o_product_video_thumb"/>
                     </li></t>
                 </ol>

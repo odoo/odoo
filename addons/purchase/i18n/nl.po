@@ -5,21 +5,21 @@
 # Translators:
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Wynand Tastenhoye <wta@odoo.com>, 2019
 # Thijs van Oers <thijsvanoers@yahoo.com>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-09 12:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Charles Vervaecke <cvk@odoo.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +55,7 @@ msgstr "${object.company_id.name} Order (Ref ${object.name or 'n/b' })"
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
 msgid "'Request for Quotation - %s' % (object.name)"
-msgstr ""
+msgstr "'Offerteaanvraag - %s' % (object.name)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -376,7 +376,7 @@ msgstr "Sectie toevoegen"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Add several variants to the purchase order from a grid"
-msgstr ""
+msgstr "Voeg meerdere varianten toe aan de inkooporder vanuit een grid"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -468,7 +468,7 @@ msgstr "Factuurregels"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Billed"
-msgstr "Gefactureer"
+msgstr "Gefactureerd"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -863,12 +863,8 @@ msgid "Icon to indicate an exception activity."
 msgstr "Icoon om uitzondering op activiteit aan te geven."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
@@ -1108,12 +1104,6 @@ msgstr "Maandelijkse inkopen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "My Activities"
-msgstr "Mijn activiteiten"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "My Orders"
 msgstr "Mijn orders"
 
@@ -1183,8 +1173,8 @@ msgstr "Aantal acties"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
-msgid "Number of error"
-msgstr "Aantal foutmeldingen"
+msgid "Number of errors"
+msgstr "Aantal fouten"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
@@ -1380,7 +1370,7 @@ msgstr "Voorzie een dubbel navigatie mechanisme voor inkopen"
 #: model:ir.ui.menu,name:purchase.menu_report_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase"
-msgstr "Inkopen"
+msgstr "Inkoop"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
@@ -1472,7 +1462,7 @@ msgstr "Inkooporderregel"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 msgid "Purchase Order Lines"
-msgstr "Inkopen"
+msgstr "Inkooporderregels"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lock
@@ -1646,7 +1636,7 @@ msgstr "Offerte_${(object.name or '').replace('/','_')}"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "RFQs"
-msgstr ""
+msgstr "Offerteaanvragen"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1666,7 +1656,7 @@ msgstr "Opnieuw verzenden via e-mail"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
 msgid "Receipt Date"
-msgstr ""
+msgstr "Ontvangstdatum"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1737,9 +1727,9 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
-"Referentie van de verkooporder of bieding van uw leverancier. Het is "
-"bedoelde om de koppeling te doen tussen ontvangen producten omdat deze "
-"referentie meestal geschreven is op de pakbon verzonden door uw leverancier."
+"Referentie van de verkooporder of bieding van uw leverancier. Het is bedoeld"
+" om de koppeling te doen tussen ontvangen producten omdat deze referentie "
+"meestal geschreven is op de pakbon verzonden door uw leverancier."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -2107,12 +2097,12 @@ msgstr "Maateenheid"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr "Maateenheden"
+msgstr "Maateenheid"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Maateenheid categorieën"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2168,7 +2158,7 @@ msgstr "Hulpveld om de valuta uit te drukken"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "Variant grid ingave"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id

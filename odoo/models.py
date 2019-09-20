@@ -2822,7 +2822,9 @@ Fields:
             elif field.compute:
                 # optimization: prefetch direct field dependencies
                 for dotname in field.depends:
-                    stored_fields.add(dotname.split('.')[0])
+                    f = self._fields[dotname.split('.')[0]]
+                    if f.prefetch and (not f.groups or self.user_has_groups(f.groups)):
+                        stored_fields.add(f.name)
         self._read(stored_fields)
 
         # retrieve results from records; this takes values from the cache and
@@ -3580,7 +3582,8 @@ Record ids: %(records)s
                     _logger.warning("%s.create() with unknown fields: %s", self._name, key)
                     continue
                 if field.company_dependent:
-                    cached_def = field.convert_to_cache(field.default(self), self)
+                    irprop_def = self.env['ir.property'].get(key, self._name)
+                    cached_def = field.convert_to_cache(irprop_def, self)
                     cached_val = field.convert_to_cache(val, self)
                     if cached_val == cached_def:
                         # val is the same as the default value defined in
@@ -4065,20 +4068,12 @@ Record ids: %(records)s
         :return: the qualified field name (or expression) to use for ``field``
         """
         if self.env.lang:
-            # Sub-select to return at most one translation per record.
-            # Even if it shoud probably not be the case,
-            # this is possible to have multiple translations for a same record in the same language.
-            # The parenthesis surrounding the select are important, as this is a sub-select.
-            # The quotes surrounding `ir_translation` are important as well.
-            unique_translation_subselect = """
-                (SELECT res_id, value FROM "ir_translation"
-                 WHERE type='model' AND name=%s AND lang=%s AND value!='')
-            """
             alias, alias_statement = query.add_join(
-                (table_alias, unique_translation_subselect, 'id', 'res_id', field),
+                (table_alias, 'ir_translation', 'id', 'res_id', field),
                 implicit=False,
                 outer=True,
-                extra_params=["%s,%s" % (self._name, field), self.env.lang],
+                extra='"{rhs}"."type" = \'model\' AND "{rhs}"."name" = %s AND "{rhs}"."lang" = %s AND "{rhs}"."value" != %s',
+                extra_params=["%s,%s" % (self._name, field), self.env.lang, ""],
             )
             return 'COALESCE("%s"."%s", "%s"."%s")' % (alias, 'value', table_alias, field)
         else:
@@ -5565,7 +5560,7 @@ Record ids: %(records)s
                     real_records = self - new_records
                     records = model.browse()
                     if real_records:
-                        records |= model.sudo().search([(key.name, 'in', real_records.ids)])
+                        records |= model.search([(key.name, 'in', real_records.ids)], order='id')
                     if new_records:
                         cache_records = self.env.cache.get_records(model, key)
                         records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))

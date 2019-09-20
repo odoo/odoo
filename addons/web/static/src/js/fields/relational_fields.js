@@ -397,8 +397,10 @@ var FieldMany2One = AbstractField.extend({
             kanban_view_ref: this.attrs.kanban_view_ref,
             on_selected: function (records) {
                 self.reinitialize(records[0]);
+            },
+            on_closed: function () {
                 self.activate();
-            }
+            },
         };
     },
     /**
@@ -650,7 +652,6 @@ var FieldMany2One = AbstractField.extend({
      *   in the dialog (each filter has keys 'description' and 'domain')
      */
     _searchCreatePopup: function (view, ids, context, dynamicFilters) {
-        var self = this;
         var options = this._getSearchCreatePopupOptions(view, ids, context, dynamicFilters);
         return new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, options)).open();
     },
@@ -820,6 +821,46 @@ var Many2oneBarcode = FieldMany2One.extend({
 });
 
 var ListFieldMany2One = FieldMany2One.extend({
+    events: _.extend({}, FieldMany2One.prototype.events, {
+        'focusin input': '_onInputFocusin',
+    }),
+
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        // when we empty the input, we delay the setValue to prevent from
+        // triggering the 'fieldChanged' event twice when the user wants set
+        // another m2o value ; the following attribute is used to determine when
+        // we skipped the setValue, s.t. we can perform it later on if the user
+        // didn't select another value
+        this.mustSetValue = false;
+        this.m2oDialogFocused = false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * If in readonly, will never be considered as an active widget.
+     *
+     * @override
+     */
+    activate: function () {
+        if (this.mode === 'readonly') {
+            return false;
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    reinitialize: function () {
+        this.mustSetValue = false;
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -830,6 +871,52 @@ var ListFieldMany2One = FieldMany2One.extend({
      */
     _renderReadonly: function () {
         this.$el.text(this.m2o_value);
+    },
+    /**
+     * @override
+     * @private
+     */
+    _searchCreatePopup: function () {
+        this.m2oDialogFocused = true;
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onInputFocusin: function () {
+        this.m2oDialogFocused = false;
+    },
+    /**
+     * In list views, we don't want to try to trigger a fieldChange when the field
+     * is being emptied. Instead, it will be triggered as the user leaves the field
+     * while it is empty.
+     *
+     * @override
+     * @private
+     */
+    _onInputFocusout: function () {
+        this._super.apply(this, arguments);
+        if (!this.m2oDialogFocused && this.$input.val() === "" && this.mustSetValue) {
+            this.reinitialize(false);
+        }
+    },
+    /**
+     * Prevents the triggering of an immediate _onFieldChanged when emptying the field.
+     *
+     * @override
+     * @private
+     */
+    _onInputKeyup: function () {
+        if (this.$input.val() !== "") {
+            this._super.apply(this, arguments);
+        } else {
+            this.mustSetValue = true;
+        }
     },
 });
 
@@ -2199,13 +2286,16 @@ var FieldMany2ManyTags = AbstractField.extend({
         this.many2one._getSearchCreatePopupOptions = function (view, ids, context, dynamicFilters) {
             var options = _getSearchCreatePopupOptions.apply(this, arguments);
             var domain = this.record.getDomain({fieldName: this.name});
+            var m2mRecords = [];
             return _.extend({}, options, {
                 domain: domain.concat(["!", ["id", "in", self.value.res_ids]]),
                 disable_multiple_selection: false,
                 on_selected: function (records) {
-                    self.many2one.reinitialize(records);
-                    self.many2one.activate();
-                }
+                    m2mRecords.push(...records);
+                },
+                on_closed: function () {
+                    self.many2one.reinitialize(m2mRecords);
+                },
             });
         };
         return this.many2one.appendTo(this.$el);
@@ -2291,7 +2381,7 @@ var FieldMany2ManyTagsAvatar = FieldMany2ManyTags.extend({
     _getRenderTagsContext: function () {
         var result = this._super.apply(this, arguments);
         result.avatarModel = this.nodeOptions.avatarModel || this.field.relation;
-        result.avatarField = this.nodeOptions.avatarField || 'image_64';
+        result.avatarField = this.nodeOptions.avatarField || 'image_128';
         return result;
     },
 });

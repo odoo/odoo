@@ -277,7 +277,6 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self,configs){
             self.config = configs[0];
             self.config.use_proxy = self.config.is_posbox && (
-                                    self.config.iface_payment_terminal ||
                                     self.config.iface_electronic_scale ||
                                     self.config.iface_print_via_proxy  ||
                                     self.config.iface_scan_via_proxy   ||
@@ -665,7 +664,9 @@ exports.PosModel = Backbone.Model.extend({
         var order = new exports.Order({},{pos:this});
         this.get('orders').add(order);
         this.set('selectedOrder', order);
-        this.send_current_order_to_customer_facing_display();
+        if (this.config.iface_customer_facing_display) {
+            this.send_current_order_to_customer_facing_display();
+        }
         return order;
     },
     /**
@@ -2559,10 +2560,16 @@ exports.Order = Backbone.Model.extend({
                 if (lines[i].get_product() === tip_product) {
                     lines[i].set_unit_price(tip);
                     lines[i].set_lst_price(tip);
+                    lines[i].price_manually_set = true;
                     return;
                 }
             }
-            this.add_product(tip_product, {quantity: 1, price: tip, lst_price: tip });
+            this.add_product(tip_product, {
+              quantity: 1,
+              price: tip,
+              lst_price: tip,
+              extras: {price_manually_set: true},
+            });
         }
     },
     set_pricelist: function (pricelist) {
@@ -2660,8 +2667,9 @@ exports.Order = Backbone.Model.extend({
         if(line.has_product_lot){
             this.display_lot_popup();
         }
-
-        this.pos.send_current_order_to_customer_facing_display();
+        if (this.pos.config.iface_customer_facing_display) {
+            this.pos.send_current_order_to_customer_facing_display();
+        }
     },
     get_selected_orderline: function(){
         return this.selected_orderline;

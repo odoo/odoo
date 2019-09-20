@@ -122,7 +122,6 @@ class PosConfig(models.Model):
         default=_default_invoice_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
-    iface_payment_terminal = fields.Boolean(string='Payment Terminal', help="Enables Payment Terminal integration.")
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
     iface_vkeyboard = fields.Boolean(string='Virtual KeyBoard', help=u"Don’t turn this option on if you take orders on smartphones or tablets. \n Such devices already benefit from a native keyboard.")
     iface_customer_facing_display = fields.Boolean(string='Customer Facing Display', help="Show checkout to customers with a remotely-connected screen.")
@@ -457,16 +456,22 @@ class PosConfig(models.Model):
                 config.fiscal_position_ids = [(5, 0, 0)]
 
     def _check_modules_to_install(self):
-        module_installed = False
-        for pos_config in self:
-            for field_name in [f for f in pos_config.fields_get_keys() if f.startswith('module_')]:
-                module_name = field_name.split('module_')[1]
-                module_to_install = self.env['ir.module.module'].sudo().search([('name', '=', module_name)])
-                if getattr(pos_config, field_name) and module_to_install.state not in ('installed', 'to install', 'to upgrade'):
-                    module_to_install.button_immediate_install()
-                    module_installed = True
-        # just in case we want to do something if we install a module. (like a refresh ...)
-        return module_installed
+        # determine modules to install
+        expected = [
+            fname[7:]           # 'module_account' -> 'account'
+            for fname in self.fields_get_keys()
+            if fname.startswith('module_')
+            if any(pos_config[fname] for pos_config in self)
+        ]
+        if expected:
+            STATES = ('installed', 'to install', 'to upgrade')
+            modules = self.env['ir.module.module'].sudo().search([('name', 'in', expected)])
+            modules = modules.filtered(lambda module: module.state not in STATES)
+            if modules:
+                modules.button_immediate_install()
+                # just in case we want to do something if we install a module. (like a refresh ...)
+                return True
+        return False
 
     def _check_groups_implied(self):
         for pos_config in self:

@@ -94,7 +94,7 @@ class Project(models.Model):
         action['context'] = {
             'active_id': self.id,
             'active_ids': self.ids,
-            'search_default_display_name': self.name,
+            'search_default_name': self.name,
         }
         return action
 
@@ -146,8 +146,8 @@ class ProjectTask(models.Model):
     sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Sales order item to which the task is linked. If an employee timesheets on a this task, "
         "and if this employee is not in the 'Employee/Sales Order Item Mapping' of the project, the "
-        "timesheet entry will be linked to this sales order item.")
-    sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', compute_sudo=True, store=True, readonly=True, help="Sales order to which the task is linked.")
+        "timesheet entry will be linked to this sales order item.", copy=False)
+    sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', store=True, readonly=False, help="Sales order to which the task is linked.")
     billable_type = fields.Selection([
         ('task_rate', 'At Task Rate'),
         ('employee_rate', 'At Employee Rate'),

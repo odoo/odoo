@@ -16,7 +16,6 @@
 # Giovanni Perteghella <giovanni@perteghella.org>, 2019
 # Luigi Di Naro <gigidn@gmail.com>, 2019
 # Simone Bernini <simone@aperturelabs.it>, 2019
-# Paolo Valier, 2019
 # Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2019
 # David Minneci <david@numeko.it>, 2019
 # efraimbiffi <eab@odoo.com>, 2019
@@ -25,14 +24,16 @@
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2019
 # Federico Zanuttini <fza@odoo.com>, 2019
+# Paolo Valier, 2019
+# Davide Speranza <dsp@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Federico Zanuttini <fza@odoo.com>, 2019\n"
+"Last-Translator: Davide Speranza <dsp@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -573,7 +574,7 @@ msgstr "Attività"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Eccezione"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
@@ -1149,6 +1150,12 @@ msgstr "Annullato"
 #: model:ir.model,name:mail.model_mail_shortcode
 msgid "Canned Response / Shortcode"
 msgstr "Risposta predefinita / Codice breve"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__canned_response_ids
+#: model:ir.model.fields,field_description:mail.field_mail_message__canned_response_ids
+msgid "Canned Responses"
+msgstr "Risposte predefinite"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -2659,24 +2666,20 @@ msgid "Idle"
 msgstr "Inattivo"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread
-#: model:ir.model.fields,help:mail.field_mail_channel__message_unread
-#: model:ir.model.fields,help:mail.field_mail_thread__message_unread
-#: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_unread
-#: model:ir.model.fields,help:mail.field_mail_thread_cc__message_unread
-#: model:ir.model.fields,help:mail.field_res_partner__message_unread
-#: model:ir.model.fields,help:mail.field_res_users__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Se selezionato, nuovi messaggi richiedono attenzione."
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_thread_cc__message_unread
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,help:mail.field_res_partner__message_unread
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction
+#: model:ir.model.fields,help:mail.field_res_users__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Se selezionato, nuovi messaggi richiedono attenzione."
 
@@ -3561,6 +3564,7 @@ msgstr "ID messaggio"
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_ids
+#: model:ir.model.fields,field_description:mail.field_mail_shortcode__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_ids
@@ -4110,8 +4114,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
-msgid "Number of error"
-msgstr "Numero di errori"
+msgid "Number of errors"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction_counter
@@ -4366,9 +4370,12 @@ msgid "Outgoing mail server"
 msgstr "Server posta in uscita"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__overdue
+#, python-format
 msgid "Overdue"
 msgstr "In ritardo"
 
@@ -4518,9 +4525,12 @@ msgid "Placeholder Expression"
 msgstr "Espressione per segnaposto"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__planned
+#, python-format
 msgid "Planned"
 msgstr "Pianificata"
 
@@ -5701,6 +5711,7 @@ msgstr "A:"
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: code:addons/mail/static/src/xml/systray.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today

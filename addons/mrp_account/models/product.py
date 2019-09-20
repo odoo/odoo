@@ -11,11 +11,13 @@ class ProductTemplate(models.Model):
 
     def action_bom_cost(self):
         templates = self.filtered(lambda t: t.product_variant_count == 1 and t.bom_count > 0)
-        return templates.mapped('product_variant_id').action_bom_cost()
+        if templates:
+            return templates.mapped('product_variant_id').action_bom_cost()
 
     def button_bom_cost(self):
         templates = self.filtered(lambda t: t.product_variant_count == 1 and t.bom_count > 0)
-        return templates.mapped('product_variant_id').button_bom_cost()
+        if templates:
+            return templates.mapped('product_variant_id').button_bom_cost()
 
 
 class ProductProduct(models.Model):
@@ -50,6 +52,8 @@ class ProductProduct(models.Model):
 
     def _compute_bom_price(self, bom, boms_to_recompute=False):
         self.ensure_one()
+        if not bom:
+            return 0
         if not boms_to_recompute:
             boms_to_recompute = []
         total = 0

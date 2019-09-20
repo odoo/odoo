@@ -23,10 +23,10 @@ class AccountJournal(models.Model):
         return [
             ('II_IM', 'Pre-printed Invoice'),
             ('RLI_RLM', 'Online Invoice'),
-            ('BFERCEL', 'Electronic Fiscal Bonds - Online Invoice'),
-            ('FEERCELP', 'Export Vouchers - Billing Plus'),
-            ('FEERCEL', 'Export Vouchers - Online Invoice'),
-            ('CPERCEL', 'Product Coding - Online Vouchers'),
+            ('BFERCEL', 'Electronic Fiscal Bond - Online Invoice'),
+            ('FEERCELP', 'Export Voucher - Billing Plus'),
+            ('FEERCEL', 'Export Voucher - Online Invoice'),
+            ('CPERCEL', 'Product Coding - Online Voucher'),
         ]
 
     def _get_journal_letter(self, counterpart_partner=False):
@@ -105,7 +105,7 @@ class AccountJournal(models.Model):
     def create(self, values):
         """ Create Document sequences after create the journal """
         res = super().create(values)
-        res.create_document_sequences()
+        res._l10n_ar_create_document_sequences()
         return res
 
     def write(self, values):
@@ -115,7 +115,7 @@ class AccountJournal(models.Model):
         res = super().write(values)
         if to_check.intersection(set(values.keys())):
             for rec in self:
-                rec.create_document_sequences()
+                rec._l10n_ar_create_document_sequences()
         return res
 
     @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',
@@ -133,7 +133,7 @@ class AccountJournal(models.Model):
                 'You can not change the journal configuration for a journal that already have validate invoices') +
                 ':<br/><br/> - %s' % ('<br/>- '.join(invoices.mapped('display_name'))))
 
-    def create_document_sequences(self):
+    def _l10n_ar_create_document_sequences(self):
         """ IF AFIP Configuration change try to review if this can be done and then create / update the document
         sequences """
         self.ensure_one()
@@ -159,7 +159,7 @@ class AccountJournal(models.Model):
                lambda x: x.l10n_ar_letter == document.l10n_ar_letter):
                 continue
 
-            sequences |= self.env['ir.sequence'].create(document.get_document_sequence_vals(self))
+            sequences |= self.env['ir.sequence'].create(document._get_document_sequence_vals(self))
         return sequences
 
     @api.constrains('l10n_ar_afip_pos_number')

@@ -77,6 +77,9 @@ var SearchPanel = Widget.extend({
      * @param {Object} params
      * @param {Object} [params.defaultValues={}] the value(s) to activate by
      *   default, for each filter and category
+     * @param {boolean} [params.defaultNoFilter=false] if true, select 'All' as
+     *   value for each category that has no value specified in defaultValues
+     *   (instead of looking in the localStorage for the last selected value)
      * @param {Object} params.fields
      * @param {string} params.model
      * @param {Array[]} params.searchDomain domain coming from controlPanel
@@ -97,6 +100,12 @@ var SearchPanel = Widget.extend({
         this.initialState = params.state;
         this.scrollTop = this.initialState && this.initialState.scrollTop || null;
         this.defaultValues = params.defaultValues || {};
+        if (params.defaultNoFilter) {
+            Object.keys(this.categories).forEach((categoryId) => {
+                var fieldName = this.categories[categoryId].fieldName;
+                this.defaultValues[fieldName] = this.defaultValues[fieldName] || false;
+            });
+        }
         this.fields = params.fields;
         this.model = params.model;
         this.className = params.classes.concat(['o_search_panel']).join(' ');
@@ -181,7 +190,7 @@ var SearchPanel = Widget.extend({
         return {
             sections: searchPanelSections,
             classes: classes,
-        }
+        };
     },
     /**
      * Export the current state (categories and filters) of the searchpanel.
@@ -279,8 +288,9 @@ var SearchPanel = Widget.extend({
         });
         _.map(values, function (value) {
             var value = category.values[value.id];
-            if (value.parentId) {
-                category.values[value.parentId].childrenIds.push(value.id);
+            var parentCategoryId = value.parentId;
+            if (parentCategoryId && parentCategoryId in category.values) {
+                category.values[parentCategoryId].childrenIds.push(value.id);
             }
         });
         category.rootIds = _.filter(_.map(values, function (value) {
@@ -293,7 +303,6 @@ var SearchPanel = Widget.extend({
         // set active value
         var validValues = _.pluck(category.values, 'id').concat([false]);
         var value = this._getCategoryDefaultValue(category, validValues);
-        // if not set in localStorage either, select 'All'
         category.activeValueId = _.contains(validValues, value) ? value : false;
 
         // unfold ancestor values of active value to make it is visible

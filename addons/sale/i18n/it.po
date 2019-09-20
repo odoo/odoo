@@ -9,25 +9,26 @@
 # Simone Bernini <simone@aperturelabs.it>, 2019
 # Alberto Carollo <baba75@gmail.com>, 2019
 # David Minneci <david@numeko.it>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
 # Martin Trigaux, 2019
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
-# Paolo Valier, 2019
 # efraimbiffi <eab@odoo.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # pfaodoo <pfa@odoo.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2019
 # Federico Zanuttini <fza@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Paolo Valier, 2019
+# mymage <stefano.consolaro@mymage.it>, 2019
+# Davide Speranza <dsp@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Federico Zanuttini <fza@odoo.com>, 2019\n"
+"Last-Translator: Davide Speranza <dsp@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -431,7 +432,7 @@ msgstr "<span>Firmando questa proposta, accetto i seguenti termini:</span>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>Sconto (%)</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -472,7 +473,7 @@ msgstr "<strong class=\"mr16\">Imponibile</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr ""
+msgstr "<strong>Commerciale</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -695,7 +696,7 @@ msgstr "Attività"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Eccezione"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -829,7 +830,7 @@ msgstr "Numero allegati"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_value
-#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__attribute_value_id
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_product_template_attribute_value_id
 msgid "Attribute Value"
 msgstr "Valore attributo"
 
@@ -941,8 +942,8 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
-msgid "Choose how to confirm quotations and get paid."
-msgstr "Scegli come confermare i preventivi ed essere pagato."
+msgid "Choose your default customer payment method."
+msgstr ""
 
 #. module: sale
 #. openerp-web
@@ -1048,11 +1049,6 @@ msgid "Confirm"
 msgstr "Conferma"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
-msgid "Confirmation &amp; Payment"
-msgstr "Conferma e pagamento"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__confirmation_template_id
 msgid "Confirmation Email"
 msgstr "Email di Conferma"
@@ -1151,6 +1147,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
+msgid "Credit card (via Stripe)"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__currency_id
@@ -1165,8 +1166,18 @@ msgstr "Tasso di cambio"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_value
-msgid "Custom value"
-msgstr "Valore personalizzato "
+msgid "Custom Value"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
+msgid "Custom Values"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__manual
+msgid "Custom payment instructions"
+msgstr "Istruzioni di pagamento personalizzate"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
@@ -1332,11 +1343,6 @@ msgstr "Indirizzo di consegna"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_order_dates
 msgid "Delivery Date"
 msgstr "Data di consegna"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
-msgid "Delivery Lead Time"
-msgstr "Tempo di consegna"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__partner_shipping_id
@@ -1551,6 +1557,11 @@ msgid "External Link"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
+msgid "Extra Values"
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Extra line with %s "
@@ -1705,12 +1716,8 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Se selezionato, nuovi messaggi richiedono attenzione."
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
+#: model:ir.model.fields,help:sale.field_sale_order__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Se selezionato, nuovi messaggi richiedono attenzione."
 
@@ -2037,6 +2044,11 @@ msgid "Late Activities"
 msgstr "Ultime attività"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
+msgid "Lead Time"
+msgstr "Tempo di consegna"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr "Consente ai clienti di accedere per visualizzare i loro documenti"
@@ -2132,6 +2144,13 @@ msgid "Marketing"
 msgstr "Marketing"
 
 #. module: sale
+#. openerp-web
+#: code:addons/sale/static/src/xml/account_reconciliation.xml:0
+#, python-format
+msgid "Match with a sale order"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__medium_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__medium_id
 msgid "Medium"
@@ -2193,6 +2212,11 @@ msgstr "I miei preventivi"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
 msgstr "Righe ordini di vendita"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__name
+msgid "Name"
+msgstr "Nome"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_by
@@ -2294,8 +2318,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
-msgid "Number of error"
-msgstr "Numero di errori"
+msgid "Number of errors"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
@@ -2383,6 +2407,12 @@ msgstr ""
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Sono validi solo i numeri interi."
+
+#. module: sale
+#: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
+msgid ""
+"Only one Custom Value is allowed per Attribute Value per Sales Order Line."
+msgstr ""
 
 #. module: sale
 #. openerp-web
@@ -2510,6 +2540,11 @@ msgid "Other Info"
 msgstr "Altre informazioni"
 
 #. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
+msgid "Other payment acquirer"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
 msgstr ""
@@ -2563,6 +2598,7 @@ msgstr "Pagare con altro sistema di pagamento"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__paypal
 msgid "PayPal"
 msgstr "PayPal"
 
@@ -2600,6 +2636,11 @@ msgstr "Termini di pagamento"
 #: model:ir.model,name:sale.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Transazione di pagamento"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
+msgid "Payment method"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2749,11 +2790,6 @@ msgstr "Variante prodotto"
 #: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
 msgstr "Varianti prodotto"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
-msgid "Product attribute values that do not create variants"
-msgstr "Valori di attributo prodotto che non creano varianti"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3032,6 +3068,7 @@ msgstr "Errore di invio SMS"
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/account_reconciliation.js:0
+#: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Sale Order"
 msgstr "Ordine di vendita"
@@ -3068,11 +3105,6 @@ msgstr "Avvisi vendita"
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
 msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
-msgid "Sale order line"
-msgstr "Riga ordine di vendita"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -3136,6 +3168,7 @@ msgstr "Voce ordine di vendita"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
@@ -3565,6 +3598,12 @@ msgid "Subtotal"
 msgstr "Subtotale"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
+msgid "Tax Total"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_by_group
 msgid "Tax amount by group"
 msgstr "Importo imposta per gruppo"
@@ -3920,6 +3959,12 @@ msgstr "Totale imposte"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
+msgid "Total Tax Excluded"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Included"
 msgstr "Totale (Imposte incluse)"
 
@@ -4076,11 +4121,6 @@ msgstr ""
 msgid "Use this menu to access quotations, sales orders and customers."
 msgstr ""
 "Usa questo menù per accedere a preventivi, ordini di vendita e clienti."
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
-msgid "User entered custom product attribute values"
-msgstr "L'utente ha inserito valori di attributo prodotto personalizzati"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations

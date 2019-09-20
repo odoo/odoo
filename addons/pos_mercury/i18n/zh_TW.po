@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"POT-Creation-Date: 2019-09-13 11:26+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -29,14 +29,12 @@ msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>購買讀卡器"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"<i>Mercury Configurations</i> define what Mercury account will be used when\n"
-"                                processing credit card transactions in the Point Of Sale. Setting up a Mercury\n"
+"<i>Vantiv Configurations</i> define what Vantiv account will be used when\n"
+"                                processing credit card transactions in the Point Of Sale. Setting up a Vantiv\n"
 "                                configuration will enable you to allow payments with various credit cards\n"
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
-"<i>Mercury配置</i>定義在POS用信用卡進行交易的Mercury帳號\n"
-"設定Mercury配置能夠讓您用不同的付款方式支付（例如Visa， 萬事達卡，Discovery，美國運通等等）。配置好之後您應該把他和POS的付款方式聯繫起來。"
 
 #. module: pos_mercury
 #. openerp-web
@@ -191,14 +189,14 @@ msgstr "授權給商人的ID讓他能在支付供應商的伺服器上支付"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
+"If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
 "                                to create one."
-msgstr "如果您還沒有Mercury帳戶，請撥打+1 (800) 846-4472以創建帳號。"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
-msgid "Invoice number from Mercury Pay"
-msgstr "Mercury支付的憑單號碼"
+msgid "Invoice number from Vantiv Pay"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration____last_update
@@ -229,45 +227,19 @@ msgid "Merchant Password"
 msgstr "商家密碼"
 
 #. module: pos_mercury
-#: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
-#: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
-msgid "Mercury Configurations"
-msgstr "Mercury配置"
-
-#. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
-msgid "Mercury Credentials"
-msgstr "Mercury 憑據"
-
-#. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
-msgid "Mercury invoice number"
-msgstr "Mercury憑單號碼"
-
-#. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
-msgid "Mercury record number"
-msgstr "Mercury記錄號碼"
-
-#. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
-msgid "Mercury reference number"
-msgstr "Mercury參考號碼"
-
-#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__name
 msgid "Name"
 msgstr "名称"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
-msgid "Name of this Mercury configuration"
-msgstr "Mercury配置的名稱"
+msgid "Name of this Vantiv configuration"
+msgstr ""
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
-msgid "No Mercury configuration associated with the payment method."
+msgid "No Vantiv configuration associated with the payment method."
 msgstr ""
 
 #. module: pos_mercury
@@ -280,8 +252,8 @@ msgstr "找不到使用者%s 的已打開POS會話。"
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
-msgid "No response from Mercury (Mercury down?)"
-msgstr "Mercury沒有響應（Mercury 關閉？）"
+msgid "No response from Vantiv (Vantiv down?)"
+msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
@@ -334,30 +306,20 @@ msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
-msgid "Payment record number from Mercury Pay"
-msgstr "Mercury支付的支付記錄號碼"
+msgid "Payment record number from Vantiv Pay"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_ref_no
-msgid "Payment reference number from Mercury Pay"
-msgstr "Mercury支付的支付參考號碼"
+msgid "Payment reference number from Vantiv Pay"
+msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
-msgid "Please setup your Mercury merchant account."
-msgstr "請設定您的Mercury商人帳戶。"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
-msgid "Point of Sale Mercury Configuration"
-msgstr "POSMercury配置"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
-msgid "Point of Sale Mercury Transaction"
-msgstr "POSMercury交易記錄"
+msgid "Please setup your Vantiv merchant account."
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -372,6 +334,16 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment
 msgid "Point of Sale Payments"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
+msgid "Point of Sale Vantiv Configuration"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
+msgid "Point of Sale Vantiv Transaction"
 msgstr ""
 
 #. module: pos_mercury
@@ -421,8 +393,8 @@ msgstr "用來付款的卡號。"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment_method__pos_mercury_config_id
-msgid "The configuration of Mercury used for this journal"
-msgstr "該日記帳使用的Mercury配置"
+msgid "The configuration of Vantiv used for this journal"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
@@ -458,19 +430,42 @@ msgstr "類型"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"Using the Mercury integration in the Point Of Sale is easy: just press the\n"
+"Using the Vantiv integration in the Point Of Sale is easy: just press the\n"
 "                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
-"在POS使用Mercury集成比較容易：只要按下相關的付款方式。\n"
-"之後金額會像其他在其他付款行一樣能被調整（例如現金返回）。\n"
-"不管任何時候只要付款行建立起來，就可以通過讀卡設備刷卡。"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
 msgstr "Vantiv 帳戶"
+
+#. module: pos_mercury
+#: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
+#: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
+msgid "Vantiv Configurations"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
+msgid "Vantiv Credentials"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
+msgid "Vantiv invoice number"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
+msgid "Vantiv record number"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
+msgid "Vantiv reference number"
+msgstr ""
 
 #. module: pos_mercury
 #. openerp-web

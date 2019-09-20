@@ -24,6 +24,7 @@ class SaleOrder(models.Model):
         help='Select a non billable project on which tasks can be created.')
     project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
     timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
+    timesheet_total_duration = fields.Float("Timesheet Total Duration", compute='_compute_timesheet_total_duration', help="Total recorded duration, expressed in the encoding UoM")
 
     @api.depends('analytic_account_id.line_ids')
     def _compute_timesheet_ids(self):
@@ -59,6 +60,18 @@ class SaleOrder(models.Model):
             projects |= order.order_line.mapped('project_id')
             projects |= order.project_id
             order.project_ids = projects
+
+    @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
+    def _compute_timesheet_total_duration(self):
+        for sale_order in self:
+            duration_list = []
+            for timesheet in sale_order.timesheet_ids:
+                timesheet_uom = timesheet.product_uom_id or timesheet.company_id.project_time_mode_id
+                if timesheet_uom != sale_order.timesheet_encode_uom_id and timesheet_uom.category_id == sale_order.timesheet_encode_uom_id.category_id:
+                    duration_list.append(timesheet_uom._compute_quantity(timesheet.unit_amount, sale_order.timesheet_encode_uom_id))
+                else:
+                    duration_list.append(timesheet.unit_amount)
+            sale_order.timesheet_total_duration = sum(duration_list)
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
@@ -125,9 +138,8 @@ class SaleOrder(models.Model):
 
     def action_view_timesheet(self):
         self.ensure_one()
-        action = self.env.ref('hr_timesheet.timesheet_action_all').read()[0]
+        action = self.env.ref('sale_timesheet.timesheet_action_from_sales_order').read()[0]
         action['context'] = self.env.context  # erase default filters
-
         if self.timesheet_count > 0:
             action['domain'] = [('so_line', 'in', self.order_line.ids)]
         else:

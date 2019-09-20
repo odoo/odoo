@@ -174,7 +174,7 @@ class HolidaysRequest(models.Model):
         help='This area is automatically filled by the user who validate the time off')
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
-        help='This area is automaticly filled by the user who validate the time off with second level (If time off type need second validation)')
+        help='This area is automatically filled by the user who validate the time off with second level (If time off type need second validation)')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
 
@@ -539,23 +539,23 @@ class HolidaysRequest(models.Model):
     def _check_leave_type_validity(self):
         for leave in self:
             vstart = leave.holiday_status_id.validity_start
-            vstop  = leave.holiday_status_id.validity_stop
-            dfrom  = leave.date_from
-            dto    = leave.date_to
+            vstop = leave.holiday_status_id.validity_stop
+            dfrom = leave.date_from
+            dto = leave.date_to
             if leave.holiday_status_id.validity_start and leave.holiday_status_id.validity_stop:
                 if dfrom and dto and (dfrom.date() < vstart or dto.date() > vstop):
                     raise ValidationError(
-                        _('You can take %s only between %s and %s') % (
+                        _('%s are only valid between %s and %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_start, leave.holiday_status_id.validity_stop))
             elif leave.holiday_status_id.validity_start:
                 if dfrom and (dfrom.date() < vstart):
                     raise ValidationError(
-                        _('You can take %s from %s') % (
+                        _('%s are only valid starting from %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_start))
             elif leave.holiday_status_id.validity_stop:
                 if dto and (dto.date() > vstop):
                     raise ValidationError(
-                        _('You can take %s until %s') % (
+                        _('%s are only valid until %s') % (
                             leave.holiday_status_id.display_name, leave.holiday_status_id.validity_stop))
 
     def _check_double_validation_rules(self, employee, state):

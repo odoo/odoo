@@ -3518,7 +3518,7 @@ QUnit.module('ActionManager', {
                 active_ids: [1],
             },
             flags: {
-                withSearchPanel: false,
+                searchPanelDefaultNoFilter: true,
             },
         });
         var checkSessionStorage = false;

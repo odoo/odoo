@@ -205,7 +205,7 @@ class Users(models.Model):
     # User can write on a few of his own fields (but not his groups for example)
     SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
     # User can read a few of his own fields
-    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image_1920', 'image_1024', 'image_512', 'image_256', 'image_128', 'image_64', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
+    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image_1920', 'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
 
     def _default_groups(self):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
@@ -400,9 +400,41 @@ class Users(models.Model):
 
     @api.constrains('groups_id')
     def _check_one_user_type(self):
-        for user in self:
-            if len(user.groups_id.filtered(lambda x: x.category_id.xml_id == 'base.module_category_user_type')) > 1:
+        """We check that no users are both portal and users (same with public).
+           This could typically happen because of implied groups.
+        """
+        user_types_category = self.env.ref('base.module_category_user_type', raise_if_not_found=False)
+        user_types_groups = self.env['res.groups'].search(
+            [('category_id', '=', user_types_category.id)]) if user_types_category else False
+        if user_types_groups:  # needed at install
+            if self._has_multiple_groups(user_types_groups.ids):
                 raise ValidationError(_('The user cannot have more than one user types.'))
+
+    def _has_multiple_groups(self, group_ids):
+        """The method is not fast if the list of ids is very long;
+           so we rather check all users than limit to the size of the group
+        :param group_ids: list of group ids
+        :return: boolean: is there at least a user in at least 2 of the provided groups
+        """
+        if group_ids:
+            args = [tuple(group_ids)]
+            if len(self.ids) == 1:
+                where_clause = "AND r.uid = %s"
+                args.append(self.id)
+            else:
+                where_clause = ""  # default; we check ALL users (actually pretty efficient)
+            query = """
+                    SELECT 1 FROM res_groups_users_rel WHERE EXISTS(
+                        SELECT r.uid
+                        FROM res_groups_users_rel r
+                        WHERE r.gid IN %s""" + where_clause + """
+                        GROUP BY r.uid HAVING COUNT(r.gid) > 1
+                    )
+            """
+            self.env.cr.execute(query, args)
+            return bool(self.env.cr.fetchall())
+        else:
+            return False
 
     def toggle_active(self):
         for user in self:
@@ -520,7 +552,7 @@ class Users(models.Model):
         user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         if not user_ids:
             user_ids = self._search(expression.AND([[('name', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(user_ids).name_get()
+        return models.lazy_name_get(self.browse(user_ids).with_user(name_get_uid))
 
     def copy(self, default=None):
         self.ensure_one()
@@ -939,6 +971,7 @@ class GroupsImplied(models.Model):
                            JOIN group_imply i ON (r.gid = i.hid)
                           WHERE i.gid = %(gid)s
                 """, dict(gid=group.id))
+            self._check_one_user_type()
         return res
 
 class UsersImplied(models.Model):

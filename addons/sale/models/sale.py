@@ -179,7 +179,7 @@ class SaleOrder(models.Model):
     signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
     signed_on = fields.Datetime('Signed On', help='Date of the signature.', copy=False)
 
-    commitment_date = fields.Datetime('Commitment Date',
+    commitment_date = fields.Datetime('Delivery Date',
                                       states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
                                       copy=False, readonly=True,
                                       help="This is the delivery date promised to the customer. "
@@ -367,8 +367,8 @@ class SaleOrder(models.Model):
             return {
                 'warning': {
                     'title': _('Requested date is too soon.'),
-                    'message': _("The commitment date is sooner than the expected date."
-                                 "You may be unable to honor the commitment date.")
+                    'message': _("The delivery date is sooner than the expected date."
+                                 "You may be unable to honor the delivery date.")
                 }
             }
 
@@ -457,7 +457,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         journal = self.env['account.move'].with_context(force_company=self.company_id.id, default_type='out_invoice')._get_default_journal()
         if not journal:
-                raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
+            raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
         invoice_vals = {
             'ref': self.client_order_ref or '',
@@ -490,14 +490,19 @@ class SaleOrder(models.Model):
             action['res_id'] = invoices.id
         else:
             action = {'type': 'ir.actions.act_window_close'}
-        action['context'] = {
+
+        context = {
             'default_type': 'out_invoice',
-            'default_partner_id': self.partner_id.id,
-            'default_partner_shipping_id': self.partner_shipping_id.id,
-            'default_invoice_payment_term_id': self.payment_term_id.id,
-            'default_invoice_origin': self.name,
-            'default_user_id': self.user_id.id,
         }
+        if len(self) == 1:
+            context.update({
+                'default_partner_id': self.partner_id.id,
+                'default_partner_shipping_id': self.partner_shipping_id.id,
+                'default_invoice_payment_term_id': self.payment_term_id.id,
+                'default_invoice_origin': self.mapped('name'),
+                'default_user_id': self.user_id.id,
+            })
+        action['context'] = context
         return action
 
     def _create_invoices(self, grouped=False, final=False):
@@ -696,7 +701,7 @@ class SaleOrder(models.Model):
 
     def _get_forbidden_state_confirm(self):
         return {'done', 'cancel'}
-    
+
     def _prepare_analytic_account_data(self, prefix=None):
         """
         Prepare method for analytic account data

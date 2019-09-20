@@ -245,13 +245,11 @@ class WebsiteSlides(WebsiteProfile):
         channels_popular = channels_all.sorted('total_votes', reverse=True)[:3]
         channels_newest = channels_all.sorted('create_date', reverse=True)[:3]
 
-        # fetch 'latests achievements' for non logged people
+        achievements = request.env['gamification.badge.user'].sudo().search([('badge_id.is_published', '=', True)], limit=5)
         if request.env.user._is_public():
-            achievements = request.env['gamification.badge.user'].sudo().search([('badge_id.is_published', '=', True)], limit=5)
             challenges = None
             challenges_done = None
         else:
-            achievements = None
             challenges = request.env['gamification.challenge'].sudo().search([
                 ('category', '=', 'slides'),
                 ('reward_id.is_published', '=', True)
@@ -262,7 +260,6 @@ class WebsiteSlides(WebsiteProfile):
                 ('badge_id.is_published', '=', True)
             ]).mapped('challenge_id')
 
-        # fetch 'heroes of the week' for non logged people
         users = request.env['res.users'].sudo().search([
             ('karma', '>', 0),
             ('website_published', '=', True)], limit=5, order='karma desc')
@@ -583,7 +580,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides/slide/<int:slide_id>/get_image', type='http', auth="public", website=True, sitemap=False)
     def slide_get_image(self, slide_id, field='image_128', width=0, height=0, crop=False):
         # Protect infographics by limiting access to 256px (large) images
-        if field not in ('image_64', 'image_128', 'image_256', 'image_512', 'image_1024', 'image_1920'):
+        if field not in ('image_128', 'image_256', 'image_512', 'image_1024', 'image_1920'):
             return werkzeug.exceptions.Forbidden()
 
         slide = request.env['slide.slide'].sudo().browse(slide_id).exists()

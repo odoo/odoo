@@ -418,54 +418,6 @@ body {
     .pos-hidden {
         opacity: 0;
     }
-
-    // =========== EDIT MODE ===========
-    &.editor_enable {
-        .pos-hidden {
-            opacity: 0.1;
-            background: repeating-linear-gradient(
-                45deg,
-                $color-gray-lighter,
-                $color-gray-lighter 5px,
-                $color-gray-dark 5px,
-                $color-gray-dark 10px
-            )!important;
-        }
-
-        @media all and (orientation: portrait) {
-            .pos-customer_facing_display {
-                .pos-payment_info .pos-adv {
-                    top: 35px;
-                }
-            }
-        }
-
-        #oe_manipulators .oe_overlay > .oe_overlay_options > .btn-group> .dropdown.oe_options.btn-group.snippet-option-pos_palette > .dropdown-menu {
-            min-width: 100px;
-            max-width: 100px;
-
-            > .o_main_header {
-                display: none;
-            }
-
-            > a {
-                position: relative;
-                padding: 14px 0!important;
-                margin-bottom: 1px;
-
-                &:before {
-                    color: #05eb05;
-                }
-            }
-        }
-
-        #oe_manipulators .no_parent_options {
-            .snippet-option-pos_palette,
-            .o_parent_editor_header {
-                display: none;
-            }
-        }
-    }
 }
 
 
@@ -503,28 +455,11 @@ body {
             background: $bg-info;
         }
     }
+}
 
-    // Editor dropdown buttons
-    #oe_manipulators .oe_overlay > .oe_overlay_options .snippet-option-pos_palette > .dropdown-menu > & {
-        background: $bg-products!important;
-
-        &:after {
-            content: "";
-            position: absolute;
-            top:0;
-            right: 0;
-            bottom:0;
-            left: 50px;
-            background: $bg-info;
-        }
-
-        &:before {
-            text-shadow: 0 0 1px invert($bg-products);
-        }
-    }
-};
-
-// =========== PALETTE  ===========
+// =========== PALETTES ===========
+// Those are kept for compatibility for now (previously there was a feature
+// which allowed to change the default pos-palette_01 class.
 .pos-palette_01 { @include palette-variant; }
 .pos-palette_02 { @include palette-variant(#364152, #e6e7e8, #ecf2f6, #364152, white, $color-gray-dark, #364152 ); }
 .pos-palette_03 { @include palette-variant(#1BA39C, $color-gray-lighter, #ececec ); }
@@ -533,10 +468,8 @@ body {
 .pos-palette_06 { @include palette-variant(#9E373B, $color-gray-lighter); }
 .pos-palette_07 { @include palette-variant(#ce9934, white, #ececec ); }
 .pos-palette_08 { @include palette-variant(#a48c77, $color-gray-lighter, #ececec ); }
-
 .pos-palette_09 { @include palette-variant(linear-gradient(30deg, #014d43, #127e71), $color-gray-lighter, #ececec ); }
 .pos-palette_10 { @include palette-variant(linear-gradient(30deg, #e2316c, #ea4c89), white, #ececec ); }
 .pos-palette_11 { @include palette-variant(linear-gradient(30deg, #362b3d, #5b4a63), white, #ececec ); }
-
 .pos-palette_12 { @include palette-variant(#434343, #e6e6e6, #5b5b5b, #bdb9b9, #f5f5f5); }
 .pos-palette_13 { @include palette-variant(linear-gradient(30deg, #1a1b1f, #3d3f45), white, #a2a2ab, $color-gray-lighter, $color-gray-lighter); }

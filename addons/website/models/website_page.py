@@ -20,7 +20,6 @@ class Page(models.Model):
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
     is_homepage = fields.Boolean(compute='_compute_homepage', inverse='_set_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
-    is_tracked = fields.Boolean(string='Is Tracked', default=False, help="A tracked page will be included in visitors browsing history.")
 
     # Page options
     header_overlay = fields.Boolean()

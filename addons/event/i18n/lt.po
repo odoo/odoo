@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -1202,14 +1202,10 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event__message_unread
-#: model:ir.model.fields,help:event.field_event_registration__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jeigu pažymėta, naujoms žinutėms reikės jūsų dėmesio."
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction
+#: model:ir.model.fields,help:event.field_event_event__message_unread
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction
+#: model:ir.model.fields,help:event.field_event_registration__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
@@ -1491,8 +1487,8 @@ msgstr "Dalyvių skaičius"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error_counter
-msgid "Number of error"
-msgstr "Klaidos numeris"
+msgid "Number of errors"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner__event_count
@@ -1825,6 +1821,11 @@ msgstr "Laiko juosta"
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Today Activities"
 msgstr "Šiandienos veiklos"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_tree
+msgid "Total"
+msgstr "Suma"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track

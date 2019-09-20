@@ -6,7 +6,7 @@ from odoo.tools.safe_eval import safe_eval
 
 class SaleCouponGenerate(models.TransientModel):
     _name = 'sale.coupon.generate'
-    _description = 'Sales Coupon Generate'
+    _description = 'Generate Sales Coupon'
 
     nbr_coupons = fields.Integer(string="Number of Coupons", help="Number of coupons", default=1)
     generation_type = fields.Selection([

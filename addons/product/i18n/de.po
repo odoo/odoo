@@ -6,20 +6,19 @@
 # e2f <projects@e2f.com>, 2019
 # Wolfgang Taferner, 2019
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2019
-# Martin Trigaux, 2019
-# nle_odoo, 2019
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
 # brokemeister <work@maltejansen.de>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Felix Hoßfeld <felix.hossfeld@thoughtgang.de>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Martin Trigaux, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-13 11:28+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -226,7 +225,10 @@ msgstr "Aktion notwendig"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__active
 #: model:ir.model.fields,field_description:product.field_product_product__active
 #: model:ir.model.fields,field_description:product.field_product_template__active
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__active
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_active
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Active"
 msgstr "Aktiv"
 
@@ -343,7 +345,7 @@ msgstr "Attributwert"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
-#: model:ir.model.fields,field_description:product.field_product_product__attribute_value_ids
+#: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
@@ -473,11 +475,17 @@ msgid "Color Index"
 msgstr "Farbkennzeichnung"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__combination_indices
+msgid "Combination Indices"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_res_company
 msgid "Companies"
 msgstr "Unternehmen"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_packaging__company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist__company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__company_id
 #: model:ir.model.fields,field_description:product.field_product_product__company_id
@@ -638,9 +646,10 @@ msgstr "Dezimalstellen"
 
 #. module: product
 #: code:addons/product/models/res_company.py:0
+#: code:addons/product/models/res_company.py:0
 #, python-format
-msgid "Default %(currency)s pricelist for %(company)s"
-msgstr "Standard-Preisliste in %(currency)s für %(company)s"
+msgid "Default %(currency)s pricelist"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -746,16 +755,6 @@ msgstr "Enddatum dieses Lieferantenpreises"
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
 msgid "Ending valid for the pricelist item validation"
 msgstr "Enddatum der Gültigkeit dieser Preislistenposition"
-
-#. module: product
-#: code:addons/product/models/product.py:0
-#, python-format
-msgid ""
-"Error! It is not allowed to choose more than one value for a given "
-"attribute."
-msgstr ""
-"Fehler! Es ist nicht erlaubt, mehr als ein Wert für ein gegebenes Attribut "
-"zu verwenden."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -883,14 +882,10 @@ msgid "Icon to indicate an exception activity."
 msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product__message_unread
-#: model:ir.model.fields,help:product.field_product_template__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
+#: model:ir.model.fields,help:product.field_product_product__message_unread
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
+#: model:ir.model.fields,help:product.field_product_template__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
@@ -935,31 +930,31 @@ msgstr "Bild"
 #: model:ir.model.fields,field_description:product.field_product_product__image_1024
 #: model:ir.model.fields,field_description:product.field_product_template__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Bild 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_128
 #: model:ir.model.fields,field_description:product.field_product_template__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Bild 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_256
 #: model:ir.model.fields,field_description:product.field_product_template__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Bild 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_512
 #: model:ir.model.fields,field_description:product.field_product_template__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "Bild 512"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_64
 #: model:ir.model.fields,field_description:product.field_product_template__image_64
 msgid "Image 64"
-msgstr ""
+msgstr "Bild 64"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -993,6 +988,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "In which unit of measure do you manage your volumes"
 msgstr "In welcher Mengeneinheit verwalten Sie Ihre Volumina?"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
+msgid "Inactive"
+msgstr "Inaktiv"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
@@ -1247,8 +1247,8 @@ msgstr "Anzahl der Aktionen"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
-msgid "Number of error"
-msgstr "Fehlernummer"
+msgid "Number of errors"
+msgstr "Anzahl der Fehler"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
@@ -1791,6 +1791,11 @@ msgid "Related Products"
 msgstr "Zugehörige Produkte"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
+msgid "Related Variants"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_user_id
 msgid "Responsible User"
@@ -1969,18 +1974,8 @@ msgid "Supplier Pricelist"
 msgstr "Lieferantenpreisliste"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_ids
-#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_value_ids
-#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_value_wnva_ids
-#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_wnva_ids
 #: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_ids
-#: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_wnva_ids
-#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_ids
-#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_value_ids
-#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_value_wnva_ids
-#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_wnva_ids
 #: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_ids
-#: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_wnva_ids
 msgid "Technical compute"
 msgstr "Technische Berechnung"
 
@@ -1992,11 +1987,6 @@ msgid ""
 msgstr ""
 "Technisches Feld. Verwendet für die Suche nach Preislisten, die nicht in der"
 " Datenbank gespeichert sind."
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
-msgid "Template Attribute Values"
-msgstr "Vorlagenattributwerte"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2224,36 +2214,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
 msgstr "Gültige Produktattributzeilen"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_wnva_ids
-#: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_wnva_ids
-msgid "Valid Product Attribute Lines Without No Variant Attributes"
-msgstr "Gültige Produktattributzeilen ohne Variantenattribute"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_value_ids
-#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_value_ids
-msgid "Valid Product Attribute Values"
-msgstr "Gültige Werte für Produktattribute"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_value_wnva_ids
-#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_value_wnva_ids
-msgid "Valid Product Attribute Values Without No Variant Attributes"
-msgstr "Gültige Produktattributwerte ohne Variantenattribute"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_ids
-#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_ids
-msgid "Valid Product Attributes"
-msgstr "Gültige Produkteigenschaften"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_wnva_ids
-#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_wnva_ids
-msgid "Valid Product Attributes Without No Variant Attributes"
-msgstr "Gültige Produktattribute ohne Variantenattribute"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2529,12 +2489,6 @@ msgstr ""
 "Rundungsfaktor für die Hauptwährung des Unternehmens."
 
 #. module: product
-#: code:addons/product/models/product_template.py:0
-#, python-format
-msgid "You cannot define two attribute lines for the same attribute."
-msgstr ""
-
-#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -2556,6 +2510,15 @@ msgstr ""
 msgid ""
 "You cannot move the attribute <strong>%s</strong> from the product %s to the"
 " product %s."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot update related variants from the values. Please update related "
+"values from the variants."
 msgstr ""
 
 #. module: product

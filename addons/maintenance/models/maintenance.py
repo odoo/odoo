@@ -118,7 +118,7 @@ class MaintenanceEquipment(models.Model):
             equipment_ids = self._search([('name', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
         if not equipment_ids:
             equipment_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(equipment_ids).name_get()
+        return models.lazy_name_get(self.browse(equipment_ids).with_user(name_get_uid))
 
     name = fields.Char('Equipment Name', required=True, translate=True)
     company_id = fields.Many2one('res.company', string='Company',
@@ -145,7 +145,7 @@ class MaintenanceEquipment(models.Model):
     maintenance_open_count = fields.Integer(compute='_compute_maintenance_count', string="Current Maintenance", store=True)
     period = fields.Integer('Days between each preventive maintenance')
     next_action_date = fields.Date(compute='_compute_next_maintenance', string='Date of the next preventive maintenance', store=True)
-    maintenance_team_id = fields.Many2one('maintenance.team', string='Maintenance Team')
+    maintenance_team_id = fields.Many2one('maintenance.team', string='Maintenance Team', check_company=True)
     maintenance_duration = fields.Float(help="Maintenance Duration in hours.")
 
     @api.depends('effective_date', 'period', 'maintenance_ids.request_date', 'maintenance_ids.close_date')
@@ -197,6 +197,12 @@ class MaintenanceEquipment(models.Model):
             equipment.maintenance_count = len(equipment.maintenance_ids)
             equipment.maintenance_open_count = len(equipment.maintenance_ids.filtered(lambda x: not x.stage_id.done))
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id and self.maintenance_team_id:
+            if self.maintenance_team_id.company_id and not self.maintenance_team_id.company_id.id == self.company_id.id:
+                self.maintenance_team_id = False
+
     @api.onchange('category_id')
     def _onchange_category_id(self):
         self.technician_user_id = self.category_id.technician_user_id
@@ -238,6 +244,7 @@ class MaintenanceEquipment(models.Model):
             'user_id': self.technician_user_id.id,
             'maintenance_team_id': self.maintenance_team_id.id,
             'duration': self.maintenance_duration,
+            'company_id': self.company_id.id or self.env.company.id
             })
 
     @api.model
@@ -315,6 +322,12 @@ class MaintenanceRequest(models.Model):
         first_stage_obj = self.env['maintenance.stage'].search([], order="sequence asc", limit=1)
         # self.write({'active': True, 'stage_id': first_stage_obj.id})
         self.write({'archive': False, 'stage_id': first_stage_obj.id})
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id and self.maintenance_team_id:
+            if self.maintenance_team_id.company_id and not self.maintenance_team_id.company_id.id == self.company_id.id:
+                self.maintenance_team_id = False
 
     @api.onchange('equipment_id')
     def onchange_equipment_id(self):

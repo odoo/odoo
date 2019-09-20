@@ -452,6 +452,9 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
     $editable.data('range').select();
     $editable.data('NoteHistory').recordUndo();
 
+    var link = linkInfo.range.commonAncestor().closest('a');
+    linkInfo.className = link && link.className;
+
     var def = new $.Deferred();
     core.bus.trigger('link_dialog_demand', {
         $editable: $editable,

@@ -56,7 +56,7 @@ class ProductAttribute(models.Model):
             for pa in self:
                 if vals['create_variant'] != pa.create_variant and pa.is_used_on_products:
                     raise UserError(
-                        _("You cannot change the Variants Creation Mode of the attribute <strong>%s</strong> because it is used on the following products:\n%s") %
+                        _("You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n%s") %
                         (pa.display_name, ", ".join(pa.product_tmpl_ids.mapped('display_name')))
                     )
         invalidate_cache = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
@@ -72,7 +72,7 @@ class ProductAttribute(models.Model):
         for pa in self:
             if pa.is_used_on_products:
                 raise UserError(
-                    _("You cannot delete the attribute <strong>%s</strong> because it is used on the following products:\n%s") %
+                    _("You cannot delete the attribute %s because it is used on the following products:\n%s") %
                     (pa.display_name, ", ".join(pa.product_tmpl_ids.mapped('display_name')))
                 )
         return super(ProductAttribute, self).unlink()
@@ -121,7 +121,7 @@ class ProductAttributeValue(models.Model):
             for pav in self:
                 if pav.attribute_id.id != values['attribute_id'] and pav.is_used_on_products:
                     raise UserError(
-                        _("You cannot change the attribute of the value <strong>%s</strong> because it is used on the following products:%s") %
+                        _("You cannot change the attribute of the value %s because it is used on the following products:%s") %
                         (pav.display_name, ", ".join(pav.pav_attribute_line_ids.product_tmpl_id.mapped('display_name')))
                     )
 
@@ -138,7 +138,7 @@ class ProductAttributeValue(models.Model):
         for pav in self:
             if pav.is_used_on_products:
                 raise UserError(
-                    _("You cannot delete the value <strong>%s</strong> because it is used on the following products:\n%s") %
+                    _("You cannot delete the value %s because it is used on the following products:\n%s") %
                     (pav.display_name, ", ".join(pav.pav_attribute_line_ids.product_tmpl_id.mapped('display_name')))
                 )
         return super(ProductAttributeValue, self).unlink()
@@ -172,13 +172,13 @@ class ProductTemplateAttributeLine(models.Model):
         for ptal in self:
             if ptal.active and not ptal.value_ids:
                 raise ValidationError(
-                    _("The attribute <strong>%s</strong> must have at least one value for the product %s.") %
+                    _("The attribute %s must have at least one value for the product %s.") %
                     (ptal.attribute_id.display_name, ptal.product_tmpl_id.display_name)
                 )
             for pav in ptal.value_ids:
                 if pav.attribute_id != ptal.attribute_id:
                     raise ValidationError(
-                        _("On the product %s you cannot associate the value <strong>%s</strong> with the attribute <strong>%s</strong> because they do not match.") %
+                        _("On the product %s you cannot associate the value %s with the attribute %s because they do not match.") %
                         (ptal.product_tmpl_id.display_name, pav.display_name, ptal.attribute_id.display_name)
                     )
         return True
@@ -230,7 +230,7 @@ class ProductTemplateAttributeLine(models.Model):
             for ptal in self:
                 if ptal.product_tmpl_id.id != values['product_tmpl_id']:
                     raise UserError(
-                        _("You cannot move the attribute <strong>%s</strong> from the product %s to the product %s.") %
+                        _("You cannot move the attribute %s from the product %s to the product %s.") %
                         (ptal.attribute_id.display_name, ptal.product_tmpl_id.display_name, values['product_tmpl_id'])
                     )
 
@@ -238,7 +238,7 @@ class ProductTemplateAttributeLine(models.Model):
             for ptal in self:
                 if ptal.attribute_id.id != values['attribute_id']:
                     raise UserError(
-                        _("On the product %s you cannot transform the attribute <strong>%s</strong> into the attribute %s.") %
+                        _("On the product %s you cannot transform the attribute %s into the attribute %s.") %
                         (ptal.product_tmpl_id.display_name, ptal.attribute_id.display_name, values['attribute_id'])
                     )
         # Remove all values while archiving to make sure the line is clean if it
@@ -361,7 +361,7 @@ class ProductTemplateAttributeLine(models.Model):
             args = args or []
             domain = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
             attribute_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-            return self.browse(attribute_ids).name_get()
+            return models.lazy_name_get(self.browse(attribute_ids).with_user(name_get_uid))
         return super(ProductTemplateAttributeLine, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _without_no_variant_attributes(self):
@@ -416,7 +416,7 @@ class ProductTemplateAttributeValue(models.Model):
         for ptav in self:
             if ptav.product_attribute_value_id not in ptav.attribute_line_id.value_ids:
                 raise ValidationError(
-                    _("The value <strong>%s</strong> is not defined for the attribute <strong>%s</strong> on the product %s.") %
+                    _("The value %s is not defined for the attribute %s on the product %s.") %
                     (ptav.product_attribute_value_id.display_name, ptav.attribute_id.display_name, ptav.product_tmpl_id.display_name)
                 )
 
@@ -439,12 +439,12 @@ class ProductTemplateAttributeValue(models.Model):
             for ptav in self:
                 if pav_in_values and ptav.product_attribute_value_id.id != values['product_attribute_value_id']:
                     raise UserError(
-                        _("You cannot change the value of the value <strong>%s</strong> set on product %s.") %
+                        _("You cannot change the value of the value %s set on product %s.") %
                         (ptav.display_name, ptav.product_tmpl_id.display_name)
                     )
                 if product_in_values and ptav.product_tmpl_id.id != values['product_tmpl_id']:
                     raise UserError(
-                        _("You cannot change the product of the value <strong>%s</strong> set on product %s.") %
+                        _("You cannot change the product of the value %s set on product %s.") %
                         (ptav.display_name, ptav.product_tmpl_id.display_name)
                     )
         return super(ProductTemplateAttributeValue, self).write(values)

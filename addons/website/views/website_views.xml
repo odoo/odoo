@@ -147,7 +147,7 @@
                                 <field name="url"/>
                                 <field name="view_id" context="{'display_website': True}"/>
                                 <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-                                <field name="is_tracked"/>
+                                <field name="track"/>
                             </group>
                             <group>
                                 <field name="website_indexed"/>
@@ -175,7 +175,7 @@
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>
-                    <field name="is_tracked"/>
+                    <field name="track"/>
                 </tree>
             </field>
         </record>
@@ -188,8 +188,8 @@
                     <filter string="Published" name="published" domain="[('website_published', '=', True)]"/>
                     <filter string="Not published" name="not_published" domain="[('website_published', '=', False)]"/>
                     <separator/>
-                    <filter string="Tracked" name="tracked" domain="[('is_tracked', '=', True)]"/>
-                    <filter string="Not tracked" name="not_tracked" domain="[('is_tracked', '=', False)]"/>
+                    <filter string="Tracked" name="tracked" domain="[('track', '=', True)]"/>
+                    <filter string="Not tracked" name="not_tracked" domain="[('track', '=', False)]"/>
                 </search>
             </field>
         </record>

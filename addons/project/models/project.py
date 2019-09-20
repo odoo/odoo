@@ -195,16 +195,16 @@ class Project(models.Model):
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', 'Visible by invited employees'),
-            ('employees', 'Visible by employees'),
-            ('portal', 'Visible by portal users and employees'),
+            ('followers', 'Invited employees'),
+            ('employees', 'All employees'),
+            ('portal', 'Portal users and all employees'),
         ],
-        string='Privacy', required=True,
+        string='Visibility', required=True,
         default='portal',
         help="Defines the visibility of the tasks of the project:\n"
-                "- Visible by invited employees: employees may only see the followed project and tasks.\n"
-                "- Visible by employees: employees may see all project and tasks.\n"
-                "- Visible by portal users and employees: employees may see everything."
+                "- Invited employees: employees may only see the followed project and tasks.\n"
+                "- All employees: employees may see all project and tasks.\n"
+                "- Portal users and all employees: employees may see everything."
                 "   Portal users may see project and tasks followed by.\n"
                 "   them or by someone of their company.")
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
@@ -645,7 +645,7 @@ class Task(models.Model):
         for task in self:
             if task.project_id:
                 if task.project_id.company_id != task.company_id:
-                    raise ValidationError(_('Your task must beo in the same company as its project.'))
+                    raise ValidationError(_('Your task must be in the same company as its project.'))
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):

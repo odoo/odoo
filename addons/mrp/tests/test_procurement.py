@@ -194,5 +194,6 @@ class TestProcurement(TestMrpCommon):
 
         move_dest_scheduled_date = move_dest.date_expected
         mo.date_planned_start += timedelta(days=5)
-
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=5), delta=timedelta(seconds=1), msg='date is not propagated')
+        # Adding 5 days to the date planned start makes the next move's date 4 days and 23 hours
+        # later since the date planned start was set one hour before the date_planned_end.
+        self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=4, hours=23), delta=timedelta(seconds=1), msg='date is not propagated')

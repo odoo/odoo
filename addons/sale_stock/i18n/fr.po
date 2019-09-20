@@ -5,7 +5,6 @@
 # Translators:
 # e2f <projects@e2f.com>, 2019
 # bb76cd9ac0cb7e20167a14728edb858b, 2019
-# Martin Trigaux, 2019
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2019
 # Fabien Pinckaers <fp@openerp.com>, 2019
 # Antoine Lorence <antoine.lorence@gmail.com>, 2019
@@ -25,13 +24,15 @@
 # Marie Willemyns <mwi@odoo.com>, 2019
 # Doryan R, 2019
 # Clo <clo@odoo.com>, 2019
+# thomas quertinmont <tqu@odoo.com>, 2019
+# Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -40,13 +41,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/js/qty_at_date_widget.js:0
-#, python-format
-msgid "%s Availability"
-msgstr "%s Disponible"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -65,7 +59,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Préparation</b>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-times\"/><b>Annulé</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -97,7 +91,7 @@ msgstr "<span class=\"o_stat_text\">Vendu</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
 msgid "<span>Product</span>"
-msgstr ""
+msgstr "<span>Produit</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
@@ -122,12 +116,12 @@ msgstr "<strong>Bon de livraison</strong>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Incoterm: </strong>"
-msgstr ""
+msgstr "<strong>Incoterm: </strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
+msgstr "<strong>Incoterm:</strong>"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__product_type
@@ -171,16 +165,16 @@ msgid "As soon as possible"
 msgstr "Aussi vite que possible"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
-msgid "Choose to apply SO lines specific routes."
-msgstr "Appliquer des routes spécifiques par commande."
-
-#. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/js/qty_at_date_widget.js:0
 #, python-format
-msgid "Close"
-msgstr "Fermer"
+msgid "Availability"
+msgstr "Disponibilité"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Choose to apply SO lines specific routes."
+msgstr "Appliquer des routes spécifiques par commande."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -208,13 +202,6 @@ msgid "Delivery"
 msgstr "Livraison"
 
 #. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Delivery Date"
-msgstr "Date de livraison"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
 msgstr "Livraisons"
@@ -227,11 +214,16 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Date de livraison que vous pouvez promettre au client, calculée à partir du "
+"délai minimum des lignes de commande dans le cas des produits de type "
+"Service. En cas d'expédition, la politique d'expédition de la commande sera "
+"prise en compte pour utiliser soit le délai minimum soit le délai maximum "
+"des lignes de commande."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
-msgstr ""
+msgstr "Affichage des lots et des numéros de série sur les factures"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -241,7 +233,7 @@ msgstr ""
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr ""
+msgstr "Affichage du numéro de série et de lot sur les factures"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
@@ -259,6 +251,8 @@ msgstr "Afficher les incoterms sur les commandes et les factures"
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
+"N'oubliez pas de changer de partenaire sur les bons de livraison suivants: "
+"%s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -285,6 +279,13 @@ msgstr "Exception(s):"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
 msgid "Expected Date"
 msgstr "Date prévue"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "Expected Delivery"
+msgstr "Livraison prévue"
 
 #. module: sale_stock
 #. openerp-web
@@ -367,7 +368,7 @@ msgstr "Lot/N° série"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "Les numéros de lot &amp; de série apparaitront sur la facture"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -422,13 +423,6 @@ msgid "On Hand - Reserved"
 msgstr ""
 
 #. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "On delivery date"
-msgstr ""
-
-#. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
@@ -468,7 +462,7 @@ msgstr "Qté disponible aujourd'hui"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr ""
+msgstr "Qté à livrer"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -633,6 +627,9 @@ msgid ""
 "                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
+"L'adresse de livraison a été modifiée sur la commande client<br/>\n"
+"                         De <strong>\"%s\"</strong> à <strong> \"%s\"</strong>,\n"
+"                         Vous devriez probablement mettre à jour le partenaire sur ce document."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -646,7 +643,7 @@ msgstr ""
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "This product is replenished on demand."
-msgstr ""
+msgstr "Ce produit est réapprovisionné à la demande."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -663,7 +660,7 @@ msgstr "Transferts"
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "View Detailed Forecast"
-msgstr ""
+msgstr "Voir les prévisions détaillées"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date

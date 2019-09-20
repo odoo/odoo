@@ -14,7 +14,7 @@ $-font-numbers: (
         $-seen: append($-seen, $-number);
         $-theme-font: nth($o-theme-font-urls, $-number);
         @if $-theme-font {
-            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}&display=swap");
         }
     }
 }
@@ -255,6 +255,26 @@ font[class*='bg-'] {
     &.o_bg_img_opt_repeat_y {
         background-repeat: repeat-y;
     }
+}
+
+// Background videos
+.o_background_video {
+    position: relative;
+
+    > * {
+        position: relative;
+    }
+}
+.o_bg_video_container {
+    @include o-position-absolute(0, 0 ,0 ,0);
+    overflow: hidden;
+}
+.o_bg_video_iframe {
+    position: relative;
+    pointer-events: none !important;
+}
+.o_bg_video_loading {
+    @include o-position-absolute(0, 0 ,0 ,0);
 }
 
 // Probably outdated

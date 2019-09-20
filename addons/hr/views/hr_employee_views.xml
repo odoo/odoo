@@ -224,10 +224,7 @@
                    <templates>
                        <t t-name="kanban-box">
                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                           <!-- Medium employee's picture -->
-                           <field name="image_128" widget="image" class="o_kanban_image_fill_left d-none d-md-block" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
-                           <!-- Employee's picture optimized for mobile -->
-                           <field name="image_64" widget="image" class="o_kanban_image d-md-none rounded-circle" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
+                           <field name="image_128" widget="image" class="o_kanban_image_fill_left o_hr_rounded_circle" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
 
                             <div class="oe_kanban_details">
                                <div class="o_kanban_record_top">
@@ -269,7 +266,7 @@
                     <field name="id"/>
                     <templates>
                         <div t-name="activity-box">
-                            <img t-att-src="activity_image('hr.employee', 'image_64', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                            <img t-att-src="activity_image('hr.employee', 'image_128', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <field name="job_id" muted="1" display="full"/>
@@ -341,7 +338,7 @@
             <field name="view_mode">kanban,form,tree</field>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="context">{
-                "search_default_department_id": [active_id],
+                "searchpanel_default_department_id": active_id,
                 "default_department_id": active_id}
             </field>
             <field name="help" type="html">

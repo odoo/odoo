@@ -1,41 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data>
     <!--page history-->
-    <record id="website_visitor_page_action" model="ir.actions.act_window">
-        <field name="name">Page Views History</field>
-        <field name="res_model">website.visitor.page</field>
-        <field name="view_mode">tree</field>
-        <field name="domain">[('visitor_id', '=', active_id)]</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-              No page views yet for this visitor
-            </p>
-        </field>
-    </record>
-
     <record id="website_visitor_page_view_tree" model="ir.ui.view">
-        <field name="name">website.visitor.page.view.tree</field>
-        <field name="model">website.visitor.page</field>
+        <field name="name">website.track.view.tree</field>
+        <field name="model">website.track</field>
         <field name="arch" type="xml">
             <tree string="Visitor Page Views History" create="0">
+                <field name="visitor_id"/>
                 <field name="page_id"/>
+                <field name="url"/>
                 <field name="visit_datetime"/>
             </tree>
         </field>
     </record>
 
+    <record id="website_visitor_page_view_graph" model="ir.ui.view">
+        <field name="name">website.track.view.graph</field>
+        <field name="model">website.track</field>
+        <field name="arch" type="xml">
+            <graph string="Visitor Page Views">
+                <field name="url"/>
+            </graph>
+        </field>
+    </record>
+
     <record id="website_visitor_page_view_search" model="ir.ui.view">
-        <field name="name">website.visitor.page.view.search</field>
-        <field name="model">website.visitor.page</field>
+        <field name="name">website.track.view.search</field>
+        <field name="model">website.track</field>
         <field name="arch" type="xml">
             <search string="Search Visitor">
+                <field name="visitor_id"/>
                 <field name="page_id"/>
+                <field name="url"/>
                 <field name="visit_datetime"/>
-
+                <filter string="Pages" name="type_page" domain="[('page_id', '!=', False)]"/>
+                <filter string="Urls &amp; Pages" name="type_url" domain="[('url', '!=', False)]"/>
                 <group string="Group By">
+                    <filter string="Visitor" name="group_by_visitor" domain="[]" context="{'group_by': 'visitor_id'}"/>
                     <filter string="Page" name="group_by_page" domain="[]" context="{'group_by': 'page_id'}"/>
+                    <filter string="Url" name="group_by_url" domain="[]" context="{'group_by': 'url'}"/>
+                    <filter string="Date" name="group_by_date" domain="[]" context="{'group_by': 'visit_datetime'}"/>
                 </group>
             </search>
+        </field>
+    </record>
+
+    <record id="website_visitor_page_action" model="ir.actions.act_window">
+        <field name="name">Page Views History</field>
+        <field name="res_model">website.track</field>
+        <field name="view_mode">tree</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('website_visitor_page_view_tree')}),
+            (0, 0, {'view_mode': 'graph', 'view_id': ref('website_visitor_page_view_graph')}),
+        ]"/>
+        <field name="domain">[('visitor_id', '=', active_id), ('url', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+              No page views yet for this visitor
+            </p>
         </field>
     </record>
 
@@ -63,6 +85,7 @@
                 <field name="is_connected"/>
                 <field name="display_name"/>
                 <field name="page_ids"/>
+                <field name="user_partner_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -77,7 +100,7 @@
                                 </strong>
                                 <div class="mb-2">Active <field name="time_since_last_action"/></div>
                                 <div>Visits<span class="float-right font-weight-bold"><field name="visit_count"/></span></div>
-                                <div>Visited Pages<span class="float-right font-weight-bold"><field name="page_count"/></span></div>
+                                <div id="o_page_count">Visited Pages<span class="float-right font-weight-bold"><field name="page_count"/></span></div>
                                 <div id="w_visitor_kanban_actions"></div>
                             </div>
                         </div>
@@ -92,7 +115,10 @@
         <field name="model">website.visitor</field>
         <field name="arch" type="xml">
             <form string="Website Visitor" create="0">
-                <header></header>
+                <header>
+                    <button name="action_send_mail" type="object" class="btn btn-primary"
+                            attrs="{'invisible': [('email', '=', False)]}" string="Send Email"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button o_stat_button_info" attrs="{'invisible': [('is_connected', '=', False)]}">
@@ -115,17 +141,18 @@
                     <div class="float-right" attrs="{'invisible': [('country_id', '=', False)]}"><field name="country_flag" widget="image" options='{"size": [32, 32]}'/></div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Visitor"/>
-                        <h1><field name="name"/></h1>
+                        <h1><field name="display_name"/></h1>
                     </div>
                     <group id="general_info">
                         <group string="Visitor Informations">
                             <field name="is_connected" invisible="1"/>
                             <field name="user_partner_id" attrs="{'invisible': [('user_partner_id', '=', False)]}"/>
+                            <field name="email"/>
+                            <field name="mobile"/>
                             <field name="country_id" attrs="{'invisible': [('country_id', '=', False)]}"/>
                             <field name="lang_id"/>
-
                         </group>
-                        <group string="Visits">
+                        <group id="visits" string="Visits">
                             <field name="create_date"/>
                             <field name="last_connection_datetime"/>
                             <field name="page_ids" widget="many2many_tags"/>
@@ -140,16 +167,27 @@
         <field name="name">website.visitor.view.tree</field>
         <field name="model">website.visitor</field>
         <field name="arch" type="xml">
-            <tree string="Web Visitors" create="0">
+            <tree string="Web Visitors" create="0" decoration-success="is_connected" decoration-danger="not is_connected">
                 <!--TODO DBE : Handle no_label in treeview-->
                 <field name="country_flag" widget="image" options='{"size": [20, 20]}' string=" "/>
-                <field name="name"/>
-                <field name="time_since_last_action"/>
+                <field name="display_name"/>
+                <field name="create_date"/>
+                <field name="last_connection_datetime"/>
                 <field name="lang_id"/>
                 <field name="visit_count"/>
                 <field name="page_ids" widget="many2many_tags"/>
                 <field name="is_connected" invisible="1"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_graph" model="ir.ui.view">
+        <field name="name">website.visitor.view.graph</field>
+        <field name="model">website.visitor</field>
+        <field name="arch" type="xml">
+            <graph string="Visitors last connection">
+                <field name="visit_count"/>
+            </graph>
         </field>
     </record>
 
@@ -178,12 +216,22 @@
         </field>
     </record>
 
+    <record id="website_visitor_view_graph" model="ir.ui.view">
+        <field name="name">website.visitor.view.graph</field>
+        <field name="model">website.visitor</field>
+        <field name="arch" type="xml">
+            <graph string="Visitors">
+                <field name="create_date" type="row"/>
+            </graph>
+        </field>
+    </record>
+
     <record id="website_visitors_action" model="ir.actions.act_window">
         <field name="name">Visitors</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">website.visitor</field>
         <field name="context">{'search_default_is_connected':1}</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">tree,form,kanban,graph</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Wait for visitors to come to your website to see their history.
@@ -191,9 +239,57 @@
         </field>
     </record>
 
+    <record id="website_visitor_track_view_tree" model="ir.ui.view">
+        <field name="name">website.track.view.tree</field>
+        <field name="model">website.track</field>
+        <field name="arch" type="xml">
+            <tree string="Visitor Views History" create="0" edit="0">
+                <field name="visitor_id"/>
+                <field name="page_id"/>
+                <field name="url"/>
+                <field name="visit_datetime"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="website_visitor_track_view_graph" model="ir.ui.view">
+        <field name="name">website.track.view.graph</field>
+        <field name="model">website.track</field>
+        <field name="arch" type="xml">
+            <graph string="Visitor Views">
+                <field name="url"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_action" model="ir.actions.act_window">
+        <field name="name">Views</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">website.track</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'search_default_type_url':1}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('website_visitor_track_view_tree')}),
+            (0, 0, {'view_mode': 'graph', 'view_id': ref('website_visitor_track_view_graph')}),
+        ]"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Wait for visitors to come to your website to see the pages they viewed.
+          </p>
+        </field>
+    </record>
+
     <menuitem id="website_visitor_menu"
         name="Visitors"
         sequence="80"
-        parent="website.menu_website_configuration"
+        parent="website.menu_website_configuration"/>
+
+    <menuitem id="menu_visitor_sub_menu" name="Visitors"
+        sequence="1"
+        parent="website_visitor_menu"
         action="website.website_visitors_action"/>
+    <menuitem id="menu_visitor_view_menu" name="Views"
+        sequence="2"
+        parent="website_visitor_menu"
+        action="website.website_visitor_view_action"/>
 </data></odoo>

@@ -75,7 +75,6 @@ bus.add_signal_receiver(cups_notification_handler, signal_name="PrinterStateChan
 
 class PrinterDriver(Driver):
     connection_type = 'printer'
-    status = {'status': "disconnected", 'printers': [], 'messages': []}
 
     def __init__(self, device):
         super(PrinterDriver, self).__init__(device)
@@ -88,8 +87,7 @@ class PrinterDriver(Driver):
             'reason': None,
         }
         self.send_status()
-        if 'direct' in self._device_connection or helpers.get_odoo_server_url():
-            self.add_connected_printer()
+        if 'direct' in self._device_connection:
             self.print_status()
 
     @classmethod
@@ -137,21 +135,12 @@ class PrinterDriver(Driver):
 
     @classmethod
     def get_status(cls):
-        return cls.status
+        status = 'connected' if any(iot_devices[d].device_type == "printer" and iot_devices[d].device_connection == 'direct' for d in iot_devices) else 'disconnected'
+        return {'status': status, 'messages': ''}
 
     @property
     def device_identifier(self):
         return self.dev['identifier']
-
-    def add_connected_printer(self):
-        PrinterDriver.status['status'] = "connected"
-        PrinterDriver.status['printers'].append(self.device_identifier)
-
-    def remove_connected_printer(self):
-        if self.device_identifier in PrinterDriver.status['printers']:
-            PrinterDriver.status['printers'].remove(self.device_identifier)
-            if not PrinterDriver.status['printers']:
-                PrinterDriver.status['status'] = "disconnected"
 
     def action(self, data):
         if data.get('action') == 'cashbox':
@@ -162,7 +151,6 @@ class PrinterDriver(Driver):
             self.print_raw(b64decode(data['document']))
 
     def disconnect(self):
-        self.remove_connected_printer()
         self.update_status('disconnected', 'Printer was disconnected')
         super(PrinterDriver, self).disconnect()
 

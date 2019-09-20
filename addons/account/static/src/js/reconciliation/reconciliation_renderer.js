@@ -219,6 +219,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'click .accounting_view tfoot': '_onChangeTab',
         'click': '_onTogglePanel',
         'click .o_field_widget': '_onStopPropagation',
+        'keydown .o_input': '_onStopPropagation',
         'click .o_notebook li a': '_onChangeTab',
         'click .cell': '_onEditAmount',
         'change input.filter': '_onFilterChange',
@@ -241,39 +242,18 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
     _onKeydown: function (ev) {
         switch (ev.which) {
-            case $.ui.keyCode.TAB:
-                var event = this.trigger_up('navigation_move', {
-                    direction: ev.shiftKey ? 'previous' : 'next',
-                    handle: this.handle,
-                });
-                if (event.is_stopped()) {
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                }
-                break;
             case $.ui.keyCode.ENTER:
-                this.trigger_up('navigation_move', {direction: 'next_line', handle: this.handle});
-                break;
-            case $.ui.keyCode.ESCAPE:
-                this.trigger_up('navigation_move', {direction: 'cancel', handle: this.handle, originalEvent: ev});
+                this.trigger_up('navigation_move', {direction: 'validate', handle: this.handle});
                 break;
             case $.ui.keyCode.UP:
                 ev.stopPropagation();
                 ev.preventDefault();
                 this.trigger_up('navigation_move', {direction: 'up', handle: this.handle});
                 break;
-            case $.ui.keyCode.RIGHT:
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'right', handle: this.handle});
-                break;
             case $.ui.keyCode.DOWN:
                 ev.stopPropagation();
                 ev.preventDefault();
                 this.trigger_up('navigation_move', {direction: 'down', handle: this.handle});
-                break;
-            case $.ui.keyCode.LEFT:
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'left', handle: this.handle});
                 break;
         }
     },
@@ -477,12 +457,6 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             });
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
-
-        if (this.$el.is(':focus-within')) {
-            this.$('caption .o_buttons button:not(:disabled):visible').attr('accesskey', 'V');
-        } else {
-            this.$('caption .o_buttons button').attr('accesskey', '');
-        }
     },
 
     updatePartialAmount: function(line_id, amount) {
@@ -893,40 +867,19 @@ var ManualLineRenderer = LineRenderer.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            var defs = [];
-            var def;
-            if (self._initialState.partner_id) {
-                def = self._makePartnerRecord(self._initialState.partner_id, self._initialState.partner_name).then(function (recordID) {
-                    self.fields.partner_id = new relational_fields.FieldMany2One(self,
-                        'partner_id',
-                        self.model.get(recordID),
-                        {mode: 'readonly'}
-                    );
-                });
-                defs.push(def);
-            } else {
-                def = self.model.makeRecord('account.move.line', [{
-                    relation: 'account.account',
-                    type: 'many2one',
-                    name: 'account_id',
-                    value: [self._initialState.account_id.id, self._initialState.account_id.display_name],
-                }]).then(function (recordID) {
-                    self.fields.title_account_id = new relational_fields.FieldMany2One(self,
-                        'account_id',
-                        self.model.get(recordID),
-                        {mode: 'readonly'}
-                    );
-                });
-                defs.push(def);
-            }
-
-            return Promise.all(defs).then(function () {
-                if (!self.fields.title_account_id) {
-                    return self.fields.partner_id.prependTo(self.$('.accounting_view thead td:eq(0) span:first'));
-                } else {
-                    self.fields.partner_id.destroy();
-                    return self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(0) span:first'));
-                }
+            return self.model.makeRecord('account.move.line', [{
+                relation: 'account.account',
+                type: 'many2one',
+                name: 'account_id',
+                value: [self._initialState.account_id.id, self._initialState.account_id.display_name],
+            }]).then(function (recordID) {
+                self.fields.title_account_id = new relational_fields.FieldMany2One(self,
+                    'account_id',
+                    self.model.get(recordID),
+                    {mode: 'readonly'}
+                );
+            }).then(function () {
+                return self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(0) span:first'));
             });
         });
     },

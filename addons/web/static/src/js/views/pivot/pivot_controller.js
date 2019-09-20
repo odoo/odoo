@@ -13,7 +13,6 @@ odoo.define('web.PivotController', function (require) {
  */
 
 var AbstractController = require('web.AbstractController');
-var config = require('web.config');
 var core = require('web.core');
 var framework = require('web.framework');
 var session = require('web.session');
@@ -115,16 +114,6 @@ var PivotController = AbstractController.extend({
             this._updateButtons();
         }
     },
-    /**
-     * @override
-     * @param {Object} params
-    */
-    update: function (params) {
-        if (config.device.isMobile && params.context) {
-            params.context.pivot_column_groupby = [];
-        }
-        return this._super.apply(this, arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -218,12 +207,7 @@ var PivotController = AbstractController.extend({
                          .toggleClass('selected', isSelected);
         });
         var noDataDisplayed = !state.hasData || !state.measures.length;
-        var $flipButton = this.$buttons.find('.o_pivot_flip_button');
-        if (config.device.isMobile) {
-            $flipButton.toggleClass('o_hidden', true);
-        } else {
-            $flipButton.prop('disabled', noDataDisplayed);
-        }
+        this.$buttons.find('.o_pivot_flip_button').prop('disabled', noDataDisplayed);
         this.$buttons.find('.o_pivot_expand_button').prop('disabled', noDataDisplayed);
         this.$buttons.find('.o_pivot_download').prop('disabled', noDataDisplayed);
     },

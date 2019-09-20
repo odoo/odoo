@@ -74,17 +74,20 @@
 
     <t t-name="ProxyStatusWidget">
         <div class="oe_status js_proxy">
-            <span class='js_msg oe_orange oe_hidden'></span>
-            <div class="js_connected oe_icon oe_green">
+            <div class="js_connected oe_green">
+                <span class="js_msg oe_hidden"></span>
                 <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Connected" title="Proxy Connected"></i>
             </div>
-            <div class="js_connecting oe_icon oe_hidden">
+            <div class="js_connecting oe_hidden">
+                <span class="js_msg oe_hidden"></span>
                 <i class='fa fa-fw fa-spin fa-spinner' role="img" aria-label="Connecting to Proxy" title="Connecting to Proxy"></i>
             </div>
-            <div class="js_warning oe_icon oe_orange oe_hidden">
+            <div class="js_warning oe_orange oe_hidden">
+                <span class="js_msg oe_hidden"></span>
                 <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Warning" title="Proxy Warning"></i>
             </div>
-            <div class="js_disconnected oe_icon oe_red oe_hidden">
+            <div class="js_disconnected oe_red oe_hidden">
+                <span class="js_msg oe_hidden"></span>
                 <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Disconnected" title="Proxy Disconnected"></i>
             </div>
         </div>
@@ -360,7 +363,7 @@
                     <i class='fa fa-camera' role="img" aria-label="Picture" title="Picture"></i>
                 </t>
                 <t t-if='partner.id'>
-                    <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner"/>
+                    <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner" style="width: 64px; height: 64px; object-fit: cover;"/>
                 </t>
                 <input type='file' class='image-uploader'></input>
             </div>
@@ -442,7 +445,7 @@
     <t t-name="ClientDetails">
         <section class='client-details'>
             <div class='client-picture'>
-                <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner logo"/>
+                <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner logo" style="width: 64px; height: 64px; object-fit: cover;"/>
             </div>
             <div class='client-name'><t t-esc='partner.name' /></div>
             <div class='edit-buttons'>
@@ -933,7 +936,7 @@
                         <t t-call="OrderReceiptWrappedProductNameLines"/>
                         <t t-if="line.display_discount_policy == 'without_discount' &amp;&amp; line.price != line.price_lst">
                             <div class="pos-receipt-left-padding">
-                                <t t-esc="widget.format_currency_no_symbol(line.price_lst)" /> 
+                                <t t-esc="widget.format_currency_no_symbol(line.price_lst)" />
                                 ->
                                 <t t-esc="widget.format_currency_no_symbol(line.price)" />
                             </div>
@@ -1458,7 +1461,7 @@
                         </em>
                         <t t-esc="line.get_unit().name" />
                         at
-                        <t t-if="line.display_discount_policy() == 'without_discount' &amp;&amp; 
+                        <t t-if="line.display_discount_policy() == 'without_discount' &amp;&amp;
                             line.get_unit_display_price() != line.get_lst_price()">
                             <s>
                                 <t t-esc="widget.format_currency(line.get_lst_price(),'Product Price')" />
@@ -1733,7 +1736,6 @@
         </div>
     </t>
 
-<!-- This is a duplicate of xml_id = point_of_sale.extra_head . We could have told models.js to do an extra rpc call for this-->
     <t t-name="CustomerFacingDisplayHead">
         <div class="resources">
             <base t-att-href="origin"/>

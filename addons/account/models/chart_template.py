@@ -238,7 +238,7 @@ class AccountChartTemplate(models.Model):
             })
 
         # Set the transfer account on the company
-        company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[0]
+        company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[:1]
 
         # Create Bank journals
         self._create_bank_journals(company, acc_template_ref)
@@ -249,6 +249,12 @@ class AccountChartTemplate(models.Model):
         # set the default taxes on the company
         company.account_sale_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company.id)], limit=1).id
         company.account_purchase_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company.id)], limit=1).id
+
+        # set default taxes to income/expense accounts
+        if company.account_sale_tax_id:
+            self.env['account.account'].browse(acc_template_ref.values()).filtered(lambda x: x.user_type_id.internal_group == 'income' and x != company.income_currency_exchange_account_id).tax_ids = company.account_sale_tax_id
+        if company.account_purchase_tax_id:
+            self.env['account.account'].browse(acc_template_ref.values()).filtered(lambda x: x.user_type_id.internal_group == 'expense' and x != company.expense_currency_exchange_account_id).tax_ids = company.account_purchase_tax_id
         return {}
 
     @api.model
@@ -259,7 +265,7 @@ class AccountChartTemplate(models.Model):
         """
         model_to_check = ['account.move', 'account.payment', 'account.bank.statement']
         for model in model_to_check:
-            if len(self.env[model].search([('company_id', '=', company_id.id)])) > 0:
+            if self.env[model].sudo().search([('company_id', '=', company_id.id)], limit=1):
                 return True
         return False
 
@@ -649,15 +655,7 @@ class AccountChartTemplate(models.Model):
         account_tmpl_obj = self.env['account.account.template']
         acc_template = account_tmpl_obj.search([('nocreate', '!=', True), ('chart_template_id', '=', self.id)], order='id')
         template_vals = []
-        all_parents = self._get_chart_parent_ids()
-        sale_tax = self.env['account.tax.template'].search([('type_tax_use', '=', 'sale'), ('chart_template_id', 'in', all_parents)], limit=1)
-        purchase_tax = self.env['account.tax.template'].search([('type_tax_use', '=', 'purchase'), ('chart_template_id', 'in', all_parents)], limit=1)
         for account_template in acc_template:
-            # Adding a tax by default on each income or expense account, if they are not used for exchange difference.
-            if account_template.user_type_id.internal_group == 'income' and account_template != self.income_currency_exchange_account_id:
-                account_template.tax_ids = sale_tax
-            elif account_template.user_type_id.internal_group == 'expense' and account_template != self.expense_currency_exchange_account_id:
-                account_template.tax_ids = purchase_tax
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits:
