@@ -167,9 +167,9 @@ class Channel(models.Model):
     karma_review = fields.Integer('Add Review', default=10, help="Karma needed to add a review on the course")
     karma_slide_comment = fields.Integer('Add Comment', default=3, help="Karma needed to add a comment on a slide of this course")
     karma_slide_vote = fields.Integer('Vote', default=3, help="Karma needed to like/dislike a slide of this course.")
-    can_review = fields.Boolean('Can Review', compute='_compute_action_rights')
-    can_comment = fields.Boolean('Can Comment', compute='_compute_action_rights')
-    can_vote = fields.Boolean('Can Vote', compute='_compute_action_rights')
+    can_review = fields.Boolean('Can Review', compute='_compute_action_rights', compute_sudo=False)
+    can_comment = fields.Boolean('Can Comment', compute='_compute_action_rights', compute_sudo=False)
+    can_vote = fields.Boolean('Can Vote', compute='_compute_action_rights', compute_sudo=False)
 
     @api.depends('slide_ids.is_published')
     def _compute_slide_last_update(self):
