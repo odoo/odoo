@@ -211,7 +211,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             .data('combination');
 
         if (combination) {
-            return JSON.parse(combination);
+            return combination;
         }
         return VariantMixin.getSelectedVariantValues.apply(this, arguments);
     },
