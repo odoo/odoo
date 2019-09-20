@@ -357,3 +357,17 @@ class FetchmailServer(models.Model):
             if descrizione:
                 output_str += "<li>Errore %s: %s</li>" % (element[0].text, descrizione)
         return output_str + "</ul>"
+
+class IrMailServer(models.Model):
+    _name = "ir.mail_server"
+    _inherit = "ir.mail_server"
+
+    def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
+                attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
+                body_alternative=None, subtype_alternative='plain'):
+
+        if self.env.context.get('wo_return_path') and headers:
+            headers.pop('Return-Path', False)
+        return super(IrMailServer, self).build_email(email_from, email_to, subject, body, email_cc, email_bcc, reply_to,
+                attachments, message_id, references, object_id, subtype, headers,
+                body_alternative, subtype_alternative)
