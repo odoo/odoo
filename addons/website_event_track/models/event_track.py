@@ -111,8 +111,11 @@ class Track(models.Model):
     @api.depends('date', 'duration')
     def _compute_end_date(self):
         for track in self:
-            delta = timedelta(minutes=60 * track.duration)
-            track.date_end = track.date + delta
+            if track.date:
+                delta = timedelta(minutes=60 * track.duration)
+                track.date_end = track.date + delta
+            else:
+                track.date_end = False
 
     @api.model
     def create(self, vals):
