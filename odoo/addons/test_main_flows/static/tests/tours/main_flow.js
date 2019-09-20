@@ -702,6 +702,12 @@ tour.register('main_flow_tour', {
     position: "right",
     run: "text 867656544",
 }, {
+    edition: "enterprise",
+    trigger: ".o_field_widget[name=new_journal_name]",
+    content: _t("Enter a journal name"),
+    position: "right",
+    run: "text AwesomeBank",
+}, {
     trigger: ".modal-footer .btn-primary",
     content: _t('Save'),
     position: 'bottom',

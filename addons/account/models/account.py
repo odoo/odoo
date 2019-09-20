@@ -1090,7 +1090,7 @@ class AccountJournal(models.Model):
         visible on dashboard if no bank statement source has been defined yet
         """
         # We simply call the setup bar function.
-        return self.env['res.company'].setting_init_bank_account_action()
+        return self.env['res.company'].with_context(journal_id=self.id).setting_init_bank_account_action()
 
     def create_invoice_from_attachment(self, attachment_ids=[]):
         ''' Create the invoices from files.

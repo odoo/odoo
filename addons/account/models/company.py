@@ -270,6 +270,7 @@ class ResCompany(models.Model):
                 'target': 'new',
                 'view_mode': 'form',
                 'views': [[view_id, 'form']],
+                'context': self.env.context,
         }
 
     @api.model
