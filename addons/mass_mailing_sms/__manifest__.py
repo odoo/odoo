@@ -22,6 +22,7 @@
         'views/mailing_mailing_views.xml',
         'views/link_tracker_views.xml',
         'views/mass_mailing_sms_templates_portal.xml',
+        'views/utm_campaign_views.xml',
         'report/mailing_trace_report_views.xml',
         'wizard/sms_composer_views.xml',
         'wizard/mailing_sms_test_views.xml',
