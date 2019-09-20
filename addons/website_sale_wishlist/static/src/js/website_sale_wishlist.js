@@ -69,23 +69,6 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     //--------------------------------------------------------------------------
 
     /**
-     * Gets the element in the navbar currently displayed.
-     * Depending on the scroll position, it could either be the one in the main
-     * top bar or the one in the affixed navbar.
-     *
-     * @private
-     * @param {string} selector
-     * @returns {jQuery}
-     */
-    _getNavBarButton: function (selector) {
-        var $affixedHeaderButton = $('header.affixed ' + selector);
-        if ($affixedHeaderButton.length) {
-            return $affixedHeaderButton;
-        } else {
-            return $('header ' + selector).first();
-        }
-    },
-    /**
      * @private
      */
     _addNewProducts: function ($el) {
@@ -122,7 +105,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                         product_id: productId,
                     },
                 }).then(function () {
-                    var $navButton = self._getNavBarButton('.o_wsale_my_wish');
+                    var $navButton = wSaleUtils.getNavBarButton('.o_wsale_my_wish');
                     self.wishlistProductIDs.push(productId);
                     self._updateWishlistView();
                     wSaleUtils.animateClone($navButton, $el.closest('form'), 25, 40);
@@ -174,7 +157,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _addOrMoveWish: function (e) {
-        var $navButton = this._getNavBarButton('.o_wsale_my_cart');
+        var $navButton = wSaleUtils.getNavBarButton('.o_wsale_my_cart');
         var tr = $(e.currentTarget).parents('tr');
         var product = tr.data('product-id');
         $('.o_wsale_my_cart').removeClass('d-none');

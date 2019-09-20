@@ -4,34 +4,66 @@
     'name': 'Argentinian Accounting',
     'version': '13.0.1.0.0',
     'description': """
-Argentinian Accounting
-======================
+Functional
+----------
 
-* Activate ARS currency.
-* Create new model AFIP Responsibility to identify the partners fiscal responsibility.
-* Add the Identification Types valid in Argentina.
-* Define Argentinian chart of accounts:
+This module add accounting features for the Argentinian localization, which represent the minimal configuration needed for a company  to operate in Argentina and under the AFIP (Administración Federal de Ingresos Públicos) regulations and guidelines.
+
+Follow the next configuration steps for Production:
+
+1. Go to your company and configure your VAT number and AFIP Responsibility Type
+2. Go to Accounting / Settings and set the Chart of Account that you will like to use.
+3. Create your Sale journals taking into account AFIP POS info.
+
+Demo data for testing:
+
+* 3 companies were created, one for each AFIP responsibility type with the respective Chart of Account installed. Choose the company that fix you in order to make tests:
+
+  * (AR) Responsable Inscripto
+  * (AR) Exento
+  * (AR) Monotributo
+
+* Journal sales configured to Pre printed and Expo invoices in all companies
+* Invoices and other documents examples already validated in “(AR) Responsable Inscripto” company
+* Partners example for the different responsibility types:
+
+  * ADHOC (IVA Responsable Inscripto)
+  * Consejo Municipal Rosario (IVA Sujeto Exento)
+  * Gritti (Monotributo)
+  * Cerro Castor. IVA Liberado in Zona Franca
+  * Expresso (Cliente del Exterior)
+  * Odoo (Proveedor del Exterior)
+
+Highlights:
+
+* Chart of account will not be automatically installed, each CoA Template depends on the AFIP Responsibility of the company, you will need to install the CoA for your needs.
+* No sales journals will be generated when installing a CoA, you will need to configure your journals manually.
+* The Document type will be properly pre selected when creating an invoice depending on the fiscal responsibility of the issuer and receiver of the document and the related journal.
+* A CBU account type has been added and also CBU Validation
+
+
+Technical
+---------
+
+This module adds both models and fields that will be eventually used for the electronic invoice module. Here is a summary of the main features:
+
+Master Data:
+
+* Chart of Account: one for each AFIP responsibility that is related to a legal entity:
 
   * Responsable Inscripto (RI)
   * Exento (EX)
   * Monotributo (Mono)
 
-* Define Argentinian Taxes
-* Define Fiscal Positions
-* Define AFIP Legal Documents
-* Add AFIP Codes for models:
-
-    * Identification Type
-    * Currency
-    * Country (used to identify legal entities and natural persons of foreign countries)
-    * Product Unit of Measure
-    * Tax Group
-
-Follow the next Settings steps
-
-1. Go to your company and configure your VAT number and AFIP Responsibility
-2. Go to Invoicing / Settings and set the Chart of Account you will like to use.
-3. Create your sale journals taking into account AFIP Point of Sales info if needed.
+* Argentinian Taxes and Account Tax Groups (VAT taxes with the existing aliquots and other types)
+* AFIP Responsibility Types
+* Fiscal Positions (in order to map taxes)
+* Legal Documents Types in Argentina
+* Identification Types valid in Argentina.
+* Country AFIP codes and Country VAT codes for legal entities, natural persons and others
+* Currency AFIP codes
+* Unit of measures AFIP codes
+* Partners: Consumidor Final and AFIP
 """,
     'author': 'ADHOC SA',
     'category': 'Localization',

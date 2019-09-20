@@ -5,11 +5,9 @@
 # Translators:
 # bower Guo <124358678@qq.com>, 2019
 # snow wang <147156565@qq.com>, 2019
-# Gary Wei <Gary.wei@elico-corp.com>, 2019
 # Joray <13637815@qq.com>, 2019
 # roye w <159820@qq.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
-# Martin Trigaux, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
@@ -23,14 +21,17 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
+# Gary Wei <Gary.wei@elico-corp.com>, 2019
+# ChinaMaker <liuct@chinamaker.net>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-13 11:27+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Jeanphy <hzh0292@qq.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -307,9 +308,19 @@ msgid "ABC"
 msgstr "ABC"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Accept customer tips or convert their change to a tip"
+msgstr "接受客户提示，或将其更改转换为提示"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Accept payments with a credit card reader"
-msgstr "通过信用卡读卡器收款"
+msgid "Accept payments with a Vantiv payment terminal"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Accept payments with an Adyen payment terminal"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
@@ -415,6 +426,16 @@ msgstr "管理员"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Advanced Pricelists"
+msgstr "高级价格表"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_adyen
+msgid "Adyen Payment Terminal"
 msgstr ""
 
 #. module: point_of_sale
@@ -671,11 +692,19 @@ msgstr "找零"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 #, python-format
 msgid "Cancel"
 msgstr "取消日期"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Cancel Payment Request"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__cancel
@@ -1034,6 +1063,13 @@ msgstr "正连接到PosBox"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Connection error"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Connection to IoT Box failed"
@@ -1124,11 +1160,6 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__create_date
 msgid "Created on"
 msgstr "创建时间"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Credit Card Reader"
-msgstr "信用卡读卡器"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1546,6 +1577,7 @@ msgstr "电子秤"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Email"
 msgstr "EMail"
@@ -1607,6 +1639,13 @@ msgstr "会话结束"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end_real
 msgid "Ending Balance"
 msgstr "结束余额"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "Error"
+msgstr "错误"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_category.py:0
@@ -1690,6 +1729,20 @@ msgid "For imprecise industrial touchscreens."
 msgstr "对于不精确的工业用触摸屏。"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Force Done"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Force done"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Generation of your order references"
 msgstr "订单参考的生成"
@@ -1761,6 +1814,11 @@ msgid "Header & Footer"
 msgstr "页眉和页脚"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
+msgid "Hide Use Payment Terminal"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
@@ -1808,12 +1866,8 @@ msgid "Icon to indicate an exception activity."
 msgstr "表示一个例外活动的图标。"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__message_unread
-msgid "If checked new messages require your attention."
-msgstr "查看是否有需要留意的新消息。"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "确认后, 出现提示消息."
 
@@ -1882,7 +1936,6 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_mercury
 msgid "Integrated Card Payments"
 msgstr "集成卡支付"
 
@@ -2391,8 +2444,8 @@ msgstr "打印数"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error_counter
-msgid "Number of error"
-msgstr "错误个数"
+msgid "Number of errors"
+msgstr "错误数"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
@@ -2754,14 +2807,46 @@ msgid "Payment Reference"
 msgstr "付款参考"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Payment Successful"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_payment_terminal
 msgid "Payment Terminal"
 msgstr "付款终端"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Payment Terminals"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
+msgid "Payment Transaction ID"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Payment methods available"
 msgstr "可用支付方式"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Payment request pending"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Payment reversed"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -2770,7 +2855,6 @@ msgstr "可用支付方式"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_payment
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_tree
@@ -3426,6 +3510,11 @@ msgid "Receipt Printer"
 msgstr "票据打印机"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
+msgid "Record payments with a terminal on this journal."
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Record transactions in foreign currencies"
 msgstr "用外币记录交易"
@@ -3463,6 +3552,13 @@ msgstr "重新打印小票"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
+msgid "Request sent"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
 msgid "Reset"
 msgstr "重置"
 
@@ -3494,6 +3590,13 @@ msgid "Resume"
 msgstr "重新开始"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Retry"
+msgstr "重试"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
@@ -3504,6 +3607,27 @@ msgstr "退返产品"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_return
 msgid "Returned"
 msgstr "退货"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Reversal request sent to terminal"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Reverse"
+msgstr "逆转"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Reverse Payment"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -3542,7 +3666,6 @@ msgstr "销售日记账"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #, python-format
 msgid "Save"
 msgstr "保存"
@@ -3619,6 +3742,26 @@ msgstr ""
 #, python-format
 msgid "Select pricelist"
 msgstr "选择价目表"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__selectable_categ_ids
+msgid "Selectable Categ"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Send"
+msgstr "发送"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Send Payment Request"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -3835,11 +3978,6 @@ msgid "Start Session"
 msgstr ""
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
-msgid "Start Today"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
 msgstr "从默认产品类别开始销售"
@@ -4043,6 +4181,13 @@ msgid "Taxes:"
 msgstr "税率："
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
+msgid ""
+"Technical field which is used to hide use_payment_terminal when no payment "
+"interfaces are installed."
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
@@ -4237,12 +4382,20 @@ msgid ""
 msgstr "会话打开时间过长，请考虑关闭。"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"The transactions are processed by Adyen. Set your Adyen credentials on the "
+"related payment method."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "The transactions are processed by Vantiv. Set your Vantiv credentials on the"
-" related payment journal."
-msgstr "交易由Vantiv处理。在相关的付款日记帐上设置您的Vantiv凭据。"
+" related payment method."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -4271,6 +4424,13 @@ msgstr "数据库中有不能保存的暂停作业，是否退出？"
 msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "There is already an electronic payment in progress."
 msgstr ""
 
 #. module: point_of_sale
@@ -4378,6 +4538,7 @@ msgstr "此操作将永久销毁来自本地存储的所有付费订单数据切
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "This product is used as reference on customer receipts."
 msgstr "本产品用于客户收据的参考。"
 
@@ -4426,10 +4587,12 @@ msgstr "提示"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Tip Product"
 msgstr "提示产品"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model:product.product,name:point_of_sale.product_product_tip
 #: model:product.template,name:point_of_sale.product_product_tip_product_template
 msgid "Tips"
@@ -4531,9 +4694,21 @@ msgid "Total:"
 msgstr "总计："
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Transaction cancelled"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
 msgid "Type"
 msgstr "类型"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_type
+msgid "Type of card used"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_decoration
@@ -4619,6 +4794,11 @@ msgid "Use Existing Lots/Serial Numbers"
 msgstr "使用已有批次/序列号码"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__use_payment_terminal
+msgid "Use a Payment Terminal"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__barcode
 msgid "Use a barcode to identify this contact from the Point of Sale."
 msgstr "使用条形码从POS识别此联系人。"
@@ -4690,9 +4870,26 @@ msgid "Validate Closing & Post Entries"
 msgstr "确认关闭并登录分录"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Vantiv (US & Canada)"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_mercury
+msgid "Vantiv Payment Terminal"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_vkeyboard
 msgid "Virtual KeyBoard"
 msgstr "虚拟键盘"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid "Waiting for card"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse

@@ -16,14 +16,15 @@
 # Abdullah Onur Uğur <aonurugur@outlook.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2019
+# Saban Yildiz <sabany@projetgrup.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-13 11:27+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: ANIL TAN SAĞIR <anils@projetgrup.com>, 2019\n"
+"Last-Translator: Saban Yildiz <sabany@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +58,7 @@ msgstr ""
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid ""
-"<b>Congratulations !</b> May I recommend you to setup an <a "
+"<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
 
@@ -412,6 +413,11 @@ msgstr ""
 #: model:ir.model,name:hr.model_hr_employee_base
 msgid "Basic Employee"
 msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__can_edit
+msgid "Can Edit"
+msgstr "Düzenleyebilir"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -983,16 +989,12 @@ msgid "Identification No"
 msgstr "Kimlik No"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department__message_unread
-#: model:ir.model.fields,help:hr.field_hr_employee__message_unread
-#: model:ir.model.fields,help:hr.field_hr_job__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_department__message_unread
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_employee__message_unread
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_job__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 
@@ -1325,6 +1327,7 @@ msgstr "Mevcut değil"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__note
 msgid "Note"
 msgstr "Not"
 
@@ -1355,8 +1358,8 @@ msgstr "Şu anda bu pozisyonda bulunan personel sayısı."
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
-msgid "Number of error"
-msgstr "Hata Sayısı"
+msgid "Number of errors"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee

@@ -1009,8 +1009,9 @@ var VideoWidget = MediaWidget.extend({
     /**
      * @constructor
      */
-    init: function (parent, media) {
+    init: function (parent, media, options) {
         this._super.apply(this, arguments);
+        this.isForBgVideo = !!options.isForBgVideo;
         this._onVideoCodeInput = _.debounce(this._onVideoCodeInput, 1000);
     },
     /**
@@ -1021,7 +1022,7 @@ var VideoWidget = MediaWidget.extend({
 
         if (this.media) {
             var $media = $(this.media);
-            var src = $media.data('oe-expression') || $media.data('src') || '';
+            var src = $media.data('oe-expression') || $media.data('src') || ($media.is('iframe') ? $media.attr('src') : '') || '';
             this.$('textarea#o_video_text').val(src);
 
             this.$('input#o_video_autoplay').prop('checked', src.indexOf('autoplay=1') >= 0);
@@ -1047,6 +1048,9 @@ var VideoWidget = MediaWidget.extend({
      */
     save: function () {
         this._updateVideo();
+        if (this.isForBgVideo) {
+            return Promise.resolve({bgVideoSrc: this.$content.attr('src')});
+        }
         if (this.$('.o_video_dialog_iframe').is('iframe')) {
             this.$media = $(
                 '<div class="media_iframe_video" data-oe-expression="' + this.$content.attr('src') + '">' +
@@ -1135,7 +1139,7 @@ var VideoWidget = MediaWidget.extend({
             $video.attr('src', vinMatch[0] + '/embed/simple');
             videoType = 'vin';
         } else if (vimMatch && vimMatch[3].length) {
-            $video.attr('src', '//player.vimeo.com/video/' + vimMatch[3] + autoplay);
+            $video.attr('src', '//player.vimeo.com/video/' + vimMatch[3] + autoplay.replace('mute', 'muted'));
             videoType = 'vim';
         } else if (dmMatch && dmMatch[2].length) {
             var justId = dmMatch[2].replace('video/', '');
@@ -1200,13 +1204,13 @@ var VideoWidget = MediaWidget.extend({
         var url = embedMatch ? embedMatch[1] : code;
 
         var query = this._createVideoNode(url, {
-            autoplay: this.$('input#o_video_autoplay').is(':checked'),
-            hide_controls: this.$('input#o_video_hide_controls').is(':checked'),
-            loop: this.$('input#o_video_loop').is(':checked'),
-            hide_fullscreen: this.$('input#o_video_hide_fullscreen').is(':checked'),
-            hide_yt_logo: this.$('input#o_video_hide_yt_logo').is(':checked'),
-            hide_dm_logo: this.$('input#o_video_hide_dm_logo').is(':checked'),
-            hide_dm_share: this.$('input#o_video_hide_dm_share').is(':checked'),
+            'autoplay': this.isForBgVideo || this.$('input#o_video_autoplay').is(':checked'),
+            'hide_controls': this.isForBgVideo || this.$('input#o_video_hide_controls').is(':checked'),
+            'loop': this.isForBgVideo || this.$('input#o_video_loop').is(':checked'),
+            'hide_fullscreen': this.isForBgVideo || this.$('input#o_video_hide_fullscreen').is(':checked'),
+            'hide_yt_logo': this.isForBgVideo || this.$('input#o_video_hide_yt_logo').is(':checked'),
+            'hide_dm_logo': this.isForBgVideo || this.$('input#o_video_hide_dm_logo').is(':checked'),
+            'hide_dm_share': this.isForBgVideo || this.$('input#o_video_hide_dm_share').is(':checked'),
         });
 
         var $optBox = this.$('.o_video_dialog_options');
@@ -1222,8 +1226,9 @@ var VideoWidget = MediaWidget.extend({
         // Individually show / hide options base on the video provider
         $optBox.find('div.o_' + query.type + '_option').removeClass('d-none');
 
-        // Hide the entire options box if no options are available
-        $optBox.toggleClass('d-none', $optBox.find('div:not(.d-none)').length === 0);
+        // Hide the entire options box if no options are available or if the
+        // dialog is opened for a background-video
+        $optBox.toggleClass('d-none', this.isForBgVideo || $optBox.find('div:not(.d-none)').length === 0);
 
         if (query.type === 'yt') {
             // Youtube only: If 'hide controls' is checked, hide 'fullscreen'

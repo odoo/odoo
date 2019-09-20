@@ -54,13 +54,21 @@ class AccountMove(models.Model):
         '''
         amount_total_import = None
 
+        default_type = False
         if self._context.get('default_journal_id'):
             journal = self.env['account.journal'].browse(self.env.context['default_journal_id'])
             default_type = 'out_invoice' if journal.type == 'sale' else 'in_invoice'
         elif self._context.get('default_type'):
             default_type = self._context['default_type']
-        else:
+        elif self.type in self.env['account.move'].get_invoice_types(include_receipts=True):
+            # in case an attachment is saved on a draft invoice previously created, we might
+            # have lost the default value in context but the type was already set
+            default_type = self.type
+
+        if not default_type:
             raise UserError(_("No information about the journal or the type of invoice is passed"))
+        if default_type == 'entry':
+            return
 
         # Total amount.
         elements = tree.xpath('//ram:GrandTotalAmount', namespaces=tree.nsmap)
@@ -74,6 +82,7 @@ class AccountMove(models.Model):
         elements = tree.xpath('//rsm:ExchangedDocument/ram:TypeCode', namespaces=tree.nsmap)
         type_code = elements[0].text
 
+        default_type.replace('_refund', '_invoice')
         if type_code == '381':
             default_type = 'out_refund' if default_type == 'out_invoice' else 'in_refund'
             refund_sign = -1
@@ -221,7 +230,10 @@ class AccountMove(models.Model):
         # /!\ 'default_res_id' in self._context is used to don't process attachment when using a form view.
         res = super(AccountMove, self).message_post(**kwargs)
 
-        if 'no_new_invoice' not in self.env.context and len(self) == 1 and self.state == 'draft':
+        if not self.env.context.get('no_new_invoice') and len(self) == 1 and self.state == 'draft' and (
+            self.env.context.get('default_type', self.type) in self.env['account.move'].get_invoice_types(include_receipts=True)
+            or self.env['account.journal'].browse(self.env.context.get('default_journal_id')).type in ('sale', 'purchase')
+        ):
             for attachment in self.env['ir.attachment'].browse(kwargs.get('attachment_ids', [])):
                 self._create_invoice_from_attachment(attachment)
         return res

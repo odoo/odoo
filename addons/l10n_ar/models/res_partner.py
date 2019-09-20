@@ -33,29 +33,34 @@ class ResPartner(models.Model):
 
     @api.depends('l10n_ar_vat')
     def _compute_l10n_ar_formatted_vat(self):
-        """ This will add some dash to the CUIT number in order to show in his natural format:
+        """ This will add some dash to the CUIT number (VAT AR) in order to show in his natural format:
         {person_category}-{number}-{validation_number} """
         recs_ar_vat = self.filtered('l10n_ar_vat')
         for rec in recs_ar_vat:
-            rec.l10n_ar_formatted_vat = stdnum.ar.cuit.format(rec.l10n_ar_vat)
+            try:
+                rec.l10n_ar_formatted_vat = stdnum.ar.cuit.format(rec.l10n_ar_vat)
+            except Exception as error:
+                rec.l10n_ar_formatted_vat = rec.l10n_ar_vat
+                _logger.log(25, "Argentinian VAT was not formatted: %s", repr(error))
         remaining = self - recs_ar_vat
         remaining.l10n_ar_formatted_vat = False
 
     @api.depends('vat', 'l10n_latam_identification_type_id')
     def _compute_l10n_ar_vat(self):
-        """ We add this computed field that returns cuit or nothing if this one is not set for the partner. This
-        Validation can be also done by calling ensure_vat() method that returns the cuit or error if this one is not
-        found """
+        """ We add this computed field that returns cuit (VAT AR) or nothing if this one is not set for the partner.
+        This Validation can be also done by calling ensure_vat() method that returns the cuit (VAT AR) or error if this
+        one is not found """
         recs_ar_vat = self.filtered(lambda x: x.l10n_latam_identification_type_id.l10n_ar_afip_code == '80')
-        recs_ar_vat.l10n_ar_vat = True
+        for rec in recs_ar_vat:
+            rec.l10n_ar_vat = rec.vat
         remaining = self - recs_ar_vat
         remaining.l10n_ar_vat = False
 
     @api.constrains('vat', 'l10n_latam_identification_type_id')
     def check_vat(self):
-        """ Since we validate more documents than the vat for Argentinian partners (CUIT, CUIL, DNI) we
+        """ Since we validate more documents than the vat for Argentinian partners (CUIT - VAT AR, CUIL, DNI) we
         extend this method in order to process it. """
-        # NOTE by the moment we include the CUIT (VAT) validation also here because we extend the messages
+        # NOTE by the moment we include the CUIT (VAT AR) validation also here because we extend the messages
         # errors to be more friendly to the user. In a future when Odoo improve the base_vat message errors
         # we can change this method and use the base_vat.check_vat_ar method.s
         l10n_ar_partners = self.filtered(lambda x: x.l10n_latam_identification_type_id.l10n_ar_afip_code)

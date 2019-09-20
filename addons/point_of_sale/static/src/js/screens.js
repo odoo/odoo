@@ -551,7 +551,9 @@ var OrderWidget = PosBaseWidget.extend({
                 selected_orderline.price_manually_set = true;
                 selected_orderline.set_unit_price(val);
             }
-            this.pos.send_current_order_to_customer_facing_display();
+            if (this.pos.config.iface_customer_facing_display) {
+                this.pos.send_current_order_to_customer_facing_display();
+            }
     	}
     },
     change_selected_order: function() {
@@ -1319,7 +1321,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
         }
     },
     partner_icon_url: function(id){
-        return '/web/image?model=res.partner&id='+id+'&field=image_64';
+        return '/web/image?model=res.partner&id='+id+'&field=image_128';
     },
 
     // ui handle for the 'edit selected customer' action
@@ -1755,7 +1757,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             var invoiced = self.pos.push_and_invoice_order(order);
             self.invoicing = true;
 
-            invoiced.fail(self._handleFailedPushForInvoice.bind(self, order, true)); // refresh
+            invoiced.catch(self._handleFailedPushForInvoice.bind(self, order, true)); // refresh
 
             invoiced.then(function(){
                 self.invoicing = false;

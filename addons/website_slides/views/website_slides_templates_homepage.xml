@@ -81,19 +81,24 @@
 
             <div class="container o_wslides_home_main">
                 <div class="row">
-                    <div t-if="is_public_user" class="col-lg-3 order-3 order-lg-2">
-                        <div class="row">
-                            <div class="col-12 col-md-7 col-lg-12">
-                                <t t-call="website_slides.slides_home_achievements_small"/>
-                            </div>
-                            <div class="col-12 col-md-5 col-lg-12 mt-5 mt-md-0">
-                                <div class="pl-md-5 pl-lg-0 mt-lg-4">
-                                    <t t-call="website_slides.slides_home_users_small"/>
+                    <t t-set="is_achievements_active" t-value="request.website.viewref('website_slides.toggle_latest_achievements').active"/>
+                    <t t-set="has_side_column" t-value="request.website.viewref('website_slides.toggle_leaderboard').active or is_achievements_active"/>
+                    <t t-if="is_public_user">
+                        <div t-if="has_side_column" class="col-lg-3 order-3 order-lg-2">
+                            <div class="row">
+                                <div class="col-12 col-md-7 col-lg-12">
+                                    <t t-call="website_slides.slides_home_achievements_small"/>
+                                </div>
+                                <div class="col-12 col-md-5 col-lg-12 mt-5 mt-md-0">
+                                    <div t-att-class="'pl-md-5 pl-lg-0 mt-lg-4' if is_achievements_active else 'pl-md-5 pl-lg-0'">
+                                        <t t-call="website_slides.slides_home_users_small"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </t>
                     <div t-else="" class="col-lg-3 order-lg-2">
+                        <t t-set="has_side_column" t-value="True"/>
                         <div class="o_wslides_home_aside_loggedin card p-3 p-lg-0 mb-4">
                             <div class="o_wslides_home_aside_title">
                                 <div class="d-flex align-items-center">
@@ -116,6 +121,9 @@
                                     <div class="col-12 col-sm-6 col-lg-12 d-flex align-items-center">
                                         <t t-call="website_slides.slides_home_user_achievements_small"/>
                                     </div>
+                                    <div class="col-12 col-md-7 col-lg-12 pl-md-5 pl-lg-0 mt-lg-4">
+                                        <t t-call="website_slides.slides_home_achievements_small"/>
+                                    </div>
                                     <div class="col-12 col-sm-6 col-lg-12 pl-md-5 pl-lg-0 mt-lg-4">
                                         <t t-call="website_slides.slides_home_users_small"/>
                                     </div>
@@ -123,7 +131,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-9 pr-lg-5 order-lg-1">
+                    <div t-att-class="'col-lg-9 pr-lg-5 order-lg-1' if has_side_column else 'col-lg pr-lg'">
                         <div class="o_wslides_home_content_section mb-3"
                             t-if="not channels_popular">
                             <p class="h2">No Course created yet.</p>
@@ -336,8 +344,13 @@
     </div>
 </template>
 
-<template id='slides_home_achievements_small' name="Latest Achievements">
-    <div class="o_wslides_home_aside">
+<template id='slides_home_achievements_small' name="Users">
+    <t class="o_wslides_home_aside">
+    </t>
+</template>
+
+<template id="toggle_latest_achievements" inherit_id="website_slides.slides_home_achievements_small" active="True" customize_show="True" name='Display Achievements'>
+    <xpath expr="//t[hasclass('o_wslides_home_aside')]" position="inside">
         <div class="row o_wslides_home_aside_title">
             <div class="col">
                 <h5 class="m-0">Latest achievements</h5>
@@ -354,7 +367,7 @@
             </t>
             <t t-else=""><p class="col mt8">No achievements currently :(</p></t>
         </div>
-    </div>
+    </xpath>
 </template>
 
 <template id='achievement_card' name="Achivement Card">
@@ -416,7 +429,7 @@
     <div class="o_wslides_home_aside">
         <div t-if="user.rank_id" class="d-flex align-items-center">
             <span class="font-weight-bold text-muted mr-2">Current rank:</span>
-            <img t-att-src="website.image_url(user.rank_id, 'image_64')" height="16" alt="" class="mr-1"/>
+            <img t-att-src="website.image_url(user.rank_id, 'image_128')" width="16" height="16" alt="" class="o_object_fit_cover mr-1"/>
             <a href="/profile/ranks_badges" t-field="user.rank_id"/>
         </div>
         <t t-set="next_rank_id" t-value="user._get_next_rank()"/>

@@ -326,10 +326,12 @@ var MockServer = Class.extend({
             if (field.type === "one2many" || field.type === "many2many") {
                 field.views = {};
                 _.each(node.childNodes, function (children) {
-                    relModel = field.relation;
-                    relFields = $.extend(true, {}, self.data[relModel].fields);
-                    field.views[children.tagName] = self._fieldsViewGet(children, relModel,
-                        relFields, _.extend({}, context, {base_model_name: model}));
+                    if (children.tagName) { // skip text nodes
+                        relModel = field.relation;
+                        relFields = $.extend(true, {}, self.data[relModel].fields);
+                        field.views[children.tagName] = self._fieldsViewGet(children, relModel,
+                            relFields, _.extend({}, context, {base_model_name: model}));
+                    }
                 });
             }
 

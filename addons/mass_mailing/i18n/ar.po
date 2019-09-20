@@ -9,29 +9,30 @@
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2019
 # Ali Alrehawi <alrehawi@hotmail.com>, 2019
 # Islam Eldeeb <islameldeb@gmail.com>, 2019
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Sadig Adam <sadig41@gmail.com>, 2019
 # Akram Alfusayal <akram_ma@hotmail.com>, 2019
 # amrnegm <amrnegm.01@gmail.com>, 2019
-# Martin Trigaux, 2019
 # hoxhe Aits <hoxhe0@gmail.com>, 2019
 # Ali zuaby <ali@zuaby.net>, 2019
-# Osoul <baruni@osoul.ly>, 2019
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2019
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2019
 # amal ahmed <amalalhashemy88@hotmail.com>, 2019
 # Khalid Alshashai <kalshashai@gmail.com>, 2019
 # Zuhair Hammadi <zuhair12@gmail.com>, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Martin Trigaux, 2019
+# Osoul <baruni@osoul.ly>, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019
+# Nisrine Tagri <nta@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-13 11:29+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019\n"
+"Last-Translator: Nisrine Tagri <nta@odoo.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,8 +153,8 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
-msgid "<i class=\"fa fa-eyedropper\"/>Background Color"
-msgstr "<i class=\"fa fa-eyedropper\"/>لون الخلفية"
+msgid "<i class=\"fa fa-eyedropper\"/> Background Color"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -220,6 +221,11 @@ msgstr ""
 msgid ""
 "<span name=\"ignored_text\">emails have been ignored and will not be "
 "sent.</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<span name=\"next_departure_text\">This mailing is scheduled for</span>"
 msgstr ""
 
 #. module: mass_mailing
@@ -294,6 +300,7 @@ msgstr "طوال اليوم"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_needaction
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_needaction
 msgid "Action Needed"
 msgstr "إجراء مطلوب"
 
@@ -302,6 +309,21 @@ msgstr "إجراء مطلوب"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__active
 msgid "Active"
 msgstr "نشط"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_ids
+msgid "Activities"
+msgstr "الأنشطة"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_state
+msgid "Activity State"
+msgstr "حالة النشاط"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__unique_ab_testing
@@ -392,6 +414,7 @@ msgstr "إرفاق ملف"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_attachment_count
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_attachment_count
 msgid "Attachment Count"
 msgstr "عدد المرفقات"
 
@@ -482,6 +505,12 @@ msgstr "وسوم الحملة"
 #: model:ir.ui.menu,name:mass_mailing.menu_email_campaigns
 msgid "Campaigns"
 msgstr "الحملات"
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
+msgid ""
+"Campaigns are the perfect tool to track results across multiple mailings."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -624,26 +653,25 @@ msgid "Create a Mass Mailing List"
 msgstr "إنشاء قائمة بريدية جماعية"
 
 #. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
-msgid ""
-"Create a campaign to structure mailing and get analysis from email status."
-msgstr "أنشئ حملة لهيكلة مراسلاتك ومتابعة تحليلها من خلال حالة البريد."
-
-#. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
-msgid "Create a contact in your address book"
-msgstr "إنشاء جهة اتصال في دفتر عناوينك"
-
-#. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
-msgid "Create a new UTM campaign"
+#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing_campaign
+msgid "Create a link tracker"
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing_campaign
-msgid "Create a new link tracker"
-msgstr "إنشاء متتبع رابط جديد"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
+msgid "Create a mailing"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
+msgid "Create a mailing campaign"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
+msgid "Create a mailing contact"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_ab_mass_mailings_from_campaign
@@ -657,6 +685,11 @@ msgstr "إنشاء مراسلات جديدة"
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
 msgid "Create a new mailing list"
 msgstr "إنشاء قائمة بريدية جديدة"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
+msgid "Create an A/B Testing Mailing"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__create_uid
@@ -866,6 +899,13 @@ msgid "Email Marketing"
 msgstr "التسويق بالبريد الإلكتروني"
 
 #. module: mass_mailing
+#: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_queue_ir_actions_server
+#: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_queue
+#: model:ir.cron,name:mass_mailing.ir_cron_mass_mailing_queue
+msgid "Email Marketing: Process queue"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_template
 msgid "Email Templates"
 msgstr "قوالب البريد"
@@ -951,21 +991,23 @@ msgstr "ملاحظات من %s: %s"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_follower_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_follower_ids
 msgid "Followers"
 msgstr "المتابعون"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_channel_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_channel_ids
 msgid "Followers (Channels)"
 msgstr "المتابعون (القنوات)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_partner_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "المتابعون (الشركاء)"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__email_from
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__email_from
 msgid "From"
 msgstr "من"
@@ -1018,12 +1060,20 @@ msgstr ""
 "للعديد من الإجراءات والمتحكمات."
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_unread
-msgid "If checked new messages require your attention."
-msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج لرؤيتها."
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_exception_icon
+msgid "Icon"
+msgstr "الأيقونة"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_needaction
+#: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_unread
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_needaction
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج لرؤيتها."
 
@@ -1040,6 +1090,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_has_error
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض الرسائل."
 
@@ -1074,6 +1125,7 @@ msgstr "عنوان البريد الإلكتروني غير صالح"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_is_follower
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_is_follower
 msgid "Is Follower"
 msgstr "متابع"
 
@@ -1251,11 +1303,6 @@ msgid "Mailing Lists"
 msgstr "القوائم البريدية"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "Mailing Name"
-msgstr ""
-
-#. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_trace
 msgid "Mailing Statistics"
 msgstr ""
@@ -1280,6 +1327,13 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_type
 msgid "Mailing Type"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
+msgid ""
+"Mailing contacts allow you to separate your marketing audience from your "
+"business contact directory."
 msgstr ""
 
 #. module: mass_mailing
@@ -1308,6 +1362,7 @@ msgstr "المراسلات المسندة إلي"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_main_attachment_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "المرفق الرئيسي"
 
@@ -1403,13 +1458,6 @@ msgid "Mass Mailing Subscription Information"
 msgstr "معلومات اشتراك المراسلات الجماعية"
 
 #. module: mass_mailing
-#: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_queue_ir_actions_server
-#: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_queue
-#: model:ir.cron,name:mass_mailing.ir_cron_mass_mailing_queue
-msgid "Mass Mailing: Process queue"
-msgstr "المراسلات الجماعية: طابور المعالجة"
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_ids
 msgid "Mass Mailings"
 msgstr "المراسلات الجماعية"
@@ -1453,6 +1501,7 @@ msgstr "دمجها في قائمة بريدية موجودة"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_has_error
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_has_error
 msgid "Message Delivery error"
 msgstr "خطأ في تسليم الرسائل"
 
@@ -1463,6 +1512,7 @@ msgstr "معرف الرسالة"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_ids
 msgid "Messages"
 msgstr "الرسائل"
 
@@ -1493,6 +1543,7 @@ msgstr "مراسلاتي"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__name
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Name"
 msgstr "الاسم"
 
@@ -1505,6 +1556,21 @@ msgstr "الاسم/البريد الإلكتروني"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__new_list_name
 msgid "New Mailing List Name"
 msgstr "اسم قائمة بريدية جديدة"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "الموعد النهائي للنشاط التالي"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_summary
+msgid "Next Activity Summary"
+msgstr "ملخص النشاط التالي"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_type_id
+msgid "Next Activity Type"
+msgstr "نوع النشاط التالي"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -1523,6 +1589,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_needaction_counter
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_needaction_counter
 msgid "Number of Actions"
 msgstr "عدد الإجراءات"
 
@@ -1553,21 +1620,25 @@ msgstr "عدد النقرات"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_has_error_counter
-msgid "Number of error"
-msgstr "عدد الأخطاء"
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_has_error_counter
+msgid "Number of errors"
+msgstr "عدد الاخطاء"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_needaction_counter
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "عدد الرسائل التي تتطلب إجراء"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_has_error_counter
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_unread_counter
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_unread_counter
 msgid "Number of unread messages"
 msgstr "عدد الرسائل الجديدة"
 
@@ -1585,11 +1656,6 @@ msgstr "في طلبك القادم!"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.layout
 msgid "Odoo"
 msgstr "أودو"
-
-#. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
-msgid "Odoo helps you to easily track all activities related to a customer."
-msgstr "تساعدك أودو على تتبع كل الأنشطة المتعلقة بعميل بسهولة."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
@@ -1634,11 +1700,6 @@ msgid ""
 msgstr ""
 "استبعاد قائمة بريدية محددة. يجب ألا يُستخدم هذا الحقل في واجهة بدون سياق "
 "قائمة بريدية فريدة ونشطة."
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "Options"
-msgstr "خيارات"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
@@ -1803,6 +1864,11 @@ msgid "Responsible"
 msgstr "المسئول"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_user_id
+msgid "Responsible User"
+msgstr "المستخدم المسؤول"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Restore"
@@ -1823,12 +1889,6 @@ msgstr "معالج عينة البريد"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Schedule"
 msgstr "جدولة"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__schedule_date
-msgid "Schedule in the Future"
-msgstr "جدولته مستقبلًا"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__scheduled
@@ -1852,6 +1912,12 @@ msgstr "الفترة المجدولة"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__next_departure
 msgid "Scheduled date"
 msgstr "التاريخ المجدول"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__schedule_date
+msgid "Scheduled for"
+msgstr ""
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing_contact.py:0
@@ -1878,13 +1944,14 @@ msgstr "اختيار القوائم البريدية:"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Send"
 msgstr "إرسال"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "Send Now"
-msgstr "إرسال الآن"
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__email_from
+msgid "Send From"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
@@ -1902,14 +1969,9 @@ msgid "Send a sample email for testing purpose to the address below."
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
-msgid "Send new A/B Testing Mailing"
-msgstr "إرسال بريد جديد بطريقة اختبار أ/ب"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
-msgid "Send new Mailing"
-msgstr "إرسال مراسلات جديدة"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
+msgid "Send on"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
@@ -1952,6 +2014,7 @@ msgstr "فترة الإرسال"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mass_mailing_configuration
 #: model:ir.ui.menu,name:mass_mailing.menu_mass_mailing_global_settings
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Settings"
 msgstr "الإعدادات"
 
@@ -2000,6 +2063,19 @@ msgstr "إحصائيات النقرات"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Status"
 msgstr "الحالة"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"الحالة على أساس الأنشطة\n"
+"المتأخرة: تاريخ الاستحقاق مر\n"
+"اليوم: تاريخ النشاط هو اليوم\n"
+"المخطط: الأنشطة المستقبلية."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__subject
@@ -2143,11 +2219,6 @@ msgstr ""
 "يكون هذا مفيدًا إذا كانت حملات تسويقك تتكون من عدة عناوين بريد إلكتروني."
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "This mailing is scheduled for"
-msgstr "من المقرر إرسال هذه الرسالة في"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid ""
 "This tool is advised if your marketing campaign is composed of several "
@@ -2172,10 +2243,23 @@ msgid "Total"
 msgstr "الإجمالي"
 
 #. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.link_tracker_action_mass_mailing_campaign
+msgid ""
+"Trackers are used to collect count stat about click on links and generate "
+"short URLs."
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__trace_type
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__mailing_type
 msgid "Type"
 msgstr "النوع"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_utm_campaign
@@ -2195,11 +2279,13 @@ msgstr "خطأ غير معروف"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_unread
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_unread
 msgid "Unread Messages"
 msgstr "الرسائل الجديدة"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_unread_counter
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "عدد الرسائل الجديدة"
 
@@ -2315,11 +2401,13 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__website_message_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__website_message_ids
 msgid "Website Messages"
 msgstr "رسائل الموقع"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__website_message_ids
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__website_message_ids
 msgid "Website communication history"
 msgstr "سجل تواصل الموقع"
 

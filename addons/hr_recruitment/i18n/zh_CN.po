@@ -15,14 +15,15 @@
 # snow wang <147156565@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
+# ChinaMaker <liuct@chinamaker.net>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-09 12:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Jeanphy <hzh0292@qq.com>, 2019\n"
+"Last-Translator: ChinaMaker <liuct@chinamaker.net>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +80,7 @@ msgid ""
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Hello,\n"
 "                <br/><br/>\n"
-"                We confirm we successfully received your application to the job\n"
+"                We confirm we successfully received your application for the job\n"
 "                \"<a href=\"${object.job_id.website_url or ''}\" style=\"color:#9A6C8E;\"><strong>${object.job_id.name}</strong></a>\" at <strong>${object.company_id.name}</strong>.\n"
 "                <br/><br/>\n"
 "                We will come back to you shortly.\n"
@@ -272,9 +273,9 @@ msgid ""
 "                our hiring team reviewed your application and <b>did not\n"
 "                select it for further consideration</b>.\n"
 "                <br/><br/>\n"
-"                Please note that recruiting is hard, and we can do\n"
-"                mistake. Do not hesitate to reply to this email if you\n"
-"                think we did a mistake, or if you want more information\n"
+"                Please note that recruiting is hard, and we can make\n"
+"                mistakes. Do not hesitate to reply to this email if you\n"
+"                think we made a mistake, or if you want more information\n"
 "                about our decision.\n"
 "                <br/><br/>\n"
 "                We will, however, keep your resume on record and get in\n"
@@ -304,48 +305,6 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"    <tr>\n"
-"        <td valign=\"top\">\n"
-"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
-"                尊敬的,<br/><br/>\n"
-"                Thank you for your interest in joining the\n"
-"                <b>${object.company_id.name}</b> team.  We wanted to\n"
-"                let you know that, although your resume is competitive,\n"
-"                our hiring team reviewed your application and <b>did not\n"
-"                select it for further consideration</b>.\n"
-"                <br/><br/>\n"
-"                Please note that recruiting is hard, and we can do\n"
-"                mistake. Do not hesitate to reply to this email if you\n"
-"                think we did a mistake, or if you want more information\n"
-"                about our decision.\n"
-"                <br/><br/>\n"
-"                We will, however, keep your resume on record and get in\n"
-"                touch with you about future opportunities that may be a\n"
-"                better fit for your skills and experience.\n"
-"                <br/><br/>\n"
-"                We wish you all the best in your job search and hope we\n"
-"                will have the chance to consider you for another role\n"
-"                in the future.\n"
-"                <br/><br/>\n"
-"                谢谢,\n"
-"                <div style=\"font-size: 11px; color: grey;\">\n"
-"                    % if object.user_id:\n"
-"                        -- <br/>\n"
-"                        <strong>${object.user_id.name}</strong><br/>\n"
-"                        EMail: ${object.user_id.email or ''}<br/>\n"
-"                        电话: ${object.user_id.phone or ''}\n"
-"                    % else:\n"
-"                        -- <br/>\n"
-"                        ${object.company_id.name}<br/>\n"
-"                        HR 团队\n"
-"                    % endif\n"
-"                </div>\n"
-"            </div>\n"
-"        </td>\n"
-"    </tr>\n"
-"</table>\n"
-"        "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -1093,12 +1052,8 @@ msgid "Icon to indicate an exception activity."
 msgstr "表示一个例外活动的图标。"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_unread
-msgid "If checked new messages require your attention."
-msgstr "查看是否有需要留意的新消息。"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "确认后, 出现提示消息."
 
@@ -1359,11 +1314,6 @@ msgstr "手机"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-msgid "My Activities"
-msgstr "我的活动"
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "My Applications"
 msgstr "我的申请"
 
@@ -1503,8 +1453,8 @@ msgstr "要关闭的天数"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error_counter
-msgid "Number of error"
-msgstr "错误个数"
+msgid "Number of errors"
+msgstr "错误数"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter

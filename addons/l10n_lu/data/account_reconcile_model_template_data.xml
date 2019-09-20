@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="bank_fees_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="lu_2011_chart_1"/>
+        <field name="name">Bank Fees</field>
+        <field name="account_id" ref="lu_2011_account_61333"/>
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Bank Fees</field>
+        <field name="rule_type">writeoff_button</field>
+    </record>
+    <record id="cash_discount_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="lu_2011_chart_1"/>
+        <field name="name">Cash Discount</field>
+        <field name="account_id" ref="lu_2020_account_65562"/>
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Cash Discount</field>
+        <field name="rule_type">writeoff_button</field>
+    </record>
+</odoo>

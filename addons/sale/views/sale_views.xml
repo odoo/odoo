@@ -115,7 +115,7 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5">
-                    <field name="partner_id" avatar_field="image_small"/>
+                    <field name="partner_id" avatar_field="image_128"/>
                     <field name="amount_total" widget="monetary"/>
                     <field name="payment_term_id"/>
                 </calendar>
@@ -190,8 +190,8 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Order Number"/>
                     <field name="date_order" string="Order Date"/>
-                    <field name="commitment_date" groups="sale.group_sale_order_dates"/>
-                    <field name="expected_date" groups="sale.group_sale_order_dates"/>
+                    <field name="commitment_date"/>
+                    <field name="expected_date"/>
                     <field name="partner_id"/>
                     <field name="user_id" optional="show"/>
                     <field name="team_id" optional="hide"/>
@@ -216,8 +216,8 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Quotation Number"/>
                     <field name="create_date" string="Create Date"/>
-                    <field name="commitment_date" groups="sale.group_sale_order_dates"/>
-                    <field name="expected_date" groups="sale.group_sale_order_dates"/>
+                    <field name="commitment_date"/>
+                    <field name="expected_date"/>
                     <field name="partner_id"/>
                     <field name="user_id" optional="show"/>
                     <field name="team_id" optional="hide"/>
@@ -641,9 +641,11 @@
                                 </group>
                             </group>
                             <group>
-                                <group name="sale_shipping" groups="sale.group_sale_order_dates">
-                                    <field name="expected_date"/>
-                                    <field name="commitment_date"/>
+                                <group name="sale_shipping">
+                                    <label for="commitment_date" string="Delivery Date"/>
+                                    <div class="o_row">
+                                        <field name="commitment_date"/> <span class="text-muted">Expected: <field name="expected_date" widget="date"/></span>
+                                    </div>
                                 </group>
                                 <group string="Reporting" name="sale_reporting" groups="base.group_no_one">
                                     <group name="technical" colspan="2" class="mb-0">

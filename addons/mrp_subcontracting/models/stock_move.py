@@ -11,7 +11,7 @@ from odoo.tools.float_utils import float_compare, float_is_zero
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    is_subcontract = fields.Boolean('The move is a subcontract receipt', copy=False)
+    is_subcontract = fields.Boolean('The move is a subcontract receipt')
     show_subcontracting_details_visible = fields.Boolean(
         compute='_compute_show_subcontracting_details_visible'
     )
@@ -38,12 +38,23 @@ class StockMove(models.Model):
             move.show_details_visible = True
         return res
 
+    def copy(self, default=None):
+        self.ensure_one()
+        if not self.is_subcontract or 'location_id' in default:
+            return super(StockMove, self).copy(default=default)
+        if not default:
+            default = {}
+        default['location_id'] = self.picking_id.location_id.id
+        return super(StockMove, self).copy(default=default)
+
     def write(self, values):
         """ If the initial demand is updated then also update the linked
         subcontract order to the new quantity.
         """
         res = super(StockMove, self).write(values)
         if 'product_uom_qty' in values:
+            if self.env.context.get('cancel_backorder') is False:
+                return res
             self.filtered(lambda m: m.is_subcontract and
             m.state not in ['draft', 'cancel', 'done'])._update_subcontract_order_qty()
         return res
@@ -88,15 +99,18 @@ class StockMove(models.Model):
         for move in self:
             if move.location_id.usage != 'supplier' or move.location_dest_id.usage == 'supplier':
                 continue
-            if not move.picking_id or self.env.context.get('do_not_create_subcontract_order'):
+            if move.move_orig_ids.production_id:
                 continue
             bom = move._get_subcontract_bom()
             if not bom:
                 continue
+            if float_is_zero(move.product_qty, precision_rounding=move.product_uom.rounding) and\
+                    move.picking_id.immediate_transfer is True:
+                raise UserError(_("To subcontract, use a planned transfer."))
             subcontract_details_per_picking[move.picking_id].append((move, bom))
             move.write({
                 'is_subcontract': True,
-                'location_id': self.picking_id.partner_id.property_stock_subcontractor.id
+                'location_id': move.picking_id.partner_id.with_context(force_company=move.company_id.id).property_stock_subcontractor.id
             })
         for picking, subcontract_details in subcontract_details_per_picking.items():
             picking._subcontracted_produce(subcontract_details)
@@ -153,6 +167,11 @@ operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name
     def _has_tracked_subcontract_components(self):
         self.ensure_one()
         return any(m.has_tracking != 'none' for m in self.move_orig_ids.production_id.move_raw_ids)
+
+    def _prepare_extra_move_vals(self, qty):
+        vals = super(StockMove, self)._prepare_extra_move_vals(qty)
+        vals['location_id'] = self.location_id.id
+        return vals
 
     def _should_bypass_reservation(self):
         """ If the move is subcontracted then ignore the reservation. """

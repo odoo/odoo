@@ -36,7 +36,7 @@
                 t-att-title="record.title"
                 t-att-data-oe-model="record.res_model"
                 t-att-data-oe-id="record.res_id">
-                <img t-att-src="record.avatar_url" alt="Avatar"/>
+                <img t-att-src="record.avatar_url" alt="Avatar" class="o_image_64_cover"/>
                 <t t-esc="record.name"/>
             </a>
             <button t-if="record.is_editable"

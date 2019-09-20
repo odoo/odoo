@@ -44,8 +44,8 @@
                                         </div>
                                         <div class="oe_kanban_bottom_right">
                                             <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
-                                            <img t-att-src="kanban_image('res.partner', 'image_64', record.partner_id.raw_value)"
-                                                t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value" width="24" height="24"
+                                            <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)"
+                                                t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value"
                                                 class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
@@ -65,8 +65,8 @@
                 <calendar date_start="date" date_delay="duration" string="Event Tracks" color="location_id" event_limit="5">
                     <field name="location_id"/>
                     <field name="event_id"/>
-                    <field name="partner_id" avatar_field="image_small"/>
-                    <field name="user_id" avatar_field="image_small"/>
+                    <field name="partner_id" avatar_field="image_128"/>
+                    <field name="user_id" avatar_field="image_128"/>
                 </calendar>
             </field>
         </record>

@@ -5,18 +5,18 @@
 # Translators:
 # Zsofia Biro <zsbiro1205@gmail.com>, 2019
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
-# Martin Trigaux, 2019
-# krnkris, 2019
 # gezza <geza.nagy@oregional.hu>, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Martin Trigaux, 2019
+# krnkris, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-13 11:28+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"Last-Translator: krnkris, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -489,11 +489,8 @@ msgid "Answered"
 msgstr "Megválaszolt"
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_user_input
-#: model:ir.actions.act_window,name:survey.action_survey_user_input_notest
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__user_input_line_ids
-#: model:ir.ui.menu,name:survey.menu_survey_type_form1
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
@@ -526,7 +523,7 @@ msgstr "Mellékletek"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__attempt_number
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Attempt n°"
 msgstr ""
 
@@ -746,7 +743,7 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input__state__done
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Completed"
 msgstr "Elkészült"
 
@@ -754,11 +751,6 @@ msgstr "Elkészült"
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Compose Email"
 msgstr "Email írás"
-
-#. module: survey
-#: model:ir.ui.menu,name:survey.menu_surveys_configuration
-msgid "Configuration"
-msgstr "Konfiguráció"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
@@ -779,6 +771,11 @@ msgstr "Kapcsolat"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__body
 msgid "Contents"
 msgstr "Tartalmak"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_is_correct
+msgid "Correct"
+msgstr "Megfelelő"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_uid
@@ -908,9 +905,17 @@ msgstr "Leírás"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
-msgid ""
-"Design easily your survey, send invitations to answer by email and analyze "
-"answers."
+msgid "Design easily your survey, send invitations and analyze answers."
+msgstr ""
+
+#. module: survey
+#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
+msgid "Detailed Answers"
+msgstr ""
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input_line
+msgid "Detailled Answers"
 msgstr ""
 
 #. module: survey
@@ -969,7 +974,7 @@ msgid "Edit in backend"
 msgstr "Szerkesztés ablakban"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Email"
 msgstr "E-mail"
 
@@ -1067,7 +1072,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Group By"
 msgstr "Csoportosítás"
 
@@ -1103,12 +1108,8 @@ msgid "Identification token"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
-
-#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
+#: model:ir.model.fields,help:survey.field_survey_survey__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
 
@@ -1161,12 +1162,18 @@ msgid "Input must be an email"
 msgstr ""
 
 #. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid "Invalid performance computation"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input__input_type__link
 msgid "Invitation"
 msgstr "Meghívó"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Invite"
 msgstr "Meghívás"
 
@@ -1204,12 +1211,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_label__sequence
 msgid "Label Sequence order"
 msgstr ""
-
-#. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_label_form
-#: model:ir.ui.menu,name:survey.menu_survey_label_form1
-msgid "Labels"
-msgstr "Feliratok"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__labels_ids_2
@@ -1428,12 +1429,7 @@ msgid "Multiple choices per row"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "My Activities"
-msgstr "Tevékenységeim"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "New"
 msgstr "Új"
 
@@ -1528,8 +1524,8 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error_counter
-msgid "Number of error"
-msgstr "Hibák száma"
+msgid "Number of errors"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
@@ -1593,8 +1589,14 @@ msgid "Outgoing mail server"
 msgstr "Kimenő levelező szerver"
 
 #. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_result.js:0
+#, python-format
+msgid "Overall Performance %.2f%s"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__page_id
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__page_id
 msgid "Page"
 msgstr "Oldal"
 
@@ -1604,7 +1606,7 @@ msgid "Pages"
 msgstr "Oldalak"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Partially Completed"
 msgstr ""
 
@@ -1619,8 +1621,16 @@ msgid "Participate to ${object.survey_id.title} survey"
 msgstr ""
 
 #. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input
+#: model:ir.actions.act_window,name:survey.action_survey_user_input_notest
+#: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.menu,name:survey.survey_menu_user_inputs
+msgid "Participations"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__partner_id
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Partner"
 msgstr "Partner"
 
@@ -1666,7 +1676,7 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Print"
 msgstr "Nyomtatás"
 
@@ -1701,6 +1711,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_question__question_ids
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_ids
 #: model:ir.ui.menu,name:survey.menu_survey_question_form1
+#: model:ir.ui.menu,name:survey.survey_menu_questions
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Questions"
 msgstr "Kérdések"
@@ -1711,7 +1722,7 @@ msgid "Quizz Passed"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Quizz passed"
 msgstr ""
 
@@ -1747,7 +1758,7 @@ msgid "Resend Comment"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Resend Invitation"
 msgstr ""
 
@@ -1812,6 +1823,11 @@ msgid "SMS Delivery error"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_score
+msgid "Score"
+msgstr "Pontszám"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__quizz_score
 msgid "Score (%)"
 msgstr ""
@@ -1819,11 +1835,6 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__answer_score
 msgid "Score for this choice"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_score
-msgid "Score given for this choice"
 msgstr ""
 
 #. module: survey
@@ -1859,7 +1870,7 @@ msgid "Search Question"
 msgstr "Kérdés keresése"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Search Survey"
 msgstr "Felmérés keresése"
 
@@ -1869,6 +1880,7 @@ msgid "Search User input lines"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__page_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Section"
 msgstr "Szakasz"
@@ -1901,6 +1913,7 @@ msgstr "Küldés"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__sequence
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_line__question_sequence
 msgid "Sequence"
 msgstr "Sorszám"
 
@@ -2042,6 +2055,12 @@ msgid "Successfully failed"
 msgstr ""
 
 #. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_label_form
+#: model:ir.ui.menu,name:survey.menu_survey_label_form1
+msgid "Suggested Values"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested
 msgid "Suggested answer"
 msgstr ""
@@ -2068,7 +2087,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_tree
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Survey"
 msgstr "Felmérés"
 
@@ -2106,7 +2125,7 @@ msgid "Survey Stage"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_form
+#: model:ir.model.fields,field_description:survey.field_survey_survey__title
 msgid "Survey Title"
 msgstr "Felmérés címe"
 
@@ -2121,13 +2140,8 @@ msgid "Survey User Input Line"
 msgstr ""
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_user_input_line
-msgid "Survey User Input lines"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_tree
 msgid "Survey User inputs"
 msgstr ""
 
@@ -2154,7 +2168,7 @@ msgid "Test"
 msgstr "Tesztelés"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Test Entries"
 msgstr ""
 
@@ -2344,7 +2358,6 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__title
-#: model:ir.model.fields,field_description:survey.field_survey_survey__title
 msgid "Title"
 msgstr "Név"
 
@@ -2426,11 +2439,6 @@ msgstr "Felhasználó"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__user_input_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 msgid "User Input"
-msgstr ""
-
-#. module: survey
-#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
-msgid "User Input Lines"
 msgstr ""
 
 #. module: survey
@@ -2539,6 +2547,11 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "ans"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
+msgid "e.g. Satisfaction Survey"
 msgstr ""
 
 #. module: survey

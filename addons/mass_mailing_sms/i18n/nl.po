@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-13 11:28+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -23,27 +23,28 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
+msgid "+32 495 85 85 77, +33 545 55 55 55"
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_form
 msgid ""
 "<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This "
-"number is blacklisted for mass SMS\" aria-label=\"Phone Blacklisted\" "
+"number is blacklisted for SMS Marketing\" aria-label=\"Phone Blacklisted\" "
 "attrs=\"{'invisible': [('phone_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
-"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"Dit nummer"
-" is geblacklist voor bulk SMS\" aria-label=\"Telefoon geblacklist\" "
-"attrs=\"{'invisible': [('phone_blacklisted', '=', False)]}\" "
-"groups=\"base.group_user\"/>"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=',"
 " 'sms')]}\">SMS Text Message could not be sent.</span>"
 msgstr ""
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<span name=\"ignored_text_sms\" attrs=\"{'invisible': [('mailing_type', "
 "'!=', 'sms')]}\">SMS Text Message have been ignored and will not be "
@@ -51,7 +52,14 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"<span name=\"next_departure_text\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">This SMS marketing is scheduled for</span>"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<span name=\"scheduled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
 "'!=', 'sms')]}\">SMS Text Message are in queue and will be sent soon.</span>"
@@ -67,11 +75,11 @@ msgstr ""
 "'!=', 'sms')]}\">Deze sms</span>"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<strong>\n"
-"                                It appears you don't have enough IAP credits. Click here to buy credits.\n"
-"                            </strong>"
+"                            It appears you don't have enough IAP credits. Click here to buy credits.\n"
+"                        </strong>"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -87,7 +95,8 @@ msgstr "<strong>Dit nummer lijkt ongeldig.</strong>"
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/controllers/main.py:0
 #, python-format
-msgid "Blacklist through mass sms unsubscribe (mailing ID: %s - model: %s)"
+msgid ""
+"Blacklist through SMS Marketing unsubscribe (mailing ID: %s - model: %s)"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -139,6 +148,11 @@ msgid "Contacts Lists"
 msgstr "Contacten lijsten"
 
 #. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
+msgid "Create a new SMS Marketing"
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_contact_action_sms
 msgid "Create a new contact"
 msgstr "Maak een nieuw contact"
@@ -147,11 +161,6 @@ msgstr "Maak een nieuw contact"
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
 msgid "Create a new contacts list"
 msgstr "Maak een nieuwe contactenlijst"
-
-#. module: mass_mailing_sms
-#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
-msgid "Create a new mass SMS"
-msgstr "Maak een nieuwe bulk SMS"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__create_uid
@@ -191,7 +200,9 @@ msgstr "Soort mislukking"
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 #, python-format
-msgid "Following numbers are not correctly encoded: %s"
+msgid ""
+"Following numbers are not correctly encoded: %s, example : \"+32 495 85 85 "
+"77, +33 545 55 55 55\""
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -229,7 +240,7 @@ msgid "Insufficient IAP credits"
 msgstr "Onvoldoende IAP krediet"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_kanban
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_kanban_sms
 msgid "Insufficient credits"
 msgstr "Onvoldoende krediet"
 
@@ -299,26 +310,6 @@ msgid "Mass Mailing Statistics"
 msgstr "Bulkmailing analyses"
 
 #. module: mass_mailing_sms
-#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_mailing_action_sms
-#: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_mass_sms
-#: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_root
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
-msgid "Mass SMS"
-msgstr "Bulk SMS"
-
-#. module: mass_mailing_sms
-#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_trace_report_action_sms
-msgid "Mass SMS Analysis"
-msgstr "Bulk SMS analyse"
-
-#. module: mass_mailing_sms
-#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
-msgid ""
-"Mass SMS Statistics allows you to check different mailing related information like number of sent SMS or bounced SMS.\n"
-"                You can sort out your analysis by different groups to get accurate grained analysis."
-msgstr ""
-
-#. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_missing
 msgid "Missing Number"
 msgstr "Ontbrekend nummer"
@@ -327,6 +318,11 @@ msgstr "Ontbrekend nummer"
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__mobile
 msgid "Mobile"
 msgstr "Mobiel"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_search_sms
+msgid "My SMS Marketing"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__numbers
@@ -374,7 +370,7 @@ msgid "SMS Body"
 msgstr "SMS inhoud"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "SMS Content"
 msgstr "SMS inhoud"
 
@@ -382,6 +378,26 @@ msgstr "SMS inhoud"
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_sms_id_int
 msgid "SMS ID (tech)"
 msgstr "SMS ID (technisch)"
+
+#. module: mass_mailing_sms
+#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_mailing_action_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_mass_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_root
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+msgid "SMS Marketing"
+msgstr "SMS marketing"
+
+#. module: mass_mailing_sms
+#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_trace_report_action_sms
+msgid "SMS Marketing Analysis"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
+msgid ""
+"SMS Marketing Statistics allows you to check different mailing related information like number of sent SMS or bounced SMS.\n"
+"                You can sort out your analysis by different groups to get accurate grained analysis."
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
@@ -420,7 +436,7 @@ msgid "Send"
 msgstr "Verzenden"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "Send Now"
 msgstr "Nu verzenden"
 
@@ -436,11 +452,13 @@ msgstr "Verstuur een voorbeeld SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
-msgid "Send a sample SMS for testing purpose to the numbers below."
+msgid ""
+"Send a sample SMS for testing purpose to the numbers below (comma-separated "
+"list)."
 msgstr ""
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "Sent"
 msgstr "Verzonden"
 
@@ -465,16 +483,20 @@ msgid "Statistics"
 msgstr "Statistieken"
 
 #. module: mass_mailing_sms
-#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
-#, python-format
-msgid "Test Mailing"
-msgstr "Test mailing"
-
-#. module: mass_mailing_sms
-#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_sms_test_action
 #: model:ir.model,name:mass_mailing_sms.model_mailing_sms_test
 msgid "Test SMS Mailing"
 msgstr "Test SMS mailing"
+
+#. module: mass_mailing_sms
+#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_sms_test_action
+msgid "Test SMS Marketing"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "Test SMS marketing"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
@@ -488,7 +510,7 @@ msgid "There was an error when trying to unsubscribe"
 msgstr ""
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "This will send SMS to all recipients. Do you still want to proceed ?"
 msgstr ""
 

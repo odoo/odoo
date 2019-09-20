@@ -8,18 +8,18 @@
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
 # Tamás Dombos, 2019
 # Martin Trigaux, 2019
-# krnkris, 2019
 # gezza <geza.nagy@oregional.hu>, 2019
 # Kovács Tibor <kovika@gmail.com>, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# krnkris, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"Last-Translator: krnkris, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1095,6 +1095,12 @@ msgstr "Visszavonva"
 #: model:ir.model,name:mail.model_mail_shortcode
 msgid "Canned Response / Shortcode"
 msgstr "Bedobozolt válasz / Billentyűzet parancs"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__canned_response_ids
+#: model:ir.model.fields,field_description:mail.field_mail_message__canned_response_ids
+msgid "Canned Responses"
+msgstr "Bedobozolt válaszok"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -2604,24 +2610,20 @@ msgid "Idle"
 msgstr "Üresjárat"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread
-#: model:ir.model.fields,help:mail.field_mail_channel__message_unread
-#: model:ir.model.fields,help:mail.field_mail_thread__message_unread
-#: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_unread
-#: model:ir.model.fields,help:mail.field_mail_thread_cc__message_unread
-#: model:ir.model.fields,help:mail.field_res_partner__message_unread
-#: model:ir.model.fields,help:mail.field_res_users__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread
 #: model:ir.model.fields,help:mail.field_mail_channel__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_channel__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_thread__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction
+#: model:ir.model.fields,help:mail.field_mail_thread_cc__message_unread
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction
+#: model:ir.model.fields,help:mail.field_res_partner__message_unread
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction
+#: model:ir.model.fields,help:mail.field_res_users__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
 
@@ -3505,6 +3507,7 @@ msgstr "Üzenet-ID azonosító"
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_ids
+#: model:ir.model.fields,field_description:mail.field_mail_shortcode__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_ids
@@ -4049,8 +4052,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
-msgid "Number of error"
-msgstr "Hibák száma"
+msgid "Number of errors"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction_counter
@@ -4302,9 +4305,12 @@ msgid "Outgoing mail server"
 msgstr "Kimenő levelező szerver"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__overdue
+#, python-format
 msgid "Overdue"
 msgstr "Lejárt"
 
@@ -4451,9 +4457,12 @@ msgid "Placeholder Expression"
 msgstr "Üres mező kifejezés"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__planned
+#, python-format
 msgid "Planned"
 msgstr "Tervezett"
 
@@ -5627,6 +5636,7 @@ msgstr "Címzett:"
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
+#: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: code:addons/mail/static/src/xml/systray.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today

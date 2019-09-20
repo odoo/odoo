@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -799,7 +799,7 @@ msgstr "附件數"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_value
-#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__attribute_value_id
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_product_template_attribute_value_id
 msgid "Attribute Value"
 msgstr "屬性值"
 
@@ -907,8 +907,8 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
-msgid "Choose how to confirm quotations and get paid."
-msgstr "選擇如何確認報價並獲得付款。"
+msgid "Choose your default customer payment method."
+msgstr ""
 
 #. module: sale
 #. openerp-web
@@ -1013,11 +1013,6 @@ msgid "Confirm"
 msgstr "確認"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
-msgid "Confirmation &amp; Payment"
-msgstr "確認 &amp; 付款"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__confirmation_template_id
 msgid "Confirmation Email"
 msgstr "確認電子信件"
@@ -1113,6 +1108,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
+msgid "Credit card (via Stripe)"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__currency_id
@@ -1127,8 +1127,18 @@ msgstr "匯率"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_value
-msgid "Custom value"
+msgid "Custom Value"
 msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
+msgid "Custom Values"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__manual
+msgid "Custom payment instructions"
+msgstr "自定義付款說明"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
@@ -1294,11 +1304,6 @@ msgstr "收貨地址"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_order_dates
 msgid "Delivery Date"
 msgstr "交貨日期"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
-msgid "Delivery Lead Time"
-msgstr "交貨前置時間"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__partner_shipping_id
@@ -1507,6 +1512,11 @@ msgid "External Link"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
+msgid "Extra Values"
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Extra line with %s "
@@ -1652,12 +1662,8 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__message_unread
-msgid "If checked new messages require your attention."
-msgstr "勾選代表有新訊息需要您留意。"
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
+#: model:ir.model.fields,help:sale.field_sale_order__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "勾選代表有新訊息需要您留意。"
 
@@ -1973,6 +1979,11 @@ msgid "Late Activities"
 msgstr "逾期活動"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
+msgid "Lead Time"
+msgstr "前置時間"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr "讓您的客戶登入查看他們的文件"
@@ -2066,6 +2077,13 @@ msgid "Marketing"
 msgstr "市場行銷"
 
 #. module: sale
+#. openerp-web
+#: code:addons/sale/static/src/xml/account_reconciliation.xml:0
+#, python-format
+msgid "Match with a sale order"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__medium_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__medium_id
 msgid "Medium"
@@ -2127,6 +2145,11 @@ msgstr "我的報價單"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
 msgstr "我的銷售訂單明細"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__name
+msgid "Name"
+msgstr "名称"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_by
@@ -2226,8 +2249,8 @@ msgstr "訂單被確認和產品交付給客戶之間的天數"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
-msgid "Number of error"
-msgstr "錯誤數量"
+msgid "Number of errors"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
@@ -2309,6 +2332,12 @@ msgstr ""
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "僅整數值是有效的。"
+
+#. module: sale
+#: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
+msgid ""
+"Only one Custom Value is allowed per Attribute Value per Sales Order Line."
+msgstr ""
 
 #. module: sale
 #. openerp-web
@@ -2436,6 +2465,11 @@ msgid "Other Info"
 msgstr "其他信息"
 
 #. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
+msgid "Other payment acquirer"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
 msgstr ""
@@ -2489,6 +2523,7 @@ msgstr "其它方式支付"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__paypal
 msgid "PayPal"
 msgstr "PayPal"
 
@@ -2526,6 +2561,11 @@ msgstr "付款條款"
 #: model:ir.model,name:sale.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "付款交易"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
+msgid "Payment method"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2675,11 +2715,6 @@ msgstr "產品變體"
 #: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
 msgstr "產品變體"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
-msgid "Product attribute values that do not create variants"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2952,6 +2987,7 @@ msgstr ""
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/account_reconciliation.js:0
+#: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Sale Order"
 msgstr "銷售訂單"
@@ -2988,11 +3024,6 @@ msgstr "銷售警告"
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
 msgstr "請選擇付款方式"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
-msgid "Sale order line"
-msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -3056,6 +3087,7 @@ msgstr "銷售訂單專案"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
@@ -3478,6 +3510,12 @@ msgid "Subtotal"
 msgstr "小計"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
+msgid "Tax Total"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_by_group
 msgid "Tax amount by group"
 msgstr "按組分配稅額"
@@ -3787,6 +3825,12 @@ msgstr "稅額總計"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
+msgid "Total Tax Excluded"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Included"
 msgstr "含稅總金額"
 
@@ -3943,11 +3987,6 @@ msgstr "使用麵包屑導航以<b>返回之前的頁面</b>。"
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
 msgstr "使用此選單訪問報價單，銷售訂單以及客戶。"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
-msgid "User entered custom product attribute values"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations

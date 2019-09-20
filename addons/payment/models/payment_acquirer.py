@@ -644,6 +644,10 @@ class PaymentTransaction(models.Model):
         transactions = self.filtered(lambda t: t.state != 'draft')
         return transactions and transactions[0] or transactions
 
+    def _get_processing_info(self):
+        """ Extensible method for providers if they need specific fields/info regarding a tx in the payment processing page. """
+        return dict()
+
     def _get_payment_transaction_sent_message(self):
         self.ensure_one()
         if self.payment_token_id:

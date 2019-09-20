@@ -50,6 +50,7 @@ var ControlPanelRenderer = Renderer.extend({
         this.$subMenus = null;
         this.action = params.action;
         this.displaySearchMenu = true;
+        this.isMobile = config.device.isMobile;
         this.menusSetup = false;
         this.searchMenuTypes = params.searchMenuTypes || [];
         this.subMenus = {};

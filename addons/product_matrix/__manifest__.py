@@ -6,7 +6,7 @@
        Technical module: Matrix Implementation
     """,
     'description': """
-        Please refer to Sale Matrix or Purchase Matrix for the uses of this module.
+Please refer to Sale Matrix or Purchase Matrix for the use of this module.
     """,
     'category': 'Sales',
     'version': '1.0',

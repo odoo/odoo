@@ -71,7 +71,7 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div>
                                 <span>
-                                    <img t-att-src="kanban_image('hr.employee', 'image_64', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="40" height="40" class="oe_kanban_avatar float-left mr4"/>
+                                    <img t-att-src="kanban_image('hr.employee', 'image_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" class="oe_kanban_avatar o_image_40_cover float-left mr4"/>
                                 </span>
                                 <span>
                                     <div>
@@ -110,17 +110,14 @@
         </field>
     </record>
 
-    <record id="act_hr_employee_holiday_request" model="ir.actions.act_window">
+    <record id="act_hr_employee_holiday_request" model="ir.actions.server">
         <field name="name">Time off Analysis</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">hr.leave.report</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave_report"/>
         <field name="binding_model_id" ref="hr.model_hr_employee"/>
-        <field name="view_mode">tree,form,pivot</field>
-        <field name="context">{
-            'search_default_group_type': 1,
-            'search_default_year': 1}</field>
-        <field name="domain">[('holiday_type','=','employee')]</field>
-        <field name="search_view_id" ref="view_hr_holidays_filter_report"/>
+        <field name="state">code</field>
+        <field name="code">
+        action = model.action_time_off_analysis()
+        </field>
     </record>
 
 </odoo>

@@ -61,7 +61,7 @@ class HolidaysType(models.Model):
         compute='_compute_leaves', string='Remaining Time Off',
         help='Maximum Time Off Allowed - Time Off Already Taken')
     virtual_remaining_leaves = fields.Float(
-        compute='_compute_leaves', search='_search_virtual_remaining_leaves' ,string='Virtual Remaining Time Off',
+        compute='_compute_leaves', search='_search_virtual_remaining_leaves', string='Virtual Remaining Time Off',
         help='Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval')
     group_days_allocation = fields.Float(
         compute='_compute_group_days_allocation', string='Days Allocated')
@@ -85,14 +85,14 @@ class HolidaysType(models.Model):
         help='\tNo Allocation Needed: no allocation by default, users can freely request time off;'
              '\tFree Allocation Request: allocated by HR and users can request time off and allocations;'
              '\tAllocated by HR only: allocated by HR and cannot be bypassed; users can request time off;')
-    validity_start = fields.Date("From", default=fields.Date.today,
+    validity_start = fields.Date("From",
                                  help='Adding validity to types of time off so that it cannot be selected outside this time period')
     validity_stop = fields.Date("To")
     valid = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
     time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave', string="Kind of Leave",
                                  help="Whether this should be computed as a holiday or as work time (eg: formation)")
     request_unit = fields.Selection([
-        ('day', 'Day'), ('half_day','Half Day'), ('hour', 'Hours')],
+        ('day', 'Day'), ('half_day', 'Half Day'), ('hour', 'Hours')],
         default='day', string='Take Time Off in', required=True)
     unpaid = fields.Boolean('Is Unpaid', default=False)
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
@@ -230,10 +230,10 @@ class HolidaysType(models.Model):
     def get_days_all_request(self):
         leave_types = sorted(self.search([]).filtered(lambda x: x.virtual_remaining_leaves or x.max_leaves), key=self._model_sorting_key, reverse=True)
         return [(lt.name, {
-                    'remaining_leaves': lt.remaining_leaves,
-                    'virtual_remaining_leaves': lt.virtual_remaining_leaves,
-                    'max_leaves': lt.max_leaves,
-                    'leaves_taken': lt.leaves_taken,
+                    'remaining_leaves': ('%.2f' % lt.remaining_leaves).rstrip('0').rstrip('.'),
+                    'virtual_remaining_leaves': ('%.2f' % lt.virtual_remaining_leaves).rstrip('0').rstrip('.'),
+                    'max_leaves': ('%.2f' % lt.max_leaves).rstrip('0').rstrip('.'),
+                    'leaves_taken': ('%.2f' % lt.leaves_taken).rstrip('0').rstrip('.'),
                     'request_unit': lt.request_unit,
                 }, lt.allocation_type)
             for lt in leave_types]

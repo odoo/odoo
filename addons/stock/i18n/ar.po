@@ -17,8 +17,6 @@
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
 # amrnegm <amrnegm.01@gmail.com>, 2019
-# Martin Trigaux, 2019
-# hoxhe Aits <hoxhe0@gmail.com>, 2019
 # Mahmoud M. Soliman <mahmoud_soliman4@alex-comm.edu.eg>, 2019
 # Osoul <baruni@osoul.ly>, 2019
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2019
@@ -27,14 +25,17 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # Waleed Mohsen <mohsen.waleed@gmail.com>, 2019
 # Amer Hazaa <eng.amer.it@gmail.com>, 2019
+# Martin Trigaux, 2019
+# hoxhe Aits <hoxhe0@gmail.com>, 2019
+# Nisrine Tagri <nta@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"POT-Creation-Date: 2019-09-13 11:26+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Amer Hazaa <eng.amer.it@gmail.com>, 2019\n"
+"Last-Translator: Nisrine Tagri <nta@odoo.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,6 +110,12 @@ msgstr "${object.company_id.name} أمر التسليم (رقم ${object.name or
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_picking_responsible.py:0
+#, python-format
+msgid "%s has a restricted access to %s"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -794,6 +801,11 @@ msgid "Assign"
 msgstr "تكليف"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
+msgid "Assign Owner"
+msgstr "تعيين مالك"
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_picking_responsible
 msgid "Assign Responsible"
 msgstr ""
@@ -812,11 +824,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
 msgid "Assign a Responsible"
 msgstr "إسناد لمسئول"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
-msgid "Assign owner"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1079,6 +1086,25 @@ msgid "Change to a better name"
 msgstr "تغيير الاسم لاسم أفضل"
 
 #. module: stock
+#: code:addons/stock/models/product_strategy.py:0
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/models/stock_production_lot.py:0
+#: code:addons/stock/models/stock_warehouse.py:0
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"Changing the company of this record is forbidden at this point, you should "
+"rather archive it and create a new one."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Changing the operation type of this record is forbidden at this point."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
 msgstr "تحقق من توفر الكمية"
@@ -1138,6 +1164,7 @@ msgid "Companies"
 msgstr "الشركات"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__company_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__company_id
@@ -1145,10 +1172,14 @@ msgstr "الشركات"
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_move__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_package_level__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__company_id
@@ -1231,6 +1262,7 @@ msgstr "البند الاستهلاكي"
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
 #: model:ir.model.fields,field_description:stock.field_stock_picking__partner_id
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Contact"
 msgstr "جهة الاتصال"
 
@@ -1722,6 +1754,11 @@ msgstr "الكمية المستلمة"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 msgid "Delivery"
 msgstr "التسليم"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Delivery Address"
+msgstr "عنوان التسليم"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -2457,16 +2494,12 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking__message_unread
-#: model:ir.model.fields,help:stock.field_stock_production_lot__message_unread
-#: model:ir.model.fields,help:stock.field_stock_scrap__message_unread
-msgid "If checked new messages require your attention."
-msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج لرؤيتها."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_picking__message_unread
 #: model:ir.model.fields,help:stock.field_stock_production_lot__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_production_lot__message_unread
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_scrap__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج لرؤيتها."
 
@@ -2584,6 +2617,13 @@ msgstr "إذا كان محددًا، ستتمكن من اختيار حزم كا�
 #: model:ir.model.fields,help:stock.field_stock_rule__active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr "إذا لم يتم التحقق منه، سوف تسمح لك لإخفاء القاعده دون إزالته. "
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
+msgid ""
+"If you cancel this inventory adjustment, all its inventory adjustment lines "
+"will be lost. Are you sure you want to discard it ?"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
@@ -2910,12 +2950,6 @@ msgstr "لا يمكن حجز كمية أكبر من المنتج %s مما تم�
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
 msgstr "لا يمكن حجز كمية أكبر من المنتج %s مما تملك في مخزونك."
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__product_packaging
-msgid ""
-"It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr "وتحدد سمات المجموعة مثل النوع, كمية المجموعة, الخ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3675,8 +3709,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
-msgid "Number of error"
-msgstr "عدد الأخطاء"
+msgid "Number of errors"
+msgstr "عدد الاخطاء"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -4176,11 +4210,6 @@ msgstr "بضاعة موجبة"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Pre-fill Detailed Operations"
 msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging
-msgid "Preferred Packaging"
-msgstr "التعبئة المفضلة"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -4757,6 +4786,11 @@ msgstr "مسار الاستلام"
 #, python-format
 msgid "Receipts"
 msgstr "الإيصالات"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Receive From"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
@@ -5920,11 +5954,12 @@ msgstr "يجب أن يكون كود المخزن فريدًا من نوعه لك
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_production_lot_name_ref_uniq
-msgid "The combination of serial number and product must be unique !"
-msgstr "يجب أن يكون خليط الرقم المسلسل والمنتج فريدًا!"
+msgid ""
+"The combination of serial number and product must be unique across a company"
+" !"
+msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_type__company_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
 msgid "The company is automatically set from your user preferences."
 msgstr "يتم تعيين المؤسسة تلقائيًا من إعدادات مستخدمك."
@@ -6598,13 +6633,10 @@ msgstr "استخدام الأرقام المسلسلة/أرقام اللوط ا�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid ""
-"Use this assistant to replenish your stock. \n"
+"Use this assistant to replenish your stock.\n"
 "                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
 msgstr ""
-"استخدم هذا المعالج للمساعدة في تغذية المخزن بهذا المنتج. بناءً على إعدادات "
-"المنتج فإن هذا المعالج قد يقوم بإنشاء طلب شراء مبدئي، أو أمر تصنيع، أو حركة "
-"مخازن."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7075,6 +7107,12 @@ msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr "لا يمنكك إلغاء حركة مخزون فى الحالة \"منتهية\"."
 
 #. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -7238,12 +7276,6 @@ msgid ""
 "You have to select a product unit of measure that is in the same category "
 "than the default unit of measure of the product"
 msgstr "يجب أن تختار للمنتج وحدة قياس من نفس فئة وحدة قياسه الافتراضية"
-
-#. module: stock
-#: code:addons/stock/models/stock_location.py:0
-#, python-format
-msgid "You have to set a name for this location."
-msgstr "يجب تحديد اسم لهذا الموقع."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"POT-Creation-Date: 2019-09-09 12:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -255,11 +255,6 @@ msgstr "Veiklų analizė"
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_done
 msgid "Activities Done Target"
 msgstr "Atliktų veiklų tikslas"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Activities Todo"
-msgstr "Atliktinos veiklos"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -960,6 +955,20 @@ msgid "Empty"
 msgstr ""
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Enrich your leads automatically with company data based on their email "
+"address"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_lead_enrich
+msgid ""
+"Enrich your leads automatically with company data based on their email "
+"address."
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
 msgid ""
 "Enter here the internal requirements for this stage (ex: Offer sent to "
@@ -1144,12 +1153,8 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_lead__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jeigu pažymėta, naujoms žinutėms reikės jūsų dėmesio."
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
+#: model:ir.model.fields,help:crm.field_crm_lead__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
@@ -1337,6 +1342,11 @@ msgstr "Iniciatyva"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__lead_count
 msgid "Lead Count"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Lead Enrichment"
 msgstr ""
 
 #. module: crm
@@ -1772,8 +1782,8 @@ msgstr "Veiksmų skaičius"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error_counter
-msgid "Number of error"
-msgstr "Klaidos numeris"
+msgid "Number of errors"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter

@@ -1382,7 +1382,7 @@ take the following attributes:
       <gantt
         date_start="date_start"
         date_stop="date_stop"
-        thumbnails="{'user_id': 'image_64'}"
+        thumbnails="{'user_id': 'image_128'}"
       >
       </gantt>
 

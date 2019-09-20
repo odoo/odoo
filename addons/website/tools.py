@@ -100,6 +100,7 @@ class MockRequest(object):
             'httprequest': {
                 'path': '/hello/',
                 'app': app,
+                'cookies': kw.get('cookies', {}),
             },
             'lang': lang,
             'redirect': werkzeug.utils.redirect,

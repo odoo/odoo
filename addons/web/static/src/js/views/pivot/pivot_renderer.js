@@ -125,10 +125,7 @@ var PivotRenderer = AbstractRenderer.extend({
                     if (rowIndex > 0) {
                         cellParams.title = groupbyLabels[rowIndex - 1];
                     }
-                    className = 'o_pivot_header_cell';
-                    if (!config.device.isMobile) {
-                        className += cell.isLeaf ? '_closed' : '_opened';
-                    }
+                    className = 'o_pivot_header_cell' + (cell.isLeaf ? '_closed' : '_opened');
                 }
                 cellParams.class = className;
             

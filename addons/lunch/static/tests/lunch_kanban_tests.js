@@ -261,6 +261,55 @@ QUnit.module('LunchKanbanView', {
             kanban.destroy();
         });
 
+        QUnit.test('search panel domain location false: fetch products in all locations', async function (assert) {
+            assert.expect(10);
+            const regularInfos = _.extend({}, this.regularInfos);
+
+            const kanban = await createLunchKanbanView({
+                View: LunchKanbanView,
+                model: 'product',
+                data: this.data,
+                arch: `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div><field name="name"/></div>
+                            </t>
+                        </templates>
+                    </kanban>
+                `,
+                mockRPC: function (route, args) {
+                    assert.step(route);
+
+                    if (route.startsWith('/lunch')) {
+                        return mockLunchRPC({
+                            infos: regularInfos,
+                            userLocation: false,
+                        }).apply(this, arguments);
+                    }
+                    if (args.method === 'search_panel_select_multi_range') {
+                        assert.deepEqual(args.kwargs.search_domain, [],
+                            'The domain should not exist since the location is false.');
+                    }
+                    if (route === '/web/dataset/search_read') {
+                        assert.deepEqual(args.domain, [],
+                            'The domain for fetching actual data should be correct');
+                    }
+                    return this._super.apply(this, arguments);
+                }
+            });
+            assert.verifySteps([
+                '/lunch/user_location_get',
+                '/web/dataset/call_kw/product/search_panel_select_multi_range',
+                '/web/dataset/call_kw/product/search_panel_select_multi_range',
+                '/web/dataset/search_read',
+                '/lunch/infos',
+                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
+            ])
+
+            kanban.destroy();
+        });
+
         QUnit.test('non-empty cart', async function (assert) {
             assert.expect(17);
 

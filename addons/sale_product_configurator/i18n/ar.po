@@ -3,7 +3,6 @@
 # 	* sale_product_configurator
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # amrnegm <amrnegm.01@gmail.com>, 2019
 # Martin Trigaux, 2019
 # hoxhe Aits <hoxhe0@gmail.com>, 2019
@@ -13,14 +12,15 @@
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2019
 # Zuhair Hammadi <zuhair12@gmail.com>, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 12:27+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2019\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,8 +46,15 @@ msgstr "إضافة"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Add one"
 msgstr "إضافة واحدة"
+
+#. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_attribute_value_ids
+msgid "Attribute Values"
+msgstr "قيم الخاصية"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
@@ -56,7 +63,7 @@ msgstr "الخيارات المتاحة:"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:200
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Back"
 msgstr "العودة"
@@ -68,7 +75,7 @@ msgstr "إلغاء"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:201
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Configure"
 msgstr "إعداد"
@@ -80,7 +87,7 @@ msgstr "إعداد منتج"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:199
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Confirm"
 msgstr "تأكيد"
@@ -96,20 +103,24 @@ msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
+msgid "Custom Values"
+msgstr ""
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
 msgid "Display Name"
 msgstr "الاسم المعروض"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
+msgid "Extra Values"
+msgstr ""
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
 msgid "ID"
 msgstr "المُعرف"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_product_product__has_configurable_attributes
-#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__has_configurable_attributes
-msgid "Is a configurable product"
-msgstr ""
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
@@ -186,11 +197,6 @@ msgid "Product Template"
 msgstr "قالب المنتج"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
-msgid "Product attribute values that do not create variants"
-msgstr "قيم خصائص المنتج التي لا تنشئ موديلات"
-
-#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Quantity"
@@ -199,6 +205,7 @@ msgstr "الكمية"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Remove one"
 msgstr "إزالة واحدة"
 
@@ -218,12 +225,6 @@ msgid "Save"
 msgstr "حفظ"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_attribute_value_ids
-msgid "Template Attribute Values"
-msgstr "قيم خصائص القالب"
-
-#. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This combination does not exist."
 msgstr "هذه التركيبة غير موجودة."
@@ -232,8 +233,3 @@ msgstr "هذه التركيبة غير موجودة."
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
 msgstr "لا توجد تركيبة صحيحة لهذا المنتج."
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
-msgid "User entered custom product attribute values"
-msgstr "قيم خصائص المنتج المعدلة تبعًا للعميل"

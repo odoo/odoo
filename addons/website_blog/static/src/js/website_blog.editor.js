@@ -90,31 +90,57 @@ WysiwygMultizone.include({
      * @override
      */
     _saveElement: function (outerHTML, recordInfo, editable) {
-        var defs = [this._super.apply(this, arguments)];
-        // TODO the o_dirty class is not put on the right element for blog cover
-        // edition. For some strange reason, it was forcly put (even if not
-        // dirty) in <= saas-16 but this is not the case anymore.
-        var $blogContainer = $(editable).closest('.o_blog_cover_container');
-        if (!this.__blogCoverSaved && $blogContainer.length) {
-            var $el = $blogContainer;
-            this.__blogCoverSaved = true;
-            defs.push(this._rpc({
-                route: '/blog/post_change_background',
-                params: {
-                    blog_id: parseInt($el.closest('[name="blog_post"], #o_wblog_blog_top, #o_wblog_post_top').find('[data-oe-model="blog.blog"]').first().data('oe-id'), 10),
-                    post_id: parseInt($el.closest('[name="blog_post"], #o_wblog_blog_top, #o_wblog_post_top').find('[data-oe-model="blog.post"]').first().data('oe-id'), 10),
-                    cover_properties: {
-                        'background-image': $el.find('.o_blog_cover_image').css('background-image').replace(/"/g, '').replace(window.location.protocol + "//" + window.location.host, ''),
-                        'background-color': $el.attr('data-filter-color'),
-                        'opacity': $el.attr('data-filter-value'),
-                        'resize_class': $el.attr('data-cover-class'),
-                        'text_size_class': $el.attr('data-text-size-class'),
-                        'text_align_class': $el.attr('data-text-align-class'),
-                    },
-                },
-            }));
+        var prom = this._super.apply(this, arguments);
+
+        var el = editable.closest('.o_blog_cover_container');
+        if (!el) {
+            return prom;
         }
-        return Promise.all(defs);
+
+        var ancestor = el.closest('[name="blog_post"], #o_wblog_blog_top, #o_wblog_post_top');
+        var blogID = parseInt($(ancestor.querySelector('[data-oe-model="blog.blog"]')).data('oe-id'), 10);
+        var postID = parseInt($(ancestor.querySelector('[data-oe-model="blog.post"]')).data('oe-id'), 10);
+
+        if (blogID) {
+            this.__savedCoversBlogIDs = this.__savedCoversBlogIDs || [];
+            if (this.__savedCoversBlogIDs.includes(blogID)) {
+                return prom;
+            }
+            this.__savedCoversBlogIDs.push(blogID);
+        }
+        if (postID) {
+            this.__savedCoversPostIDs = this.__savedCoversPostIDs || [];
+            if (this.__savedCoversPostIDs.includes(postID)) {
+                return prom;
+            }
+            this.__savedCoversPostIDs.push(postID);
+        }
+
+        var model = postID ? 'blog.post' : blogID ? 'blog.blog' : false;
+        if (!model) {
+            return prom;
+        }
+
+        var cssBgImage = $(el.querySelector('.o_blog_cover_image')).css('background-image');
+        var coverProps = {
+            'background-image': cssBgImage.replace(/"/g, '').replace(window.location.protocol + "//" + window.location.host, ''),
+            'background-color': el.dataset.filterColor,
+            'opacity': el.dataset.filterValue,
+            'resize_class': el.dataset.coverClass,
+            'text_size_class': el.dataset.textSizeClass,
+            'text_align_class': el.dataset.textAlignClass,
+        };
+
+        var prom2 = this._rpc({
+            model: model,
+            method: 'write',
+            args: [
+                postID || blogID,
+                {'cover_properties': JSON.stringify(coverProps)}
+            ],
+        });
+
+        return Promise.all([prom, prom2]);
     },
 });
 
@@ -270,11 +296,11 @@ options.registry.blog_cover = options.Class.extend({
                 return self.$filter.hasClass($(this).data('filterColor'));
             }).addClass('active').data('filterColor');
 
-        this.$target.attr('data-cover-class', this.$el.find('.active[data-cover-opt="size"]').data('selectClass') || '');
-        this.$target.attr('data-text-size-class', this.$el.find('.active[data-cover-opt="text_size"]').data('selectClass') || '');
-        this.$target.attr('data-text-align-class', this.$el.find('.active[data-cover-opt="text_align"]').data('selectClass') || '');
-        this.$target.attr('data-filter-value', activeFilterValue || 0.0);
-        this.$target.attr('data-filter-color', activeFilterColor || '');
+        this.$target[0].dataset.coverClass = this.$el.find('.active[data-cover-opt="size"]').data('selectClass') || '';
+        this.$target[0].dataset.textSizeClass = this.$el.find('.active[data-cover-opt="text_size"]').data('selectClass') || '';
+        this.$target[0].dataset.textAlignClass = this.$el.find('.active[data-cover-opt="text_align"]').data('selectClass') || '';
+        this.$target[0].dataset.filterValue = activeFilterValue || 0.0;
+        this.$target[0].dataset.filterColor = activeFilterColor || '';
     },
 });
 });

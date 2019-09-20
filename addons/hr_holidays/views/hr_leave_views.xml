@@ -110,11 +110,10 @@
                         <div class="oe_kanban_global_click container">
                             <div class="row no-gutters">
                                 <div class="col-2">
-                                    <img t-att-src="kanban_image('hr.employee', 'image_64', record.employee_id.raw_value)"
+                                    <img t-att-src="kanban_image('hr.employee', 'image_128', record.employee_id.raw_value)"
                                         t-att-title="record.employee_id.value"
                                         t-att-alt="record.employee_id.value"
-                                        width="40" height="40"
-                                        class="oe_kanban_avatar float-left mr4 col-md-"/>
+                                        class="oe_kanban_avatar o_image_40_cover float-left mr4"/>
                                 </div>
                                 <div class="col-10">
                                     <span class="badge badge-pill float-right mt4 mr16"><t t-esc="record.number_of_days.value"/> days</span>
@@ -175,7 +174,7 @@
                 <field name="number_of_days"/>
                 <templates>
                     <div t-name="activity-box">
-                        <img t-att-src="activity_image('hr.employee', 'image_64', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="50" height="50"/>
+                        <img t-att-src="activity_image('hr.employee', 'image_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="50" height="50"/>
                         <div>
                             <field name="name"/>
                             <span class="ml-3 text-muted">
@@ -211,7 +210,7 @@
             </header>
             <sheet>
                 <field name="leave_type_request_unit" invisible="1"/>
-                <div class="oe_title" attrs="{'invisible': [('display_name', '=', False)]}" name="title">
+                <div class="oe_title oe_read_only" attrs="{'invisible': [('display_name', '=', False)]}" name="title">
                     <h1>
                         <field name="display_name"/>
                     </h1>

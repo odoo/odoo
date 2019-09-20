@@ -8,13 +8,68 @@ odoo.define('web.ListController', function (require) {
  */
 
 var core = require('web.core');
+var session = require('web.session');
+var framework = require('web.framework');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
 var Dialog = require('web.Dialog');
+var fieldUtils = require('web.field_utils');
 var Sidebar = require('web.Sidebar');
 
 var _t = core._t;
 var qweb = core.qweb;
+
+/**
+ * Return data required for exporting the current list to a xls file.
+ * Recursive if some groups are nested.
+ * Note: this function is also used when the records are not grouped.
+ * In this scenario, an artificial single group with every record in
+ * the list is built.
+ * @param {Array} groups
+ * @param {Array} displayedFields
+ * @param {Array} allFields
+ * @returns {Array} list of groups with the following structure:
+ *                      'data': list of records or list of sub-groups
+ *                      'isGrouped': true if data contains sub-groups
+ *                      'value': title of the group
+ *                      'count': number of records in the group
+ *                      'aggregateValues': dict container aggregated values of fields {field: aggregatedValue, ...}
+ *                      'hideHeader': self explanatory, used when the records are not grouped at all.
+ */
+var processGroups = (groups, displayedFields, allFields) => {
+    let formatRecord = record => {
+        let data = _.pick(record.data, displayedFields)
+        let formattedData = {}
+
+        Object.entries(data).forEach(([field_name, value]) => {
+            let field = allFields[field_name]
+            let formattedValue = fieldUtils.format[field.type](value, field, {data: record.data, forceString: true})
+            formattedData[field_name] = formattedValue.replace('&nbsp;', '')
+        });
+        return formattedData
+    }
+
+    if (groups.length && groups[0].groupedBy && groups[0].groupedBy.length) {
+        // Recursively process sub-group
+        return groups.map(group => ({
+            hideHeader: !!group.hideHeader,
+            isGrouped: true,
+            value: group.value !== undefined && group.value.toString() || _t("Undefined"),
+            count: group.count,
+            aggregateValues: _.pick(group.aggregateValues, displayedFields),
+            data: processGroups(group.data, displayedFields, allFields),
+        }))
+    }
+    // process records
+    return groups.map(group => ({
+        hideHeader: !!group.hideHeader,
+        isGrouped: false,
+        value: group.value !== undefined && group.value.toString() || _t("Undefined"),
+        count: group.count,
+        aggregateValues: _.pick(group.aggregateValues, displayedFields),
+        data: group.data.map(formatRecord)
+    }))
+}
 
 var ListController = BasicController.extend({
     /**
@@ -22,6 +77,9 @@ var ListController = BasicController.extend({
      * the list view. It can be overridden to add buttons in specific child views.
      */
     buttons_template: 'ListView.buttons',
+    events: _.extend({}, BasicController.prototype.events, {
+        'click .o_list_download': '_onExportRecords',
+    }),
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         activate_next_widget: '_onActivateNextWidget',
         add_record: '_onAddRecord',
@@ -50,6 +108,10 @@ var ListController = BasicController.extend({
         this.noLeaf = params.noLeaf;
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
+        this.fieldChangedPrevented = false;
+        this.activeActions = _.extend({}, this.activeActions, {
+            download: this.renderer.arch.attrs.download ? !!JSON.parse(this.renderer.arch.attrs.download) : true,
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -134,6 +196,7 @@ var ListController = BasicController.extend({
                 },
                 trigger: 'manual',
             });
+            this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
             this.$buttons.appendTo($node);
         }
@@ -339,6 +402,31 @@ var ListController = BasicController.extend({
         });
     },
     /**
+     * Export the current list data in a xls file.
+     *
+     * @private
+     */
+    _downloadList() {
+        let groups = this.renderer.state.data
+        groups = this.renderer.isGrouped ? groups : [{data: groups, count: groups.length, hideHeader: true}] // Artificial single group
+
+        let allFields = this.renderer.state.fields
+        let columns = this.renderer.columns.map(column => ({
+            field: column.attrs.name,
+            aggregateValue: column.aggregate && column.aggregate.value,
+            string: allFields[column.attrs.name].string,
+        }))
+
+        groups = processGroups(groups, columns.map(c => c.field), allFields)
+
+        return session.get_file({
+            url: '/web/list/export_xls',
+            data: {data: JSON.stringify({columns, groups, title: this._title})},
+            complete: framework.unblockUI,
+            error: (error) => this.call('crash_manager', 'rpc_error', error),
+        });
+    },
+    /**
      * @override
      * @private
      */
@@ -371,6 +459,7 @@ var ListController = BasicController.extend({
      */
     _saveMultipleRecords: function (recordId, node, changes) {
         var self = this;
+        var fieldName = Object.keys(changes)[0];
         var value = Object.values(changes)[0];
         var recordIds = _.union([recordId], this.selectedRecords);
         var validRecordIds = recordIds.reduce(function (result, nextRecordId) {
@@ -388,6 +477,7 @@ var ListController = BasicController.extend({
                 this.model.discardChanges(recordId);
                 return this._confirmSave(recordId).then(reject);
             };
+            let dialog;
             if (validRecordIds.length > 0) {
                 let message;
                 if (nbInvalid === 0) {
@@ -399,13 +489,13 @@ var ListController = BasicController.extend({
                         _t("Do you want to set the value on the %d valid selected records? (%d invalid)"),
                         validRecordIds.length, nbInvalid);
                 }
-                Dialog.confirm(this, message, {
+                dialog = Dialog.confirm(this, message, {
                     confirm_callback: () => {
-                        this.model.saveRecords(recordId, validRecordIds)
-                            .then(() => {
+                        return this.model.saveRecords(recordId, validRecordIds, fieldName)
+                            .then(async () => {
                                 this._updateButtons('readonly');
                                 const state = this.model.get(this.handle);
-                                this.renderer.updateState(state, {keepWidths: true});
+                                await this.renderer.updateState(state, {keepWidths: true});
                                 resolve(Object.keys(changes));
                             })
                             .guardedCatch(rejectAndDiscard);
@@ -413,10 +503,17 @@ var ListController = BasicController.extend({
                     cancel_callback: rejectAndDiscard,
                 });
             } else {
-                Dialog.alert(this, _t("No valid record to save"), {
+                dialog = Dialog.alert(this, _t("No valid record to save"), {
                     confirm_callback: rejectAndDiscard,
                 });
             }
+            dialog.on('closed', this, async () => {
+                // we need to wait for the dialog to be actually closed, but
+                // the 'closed' event is triggered just before, and it prevents
+                // from focussing the cell
+                await Promise.resolve();
+                this.renderer.focusCell(recordId, node);
+            });
         });
     },
     /**
@@ -587,6 +684,28 @@ var ListController = BasicController.extend({
         this._discardChanges();
     },
     /**
+     * Used to detect if the discard button is about to be clicked.
+     * Some focusout events might occur and trigger a save which
+     * is not always wanted when clicking "Discard".
+     *
+     * @param {MouseEvent} ev
+     * @private
+     */
+    _onDiscardMousedown: function (ev) {
+        var self = this;
+        this.fieldChangedPrevented = true;
+        window.addEventListener('mouseup', function (mouseupEvent) {
+            var preventedEvent = self.fieldChangedPrevented;
+            self.fieldChangedPrevented = false;
+            // If the user starts clicking (mousedown) on the button and stops clicking
+            // (mouseup) outside of the button, we want to trigger the original onFieldChanged
+            // Event that was prevented in the meantime.
+            if (ev.target !== mouseupEvent.target && preventedEvent.constructor.name === 'OdooEvent') {
+                self._onFieldChanged(preventedEvent);
+            }
+        }, { capture: true, once: true });
+    },
+    /**
      * Called when the user asks to edit a row -> Updates the controller buttons
      *
      * @param {OdooEvent} ev
@@ -612,6 +731,14 @@ var ListController = BasicController.extend({
             return field.attrs.name;
         });
         new DataExport(this, record, defaultExportFields).open();
+    },
+    /**
+     * Export Records in a xls file
+     *
+     * @private
+     */
+    _onExportRecords() {
+        this._downloadList()
     },
     /**
      * Opens the related form view.
@@ -643,15 +770,16 @@ var ListController = BasicController.extend({
         ev.stopPropagation();
         const recordId = ev.data.dataPointID;
 
-        if (this.renderer.inMultipleRecordEdition(recordId)) {
+        if (this.fieldChangedPrevented) {
+            this.fieldChangedPrevented = ev;
+        } else if (this.renderer.inMultipleRecordEdition(recordId)) {
             // deal with edition of multiple lines
-            const _onSuccess = ev.data.onSuccess;
             ev.data.onSuccess = () => {
-                Promise.resolve(_onSuccess()).then(() => {
-                    const savedRecordsPromise = this._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
-                    this.multipleRecordsSavingPromise = savedRecordsPromise;
-                });
+                this.multipleRecordsSavingPromise =
+                    this._saveMultipleRecords(ev.data.dataPointID, ev.target.__node, ev.data.changes);
             };
+            // disable onchanges as we'll save directly
+            ev.data.notifyChange = false;
         }
         this._super.apply(this, arguments);
     },
@@ -676,6 +804,29 @@ var ListController = BasicController.extend({
     _onSelectionChanged: function (ev) {
         this.selectedRecords = ev.data.selection;
         this._toggleSidebar();
+    },
+    /**
+     * If the record is set as dirty while in multiple record edition,
+     * we want to immediatly discard the change.
+     *
+     * @private
+     * @override
+     * @param {OdooEvent} ev
+     */
+    _onSetDirty: function (ev) {
+        var self = this;
+        var recordId = ev.data.dataPointID;
+        if (this.renderer.inMultipleRecordEdition(recordId)) {
+            ev.stopPropagation();
+            Dialog.alert(this, _t("No valid record to save"), {
+                confirm_callback: function () {
+                    self.model.discardChanges(recordId);
+                    self._confirmSave(recordId);
+                },
+            });
+        } else {
+            this._super.apply(this, arguments);
+        }
     },
     /**
      * When the user clicks on one of the sortable column headers, we need to

@@ -10,22 +10,22 @@
 # Андрей Гусев <gaussgss@gmail.com>, 2019
 # Viktor Pogrebniak <vp@aifil.ru>, 2019
 # Дмитрий Ефременко <shiza867@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Collex100, 2019
-# Sergey Vilizhanin, 2019
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2019
 # Oleg Kuryan <oleg@ventor.tech>, 2019
 # Konstantin Korovin <korovin74@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Sergey Vilizhanin, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Konstantin Korovin <korovin74@gmail.com>, 2019\n"
+"Last-Translator: Sergey Vilizhanin, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -799,7 +799,7 @@ msgstr "Количество вложений"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_value
-#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__attribute_value_id
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_product_template_attribute_value_id
 msgid "Attribute Value"
 msgstr ""
 
@@ -910,8 +910,8 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
-msgid "Choose how to confirm quotations and get paid."
-msgstr "Выберите, как подтверждать предложения цен и получать оплату."
+msgid "Choose your default customer payment method."
+msgstr ""
 
 #. module: sale
 #. openerp-web
@@ -1016,11 +1016,6 @@ msgid "Confirm"
 msgstr "Подтвердить"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
-msgid "Confirmation &amp; Payment"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__confirmation_template_id
 msgid "Confirmation Email"
 msgstr "Письмо с подтверждением"
@@ -1118,6 +1113,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
+msgid "Credit card (via Stripe)"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__currency_id
@@ -1132,7 +1132,17 @@ msgstr "Курс валюты"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_value
-msgid "Custom value"
+msgid "Custom Value"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
+msgid "Custom Values"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__manual
+msgid "Custom payment instructions"
 msgstr ""
 
 #. module: sale
@@ -1299,11 +1309,6 @@ msgstr "Адрес доставки"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_order_dates
 msgid "Delivery Date"
 msgstr "Дата доставки"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
-msgid "Delivery Lead Time"
-msgstr "Время выполнения доставки"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__partner_shipping_id
@@ -1514,6 +1519,11 @@ msgid "External Link"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
+msgid "Extra Values"
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Extra line with %s "
@@ -1663,12 +1673,8 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Если отмечено, новые сообщения будут требовать вашего внимания."
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
+#: model:ir.model.fields,help:sale.field_sale_order__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Если отмечено - новые сообщения требуют Вашего внимания."
 
@@ -1993,6 +1999,11 @@ msgid "Late Activities"
 msgstr "Действия с опозданием"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
+msgid "Lead Time"
+msgstr "Время выполнения заказа"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr "Разрешите клиентам логиниться, чтобы видеть свои документы"
@@ -2086,6 +2097,13 @@ msgid "Marketing"
 msgstr "Маркетинг"
 
 #. module: sale
+#. openerp-web
+#: code:addons/sale/static/src/xml/account_reconciliation.xml:0
+#, python-format
+msgid "Match with a sale order"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__medium_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__medium_id
 msgid "Medium"
@@ -2147,6 +2165,11 @@ msgstr "Мои ценовые предложения"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
 msgstr "Мои позиции заказов продаж"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__name
+msgid "Name"
+msgstr "Название"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_by
@@ -2247,7 +2270,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: sale
@@ -2332,6 +2355,12 @@ msgstr ""
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Только целочисленное значение."
+
+#. module: sale
+#: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
+msgid ""
+"Only one Custom Value is allowed per Attribute Value per Sales Order Line."
+msgstr ""
 
 #. module: sale
 #. openerp-web
@@ -2457,6 +2486,11 @@ msgid "Other Info"
 msgstr "Прочая информация"
 
 #. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
+msgid "Other payment acquirer"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
 msgstr ""
@@ -2510,6 +2544,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__paypal
 msgid "PayPal"
 msgstr ""
 
@@ -2547,6 +2582,11 @@ msgstr "Условия оплаты"
 #: model:ir.model,name:sale.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Операция Оплаты"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
+msgid "Payment method"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2696,11 +2736,6 @@ msgstr "Вариант продукта"
 #: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
 msgstr "Варианты продукта"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
-msgid "Product attribute values that do not create variants"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2973,6 +3008,7 @@ msgstr ""
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/account_reconciliation.js:0
+#: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Sale Order"
 msgstr "Заказ на продажу"
@@ -3008,11 +3044,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
-msgid "Sale order line"
 msgstr ""
 
 #. module: sale
@@ -3077,6 +3108,7 @@ msgstr "Элемент заказа на продажу"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
@@ -3501,6 +3533,12 @@ msgid "Subtotal"
 msgstr "Подытог"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
+msgid "Tax Total"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_by_group
 msgid "Tax amount by group"
 msgstr ""
@@ -3839,6 +3877,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
+msgid "Total Tax Excluded"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Included"
 msgstr "Итого налогов"
 
@@ -3996,11 +4040,6 @@ msgid "Use this menu to access quotations, sales orders and customers."
 msgstr ""
 "Используйте это меню для доступа к предложением, заказам на продажу и "
 "клиентам."
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
-msgid "User entered custom product attribute values"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations

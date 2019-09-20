@@ -1790,6 +1790,7 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
     }
     r.clean().select();
     event.preventDefault();
+
     return false;
 };
 $.summernote.pluginEvents.insertOrderedList = function (event, editor, layoutInfo) {
@@ -1797,6 +1798,7 @@ $.summernote.pluginEvents.insertOrderedList = function (event, editor, layoutInf
 };
 $.summernote.pluginEvents.insertCheckList = function (event, editor, layoutInfo) {
     $.summernote.pluginEvents.insertUnorderedList(event, editor, layoutInfo, "checklist");
+    $(range.create().sc.parentNode).trigger('input'); // to update checklist-id
 };
 $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent) {
     var $editable = layoutInfo.editable();
@@ -2469,6 +2471,7 @@ function mouseDownChecklist (e) {
     if (!dom.isLi(e.target) || !$(e.target).parent('ul.o_checklist').length || e.offsetX > 0) {
         return;
     }
+    e.stopPropagation();
     e.preventDefault();
     var checked = $(e.target).hasClass('o_checked');
     $(e.target).toggleClass('o_checked', !checked);
@@ -2478,12 +2481,14 @@ function mouseDownChecklist (e) {
     });
     if (checked) {
         $sublevel.removeClass('o_checked');
-        $parents.prev('ul.o_checklist li').removeClass('o_checked');
+        do {
+            $parents = $parents.prev('ul.o_checklist li').removeClass('o_checked');
+        } while ($parents.length);
     } else {
         $sublevel.addClass('o_checked');
         var $lis;
         do {
-            $lis = $parents.not(':has(li:not(.o_checked))').prev('ul.o_checklist li:not(.o_checked)');
+            $lis = $parents.not(':has(li[id^="checklist-id"]:not(.o_checked))').prev('ul.o_checklist li:not(.o_checked)');
             $lis.addClass('o_checked');
         } while ($lis.length);
     }

@@ -320,6 +320,7 @@ var SelectCreateDialog = ViewDialog.extend({
         this._super.apply(this, arguments);
         _.defaults(this.options, { initial_view: 'search' });
         this.on_selected = this.options.on_selected || (function () {});
+        this.on_closed = this.options.on_closed || (function () {});
         this.initialIDs = this.options.initial_ids;
         this.viewType = 'list';
     },
@@ -394,6 +395,10 @@ var SelectCreateDialog = ViewDialog.extend({
         }).then(function () {
             return fragment;
         });
+    },
+    close: function () {
+        this._super.apply(this, arguments);
+        this.on_closed();
     },
     create_edit_record: function () {
         var self = this;

@@ -10,21 +10,21 @@
 # storm_mpildek <matija.pildek@storm.hr>, 2019
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
 # Mario Jureša <mario.juresa@uvid.hr>, 2019
 # Tina Milas, 2019
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"POT-Creation-Date: 2019-09-13 11:26+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Tina Milas, 2019\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,6 +96,12 @@ msgstr ""
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_picking_responsible.py:0
+#, python-format
+msgid "%s has a restricted access to %s"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -742,6 +748,11 @@ msgid "Assign"
 msgstr "Dodijeli"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
+msgid "Assign Owner"
+msgstr "Dodjeljeni vlasnik"
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_picking_responsible
 msgid "Assign Responsible"
 msgstr ""
@@ -759,11 +770,6 @@ msgstr ""
 #: model:ir.actions.server,name:stock.action_assign_a_responsible
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
 msgid "Assign a Responsible"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
-msgid "Assign owner"
 msgstr ""
 
 #. module: stock
@@ -1025,6 +1031,25 @@ msgid "Change to a better name"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/product_strategy.py:0
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/models/stock_production_lot.py:0
+#: code:addons/stock/models/stock_warehouse.py:0
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"Changing the company of this record is forbidden at this point, you should "
+"rather archive it and create a new one."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Changing the operation type of this record is forbidden at this point."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
 msgstr "Provjeri dostupnost"
@@ -1083,6 +1108,7 @@ msgid "Companies"
 msgstr "Tvrtke"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__company_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__company_id
@@ -1090,10 +1116,14 @@ msgstr "Tvrtke"
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_move__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_package_level__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__company_id
@@ -1176,6 +1206,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
 #: model:ir.model.fields,field_description:stock.field_stock_picking__partner_id
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -1654,6 +1685,11 @@ msgstr "Otpremljena kol."
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 msgid "Delivery"
 msgstr "Otprema"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Delivery Address"
+msgstr "Adresa dostave"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -2375,16 +2411,12 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking__message_unread
-#: model:ir.model.fields,help:stock.field_stock_production_lot__message_unread
-#: model:ir.model.fields,help:stock.field_stock_scrap__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_picking__message_unread
 #: model:ir.model.fields,help:stock.field_stock_production_lot__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_production_lot__message_unread
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_scrap__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
 
@@ -2494,6 +2526,13 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_rule__active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr "Ako nije označeno, omogućuje sakrivanje pravila bez brisanja."
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
+msgid ""
+"If you cancel this inventory adjustment, all its inventory adjustment lines "
+"will be lost. Are you sure you want to discard it ?"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
@@ -2821,13 +2860,6 @@ msgstr ""
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
 msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__product_packaging
-msgid ""
-"It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr ""
-"It specifies attributes of packaging like type, quantity of packaging,etc."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3587,8 +3619,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
-msgid "Number of error"
-msgstr "Broj grešaka"
+msgid "Number of errors"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -4083,11 +4115,6 @@ msgstr "Pozitivna zaliha"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Pre-fill Detailed Operations"
 msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging
-msgid "Preferred Packaging"
-msgstr "Preferirano pakiranje"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -4662,6 +4689,11 @@ msgstr ""
 #, python-format
 msgid "Receipts"
 msgstr "Primke"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Receive From"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
@@ -5805,11 +5837,12 @@ msgstr "Šifra skladišta mora biti jedinstvena za organizaciju!"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_production_lot_name_ref_uniq
-msgid "The combination of serial number and product must be unique !"
-msgstr "Kombinacija serijskog broja i proizvoda mora biti jedinstvena!"
+msgid ""
+"The combination of serial number and product must be unique across a company"
+" !"
+msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_type__company_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
 msgid "The company is automatically set from your user preferences."
 msgstr "Tvrtka je automatski postavljena iz Vaših korisničkih preferencija."
@@ -6480,7 +6513,7 @@ msgstr "Koristi postojeće lotove/serijske brojeve"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid ""
-"Use this assistant to replenish your stock. \n"
+"Use this assistant to replenish your stock.\n"
 "                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
 msgstr ""
@@ -6941,6 +6974,12 @@ msgstr ""
 "Ne možete otkazati skladišne dokumente koji su postavljeni na 'Izvršeno'."
 
 #. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -7091,12 +7130,6 @@ msgstr ""
 msgid ""
 "You have to select a product unit of measure that is in the same category "
 "than the default unit of measure of the product"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_location.py:0
-#, python-format
-msgid "You have to set a name for this location."
 msgstr ""
 
 #. module: stock

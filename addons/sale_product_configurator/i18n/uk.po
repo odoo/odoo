@@ -3,17 +3,17 @@
 # 	* sale_product_configurator
 # 
 # Translators:
-# Martin Trigaux, 2019
 # Bohdan Lisnenko, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 12:27+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,8 +39,15 @@ msgstr "Додати"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Add one"
 msgstr "Додати один"
+
+#. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_attribute_value_ids
+msgid "Attribute Values"
+msgstr "Значення атрибутів"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
@@ -49,7 +56,7 @@ msgstr "Доступні функції:"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:200
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Back"
 msgstr "Назад"
@@ -61,7 +68,7 @@ msgstr "Скасувати"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:201
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Configure"
 msgstr "Налаштувати"
@@ -73,7 +80,7 @@ msgstr "Налаштувати товар"
 
 #. module: sale_product_configurator
 #. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:199
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Confirm"
 msgstr "Підтвердити"
@@ -89,20 +96,24 @@ msgid "Created on"
 msgstr "Створено на"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
+msgid "Custom Values"
+msgstr ""
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
+msgid "Extra Values"
+msgstr ""
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
 msgid "ID"
 msgstr "ID"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_product_product__has_configurable_attributes
-#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__has_configurable_attributes
-msgid "Is a configurable product"
-msgstr "Налаштовуваний товар"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
@@ -180,11 +191,6 @@ msgid "Product Template"
 msgstr "Шаблон товару"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
-msgid "Product attribute values that do not create variants"
-msgstr "Значення атрибутів товару, які не створюють варіанти"
-
-#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Quantity"
@@ -193,6 +199,7 @@ msgstr "Кількість"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Remove one"
 msgstr "Вилучити один"
 
@@ -212,12 +219,6 @@ msgid "Save"
 msgstr "Зберегти"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_attribute_value_ids
-msgid "Template Attribute Values"
-msgstr "Значення шаблону атрибута"
-
-#. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This combination does not exist."
 msgstr "Цієї комбінації не існує."
@@ -226,8 +227,3 @@ msgstr "Цієї комбінації не існує."
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
 msgstr "Цей товар не має дійсної комбінації."
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
-msgid "User entered custom product attribute values"
-msgstr "Користувач увів значення атрибутів спеціального товару"

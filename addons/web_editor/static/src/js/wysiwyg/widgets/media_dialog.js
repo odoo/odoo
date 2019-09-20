@@ -76,7 +76,7 @@ var MediaDialog = Dialog.extend({
             this.activeWidget = this.imageWidget;
         } else if (this.documentWidget && $media.is('a.o_image')) {
             this.activeWidget = this.documentWidget;
-        } else if (this.videoWidget && $media.hasClass('media_iframe_video')) {
+        } else if (this.videoWidget && $media.is('.media_iframe_video, .o_bg_video_iframe')) {
             this.activeWidget = this.videoWidget;
         } else if (this.iconWidget && $media.is('span, i')) {
             this.activeWidget = this.iconWidget;

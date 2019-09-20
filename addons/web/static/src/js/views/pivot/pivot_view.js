@@ -108,7 +108,6 @@ var PivotView = AbstractView.extend({
         this.loadParams.default_order = params.default_order || this.arch.attrs.default_order;
         if (config.device.isMobile) {
             this.loadParams.colGroupBys = [];
-            this.loadParams.context.pivot_column_groupby = [];
         }
 
 

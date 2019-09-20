@@ -28,7 +28,7 @@ class BaseDocumentLayout(models.TransientModel):
     primary_color = fields.Char(related='company_id.primary_color', readonly=False)
     secondary_color = fields.Char(related='company_id.secondary_color', readonly=False)
 
-    custom_colors = fields.Boolean(compute="_compute_custom_colors")
+    custom_colors = fields.Boolean(compute="_compute_custom_colors", readonly=False)
     logo_primary_color = fields.Char(compute="_compute_logo_colors")
     logo_secondary_color = fields.Char(compute="_compute_logo_colors")
 

@@ -16,14 +16,16 @@
 # Zuhair Hammadi <zuhair12@gmail.com>, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019
+# Yazeed Dandashi <lay@odoo.com>, 2019
+# Nisrine Tagri <nta@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-09 12:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019\n"
+"Last-Translator: Nisrine Tagri <nta@odoo.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -359,12 +361,8 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread
-msgid "If checked new messages require your attention."
-msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج لرؤيتها."
-
-#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج لرؤيتها."
 
@@ -442,7 +440,7 @@ msgstr "إنشاء دفتر يومية عند استيراد كشف الحساب
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__journal_group_ids
 msgid "Journal Groups"
-msgstr ""
+msgstr "مجموعات الدفاتر اليومية"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__name
@@ -564,8 +562,8 @@ msgstr "عدد الإجراءات"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
-msgid "Number of error"
-msgstr "عدد الأخطاء"
+msgid "Number of errors"
+msgstr "عدد الاخطاء"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
@@ -588,9 +586,9 @@ msgid "OK"
 msgstr "موافق"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
-msgid "Post At Bank Reconciliation"
-msgstr "الترحيل عند التسوية البنكية"
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at
+msgid "Post At"
+msgstr "انشر في"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
@@ -795,16 +793,6 @@ msgstr "رسائل الموقع"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
 msgid "Website communication history"
 msgstr "سجل تواصل الموقع"
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
-msgid ""
-"Whether or not the payments made in this journal should be generated in "
-"draft state, so that the related journal entries are only posted when "
-"performing bank reconciliation."
-msgstr ""
-"يحدد ما إذا كانت عمليات السداد باستخدام دفتر اليومية هذا يتم إنشاؤها في حالة"
-" مسودة، بحيث يتم ترحيل القيود فقط عند إجراء التسويات البنكية."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard

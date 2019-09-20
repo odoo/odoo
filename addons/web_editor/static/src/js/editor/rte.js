@@ -323,11 +323,20 @@ var RTEWidget = Widget.extend({
         });
 
         // start element observation
-        $(document).on('content_changed', '.o_editable', function (ev) {
+        $(document).on('content_changed', function (ev) {
             self.trigger_up('rte_change', {target: ev.target});
+
+            // Add the dirty flag to the element that changed by either adding
+            // it on the highest editable ancestor or, if there is no editable
+            // ancestor, on the element itself (that element may not be editable
+            // but if it received a content_changed event, it should be marked
+            // as dirty to allow for custom savings).
             if (!ev.__isDirtyHandled) {
-                $(this).addClass('o_dirty');
                 ev.__isDirtyHandled = true;
+
+                var el = ev.target;
+                var dirty = el.closest('.o_editable') || el;
+                dirty.classList.add('o_dirty');
             }
         });
 
@@ -586,11 +595,16 @@ var RTEWidget = Widget.extend({
      *        page element)
      */
     _saveElement: function ($el, context, withLang) {
+        var viewID = $el.data('oe-id');
+        if (!viewID) {
+            return Promise.resolve();
+        }
+
         return this._rpc({
             model: 'ir.ui.view',
             method: 'save',
             args: [
-                $el.data('oe-id'),
+                viewID,
                 this._getEscapedElement($el).prop('outerHTML'),
                 $el.data('oe-xpath') || null,
             ],
@@ -720,7 +734,7 @@ var RTEWidget = Widget.extend({
         // selected too)
         //
         // The triple click behavior is reimplemented for all browsers here
-        if (ev.originalEvent.detail === 3) {
+        if (ev.originalEvent && ev.originalEvent.detail === 3) {
             // Select the whole content inside the deepest DOM element that was
             // triple-clicked
             range.create(ev.target, 0, ev.target, ev.target.childNodes.length).select();

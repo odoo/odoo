@@ -14,7 +14,9 @@ class L10nLatamDocumentType(models.Model):
         ' operation type, the responsibility of both the issuer and the'
         ' receptor of the document')
     purchase_aliquots = fields.Selection(
-        [('not_zero', 'Not Zero'), ('zero', 'Zero')], help='Indicates if this type of documents has VAT or Not')
+        [('not_zero', 'Not Zero'), ('zero', 'Zero')], help='Raise an error if a vendor bill is miss encoded. "Not Zero"'
+        ' means the VAT taxes are required for the invoices related to this document type, and those with "Zero" means'
+        ' that only "VAT Not Applicable" tax is allowed.')
 
     def _get_l10n_ar_letters(self):
         """ Return the list of values of the selection field. """
@@ -30,9 +32,9 @@ class L10nLatamDocumentType(models.Model):
             ('I', 'I'),  # used for mapping of imports
         ]
 
-    def get_document_sequence_vals(self, journal):
+    def _get_document_sequence_vals(self, journal):
         """ Values to create the sequences """
-        values = super().get_document_sequence_vals(journal)
+        values = super()._get_document_sequence_vals(journal)
         if self.country_id != self.env.ref('base.ar'):
             return values
 

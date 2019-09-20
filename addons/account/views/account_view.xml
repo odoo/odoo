@@ -92,6 +92,9 @@
                     <filter string="Liability" name="liabilityacc" domain="[('internal_group','=', 'liability')]"/>
                     <filter string="Income" name="incomeacc" domain="[('internal_group','=', 'income')]"/>
                     <filter string="Expenses" name="expensesacc" domain="[('internal_group','=', 'expense')]"/>
+                    <separator/>
+                    <filter string="Account with Entries" name="used" domain="[('used', '=', True)]"/>
+                    <separator/>
                     <field name="user_type_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Account Type" name="accounttype" domain="" context="{'group_by':'user_type_id'}"/>
@@ -694,6 +697,7 @@ action = model.setting_init_bank_account_action()
                                     <field name="amount_currency" invisible="1"/>
                                     <field name="currency_id" invisible="1" />
                                     <field name="bank_account_id" invisible="1" />
+                                    <field name="account_number" optional="hidden"/>
                                 </tree>
                             </field>
                         </page>
@@ -961,7 +965,7 @@ action = model.setting_init_bank_account_action()
                                 </div>
                                 <field name="amount_from_label_regex" attrs="{'invisible': [('amount_type','!=','regex')]}"/>
                                 <field name="decimal_separator" attrs="{'invisible': [('amount_type','!=','regex')]}"/>
-                                <field name="journal_id" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" widget="selection"
+                                <field name="journal_id" domain="[('type', '=', 'general'), ('company_id', '=', company_id)]" widget="selection"
                                        attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                             </group>
                         </group>
@@ -994,7 +998,7 @@ action = model.setting_init_bank_account_action()
                                     <span class="o_form_label oe_inline" attrs="{'invisible':[('second_amount_type','!=','percentage')]}">%</span>
                                 </div>
                                 <field name="second_amount_from_label_regex" attrs="{'invisible': [('second_amount_type','!=','regex')]}"/>
-                                <field name="second_journal_id" string="Journal" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" widget="selection"
+                                <field name="second_journal_id" string="Journal" domain="[('type', '=', 'general'), ('company_id', '=', company_id)]" widget="selection"
                                        attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                             </group>
                         </group>

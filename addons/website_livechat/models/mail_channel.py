@@ -50,15 +50,28 @@ class MailChannel(models.Model):
         :param visitor: website.visitor of the channel
         :return: arrow separated string containing navigation history information
         """
-        recent_history = visitor.visitor_page_ids[:3] if len(visitor.visitor_page_ids) >= 3 else visitor.visitor_page_ids
-        return ' → '.join(page.page_id.name + ' (' + page.visit_datetime.strftime('%H:%M') + ')' for page in recent_history)
+        history = []
+        for page in visitor.website_track_ids:
+            if page.page_id:
+                history += page.page_id.name + ' (' + page.visit_datetime.strftime('%H:%M') + ')'
+            if len(history) == 3:
+                break
+        return ' → '.join(history)
 
-    def close_livechat_request_session(self, message):
+    def close_livechat_request_session(self, type='leave', **kwargs):
+        """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
         self.ensure_one()
         if self.livechat_active:
             self.livechat_active = False
+            # avoid useless notification if the channel is empty
+            if not self.channel_message_ids:
+                return
             # Notify that the visitor has left the conversation
             name = _('The visitor') if not self.livechat_visitor_id else self.livechat_visitor_id.name
+            if type == 'cancel':
+                message = _('has started a conversation with %s. The chat request has been canceled.') % kwargs.get('speaking_with', 'an operator')
+            else:
+                message = _('has left the conversation.')
             leave_message = '%s %s' % (name, message)
             self.message_post(author_id=self.env.ref('base.user_root').sudo().partner_id.id,
                               body=leave_message, message_type='comment', subtype='mt_comment')
@@ -71,8 +84,8 @@ class MailChannel(models.Model):
         message_author_id = message.author_id
         visitor = self.livechat_visitor_id
         if len(self) == 1 and visitor and message_author_id != self.livechat_operator_id:
-            visitor.sudo().write({
-                'last_connection_datetime': fields.datetime.now(),
+            self.env['website.visitor.lastconnection'].create({
+                'visitor_id': visitor.id,
+                'connection_datetime': fields.datetime.now()
             })
         return message
-

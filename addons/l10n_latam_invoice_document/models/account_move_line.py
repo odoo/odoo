@@ -22,7 +22,9 @@ class AccountMoveLine(models.Model):
                 invoice.l10n_latam_document_type_id and invoice.l10n_latam_document_type_id._filter_taxes_included(
                     line.tax_ids)
             if not included_taxes:
-                l10n_latam_price_unit = line.price_unit
+                price_unit = line.tax_ids.with_context(round=False).compute_all(
+                    line.price_unit, invoice.currency_id, 1.0, line.product_id, invoice.partner_id)
+                l10n_latam_price_unit = price_unit['total_excluded']
                 l10n_latam_price_subtotal = line.price_subtotal
                 not_included_taxes = line.tax_ids
                 l10n_latam_price_net = l10n_latam_price_unit * (1 - (line.discount or 0.0) / 100.0)
@@ -31,7 +33,10 @@ class AccountMoveLine(models.Model):
                 l10n_latam_price_unit = included_taxes.compute_all(
                     line.price_unit, invoice.currency_id, 1.0, line.product_id, invoice.partner_id)['total_included']
                 l10n_latam_price_net = l10n_latam_price_unit * (1 - (line.discount or 0.0) / 100.0)
-                l10n_latam_price_subtotal = l10n_latam_price_net * line.quantity
+                l10n_latam_price_subtotal = included_taxes.compute_all(
+                    line.price_unit, invoice.currency_id, line.quantity, line.product_id,
+                    invoice.partner_id)['total_included']
+
             line.l10n_latam_price_subtotal = l10n_latam_price_subtotal
             line.l10n_latam_price_unit = l10n_latam_price_unit
             line.l10n_latam_price_net = l10n_latam_price_net

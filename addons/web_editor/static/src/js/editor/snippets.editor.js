@@ -77,7 +77,16 @@ var SnippetEditor = Widget.extend({
                     return $clone;
                 },
                 start: this._onDragAndDropStart.bind(this),
-                stop: this._onDragAndDropStop.bind(this),
+                stop: function () {
+                    // Delay our stop handler so that some summernote handlers
+                    // which occur on mouseup (and are themself delayed) are
+                    // executed first (this prevents the library to crash
+                    // because our stop handler may change the DOM).
+                    var args = arguments;
+                    setTimeout(function () {
+                        self._onDragAndDropStop.apply(self, args);
+                    }, 0);
+                },
             });
         } else {
             this.$('.o_move_handle').addClass('d-none');

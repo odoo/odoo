@@ -5,18 +5,18 @@
 # Translators:
 # Максим Дронь <dronmax@gmail.com>, 2019
 # Sergey Vilizhanin, 2019
-# Martin Trigaux, 2019
 # Андрей Гусев <gaussgss@gmail.com>, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Oleg Kuryan <oleg@ventor.tech>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-13 11:28+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -214,7 +214,10 @@ msgstr "Требует внимания"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__active
 #: model:ir.model.fields,field_description:product.field_product_product__active
 #: model:ir.model.fields,field_description:product.field_product_template__active
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__active
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_active
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Active"
 msgstr "Активно"
 
@@ -331,7 +334,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
-#: model:ir.model.fields,field_description:product.field_product_product__attribute_value_ids
+#: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
@@ -459,11 +462,17 @@ msgid "Color Index"
 msgstr "Цветовая палитра"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__combination_indices
+msgid "Combination Indices"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_res_company
 msgid "Companies"
 msgstr "Компании"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_packaging__company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist__company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__company_id
 #: model:ir.model.fields,field_description:product.field_product_product__company_id
@@ -624,9 +633,10 @@ msgstr "Точность"
 
 #. module: product
 #: code:addons/product/models/res_company.py:0
+#: code:addons/product/models/res_company.py:0
 #, python-format
-msgid "Default %(currency)s pricelist for %(company)s"
-msgstr "Прайслист по умолчанию %(currency)s для %(company)s"
+msgid "Default %(currency)s pricelist"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -730,14 +740,6 @@ msgstr "Конечная дата этой цены поставщика"
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
 msgid "Ending valid for the pricelist item validation"
 msgstr "Конечное значение, действительное для проверки позиции прайслиста"
-
-#. module: product
-#: code:addons/product/models/product.py:0
-#, python-format
-msgid ""
-"Error! It is not allowed to choose more than one value for a given "
-"attribute."
-msgstr "Ошибка! Нельзя выбрать более одного значения для заданного атрибута."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -864,14 +866,10 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product__message_unread
-#: model:ir.model.fields,help:product.field_product_template__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Если отмечено, новые сообщения будут требовать вашего внимания."
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
+#: model:ir.model.fields,help:product.field_product_product__message_unread
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
+#: model:ir.model.fields,help:product.field_product_template__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Если отмечено - новые сообщения требуют Вашего внимания."
 
@@ -970,6 +968,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "In which unit of measure do you manage your volumes"
 msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
+msgid "Inactive"
+msgstr "Не активно"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
@@ -1222,7 +1225,7 @@ msgstr "Количество действий"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: product
@@ -1764,6 +1767,11 @@ msgid "Related Products"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
+msgid "Related Variants"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_user_id
 msgid "Responsible User"
@@ -1936,18 +1944,8 @@ msgid "Supplier Pricelist"
 msgstr "Каталог поставщика"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_ids
-#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_value_ids
-#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_value_wnva_ids
-#: model:ir.model.fields,help:product.field_product_product__valid_product_attribute_wnva_ids
 #: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_ids
-#: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_wnva_ids
-#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_ids
-#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_value_ids
-#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_value_wnva_ids
-#: model:ir.model.fields,help:product.field_product_template__valid_product_attribute_wnva_ids
 #: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_ids
-#: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_wnva_ids
 msgid "Technical compute"
 msgstr ""
 
@@ -1959,11 +1957,6 @@ msgid ""
 msgstr ""
 "Техническое поле. Используется для поиска по прайс-листам, не хранится в "
 "базе данных."
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
-msgid "Template Attribute Values"
-msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2178,36 +2171,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_wnva_ids
-#: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_wnva_ids
-msgid "Valid Product Attribute Lines Without No Variant Attributes"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_value_ids
-#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_value_ids
-msgid "Valid Product Attribute Values"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_value_wnva_ids
-#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_value_wnva_ids
-msgid "Valid Product Attribute Values Without No Variant Attributes"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_ids
-#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_ids
-msgid "Valid Product Attributes"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__valid_product_attribute_wnva_ids
-#: model:ir.model.fields,field_description:product.field_product_template__valid_product_attribute_wnva_ids
-msgid "Valid Product Attributes Without No Variant Attributes"
 msgstr ""
 
 #. module: product
@@ -2480,12 +2443,6 @@ msgstr ""
 "чем коэффициент округления основной валюты компании"
 
 #. module: product
-#: code:addons/product/models/product_template.py:0
-#, python-format
-msgid "You cannot define two attribute lines for the same attribute."
-msgstr ""
-
-#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -2507,6 +2464,15 @@ msgstr ""
 msgid ""
 "You cannot move the attribute <strong>%s</strong> from the product %s to the"
 " product %s."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot update related variants from the values. Please update related "
+"values from the variants."
 msgstr ""
 
 #. module: product

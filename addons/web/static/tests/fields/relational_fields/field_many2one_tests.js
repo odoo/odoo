@@ -566,6 +566,81 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test("many2one doesn't trigger field_change when being emptied", async function (assert) {
+            assert.expect(2);
+
+            const list = await createView({
+                arch: `
+                    <tree editable="top">
+                        <field name="trululu"/>
+                    </tree>`,
+                data: this.data,
+                model: 'partner',
+                View: ListView,
+            });
+
+            // Select two records
+            await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+            await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+            await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+
+            const $input = list.$('.o_field_widget[name=trululu] input');
+
+            await testUtils.fields.editInput($input, "");
+            await testUtils.dom.triggerEvents($input, ['keyup']);
+
+            assert.containsNone(document.body, '.modal',
+                "No save should be triggered when removing value");
+
+            await testUtils.fields.many2one.clickOpenDropdown('trululu');
+            await testUtils.fields.many2one.clickHighlightedItem('trululu');
+
+            assert.containsOnce(document.body, '.modal',
+                "Saving should be triggered when selecting a value");
+            await testUtils.dom.click($('.modal .btn-primary'));
+
+            list.destroy();
+        });
+
+        QUnit.test("focus tracking on a many2one in a list", async function (assert) {
+            assert.expect(4);
+
+            const list = await createView({
+                arch: '<tree editable="top"><field name="trululu"/></tree>',
+                archs: {
+                    'partner,false,form': '<form string="Partners"><field name="foo"/></form>',
+                },
+                data: this.data,
+                model: 'partner',
+                View: ListView,
+            });
+
+            // Select two records
+            await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+            await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+            await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+
+            const input = list.$('.o_data_row:first() .o_data_cell:first() input')[0];
+
+            assert.strictEqual(document.activeElement, input, "Input should be focused when activated");
+
+            await testUtils.fields.many2one.clickOpenDropdown('trululu');
+            await testUtils.fields.many2one.clickItem('trululu', 'Create');
+
+            // At this point, if the focus is correctly registered by the m2o, there
+            // should be only one modal (the "Create" one) and none for saving changes.
+            assert.containsOnce(document.body, '.modal', "There should be only one modal");
+
+            await testUtils.dom.click($('.modal .btn:not(.btn-primary)'));
+
+            assert.strictEqual(document.activeElement, input, "Input should be focused after dialog closes");
+            assert.strictEqual(input.value, "", "Input should be empty after discard");
+
+            list.destroy();
+        });
+
         QUnit.test('many2one fields with option "no_open"', async function (assert) {
             assert.expect(3);
 

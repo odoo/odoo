@@ -31,9 +31,3 @@ class AccountJournal(models.Model):
             if rec.env['account.move'].search([('journal_id', '=', rec.id), ('state', '!=', 'draft')]):
                 raise ValidationError(_(
                     'You can not modify the field "Use Documents?" if there are validated invoices in this journal!'))
-
-    @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        if self._context.get('default_type') in ('out_receipt', 'in_receipt'):
-            args += [('l10n_latam_use_documents', '=', False)]
-        return super()._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)

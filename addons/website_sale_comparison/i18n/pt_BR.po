@@ -13,9 +13,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 12:27+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
 "Last-Translator: Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -80,8 +80,8 @@ msgstr "Nome da Categoria"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:8
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:20
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
 #, python-format
@@ -90,7 +90,7 @@ msgstr ""
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:52
+#: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #, python-format
 msgid "Compare Products"
@@ -133,7 +133,8 @@ msgstr "Última atualização em"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:7
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: model:ir.model,name:website_sale_comparison.model_product_product
 #, python-format
 msgid "Product"
 msgstr "Produto"
@@ -150,14 +151,19 @@ msgid "Product Attribute Category"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model:ir.model,name:website_sale_comparison.model_product_template
-msgid "Product Template"
-msgstr "Modelo de Produto"
+#: model:ir.model,name:website_sale_comparison.model_product_template_attribute_line
+msgid "Product Template Attribute Line"
+msgstr "Linha de Atributos de Modelo de Produto"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
 msgid "Product image"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__attribute_ids
+msgid "Related Attributes"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -188,22 +194,21 @@ msgid "Specifications for"
 msgstr ""
 
 #. module: website_sale_comparison
-#: code:addons/website_sale_comparison/controllers/main.py:24
-#: code:addons/website_sale_comparison/models/website_sale_comparison.py:30
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "Sem categoria"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:15
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "Warning"
 msgstr "Aviso"
 
 #. module: website_sale_comparison
 #. openerp-web
-#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:15
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "You can compare max 4 products."
 msgstr ""

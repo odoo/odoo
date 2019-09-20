@@ -41,10 +41,10 @@
                     <tr>
                         <td valign="top" align="center" rowspan="2" t-att-style="'width: 70px;' + top + bottom + left">
                             <t t-if="message.author_avatar">
-                                <img  t-attf-alt="{{author_name}}" height="64" width="64" t-attf-src="data:image/png;base64,{{message.author_avatar}}"/>
+                                <img  t-attf-alt="{{author_name}}" style="width: 64px; height: 64px; object-fit: cover;" t-attf-src="data:image/png;base64,{{message.author_avatar}}"/>
                             </t>
                             <t t-else="">
-                                <img  t-attf-alt="{{author_name}}" height="64" width="64" src="/mail/static/src/img/smiley/avatar.jpg"/>
+                                <img  t-attf-alt="{{author_name}}" style="width: 64px; height: 64px; object-fit: cover;" src="/mail/static/src/img/smiley/avatar.jpg"/>
                             </t>
                         </td>
                         <td t-att-style="'padding-left: 5px; margin: 0px;' + top">

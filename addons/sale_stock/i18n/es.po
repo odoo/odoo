@@ -4,7 +4,6 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2019
-# Martin Trigaux, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
@@ -24,27 +23,22 @@
 # Pilar Marín <pilar@odooperu.pe>, 2019
 # Sabina Batlle <sbb@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Jon Perez <jop@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
+"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/js/qty_at_date_widget.js:0
-#, python-format
-msgid "%s Availability"
-msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -169,16 +163,16 @@ msgid "As soon as possible"
 msgstr "Lo antes posible"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
-msgid "Choose to apply SO lines specific routes."
-msgstr "Elija aplicar rutas específicas de líneas del pedido de venta."
-
-#. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/js/qty_at_date_widget.js:0
 #, python-format
-msgid "Close"
-msgstr "Cerrar"
+msgid "Availability"
+msgstr "Disponibilidad"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Choose to apply SO lines specific routes."
+msgstr "Elija aplicar rutas específicas de líneas del pedido de venta."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -204,13 +198,6 @@ msgstr "Fecha:"
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
 msgstr "Entrega"
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Delivery Date"
-msgstr "Fecha de entrega"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -293,8 +280,15 @@ msgstr "Fecha prevista"
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "Forecasted Stock"
+msgid "Expected Delivery"
 msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "Forecasted Stock"
+msgstr "Stock previsto"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
@@ -423,13 +417,6 @@ msgstr "Avanzar las fechas de entrega previstas por"
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "On Hand - Reserved"
-msgstr ""
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "On delivery date"
 msgstr ""
 
 #. module: sale_stock

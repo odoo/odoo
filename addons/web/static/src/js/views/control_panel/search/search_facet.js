@@ -10,6 +10,8 @@ var SearchFacet = Widget.extend({
     template: 'SearchView.SearchFacet',
     events: _.extend({}, Widget.prototype.events, {
         'click .o_facet_remove': '_onFacetRemove',
+        'compositionend': '_onCompositionend',
+        'compositionstart': '_onCompositionstart',
         'keydown': '_onKeydown',
     }),
     /**
@@ -26,6 +28,7 @@ var SearchFacet = Widget.extend({
         });
         this.separator = this._getSeparator();
         this.icon = this._getIcon();
+        this._isComposing = false;
     },
 
     //--------------------------------------------------------------------------
@@ -130,6 +133,20 @@ var SearchFacet = Widget.extend({
 
     /**
      * @private
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionend: function (ev) {
+        this._isComposing = false;
+    },
+    /**
+     * @private
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionstart: function (ev) {
+        this._isComposing = true;
+    },
+    /**
+     * @private
      */
     _onFacetRemove: function () {
         this.trigger_up('facet_removed', {group: this.facet});
@@ -139,6 +156,9 @@ var SearchFacet = Widget.extend({
      * @param {KeyboardEvent} ev
      */
     _onKeydown: function (ev) {
+        if (this._isComposing) {
+            return;
+        }
         switch (ev.which) {
             case $.ui.keyCode.BACKSPACE:
                 this.trigger_up('facet_removed', {group: this.facet});

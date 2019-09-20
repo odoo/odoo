@@ -1199,7 +1199,7 @@ var BasicModel = AbstractModel.extend({
                 if (!_.isEmpty(action)) {
                     return self.do_action(action, {
                         on_close: function () {
-                            return self.reload(parentID);
+                            return self.trigger_up('reload');
                         }
                     });
                 } else {
@@ -1231,7 +1231,7 @@ var BasicModel = AbstractModel.extend({
                 if (!_.isEmpty(action)) {
                     return self.do_action(action, {
                         on_close: function () {
-                            return self.reload(parentID);
+                            return self.trigger_up('reload');
                         }
                     });
                 } else {
@@ -1263,7 +1263,7 @@ var BasicModel = AbstractModel.extend({
                 if (!_.isEmpty(action)) {
                     return self.do_action(action, {
                         on_close: function () {
-                            return self.reload(parentID);
+                            return self.trigger_up('reload');
                         }
                     });
                 } else {

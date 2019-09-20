@@ -215,10 +215,10 @@ class HrExpense(models.Model):
     def write(self, vals):
         if 'tax_ids' in vals or 'analytic_account_id' in vals or 'account_id' in vals:
             if any(not expense.is_editable for expense in self):
-                raise UserError(_('You are not autorized to edit this expense report.'))
+                raise UserError(_('You are not authorized to edit this expense report.'))
         if 'reference' in vals:
             if any(not expense.is_ref_editable for expense in self):
-                raise UserError(_('You are not autorized to edit the reference of this expense report.'))
+                raise UserError(_('You are not authorized to edit the reference of this expense report.'))
         return super(HrExpense, self).write(vals)
 
     @api.model

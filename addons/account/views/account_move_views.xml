@@ -106,7 +106,7 @@
                                         <span t-esc="record.name.value"/>
                                     </div>
                                     <div class="col-2 text-right">
-                                        <img t-att-src="kanban_image('res.partner', 'image_64', record.partner_id.raw_value)" t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value" class="oe_kanban_avatar o_image_24_cover"/>
                                     </div>
                                 </div>
                             </div>
@@ -135,26 +135,29 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false">
                     <field name="date" optional="show"/>
-                    <field name="journal_id" options='{"no_open":True}'/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                    <field name="name" optional="show"/>
-                    <field name="ref" optional="show"/>
-                    <field name="statement_id" invisible="1"/>
-                    <field name="partner_id" optional="show"/>
+                    <field name="journal_id" options='{"no_open":True}'/>
+                    <field name="move_id" optional="show"/>
                     <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_user" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="statement_id" invisible="1"/>
+                    <field name="ref" optional="show"/>
+                    <field name="name" optional="show"/>
                     <field name="analytic_account_id" groups="account.group_account_user" optional="show"/>
-                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
-                    <field name="reconciled" invisible="1"/>
-                    <field name="full_reconcile_id" optional="show"/>
-                    <field name="reconcile_model_id" invisible="1"/>
+                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" optional="hide"/>
+                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
                     <field name="amount_currency" readonly="True" groups="base.group_multi_currency" optional="hide"/>
-                    <field name="currency_id" readonly="True" invisible="1" />
+                    <field name="tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
+                    <field name="full_reconcile_id" optional="show"/>
+                    <field name="reconcile_model_id" invisible="1"/>
+                    <field name="reconciled" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
+                    <field name="currency_id" readonly="True" invisible="1" />
                     <field name="company_currency_id" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
-                    <field name="parent_state" invisible="1"/></tree>
+                    <field name="parent_state" invisible="1"/>
+                </tree>
             </field>
         </record>
 
@@ -165,12 +168,13 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" expand="context.get('expand', False)">
                     <field name="date" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                    <field name="ref" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                     <field name="move_id" optional="show" readonly="1"/>
-                    <field name="name"/>
-                    <field name="statement_id" invisible="1"/>
                     <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_user" attrs="{'readonly':[('parent_state','=','posted')]}" optional="show"/>
+                    <field name="statement_id" invisible="1"/>
                     <field name="partner_id" optional="show"/>
+                    <field name="ref" optional="hide"/>
+                    <field name="name"/>
                     <field name="reconciled" invisible="1"/>
                     <field name="full_reconcile_id" string="Matching" optional="show" readonly="1"/>
                     <field name="reconcile_model_id" invisible="1"/>
@@ -180,7 +184,6 @@
                     <field name="amount_currency" readonly="True" groups="base.group_multi_currency"/>
                     <field name="currency_id" readonly="True" invisible="1" />
                     <field name="company_currency_id" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
                     <field name="tax_ids" widget="many2many_tags" width="0.5" optional="hide" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
@@ -208,6 +211,7 @@
                     <attribute name="readonly">1</attribute>
                 </field>
                 <field name="full_reconcile_id" position="attributes"><attribute name="optional">hide</attribute></field>
+                <field name="tax_ids" position="attributes"><attribute name="optional">show</attribute></field>
                 <field name="tag_ids" position="attributes">
                     <attribute name="optional">show</attribute>
                     <attribute name="string">Tax Grids</attribute>
@@ -489,9 +493,9 @@
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('invoice_payment_state', '!=', 'not_paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"
                                 string="Register Payment"
                                 groups="account.group_account_invoice"/>
-                        <!-- Preview (only invoices) -->
+                        <!-- Preview (only customer invoices) -->
                         <button name="preview_invoice" type="object" string="Preview"
-                                attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                                attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
                                 type="action" groups="account.group_account_invoice"
@@ -639,6 +643,8 @@
                                        groups="account.group_account_user"
                                        options="{'no_create': True}"
                                        domain="[('type', '=?', invoice_filter_type_domain)]"/>
+
+                                <field name="company_id" groups="base.group_multi_company"/>
 
                                 <field name="currency_id"
                                        groups="base.group_multi_currency"
@@ -851,10 +857,9 @@
                                     <group string="Invoice"
                                            name="sale_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
-                                        <field name="company_id" groups="base.group_multi_company"/>
                                         <field name="invoice_user_id"/>
                                         <field name="invoice_origin" string="Source Document"
-                                               attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                                               attrs="{'invisible': [('invoice_origin', '=', False)]}"/>
                                     </group>
                                     <group string="Accounting"
                                            name="accounting_info_group"
@@ -1017,7 +1022,7 @@
         </record>
 
         <record id="action_accrual_entry" model="ir.actions.server">
-            <field name="name">Change Period</field>
+            <field name="name">Create Accrual Entry</field>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field name="binding_model_id" ref="account.model_account_move_line"/>
             <field name="state">code</field>

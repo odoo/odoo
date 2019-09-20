@@ -17,24 +17,24 @@
 # Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2019
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2019
 # danimaribeiro <danimaribeiro@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Emanuel Martins <emanuel.breno@gmail.com>, 2019
 # Renato Lima <renatonlima@gmail.com>, 2019
 # Mateus Lopes <mateus1@gmail.com>, 2019
 # Wagner Pereira <wagner@wagner.pereira.nom.br>, 2019
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2019
 # Anderson Fratuci <ander.frat@gmail.com>, 2019
 # grazziano <gra.negocia@gmail.com>, 2019
 # Silmar <pinheirosilmar@gmail.com>, 2019
 # Fábio Luna <fabiocluna@hotmail.com>, 2019
+# Martin Trigaux, 2019
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"POT-Creation-Date: 2019-09-13 11:26+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Fábio Luna <fabiocluna@hotmail.com>, 2019\n"
+"Last-Translator: Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,6 +103,12 @@ msgstr ""
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (cópia)"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_picking_responsible.py:0
+#, python-format
+msgid "%s has a restricted access to %s"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -744,6 +750,11 @@ msgid "Assign"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
+msgid "Assign Owner"
+msgstr "Atribuir proprietário"
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_picking_responsible
 msgid "Assign Responsible"
 msgstr ""
@@ -762,11 +773,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
 msgid "Assign a Responsible"
 msgstr "Associar a um Responsável"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
-msgid "Assign owner"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1031,6 +1037,25 @@ msgid "Change to a better name"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/product_strategy.py:0
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/models/stock_production_lot.py:0
+#: code:addons/stock/models/stock_warehouse.py:0
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"Changing the company of this record is forbidden at this point, you should "
+"rather archive it and create a new one."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Changing the operation type of this record is forbidden at this point."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
 msgstr "Verificar Disponibilidade"
@@ -1092,6 +1117,7 @@ msgid "Companies"
 msgstr "Empresas"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__company_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__company_id
@@ -1099,10 +1125,14 @@ msgstr "Empresas"
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_move__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_package_level__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__company_id
@@ -1185,6 +1215,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
 #: model:ir.model.fields,field_description:stock.field_stock_picking__partner_id
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Contact"
 msgstr "Contato"
 
@@ -1673,6 +1704,11 @@ msgstr "Quantidade Entregue"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 msgid "Delivery"
 msgstr "Entrega"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Delivery Address"
+msgstr "Endereço de Entrega"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -2400,16 +2436,12 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking__message_unread
-#: model:ir.model.fields,help:stock.field_stock_production_lot__message_unread
-#: model:ir.model.fields,help:stock.field_stock_scrap__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Se marcado, novas mensagens solicitarão sua atenção."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_picking__message_unread
 #: model:ir.model.fields,help:stock.field_stock_production_lot__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_production_lot__message_unread
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_scrap__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Se marcado novas mensagens solicitarão sua atenção."
 
@@ -2525,6 +2557,13 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_rule__active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr "Se desmarcado, permitirá que você oculte a regra sem removê-la."
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
+msgid ""
+"If you cancel this inventory adjustment, all its inventory adjustment lines "
+"will be lost. Are you sure you want to discard it ?"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
@@ -2850,14 +2889,6 @@ msgstr ""
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
 msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__product_packaging
-msgid ""
-"It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr ""
-"Especifica atributos do empacotamento como tipo, quantidade de "
-"empacotamento, etc."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3622,8 +3653,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
-msgid "Number of error"
-msgstr "Número do erro"
+msgid "Number of errors"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -4124,11 +4155,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_reserved
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Pre-fill Detailed Operations"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging
-msgid "Preferred Packaging"
 msgstr ""
 
 #. module: stock
@@ -4707,6 +4733,11 @@ msgstr "Rota de Recebimento "
 #, python-format
 msgid "Receipts"
 msgstr "Recebimentos"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Receive From"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
@@ -5873,11 +5904,12 @@ msgstr "O código do armazém deve ser exclusivo para cada empresa!"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_production_lot_name_ref_uniq
-msgid "The combination of serial number and product must be unique !"
-msgstr "A combinação de número de série e do produto deve ser única!"
+msgid ""
+"The combination of serial number and product must be unique across a company"
+" !"
+msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_type__company_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
 msgid "The company is automatically set from your user preferences."
 msgstr ""
@@ -6559,13 +6591,10 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid ""
-"Use this assistant to replenish your stock. \n"
+"Use this assistant to replenish your stock.\n"
 "                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
 msgstr ""
-"Use esse assistente para reabastecer seu estoque.\n"
-"                  Dependendo da configuração do seu produto, o lançamento de um reabastecimento pode desencadear uma solicitação de cotação,\n"
-"                  uma ordem de produção ou uma transferência."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7032,6 +7061,12 @@ msgstr ""
 "'Concluído'."
 
 #. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -7186,12 +7221,6 @@ msgstr ""
 msgid ""
 "You have to select a product unit of measure that is in the same category "
 "than the default unit of measure of the product"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_location.py:0
-#, python-format
-msgid "You have to set a name for this location."
 msgstr ""
 
 #. module: stock

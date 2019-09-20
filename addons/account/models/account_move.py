@@ -133,13 +133,13 @@ class AccountMove(models.Model):
     amount_residual = fields.Monetary(string='Amount Due', store=True,
         compute='_compute_amount')
     amount_untaxed_signed = fields.Monetary(string='Untaxed Amount Signed', store=True, readonly=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_tax_signed = fields.Monetary(string='Tax Signed', store=True, readonly=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_total_signed = fields.Monetary(string='Total Signed', store=True, readonly=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_residual_signed = fields.Monetary(string='Amount Due Signed', store=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_by_group = fields.Binary(string="Tax amount by group",
         compute='_compute_invoice_taxes_by_group',
         help="technical field used in report and in invoice form view with a widget to display the detail of taxes (grouped by tax group) under the subtotal")
@@ -1117,7 +1117,7 @@ class AccountMove(models.Model):
             pay_term_line_ids = move.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
 
             domain = [('account_id', 'in', pay_term_line_ids.mapped('account_id').ids),
-                      ('move_id.state', '=', 'posted'),
+                      '|', ('move_id.state', '=', 'posted'), '&', ('move_id.state', '=', 'draft'), ('journal_id.post_at', '=', 'bank_rec'),
                       ('partner_id', '=', move.commercial_partner_id.id),
                       ('reconciled', '=', False), '|', ('amount_residual', '!=', 0.0),
                       ('amount_residual_currency', '!=', 0.0)]
@@ -1521,7 +1521,8 @@ class AccountMove(models.Model):
         result = []
         for move in self:
             if self._context.get('name_groupby') and not (move.type == 'entry' and move.state == 'draft'):
-                name = '**%s**, %s' % (format_date(self.env, move.date), move.name or '')
+                move_name = move.name != "/" and move.name or _("Draft %s") % dict(move._fields['type']._description_selection(self.env))[move.type]
+                name = '**%s**, %s' % (format_date(self.env, move.date), move_name or '')
                 if move.ref:
                     name += '     (%s)' % move.ref
                 if move.partner_id.name:
@@ -1529,7 +1530,7 @@ class AccountMove(models.Model):
             elif move.type == 'entry':
                 # Miscellaneous operation.
                 if move.state == 'draft':
-                    name = '* %s' % str(move.id)
+                    name = _('Draft Entry (* %s)') % str(move.id)
                 else:
                     name = move.name
             else:
@@ -2766,7 +2767,7 @@ class AccountMoveLine(models.Model):
                     reconciled = True
             line.reconciled = reconciled
 
-            line.amount_residual = line.move_id.company_id.currency_id.round(amount * sign)
+            line.amount_residual = line.move_id.company_id.currency_id.round(amount * sign) if line.move_id.company_id else amount * sign
             line.amount_residual_currency = line.currency_id and line.currency_id.round(amount_residual_currency * sign) or 0.0
 
     @api.depends('tax_repartition_line_id.invoice_tax_id', 'tax_repartition_line_id.refund_tax_id')

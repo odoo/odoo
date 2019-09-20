@@ -510,7 +510,7 @@ class DurationConverter(models.AbstractModel):
         options.update(
             digital=dict(type="boolean", string=_('Digital formatting')),
             unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='second', required=True),
-            round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formating."), default_value='second'),
+            round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formatting."), default_value='second'),
         )
         return options
 
@@ -601,7 +601,7 @@ class BarcodeConverter(models.AbstractModel):
     def get_available_options(self):
         options = super(BarcodeConverter, self).get_available_options()
         options.update(
-            type=dict(type='string', string=_('Barcode type'), description=_('Barcode type, eg: UPCA, EAN13, Code128'), default_value='Code128'),
+            symbology=dict(type='string', string=_('Barcode symbology'), description=_('Barcode type, eg: UPCA, EAN13, Code128'), default_value='Code128'),
             width=dict(type='integer', string=_('Width'), default_value=600),
             height=dict(type='integer', string=_('Height'), default_value=100),
             humanreadable=dict(type='integer', string=_('Human Readable'), default_value=0),
@@ -610,9 +610,9 @@ class BarcodeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options=None):
-        barcode_type = options.get('type', 'Code128')
+        barcode_symbology = options.get('symbology', 'Code128')
         barcode = self.env['ir.actions.report'].barcode(
-            barcode_type,
+            barcode_symbology,
             value,
             **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable']})
         return u'<img src="data:png;base64,%s">' % base64.b64encode(barcode).decode('ascii')

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-09 12:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -220,6 +220,12 @@ msgid "An expense account is expected"
 msgstr "Рахунок витрат очікується"
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "An expense report must contain only lines from the same company."
+msgstr "Звіт про витрати повинен містити рядки лише з тієї ж компанії."
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_account_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Analytic Account"
@@ -313,11 +319,6 @@ msgid "Company"
 msgstr "Компанія"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__company_id
-msgid "Company related to this journal"
-msgstr "Компанія-власник цього журналу"
-
-#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
 msgid "Config Settings"
 msgstr "Налаштування"
@@ -360,7 +361,7 @@ msgstr "Створити нову витрату"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Create a new expense product"
-msgstr ""
+msgstr "Створити новий витратний товар"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -373,7 +374,7 @@ msgstr "Створіть новий звіт витрат"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Create expenses from incoming emails"
-msgstr ""
+msgstr "Створити витрати із вхідних електронних листів"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -545,6 +546,7 @@ msgstr "Помічник реєстрації оплати витрат"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__expense_sheet_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Report"
@@ -648,12 +650,12 @@ msgstr "Звіти про витрати на затвердження"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Expenses by Date"
-msgstr "Витрати по даті"
+msgstr "Витрати за датою"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expenses can be reimbursed in payslips."
-msgstr ""
+msgstr "Витрати можуть бути відшкодовані у розрахункових листах."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -743,13 +745,13 @@ msgstr "Загальна інформація"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generated Expense"
-msgstr ""
+msgstr "Створені витрати"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generated Expenses"
-msgstr ""
+msgstr "Створені витрати"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -803,14 +805,10 @@ msgid "Icon to indicate an exception activity."
 msgstr "Іконка для визначення виключення дії."
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_unread
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Якщо позначено, то повідомленя потребує вашої уваги."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_unread
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
 
@@ -831,12 +829,12 @@ msgstr "Вхідні електронні листи"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Invalid attachments!"
-msgstr ""
+msgstr "Недійсні прикріплення!"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
 msgid "Is Editable By Current User"
-msgstr ""
+msgstr "Редагується поточним користувачем"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
@@ -1051,7 +1049,7 @@ msgstr "Кількість прикріплень"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr "Кількість помилок"
 
 #. module: hr_expense
@@ -1276,7 +1274,7 @@ msgstr "Посилання"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_ref_editable
 msgid "Reference Is Editable By Current User"
-msgstr ""
+msgstr "Референс редагується поточним користувачем"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -1313,12 +1311,12 @@ msgstr "Зареєструвати платіж"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
-msgstr ""
+msgstr "Відшкодування витрат у розрахунковому листі"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse in Payslip"
-msgstr ""
+msgstr "Відшкодування у розрахунковому листі"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1391,10 +1389,10 @@ msgid ""
 "will automatically be set. Type the expense amount in the mail subject to "
 "set it on the expense too."
 msgstr ""
-"Надішліть електронний лист на цей псевдонім електронної пошти з квитанцією в"
-" додатку, щоби створити рахунок одним кліком. Якщо перше слово теми листа "
-"містить внутрішнє посилання на товар або назву товару, відповідний товар "
-"буде автоматично встановлено. Введіть суму витрат у тему пошти, щоби "
+"Надішліть електронний лист на цей псевдонім електронної пошти з квитанцією у"
+" прикріпленні, щоби створити рахунок одним кліком. Якщо перше слово теми "
+"листа містить внутрішнє посилання на товар або назву товару, відповідний "
+"товар буде автоматично встановлено. Введіть суму витрат у тему пошти, щоби "
 "встановити її на рахунок."
 
 #. module: hr_expense
@@ -1526,9 +1524,16 @@ msgstr ""
 "встановити товар вручну на рахунок."
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "The journal linked to the expense report must be in the same company."
+msgstr ""
+"Журнал прив'язаний до звіту про витрати повинен бути у тій же компанії."
+
+#. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
 msgid "The journal must be set on posted expense"
-msgstr ""
+msgstr "Журнал повинен бути встановлений за опублікованими витратами"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
@@ -1567,7 +1572,7 @@ msgstr "Публікувати"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Report"
-msgstr ""
+msgstr "До звіту"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
@@ -1642,7 +1647,7 @@ msgstr "Завантажити"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Uploaded Attachment"
-msgstr ""
+msgstr "Завантажене прикріплення"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1706,24 +1711,30 @@ msgstr "Історія бесіди на сайті"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not autorized to edit the reference of this expense report."
-msgstr ""
+msgstr "Ви не авторизовані, щоби редагувати референс цього звіту про витрати."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not autorized to edit this expense report."
-msgstr ""
+msgstr "Ви не авторизовані, щоби редагувати цей звіт про витрати."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can not create report without product."
-msgstr ""
+msgstr "Ви не можете створити звіт без товару."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "You can now submit it to the manager from the following link."
 msgstr "Тепер ви можете подати його менеджеру з наступного посилання."
+
+#. module: hr_expense
+#: code:addons/hr_expense/wizard/hr_expense_sheet_register_payment.py:0
+#, python-format
+msgid "You can only apply this action from an expense report."
+msgstr "Ви можете застосувати цю дію лише зі звіту про витрати."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

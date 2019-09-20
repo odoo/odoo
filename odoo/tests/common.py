@@ -23,6 +23,7 @@ import tempfile
 import threading
 import time
 import unittest
+import difflib
 import werkzeug.urls
 from contextlib import contextmanager
 from datetime import datetime, date
@@ -315,72 +316,95 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         :param expected_values:       List of dicts expected to be exactly matched in records
         '''
 
-        def _compare_candidate(record, candidate):
-            ''' Return True if the candidate matches the given record '''
-            for field_name in candidate.keys():
+        def _compare_candidate(record, candidate, field_names):
+            ''' Compare all the values in `candidate` with a record.
+            :param record:      record being compared
+            :param candidate:   dict of values to compare
+            :return:            A dictionary will encountered difference in values.
+            '''
+            diff = {}
+            for field_name in field_names:
                 record_value = record[field_name]
-                candidate_value = candidate[field_name]
                 field = record._fields[field_name]
                 field_type = field.type
                 if field_type == 'monetary':
                     # Compare monetary field.
                     currency_field_name = record._fields[field_name].currency_field
                     record_currency = record[currency_field_name]
-                    if record_currency.compare_amounts(candidate_value, record_value)\
-                            if record_currency else candidate_value != record_value:
-                        return False
+                    if field_name not in candidate:
+                        diff[field_name] = (record_value, None)
+                    elif record_currency:
+                        if record_currency.compare_amounts(candidate[field_name], record_value):
+                            diff[field_name] = (record_value, record_currency.round(candidate[field_name]))
+                    elif candidate[field_name] != record_value:
+                        diff[field_name] = (record_value, candidate[field_name])
                 elif field_type == 'float' and field.get_digits(record.env):
-                    return not float_compare(candidate_value, record_value, precision_digits=field.get_digits(record.env)[1])
+                    prec = field.get_digits(record.env)[1]
+                    if float_compare(candidate[field_name], record_value, precision_digits=prec) != 0:
+                        diff[field_name] = (record_value, candidate[field_name])
                 elif field_type in ('one2many', 'many2many'):
                     # Compare x2many relational fields.
                     # Empty comparison must be an empty list to be True.
-                    if set(record_value.ids) != set(candidate_value):
-                        return False
+                    if field_name not in candidate:
+                        diff[field_name] = (sorted(record_value.ids), None)
+                    elif set(record_value.ids) != set(candidate[field_name]):
+                        diff[field_name] = (sorted(record_value.ids), sorted(candidate[field_name]))
                 elif field_type == 'many2one':
                     # Compare many2one relational fields.
                     # Every falsy value is allowed to compare with an empty record.
-                    if (record_value or candidate_value) and record_value.id != candidate_value:
-                        return False
-                elif (candidate_value or record_value) and record_value != candidate_value:
+                    if field_name not in candidate:
+                        diff[field_name] = (record_value.id, None)
+                    elif (record_value or candidate[field_name]) and record_value.id != candidate[field_name]:
+                        diff[field_name] = (record_value.id, candidate[field_name])
+                else:
                     # Compare others fields if not both interpreted as falsy values.
-                    return False
-            return True
+                    if field_name not in candidate:
+                        diff[field_name] = (record_value, None)
+                    elif (candidate[field_name] or record_value) and record_value != candidate[field_name]:
+                        diff[field_name] = (record_value, candidate[field_name])
+            return diff
 
-        def _repr_field_value(record, field_name):
-            record_value = record[field_name]
-            field_type = record._fields[field_name].type
-            if field_type == 'monetary':
-                currency_field_name = record._fields[field_name].currency_field
-                record_currency = record[currency_field_name]
-                return record_currency and record_currency.round(record_value) or record_value
-            elif field_type in ('one2many', 'many2many'):
-                return set(record_value.ids)
-            elif field_type == 'many2one':
-                return record_value.id
-            else:
-                return record_value
-
-        def _format_message(records, expected_values):
-            ''' Return a formatted representation of records/expected_values. '''
-            all_records_values = [{key: _repr_field_value(record, key) for key in expected_values[0]} for record in records]
-            msg1 = '\n'.join(pprint.pformat(dic) for dic in all_records_values)
-            msg2 = '\n'.join(pprint.pformat(dic) for dic in expected_values)
-            return 'Current values:\n\n%s\n\nExpected values:\n\n%s' % (msg1, msg2)
-
-        # if the length or both things to compare is different, we can already tell they're not equal
-        if len(records) != len(expected_values):
-            msg = 'Wrong number of records to compare: %d != %d.\n\n' % (len(records), len(expected_values))
-            self.fail(msg + _format_message(records, expected_values))
-
-        candidates = list(expected_values)
+        # Compare records with candidates.
+        different_values = []
+        field_names = list(expected_values[0].keys())
         for index, record in enumerate(records):
-            for candidate_index, candidate in enumerate(candidates):
-                if _compare_candidate(record, candidate):
-                    candidates.pop(candidate_index)
-                    break
-            else:
-                msg = 'Record doesn\'t match expected values at index %d.\n\n' % index
-                self.fail(msg + _format_message(records, expected_values))
+            is_additional_record = index >= len(expected_values)
+            candidate = {} if is_additional_record else expected_values[index]
+            diff = _compare_candidate(record, candidate, field_names)
+            if diff:
+                different_values.append((index, 'additional_record' if is_additional_record else 'regular_diff', diff))
+        for index in range(len(records), len(expected_values)):
+            diff = {}
+            for field_name in field_names:
+                diff[field_name] = (None, expected_values[index][field_name])
+            different_values.append((index, 'missing_record', diff))
+
+        # Build error message.
+        if not different_values:
+            return
+
+        errors = ['The records and expected_values do not match.']
+        if len(records) != len(expected_values):
+            errors.append('Wrong number of records to compare: %d records versus %d expected values.' % (len(records), len(expected_values)))
+
+        for index, diff_type, diff in different_values:
+            if diff_type == 'regular_diff':
+                errors.append('\n==== Differences at index %s ====' % index)
+                record_diff = ['%s:%s' % (k, v[0]) for k, v in diff.items()]
+                candidate_diff = ['%s:%s' % (k, v[1]) for k, v in diff.items()]
+                errors.append('\n'.join(difflib.unified_diff(record_diff, candidate_diff)))
+            elif diff_type == 'additional_record':
+                errors += [
+                    '\n==== Additional record ====',
+                    pprint.pformat(dict((k, v[0]) for k, v in diff.items())),
+                ]
+            elif diff_type == 'missing_record':
+                errors += [
+                    '\n==== Missing record ====',
+                    pprint.pformat(dict((k, v[1]) for k, v in diff.items())),
+                ]
+
+        self.fail('\n'.join(errors))
 
     def shortDescription(self):
         return None

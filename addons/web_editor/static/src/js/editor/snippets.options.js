@@ -700,6 +700,17 @@ registry.colorpicker = SnippetOption.extend({
             this.$el.find('we-collapse').append($pt);
         }
 
+
+        // TODO refactor in master
+        // The primary and secondary are hardcoded here (but marked as hidden)
+        // so they can be removed from snippets when selecting another color.
+        // Normally, the chosable colors do not contain them, which prevents
+        // them to be removed. Indeed, normally, the 'alpha' and 'beta' colors
+        // (which are the same) are displayed instead... but not for all themes.
+        var $colorpicker = this.$el.find('.colorpicker');
+        $colorpicker.append($('<button/>', {'class': 'd-none', 'data-color': 'primary'}));
+        $colorpicker.append($('<button/>', {'class': 'd-none', 'data-color': 'secondary'}));
+
         var classes = [];
         this.$el.find('.colorpicker button').each(function () {
             var $color = $(this);
@@ -838,23 +849,18 @@ registry.background = SnippetOption.extend({
      * @see this.selectClass for parameters
      */
     chooseImage: function (previewMode, value, $opt) {
-        // Put fake image in the DOM, edit it and use it as background-image
-        var $image = $('<img/>', {class: 'd-none', src: value === 'true' ? '' : value}).appendTo(this.$target);
+        var options = this._getMediaDialogOptions();
+        var media = this._getEditableMedia();
 
-        var $editable = this.$target.closest('.o_editable');
-        var _editor = new weWidgets.MediaDialog(this, {
-            'onlyImages': true,
-            'firstFilters': ['background'],
-            'res_model': $editable.data('oe-model'),
-            'res_id': $editable.data('oe-id'),
-        }, $image[0]).open();
-
-        _editor.on('save', this, function () {
-            this._setCustomBackground($image.attr('src'));
+        var _editor = new weWidgets.MediaDialog(this, options, media).open();
+        _editor.on('save', this, data => {
+            this._onSaveMediaDialog(data);
             this.$target.trigger('content_changed');
         });
-        _editor.on('closed', this, function () {
-            $image.remove();
+        _editor.on('closed', this, () => {
+            if (media.classList.contains('o_we_fake_image')) {
+                media.parentNode.removeChild(media);
+            }
         });
     },
 
@@ -871,16 +877,7 @@ registry.background = SnippetOption.extend({
             return;
         }
         this.$target.off('.background-option')
-            .on('background-color-event.background-option', (function (e, previewMode) {
-                e.stopPropagation();
-                if (e.currentTarget !== e.target) {
-                    return;
-                }
-                if (previewMode === false) {
-                    this.__customImageSrc = undefined;
-                }
-                this.background(previewMode);
-            }).bind(this));
+            .on('background-color-event.background-option', this._onBackgroundColorUpdate.bind(this));
     },
     /**
      * @override
@@ -896,6 +893,37 @@ registry.background = SnippetOption.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Returns a media element the media dialog will be able to edit to use
+     * the result as the snippet's background somehow.
+     *
+     * @private
+     * @returns {HTMLElement}
+     */
+    _getEditableMedia: function () {
+        var $image = $('<img/>', {
+            class: 'd-none o_we_fake_image',
+        }).appendTo(this.$target);
+        return $image[0];
+    },
+    /**
+     * Returns the options to be given to the MediaDialog instance when choosing
+     * a snippet's background.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getMediaDialogOptions: function () {
+        var $editable = this.$target.closest('.o_editable');
+        return {
+            noDocuments: true,
+            noIcons: true,
+            noVideos: true,
+            firstFilters: ['background'],
+            res_model: $editable.data('oe-model'),
+            res_id: $editable.data('oe-id'),
+        };
+    },
     /**
      * Returns the src value from a css value related to a background image
      * (e.g. "url('blabla')" => "blabla" / "none" => "").
@@ -940,6 +968,42 @@ registry.background = SnippetOption.extend({
         this.$target.toggleClass('oe_custom_bg', !!value);
         this._setActive();
         this.$target.trigger('snippet-option-change', [this]);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called on background-color update (useful to remove the background to be
+     * able to see the chosen color).
+     *
+     * @private
+     * @param {Event} ev
+     * @param {boolean|string} previewMode
+     * @returns {boolean} true if the color has been applied (removing the
+     *                    background)
+     */
+    _onBackgroundColorUpdate: function (ev, previewMode) {
+        ev.stopPropagation();
+        if (ev.currentTarget !== ev.target) {
+            return false;
+        }
+        if (previewMode === false) {
+            this.__customImageSrc = undefined;
+        }
+        this.background(previewMode);
+        return true;
+    },
+    /**
+     * Called on media dialog save (when choosing a snippet's background) ->
+     * sets the resulting media as the snippet's background somehow.
+     *
+     * @private
+     * @param {Object} data
+     */
+    _onSaveMediaDialog: function (data) {
+        this._setCustomBackground(data.src);
     },
 });
 

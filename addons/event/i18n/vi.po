@@ -7,20 +7,19 @@
 # son dang <son.dang@doda100.com>, 2019
 # Tuan Tran <tmtuan.projects@gmail.com>, 2019
 # fanha99 <fanha99@hotmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # Duy BQ <duybq86@gmail.com>, 2019
-# Minh Nguyen <ndminh210994@gmail.com>, 2019
 # Chinh Chinh <trinhttp@trobz.com>, 2019
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1203,14 +1202,10 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event__message_unread
-#: model:ir.model.fields,help:event.field_event_registration__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạn."
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction
+#: model:ir.model.fields,help:event.field_event_event__message_unread
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction
+#: model:ir.model.fields,help:event.field_event_registration__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạn."
 
@@ -1490,8 +1485,8 @@ msgstr "Số lượng Người tham dự"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error_counter
-msgid "Number of error"
-msgstr "Số lỗi"
+msgid "Number of errors"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner__event_count
@@ -1821,6 +1816,11 @@ msgstr "Múi giờ"
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Today Activities"
 msgstr "Các oạt động hôm nay"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_tree
+msgid "Total"
+msgstr "Tổng"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track

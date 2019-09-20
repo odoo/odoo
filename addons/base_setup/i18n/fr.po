@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-13 11:27+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -61,6 +61,14 @@ msgid ""
 "\n"
 "                                        <br/>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
+"                                            Utilisateur Actif\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
+"                                            Utilisateurs Actifs\n"
+"                                        </span>\n"
+"\n"
+"                                        <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -69,6 +77,9 @@ msgid ""
 "                                                Languages\n"
 "                                            </span>"
 msgstr ""
+"<span class=\"o_form_label\">\n"
+"                                                Languages\n"
+"                                            </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -140,7 +151,7 @@ msgstr "Activer le mode développeur (avec les assets)"
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Activate the developer mode (with tests assets)"
-msgstr ""
+msgstr "Activer le mode développeur (avec les assets test)"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -203,7 +214,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose the layout of your documents"
-msgstr ""
+msgstr "Choisissez la mise en page de vos documents"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_pad
@@ -223,7 +234,7 @@ msgstr "Société"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
 msgid "Company Informations"
-msgstr ""
+msgstr "Informations sur la société"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_name
@@ -307,7 +318,7 @@ msgstr "Modifier l'agencement"
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Enter e-mail address"
-msgstr ""
+msgstr "Entrer une adresse de courriel"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
@@ -355,17 +366,17 @@ msgstr "Traductions Gengo"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geo Localization"
-msgstr ""
+msgstr "Géo localisation"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
 msgid "GeoLocalize"
-msgstr ""
+msgstr "Géolocaliser"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "GeoLocalize your partners"
-msgstr ""
+msgstr "Géolocaliser vos partenaires"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -414,7 +425,7 @@ msgstr "Inviter"
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Invite New Users"
-msgstr ""
+msgstr "Inviter de nouveaux utilisateurs"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -442,7 +453,7 @@ msgstr "Charger les données de démonstration"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Companies"
-msgstr ""
+msgstr "Gérer des sociétés"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_inter_company_rules
@@ -452,12 +463,12 @@ msgstr "Gérer des Intersociétés"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Languages"
-msgstr ""
+msgstr "Gérer les langues"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Users"
-msgstr ""
+msgstr "Gérer les utilisateurs"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -472,7 +483,7 @@ msgstr "Multi-devises"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__active_user_count
 msgid "Number of Active Users"
-msgstr ""
+msgstr "Nombre d'utilisateurs actifs"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_count
@@ -482,7 +493,7 @@ msgstr "Nombe de sociétés"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__language_count
 msgid "Number of Languages"
-msgstr ""
+msgstr "Nombre de langues"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -528,7 +539,7 @@ msgstr ""
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Pending Invitations:"
-msgstr ""
+msgstr "Invitations en attente:"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -536,14 +547,14 @@ msgid "Preview Document"
 msgstr "Prévisualisez le document"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_sms
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send SMS"
 msgstr "Envoyer le SMS"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send texts to your contacts"
-msgstr ""
+msgstr "Envoyez des textes à vos contacts"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -608,7 +619,7 @@ msgstr "Bibliothèque d'images Unsplash"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Update Info"
-msgstr ""
+msgstr "Mise à jour de l'information"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -649,6 +660,9 @@ msgid ""
 "companies. When selecting one item, the company data and logo are auto-"
 "filled."
 msgstr ""
+"Lors du remplissage de votre carnet d'adresses, Odoo fournit une liste des "
+"entreprises correspondantes. Lorsque vous sélectionnez un élément, les "
+"données de la société et le logo sont automatiquement renseignés."
 
 #. module: base_setup
 #. openerp-web

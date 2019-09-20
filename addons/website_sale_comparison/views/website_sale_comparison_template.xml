@@ -104,32 +104,39 @@
                         <table class="table table-bordered table-hover text-center mt16 table-comparator" id="o_comparelist_table">
                             <t t-set="categories" t-value="products._prepare_categories_for_display()"/>
                             <thead>
-                                <td t-if="len(categories)" class='td-top-left'/>
-                                <td t-foreach="products" t-as="product">
-                                    <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
-                                    <a href="#" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
-                                        <strong class='float-right'>x</strong>
-                                    </a>
-                                    <a t-att-href="product.website_url">
-                                        <img t-attf-src="/web/image/product.product/#{product.id}/image_256" class="img img-fluid" style="margin:auto;" alt="Product image"/>
-                                    </a>
-                                    <div class='product_summary'>
-                                        <a class="o_product_comparison_table" t-att-href="product.website_url">
-                                            <span t-esc="combination_info['display_name']"></span><br/>
+                                <tr>
+                                    <td t-if="len(categories)" class='o_ws_compare_image td-top-left border-bottom-0'/>
+                                    <td t-foreach="products" t-as="product" class="o_ws_compare_image position-relative border-bottom-0">
+                                        <a href="#" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
+                                            <strong>x</strong>
                                         </a>
+                                        <a t-att-href="product.website_url">
+                                            <img t-attf-src="/web/image/product.product/#{product.id}/image_256" class="img img-fluid" style="margin:auto;" alt="Product image"/>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td t-if="len(categories)" class='td-top-left border-top-0'/>
+                                    <td t-foreach="products" t-as="product" class="border-top-0">
+                                        <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+                                        <div class='product_summary'>
+                                            <a class="o_product_comparison_table" t-att-href="product.website_url">
+                                                <span t-esc="combination_info['display_name']"></span><br/>
+                                            </a>
 
-                                        <span>
-                                            <strong>Price:</strong>
-                                            <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
-                                            <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
-                                        </span>
+                                            <span>
+                                                <strong>Price:</strong>
+                                                <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                                                <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
+                                            </span>
 
-                                        <form action="/shop/cart/update" method="post" class="text-center">
-                                            <input name="product_id" t-att-value="product.id" type="hidden"/>
-                                            <a role="button" class="btn btn-primary btn-block a-submit" href="#"><i class="fa fa-shopping-cart"></i>&amp;nbsp;Add to Cart</a>
-                                        </form>
-                                    </div>
-                                </td>
+                                            <form action="/shop/cart/update" method="post" class="text-center">
+                                                <input name="product_id" t-att-value="product.id" type="hidden"/>
+                                                <a role="button" class="btn btn-primary btn-block a-submit" href="#"><i class="fa fa-shopping-cart"></i>&amp;nbsp;Add to Cart</a>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
                             </thead>
                             <tbody>
                                 <t t-foreach="categories" t-as="category">
@@ -157,9 +164,9 @@
 
     <template id="product_product" name="Comparator - Product row in comparator popover">
         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
-        <div class="row no-gutters align-items-center mt-2 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
-            <div class="col-3">
-                <img class="img img-fluid" t-att-src="website.image_url(product, 'image_64')" style="max-height: 50px;" alt="Product image"/>
+        <div class="row no-gutters align-items-center my-1 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
+            <div class="col-3 text-center">
+                <img class="img o_image_64_max" t-att-src="website.image_url(product, 'image_128')" alt="Product image"/>
             </div>
             <div class="col-8 pl-2">
                 <h6>

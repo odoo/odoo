@@ -49,7 +49,7 @@ class StockMove(models.Model):
     description_picking = fields.Text('Description of Picking')
     product_qty = fields.Float(
         'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
-        digits=0, store=True,
+        digits=0, store=True, compute_sudo=True,
         help='Quantity in the default UoM of the product')
     product_uom_qty = fields.Float(
         'Initial Demand',
@@ -189,7 +189,6 @@ class StockMove(models.Model):
                 move.state in ('partially_available', 'assigned') and
                 move.picking_type_id.use_create_lots and
                 not move.picking_type_id.use_existing_lots and
-                move.picking_type_id.show_operations and
                 not move.picking_type_id.show_reserved
             )
 

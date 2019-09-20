@@ -6,18 +6,18 @@
 # Jeanphy <hzh0292@qq.com>, 2019
 # amos lin <seeing@edirect168.com>, 2019
 # Ying <acc.tou@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # bluce Lan <bluce.lan@gmail.com>, 2019
+# Martin Trigaux, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"POT-Creation-Date: 2019-09-13 11:26+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: bluce Lan <bluce.lan@gmail.com>, 2019\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +92,12 @@ msgstr "${object.company_id.name} 交貨單 (Ref ${object.name or 'n/a' })"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_picking_responsible.py:0
+#, python-format
+msgid "%s has a restricted access to %s"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -776,6 +782,11 @@ msgid "Assign"
 msgstr "分配"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
+msgid "Assign Owner"
+msgstr "指定所有者"
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_picking_responsible
 msgid "Assign Responsible"
 msgstr ""
@@ -794,11 +805,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_picking_responsible_form
 msgid "Assign a Responsible"
 msgstr "指定一負責人"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
-msgid "Assign owner"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1056,6 +1062,25 @@ msgid "Change to a better name"
 msgstr "變更為更好名稱"
 
 #. module: stock
+#: code:addons/stock/models/product_strategy.py:0
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/models/stock_production_lot.py:0
+#: code:addons/stock/models/stock_warehouse.py:0
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"Changing the company of this record is forbidden at this point, you should "
+"rather archive it and create a new one."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Changing the operation type of this record is forbidden at this point."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
 msgstr "檢查可用性"
@@ -1114,6 +1139,7 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__company_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__company_id
@@ -1121,10 +1147,14 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_move__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_package_level__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__company_id
@@ -1207,6 +1237,7 @@ msgstr "消耗明細"
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
 #: model:ir.model.fields,field_description:stock.field_stock_picking__partner_id
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Contact"
 msgstr "聯繫人"
 
@@ -1694,6 +1725,11 @@ msgstr "已交貨數量"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 msgid "Delivery"
 msgstr "交貨"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Delivery Address"
+msgstr "收貨地址"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -2425,16 +2461,12 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking__message_unread
-#: model:ir.model.fields,help:stock.field_stock_production_lot__message_unread
-#: model:ir.model.fields,help:stock.field_stock_scrap__message_unread
-msgid "If checked new messages require your attention."
-msgstr "勾選代表有新訊息需要您留意。"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_picking__message_unread
 #: model:ir.model.fields,help:stock.field_stock_production_lot__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_production_lot__message_unread
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_scrap__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "勾選代表有新訊息需要您留意。"
 
@@ -2545,6 +2577,13 @@ msgstr "如果勾選此項，您將被允許可以選擇整個包裝來進行移
 #: model:ir.model.fields,help:stock.field_stock_rule__active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr "如果不勾選，允許您隱藏規則而無需刪除。"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
+msgid ""
+"If you cancel this inventory adjustment, all its inventory adjustment lines "
+"will be lost. Are you sure you want to discard it ?"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
@@ -2870,12 +2909,6 @@ msgstr "您不能保留超出庫存的%s 產品。"
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
 msgstr "不能取消保超過庫存數量的 %s 產品。"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__product_packaging
-msgid ""
-"It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr "它指定包裝的屬性，如：數量、類型等。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3633,8 +3666,8 @@ msgstr "在訂購點被觸發到收到產品或者給供應商下單的天數"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
-msgid "Number of error"
-msgstr "錯誤數量"
+msgid "Number of errors"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -4131,11 +4164,6 @@ msgstr "正數庫存"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Pre-fill Detailed Operations"
 msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging
-msgid "Preferred Packaging"
-msgstr "首選包裝"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -4718,6 +4746,11 @@ msgstr "收貨路線"
 #, python-format
 msgid "Receipts"
 msgstr "收貨"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Receive From"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
@@ -5863,11 +5896,12 @@ msgstr "每個公司的倉庫代碼必須唯一!"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_production_lot_name_ref_uniq
-msgid "The combination of serial number and product must be unique !"
-msgstr "產品和序列號的綁定必須是唯一的！"
+msgid ""
+"The combination of serial number and product must be unique across a company"
+" !"
+msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_type__company_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
 msgid "The company is automatically set from your user preferences."
 msgstr "該公司是從您的使用者喜好自動設定。"
@@ -6540,12 +6574,10 @@ msgstr "使用已有批次/序列號碼"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid ""
-"Use this assistant to replenish your stock. \n"
+"Use this assistant to replenish your stock.\n"
 "                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
 msgstr ""
-"用這個助手來補充你的存貨。\n"
-"                根據您的產品配置, 啟動補貨可能會觸發詢價、製造訂單或轉移。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7005,6 +7037,12 @@ msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr "您不能取消一個已標記為『完成』的庫存遷移。"
 
 #. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -7158,12 +7196,6 @@ msgid ""
 "You have to select a product unit of measure that is in the same category "
 "than the default unit of measure of the product"
 msgstr "您必須選擇同一計量單位類別內的計量單位而不是產品的預設計量單位。"
-
-#. module: stock
-#: code:addons/stock/models/stock_location.py:0
-#, python-format
-msgid "You have to set a name for this location."
-msgstr "必須為此位置設定名稱。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
