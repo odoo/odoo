@@ -27,6 +27,7 @@ publicWidget.registry.visitorTimezone = publicWidget.Widget.extend({
                 }
             });
         }
+        return this._super.apply(this, arguments);
     },
 });
 
