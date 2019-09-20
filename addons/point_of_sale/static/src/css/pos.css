@@ -357,6 +357,9 @@ td {
     height:100%;
     display: -webkit-flex;
     display: flex;
+    overflow : hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 .pos .pos-rightheader > * {
     border-right: 1px solid #292929;
@@ -437,8 +440,6 @@ td {
     display: flex;
     -webkit-flex: 1;
     flex: 1;
-    max-width: -moz-available;
-    max-width: -webkit-fill-available;
 }
 .pos .orders {
     display: -webkit-flex;
@@ -446,8 +447,6 @@ td {
     vertical-align: top;
     margin-left: 0px;
     overflow: hidden;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 /*  c) The session buttons */

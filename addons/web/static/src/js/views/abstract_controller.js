@@ -19,6 +19,8 @@ var config = require('web.config');
 var core = require('web.core');
 var mvc = require('web.mvc');
 
+var session = require('web.session');
+
 var QWeb = core.qweb;
 
 var AbstractController = mvc.Controller.extend(ActionMixin, {
@@ -519,6 +521,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             this.dp.add(this._rpc({
                 model: data.model,
                 method: data.method,
+                context: session.user_context,
             })).then(function (action) {
                 if (action !== undefined) {
                     self.do_action(action, options);

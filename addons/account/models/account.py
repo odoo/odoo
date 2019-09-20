@@ -317,13 +317,13 @@ class AccountAccount(models.Model):
             if opening_move_line:
                 if amount:
                     # modify the line
-                    setattr(opening_move_line.with_context({'check_move_validity': False}), field, amount)
+                    opening_move_line.with_context(check_move_validity=False)[field] = amount
                 elif counter_part_map[field]:
                     # delete the line (no need to keep a line with value = 0)
-                    opening_move_line.with_context({'check_move_validity': False}).unlink()
+                    opening_move_line.with_context(check_move_validity=False).unlink()
             elif amount:
                 # create a new line, as none existed before
-                self.env['account.move.line'].with_context({'check_move_validity': False}).create({
+                self.env['account.move.line'].with_context(check_move_validity=False).create({
                         'name': _('Opening balance'),
                         field: amount,
                         'move_id': opening_move.id,
@@ -794,7 +794,7 @@ class AccountJournal(models.Model):
         return {
             'alias_defaults': {'type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'company_id': self.company_id.id, 'journal_id': self.id},
             'alias_parent_thread_id': self.id,
-            'alias_name': re.sub(r'[^\w]+', '-', alias_name)
+            'alias_name': alias_name,
         }
 
     def unlink(self):

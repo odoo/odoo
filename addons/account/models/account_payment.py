@@ -319,14 +319,16 @@ class account_payment(models.Model):
             move_currency = self.env['res.currency'].browse(res['currency_id'])
             if move_currency == currency and move_currency != company.currency_id:
                 total += res['residual_currency']
-            elif move_currency == currency == company.currency_id:
-                total += res['amount_residual']
             else:
-                total += move_currency._convert(res['amount_residual'], currency, company, date)
+                total += company.currency_id._convert(res['amount_residual'], currency, company, date)
         return total
 
     def name_get(self):
         return [(payment.id, payment.name or _('Draft Payment')) for payment in self]
+
+    @api.model
+    def _get_move_name_transfer_separator(self):
+        return '§§'
 
     @api.depends('move_line_ids.reconciled')
     def _get_move_reconciled(self):
@@ -448,7 +450,6 @@ class account_payment(models.Model):
                 move.unlink()
             rec.write({
                 'state': 'cancelled',
-                'move_name': False,
             })
 
     def unlink(self):
@@ -484,6 +485,7 @@ class account_payment(models.Model):
         all_move_vals = []
         for payment in self:
             company_currency = payment.company_id.currency_id
+            move_names = payment.move_name.split(payment._get_move_name_transfer_separator()) if payment.move_name else None
 
             # Compute amounts.
             write_off_amount = payment.payment_difference_handling == 'reconcile' and -payment.payment_difference or 0.0
@@ -591,6 +593,9 @@ class account_payment(models.Model):
                     'payment_id': payment.id,
                 }))
 
+            if move_names:
+                move_vals['name'] = move_names[0]
+
             all_move_vals.append(move_vals)
 
             # ==== 'transfer' ====
@@ -633,6 +638,9 @@ class account_payment(models.Model):
                         }),
                     ],
                 }
+
+                if move_names and len(move_names) == 2:
+                    transfer_move_vals['name'] = move_names[1]
 
                 all_move_vals.append(transfer_move_vals)
         return all_move_vals
@@ -677,7 +685,8 @@ class account_payment(models.Model):
             moves.filtered(lambda move: move.journal_id.post_at != 'bank_rec').post()
 
             # Update the state / move before performing any reconciliation.
-            rec.write({'state': 'posted', 'move_name': moves[0].name})
+            move_name = self._get_move_name_transfer_separator().join(moves.mapped('name'))
+            rec.write({'state': 'posted', 'move_name': move_name})
 
             if rec.payment_type in ('inbound', 'outbound'):
                 # ==== 'inbound' / 'outbound' ====
