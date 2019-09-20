@@ -230,10 +230,10 @@ class HolidaysType(models.Model):
     def get_days_all_request(self):
         leave_types = sorted(self.search([]).filtered(lambda x: x.virtual_remaining_leaves or x.max_leaves), key=self._model_sorting_key, reverse=True)
         return [(lt.name, {
-                    'remaining_leaves': lt.remaining_leaves,
-                    'virtual_remaining_leaves': lt.virtual_remaining_leaves,
-                    'max_leaves': lt.max_leaves,
-                    'leaves_taken': lt.leaves_taken,
+                    'remaining_leaves': ('%.2f' % lt.remaining_leaves).rstrip('0').rstrip('.'),
+                    'virtual_remaining_leaves': ('%.2f' % lt.virtual_remaining_leaves).rstrip('0').rstrip('.'),
+                    'max_leaves': ('%.2f' % lt.max_leaves).rstrip('0').rstrip('.'),
+                    'leaves_taken': ('%.2f' % lt.leaves_taken).rstrip('0').rstrip('.'),
                     'request_unit': lt.request_unit,
                 }, lt.allocation_type)
             for lt in leave_types]
