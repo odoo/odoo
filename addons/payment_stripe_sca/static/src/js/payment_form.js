@@ -90,6 +90,43 @@ odoo.define('payment_stripe.payment_form', function (require) {
                 );
             });
         },
+<<<<<<< HEAD
+=======
+        _chargeStripeToken: function(formData, pm_id) {
+            var json_params = _.extend({}, formData, {pm_id: pm_id})
+            var final_redirect;
+            return rpc.query({
+                route: this._guessJsonRoute(),
+                params: json_params,
+            }).then(function (result) {
+                var tx_info = result.tx_info;
+                final_redirect = result.redirect;
+                if (tx_info.state === 'done') {
+                    window.location = final_redirect;
+                } else if (tx_info.state === 'pending' && tx_info.stripe_payment_intent_secret) {
+                    var stripe = new Stripe(tx_info.stripe_publishable_key);
+                    return $.Deferred(function(defer) {
+                        stripe.handleCardPayment(tx_info.stripe_payment_intent_secret).then(function (result) {defer.resolve(result)});
+                    });
+                } else {
+                    return $.Deferred().reject({
+                        "message": {"data": { "message": _t("An error occured with transaction ") + (tx_info.reference || "")}}
+                    });
+                }
+            }).then(function (result) {
+                if (result.error) {
+                    return $.Deferred().reject({"message": {"data": { "message": result.error.message}}});
+                } else {
+                    return rpc.query({
+                        route: '/payment/stripe/s2s/process_payment_intent',
+                        params: _.extend({}, result.paymentIntent, {reference: result.paymentIntent.description}),
+                    });
+                }
+            }).then(function (result) {
+                window.location = final_redirect;
+            });
+        },
+>>>>>>> 52a99b94821... temp
         /**
          * called when clicking a Stripe radio if configured for s2s flow; instanciates the card and bind it to the widget.
          *
