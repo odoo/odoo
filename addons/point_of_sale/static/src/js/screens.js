@@ -2098,7 +2098,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             this.reset_input();
 
             this.payment_interface = payment_method.payment_terminal;
-            if (this.payment_interface) {
+            if (this.payment_interface && order.selected_paymentline.amount > 0) {
                 order.selected_paymentline.set_payment_status('pending');
             }
 
