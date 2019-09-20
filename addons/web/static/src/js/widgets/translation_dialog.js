@@ -23,6 +23,7 @@ odoo.define('web.TranslationDialog', function (require) {
          * @param {string} [options.dataPointID] the data point id of the record for which we do the translations
          * @param {boolean} [options.isComingFromTranslationAlert] the initiator of the dialog, might be a link on a field or the translation alert on top of the form
          * @param {boolean} [options.isText] is the field a text field (multiline) or char (single line)
+         * @param {boolean} [options.showSrc] is the source of the translation should be rendered (for partial translations, i.e. XML content)
          *
          */
         init: function (parent, options) {
@@ -37,6 +38,7 @@ odoo.define('web.TranslationDialog', function (require) {
             this.isComingFromTranslationAlert = options.isComingFromTranslationAlert;
             this.currentInterfaceLanguage = session.user_context.lang;
             this.isText = options.isText;
+            this.showSrc = options.showSrc;
 
             this._super(parent, _.extend({
                 size: 'large',
@@ -66,15 +68,18 @@ odoo.define('web.TranslationDialog', function (require) {
                         id: term.id,
                         lang: term.lang,
                         langName: relatedLanguage[1],
+                        source: term.src,
                         // we set the translation value coming from the database, except for the language
                         // the user is currently utilizing. Then we set the translation value coming
                         // from the value of the field in the form
                         value: (term.lang === this.currentInterfaceLanguage &&
+                            !this.showSrc &&
                             !this.isComingFromTranslationAlert) ?
                             this.userLanguageValue : term.value || ''
                     };
                 });
-                this.data.sort((left, right) => left.langName < right.langName ? -1 : 1);
+                this.data.sort((left, right) =>
+                    (left.langName < right.langName || (left.langName === right.langName && left.source < right.source)) ? -1 : 1);
             });
         },
 
@@ -89,7 +94,7 @@ odoo.define('web.TranslationDialog', function (require) {
             return this._rpc({
                 model: 'ir.translation',
                 method: 'search_read',
-                fields: ['lang', 'value'],
+                fields: ['lang', 'src', 'value'],
                 domain: this.domain,
             });
         },
@@ -132,10 +137,12 @@ odoo.define('web.TranslationDialog', function (require) {
                 if (initialValue.value !== t.value) {
                     updatedTerm[t.dataset.id] = t.value;
 
-                    if (initialValue.lang === this.currentInterfaceLanguage) {
+                    if (initialValue.lang === this.currentInterfaceLanguage && !this.showSrc) {
                         // when the user has changed the term for the language he is
                         // using in the interface, this change should be reflected
                         // in the form view
+                        // partial translations being handled server side are
+                        // also ignored
                         var changes = {};
                         changes[this.fieldName] = updatedTerm[initialValue.id];
                         updateFormViewField = {
