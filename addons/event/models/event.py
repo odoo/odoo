@@ -266,6 +266,8 @@ class EventEvent(models.Model):
     @api.multi
     @api.depends('name', 'date_begin', 'date_end')
     def name_get(self):
+        # Prefetch needed fields, without reading NewId records
+        self.browse(self.ids, self._prefetch).read(["date_begin", "date_end", "name"])
         result = []
         for event in self:
             date_begin = fields.Datetime.from_string(event.date_begin)
