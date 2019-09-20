@@ -130,6 +130,22 @@
         </field>
     </record>
 
+    <record id="mailing_mailing_view_form_mixed" model="ir.ui.view">
+        <!-- View allowign to display the mailing type and therefore choosing
+        the way of mailing: not prioritized one, used in some specific cases
+        like "contacting people" without predefining mail or sms -->
+        <field name="name">mailing.mailing.view.form.mixed</field>
+        <field name="model">mailing.mailing</field>
+        <field name="mode">primary</field>
+        <field name="priority">30</field>
+        <field name="inherit_id" ref="mass_mailing_sms.mailing_mailing_view_form_sms"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mailing_type']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="mailing_mailing_view_kanban_sms" model="ir.ui.view">
         <field name="name">mailing.mailing.view.kanban.inherit.sms</field>
         <field name="model">mailing.mailing</field>
