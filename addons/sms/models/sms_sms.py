@@ -22,7 +22,7 @@ class SmsSms(models.Model):
         'server_error': 'sms_server'
     }
 
-    number = fields.Char('Number', required=True)
+    number = fields.Char('Number')
     body = fields.Text()
     partner_id = fields.Many2one('res.partner', 'Customer')
     mail_message_id = fields.Many2one('mail.message', index=True)
