@@ -6,7 +6,7 @@ from odoo.tools import float_is_zero, float_compare, safe_eval, date_utils
 from odoo.tools.misc import formatLang, format_date
 
 from collections import OrderedDict
-from datetime import date
+from datetime import date, timedelta
 from itertools import groupby, chain
 from stdnum.iso7064 import mod_97_10
 from itertools import zip_longest
@@ -21,8 +21,9 @@ import psycopg2
 _logger = logging.getLogger(__name__)
 
 #forbidden fields
-INTEGRITY_HASH_MOVE_FIELDS = ['date', 'journal_id', 'company_id']
-INTEGRITY_HASH_LINE_FIELDS = ['debit', 'credit', 'account_id', 'partner_id']
+INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
+INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
+
 
 class AccountMove(models.Model):
     _name = "account.move"
@@ -245,6 +246,9 @@ class AccountMove(models.Model):
     invoice_has_matching_suspense_amount = fields.Boolean(compute='_compute_has_matching_suspense_amount',
         groups='account.group_account_invoice',
         help="Technical field used to display an alert on invoices if there is at least a matching amount in any supsense account.")
+    tax_lock_date_message = fields.Char(
+        compute='_compute_tax_lock_date_message',
+        help="Technical field used to display a message when the invoice's accounting date is prior of the tax lock date.")
     # Technical field to hide Reconciled Entries stat button
     has_reconciled_entries = fields.Boolean(compute="_compute_has_reconciled_entries")
     # ==== Hash Fields ====
@@ -1247,6 +1251,16 @@ class AccountMove(models.Model):
                 group.id
             ) for group, amounts in res]
 
+    @api.depends('date', 'line_ids.debit', 'line_ids.credit', 'line_ids.tax_line_id', 'line_ids.tax_ids', 'line_ids.tag_ids')
+    def _compute_tax_lock_date_message(self):
+        for move in self:
+            if move._affect_tax_report() and move.company_id.tax_lock_date and move.date and move.date <= move.company_id.tax_lock_date:
+                move.tax_lock_date_message = _(
+                    "The accounting date is prior to the tax lock date which is set on %s. "
+                    "Then, this will be moved to the next available one during the invoice validation."
+                    % format_date(self.env, move.company_id.tax_lock_date))
+            else:
+                move.tax_lock_date_message = False
 
     # -------------------------------------------------------------------------
     # CONSTRAINS METHODS
@@ -1346,45 +1360,17 @@ class AccountMove(models.Model):
             raise UserError(_("Cannot create unbalanced journal entry. Ids: %s\nDifferences debit - credit: %s") % (ids, sums))
 
     def _check_fiscalyear_lock_date(self):
-        for move in self:
+        for move in self.filtered(lambda move: move.state == 'posted'):
             lock_date = max(move.company_id.period_lock_date or date.min, move.company_id.fiscalyear_lock_date or date.min)
             if self.user_has_groups('account.group_account_manager'):
                 lock_date = move.company_id.fiscalyear_lock_date
             if move.date <= (lock_date or date.min):
                 if self.user_has_groups('account.group_account_manager'):
-                    message = _("You cannot add/modify entries prior to and inclusive of the lock date %s") % lock_date
+                    message = _("You cannot add/modify entries prior to and inclusive of the lock date %s.") % format_date(self.env, lock_date)
                 else:
-                    message = _("You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role") % lock_date
+                    message = _("You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role") % format_date(self.env, lock_date)
                 raise UserError(message)
         return True
-
-    def _check_tax_lock_date(self):
-        for move in self:
-            if (
-                move.company_id.tax_lock_date
-                and move.date <= move.company_id.tax_lock_date
-                and any(
-                    line.tax_ids
-                    or line.tax_line_id
-                    or line.tag_ids.filtered(lambda x: x.applicability == "taxes")
-                    for line in move.line_ids
-                )
-            ):
-                raise UserError(
-                    _(
-                        "The operation is refused as it would impact an already issued tax statement. Please change the journal entry date or the tax lock date set in the settings ({}) to proceed"
-                    ).format(move.company_id.tax_lock_date or date.min)
-                )
-
-    def _check_move_consistency(self):
-        for move in self:
-            if move.line_ids:
-                if not all([x.company_id.id == move.company_id.id for x in move.line_ids]):
-                    raise UserError(_("Cannot create moves for different companies."))
-
-        self._check_balanced()
-        self._check_tax_lock_date()
-        self._check_fiscalyear_lock_date()
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
@@ -1498,6 +1484,9 @@ class AccountMove(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         # OVERRIDE
+        if any('state' in vals and vals.get('state') == 'posted' for vals in vals_list):
+            raise UserError(_('You cannot create a move already in the posted state. Please create a draft move and post it after.'))
+
         vals_list = self._move_autocomplete_invoice_lines_create(vals_list)
 
         moves = super(AccountMove, self).create(vals_list)
@@ -1517,14 +1506,28 @@ class AccountMove(models.Model):
                 raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
             if (move.name != '/' and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
                 raise UserError(_('You cannot edit the journal of an account move if it has been posted once.'))
+
+            # You can't change the date of a move being inside a locked period.
             if 'date' in vals and move.date != vals['date']:
-                move._check_move_consistency(check_balanced=False)
+                move._check_fiscalyear_lock_date()
+                move.line_ids._check_tax_lock_date()
+
+            # You can't post subtract a move to a locked period.
+            if 'state' in vals and move.state == 'posted' and vals['state'] != 'posted':
+                move._check_fiscalyear_lock_date()
+                move.line_ids._check_tax_lock_date()
 
         if self._move_autocomplete_invoice_lines_write(vals):
             res = True
         else:
             vals.pop('invoice_line_ids', None)
             res = super(AccountMove, self.with_context(check_move_validity=False)).write(vals)
+
+        # You can't change the date of a not-locked move to a locked period.
+        # You can't post a new journal entry inside a locked period.
+        if 'date' in vals or 'state' in vals:
+            self._check_fiscalyear_lock_date()
+            self.mapped('line_ids')._check_tax_lock_date()
 
         if ('state' in vals and vals.get('state') == 'posted') and self.restrict_mode_hash_table:
             for move in self.filtered(lambda m: not(m.secure_sequence_number or m.inalterable_hash)):
@@ -1535,8 +1538,11 @@ class AccountMove(models.Model):
 
         # Ensure the move is still well balanced.
         if 'line_ids' in vals and self._context.get('check_move_validity', True):
-            # 'check_move_validity' is needed as the write will be done line per line.
-            self._check_move_consistency()
+            self._check_balanced()
+
+        # Check the lock date.
+        # /!\ The tax lock date is managed in the lines level, don't check it there.
+        self._check_fiscalyear_lock_date()
 
         # Trigger 'action_invoice_paid' when the invoice becomes paid after a write.
         not_paid_invoices.filtered(lambda move: move.invoice_payment_state in ('paid', 'in_payment')).action_invoice_paid()
@@ -1618,6 +1624,9 @@ class AccountMove(models.Model):
 
     def is_outbound(self, include_receipts=True):
         return self.type in self.get_outbound_types(include_receipts)
+
+    def _affect_tax_report(self):
+        return any(line._affect_tax_report() for line in self.line_ids)
 
     def _get_invoice_reference_euro_invoice(self):
         """ This computes the reference based on the RF Creditor Reference.
@@ -1942,11 +1951,19 @@ class AccountMove(models.Model):
 
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly.
+            # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
+            # environment.
             if not move.invoice_date and move.is_invoice(include_receipts=True):
                 move.invoice_date = fields.Date.context_today(self)
                 move.with_context(check_move_validity=False)._onchange_invoice_date()
 
-        self._check_move_consistency()
+            # When the accounting date is prior to the tax lock date, move it automatically to the next available date.
+            # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
+            # environment.
+            if move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date:
+                move.date = move.company_id.tax_lock_date + timedelta(days=1)
+                move.with_context(check_move_validity=False)._onchange_currency()
+
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         self.mapped('line_ids').create_analytic_lines()
         for move in self:
@@ -2025,7 +2042,6 @@ class AccountMove(models.Model):
         return lines.reconcile()
 
     def button_draft(self):
-        self._check_tax_lock_date()
         AccountMoveLine = self.env['account.move.line']
         excluded_move_ids = []
 
@@ -2042,13 +2058,11 @@ class AccountMove(models.Model):
             # We remove all the analytics entries for this journal
             move.mapped('line_ids.analytic_line_ids').unlink()
 
-        self._check_fiscalyear_lock_date()
         self.mapped('line_ids').remove_move_reconcile()
         self.write({'state': 'draft'})
 
     def button_cancel(self):
         self.write({'state': 'cancel'})
-        return True
 
     def action_invoice_sent(self):
         """ Open a window to compose an email, with the edi invoice template
@@ -2906,20 +2920,24 @@ class AccountMoveLine(models.Model):
                 if line.reconciled:
                     raise UserError(_('Lines from "Off-Balance Sheet" accounts cannot be reconciled'))
 
-    def _update_check(self):
-        """ Raise Warning to cause rollback if the move is posted, some entries are reconciled or the move is older than the lock date"""
-        move_ids = set()
+    def _affect_tax_report(self):
+        self.ensure_one()
+        return self.tax_ids or self.tax_line_id or self.tag_ids.filtered(lambda x: x.applicability == "taxes")
+
+    def _check_tax_lock_date(self):
+        for line in self.filtered(lambda l: l.move_id.state == 'posted'):
+            move = line.move_id
+            if move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date and line._affect_tax_report():
+                raise UserError(_("The operation is refused as it would impact an already issued tax statement. "
+                                  "Please change the journal entry date or the tax lock date set in the settings (%s) to proceed.")
+                                % format_date(self.env, move.company_id.tax_lock_date))
+
+    def _check_reconciliation(self):
         for line in self:
-            err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
-            if line.reconciled and not (line.debit == 0 and line.credit == 0):
-                raise UserError(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
-            if line.move_id.id not in move_ids:
-                move_ids.add(line.move_id.id)
-        if move_ids:
-            moves = self.env['account.move'].browse(list(move_ids))
-            moves._check_fiscalyear_lock_date()
-            moves._check_tax_lock_date()
-        return True
+            if line.matched_debit_ids or line.matched_credit_ids:
+                raise UserError(_("You cannot do this modification on a reconciled journal entry. "
+                                  "You can just change some non legal fields or you must unreconcile first.\n"
+                                  "Journal Entry (id): %s (%s)") % (line.move_id.name, line.move_id.id))
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
@@ -3011,26 +3029,36 @@ class AccountMoveLine(models.Model):
 
         lines = super(AccountMoveLine, self).create(vals_list)
 
-        # Check the move is balanced debit = credit.
+        moves = lines.mapped('move_id')
         if self._context.get('check_move_validity', True):
-            lines.mapped('move_id')._check_move_consistency()
+            moves._check_balanced()
+        moves._check_fiscalyear_lock_date()
+        lines._check_tax_lock_date()
 
         return lines
 
     def write(self, vals):
         # OVERRIDE
+        def field_will_change(line, field_name):
+            if field_name not in vals:
+                return False
+            field = line._fields[field_name]
+            if field.type == 'many2one':
+                return line[field_name].id != vals[field_name]
+            if field.type in ('one2many', 'many2many'):
+                current_ids = set(line[field_name].ids)
+                after_write_ids = set(r['id'] for r in line.resolve_2many_commands(field_name, vals[field_name], fields=['id']))
+                return current_ids != after_write_ids
+            return line[field_name] != vals[field_name]
+
         ACCOUNTING_FIELDS = ('debit', 'credit', 'amount_currency')
         BUSINESS_FIELDS = ('price_unit', 'quantity', 'discount', 'tax_ids')
+        PROTECTED_FIELDS_TAX_LOCK_DATE = ['debit', 'credit', 'tax_line_id', 'tax_ids', 'tag_ids']
+        PROTECTED_FIELDS_LOCK_DATE = PROTECTED_FIELDS_TAX_LOCK_DATE + ['account_id', 'journal_id', 'amount_currency', 'currency_id', 'partner_id']
+        PROTECTED_FIELDS_RECONCILIATION = ('account_id', 'date', 'debit', 'credit', 'amount_currency', 'currency_id')
 
         if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
             raise UserError(_('You cannot use a deprecated account.'))
-        if any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
-            self._update_check()
-        if not self._context.get('allow_amount_currency') and any(
-                key in vals for key in ('amount_currency', 'currency_id')):
-            # hackish workaround to write the amount_currency when assigning a payment to an invoice through the 'add' button
-            # this is needed to compute the correct amount_residual_currency and potentially create an exchange difference entry
-            self._update_check()
         # when making a reconciliation on an existing liquidity journal item, mark the payment as reconciled
         for line in self:
             if line.parent_state == 'posted':
@@ -3040,9 +3068,21 @@ class AccountMoveLine(models.Model):
                     raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
             if 'statement_line_id' in vals and line.payment_id:
                 # In case of an internal transfer, there are 2 liquidity move lines to match with a bank statement
-                if all(line.statement_id for line in record.payment_id.move_line_ids.filtered(
-                        lambda r: r.id != record.id and r.account_id.internal_type == 'liquidity')):
-                    record.payment_id.state = 'reconciled'
+                if all(line.statement_id for line in line.payment_id.move_line_ids.filtered(
+                        lambda r: r.id != line.id and r.account_id.internal_type == 'liquidity')):
+                    line.payment_id.state = 'reconciled'
+
+            # Check the lock date.
+            if any(field_will_change(line, field_name) for field_name in PROTECTED_FIELDS_LOCK_DATE):
+                line.move_id._check_fiscalyear_lock_date()
+
+            # Check the tax lock date.
+            if any(field_will_change(line, field_name) for field_name in PROTECTED_FIELDS_TAX_LOCK_DATE):
+                line._check_tax_lock_date()
+
+            # Check the reconciliation.
+            if any(field_will_change(line, field_name) for field_name in PROTECTED_FIELDS_RECONCILIATION):
+                line._check_reconciliation()
 
         result = super(AccountMoveLine, self).write(vals)
 
@@ -3072,21 +3112,28 @@ class AccountMoveLine(models.Model):
                 ))
                 super(AccountMoveLine, line).write(to_write)
 
-        if self._context.get('check_move_validity', True) and any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
-            self.env['account.move'].browse(self.mapped('move_id.id'))._check_move_consistency()
+        # Check total_debit == total_credit in the related moves.
+        if self._context.get('check_move_validity', True):
+            self.mapped('move_id')._check_balanced()
 
         return result
 
     def unlink(self):
-        self._update_check()
-        move_ids = set()
-        for line in self:
-            if line.move_id.id not in move_ids:
-                move_ids.add(line.move_id.id)
-        result = super(AccountMoveLine, self).unlink()
-        if self._context.get('check_move_validity', True) and move_ids:
-            self.env['account.move'].browse(list(move_ids))._check_move_consistency()
-        return result
+        # Check the lines are not reconciled (partially or not).
+        self._check_reconciliation()
+
+        # Check total_debit == total_credit in the related moves.
+        moves = self.mapped('move_id')
+        if self._context.get('check_move_validity', True):
+            moves._check_balanced()
+
+        # Check the lock date.
+        moves._check_fiscalyear_lock_date()
+
+        # Check the tax lock date.
+        self._check_tax_lock_date()
+
+        return super(AccountMoveLine, self).unlink()
 
     @api.model
     def default_get(self, default_fields):

@@ -1155,6 +1155,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
         })
 
     def test_out_invoice_post_1(self):
+        ''' Check the invoice_date will be set automatically at the post date. '''
         frozen_today = fields.Date.today()
         with patch.object(fields.Date, 'today', lambda *args, **kwargs: frozen_today), patch.object(fields.Date, 'context_today', lambda *args, **kwargs: frozen_today):
             # Create an invoice with rate 1/3.
@@ -1240,6 +1241,111 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
                 'amount_tax': 230.0,
                 'amount_total': 1430.0,
             })
+
+    def test_out_invoice_post_2(self):
+        ''' Check the date will be set automatically at the next available post date due to the tax lock date. '''
+        # Create an invoice with rate 1/3.
+        move = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2016-01-01'),
+            'date': fields.Date.from_string('2015-01-01'),
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'name': self.product_line_vals_1['name'],
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'quantity': self.product_line_vals_1['quantity'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'tax_ids': self.product_line_vals_1['tax_ids'],
+                }),
+                (0, None, {
+                    'name': self.product_line_vals_2['name'],
+                    'product_id': self.product_line_vals_2['product_id'],
+                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
+                    'quantity': self.product_line_vals_2['quantity'],
+                    'price_unit': self.product_line_vals_2['price_unit'],
+                    'tax_ids': self.product_line_vals_2['tax_ids'],
+                }),
+            ],
+        })
+
+        # Add a manual edition of a tax line:
+        # - The modification must be preserved in the business fields.
+        # - The journal entry must be balanced before / after the post.
+        move.write({
+            'line_ids': [
+                (1, move.line_ids.filtered(lambda line: line.tax_line_id.id == self.tax_line_vals_1['tax_line_id']).id, {
+                    'amount_currency': -200.0,
+                }),
+                (1, move.line_ids.filtered(lambda line: line.date_maturity).id, {
+                    'amount_currency': 1430.0,
+                }),
+            ],
+        })
+
+        # Set the tax lock date:
+        # - The date must be set automatically at the date after the tax_lock_date.
+        # - As the date changed, the currency rate has changed (1/3 => 1/2).
+        move.company_id.tax_lock_date = fields.Date.from_string('2016-12-31')
+
+        move.post()
+
+        self.assertInvoiceValues(move, [
+            {
+                **self.product_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -1000.0,
+                'debit': 0.0,
+                'credit': 500.0,
+            },
+            {
+                **self.product_line_vals_2,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -200.0,
+                'debit': 0.0,
+                'credit': 100.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'price_unit': 200.0,
+                'price_subtotal': 200.0,
+                'price_total': 200.0,
+                'amount_currency': -200.0,
+                'debit': 0.0,
+                'credit': 100.0,
+            },
+            {
+                **self.tax_line_vals_2,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -30.0,
+                'debit': 0.0,
+                'credit': 15.0,
+            },
+            {
+                **self.term_line_vals_1,
+                'name': move.name,
+                'currency_id': self.currency_data['currency'].id,
+                'price_unit': -1430.0,
+                'price_subtotal': -1430.0,
+                'price_total': -1430.0,
+                'amount_currency': 1430.0,
+                'debit': 715.0,
+                'credit': 0.0,
+                'date_maturity': fields.Date.from_string('2016-01-01'),
+            },
+        ], {
+            **self.move_vals,
+            'invoice_payment_ref': move.name,
+            'currency_id': self.currency_data['currency'].id,
+            'date': fields.Date.from_string('2017-01-01'),
+            'amount_untaxed': 1200.0,
+            'amount_tax': 230.0,
+            'amount_total': 1430.0,
+        })
 
     def test_out_invoice_switch_out_refund_1(self):
         # Test creating an account_move with an out_invoice_type and switch it in an out_refund.

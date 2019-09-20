@@ -517,6 +517,11 @@
                     </header>
                     <!-- Invoice outstanding credits -->
                     <div groups="account.group_account_invoice"
+                         class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('tax_lock_date_message', '=', False)]}">
+                        <field name="tax_lock_date_message" nolabel="1"/>
+                    </div>
+                    <div groups="account.group_account_invoice"
                          class="alert alert-info" role="alert" style="margin-bottom:0px;"
                          attrs="{'invisible': ['|', '|', ('type', 'not in', ('out_invoice', 'out_refund')), ('invoice_has_outstanding', '=', False), ('invoice_payment_state', '!=', 'not_paid')]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
