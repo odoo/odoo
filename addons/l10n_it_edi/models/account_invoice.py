@@ -273,11 +273,12 @@ class AccountInvoice(models.Model):
             'subject': _('Sending file: %s') % (self.l10n_it_einvoice_id.name),
             'body': _('Sending file: %s to ES: %s') % (self.l10n_it_einvoice_id.name, self.env.user.company_id.l10n_it_address_recipient_fatturapa),
             'email_from': self.env.user.company_id.l10n_it_address_send_fatturapa,
+            'reply_to': self.env.user.company_id.l10n_it_address_send_fatturapa,
             'mail_server_id': self.env.user.company_id.l10n_it_mail_pec_server_id.id,
             'attachment_ids': [(6, 0, self.l10n_it_einvoice_id.ids)],
         })
 
-        mail_fattura = self.env['mail.mail'].create({
+        mail_fattura = self.env['mail.mail'].with_context(wo_return_path=True).create({
             'mail_message_id': message.id,
             'email_to': self.env.user.company_id.l10n_it_address_recipient_fatturapa,
         })
