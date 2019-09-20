@@ -1637,7 +1637,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list: list view in an initially unselected notebook page', async function (assert) {
-        assert.expect(9);
+        assert.expect(8);
 
         this.data.foo.records = [{ id: 1, o2m: [1] }];
         this.data.bar = {
@@ -1744,23 +1744,6 @@ QUnit.module('Views', {
             titi.style.width.split('px')[0] > 80 &&
             grosminet.style.width.split('px')[0] > 700,
             "list has been correctly frozen after sorting a column");
-
-        form.destroy();
-
-        // Case 5: resize a column
-        form = await createView(formOptions);
-        await testUtils.dom.click(form.$('.nav-item:last-child .nav-link'));
-
-        const resizeHandle = form.$('.o_resize')[0];
-        await testUtils.dom.dragAndDrop(resizeHandle, resizeHandle, {
-            mousemoveTarget: window,
-            mouseupTarget: window,
-        });
-        [titi, grosminet] = form.$('th');
-        assert.ok(
-            titi.style.width.split('px')[0] > 80 &&
-            grosminet.style.width.split('px')[0] > 700,
-            "list has been correctly frozen after resizing a column");
 
         form.destroy();
     });
