@@ -7,3 +7,4 @@ from . import mailing_list
 from . import mailing_mailing
 from . import mailing_trace
 from . import sms_sms
+from . import utm
