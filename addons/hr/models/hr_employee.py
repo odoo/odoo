@@ -97,9 +97,7 @@ class HrEmployeePrivate(models.Model):
     image_1920 = fields.Image(default=_default_image)
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
-    parent_id = fields.Many2one('hr.employee', 'Manager', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
-    coach_id = fields.Many2one('hr.employee', 'Coach', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
         'emp_id', 'category_id', groups="hr.group_hr_manager",
@@ -195,13 +193,6 @@ class HrEmployeePrivate(models.Model):
         for employee in self:
             if employee.pin and not employee.pin.isdigit():
                 raise ValidationError(_("The PIN must be a sequence of digits."))
-
-    @api.onchange('parent_id')
-    def _onchange_parent_id(self):
-        manager = self.parent_id
-        previous_manager = self._origin.parent_id
-        if manager and (self.coach_id == previous_manager or not self.coach_id):
-            self.coach_id = manager
 
     @api.onchange('job_id')
     def _onchange_job_id(self):
