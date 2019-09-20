@@ -27,7 +27,7 @@ class Contract(models.Model):
         help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule',
-        default=lambda self: self.env.company.resource_calendar_id.id,
+        default=lambda self: self.env.company.resource_calendar_id.id, copy=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
     advantages = fields.Text('Advantages')
@@ -37,7 +37,7 @@ class Contract(models.Model):
         ('open', 'Running'),
         ('close', 'Expired'),
         ('cancel', 'Cancelled')
-    ], string='Status', group_expand='_expand_states',
+    ], string='Status', group_expand='_expand_states', copy=False,
        tracking=True, help='Status of the contract', default='draft')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     """
@@ -50,7 +50,7 @@ class Contract(models.Model):
         ('normal', 'Grey'),
         ('done', 'Green'),
         ('blocked', 'Red')
-    ], string='Kanban State', default='normal', tracking=True)
+    ], string='Kanban State', default='normal', tracking=True, copy=False)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
     visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)
