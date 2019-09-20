@@ -238,7 +238,7 @@ class AccountChartTemplate(models.Model):
             })
 
         # Set the transfer account on the company
-        company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[0]
+        company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[:1]
 
         # Create Bank journals
         self._create_bank_journals(company, acc_template_ref)
@@ -265,7 +265,7 @@ class AccountChartTemplate(models.Model):
         """
         model_to_check = ['account.move', 'account.payment', 'account.bank.statement']
         for model in model_to_check:
-            if len(self.env[model].search([('company_id', '=', company_id.id)])) > 0:
+            if self.env[model].sudo().search([('company_id', '=', company_id.id)], limit=1):
                 return True
         return False
 

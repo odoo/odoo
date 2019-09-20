@@ -133,13 +133,13 @@ class AccountMove(models.Model):
     amount_residual = fields.Monetary(string='Amount Due', store=True,
         compute='_compute_amount')
     amount_untaxed_signed = fields.Monetary(string='Untaxed Amount Signed', store=True, readonly=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_tax_signed = fields.Monetary(string='Tax Signed', store=True, readonly=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_total_signed = fields.Monetary(string='Total Signed', store=True, readonly=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_residual_signed = fields.Monetary(string='Amount Due Signed', store=True,
-        compute='_compute_amount')
+        compute='_compute_amount', currency_field='company_currency_id')
     amount_by_group = fields.Binary(string="Tax amount by group",
         compute='_compute_invoice_taxes_by_group',
         help="technical field used in report and in invoice form view with a widget to display the detail of taxes (grouped by tax group) under the subtotal")
@@ -2767,7 +2767,7 @@ class AccountMoveLine(models.Model):
                     reconciled = True
             line.reconciled = reconciled
 
-            line.amount_residual = line.move_id.company_id.currency_id.round(amount * sign)
+            line.amount_residual = line.move_id.company_id.currency_id.round(amount * sign) if line.move_id.company_id else amount * sign
             line.amount_residual_currency = line.currency_id and line.currency_id.round(amount_residual_currency * sign) or 0.0
 
     @api.depends('tax_repartition_line_id.invoice_tax_id', 'tax_repartition_line_id.refund_tax_id')

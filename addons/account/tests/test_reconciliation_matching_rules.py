@@ -334,9 +334,9 @@ class TestReconciliationMatchingRules(AccountingTestCase):
 
         # Check first line has been well reconciled.
         self.assertRecordValues(self.bank_line_1.journal_entry_ids, [
-            {'partner_id': self.partner_1.id, 'debit': 100.0, 'credit': 0.0, 'tax_ids': [self.tax21.id]},
-            {'partner_id': self.partner_1.id, 'debit': 21.0, 'credit': 0.0, 'tax_line_id': self.tax21.id},
-            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 121.0},
+            {'partner_id': self.partner_1.id, 'debit': 100.0, 'credit': 0.0, 'tax_ids': [self.tax21.id], 'tax_line_id': False},
+            {'partner_id': self.partner_1.id, 'debit': 21.0, 'credit': 0.0, 'tax_ids': [], 'tax_line_id': self.tax21.id},
+            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 121.0, 'tax_ids': [], 'tax_line_id': False},
         ])
 
     def test_reverted_move_matching(self):

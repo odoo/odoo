@@ -8,7 +8,7 @@ from odoo import api, fields, models
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True)
+    weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True)
 
     @api.depends('product_id', 'product_uom_qty', 'product_uom')
     def _cal_move_weight(self):

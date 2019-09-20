@@ -571,6 +571,64 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('category has been archived', async function (assert) {
+        assert.expect(2);
+
+        this.data.company.fields.active = {type: 'boolean', string: 'Archived'};
+        this.data.company.records = [
+            {
+                name: 'Company 5',
+                id: 5,
+                active: true,
+            }, {
+                name: 'child of 5 archived',
+                parent_id: 5,
+                id: 666,
+                active: false,
+            }, {
+                name: 'child of 666',
+                parent_id: 666,
+                id: 777,
+                active: true,
+            }
+        ];
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban>
+                  <templates>
+                    <t t-name="kanban-box">
+                      <div>
+                        <field name="foo"/>
+                      </div>
+                    </t>
+                  </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `<search><searchpanel><field name="company_id"/></searchpanel></search>`,
+            },
+            mockRPC: async function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/search_panel_select_range') {
+                    var results = await this._super.apply(this, arguments);
+                    results.values = results.values.filter(rec => rec.active !== false);
+                    return Promise.resolve(results);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsN(kanban, '.o_search_panel_category_value', 2,
+            'The number of categories should be 2: All and Company 5');
+
+        assert.containsNone(kanban, '.o_toggle_fold',
+            'None of the categories should have children');
+
+        kanban.destroy();
+    });
+
     QUnit.test('use two categories to refine search', async function (assert) {
         assert.expect(14);
 
