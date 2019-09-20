@@ -125,6 +125,10 @@ odoo.define('payment_stripe_sca.payment_form', function (require) {
                     return $.Deferred(function(defer) {
                         stripe.handleCardPayment(tx_info.stripe_payment_intent_secret).then(function (result) {defer.resolve(result)});
                     });
+                } else {
+                    return $.Deferred().reject({
+                        "message": {"data": { "message": _t("An error occured with transaction ") + (tx_info.reference || "")}}
+                    });
                 }
             }).then(function (result) {
                 if (result.error) {
