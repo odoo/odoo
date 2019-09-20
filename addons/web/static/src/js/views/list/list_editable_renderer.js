@@ -411,18 +411,6 @@ ListRenderer.include({
         var $tds = $row.children('.o_data_cell');
         var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
 
-        // When switching to edit mode, force the dimensions of all cells to
-        // their current value so that they won't change if their content
-        // changes, to prevent the view from flickering.
-        // We need to use getBoundingClientRect instead of outerWidth to
-        // prevent a rounding issue on Firefox.
-        if (editMode) {
-            $tds.each(function () {
-                var $td = $(this);
-                $td.css({width: $td[0].getBoundingClientRect().width});
-            });
-        }
-
         // Prepare options for cell rendering (this depends on the mode)
         var options = {
             renderInvisible: editMode,
@@ -608,19 +596,25 @@ ListRenderer.include({
         }
         const table = this.el.getElementsByTagName('table')[0];
         const thead = table.getElementsByTagName('thead')[0];
-
-        // Set table layout auto and remove inline style to make sure that css
-        // rules apply (e.g. fixed width of record selector)
-        table.style.tableLayout = 'auto';
-        [...table.getElementsByTagName('th')].forEach((th) => {
-            th.style.width = null;
-        });
-
-        // Freeze each th width according to their size in auto layout
         const thElements = [...thead.getElementsByTagName('th')];
-        const thWidths = thElements.map((th) => th.offsetWidth);
+
+        let columnWidths = this.columnWidths;
+        if (!columnWidths) { // no column widths to restore
+            // Set table layout auto and remove inline style to make sure that css
+            // rules apply (e.g. fixed width of record selector)
+            table.style.tableLayout = 'auto';
+            thElements.forEach((th) => {
+                th.style.width = null;
+                th.style.maxWidth = null;
+            });
+
+            // Squeeze the table by applying a max-width on largest columns to
+            // ensure that it doesn't overflow
+            columnWidths = this._squeezeTable();
+        }
+
         thElements.forEach((th, index) => {
-            th.style.width = `${this.columnWidths ? this.columnWidths[index] : thWidths[index]}px`;
+            th.style.width = `${columnWidths[index]}px`;
         });
 
         // Set the table layout to fixed
@@ -1255,6 +1249,67 @@ ListRenderer.include({
                 });
             });
         });
+    },
+    /**
+     * Set a maximum width on the largest columns in the list in case the table
+     * is overflowing. The idea is to shrink largest columns first, but to
+     * ensure that they are still the largest at the end (maybe in equal measure
+     * with other columns).
+     *
+     * @private
+     * @returns {integer[]} width (in px) of each column s.t. the table doesn't
+     *   overflow
+     */
+    _squeezeTable: function () {
+        const table = this.el.getElementsByTagName('table')[0];
+        const thead = table.getElementsByTagName('thead')[0];
+        const thElements = [...thead.getElementsByTagName('th')];
+        const columnWidths = thElements.map(th => th.offsetWidth);
+        const getWidth = th => columnWidths[thElements.indexOf(th)] || 0;
+        const getTotalWidth = () => thElements.reduce((tot, th, i) => tot + columnWidths[i], 0);
+        const shrinkColumns = (columns, width) => {
+            let thresholdReached = false;
+            columns.forEach(th => {
+                const index = thElements.indexOf(th);
+                let maxWidth = columnWidths[index] - Math.ceil(width / columns.length);
+                if (maxWidth < 92) { // prevent the columns from shrinking under 92px (~ date field)
+                    maxWidth = 92;
+                    thresholdReached = true;
+                }
+                th.style.maxWidth = `${maxWidth}px`;
+                columnWidths[index] = maxWidth;
+            });
+            return thresholdReached;
+        };
+        // Sort columns, largest first
+        const sortedThs = [...thead.getElementsByTagName('th')]
+            .sort((a, b) => getWidth(b) - getWidth(a));
+        const allowedWidth = table.parentNode.offsetWidth;
+
+        let totalWidth = getTotalWidth();
+        let stop = false;
+        let index = 0;
+        while (totalWidth > allowedWidth && !stop) {
+            // Find the largest columns
+            index++;
+            const largests = sortedThs.slice(0, index);
+            while (getWidth(largests[0]) === getWidth(sortedThs[index])) {
+                largests.push(sortedThs[index]);
+                index++;
+            }
+
+            // Compute the number of px to remove from the largest columns
+            const nextLargest = sortedThs[index]; // largest column when omitting those in largests
+            const totalToRemove = totalWidth - allowedWidth;
+            const canRemove = (getWidth(largests[0]) - getWidth(nextLargest)) * largests.length;
+
+            // Shrink the largests columns
+            stop = shrinkColumns(largests, Math.min(totalToRemove, canRemove));
+
+            totalWidth = getTotalWidth();
+        }
+
+        return columnWidths;
     },
     /**
      * @private

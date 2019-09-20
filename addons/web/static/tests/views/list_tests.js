@@ -1636,6 +1636,101 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('editable list: overflowing table', async function (assert) {
+        assert.expect(1);
+
+        this.data.bar = {
+            fields: {
+                titi: { string: "Small char", type: "char", sortable: true },
+                grosminet: { string: "Beeg char", type: "char", sortable: true },
+            },
+            records: [
+                {
+                    id: 1,
+                    titi: "Tiny text",
+                    grosminet:
+                        // Just want to make sure that the table is overflowed
+                        `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Donec est massa, gravida eget dapibus ac, eleifend eget libero.
+                        Suspendisse feugiat sed massa eleifend vestibulum. Sed tincidunt
+                        velit sed lacinia lacinia. Nunc in fermentum nunc. Vestibulum ante
+                        ipsum primis in faucibus orci luctus et ultrices posuere cubilia
+                        Curae; Nullam ut nisi a est ornare molestie non vulputate orci.
+                        Nunc pharetra porta semper. Mauris dictum eu nulla a pulvinar. Duis
+                        eleifend odio id ligula congue sollicitudin. Curabitur quis aliquet
+                        nunc, ut aliquet enim. Suspendisse malesuada felis non metus
+                        efficitur aliquet.`,
+                },
+            ],
+        };
+        const list = await createView({
+            arch: `
+                <tree editable="top">
+                    <field name="titi"/>
+                    <field name="grosminet" widget="char"/>
+                </tree>`,
+            data: this.data,
+            model: 'bar',
+            View: ListView,
+        });
+
+        assert.strictEqual(list.$('table').width(), list.$('.o_list_view').width(),
+            "Table should not be stretched by its content");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list: overflowing table (3 columns)', async function (assert) {
+        assert.expect(4);
+
+        const longText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Donec est massa, gravida eget dapibus ac, eleifend eget libero.
+                        Suspendisse feugiat sed massa eleifend vestibulum. Sed tincidunt
+                        velit sed lacinia lacinia. Nunc in fermentum nunc. Vestibulum ante
+                        ipsum primis in faucibus orci luctus et ultrices posuere cubilia
+                        Curae; Nullam ut nisi a est ornare molestie non vulputate orci.
+                        Nunc pharetra porta semper. Mauris dictum eu nulla a pulvinar. Duis
+                        eleifend odio id ligula congue sollicitudin. Curabitur quis aliquet
+                        nunc, ut aliquet enim. Suspendisse malesuada felis non metus
+                        efficitur aliquet.`;
+
+        this.data.bar = {
+            fields: {
+                titi: { string: "Small char", type: "char", sortable: true },
+                grosminet1: { string: "Beeg char 1", type: "char", sortable: true },
+                grosminet2: { string: "Beeg char 2", type: "char", sortable: true },
+                grosminet3: { string: "Beeg char 3", type: "char", sortable: true },
+            },
+            records: [{
+                id: 1,
+                titi: "Tiny text",
+                grosminet1: longText,
+                grosminet2: longText + longText,
+                grosminet3: longText + longText + longText,
+            }],
+        };
+        const list = await createView({
+            arch: `
+                <tree editable="top">
+                    <field name="titi"/>
+                    <field name="grosminet1" class="large"/>
+                    <field name="grosminet3" class="large"/>
+                    <field name="grosminet2" class="large"/>
+                </tree>`,
+            data: this.data,
+            model: 'bar',
+            View: ListView,
+        });
+
+        assert.strictEqual(list.$('table').width(), list.$('.o_list_view').width());
+        const largeCells = list.$('.o_data_cell.large');
+        assert.strictEqual(largeCells[0].offsetWidth, largeCells[1].offsetWidth);
+        assert.strictEqual(largeCells[1].offsetWidth, largeCells[2].offsetWidth);
+        assert.ok(list.$('.o_data_cell:not(.large)')[0].offsetWidth < largeCells[0].offsetWidth);
+
+        list.destroy();
+    });
+
     QUnit.test('editable list: list view in an initially unselected notebook page', async function (assert) {
         assert.expect(8);
 
