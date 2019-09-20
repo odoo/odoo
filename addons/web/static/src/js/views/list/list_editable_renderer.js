@@ -1534,8 +1534,6 @@ ListRenderer.include({
 
         const table = this.el.getElementsByTagName('table')[0];
         const th = ev.target.closest('th');
-        // Freeze the whole table width
-        this._freezeColumnWidths();
         table.style.width = `${table.offsetWidth}px`;
         const thPosition = [...th.parentNode.children].indexOf(th);
         const resizingColumnElements = [...table.getElementsByTagName('tr')]
