@@ -76,11 +76,15 @@ msgid ""
 "country, GeoIP must be installed on your server, otherwise, the countries of"
 " the rule will not be taken into account.</span>"
 msgstr ""
+"<span class=\"text-muted\">Визначте правила для каналу підтримки. Ви можете "
+"застосувати дію для вказаної URL-адреси та для кожної країни.<br/>Щоби "
+"визначити країну, на ваш сервер необхідно встановити GeoIP, в іншому "
+"випадку, країни цього правила не будуть враховані.</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "<span style=\"font-size: 10px;\">Livechat Conversation</span><br/>"
-msgstr ""
+msgstr "<span style=\"font-size: 10px;\">Розмова живого чату</span><br/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -261,7 +265,7 @@ msgstr "Спілкуйтеся з одним із наших співробіт�
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:0
 #, python-format
 msgid "Close conversation"
-msgstr ""
+msgstr "Закрити розмову"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__technical_name
@@ -291,13 +295,13 @@ msgstr "Розмова"
 #: code:addons/im_livechat/static/src/js/im_livechat.js:0
 #, python-format
 msgid "Conversation Sent"
-msgstr ""
+msgstr "Розмова надіслана"
 
 #. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Conversation with %s"
-msgstr ""
+msgstr "Розмова з %s"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -452,6 +456,9 @@ msgid ""
 "Settings and select the Website Live Chat Channel you want to add on your "
 "website."
 msgstr ""
+"Для веб-сайтів, створених за допомогою CMS Odoo, перейдіть на Веб-сайту &gt;"
+" Налаштування &gt; Налаштування та оберіть Канал живого чату веб-сайту, який"
+" ви хочете додати на ваш веб-сайт."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -596,7 +603,7 @@ msgstr "Живий чат"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
 msgid "LiveChat Channel Search"
-msgstr ""
+msgstr "Пошук каналу живого чату"
 
 #. module: im_livechat
 #. openerp-web
@@ -740,14 +747,14 @@ msgstr "Odoo"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Online Chat Name"
-msgstr ""
+msgstr "Назва онлайн-чату"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:0
 #, python-format
 msgid "Oops! Something went wrong."
-msgstr ""
+msgstr "От халепа! Щось пішло не так."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
@@ -810,7 +817,7 @@ msgstr "Відсоток щасливих оцінювань"
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:0
 #, python-format
 msgid "Please check your internet connection."
-msgstr ""
+msgstr "Перевірте з'єднання з інтернетом."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -866,7 +873,7 @@ msgstr "Рейтинги для каналу живого чату"
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:0
 #, python-format
 msgid "Receive a copy of this conversation"
-msgstr ""
+msgstr "Отримайте копію цієї розмови"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -900,7 +907,7 @@ msgstr "Рівень задоволення"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Save your Channel to get your configuration widget."
-msgstr ""
+msgstr "Збережіть ваш канал, щоби отримати віджет налаштування."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external
@@ -1001,7 +1008,7 @@ msgstr "Текст, який пропонує користувачеві іні�
 #: code:addons/im_livechat/static/src/js/im_livechat.js:0
 #, python-format
 msgid "Thank you for your feedback"
-msgstr ""
+msgstr "Дякуємо за ваш відгук"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -1085,7 +1092,7 @@ msgstr "Оброблені сесії"
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:0
 #, python-format
 msgid "Try again"
-msgstr ""
+msgstr "Спробуйте знову"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -1175,7 +1182,7 @@ msgstr "Ваша історія чату пуста"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "e.g. /page/contactus"
-msgstr ""
+msgstr "напр. /page/contactus"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1202,4 +1209,4 @@ msgstr "секунди"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "{{author_name}}"
-msgstr ""
+msgstr "{{author_name}}"

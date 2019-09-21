@@ -19,6 +19,8 @@
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # snow wang <147156565@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Manga Tsang <mts@odoo.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -26,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +39,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Options</span>"
-msgstr ""
+msgstr "<span>Options</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -101,7 +103,7 @@ msgstr "属性"
 msgid ""
 "Before archiving \"%s\" please select another default template in the "
 "settings."
-msgstr ""
+msgstr "在归档“%s”之前，请在设置中选择另一个默认模板。"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_uom_category_id
@@ -198,7 +200,7 @@ msgstr "摘要"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Disc.%"
-msgstr ""
+msgstr "Disc.%"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
@@ -345,7 +347,7 @@ msgstr "选项"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
 msgid "Present on Quotation"
-msgstr ""
+msgstr "出现在报价单上"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
@@ -526,7 +528,7 @@ msgstr "此EMail模板将在确认时发送。留空即表示没有要发送的�
 msgid ""
 "This field will be checked if the option line's product is already present "
 "in the quotation."
-msgstr ""
+msgstr "如果选项行的产品已存在于报价单中，则将检查此字段。"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -578,7 +580,7 @@ msgstr "你不能添加选项到已确认的订单。"
 msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
-msgstr ""
+msgstr "你无法更改销售报价单的类型。相反，你应删除当前行并创建正确类型的新行。"
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
@@ -587,12 +589,14 @@ msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
 msgstr ""
+"你的报价单包含来自公司%s的产品，而你的报价单属于公司%s。\n"
+"请更改报价单公司或从其他公司删除产品（%s）。"
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid "Your template cannot contain products from multiple companies."
-msgstr ""
+msgstr "您的模板不能包含多家公司的产品。"
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -601,6 +605,8 @@ msgid ""
 "Your template contains products from company %s whereas your template belongs to company %s. \n"
 " Please change the company of your template or remove the products from other companies."
 msgstr ""
+"你的报价单包含来自公司%s的产品，而你的报价单属于公司%s。\n"
+"请更改报价单公司或从其他公司删除产品。"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
