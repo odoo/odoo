@@ -8,7 +8,7 @@
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # gary chk <garychk@163.com>, 2018
-# Emily JIA <eji@odoo.com>, 2018
+# Emily Jia <eji@odoo.com>, 2018
 # Henry Zhou <zhouhenry@live.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
@@ -29,6 +29,8 @@
 # Martin Trigaux, 2019
 # John An <johnxan@163.com>, 2019
 # Jerry Pan <panjianyu@inspur.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
+# Mandy Choy <mnc@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -36,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Jerry Pan <panjianyu@inspur.com>, 2019\n"
+"Last-Translator: Mandy Choy <mnc@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2057,7 +2059,7 @@ msgstr "当与保障服务器通信时发生错误。"
 msgid ""
 "Error without exception. Probably due do concurrent access update of "
 "notification records. Please see with an administrator."
-msgstr ""
+msgstr "错误没有例外。可能由于并发访问更新通知记录。请与管理员联系。"
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:329
@@ -3455,7 +3457,7 @@ msgstr "管理频道"
 #: code:addons/mail/models/mail_channel.py:170
 #, python-format
 msgid "Moderated channels must have moderators."
-msgstr ""
+msgstr "审核频道必须有版主"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_count
@@ -3506,13 +3508,13 @@ msgstr "管理员"
 #: code:addons/mail/models/mail_channel.py:154
 #, python-format
 msgid "Moderators must have an email address."
-msgstr ""
+msgstr "版主必须拥有电邮地址。"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:160
 #, python-format
 msgid "Moderators should be members of the channel they moderate."
-msgstr ""
+msgstr "版主应该是他们主持的频道的成员。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -3767,7 +3769,7 @@ msgstr "找不到匹配消息。请尝试更改搜索内容"
 #: code:addons/mail/wizard/mail_resend_message.py:51
 #, python-format
 msgid "No message_id found in context"
-msgstr ""
+msgstr "上下文中没有找到message_id"
 
 #. module: mail
 #. openerp-web
@@ -3961,7 +3963,7 @@ msgstr "在线"
 #, python-format
 msgid ""
 "Only an administrator or a moderator can send guidelines to channel members!"
-msgstr ""
+msgstr "只有管理员或版主才能向通道成员发送指导方针!"
 
 #. module: mail
 #: code:addons/mail/models/ir_model.py:53
@@ -3973,7 +3975,7 @@ msgstr "仅有自定义模型能被修改."
 #: code:addons/mail/models/mail_channel.py:165
 #, python-format
 msgid "Only mailing lists can be moderated."
-msgstr ""
+msgstr "只能审核邮件列表。"
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -3985,7 +3987,7 @@ msgstr "打开"
 #: code:addons/mail/static/src/xml/thread.xml:409
 #, python-format
 msgid "Open Channel in Discuss to moderate"
-msgstr ""
+msgstr "打开频道进行讨论"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -4494,7 +4496,7 @@ msgstr "记录线索ID"
 #: code:addons/mail/models/mail_message.py:899
 #, python-format
 msgid "Records:"
-msgstr ""
+msgstr "记录:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -5717,7 +5719,7 @@ msgstr "查看"
 msgid ""
 "View \"mail.mail_channel_send_guidelines\" was not found. No email has been "
 "sent. Please contact an administrator to fix this issue."
-msgstr ""
+msgstr "未找到“mail.mail_channel_send_guidelines”。 尚未发送电子邮件。 请与管理员联系以解决此问题。"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:752
@@ -5935,7 +5937,7 @@ msgstr "您不能删除这些群组，因为整个公司群组被其它模块引
 msgid ""
 "You do not have the rights to modify fields related to moderation on one of "
 "the channels you are modifying."
-msgstr ""
+msgstr "您无权在通道上修改与审核相关的字段。"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:2365

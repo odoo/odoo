@@ -9,10 +9,10 @@
 # jl2035 <jaka.luthar@gmail.com>, 2019
 # matjaz k <matjaz@mentis.si>, 2019
 # Martin Trigaux, 2019
-# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
-# Tadej Lupšina <tadej@hbs.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2019
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
+# Tadej Lupšina <tadej@hbs.si>, 2019
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Grega Vavtar <grega@hbs.si>, 2019\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,25 +118,25 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        % set doc_name = 'ponudbo' if object.state in ('draft', 'sent') else 'ponudbo'\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
 "        Spoštovani ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Pošiljamo vam\n"
+"        V prilogi je\n"
 "        % if ctx.get('proforma')\n"
-"            v prilogi\n"
+"            vaš pro-forma račun\n"
 "        % else\n"
 "            ${doc_name} <strong>${object.name}</strong>\n"
 "        % endif\n"
 "        % if object.origin:\n"
-"            (${object.origin} )\n"
+"            (sklic: ${object.origin} )\n"
 "        % endif\n"
-"        v znesku <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> z DDV\n"
+"        v znesku <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>\n"
 "        od ${object.company_id.name}.\n"
 "        <br/><br/>\n"
-"        V primeru kakšnih vprašanj, nas kontaktirajte.\n"
+"        V primeru kakršnegakoli vprašanja nas kontaktirajte.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -551,17 +551,17 @@ msgstr "Dodaj"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a note"
-msgstr ""
+msgstr "Dodaj opombo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a product"
-msgstr ""
+msgstr "Dodaj proizvod"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a section"
-msgstr ""
+msgstr "Dodaj odsek"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
@@ -594,7 +594,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Omogoča pošiljanje pro-forma računov kupcem"
+msgstr "Omogoča pošiljanje predračunov kupcem"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
@@ -1414,7 +1414,7 @@ msgstr "Sledilci (partnerji)"
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
-msgstr ""
+msgstr "Prepovedane vrednosti na nezaračunljivi postavki ponudbe"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1977,7 +1977,7 @@ msgstr ""
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
+msgstr "Manjkajoča obvezna polja na obračunljivi postavki ponudbe."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__multi_sales_price
@@ -3203,7 +3203,7 @@ msgstr "Prodaja proizvodov v večkratniku enote # na pakiranje"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr ""
+msgstr "Pošlji predračun"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3515,6 +3515,7 @@ msgid ""
 "Terms and conditions... (note: you can setup default ones in the "
 "Configuration menu)"
 msgstr ""
+"Pravila in pogoji... (opomba: privzete lahko nastavite v meniju Nastavitve)"
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:116
@@ -3898,7 +3899,7 @@ msgstr "Merske enote"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unlock"
-msgstr ""
+msgstr "Odkleni"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_unread

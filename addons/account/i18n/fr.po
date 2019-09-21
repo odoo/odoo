@@ -992,7 +992,7 @@ msgstr "Nom du détenteur du compte si différent du partenaire"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
 msgid "Account Invoice Send"
-msgstr ""
+msgstr "Facture du compte envoyée"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -1734,7 +1734,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_nature
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_nature
 msgid "Amount Nature"
-msgstr ""
+msgstr "Nature du montant"
 
 #. module: account
 #: selection:account.reconcile.model,match_nature:0
@@ -1746,7 +1746,7 @@ msgstr "Montant payé"
 #: selection:account.reconcile.model,match_nature:0
 #: selection:account.reconcile.model.template,match_nature:0
 msgid "Amount Paid/Received"
-msgstr ""
+msgstr "Montant Payé/Reçu"
 
 #. module: account
 #: selection:account.reconcile.model,match_nature:0
@@ -2112,7 +2112,7 @@ msgstr "Détection automatique"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__auto_reconcile
 msgid "Auto-validate"
-msgstr ""
+msgstr "Auto-valider"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4236,6 +4236,10 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
+"Détermine où la taxe est sélectionnable. Remarque : 'None' signifie que la "
+"taxe ne peut pas être utilisée toute seule, mais elle peut être utilisée "
+"dans un groupe. 'ajustement' est utilisé pour effectuer un ajustement de "
+"taxe."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__difference
@@ -4257,6 +4261,12 @@ msgid ""
 msgstr ""
 "Différence entre la balance finale calculée et la balance finale spécifiée "
 "manuellement."
+
+#. module: account
+#: code:addons/account/models/account_move.py:408
+#, python-format
+msgid "Difference debit - credit: "
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
@@ -5659,11 +5669,13 @@ msgid ""
 "Incoterms are used to divide transaction costs and responsibilities between "
 "buyer and seller."
 msgstr ""
+"Les incoterms sont utilisés pour partager les coûts et les responsabilités "
+"entre les acheteurs et les vendeurs."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr ""
+msgstr "Indique que cet élément de journal est une ligne de taxe"
 
 #. module: account
 #. openerp-web
@@ -6361,6 +6373,10 @@ msgid ""
 " anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
 msgstr ""
+"Laissez ce champ vide pour utiliser la valeur par défaut de la catégorie de "
+"produit. Si la comptabilité anglo-saxonne avec méthode d’évaluation "
+"automatisée est configurée, le compte de dépenses de la catégorie de produit"
+" sera utilisé."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -7198,7 +7214,7 @@ msgstr "Nombre Suivant"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__sequence_number_next_prefix
 msgid "Next Number Prefix"
-msgstr ""
+msgstr "Préfixe du numéro suivant"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -8093,7 +8109,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:444
 #, python-format
 msgid "Payments without a customer can't be matched"
-msgstr ""
+msgstr "Les paiements sans client ne peuvent être jumelés"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -8404,6 +8420,8 @@ msgid ""
 "Programmation Error: Can't call _get_invoice_matching_query() for different "
 "rules than 'invoice_matching'"
 msgstr ""
+"Erreur de programmation: impossible d'appeler _get_invoice_matching_query() "
+"pour des règles différentes de 'invoice_matching'"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:489
@@ -8840,7 +8858,7 @@ msgstr "Responsable"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner_category_ids
 msgid "Restrict Partner Categories to"
-msgstr ""
+msgstr "Limitez les catégories de partenaires à"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids

@@ -854,15 +854,10 @@ msgstr ""
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"Het is niet mogelijk dat zowel B2B als B2C prijzen zijn ingesteld op een gebruiker.\n"
-"Verkeerd ingestelde gebruiker(s): %s\n"
-"Ga naar de algemene instellingen en kies bij prijzen voor, of 'Prijzen exclusief BTW' of 'Prijzen inclusief BTW'\n"
-"(of wissel twee keer de instelling als deze al op de juiste waarde stat)"
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4214,6 +4209,12 @@ msgid ""
 "balance."
 msgstr ""
 "Verschil tussen het berekende eindsaldo en het gespecificeerde eindsoldo"
+
+#. module: account
+#: code:addons/account/models/account_move.py:408
+#, python-format
+msgid "Difference debit - credit: "
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest

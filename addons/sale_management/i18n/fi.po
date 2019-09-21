@@ -13,6 +13,7 @@
 # Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
 # Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr "% alennus"
 #. module: sale_management
 #: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
 msgid "4 Person Desk"
-msgstr ""
+msgstr "4 Hengen pöytä"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -47,7 +48,7 @@ msgstr "<span>Alennus</span>"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Optional Products</span>"
-msgstr ""
+msgstr "<span>Vaihtoehtoiset tuotteet</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -78,17 +79,17 @@ msgstr "Lisää yksi"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Add to cart"
-msgstr ""
+msgstr "Lisää ostoskoriin"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Add to order lines"
-msgstr ""
+msgstr "Lisää tilauslinjoihin"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
 msgid "All Sales"
-msgstr ""
+msgstr "Kaikki myynnit"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -111,7 +112,7 @@ msgstr "Attribuutit"
 msgid ""
 "Before archiving \"%s\" please select another default template in the "
 "settings."
-msgstr ""
+msgstr "Ennen \"%s\" arkistointia valitse toinen oletusmalli asetuksista."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
@@ -136,12 +137,12 @@ msgstr "Luo lasku"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Create standardized offers with default products"
-msgstr ""
+msgstr "Luo standardoituja tarjouksia, joissa on oletustuotteita"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr ""
+msgstr "Luo tarjousmalli"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -179,11 +180,13 @@ msgid ""
 "Design your quotation templates using building blocks<br/>\n"
 "                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
+"Suunnittele tarjousmallisi käyttäen rakennuspalikoita<br/>\n"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Varoitus: Tämä vaihtoehto asentaa verkkosivu appin.</em>"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Yhteenveto"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
@@ -203,30 +206,31 @@ msgstr "Näyttönimi"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Näyttötyyppi"
 
 #. module: sale_management
 #: code:addons/sale_management/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "Do not have access, skip this data for user's digest email"
 
 #. module: sale_management
 #: sql_constraint:sale.order.template.line:0
 msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
-msgstr ""
+msgstr "Kielletty tuote, yksikköhinta, määrä ja UoM ei-vastattavassa myyntiin"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
 msgstr ""
+"Antaa sekvenssijärjestyksen, kun näyttöön tulee valinnaisia tuotteita."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
-msgstr ""
+msgstr "Antaa sekvenssijärjestyksen, kun näyttöön tulee myyntinoteerauslinja."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
@@ -242,11 +246,12 @@ msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
 msgstr ""
+"Jos tätä ei ole valittu, voit piilottaa tarjousmallin poistamatta sitä."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr ""
+msgstr "Kpi Myyntien kokonaismäärä"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option____last_update
@@ -286,7 +291,7 @@ msgstr "Rivit"
 #. module: sale_management
 #: sql_constraint:sale.order.template.line:0
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr ""
+msgstr "Puuttuva vaadittu tuote ja UoM vastuussa olevasta myynnistä."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -297,12 +302,12 @@ msgstr "Muistiinpano"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
+msgstr "Päivien lukumäärä tarjouksen voimassaolopäivämäärän laskennassa"
 
 #. module: sale_management
 #: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
 msgid "Office Chair"
-msgstr ""
+msgstr "Toimistotuoli"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
@@ -356,12 +361,12 @@ msgstr "Määrä"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Tarjousrakentaja"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "Tarjouksen kesto"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template
@@ -375,7 +380,7 @@ msgstr "Tarjouspohja"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "Tarjouspohjarivi"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -385,7 +390,7 @@ msgstr "Tarjouspohjarivit"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "Tarjouspohja vaihtoehto"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
@@ -415,7 +420,7 @@ msgstr "Poista"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Remove one"
-msgstr ""
+msgstr "Poista yksi"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
@@ -423,6 +428,8 @@ msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Pyydä online-allekirjoitusta asiakkaalle vahvistamaan tilaukset "
+"automaattisesti."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
@@ -430,11 +437,12 @@ msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Pyydä online-maksu asiakkaalta vahvistaaksesi tilaukset automaattisesti."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "Myynnin vaihtoehdot"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order
@@ -454,7 +462,7 @@ msgstr "Myyntitilauksen rivi"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
 msgid "Sales Order Reference"
-msgstr ""
+msgstr "Myyntitilausviite"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
@@ -464,7 +472,7 @@ msgstr "Myyntitarjouspohjan rivit"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Search Quotation Template"
-msgstr ""
+msgstr "Etsi tarjouspohjaa"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -481,7 +489,7 @@ msgstr "Järjestys"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Tekninen kenttä UX-tarkoitukseen."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
@@ -494,6 +502,8 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
+"Ylläpitäjä voi asettaa oletusehdot myyntiasetuksissa. Tässä asetetut ehdot "
+"näkyvät sen sijaan, jos valitset tämän tarjousmallin."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -530,12 +540,15 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"Käytä malleja luoden hiottuja, ammattimaisia tarjouksia minuuteissa.\n"
+"                 Lähetä nämä tarjoukset sähköpostitse ja anna asiakkaidesi kirjautua verkossa.\n"
+"                 Käytä myyntiäsi ja alennuksia ja nostaaksesi myyntiäsi."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:198
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "Et voi lisätä vaihtoehtoja vahvistettuun tilaukseen."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:90
@@ -544,6 +557,8 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Et voi muuttaa myyntilainausrivin tyyppiä. Sen sijaan sinun pitäisi poistaa "
+"nykyinen rivi ja luoda uusi oikean tyyppinen rivi."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

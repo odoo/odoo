@@ -10,10 +10,10 @@
 # matjaz k <matjaz@mentis.si>, 2019
 # laznikd <laznik@mentis.si>, 2019
 # Martin Trigaux, 2019
-# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
-# Tadej Lupšina <tadej@hbs.si>, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2019
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
+# Tadej Lupšina <tadej@hbs.si>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Grega Vavtar <grega@hbs.si>, 2019\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,9 +160,9 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Spoštovani ${object.partner_id.name}<br/><br/>\n"
 "        Hvala za vaše plačilo.\n"
-"        Tukaj je vaše potrdilo o plačilu <strong>${(object.name or '').replace('/','-')}</strong> v znesku <strong>${format_amount(object.amount, object.currency_id)}</strong> od podjetja ${object.company_id.name}.\n"
+"        Pošiljamo vam potrdilo o plačilu <strong>${(object.name or '').replace('/','-')}</strong> v znesku <strong>${format_amount(object.amount, object.currency_id)}</strong> od ${object.company_id.name}.\n"
 "        <br/><br/>\n"
-"        V primeru kakšnih vprašanj, nas kontaktirajte.\n"
+"        V primeru kakršnihkoli vprašanj nas kontaktirajte.\n"
 "        <br/><br/>\n"
 "        Lep pozdrav,<br/>\n"
 "        % if user and user.signature:\n"
@@ -217,17 +217,17 @@ msgstr ""
 "            račun\n"
 "        %endif\n"
 "        % if object.origin:\n"
-"            (po ponudbi: ${object.origin})\n"
+"            (s sklicem: ${object.origin})\n"
 "        % endif\n"
 "        v vrednosti <strong>${format_amount(object.amount_total, object.currency_id)}</strong> z DDV\n"
-"        od podjetja ${object.company_id.name}.\n"
+"        od ${object.company_id.name}.\n"
 "        % if object.state=='paid':\n"
-"            Ta račun je že bil plačan\n"
+"            Ta račun je že plačan\n"
 "        % else:\n"
-"            Prosimo poravnajte vaše obveznosti v roku navedenem na računu.\n"
+"            Prosimo, da obveznosti poravnate v roku navedenem na računu.\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        V primeru kakšnih vprašanj, nas kontaktirajte.\n"
+"        V primeru kakršnihkoli vprašanj nas kontaktirajte.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -442,7 +442,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Bilanca v glavni knjigi</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -482,7 +482,7 @@ msgstr "<span>Pop.(%)</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Import Bills</span>"
-msgstr ""
+msgstr "<span>Uvoz računov</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -783,7 +783,6 @@ msgstr ""
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
@@ -1167,7 +1166,7 @@ msgstr "Računovodske vknjižbe"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Overview"
-msgstr ""
+msgstr "Pregled knjigovodstva"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1276,7 +1275,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 msgid "Add a line"
-msgstr ""
+msgstr "Dodaj postavko"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -1291,7 +1290,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 msgid "Add a note"
-msgstr ""
+msgstr "Dodaj opombo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1313,7 +1312,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 msgid "Add a section"
-msgstr ""
+msgstr "Dodaj odsek"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2322,12 +2321,12 @@ msgstr "Analiza računov"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Pay"
-msgstr ""
+msgstr "Računi za plačilo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr ""
+msgstr "Računi za potrditev"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:178
@@ -4042,6 +4041,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_move.py:408
+#, python-format
+msgid "Difference debit - credit: "
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
 msgstr ""
@@ -5688,7 +5693,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to Validate"
-msgstr ""
+msgstr "Računi za potrditev"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
@@ -7410,7 +7415,7 @@ msgstr "Nadrejeno sporočilo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__parent_path
 msgid "Parent Path"
-msgstr "Pot Nadrejenega"
+msgstr "Pot nadrejenega"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__parent_state
@@ -8072,7 +8077,7 @@ msgstr "Nabava"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Purchase Representative"
-msgstr ""
+msgstr "Nabavni zastopnik"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

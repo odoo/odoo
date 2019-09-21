@@ -884,16 +884,10 @@ msgstr "لا يمكن ضبط الموقف الضريبي لنفس الضريبة
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"لا يمكن للمستخدم أن يستخدم ضرائب الشركات B2B وضرائب الأفراد B2C في نفس الوقت.\n"
-"المستخدمـ(ين) بهذه المشكلة: %s\n"
-"يتوجب عليك أن تذهب إلى الإعدادات العامة، وأن تختار عرض أسعار المنتجات\n"
-"إما 'شاملة الضرائب' أو 'غير شاملة الضرائب'\n"
-"(أو التبديل بين الاختيارين مرتين إذا كان الاختيار المطلوب محدد مسبقاً)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4208,6 +4202,12 @@ msgid ""
 "Difference between the computed ending balance and the specified ending "
 "balance."
 msgstr "الفرق بين الرصيد الختامي المحسوب والرصيد الختامي المحدد."
+
+#. module: account
+#: code:addons/account/models/account_move.py:408
+#, python-format
+msgid "Difference debit - credit: "
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
