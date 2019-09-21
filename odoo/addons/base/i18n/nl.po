@@ -3,17 +3,17 @@
 # 	* base
 # 
 # Translators:
-# Eric Geens <eric.geens@vitabiz.be>, 2019
 # Julia van Orsouw <julia@odooexperts.nl>, 2019
+# Eric Geens <eric.geens@vitabiz.be>, 2019
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2019
 # Melroy van den Berg <webmaster1989@gmail.com>, 2019
 # Cas Vissers <c.vissers@brahoo.nl>, 2019
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
@@ -105,25 +105,13 @@ msgid ""
 "Base module for Hungarian localization\n"
 "==========================================\n"
 "\n"
-"This module consists :\n"
+"This module consists of:\n"
 "\n"
 " - Generic Hungarian chart of accounts\n"
 " - Hungarian taxes\n"
 " - Hungarian Bank information\n"
 " "
 msgstr ""
-"\n"
-"\n"
-"Basis module voor de Hongaarse lokalisatie\n"
-"==========================================\n"
-"\n"
-"Deze bestaat uit:\n"
-"\n"
-"- Algemene Hongaarse rekeningschema\n"
-"- Hongaarse BTW tarieven\n"
-"- Hongaarse bank gegevens\n"
-" \n"
-" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -278,7 +266,7 @@ msgid ""
 "Note:\n"
 "-----\n"
 "\n"
-"* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  You may not need to use these at all under normal circumstances.\n"
+"* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  Under normal circumstances, you might not need to use those at all.\n"
 "\n"
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
@@ -318,7 +306,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"This module adds a custom Sales Team for the point of sale to be able to view and manage your point of sale sales with more ease.\n"
+"This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.\n"
 msgstr ""
 "\n"
 "\n"
@@ -329,7 +317,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"This module adds several restaurant features to the Point of Sale:\n"
+"This module adds several features to the Point of Sale that are specific to restaurant management:\n"
 "- Bill Printing: Allows you to print a receipt before the order is paid\n"
 "- Bill Splitting: Allows you to split an order into different orders\n"
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
@@ -348,8 +336,8 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"This module allows the cashier to quickly give a percentage\n"
-"sale discount to a customer.\n"
+"This module allows the cashier to quickly give a percentage-based\n"
+"discount to a customer.\n"
 "\n"
 msgstr ""
 "\n"
@@ -364,34 +352,32 @@ msgid ""
 "\n"
 "\n"
 "This module allows you to define a loyalty program in\n"
-"the point of sale, where the customers earn loyalty points\n"
+"the point of sale, where customers earn loyalty points\n"
 "and get rewards.\n"
 "\n"
 msgstr ""
-"\n"
-"\n"
-"=======================\n"
-"\n"
-"Deze module geeft de mogelijkheid een vaste klanten-\n"
-"programma op te stellen, waarbij klanten punten en\n"
-"beloningen kunnen verdienen.\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
 msgid ""
 "\n"
 "\n"
-"Use Epson Printers as Order Printers in the Point of Sale without IoT Box\n"
+"Use Epson Printers as Order Printers in the Point of Sale without the IoT Box\n"
 msgstr ""
+"\n"
+"\n"
+"Gebruik Epson-printers zonder de IoT-box in het kassasysteem\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer
 msgid ""
 "\n"
 "\n"
-"Use Epson ePOS Printers without IoT Box in the Point of Sale\n"
+"Use Epson ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Gebruik Epson ePOS-printers zonder de IoT-box in het kassasysteem\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -418,7 +404,7 @@ msgid ""
 "\n"
 "    * Defines the following chart of account templates:\n"
 "        * Austrian General Chart of accounts 2010\n"
-"    * Defines templates for sale and purchase VAT\n"
+"    * Defines templates for VAT on sales and purchases\n"
 "    * Defines tax templates\n"
 "    * Defines fiscal positions for Austrian fiscal legislation\n"
 "    * Defines tax reports U1/U30\n"
@@ -442,31 +428,31 @@ msgstr ""
 msgid ""
 "\n"
 "        - Allow to set project for Helpdesk team\n"
-"        - Track timesheet for task from ticket\n"
+"        - Track timesheet for a task from a ticket\n"
 "    "
 msgstr ""
 "\n"
 "        - Toestaan om een project in te stellen voor een Helpdeskteam\n"
-"        - Maak een urenstaat aan voor een taak vanuit een issue\n"
+"        - Maak een urenstaat aan voor een taak vanuit een ticket\n"
 " "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
 msgid ""
 "\n"
-"        A tax defined as python code consists in two snippets of python code which are executed in a local environment containing data such as the unit price, product or partner.\n"
+"A tax defined as python code consists of two snippets of python code which are executed in a local environment containing data such as the unit price, product or partner.\n"
 "\n"
-"        \"Applicable Code\" defines if the tax is to be applied.\n"
+"\"Applicable Code\" defines if the tax is to be applied.\n"
 "\n"
-"        \"Python Code\" defines the amount of the tax.\n"
+"\"Python Code\" defines the amount of the tax.\n"
 "        "
 msgstr ""
 "\n"
-"Een BTW die in python-code wordt berekend bestaat uit twee blokken python-code die lokaal worden uitgevoerd, en die gegevens bevatten zoals eenheidsprijs, product of relatie.\n"
+"        Een belasting die in python-code wordt berekend bestaat uit twee blokken python-code die lokaal worden uitgevoerd, en die gegevens bevatten zoals eenheidsprijs, product of relatie.\n"
 "\n"
-"\"Code toe te passen\" bepaalt of de BTW al dan niet moet worden toegepast.\n"
+"        \"Code toe te passen\" bepaalt of de belasting al dan niet moet worden toegepast.\n"
 "\n"
-" \"Python code\" bepaalt het bedrag van de BTW.\n"
+"        \"Python code\" bepaalt het bedrag van de belasting.\n"
 "        "
 
 #. module: base
@@ -495,7 +481,7 @@ msgid ""
 "\n"
 "        Accounting reports for Germany\n"
 "        Contains Balance sheet, Profit and Loss, VAT and Partner VAT reports\n"
-"        Also add DATEV export options to general ledger\n"
+"        Also adds DATEV export options to general ledger\n"
 "    "
 msgstr ""
 "\n"
@@ -579,7 +565,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_voip
 msgid ""
 "\n"
-"        Allow to make call from next activities or with click-to-dial.\n"
+"Allows to make call from next activities or with click-to-dial.\n"
 "    "
 msgstr ""
 "\n"
@@ -589,7 +575,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_sale_stock_renting
 msgid ""
 "\n"
-"        Allow use of stock application to manage rentals inventory\n"
+"Allows use of stock application to manage rentals inventory\n"
 "        "
 msgstr ""
 "\n"
@@ -641,16 +627,16 @@ msgstr ""
 #: model:ir.module.module,description:base.module_documents_account
 msgid ""
 "\n"
-"        Bridge module between the accounting and documents apps. It adds \n"
-"        the ability to create invoices from the document module, and a \n"
-"        button on Accounting's reports allowing to save the report into\n"
-"        Documents in the desired format(s).\n"
+"Bridge module between the accounting and documents apps. It enables \n"
+"the creation invoices from the Documents module, and adds a \n"
+"button on Accounting's reports allowing to save the report into the \n"
+"Documents app in the desired format(s).\n"
 msgstr ""
 "\n"
 "Koppel module tussen de boekhouding en documenten apps. Het voegt\n"
-"de mogelijkheid toe om facturen te maken vanuit de documenten module en een\n"
-"knop op boekhoudkundige rapporten om het rapport te bewaren in\n"
-"de documenten op in het gewenste formaat.\n"
+"de mogelijkheid toe om facturen te maken vanuit de documenten module en voegt een\n"
+"knop toe op boekhoudkundige rapporten om het rapport in het gewenste formaat te bewaren in\n"
+"de documenten app .\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_product_configurator
@@ -694,7 +680,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_account_taxcloud
 msgid ""
 "\n"
-"        Compute sales tax automatically using TaxCloud based on customer address in United States.\n"
+"Computes the sales tax automatically using TaxCloud and the customer's address in United States.\n"
 "    "
 msgstr ""
 "\n"
@@ -708,16 +694,19 @@ msgid ""
 "        Convert helpdesk tickets to field service tasks.\n"
 "    "
 msgstr ""
+"\n"
+"       Converteert helpdesktickets naar field service taken.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_account
 msgid ""
 "\n"
-"        Create Credit Notes from Helpdesk's tickets\n"
+"Create Credit Notes from Helpdesk tickets\n"
 "    "
 msgstr ""
 "\n"
-"Maak creditfactuur aan vanuit helpdesk tickets"
+"Maak credit nota's vanuit Helpdesk tickets"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -753,17 +742,17 @@ msgstr ""
 #: model:ir.module.module,description:base.module_helpdesk_sale_coupon
 msgid ""
 "\n"
-"        Generate Coupons from Helpdesk's tickets\n"
+"Generate Coupons from Helpdesks tickets\n"
 "    "
 msgstr ""
 "\n"
-"Genereer kortsingsbonnen vanuit uw helpdesk tickets"
+"Genereer kortingsbonnen vanuit helpdesk tickets"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_landing
 msgid ""
 "\n"
-"        Generate Electronic Invoice with Customs Number\n"
+"Generate Electronic Invoice with custom numbers\n"
 "    "
 msgstr ""
 "\n"
@@ -789,9 +778,12 @@ msgstr ""
 #: model:ir.module.module,description:base.module_hr_holidays_attendance
 msgid ""
 "\n"
-"        Hides attendance presence stat button when an employee is on leave.\n"
+"Hides the attendance presence button when an employee is on leave.\n"
 "    "
 msgstr ""
+"\n"
+"Verbergt de aanwezigheidsknop wanneer een werknemer met verlof is.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -800,6 +792,9 @@ msgid ""
 "        Import Data From Winbooks\n"
 "    "
 msgstr ""
+"\n"
+"        Importeer Data Van Winbooks\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -814,29 +809,31 @@ msgstr ""
 #: model:ir.module.module,description:base.module_helpdesk_stock
 msgid ""
 "\n"
-"        Manage Product returns from Helpdesk's tickets\n"
+"Manage Product returns from helpdesk tickets\n"
 "    "
 msgstr ""
 "\n"
-"Beheer het retourneren van producten vanuit helpdesk tickets"
+"Beheer het retourneren van producten vanuit helpdesk tickets\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale
 msgid ""
 "\n"
-"        Manage the after sale of the products from Helpdesk's tickets.\n"
+"Manage the after sale of the products from helpdesk tickets.\n"
 "    "
 msgstr ""
-"\n"
-"Beheer de naverkoop van de producten vanuit uw helpdesk tickets."
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_matrix
 msgid ""
 "\n"
-"        Please refer to Sale Matrix or Purchase Matrix for the uses of this module.\n"
+"Please refer to Sale Matrix or Purchase Matrix for the use of this module.\n"
 "    "
 msgstr ""
+"\n"
+"Raadpleeg Verkoopmatrix of Aankoopmatrix voor het gebruik van deze module.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense_check
@@ -852,11 +849,11 @@ msgstr ""
 #: model:ir.module.module,description:base.module_helpdesk_repair
 msgid ""
 "\n"
-"        Repair Products from Helpdesk's tickets\n"
+"Repair Products from helpdesk tickets\n"
 "    "
 msgstr ""
 "\n"
-"Repareer producten vanuit helpdesk tickets"
+"Herstel producten vanuit helpdesk tickets"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -876,17 +873,17 @@ msgstr ""
 #: model:ir.module.module,description:base.module_sale_product_configurator
 msgid ""
 "\n"
-"        Technical module installed when the user checks the \"module_sale_product_configurator\" setting.\n"
-"        The main purpose is to override the sale_order view to allow configuring products in the SO form.\n"
+"Technical module installed when the user checks the \"module_sale_product_configurator\" setting.\n"
+"The main purpose is to override the sale_order view to allow configuring products in the SO form.\n"
 "\n"
-"        It also enables the optional products feature.\n"
+"It also enables the \"optional products\" feature.\n"
 "    "
 msgstr ""
 "\n"
 "Technische module die geïnstalleerd wordt wanneer de gebruiker de optie \"module_sale_product_configurator\" aanvinkt.\n"
 "Het hoofddoel is om de sale_order weergave te overschrijven om product configuratie in het verkooporder formulier toe te staan.\n"
 "\n"
-"Het activeert ook de optionele producten optie."
+"Het activeert ook de \"optionele producten\" optie."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -912,6 +909,8 @@ msgid ""
 "        This bridge module allows to manage subcontracting with the dropshipping module.\n"
 "    "
 msgstr ""
+"\n"
+"Deze koppel module laat toe om onderaannemingen te beheren met de dropshipping-module."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account
@@ -920,6 +919,8 @@ msgid ""
 "        This bridge module allows to manage subcontracting with valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Deze koppel module laat toe om onderaannemingen te beheren met waardering."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_quality_control
@@ -935,28 +936,28 @@ msgstr ""
 #: model:ir.module.module,description:base.module_delivery_barcode
 msgid ""
 "\n"
-"        This module adds support for barcodes scanning to the delivery packages.\n"
+"This module enables the management of deliveries through the use of barcode scanning.\n"
 "    "
 msgstr ""
 "\n"
-"Deze module voegt ondersteuning toe om barcodes te scannen naar de afleveringen."
+"Deze module maakt het beheer van leveringen mogelijk met barcodescanning.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode
 msgid ""
 "\n"
-"        This module adds support for barcodes scanning to the warehouse management system.\n"
+"This module enables the barcode scanning feature for the warehouse management system.\n"
 "    "
 msgstr ""
 "\n"
-"Deze module voegt ondersteuning toe om barcodes te scannen naar het magazijn beheersysteem."
+"Deze module voegt barcodes scanning toe voor een efficiënter beheer van uw voorraad."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_real_estates
 msgid ""
 "\n"
-"        This module adds support for real estates data to Spanish localization,\n"
-"        and its mod 347 report.\n"
+"This module allows the user to add real estate related data to the Spanish localization and generates a mod 347 report.\n"
 "    "
 msgstr ""
 "\n"
@@ -966,8 +967,8 @@ msgstr ""
 #: model:ir.module.module,description:base.module_pos_hr
 msgid ""
 "\n"
-"        This module adds the possibility to log in to the PoS with Employees using barcode, pin, or both.\n"
-"        The PoS still requires one user, but it can have an unlimited number of employees.\n"
+"This module allows Employees (and not users) to log in to the Point of Sale application using a barcode, a PIN number or both.\n"
+"The actual till still requires one user but an unlimited number of employees can log on to that till and process sales.\n"
 "    "
 msgstr ""
 "\n"
@@ -994,6 +995,10 @@ msgid ""
 "        by choosing product variants quantity through a Grid Entry.\n"
 "    "
 msgstr ""
+"\n"
+"        Met deze module kunnen inkooporders snel worden geplaatst\n"
+" door de hoeveelheid productvarianten te kiezen via een rasterinvoer\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_product_matrix
@@ -1003,6 +1008,10 @@ msgid ""
 "        by choosing product variants quantity through a Grid Entry.\n"
 "    "
 msgstr ""
+"\n"
+"        Met deze module kunnen verkooporders snel worden geplaatst\n"
+" door de hoeveelheid productvarianten te kiezen via een rasterinvoer\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_ponto
@@ -1189,6 +1198,9 @@ msgid ""
 "       Add variants to your purchase orders through an Order Grid Entry.\n"
 "    "
 msgstr ""
+"\n"
+"       Voeg varianten toe aan inkooporders via een rasterinvoer.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_autocomplete
@@ -1207,6 +1219,9 @@ msgid ""
 "       Technical module: Matrix Implementation\n"
 "    "
 msgstr ""
+"\n"
+"       Technische module: Raster Implementatie\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -1351,6 +1366,9 @@ msgid ""
 "    Schedule your teams and employees with shift.\n"
 "    "
 msgstr ""
+"\n"
+"    Plan uw teams en werknemers met ploegendienst.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -1800,6 +1818,8 @@ msgid ""
 "\n"
 "Add the ability to manage hr files through documents.\n"
 msgstr ""
+"\n"
+"Voeg de mogelijkheid toe om personeelsdocumenten te beheren met de document module.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_recruitment
@@ -1807,6 +1827,8 @@ msgid ""
 "\n"
 "Add the ability to manage resumés and letters from the Documents app.\n"
 msgstr ""
+"\n"
+"Voeg de mogelijkheid toe om CV's en brieven te beheren met de  documenten app.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_margin
@@ -1848,6 +1870,8 @@ msgid ""
 "\n"
 "Adds fleet data to documents\n"
 msgstr ""
+"\n"
+"Voegt vlootgegevens toe aan documenten\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_product
@@ -1856,6 +1880,8 @@ msgid ""
 "Adds the ability to create products from the document module and adds the\n"
 "option to send products' attachments to the documents app.\n"
 msgstr ""
+"\n"
+"Voegt de mogelijkheid toe om producten te maken vanuit de documentmodule en voegt de optie toe om bijlagen van producten naar de documenten-app te verzenden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_crm
@@ -1864,6 +1890,9 @@ msgid ""
 "Adds the lead partner to phonecall list\n"
 "    "
 msgstr ""
+"\n"
+"        Voegt de lead toe aan de telefoonlijst\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_enterprise
@@ -1907,6 +1936,19 @@ msgid ""
 "* Supported cards: Visa, MasterCard, American Express, Discover\n"
 "    "
 msgstr ""
+"\n"
+"Maak kassabetalingen met kredietkaarten mogelijk\n"
+"=============================================\n"
+"\n"
+"De module geeft klanten de mogelijkheid om hun bestelling met een creditcard te betalen. De transacties worden verwerkt via Vantiv (ontworpen door \n"
+"Wells Fargo Bank). Een Vantiv merchant account is hiervoor vereist. \n"
+"Het volgende is mogelijk:\n"
+"\n"
+"* Snelle betaling door gewoon een creditcard te slepen terwijl u op het betalingsscherm bent\n"
+"* Combineren van contante betalingen en betalingen via creditcard\n"
+"* Terugbetalingen\n"
+"* Ondersteunde kaarten: Visa, MasterCard, American Express, Discover\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -2036,6 +2078,9 @@ msgid ""
 "Allows to use tracking numbers for products sold on Amazon\n"
 "==========================================================\n"
 msgstr ""
+"\n"
+"Hiermee kunnen trackingnummers worden gebruikt voor producten die op Amazon worden verkocht\n"
+"==========================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_snailmail
@@ -2309,7 +2354,7 @@ msgid ""
 "Base module for the Brazilian localization\n"
 "==========================================\n"
 "\n"
-"This module consists in:\n"
+"This module consists of:\n"
 "\n"
 " - Generic Brazilian chart of accounts\n"
 " - Brazilian taxes such as:\n"
@@ -2342,22 +2387,6 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't \n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
-"\n"
-"Basis module voor de Braziliaanse lokalisatie\n"
-"==========================================\n"
-"\n"
-"Deze bestaat uit:\n"
-" - Algemene Braziliaanse rekeningschema\n"
-" - Braziliaanse BTW tarieven zoals:\n"
-"\n"
-"        - IPI\n"
-"        - ICMS\n"
-"        - PIS\n"
-"        - COFINS\n"
-"        - ISS\n"
-"        - IR\n"
-"        - IRPJ\n"
-"        - CSLL\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_payment
@@ -2550,6 +2579,11 @@ msgid ""
 "This module adds certification to resumé for employees.\n"
 "        "
 msgstr ""
+"\n"
+"Certificatie en Vaardigheden voor HR\n"
+"========================\n"
+"\n"
+"Deze module voegt certificering toe aan het CV van medewerkers."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
@@ -2669,6 +2703,10 @@ msgid ""
 "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
 "    "
 msgstr ""
+"\n"
+"Chileense lokalisatie voor boekhouding en belastingen\n"
+"Chileense boekhouding en belastingen volgens de geldende voorschriften\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_city
@@ -2713,6 +2751,11 @@ msgid ""
 "on old plannings.\n"
 "\n"
 msgstr ""
+"\n"
+"Vergelijk urenstaten en prognoses\n"
+"================================\n"
+"\n"
+"U kunt uw toekomstige voorspellingen beter plannen door het aantal uren te bekijken en te vergelijken met oude prognoses.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_enterprise
@@ -2806,6 +2849,8 @@ msgid ""
 "\n"
 "Correct address formating when both partner_autocomplete and base_address_extended modules are installed"
 msgstr ""
+"\n"
+"Correcte adres formaat wanneer en partner_autocomplete en base_address_extended modules zijn geïnstalleerd "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -3213,6 +3258,8 @@ msgid ""
 "\n"
 "Employee contracts files will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Werknemer contracten worden automatisch geïntegreerd in de Document-app.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_payroll
@@ -3220,6 +3267,8 @@ msgid ""
 "\n"
 "Employee payslips will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Loonstroken werknemer worden automatisch geïntegreerd in de Document-app.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_utm
@@ -3446,6 +3495,10 @@ msgid ""
 "\n"
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
+"\n"
+"Genereer leads of prospects in de CRM-app via een contactformulier dat is gepubliceerd op de contactpagina van uw website. Dit formulier kan worden aangepast dankzij de module * Website Form Builder * (beschikbaar in Odoo Enterprise).\n"
+"\n"
+"Deze module evalueert of het opgegeven vaste telefoonnummer en mobiele nummer werd ingegeven."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_links
@@ -3488,6 +3541,11 @@ msgid ""
 "Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 "    "
 msgstr ""
+"\n"
+"Genereert Intrastat XML-rapport voor aangifte\n"
+"Op basis van facturen.\n"
+"Voegt de mogelijkheid toe om het herkomstland van goederen en de partner-btw in het Intrastat XML-rapport op te geven.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
@@ -3839,6 +3897,15 @@ msgid ""
 "regular Odoo interface anymore.\n"
 "\n"
 msgstr ""
+"\n"
+"IoT Box home pagina\n"
+"===============\n"
+"Deze module overschrijft de Odoo web interface om een simpele home pagina\n"
+"weer te geven die uitlegt wat de IoT Box is, welke status deze heeft\n"
+"en waar u documentatie kan vinden.\n"
+"\n"
+"Als u deze module activeert kan u niet meer de standaard\n"
+"interface van Odoo bereiken. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_upgrade
@@ -3867,6 +3934,8 @@ msgid ""
 "\n"
 "It links the module\n"
 msgstr ""
+"\n"
+"Het linkt naar de module\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant_iot
@@ -4293,6 +4362,12 @@ msgid ""
 "Bridge module adding UX requirements to ease mass mailing of course members.\n"
 "        "
 msgstr ""
+"\n"
+"Bulk mailing cursisten\n"
+"==============================\n"
+"\n"
+"Koppel module die UI vereisten toevoegt om bulk mailen naar cursisten te vergemakkelijken.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_event
@@ -4467,6 +4542,20 @@ msgid ""
 "of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
+"\n"
+"Module om betaalherinneringen te automatiseren voor onbetaalde facturen, op basis van meerdere aanmaningsniveau's\n"
+"================================================== ======================= \n"
+"\n"
+"U kunt uw meerdere niveaus van aanmanen definiëren:.\n"
+"-------------------------------------------------- ------------- \n"
+"Instellingen / Beheer / Betaalherinnering niveau's\n"
+"\n"
+"Zodra het is gedefinieerd, kunt u elke dag automatisch herinneringen afdrukken door simpelweg op het menu te klikken:\n"
+"-------------------------------------------------- -------------------------------------------------- --\n"
+"Klantoverzicht\n"
+"\n"
+"Het zal een PDF / e-mails versturen / handmatige acties genereren volgens de verschillende niveaus\n"
+"van herinnering. U kunt verschillende instellingen maken voor verschillende bedrijven.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -12404,10 +12493,8 @@ msgstr "Datumeenheid gebruikt voor vergelijking en formatteren"
 #, python-format
 msgid ""
 "Date unit used for the rounding. The value must be smaller than 'hour' if "
-"you use the digital formating."
+"you use the digital formatting."
 msgstr ""
-"Datum eenheid gebruikt voor de afronding. De waarde moet kleiner zijn dan "
-"'uur' indien u de digitale formattering gebruikt."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -14753,8 +14840,8 @@ msgstr "Krijg een nieuwe dashboard weergave in de website app"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_fleet
-msgid "Get history of driven cars for employees"
-msgstr "Krijg historiek van auto's waarmee werknemer gereden heeft"
+msgid "Get history of driven cars by employees"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_enterprise

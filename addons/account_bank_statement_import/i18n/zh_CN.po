@@ -16,6 +16,8 @@
 # Jeanphy <hzh0292@qq.com>, 2019
 # Sage Ren <263737@qq.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
+# Manga Tsang <mts@odoo.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -23,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-09 12:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: ChinaMaker <liuct@chinamaker.net>, 2019\n"
+"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,7 +211,7 @@ msgstr "颜色索引"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_model
 msgid "Communication Standard"
-msgstr ""
+msgstr "通讯标准"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type
@@ -256,7 +258,7 @@ msgstr "信用票分录序列"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "Credit Notes Next Number"
-msgstr ""
+msgstr "信用票据下一个号码"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -409,7 +411,7 @@ msgstr "它将作为一个默认借方科目"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "It creates draft invoices and bills by sending an email."
-msgstr ""
+msgstr "它通过发送电子邮件创建草稿发票和账单。"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -442,14 +444,14 @@ msgstr "日记账名称"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__json_activity_data
 msgid "Json Activity Data"
-msgstr ""
+msgstr "Json活动数据"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
 "Just click OK to create the account/journal and finish the upload. If this "
 "was a mistake, hit cancel to abort the upload."
-msgstr ""
+msgstr "只需单击“确定”即可创建账户/日记账并完成上载。如果这是一个错误，请点击取消以中止上传。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__kanban_dashboard
@@ -580,7 +582,7 @@ msgstr "OK"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at
 msgid "Post At"
-msgstr ""
+msgstr "发布于"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
@@ -613,7 +615,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select Files"
-msgstr ""
+msgstr "选择文件夾"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
@@ -654,7 +656,7 @@ msgid ""
 "The account of the statement you are uploading is not yet recorded in Odoo. "
 "In order to proceed with the upload, you need to create a bank journal for "
 "this account."
-msgstr ""
+msgstr "你上传的对账单的账户尚未记录在Odoo中。要继续上传，你需要为此账户创建银行日记账。"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
@@ -746,7 +748,7 @@ msgstr "上传"
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Upload Bank Statements"
-msgstr ""
+msgstr "上传银行对账单"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
@@ -793,7 +795,7 @@ msgstr "你已经导入文件。"
 msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
-msgstr ""
+msgstr "你可以为每种参考类型选择不同的模型。默认值是Odoo引用。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type
@@ -806,7 +808,7 @@ msgstr "您可以在这里设置默认联系方式，该联系方式将显示在
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "You can upload your bank statement using:"
-msgstr ""
+msgstr "你可以使用以下方式上传银行对帐单："
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0

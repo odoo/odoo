@@ -23,11 +23,11 @@
 # Christian Oechsner <carinachristian@gmail.com>, 2019
 # n3niu, 2019
 # Michael Schütt <michael.schuett.lwl@gmail.com>, 2019
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2019
 # Bülent Tiknas <btiknas@googlemail.com>, 2019
 # Jan Meyer, 2019
 # Ralf Hilgenstock <rh@dialoge.info>, 2019
 # Wolfgang Taferner, 2019
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2019
 # Ermin Trevisan <trevi@twanda.com>, 2019
 # Gab_Odoo <gab@odoo.com>, 2019
 # Anja Funk <anja.funk@afimage.de>, 2019
@@ -119,25 +119,13 @@ msgid ""
 "Base module for Hungarian localization\n"
 "==========================================\n"
 "\n"
-"This module consists :\n"
+"This module consists of:\n"
 "\n"
 " - Generic Hungarian chart of accounts\n"
 " - Hungarian taxes\n"
 " - Hungarian Bank information\n"
 " "
 msgstr ""
-"\n"
-"\n"
-"Basismodul für ungarische Lokalisation\n"
-"==========================================\n"
-"\n"
-"Dieses Modul beinhaltet:  \n"
-"\n"
-"- Allgemeine ungarische Kontenrahmen\n"
-"- Ungarische Steuern\n"
-"- Ungarische Bank-Informationen\n"
-" \n"
-" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -292,29 +280,12 @@ msgid ""
 "Note:\n"
 "-----\n"
 "\n"
-"* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  You may not need to use these at all under normal circumstances.\n"
+"* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  Under normal circumstances, you might not need to use those at all.\n"
 "\n"
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 "    "
 msgstr ""
-"\n"
-"\n"
-"Überblick:\n"
-"---------\n"
-"\n"
-"* Kontenplan und Umsatzsteuer Vorlagen für Unternehmen in Japan.\n"
-"* Dieser Kontenplan deckt u.U. nicht alle erforderlichen Konten für ein japanisches Unternehmen. Es wird deshalb vorausgesetzt, dass Sie weitere Konten zur \n"
-"Basis dieser Vorlage hinzufügen / löschen / ändern.\n"
-"\n"
-"Hinweis:\n"
-"-----\n"
-"\n"
-"* Die Steuerzuordnungen \"内 税 'und' 外 税 ' wurden hinzugefügt, um die besonderen Anforderungen einer  POS-Implementierung zu erfüllen. [1] Sie müssen diese allerdings nicht zwingend anwenden.\n"
-"\n"
-"[1] Siehe https://github.com/odoo/odoo/pull/6470 zum Detail.\n"
-"\n"
-"    "
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -333,44 +304,30 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"This module adds a custom Sales Team for the point of sale to be able to view and manage your point of sale sales with more ease.\n"
+"This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.\n"
 msgstr ""
-"\n"
-"\n"
-"Dieses Modul fügt einen benutzerdefinierten Verkaufskanal hinzu, damit der Point of Sale Ihre Point of Sale-Verkäufe leichter anzeigen und verwalten kann.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
 msgid ""
 "\n"
 "\n"
-"This module adds several restaurant features to the Point of Sale:\n"
+"This module adds several features to the Point of Sale that are specific to restaurant management:\n"
 "- Bill Printing: Allows you to print a receipt before the order is paid\n"
 "- Bill Splitting: Allows you to split an order into different orders\n"
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
-"\n"
-"\n"
-"Dieses Modul fügt der Verkaufsstelle (POS) weitere Restaurant Eigenschaften hinzu:\n"
-"- Rechnungsdruck: Ermöglicht den Druck einer Quittung bevor die Bestellung bezahlt wurde\n"
-"- Aufteilen der Rechnung: Ermöglicht es, die ursprüngliche Bestellung in unterschiedliche Bestellungen zu teilen\n"
-"- Ausdruck des Küchenauftrags: Ermöglicht es, Änderungen der Bestellung für die Küche oder die Bar auszudrucken\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
 msgid ""
 "\n"
 "\n"
-"This module allows the cashier to quickly give a percentage\n"
-"sale discount to a customer.\n"
+"This module allows the cashier to quickly give a percentage-based\n"
+"discount to a customer.\n"
 "\n"
 msgstr ""
-"\n"
-"\n"
-"Dieses Modul erlaubt dem Kassierer schnell, dem Kunden einen prozentualen Verkaufsrabatt zu gewähren.\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -378,21 +335,17 @@ msgid ""
 "\n"
 "\n"
 "This module allows you to define a loyalty program in\n"
-"the point of sale, where the customers earn loyalty points\n"
+"the point of sale, where customers earn loyalty points\n"
 "and get rewards.\n"
 "\n"
 msgstr ""
-"\n"
-"\n"
-"Dieses Modul ermöglicht es Ihnen, ein Treueprogramm für die Verkaufsstelle (POS) zu definieren, mit dem der Kunde Treuepunkte verdient und Prämien dafür erhält.\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
 msgid ""
 "\n"
 "\n"
-"Use Epson Printers as Order Printers in the Point of Sale without IoT Box\n"
+"Use Epson Printers as Order Printers in the Point of Sale without the IoT Box\n"
 msgstr ""
 
 #. module: base
@@ -400,7 +353,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"Use Epson ePOS Printers without IoT Box in the Point of Sale\n"
+"Use Epson ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
 
 #. module: base
@@ -428,7 +381,7 @@ msgid ""
 "\n"
 "    * Defines the following chart of account templates:\n"
 "        * Austrian General Chart of accounts 2010\n"
-"    * Defines templates for sale and purchase VAT\n"
+"    * Defines templates for VAT on sales and purchases\n"
 "    * Defines tax templates\n"
 "    * Defines fiscal positions for Austrian fiscal legislation\n"
 "    * Defines tax reports U1/U30\n"
@@ -449,31 +402,21 @@ msgstr ""
 msgid ""
 "\n"
 "        - Allow to set project for Helpdesk team\n"
-"        - Track timesheet for task from ticket\n"
+"        - Track timesheet for a task from a ticket\n"
 "    "
 msgstr ""
-"\n"
-" - Zulassen, dass das Projekt für das Helpdesk-Team festgelegt wird\n"
-" - Zeiterfassung für Aufgabe aus Ticket verfolgen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
 msgid ""
 "\n"
-"        A tax defined as python code consists in two snippets of python code which are executed in a local environment containing data such as the unit price, product or partner.\n"
+"A tax defined as python code consists of two snippets of python code which are executed in a local environment containing data such as the unit price, product or partner.\n"
 "\n"
-"        \"Applicable Code\" defines if the tax is to be applied.\n"
+"\"Applicable Code\" defines if the tax is to be applied.\n"
 "\n"
-"        \"Python Code\" defines the amount of the tax.\n"
+"\"Python Code\" defines the amount of the tax.\n"
 "        "
 msgstr ""
-"\n"
-"        Eine durch Python-Code definierte Steuer besteht aus zwei Code-Fragmenten, welche in einer lokalen Umgebung mit Daten, wie Preis, Produkt oder Partner, ausgeführt werden.\n"
-"\n"
-"        \"Anwendbarer Code\" legt die anzuwendende Steuer fest.\n"
-"\n"
-"        \"Python Code\" legt den Steuerbetrag fest.\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -501,14 +444,9 @@ msgid ""
 "\n"
 "        Accounting reports for Germany\n"
 "        Contains Balance sheet, Profit and Loss, VAT and Partner VAT reports\n"
-"        Also add DATEV export options to general ledger\n"
+"        Also adds DATEV export options to general ledger\n"
 "    "
 msgstr ""
-"\n"
-"Buchhaltungsberichte für Deutschland\n"
-"Enthält Bilanz, Gewinn- und Verlustrechnungen, USt.- und Partner-USt.-Berichte\n"
-"\n"
-"Ein DATEV-Export des Hauptbuchs kann optinal hinzugefügt werden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_reports
@@ -575,17 +513,15 @@ msgstr ""
 #: model:ir.module.module,description:base.module_voip
 msgid ""
 "\n"
-"        Allow to make call from next activities or with click-to-dial.\n"
+"Allows to make call from next activities or with click-to-dial.\n"
 "    "
 msgstr ""
-"\n"
-"Erlauben Sie, einen Anruf über die nächsten Aktivitäten oder per Click-to-Dial zu tätigen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock_renting
 msgid ""
 "\n"
-"        Allow use of stock application to manage rentals inventory\n"
+"Allows use of stock application to manage rentals inventory\n"
 "        "
 msgstr ""
 
@@ -633,16 +569,11 @@ msgstr ""
 #: model:ir.module.module,description:base.module_documents_account
 msgid ""
 "\n"
-"        Bridge module between the accounting and documents apps. It adds \n"
-"        the ability to create invoices from the document module, and a \n"
-"        button on Accounting's reports allowing to save the report into\n"
-"        Documents in the desired format(s).\n"
+"Bridge module between the accounting and documents apps. It enables \n"
+"the creation invoices from the Documents module, and adds a \n"
+"button on Accounting's reports allowing to save the report into the \n"
+"Documents app in the desired format(s).\n"
 msgstr ""
-"\n"
-"        Brückenmodul zwischen den Buchhaltungs- und Dokumentenapplikationen. Es bietet \n"
-"        die Möglichkeit, Rechnungen aus dem Dokumentmodul zu erstellen, und eine \n"
-"        Schaltfläche auf den Berichten des Rechnungswesens, mit dem Sie\n"
-"        Berichte in Dokumente im gewünschten Format speichern können.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_product_configurator
@@ -678,11 +609,9 @@ msgstr ""
 #: model:ir.module.module,description:base.module_account_taxcloud
 msgid ""
 "\n"
-"        Compute sales tax automatically using TaxCloud based on customer address in United States.\n"
+"Computes the sales tax automatically using TaxCloud and the customer's address in United States.\n"
 "    "
 msgstr ""
-"\n"
-"Berechnen Sie die Verkaufssteuer automatisch mit TaxCloud basierend auf der Kundenadresse in den Vereinigten Staaten."
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm
@@ -696,7 +625,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_helpdesk_account
 msgid ""
 "\n"
-"        Create Credit Notes from Helpdesk's tickets\n"
+"Create Credit Notes from Helpdesk tickets\n"
 "    "
 msgstr ""
 
@@ -729,7 +658,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_helpdesk_sale_coupon
 msgid ""
 "\n"
-"        Generate Coupons from Helpdesk's tickets\n"
+"Generate Coupons from Helpdesks tickets\n"
 "    "
 msgstr ""
 
@@ -737,11 +666,9 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_landing
 msgid ""
 "\n"
-"        Generate Electronic Invoice with Customs Number\n"
+"Generate Electronic Invoice with custom numbers\n"
 "    "
 msgstr ""
-"\n"
-"        Erstelle Elektronische Rechnung mit Zolltarifnummer"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -763,7 +690,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_hr_holidays_attendance
 msgid ""
 "\n"
-"        Hides attendance presence stat button when an employee is on leave.\n"
+"Hides the attendance presence button when an employee is on leave.\n"
 "    "
 msgstr ""
 
@@ -788,7 +715,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_helpdesk_stock
 msgid ""
 "\n"
-"        Manage Product returns from Helpdesk's tickets\n"
+"Manage Product returns from helpdesk tickets\n"
 "    "
 msgstr ""
 
@@ -796,7 +723,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_helpdesk_sale
 msgid ""
 "\n"
-"        Manage the after sale of the products from Helpdesk's tickets.\n"
+"Manage the after sale of the products from helpdesk tickets.\n"
 "    "
 msgstr ""
 
@@ -804,7 +731,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_product_matrix
 msgid ""
 "\n"
-"        Please refer to Sale Matrix or Purchase Matrix for the uses of this module.\n"
+"Please refer to Sale Matrix or Purchase Matrix for the use of this module.\n"
 "    "
 msgstr ""
 
@@ -823,7 +750,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_helpdesk_repair
 msgid ""
 "\n"
-"        Repair Products from Helpdesk's tickets\n"
+"Repair Products from helpdesk tickets\n"
 "    "
 msgstr ""
 
@@ -841,10 +768,10 @@ msgstr ""
 #: model:ir.module.module,description:base.module_sale_product_configurator
 msgid ""
 "\n"
-"        Technical module installed when the user checks the \"module_sale_product_configurator\" setting.\n"
-"        The main purpose is to override the sale_order view to allow configuring products in the SO form.\n"
+"Technical module installed when the user checks the \"module_sale_product_configurator\" setting.\n"
+"The main purpose is to override the sale_order view to allow configuring products in the SO form.\n"
 "\n"
-"        It also enables the optional products feature.\n"
+"It also enables the \"optional products\" feature.\n"
 "    "
 msgstr ""
 
@@ -889,48 +816,34 @@ msgstr ""
 #: model:ir.module.module,description:base.module_delivery_barcode
 msgid ""
 "\n"
-"        This module adds support for barcodes scanning to the delivery packages.\n"
+"This module enables the management of deliveries through the use of barcode scanning.\n"
 "    "
 msgstr ""
-"\n"
-"Dieses Modul gibt weitere Unterstützung für das Scannen von Barcodes auf Lieferpaketen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode
 msgid ""
 "\n"
-"        This module adds support for barcodes scanning to the warehouse management system.\n"
+"This module enables the barcode scanning feature for the warehouse management system.\n"
 "    "
 msgstr ""
-"\n"
-"        Dieses Modul ergänzt die Möglichkeit in der Lagerverwaltung mit Barcode-Lesern zu arbeiten.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_real_estates
 msgid ""
 "\n"
-"        This module adds support for real estates data to Spanish localization,\n"
-"        and its mod 347 report.\n"
+"This module allows the user to add real estate related data to the Spanish localization and generates a mod 347 report.\n"
 "    "
 msgstr ""
-"\n"
-"        Dieses Modul fügt Unterstützung für Immobiliendaten zur Spanischen Lokalisierung\n"
-"        und ihren mod 347 Bericht hinzu.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr
 msgid ""
 "\n"
-"        This module adds the possibility to log in to the PoS with Employees using barcode, pin, or both.\n"
-"        The PoS still requires one user, but it can have an unlimited number of employees.\n"
+"This module allows Employees (and not users) to log in to the Point of Sale application using a barcode, a PIN number or both.\n"
+"The actual till still requires one user but an unlimited number of employees can log on to that till and process sales.\n"
 "    "
 msgstr ""
-"\n"
-"        Dieses Modul bietet die Möglichkeit, sich mit Mitarbeitern per Barcode, Pin oder beidem am PoS anzumelden.\n"
-"        Der PoS benötigt noch einen Benutzer, kann aber eine unbegrenzte Anzahl von Mitarbeitern haben.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_support
@@ -2227,7 +2140,7 @@ msgid ""
 "Base module for the Brazilian localization\n"
 "==========================================\n"
 "\n"
-"This module consists in:\n"
+"This module consists of:\n"
 "\n"
 " - Generic Brazilian chart of accounts\n"
 " - Brazilian taxes such as:\n"
@@ -2260,42 +2173,6 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't \n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
-"\n"
-"Base module for the Brazilian localization\n"
-"==========================================\n"
-"\n"
-"This module consists in:\n"
-"\n"
-" - Generic Brazilian chart of accounts\n"
-" - Brazilian taxes such as:\n"
-"\n"
-"        - IPI\n"
-"        - ICMS\n"
-"        - PIS\n"
-"        - COFINS\n"
-"        - ISS\n"
-"        - IR\n"
-"        - IRPJ\n"
-"        - CSLL\n"
-"\n"
-"The field tax_discount has also been added in the account.tax.template and \n"
-"account.tax objects to allow the proper computation of some Brazilian VATs \n"
-"such as ICMS. The chart of account creation wizard has been extended to \n"
-"propagate those new data properly.\n"
-"\n"
-"It's important to note however that this module lack many implementations to \n"
-"use Odoo properly in Brazil. Those implementations (such as the electronic \n"
-"fiscal Invoicing which is already operational) are brought by more than 15 \n"
-"additional modules of the Brazilian Launchpad localization project \n"
-"https://launchpad.net/openerp.pt-br-localiz and their dependencies in the \n"
-"extra addons branch. Those modules aim at not breaking with the remarkable \n"
-"Odoo modularity, this is why they are numerous but small. One of the \n"
-"reasons for maintaining those modules apart is that Brazilian Localization \n"
-"leaders need commit rights agility to complete the localization as companies \n"
-"fund the remaining legal requirements (such as soon fiscal ledgers, \n"
-"accounting SPED, fiscal SPED and PAF ECF that are still missing as September \n"
-"2011). Those modules are also strictly licensed under AGPL V3 and today don't \n"
-"come with any additional paid permission for online use of 'private modules'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_payment
@@ -12186,10 +12063,8 @@ msgstr "Datumseinheit, die zum Vergleichen und Formatieren verwendet wird"
 #, python-format
 msgid ""
 "Date unit used for the rounding. The value must be smaller than 'hour' if "
-"you use the digital formating."
+"you use the digital formatting."
 msgstr ""
-"Datumseinheit, die für die Rundung verwendet wird. Der Wert muss kleiner als"
-" \"Stunde\" sein, wenn Sie die digitale Formatierung verwenden."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -14532,8 +14407,8 @@ msgstr "Holen Sie sich eine neue Dashboard-Ansicht in der Website-App"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_fleet
-msgid "Get history of driven cars for employees"
-msgstr "Historie der gefahrenen Autos für Mitarbeiter abrufen"
+msgid "Get history of driven cars by employees"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_enterprise

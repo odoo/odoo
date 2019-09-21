@@ -26,10 +26,10 @@
 # Bülent Tiknas <btiknas@googlemail.com>, 2019
 # brokemeister <work@maltejansen.de>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
 # Bettina Pfeifer <betzilla@web.de>, 2019
 # Martin Trigaux, 2019
 # Leon Grill <leg@odoo.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-13 11:26+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,21 +145,22 @@ msgstr "%s: Umschlaglager"
 msgid ""
 "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
+"'Lieferschein - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Inventory - %s' % (object.name)"
-msgstr ""
+msgstr "'Bestand- %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr ""
+msgstr "'Lagerort - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
 msgid "'Lot-Serial - %s' % object.name"
-msgstr ""
+msgstr "'Lot-Serialnummer - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
@@ -398,7 +399,7 @@ msgstr "<span><strong>Lagerhausadresse:</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "<span>Assign Serial Numbers</span>"
-msgstr ""
+msgstr "<span>Seriennummern zuweisen</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -424,7 +425,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Counted Quantity</strong>"
-msgstr ""
+msgstr "<strong>Gezähltemenge</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -460,18 +461,18 @@ msgstr "<strong>Minimale Menge</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr ""
+msgstr "<strong>Vorrätige Menge</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order:</strong>"
-msgstr ""
+msgstr "<strong>Auftrag:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Package Type:</strong>"
-msgstr ""
+msgstr "<strong>Pakettyp:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -509,17 +510,17 @@ msgstr "<strong>Menge</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date:</strong>"
-msgstr ""
+msgstr "<strong>Geplantes Datum:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Shipping Date:</strong>"
-msgstr ""
+msgstr "<strong>Versanddatum:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Status:</strong>"
-msgstr ""
+msgstr "<strong>Status:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -2165,7 +2166,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Exception Activities"
-msgstr ""
+msgstr "Ausnahmeaktivitäten"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking

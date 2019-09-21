@@ -17,6 +17,7 @@
 # roye w <159820@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: John An <johnxan@163.com>, 2019\n"
+"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +80,7 @@ msgstr "会计信息"
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
-msgstr ""
+msgstr "在产品价值中增加额外成本（运输，海关......）。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -185,7 +186,7 @@ msgstr "成本方法"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
-msgstr ""
+msgstr "产品类别%s的成本定价核算方法更改：从%s 到%s。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id
@@ -251,7 +252,7 @@ msgid ""
 "Due to a change of product category (from %s to %s), the costing method"
 "                                has changed for product template %s: from %s"
 " to %s."
-msgstr ""
+msgstr "由于产品类别的变化（从 %s 至%s ），成本定价方法已更改为产品模板 %s：从 %s 至%s 。"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -349,7 +350,7 @@ msgstr "更新时间"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr ""
+msgstr "链接到"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -379,7 +380,7 @@ msgstr "其他信息"
 msgid ""
 "Please define an expense account for this product: \"%s\" (id:%d) - or for "
 "its category: \"%s\"."
-msgstr ""
+msgstr "请为此产品定义费用科目： \"%s\" (id:%d) - 或其类别：\"%s\"."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__new_price
@@ -413,7 +414,7 @@ msgstr "产品模板"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr ""
+msgstr "手动修改产品值（从 %s 到%s）"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -532,7 +533,7 @@ msgstr "技术字段用于检索昂格鲁-撒克逊明细行"
 msgid ""
 "The Stock Input and/or Output accounts cannot be the same than the Stock "
 "Valuation account."
-msgstr ""
+msgstr "库存进货和/或出货科目不能与库存计价科目相同。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -564,7 +565,7 @@ msgstr "移动处于不一致的状态:它们不属于同一个来源或目标�
 msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
 " moves should impact the valuation of the stock."
-msgstr ""
+msgstr "没有评估层。当某些产品移动会影响股票的估值时，会创建评估层。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -645,7 +646,7 @@ msgstr "估价层？"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
-msgstr ""
+msgstr "产品类别的评估方法更改 %s: 从 %s 到 %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -668,7 +669,7 @@ msgstr "警告"
 msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
+msgstr "在产品上启用自动库存评估后，此帐户将保留产品的当前值。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -677,6 +678,9 @@ msgid ""
 "                unless there is a specific valuation account set on the source location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"在进行自动库存估价时，所有进货库存移动的对应日记帐项目将在此帐户中过帐，\n"
+"                除非在来源位置设置了特定的评估帐户。这是此类别中所有产品的默认值。\n"
+"          它也可以直接在每个产品上设置。 "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -685,13 +689,16 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"在进行自动库存评估时，所有外发库存移动的对应日记帐项目将在此帐户中过帐，\n"
+"               除非在目的地设置了特定的评估帐户。 这是此类别中所有产品的默认值。\n"
+"                它也可以直接在每个产品上设置。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
 msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr ""
+msgstr "在进行自动库存评估时，这是会计日记账，其中处理库存移动时将自动过帐条目。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -699,7 +706,7 @@ msgstr ""
 msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr ""
+msgstr "你没有在产品类别中定义任何输入评估帐户。你必须在处理此操作之前定义一个。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -724,7 +731,7 @@ msgstr "您没有在您的产品类别中定义任何库存评估账户。 处�
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account."
-msgstr ""
+msgstr "你必须设置对应帐户。"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -734,4 +741,4 @@ msgstr "_应用"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
 msgid "remaining_value Value"
-msgstr ""
+msgstr "remaining_value 值"
