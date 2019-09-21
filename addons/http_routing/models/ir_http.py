@@ -168,8 +168,14 @@ def is_multilang_url(local_url, langs=None):
         path = url[0]
         query_string = url[1] if len(url) > 1 else None
         router = request.httprequest.app.get_db_router(request.db).bind('')
-        # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
-        func = router.match(path, method='POST', query_args=query_string)[0]
+        if request.httprequest.path == local_url:
+            # If werkzeug received some request, search for proper router
+            func = router.match(path, method=request.httprequest.method, query_args=query_string)[0]
+        else:
+            # If someone tries to find routing rule using manual function call
+            # Like to get form url using url_for('/post/request') in GET /page request
+            # Force check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
+            func = router.match(path, method='POST', query_args=query_string)[0]
         return (func.routing.get('website', False) and
                 func.routing.get('multilang', func.routing['type'] == 'http'))
     except werkzeug.exceptions.NotFound:
