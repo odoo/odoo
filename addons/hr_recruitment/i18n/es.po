@@ -39,8 +39,9 @@
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Martin Trigaux, 2019
-# Jon Perez <jop@odoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
+# Mariana Santos Romo <msn@odoo.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -48,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:31+0000\n"
 "PO-Revision-Date: 2016-08-05 12:59+0000\n"
-"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
+"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -378,7 +379,7 @@ msgstr "Agregar un nuevo empleado"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Add a new stage in the recruitment process"
-msgstr ""
+msgstr "Agregar una nueva etapa en el proceso de reclutamiento"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
@@ -440,7 +441,7 @@ msgstr "Candidato creado"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_from
 msgid "Applicant email"
-msgstr ""
+msgstr "Correo electrónico del candidato"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
@@ -487,6 +488,8 @@ msgid ""
 "Applicants can send resume to this email address,<br/>it will create an "
 "application automatically"
 msgstr ""
+"Los solicitantes pueden enviar un currículum a esta dirección de correo "
+"electrónico, <br/> creará una aplicación automáticamente"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_count
@@ -519,7 +522,7 @@ msgstr "Solicitudes"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
 msgid "Applications with the same email"
-msgstr ""
+msgstr "Aplicaciones con el mismo correo electrónico"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
@@ -718,7 +721,7 @@ msgstr "Crear seudónimo"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Create some aliases to track where applicants come from"
-msgstr ""
+msgstr "Cree algunos alias para rastrear de dónde provienen los solicitantes"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_uid
@@ -1164,7 +1167,7 @@ msgstr "Formularios de entrevista"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__is_favorite
 msgid "Is Favorite"
-msgstr ""
+msgstr "Es favorito"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_is_follower
@@ -1415,7 +1418,7 @@ msgstr "Nuevas solicitudes"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "New Applications <br/>"
-msgstr ""
+msgstr "Nuevas aplicaciones <br/>"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:463
@@ -1434,11 +1437,14 @@ msgid ""
 "New applicants can be generated from incoming emails. You just need to set "
 "email aliases in configuration of job positions.<br>"
 msgstr ""
+"Se pueden generar nuevos solicitantes a partir de correos electrónicos "
+"entrantes. Solo necesita establecer alias de correo electrónico en la "
+"configuración de puestos de trabajo. <br>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
 msgid "Newly Hired"
-msgstr ""
+msgstr "Recientemente contratado"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
@@ -1480,7 +1486,7 @@ msgstr "Sin asunto"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid "No applications yet"
-msgstr ""
+msgstr "Aún no hay aplicaciones"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
@@ -1508,6 +1514,8 @@ msgid ""
 "Number of applications that are new in the flow (typically at first step of "
 "the flow)"
 msgstr ""
+"Número de aplicaciones que son nuevas en el flujo (generalmente en el primer"
+" paso del flujo)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
@@ -1678,7 +1686,7 @@ msgstr "Proceso de selección"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
 msgid "Recruitment Stages"
-msgstr ""
+msgstr "Etapas de reclutamiento"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
@@ -1794,7 +1802,7 @@ msgstr "Secuencia"
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Set Email Aliases"
-msgstr ""
+msgstr "Establecer alias de correo electrónico"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -1891,7 +1899,7 @@ msgstr "Comienzo del reclutamiento"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Start recruitment"
-msgstr ""
+msgstr "Comienzo del reclutamiento"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_state
@@ -2135,10 +2143,10 @@ msgstr "p.e. Director de Ventas"
 #. module: hr_recruitment
 #: model:ir.actions.server,name:hr_recruitment.hr_applicant_resumes_server
 msgid "hr.applicant.resumes.server"
-msgstr ""
+msgstr "hr.applicant.resumes.server"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:300
 #, python-format
 msgid "job applicant"
-msgstr ""
+msgstr "solicitante de empleo"

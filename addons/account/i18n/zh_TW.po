@@ -6,7 +6,6 @@
 # 金儒 楊 <ce1123@cooleagle.com.tw>, 2018
 # Bill Hsu <hcm86@icloud.com>, 2018
 # Cécile Collart <cco@odoo.com>, 2018
-# Michael Yeung, 2018
 # Jordy Lai <alj@odoo.com>, 2018
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
 # sejun huang <sejun.huang@gmail.com>, 2019
@@ -15,6 +14,7 @@
 # amos lin <seeing@edirect168.com>, 2019
 # Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Michael Yeung, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: Michael Yeung, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -522,7 +522,7 @@ msgstr "<span>說明</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>折扣率%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -616,7 +616,7 @@ msgstr "<strong class=\"text-center\">SEPA二維碼沒有被正確設定.</stron
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">銷售員</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
@@ -820,7 +820,6 @@ msgstr "稅務財政情況在相同的稅上面只能定義一次。"
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
@@ -2775,7 +2774,7 @@ msgstr "Choose counterpart or Create Write-off"
 msgid ""
 "Choose how you want to credit this invoice. You cannot \"modify\" nor "
 "\"cancel\" if the invoice is already reconciled."
-msgstr ""
+msgstr "此發票已經被核對，已經不能被修改或取消。請選擇要如何退掉這銷售發票"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.actions_account_fiscal_year
@@ -3955,7 +3954,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Disc.%"
-msgstr ""
+msgstr "折扣率%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount
@@ -11516,7 +11515,7 @@ msgstr "您不能從從已經關閉的銀行對帳單中放／取錢。"
 msgid ""
 "You cannot register payments for customer invoices and credit notes at the "
 "same time."
-msgstr ""
+msgstr "你不能同時間登記銷售發票及退款單"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:109

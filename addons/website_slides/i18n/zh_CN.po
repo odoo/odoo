@@ -29,6 +29,8 @@
 # Martin Trigaux, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
+# Manga Tsang <mts@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -36,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:27+0000\n"
 "PO-Revision-Date: 2016-08-05 13:14+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2019\n"
+"Last-Translator: Manga Tsang <mts@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +49,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completion
 msgid "# Completed Slides"
-msgstr ""
+msgstr "#完成幻灯片"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_time
@@ -74,7 +76,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__public_views
 msgid "# of Public Views"
-msgstr ""
+msgstr "公众观看次数"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_views
@@ -132,17 +134,17 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid "<b>(empty)</b>"
-msgstr ""
+msgstr "<b>(空白)</b>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<b>Order by</b>"
-msgstr ""
+msgstr "<b>按序排列</b>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
 msgid "<b>Uncategorized</b>"
-msgstr ""
+msgstr "未分类"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_slide_channel_invite
@@ -161,6 +163,19 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的 ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"       您已被邀请加入新课程: ${object.channel_id.name}.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"               点击此处开始课程.\n"
+"            </a>\n"
+"        </div>\n"
+"        享受这个独家内容 !\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -218,6 +233,8 @@ msgid ""
 "<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
 "ml-1\">Lessons</span>"
 msgstr ""
+"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">课程</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -225,11 +242,13 @@ msgid ""
 "<i class=\"fa fa-chevron-left mr-2\"/> <span class=\"d-none d-sm-inline-"
 "block\">Prev</span>"
 msgstr ""
+"<i class=\"fa fa-chevron-left mr-2\"/> <span class=\"d-none d-sm-inline-"
+"block\">上一页</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-circle-o-notch fa-spin mr-2\"/><b>Loading...</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-circle-o-notch fa-spin mr-2\"/><b>载入中...</b>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -239,12 +258,12 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-cloud-upload mr-1\"/>Upload new content"
-msgstr ""
+msgstr "<i class=\"fa fa-cloud-upload mr-1\"/>上传新内容"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-code\"/> Embed"
-msgstr ""
+msgstr "<i class=\"fa fa-code\"/> 嵌入"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -257,11 +276,13 @@ msgid ""
 "<i class=\"fa fa-desktop mr-2\"/>\n"
 "                <span class=\"d-none d-sm-inline-block\">Fullscreen</span>"
 msgstr ""
+"<i class=\"fa fa-desktop mr-2\"/>\n"
+"                <span class=\"d-none d-sm-inline-block\">全屏</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-envelope\"/> Email"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\"/> 电子邮件"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -271,12 +292,12 @@ msgstr "<i class=\"fa fa-envelope-o\"/> 发送邮件"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-eraser mr-1\"/>Clear filters"
-msgstr ""
+msgstr "<i class=\"fa fa-eraser mr-1\"/>清除筛选"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "<i class=\"fa fa-eraser\"/> Clear filters"
-msgstr ""
+msgstr "<i class=\"fa fa-eraser\"/> 清除筛选"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
@@ -284,16 +305,18 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
 "label=\"Attention\" title=\"Attention\"/> This document is private."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
+"label=\"Attention\" title=\"Attention\"/> 这份文件是私有的。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
 msgid "<i class=\"fa fa-flag text-warning\"/> Quiz"
-msgstr ""
+msgstr "<i class=\"fa fa-flag text-warning\"/> 测验"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
 msgid "<i class=\"fa fa-flag-checkered text-warning mr-2\"/>Quiz"
-msgstr ""
+msgstr "<i class=\"fa fa-flag-checkered text-warning mr-2\"/>测验"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -303,7 +326,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "<i class=\"fa fa-graduation-cap mr-1\"/>All courses"
-msgstr ""
+msgstr "<i class=\"fa fa-graduation-cap mr-1\"/>所有课程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -311,6 +334,8 @@ msgid ""
 "<i class=\"fa fa-home d-md-none\"/><span class=\"d-none d-md-inline-block "
 "ml-1\">Back to course</span>"
 msgstr ""
+"<i class=\"fa fa-home d-md-none\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">回到课程</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -320,7 +345,7 @@ msgstr "<i class=\"fa fa-home\"/> 关于"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 msgid "<i class=\"fa fa-home\"/> Course"
-msgstr ""
+msgstr "<i class=\"fa fa-home\"/> 课程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -328,6 +353,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
 "                    The social sharing module will be unlocked when a moderator will allow your publication."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                    当管理员允许您的出版时，社交共享模块将被解锁。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -335,6 +362,8 @@ msgid ""
 "<i class=\"fa fa-pencil\"/><span class=\"d-none d-md-inline-block "
 "ml-1\">Write a review</span>"
 msgstr ""
+"<i class=\"fa fa-pencil\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">写评论</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -357,12 +386,12 @@ msgstr "<i class=\"fa fa-share-alt\"/> 分享"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "<i class=\"fa fa-share-square fa-fw\"/> Share"
-msgstr ""
+msgstr "<i class=\"fa fa-share-square fa-fw\"/> 分享"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 msgid "<i class=\"fa fa-share-square\"/> Share"
-msgstr ""
+msgstr "<i class=\"fa fa-share-square\"/> Share"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -370,6 +399,8 @@ msgid ""
 "<i class=\"fa fa-sign-out d-md-none\"/><span class=\"d-none d-md-inline-"
 "block ml-1\">Exit Fullscreen</span>"
 msgstr ""
+"<i class=\"fa fa-sign-out d-md-none\"/><span class=\"d-none d-md-inline-"
+"block ml-1\">退出全屏</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -428,6 +459,8 @@ msgid ""
 "<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"fa fa-"
 "chevron-right ml-2\"/>"
 msgstr ""
+"<span class=\"d-none d-sm-inline-block\">下一个</span> <i class=\"fa fa-"
+"chevron-right ml-2\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -441,26 +474,26 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "<span class=\"font-weight-bold text-muted mr-2\">Current rank:</span>"
-msgstr ""
+msgstr "<span class=\"font-weight-bold text-muted mr-2\">当前排名：</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
 msgid "<span class=\"font-weight-normal\">Last update:</span>"
-msgstr ""
+msgstr "<span class=\"font-weight-normal\">最后更新：</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid ""
 "<span class=\"form-text text-muted d-block w-100\">Send presentation through"
 " email</span>"
-msgstr ""
+msgstr "<span class=\"form-text text-muted d-block w-100\">通过电子邮件发送简报</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid ""
 "<span class=\"form-text text-muted\">Use permanent link to share in social "
 "media</span>"
-msgstr ""
+msgstr "<span class=\"form-text text-muted\">使用永久链接分享社交媒</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -474,12 +507,12 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training
 msgid "<span class=\"p-2\">Course content</span>"
-msgstr ""
+msgstr "<span class=\"p-2\">课程内容</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<span class=\"text-muted font-weight-bold mr-3\">Rating</span>"
-msgstr ""
+msgstr "<span class=\"text-muted font-weight-bold mr-3\">评分</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -489,7 +522,7 @@ msgstr "<span>&amp;次数：</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<span>XP</span>"
-msgstr ""
+msgstr "<span>经验</span>"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_question.py:26
@@ -513,7 +546,7 @@ msgstr ""
 #: sql_constraint:slide.slide:0
 msgid ""
 "A slide is either filled with a document url or HTML content. Not both."
-msgstr ""
+msgstr "幻灯片填上文档URL或HTML内容而不是两者。"
 
 #. module: website_slides
 #: sql_constraint:slide.tag:0
@@ -560,7 +593,7 @@ msgstr "添加一个新的侧边栏"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_review
 msgid "Add a review"
-msgstr ""
+msgstr "添加评论"
 
 #. module: website_slides
 #. openerp-web
@@ -577,31 +610,31 @@ msgstr "添加现有联系人..."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "All Courses"
-msgstr ""
+msgstr "所有课程"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__partner_ids
 msgid "All members of the channel."
-msgstr ""
+msgstr "所有成员的途径。"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:91
 #, python-format
 msgid "All questions must be answered !"
-msgstr ""
+msgstr "所有问题都必须回答！"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__allow_comment
 msgid "Allow rating on Course"
-msgstr ""
+msgstr "允许评分课程"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:52
 #, python-format
 msgid "Allow review on Course"
-msgstr ""
+msgstr "允许对课程进行评论"
 
 #. module: website_slides
 #. openerp-web
@@ -615,7 +648,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:99
 #, python-format
 msgid "Amazing!"
-msgstr ""
+msgstr "了不起!"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__text_value
@@ -626,7 +659,7 @@ msgstr "答案"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
 msgid "Answer for a slide question"
-msgstr ""
+msgstr "回答幻灯片问题"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__category
@@ -638,7 +671,7 @@ msgstr "出现在"
 msgid ""
 "Applied directly as ACLs. Allow to hide channels and their content for non "
 "members."
-msgstr ""
+msgstr "直接应用为ACL。 允许隐藏非成员的频道及其内容。"
 
 #. module: website_slides
 #. openerp-web
@@ -652,7 +685,7 @@ msgstr "存档"
 #: code:addons/website_slides/static/src/js/slides_slide_archive.js:17
 #, python-format
 msgid "Archive Slide"
-msgstr ""
+msgstr "存档幻灯片"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
@@ -665,7 +698,7 @@ msgstr "已归档"
 #: code:addons/website_slides/static/src/xml/slide_management.xml:5
 #, python-format
 msgid "Are you sure you want to archive this slide ?"
-msgstr ""
+msgstr "您确定要存档此幻灯片吗？"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_attachment_count
@@ -688,7 +721,7 @@ msgstr "与会者"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_count
 msgid "Attendees count"
-msgstr ""
+msgstr "参加者数量"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__author_id
@@ -698,7 +731,7 @@ msgstr "作者"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_group_ids
 msgid "Auto Enroll Groups"
-msgstr ""
+msgstr "自动组队"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_big
@@ -714,7 +747,7 @@ msgstr "可评论的"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_review
 msgid "Can Review"
-msgstr ""
+msgstr "可以评论"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_upload
@@ -724,7 +757,7 @@ msgstr "可以上传"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_vote
 msgid "Can Vote"
-msgstr ""
+msgstr "可以投票"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_image_be_zoomed
@@ -775,14 +808,14 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
 msgid "Certification"
-msgstr ""
+msgstr "认证"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_certification
 #: model:gamification.challenge.line,name:website_slides.badge_data_certification_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_certification_goal
 msgid "Certified Knowledge"
-msgstr ""
+msgstr "认证知识"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__channel_id
@@ -798,17 +831,17 @@ msgstr "渠道"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_partner
 msgid "Channel / Partners (Members)"
-msgstr ""
+msgstr "渠道/合作伙伴（会员）"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_invite
 msgid "Channel Invitation Wizard"
-msgstr ""
+msgstr "频道邀请向导"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
 msgid "Channel Member"
-msgstr ""
+msgstr "渠道成员"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_form
@@ -839,13 +872,13 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__completed
 msgid "Channel validated, even if slides / lessons are added once done."
-msgstr ""
+msgstr "即使已完成幻灯片/课程，也会验证频道。"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_tag
 #: model:ir.model,name:website_slides.model_slide_channel_tag_group
 msgid "Channel/Course tags"
-msgstr ""
+msgstr "频道/课程标签"
 
 #. module: website_slides
 #: model:ir.actions.act_url,name:website_slides.action_open_channels
@@ -861,19 +894,19 @@ msgstr "频道"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:72
 #, python-format
 msgid "Check answers"
-msgstr ""
+msgstr "检查答案"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:72
 #, python-format
 msgid "Check your answers"
-msgstr ""
+msgstr "检查一下你的答案"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "Clear filters"
-msgstr ""
+msgstr "清除筛选"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -896,19 +929,19 @@ msgstr "附言"
 #: model:gamification.challenge.line,name:website_slides.badge_data_karma_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_karma_goal
 msgid "Community hero"
-msgstr ""
+msgstr "社区英雄"
 
 #. module: website_slides
 #: model:gamification.badge,description:website_slides.badge_data_course
 #: model:gamification.challenge,name:website_slides.badge_data_course_challenge
 msgid "Complete a course"
-msgstr ""
+msgstr "完成课程"
 
 #. module: website_slides
 #: model:gamification.badge,description:website_slides.badge_data_profile
 #: model:gamification.challenge,name:website_slides.badge_data_profile_challenge
 msgid "Complete your profile"
-msgstr ""
+msgstr "填写个人资料"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__completed
@@ -918,12 +951,12 @@ msgstr "已完成"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "Completed Courses"
-msgstr ""
+msgstr "完成课程"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completion
 msgid "Completion"
-msgstr ""
+msgstr "完成"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
@@ -933,7 +966,7 @@ msgstr "撰写邮件"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll
 msgid "Condition to enroll: everyone, on invite, on payment (sale bridge)."
-msgstr ""
+msgstr "注册条件：每人，邀请，付款（销售桥）。"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_config_settings
@@ -943,7 +976,7 @@ msgstr "配置设置"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "Congratulations, you have reached the last rank!"
-msgstr ""
+msgstr "恭喜你，你已经达到了最近的排名！"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
@@ -955,12 +988,12 @@ msgstr "联系人"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:67
 #, python-format
 msgid "Contact the website administrator"
-msgstr ""
+msgstr "联系网站管理员"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Contact website administrator."
-msgstr ""
+msgstr "联系网站管理员"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
@@ -1012,42 +1045,42 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 msgid "Course"
-msgstr ""
+msgstr "课程"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:12
 #, python-format
 msgid "Course Title"
-msgstr ""
+msgstr "课程名称"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_finish
 msgid "Course finished"
-msgstr ""
+msgstr "课程结束"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_rank
 msgid "Course ranked"
-msgstr ""
+msgstr "课程排名"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_type
 msgid "Course type"
-msgstr ""
+msgstr "课程类型"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:website.menu,name:website_slides.website_menu_slides
 msgid "Courses"
-msgstr ""
+msgstr "课程"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:119
 #, python-format
 msgid "Cover Image File"
-msgstr ""
+msgstr "封面图片文件"
 
 #. module: website_slides
 #. openerp-web
@@ -1071,7 +1104,7 @@ msgstr "创建一个新的分类"
 #: code:addons/website_slides/static/src/js/slides_upload.js:277
 #, python-format
 msgid "Create new %s '%s'"
-msgstr ""
+msgstr "创建新的"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__create_uid
@@ -1110,7 +1143,7 @@ msgstr "创建时间"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__html_content
 msgid "Custom HTML content for slides of type 'Web Page'."
-msgstr ""
+msgstr "“网页”类型幻灯片的自定义HTML内容。"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_gamification_challenge__category
@@ -1196,7 +1229,7 @@ msgstr "文档"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:63
 #, python-format
 msgid "Don't have an account ?"
-msgstr ""
+msgstr "没有帐户"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed
@@ -1209,7 +1242,7 @@ msgstr "完成"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:73
 #, python-format
 msgid "Done !"
-msgstr ""
+msgstr "完成!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1256,17 +1289,17 @@ msgstr "嵌入幻灯片观看计数"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:115
 #, python-format
 msgid "End course"
-msgstr ""
+msgstr "结束课程"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_msg
 msgid "Enroll Message"
-msgstr ""
+msgstr "报名信息"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll
 msgid "Enroll Policy"
-msgstr ""
+msgstr "注册政策"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__link
@@ -1276,22 +1309,22 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "External Links"
-msgstr ""
+msgstr "外部链接"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_link
 msgid "External URL for a particular slide"
-msgstr ""
+msgstr "外部链接对特定幻灯片"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__link_ids
 msgid "External URL for this slide"
-msgstr ""
+msgstr "此幻灯片的外部URL"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "External sources"
-msgstr ""
+msgstr "外部来源"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promote_strategy
@@ -1309,22 +1342,22 @@ msgstr "文件太大. 文件大小不能超过 25 MB"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Filter &amp; order"
-msgstr ""
+msgstr "Filter &amp; order"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_first_attempt_reward
 msgid "First attempt reward"
-msgstr ""
+msgstr "第一次尝试奖励"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "First slide"
-msgstr ""
+msgstr "第一张幻灯片"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "Followed Courses"
-msgstr ""
+msgstr "关注的课程"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_follower_ids
@@ -1347,7 +1380,7 @@ msgstr "关注者(业务伙伴)"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 msgid "Free preview"
-msgstr ""
+msgstr "免费预览"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__email_from
@@ -1368,7 +1401,7 @@ msgstr "游戏化挑战"
 #: model:gamification.badge,description:website_slides.badge_data_certification
 #: model:gamification.challenge,name:website_slides.badge_data_certification_challenge
 msgid "Get a certification"
-msgstr ""
+msgstr "获得认证"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_register
@@ -1382,12 +1415,12 @@ msgstr "开始"
 #: code:addons/website_slides/static/src/js/slides_upload.js:192
 #, python-format
 msgid "Go Back"
-msgstr ""
+msgstr "反回"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_footer
 msgid "Go meet them"
-msgstr ""
+msgstr "去满足他们"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__website_slide_google_app_key
@@ -1418,12 +1451,12 @@ msgstr "分组"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__group_sequence
 msgid "Group sequence"
-msgstr ""
+msgstr "组序列"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__html_content
 msgid "HTML Content"
-msgstr ""
+msgstr "HTML内容"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -1459,6 +1492,9 @@ msgid ""
 " * like content and post comments on documentation course;\n"
 " * post comment and review on training course;"
 msgstr ""
+"如果勾选此项，成员可以选择::\n"
+" * \"Like \"文档课程的内容和评论;\n"
+" * 发表评论和注解培训课程;"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread
@@ -1489,7 +1525,7 @@ msgstr "图像"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:193
 #, python-format
 msgid "Image File"
-msgstr ""
+msgstr "图象档案"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__image_original
@@ -1528,7 +1564,7 @@ msgstr "邀请"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed
 msgid "Is Completed"
-msgstr ""
+msgstr "已完成"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
@@ -1539,7 +1575,7 @@ msgstr "是关注者"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_member
 msgid "Is Member"
-msgstr ""
+msgstr "是会员"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_preview
@@ -1549,7 +1585,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__is_correct
 msgid "Is correct answer"
-msgstr ""
+msgstr "是正确的答案"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_published
@@ -1563,12 +1599,12 @@ msgstr "已发布"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 #, python-format
 msgid "Join Course"
-msgstr ""
+msgstr "加入课程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Karma Rules"
-msgstr ""
+msgstr "业力的规则"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1583,24 +1619,24 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_comment
 msgid "Karma needed to add a comment on a slide of this course"
-msgstr ""
+msgstr "贡献值需要在本课程的幻灯片上添加评论"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_review
 msgid "Karma needed to add a review on the course"
-msgstr ""
+msgstr "贡献值需要在课程上添加评论"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_vote
 msgid "Karma needed to like/dislike a slide of this course."
-msgstr ""
+msgstr "贡献值需要喜欢/不喜欢这门课程的幻灯片。"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_profile
 #: model:gamification.challenge.line,name:website_slides.badge_data_profile_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_profile_goal
 msgid "Know yourself"
-msgstr ""
+msgstr "认识你自己"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_large
@@ -1678,27 +1714,27 @@ msgstr "最新发布"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_achievements_small
 msgid "Latest achievements"
-msgstr ""
+msgstr "最新成就"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_users_small
 msgid "Leaderboard"
-msgstr ""
+msgstr "排行榜"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Lesson Nav"
-msgstr ""
+msgstr "课程导航"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_slide_vote
 msgid "Lesson voted"
-msgstr ""
+msgstr "课程投票"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "Lessons"
-msgstr ""
+msgstr "课程"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
@@ -1728,7 +1764,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_footer
 msgid "Meet The Heros Who Transformed Their Company!"
-msgstr ""
+msgstr "认识改造公司的英雄们！"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_ids
@@ -1740,23 +1776,23 @@ msgstr "会员"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_partner_ids
 msgid "Members Information"
-msgstr ""
+msgstr "会员信息"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Members Views"
-msgstr ""
+msgstr "成员的观点"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll_group_ids
 msgid ""
 "Members of those groups are automatically added as members of the channel."
-msgstr ""
+msgstr "这些组的成员将自动添加为频道成员。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_published
 msgid "Menu entry"
-msgstr ""
+msgstr "菜单输入"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
@@ -1767,7 +1803,7 @@ msgstr "消息递送错误"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll_msg
 msgid "Message explaining the enroll process"
-msgstr ""
+msgstr "说明注册过程的消息"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_ids
@@ -1783,7 +1819,7 @@ msgstr "类型"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "Mobile sub-nav"
-msgstr ""
+msgstr "流动子导航"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -1807,17 +1843,17 @@ msgstr "最多评价"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Most popular courses"
-msgstr ""
+msgstr "最受欢迎的课程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "My Courses"
-msgstr ""
+msgstr "我的课程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "My courses"
-msgstr ""
+msgstr "我的课程"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__name
@@ -1834,7 +1870,7 @@ msgstr "名称"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "Nav"
-msgstr ""
+msgstr "导航"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
@@ -1846,7 +1882,7 @@ msgstr "在${object.channel_id.name}发布的新的${object.slide_type}"
 #: code:addons/website_slides/static/src/js/website_slides.editor.js:25
 #, python-format
 msgid "New Course"
-msgstr ""
+msgstr "New Course"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -1856,7 +1892,7 @@ msgstr "最新"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Newest courses"
-msgstr ""
+msgstr "Newest courses"
 
 #. module: website_slides
 #. openerp-web
@@ -1868,7 +1904,7 @@ msgstr "下一页"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "Next rank:"
-msgstr ""
+msgstr "下一个排名："
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -1878,7 +1914,7 @@ msgstr "下一幻灯片"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_achievements_small
 msgid "No achievements currently :("
-msgstr ""
+msgstr "目前没有成就:("
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -1888,22 +1924,22 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "No completed course yet"
-msgstr ""
+msgstr "尚未完成课程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "No content was found using your search"
-msgstr ""
+msgstr "No content was found using your search"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "No followed course yet"
-msgstr ""
+msgstr "尚未關注课程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_users_small
 msgid "No leaderboard currently :("
-msgstr ""
+msgstr "目前没有排行榜:("
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
@@ -1914,13 +1950,13 @@ msgstr "没有介绍"
 #: code:addons/website_slides/models/slide_slide.py:322
 #, python-format
 msgid "Not enough karma to comment"
-msgstr ""
+msgstr "没有足够的贡献值進行评论"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:356
 #, python-format
 msgid "Not enough karma to review"
-msgstr ""
+msgstr "没有足够的贡献值進行审查"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction_counter
@@ -1950,7 +1986,7 @@ msgstr "介绍数量"
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_quiz
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_quiz
 msgid "Number of Quizs"
-msgstr ""
+msgstr "提问的数量"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_video
@@ -1962,7 +1998,7 @@ msgstr "视频数量"
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_webpage
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_webpage
 msgid "Number of Webpages"
-msgstr ""
+msgstr "网页数量"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error_counter
@@ -2002,7 +2038,7 @@ msgstr "选项"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_original
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_original
 msgid "Original Image"
-msgstr ""
+msgstr "原始图像"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_public
@@ -2025,7 +2061,7 @@ msgstr "业务伙伴"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Pick a course"
-msgstr ""
+msgstr "选择一个课程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -2037,14 +2073,14 @@ msgstr "请"
 #: code:addons/website_slides/static/src/js/slides_course_join.js:63
 #, python-format
 msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to join this course"
-msgstr ""
+msgstr "请 <a href=\"/web/login?redirect=%s\">登录</a> 参加此课程"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:58
 #, python-format
 msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to vote this lesson"
-msgstr ""
+msgstr "请 <a href=\"/web/login?redirect=%s\">登录</a> 投票这一课"
 
 #. module: website_slides
 #. openerp-web
@@ -2053,7 +2089,7 @@ msgstr ""
 msgid ""
 "Please <a href=\"/web/signup?redirect=%s\">create an account</a> to join "
 "this course"
-msgstr ""
+msgstr "请 <a href=\"/web/signup?redirect=%s\">建帐户</a> 加入此课程"
 
 #. module: website_slides
 #. openerp-web
@@ -2062,7 +2098,7 @@ msgstr ""
 msgid ""
 "Please <a href=\"/web/signup?redirect=%s\">create an account</a> to vote "
 "this lesson"
-msgstr ""
+msgstr "请 <a href=\"/web/signup?redirect=%s\">创建帐户</a> 投票这一课"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:240
@@ -2082,14 +2118,14 @@ msgstr "请输入有效的YouTube的或谷歌文档的URL"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:13
 #, python-format
 msgid "Please fill in this field"
-msgstr ""
+msgstr "请填写这一栏"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_course
 #: model:gamification.challenge.line,name:website_slides.badge_data_course_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_course_goal
 msgid "Power User"
-msgstr ""
+msgstr "超级用户"
 
 #. module: website_slides
 #. openerp-web
@@ -2114,7 +2150,7 @@ msgstr "前一幻灯片"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Private Course"
-msgstr ""
+msgstr "私人课程"
 
 #. module: website_slides
 #: selection:slide.channel,enroll:0 selection:slide.channel,visibility:0
@@ -2124,7 +2160,7 @@ msgstr "公开"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Public Views"
-msgstr ""
+msgstr "公众浏览"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.channel_public
@@ -2160,7 +2196,7 @@ msgstr "发布的模板"
 msgid ""
 "Publishing is restricted to the responsible of training courses or members "
 "of the publisher group for documentation courses"
-msgstr ""
+msgstr "出版仅限于负责培训课程或出版商组成员的文档课程"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__question_id
@@ -2186,12 +2222,12 @@ msgstr "问题"
 #: selection:slide.slide,slide_type:0
 #, python-format
 msgid "Quiz"
-msgstr ""
+msgstr "测验"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__quiz_attempts_count
 msgid "Quiz attempts count"
-msgstr ""
+msgstr "测试尝试计数"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_ids
@@ -2232,17 +2268,17 @@ msgstr "点评数"
 #. module: website_slides
 #: model:gamification.badge,description:website_slides.badge_data_karma
 msgid "Reach 2000 XP"
-msgstr ""
+msgstr "达到2000经验值"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Reach new heights"
-msgstr ""
+msgstr "达到新的记录"
 
 #. module: website_slides
 #: model:gamification.challenge,name:website_slides.badge_data_karma_challenge
 msgid "Read 2000 XP"
-msgstr ""
+msgstr "达到2000经验值"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__rating_last_feedback
@@ -2259,7 +2295,7 @@ msgstr "收件人"
 #: model:gamification.badge,description:website_slides.badge_data_register
 #: model:gamification.challenge,name:website_slides.badge_data_register_challenge
 msgid "Register to the platform"
-msgstr ""
+msgstr "注册平台"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
@@ -2280,7 +2316,7 @@ msgstr "限制发布到本网站。"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.private_profile
 msgid "Return to the course."
-msgstr ""
+msgstr "返回课程。"
 
 #. module: website_slides
 #. openerp-web
@@ -2293,12 +2329,12 @@ msgstr "审查"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "Reviews"
-msgstr ""
+msgstr "评测"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_fourth_attempt_reward
 msgid "Reward for every attempt after the third try"
-msgstr ""
+msgstr "第三次尝试后，对每一次尝试进行奖励"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_seo_optimized
@@ -2339,24 +2375,24 @@ msgstr "搜索幻灯片"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Search courses"
-msgstr ""
+msgstr "搜索课程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Search in content"
-msgstr ""
+msgstr "搜索的内容"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_second_attempt_reward
 msgid "Second attempt reward"
-msgstr ""
+msgstr "第二次尝试奖励"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_management.xml:15
 #, python-format
 msgid "Section name"
-msgstr ""
+msgstr "部分名称"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
@@ -2397,7 +2433,7 @@ msgstr "序号"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Set Done"
-msgstr ""
+msgstr "设置完成"
 
 #. module: website_slides
 #: selection:gamification.challenge,category:0
@@ -2413,7 +2449,7 @@ msgstr "共享"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Share Channel"
-msgstr ""
+msgstr "分享频道"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -2424,7 +2460,7 @@ msgstr "分享链接"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Share by mail"
-msgstr ""
+msgstr "通过邮件分享"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
@@ -2455,14 +2491,14 @@ msgstr "共享的模板"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__description
 msgid "Short Description"
-msgstr ""
+msgstr "简要说明"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:63
 #, python-format
 msgid "Sign Up !"
-msgstr ""
+msgstr "注册 ！"
 
 #. module: website_slides
 #. openerp-web
@@ -2476,14 +2512,14 @@ msgstr "登录"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:54
 #, python-format
 msgid "Sign in and join the course to take the quiz!"
-msgstr ""
+msgstr "登录并加入课程即可参加测验！"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid ""
 "Skill up and have an impact! Your business career starts here. Time to start"
 " a course."
-msgstr ""
+msgstr "熟练并产生影响！ 你的商业生涯从这里开始。 是时候开始上课了。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__slide_id
@@ -2497,7 +2533,7 @@ msgstr "幻灯片"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_partner
 msgid "Slide / Partner decorated m2m"
-msgstr ""
+msgstr "幻灯片/合作伙伴装饰m2m"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
@@ -2517,12 +2553,12 @@ msgstr "幻灯片标签"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_partner_ids
 msgid "Slide User Data"
-msgstr ""
+msgstr "幻灯片用户数据"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__channel_id
 msgid "Slide channel"
-msgstr ""
+msgstr "幻灯片频道"
 
 #. module: website_slides
 #. openerp-web
@@ -2538,7 +2574,7 @@ msgstr "幻灯片图片"
 msgid ""
 "Slide with questions must be marked as done when submitting all good answers"
 " "
-msgstr ""
+msgstr "提交所有好答案时，必须将带问题的幻灯片标记为已完成"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slides_slides
@@ -2573,17 +2609,17 @@ msgstr "排序"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 #, python-format
 msgid "Start Course"
-msgstr ""
+msgstr "开始课程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Start Course Channel"
-msgstr ""
+msgstr "开始课程频道"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Start your online course today !"
-msgstr ""
+msgstr "立即开始您的在线课程！"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -2603,22 +2639,22 @@ msgstr "主题..."
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_membership_id
 msgid "Subscriber information"
-msgstr ""
+msgstr "订阅者信息"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__user_membership_id
 msgid "Subscriber information for the current logged in user"
-msgstr ""
+msgstr "当前登录用户的订户信息"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__partner_ids
 msgid "Subscribers"
-msgstr ""
+msgstr "订阅者"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_partner_ids
 msgid "Subscribers information"
-msgstr ""
+msgstr "订阅者信息"
 
 #. module: website_slides
 #. openerp-web
@@ -2626,7 +2662,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:75
 #, python-format
 msgid "Succeed and gain karma"
-msgstr ""
+msgstr "成功并获得贡献值"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_form
@@ -2661,7 +2697,7 @@ msgstr "标签..."
 msgid ""
 "The course is accessible by anyone : the users don't need to join the "
 "channel to access the content of the course."
-msgstr ""
+msgstr "何人都可以访问该课程：用户无需加入频道即可访问课程内容。"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
@@ -2676,7 +2712,7 @@ msgstr "文档类型将根据文档 URL 和属性（例如，演示和文档的�
 msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external sign up in configuration."
-msgstr ""
+msgstr "以下收件人没有用户帐户：。 您应该为它们创建用户帐户或允许在配置中进行外部注册。"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
@@ -2690,7 +2726,7 @@ msgstr "通过网站访问单据的完整网址。"
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:89
 #, python-format
 msgid "There was an error validating this quiz."
-msgstr ""
+msgstr "验证此测试时出错。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__url
@@ -2700,21 +2736,21 @@ msgstr "第三方网站网址"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_third_attempt_reward
 msgid "Third attempt reward"
-msgstr ""
+msgstr "第三次尝试奖励"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:67
 #, python-format
 msgid "This course is private."
-msgstr ""
+msgstr "这门课程是不公开的的。"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:94
 #, python-format
 msgid "This quiz is already done. Retaking it is not possible."
-msgstr ""
+msgstr "这个测验已经做完了, 重新开始是不可能的。"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:775
@@ -2750,12 +2786,12 @@ msgstr "总的视图数"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__total_slides
 msgid "Total Slides"
-msgstr ""
+msgstr "所有幻灯片"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Total Views"
-msgstr ""
+msgstr "总浏览"
 
 #. module: website_slides
 #: selection:slide.channel,channel_type:0
@@ -2767,7 +2803,7 @@ msgstr "培训"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:28
 #, python-format
 msgid "Training (with progress)"
-msgstr ""
+msgstr "培训（进度）"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__index_content
@@ -2844,7 +2880,7 @@ msgstr "上传组"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:173
 #, python-format
 msgid "Upload Image"
-msgstr ""
+msgstr "上传图片"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -2858,26 +2894,26 @@ msgstr "上传演示"
 #: code:addons/website_slides/static/src/js/slides_upload.js:27
 #, python-format
 msgid "Upload a document"
-msgstr ""
+msgstr "上传文档"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_id
 msgid "Uploaded by"
-msgstr ""
+msgstr "上传者"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:177
 #, python-format
 msgid "Uploading Image..."
-msgstr ""
+msgstr "上传图像..."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:37
 #, python-format
 msgid "Uploading document ..."
-msgstr ""
+msgstr "上传文档中..."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
@@ -2887,12 +2923,12 @@ msgstr "使用模版"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
-msgstr ""
+msgstr "用于分类和过滤显示的频道/课程"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_vote
 msgid "User vote"
-msgstr ""
+msgstr "用户投票"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_users
@@ -2917,12 +2953,12 @@ msgstr "视图"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_users_small
 msgid "View all"
-msgstr ""
+msgstr "查看全部"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "View fullscreen"
-msgstr ""
+msgstr "查看全屏"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -2932,7 +2968,7 @@ msgstr "视图"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_card
 msgid "Views •"
-msgstr ""
+msgstr "查看 •"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
@@ -2960,7 +2996,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:71
 #, python-format
 msgid "Votes and comments are disabled for this course"
-msgstr ""
+msgstr "本课程禁止投票和评论"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -2991,7 +3027,7 @@ msgstr "网站/论坛"
 #. module: website_slides
 #: selection:gamification.challenge,category:0
 msgid "Website / Slides"
-msgstr ""
+msgstr "网站/幻灯片"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
@@ -3048,7 +3084,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:44
 #, python-format
 msgid "Write here a short description of your first course"
-msgstr ""
+msgstr "在这里写下你第一个课程的简短描述"
 
 #. module: website_slides
 #. openerp-web
@@ -3057,7 +3093,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:101
 #, python-format
 msgid "XP"
-msgstr ""
+msgstr "经验值"
 
 #. module: website_slides
 #. openerp-web
@@ -3070,20 +3106,20 @@ msgstr "你无法上传密码保护的文件。"
 #: code:addons/website_slides/models/slide_slide.py:465
 #, python-format
 msgid "You cannot mark a slide as completed if you are not among its members."
-msgstr ""
+msgstr "如果您不是其成员，则无法将幻灯片标记为已完成。"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:438
 #, python-format
 msgid "You cannot mark a slide as viewed if you are not among its members."
-msgstr ""
+msgstr "如果您不是其成员之一，则无法将幻灯片标记为已查看。"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:490
 #, python-format
 msgid ""
 "You cannot mark a slide quiz as completed if you are not among its members."
-msgstr ""
+msgstr "如果您不是其成员之一，则无法将幻灯片测验标记为已完成。"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:384
@@ -3095,73 +3131,73 @@ msgstr ""
 #: code:addons/website_slides/controllers/main.py:812
 #, python-format
 msgid "You cannot upload on this channel."
-msgstr ""
+msgstr "您无法在此频道上传"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:67
 #, python-format
 msgid "You don't have access to this lesson"
-msgstr ""
+msgstr "您无权访问本课程"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:73
 #, python-format
 msgid "You don't have enough karma to vote"
-msgstr ""
+msgstr "你没有足够的贡献值去投票"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:101
 #, python-format
 msgid "You gained"
-msgstr ""
+msgstr "你获得了"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_join.js:70
 #, python-format
 msgid "You have already joined this channel"
-msgstr ""
+msgstr "您已加入此频道"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:65
 #, python-format
 msgid "You have already voted for this lesson"
-msgstr ""
+msgstr "您已经投票给这一课"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
 msgid "You have been invited to join ${object.channel_id.name}"
-msgstr ""
+msgstr "您已被邀请加入 ${object.channel_id.name}"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:96
 #, python-format
 msgid "You must be logged to submit the quiz."
-msgstr ""
+msgstr "您必须登录才能提交测验。"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:69
 #, python-format
 msgid "You must be member of this course to vote"
-msgstr ""
+msgstr "您必须是本课程的成员才能投票"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "You're enrolled"
-msgstr ""
+msgstr "你已经注册了"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:146
 #, python-format
 msgid "Youtube Link"
-msgstr ""
+msgstr "Youtube链接"
 
 #. module: website_slides
 #. openerp-web
@@ -3183,12 +3219,12 @@ msgstr "YouTube或谷歌文档的网址"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
 msgid "achieved"
-msgstr ""
+msgstr "达到"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "bg-200"
-msgstr ""
+msgstr "bg-200"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -3198,7 +3234,7 @@ msgstr "浏览路径"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "by email."
-msgstr ""
+msgstr "通过电子邮件。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -3213,31 +3249,31 @@ msgstr "最小值"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "mr-1"
-msgstr ""
+msgstr "mr-1"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
 msgid "steps"
-msgstr ""
+msgstr "步骤"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:67
 #, python-format
 msgid "to enroll."
-msgstr ""
+msgstr "报名参加"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to share this"
-msgstr ""
+msgstr "分享这个"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
 #: model_terms:ir.ui.view,arch_db:website_slides.user_quickkarma_card
 msgid "xp"
-msgstr ""
+msgstr "经验值"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -3247,4 +3283,4 @@ msgstr "your-friend@domain.com"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ml-1\">Uncategorized</span>"
-msgstr ""
+msgstr "└<span class=\"ml-1\">Uncategorized</span>"

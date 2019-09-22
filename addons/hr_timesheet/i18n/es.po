@@ -20,6 +20,7 @@
 # Jimmy Ramos <jimmybanegas93@gmail.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Efrem Jimenez <efj@odoo.com>, 2019
+# Jesse Garza <jga@odoo.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # 
 msgid ""
@@ -63,12 +64,12 @@ msgstr "<span class=\"o_stat_text\">Partes de Horas</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "<span> planned hours</span>"
-msgstr ""
+msgstr "<span>horas planificadas</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Date</span>"
-msgstr ""
+msgstr "<span>Fecha</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -78,12 +79,12 @@ msgstr "<span>Descripción</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Responsible</span>"
-msgstr ""
+msgstr "<span>Responsable</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Time</span>"
-msgstr ""
+msgstr "<span>Hora</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -214,7 +215,7 @@ msgstr "Descripción"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__progress
 msgid "Display progress of current task."
-msgstr ""
+msgstr "Muestra el progreso de la tarea actual."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -226,7 +227,7 @@ msgstr "Duración"
 #: code:addons/hr_timesheet/models/hr_timesheet.py:98
 #, python-format
 msgid "Duration (%s)"
-msgstr ""
+msgstr "Duración (%s)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_effective
@@ -243,7 +244,7 @@ msgstr "Empleado"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__allow_timesheets
 msgid "Enable timesheeting on the project."
-msgstr ""
+msgstr "Habilite la división de horas en el proyecto."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
@@ -336,7 +337,7 @@ msgstr "Unidad de tiempo del proyecto"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "Record a new activity"
-msgstr ""
+msgstr "Grabar una nueva actividad"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours
@@ -363,12 +364,13 @@ msgstr "Responsable"
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
 msgid "See all Timesheets"
-msgstr ""
+msgstr "Ver todas las hojas de tiempo"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Set the time unit used to record your timesheets"
 msgstr ""
+"Establezca la unidad de tiempo utilizada para grabar sus partes de horas"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -384,17 +386,17 @@ msgstr "Horas consumidas"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Sub-tasks Hours Spent"
-msgstr ""
+msgstr "Subtareas Horas dedicadas"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Sum of actually spent hours on the subtask(s)"
-msgstr ""
+msgstr "Suma de horas realmente dedicadas a la(s) subtarea(s)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Synchronize time spent with our web/mobile apps"
-msgstr ""
+msgstr "Sincronice el tiempo dedicado con nuestras aplicaciones web / móviles"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task
@@ -429,6 +431,8 @@ msgid ""
 "This task must be part of a project because there are some timesheets linked"
 " to it."
 msgstr ""
+"Esta tarea debe ser parte de un proyecto porque hay algunas hojas de tiempo "
+"vinculadas."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__project_time_mode_id
@@ -457,7 +461,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Off"
-msgstr ""
+msgstr "Ausencias"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
@@ -497,7 +501,7 @@ msgstr "Detalle de los partes de horas"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Date"
-msgstr ""
+msgstr "Hoja de tiempo por fecha"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_from_employee
@@ -515,7 +519,7 @@ msgstr "Partes de horas"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
 msgid "Timesheets can be logged on this task."
-msgstr ""
+msgstr "Las hojas de tiempo se pueden registrar en esta tarea."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:29
@@ -523,6 +527,8 @@ msgstr ""
 msgid ""
 "To allow timesheet, your project %s should have an analytic account set."
 msgstr ""
+"Para permitir la hoja de tiempo, su proyecto %s debe tener un conjunto de "
+"cuentas analíticas."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree

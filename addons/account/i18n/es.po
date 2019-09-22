@@ -78,11 +78,12 @@
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Alejandro Santana <alejandrosantana@anubia.es>, 2019
 # John Guardado <jgu@odoo.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Juan Pablo Mora <jpm@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -90,7 +91,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
+"Last-Translator: Juan Pablo Mora <jpm@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -932,13 +933,11 @@ msgstr ""
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
 "Un usuario no puede tener dos tipos de impuestos B2B (Empresa a Empresa) y B2C (Empresa a Cliente).\n"
-"El/Los usuario(s) son: %s\n"
 "Debe ir a Configuración general y elegir Mostrar precios de los productos.\n"
 " con \"Impuestos incluidos\" o en el modo \"Sin impuestos\" (o cambie entre los modo si ya está en el deseado)."
 
@@ -2566,7 +2565,7 @@ msgstr "Importar CSV"
 #: code:addons/account/models/account_move.py:1611
 #, python-format
 msgid "CUST"
-msgstr ""
+msgstr "CUST"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__visible
@@ -2957,6 +2956,8 @@ msgid ""
 "Choose how you want to credit this invoice. You cannot \"modify\" nor "
 "\"cancel\" if the invoice is already reconciled."
 msgstr ""
+"Elija cómo quiere acreditar esta factura. No puede modificar ni cancelar la "
+"factura una vez conciliada."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.actions_account_fiscal_year
@@ -3191,6 +3192,8 @@ msgid ""
 "Computed field, listing the tax grids impacted by this line, and the amount "
 "it applies to each of them."
 msgstr ""
+"Campo calculado, listando las cuadrículas de impuesto afectadas por esta "
+"línea, y el monto que aplica a cada una de ellas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -4604,7 +4607,7 @@ msgstr "GRATIS A BORDO"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
 msgid "Factor Ratio"
-msgstr ""
+msgstr "Proporción de Factor"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor
@@ -4612,6 +4615,7 @@ msgid ""
 "Factor to apply on the account move lines generated from this repartition "
 "line"
 msgstr ""
+"Factor que aplicar a los movimientos generados de esta línea de repartición"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -4620,6 +4624,8 @@ msgid ""
 "Factor to apply on the account move lines generated from this repartition "
 "line, in percents"
 msgstr ""
+"Factor que aplicar a las líneas de movimiento generadas desde esta línea de "
+"repartición, en porcentajes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -5521,6 +5527,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %s; Day: "
 "%s"
 msgstr ""
+"Fecha de año fiscal incorrecta: el día está fuera del rango del mes. Mes: "
+"%s; Día: %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_incoterm_id
@@ -5712,7 +5720,7 @@ msgstr "Fecha factura"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_filter_type_domain
 msgid "Invoice Filter Type Domain"
-msgstr ""
+msgstr "Dominio del Tipo de Filtro para Factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_has_matching_supsense_amount

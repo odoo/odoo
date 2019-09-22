@@ -29,7 +29,6 @@
 # 海飞 Lu <330472962@qq.com>, 2018
 # F4NNIU <sparkamax+fanniu@gmail.com>, 2019
 # 演奏王 <wangwhai@qq.com>, 2019
-# Felix Yuen <fyu@odoo.com>, 2019
 # diaojiaolou <124412206@qq.com>, 2019
 # Henry Zhou <zhouhenry@live.com>, 2019
 # Youfu Sheng <wdmsyf@sina.com>, 2019
@@ -72,6 +71,9 @@
 # 卫安琪 <weianqi1991@gmail.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
+# Manga Tsang <mts@odoo.com>, 2019
+# Emily Jia <eji@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -79,7 +81,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:56+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2019\n"
+"Last-Translator: Emily Jia <eji@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,6 +130,20 @@ msgid ""
 "        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"将结构化通信添加到客户发票。\n"
+"--------------------------------------------------\n"
+"\n"
+"使用BBA结构化通信简化核销发票和付款之间的对账。\n"
+"您可以在开票/会计设置中选择结构化通信作为支付通信。\n"
+"建议使用兩种算法：\n"
+"\n"
+"    1) 发票号码 +++RRR/RRRR/RRRDD+++\n"
+"        **R..R =** 发票号码, **DD =** 校验数字\n"
+"    2) 客户参考 +++RRR/RRRR/SSSDD+++\n"
+"        **R..R =** 无数字字母客户参考， **SSS =** 序列号, **DD =** 校验数字\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -443,6 +459,9 @@ msgid ""
 "            Bridge Sign functionalities with the Rental application\n"
 "        "
 msgstr ""
+"\n"
+"            Bridge注册功能与Rental应用程序\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_rental
@@ -557,6 +576,12 @@ msgid ""
 "        MTD-VAT API to HMRC.   \n"
 "    "
 msgstr ""
+"\n"
+"        英国的会计报告\n"
+"        \n"
+"        允许通过MTD-VAT API通过 \n"
+"         发送税务报告给 HMRC.   \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_reports
@@ -586,6 +611,11 @@ msgid ""
 "        Colloquially known as \"Month 13\"\n"
 "    "
 msgstr ""
+"\n"
+"        允许为结束条目生成试算表。\n"
+"\n"
+"        俗称“第13个月”\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip
@@ -688,6 +718,8 @@ msgid ""
 "\n"
 "        Bridge module for website_sale_stock / sale_product_configurator"
 msgstr ""
+"\n"
+"       用于website_sale_stock / sale_product_configurator的桥模块"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_product_configurator
@@ -704,6 +736,9 @@ msgid ""
 "        Bridge module to make the website e-commerce stock management compatible with the product configurator\n"
 "    "
 msgstr ""
+"\n"
+"      桥接模块使网站的电子商务库存管理与产品配置兼容\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -740,6 +775,10 @@ msgid ""
 "        This module adds a new building block in the website builder in order to build new forms from scratch in any website page.\n"
 "    "
 msgstr ""
+"\n"
+"        自定义并创建自己的Web表单。\n"
+"        此模块在网站构建器中添加了一个新的构建块，以便在任何网站页面中从头开始构建新的表单。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -832,6 +871,9 @@ msgid ""
 "        Manage the after sale of the products from Helpdesk's tickets.\n"
 "    "
 msgstr ""
+"\n"
+"        从Helpdesk的门票管理产品的售后服务。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense_check
@@ -869,6 +911,11 @@ msgid ""
 "        Manage user and manager notifications\n"
 "    "
 msgstr ""
+"\n"
+"     特定的产品出租 (产品, 报价, 发票, ...)\n"
+"      管理产品状态, 出租, 延迟\n"
+"       管理用户和管理通知\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_product_configurator
@@ -923,6 +970,9 @@ msgid ""
 "        This bridge module is auto-installed when the modules stock_barcode and quality_control are installed.\n"
 "    "
 msgstr ""
+"\n"
+"       这个桥模块会自动安装，当库存、条形码、和质量控制模块被安装.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_barcode
@@ -986,6 +1036,14 @@ msgid ""
 "        but aims to connect with all European banks later on\n"
 "    "
 msgstr ""
+"\n"
+"       这个模块连接到我的myponto.com来检索银行对账单.\n"
+"\n"
+"        目前，该服务只允许连接到比利时的银行\n"
+"\n"
+"(法国巴黎富通银行、比利时联合银行、比利时联合银行、比利时国家石油公司、你好银行、比利时ING集团、比利时安盛集团)\n"
+"        但目标是以后与所有欧洲银行建立联系\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -1132,6 +1190,8 @@ msgid ""
 "\n"
 "        Use myponto.com to retrieve bank statements"
 msgstr ""
+"\n"
+"        使用myponto.com检索银行对帐单"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_enterprise
@@ -1179,6 +1239,8 @@ msgid ""
 "\n"
 "    Adds Quality Control to workorders with IoT.\n"
 msgstr ""
+"\n"
+"通过IoT为工单添加质量控制\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder
@@ -1205,6 +1267,9 @@ msgid ""
 "    Configure IoT devices to be used in certain \n"
 "    steps for taking measures, taking pictures, ...\n"
 msgstr ""
+"\n"
+"    配置Iot设备去实现特定的 \n"
+"   实施步骤和拍摄图片, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -1228,6 +1293,9 @@ msgid ""
 "    Gantt view for Time Off Dashboard\n"
 "    "
 msgstr ""
+"\n"
+"    甘特视图休假仪表板\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_lock
@@ -1301,6 +1369,12 @@ msgid ""
 "    - VAT Rates and Structure\n"
 "    - IE Counties List (Make sure you don't already have any counties of Ireland in the system. Otherwise they will be duplicated)"
 msgstr ""
+"\n"
+"    该模块适用于所有希望快速设置会计和县级代码的爱尔兰中小企业。该模块提供：\n"
+"\n"
+"    - 为爱尔兰定制的会计科目表\n"
+"    - 增值税率和结构\n"
+"    - IE县名单（确保您的系统中没有任何爱尔兰县。否则他们将被复制）"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -1649,6 +1723,9 @@ msgid ""
 "Add a dynamic report about contracts and employees.\n"
 "    "
 msgstr ""
+"\n"
+"添加关于契约和员工的动态报告.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -1782,6 +1859,9 @@ msgid ""
 "Advanced features for the PoS like better views \n"
 "for IoT Box config.   \n"
 msgstr ""
+"\n"
+"PoS的高级功能包括更好的视图\n"
+"物联网盒子配置 \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_calendar
@@ -1918,6 +1998,9 @@ msgid ""
 "Allows to access purchase orders from Project Overview\n"
 "======================================================\n"
 msgstr ""
+"\n"
+"支持从项目概览访问采购订单\n"
+"======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -2003,6 +2086,15 @@ msgid ""
 "If the automated inventory valuation is active, the necessary accounting entries will be created.\n"
 "\n"
 msgstr ""
+"\n"
+"MRP中的分析会计\n"
+"==========================\n"
+"\n"
+"*成本结构报告\n"
+"此外，允许计算基于其BoM的产品成本，使用其组件和工作中心操作的成本。.\n"
+"它在产品本身上添加了一个按钮，还在产品列表视图中添加了一个操作。.\n"
+"如果自动库存评估处于活动状态，将创建必要的会计条目.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -2371,6 +2463,9 @@ msgid ""
 "Bridge module for project and enterprise\n"
 "    "
 msgstr ""
+"\n"
+"项目和企业的桥模块\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_rating
@@ -2647,6 +2742,9 @@ msgid ""
 "Contains advanced features for Live Chat such as new views\n"
 "    "
 msgstr ""
+"\n"
+"包含实时聊天的高级功能，例如新视图\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_enterprise
@@ -2655,6 +2753,9 @@ msgid ""
 "Contains advanced features for purchase management\n"
 "    "
 msgstr ""
+"\n"
+"包含采购管理的高级特征\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_enterprise
@@ -2704,6 +2805,17 @@ msgid ""
 "Allows to contact directly the employee in case of unjustified absence.\n"
 "    "
 msgstr ""
+"\n"
+"控制员工出勤率\n"
+"==========================\n"
+"\n"
+"基于:\n"
+"    *  IP地址\n"
+"    * 用户的时长\n"
+"    * 已发邮件\n"
+"\n"
+"无故缺勤可以直接联系员工.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -2730,6 +2842,10 @@ msgid ""
 "================================\n"
 "\n"
 msgstr ""
+"\n"
+"创建现场服务报告\n"
+"================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project_timesheet_enterprise
@@ -2930,6 +3046,9 @@ msgid ""
 "E-invoice implementation\n"
 "    "
 msgstr ""
+"\n"
+"电子发票安装\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_slides
@@ -2941,6 +3060,12 @@ msgid ""
 "This module add completed courses to resumé for employees.\n"
 "        "
 msgstr ""
+"\n"
+"在线学习和HR技能\n"
+"===============================\n"
+"\n"
+"此模块可为员工的简历添加完整的课程.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -3091,6 +3216,8 @@ msgid ""
 "\n"
 "Easily access your documents from your employee profile.\n"
 msgstr ""
+"\n"
+"方便通过员工资料访问您的文件.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_utm
@@ -3098,6 +3225,8 @@ msgid ""
 "\n"
 "Enable management of UTM trackers: campaign, medium, source.\n"
 msgstr ""
+"\n"
+"启用UTM跟踪器管理：广告系列，媒介，来源。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -3771,6 +3900,17 @@ msgid ""
 "* Assign leads to sales teams.\n"
 "* Assign leads to specific salespersons in the sales team.\n"
 msgstr ""
+"\n"
+"线索打分\n"
+"============\n"
+"\n"
+"这个模块可以实现:\n"
+"\n"
+"* 追踪在Contact Us页面留下信息的浏览者.\n"
+"  页面浏览者会列在相关线索.\n"
+"* 对新线索计算一个分数，以便相应分配.\n"
+"* 把线索分给销售团队.\n"
+"* 在销售团队里面把线索分给特定的销售人员.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_helpdesk
@@ -3782,6 +3922,13 @@ msgid ""
 "Link module to map leads to tickets\n"
 "        "
 msgstr ""
+"\n"
+"线索工单\n"
+"=============\n"
+"\n"
+"将线索映射至工单的链接模块\n"
+"\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -4112,6 +4259,21 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a time off request is accepted by setting up a type of meeting in time off Type.\n"
 msgstr ""
+"\n"
+" 管理休假申请和假期分配\n"
+"=====================================\n"
+"\n"
+" 此应用程序会控制您公司的休假安排。其允许员工申请休假。然后，管理人员可以审查休假请求，并批准或拒绝。通过这种方式您可以控制公司或部门的整体休假计划。\n"
+"\n"
+" 您可以配置几种休假（病假、带薪休假 ，...），并通过假期分配快速地将假期分配给员工或部门。员工也可通过创建新的假期分配申请增加休假天数。这将会增加该休假类型的总可用天数（如果申请得到批准）。\n"
+"\n"
+" 您可以通过以下报告跟踪不同类型的休假：\n"
+"\n"
+"* 休假摘要\n"
+"* 按部门休假\n"
+"* 休假分析\n"
+"\n"
+" 通过设置休假中的休假类型，在休假批准时自动创建休假中日程，以使休假与内部日历（CRM 模块的日程）同步。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_event
@@ -4496,6 +4658,16 @@ msgid ""
 "\n"
 "Financial requirement contributor: Baskhuu Lodoikhuu. BumanIT LLC\n"
 msgstr ""
+"\n"
+"蒙古会计报告.\n"
+"====================================================\n"
+"-营利性和损失\n"
+"-资产负债表\n"
+"-现金流量表\n"
+"-增值税还款报告\n"
+"-企业所得税报告\n"
+"\n"
+"财务需求贡献者:Baskhuu Lodoikhuu。BumanIT有限责任公司\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nz
@@ -4658,6 +4830,10 @@ msgid ""
 "=============================\n"
 "\n"
 msgstr ""
+"\n"
+"Odoo Web 甘特图。\n"
+"=============================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web
@@ -5204,6 +5380,12 @@ msgid ""
 "Allows to automatically select analytic accounts based on Product\n"
 "    "
 msgstr ""
+"\n"
+"为您的人力资源费用设置分析帐户的默认值。\n"
+"==================================================================\n"
+"\n"
+"允许根据产品自动选择分析帐户\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
@@ -5240,6 +5422,8 @@ msgid ""
 "\n"
 "Shorten URLs and use them to track clicks and UTMs\n"
 msgstr ""
+"\n"
+"缩短url并使用它们来跟踪单击和utms\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_google_map
@@ -5301,6 +5485,12 @@ msgid ""
 "This module introduces skills and resumé management for employees.\n"
 "        "
 msgstr ""
+"\n"
+"在线学习和HR技能\n"
+"===============================\n"
+"\n"
+"此模块介绍技能和员工的简历管理.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -5919,6 +6109,11 @@ msgid ""
 "    - a generic chart of accounts\n"
 "    - SARS VAT Ready Structure"
 msgstr ""
+"\n"
+"这是南非在ZA管理Odoo所必需的最新基本本地化::\n"
+"================================================================================\n"
+"    - 一般帐目图表\n"
+"    - SARS增值税准备结构"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -6677,6 +6872,15 @@ msgid ""
 "creates next activities for the related approvers.\n"
 "    "
 msgstr ""
+"\n"
+"该模块管理批准工作流程\n"
+"======================================\n"
+"\n"
+"该模块管理批准请求，如商务旅行，\n"
+"不在办公室，加班，借阅项目，\n"
+"一般批准，采购，合同批准等。\n"
+"根据批准类型配置，请求\n"
+"为相关批准者创建下一个活动。    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -6928,6 +7132,10 @@ msgid ""
 "============================\n"
 "    "
 msgstr ""
+"\n"
+"乌克兰-帐目表.\n"
+"============================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
@@ -7039,6 +7247,10 @@ msgid ""
 "Validate stock moves for Field Service\n"
 "======================================\n"
 msgstr ""
+"\n"
+"验证库存变动到现场服务\n"
+"================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_fleet
@@ -7244,22 +7456,22 @@ msgstr "这是管理香港会计和本地化图表的基础模块"
 msgid ""
 " another model requires the record being deleted. If possible, archive it "
 "instead."
-msgstr ""
+msgstr "另一个模型要求删除记录。如果可能的话，把它存档。"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__accesses_count
 msgid "# Access Rights"
-msgstr ""
+msgstr "访问权限"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__groups_count
 msgid "# Groups"
-msgstr ""
+msgstr "# 群组"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
 msgid "# Record Rules"
-msgstr ""
+msgstr "# 记录规则"
 
 #. module: base
 #: code:addons/fields.py:614 code:addons/models.py:3377
@@ -7269,6 +7481,9 @@ msgid ""
 "\n"
 "Implicitly accessed through '%(document_kind)s' (%(document_model)s)."
 msgstr ""
+"%(previous_message)s\n"
+"\n"
+"通过 '%(document_kind)s' (%(document_model)s)隐式访问。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -7387,7 +7602,7 @@ msgstr "'%s' 不像是用于字段 '%%(field)s'的整型"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "), are you sure to create a new one?"
-msgstr ""
+msgstr "),你确定要创建一个新的?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -7411,6 +7626,8 @@ msgid ""
 "- Create/update: a mandatory field is not set.\n"
 "- Delete: another model requires the record being deleted. If possible, archive it instead."
 msgstr ""
+"- 创建/更新: 未设置强制字段.\n"
+"- 删除: 另一个模型要求删除记录。如果可能的话，把它存档"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7669,6 +7886,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reset_mode', '=', 'hard')]}\">This view has no previous version.</span>\n"
 "                        <span attrs=\"{'invisible': [('reset_mode', '=', 'soft')]}\">This view is not coming from a file.</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('reset_mode', '=', 'hard')]}\">这个视窗没有历史版本.</span>\n"
+"                        <span attrs=\"{'invisible': [('reset_mode', '=', 'soft')]}\">这个视窗不是由文件生成.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -8491,7 +8710,7 @@ msgstr "农业、林业和渔业"
 msgid ""
 "A Slide channel can be linked to forum. Also, profiles from slide and forum "
 "are regrouped together"
-msgstr ""
+msgstr "一个幻灯片频道可以链接到论坛。此外，幻灯片和论坛的配置文件被重新组合在一起"
 
 #. module: base
 #: code:addons/models.py:3073
@@ -8525,7 +8744,7 @@ msgstr "一个模块生成异常。"
 #. module: base
 #: model:ir.module.module,description:base.module_test_lint
 msgid "A module to test Odoo code with various linters."
-msgstr ""
+msgstr "一个模块测试Odoo代码与各种linters。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_impex
@@ -8540,7 +8759,7 @@ msgstr "一个用于测试 API 的模块。"
 #. module: base
 #: model:ir.module.module,description:base.module_test_rpc
 msgid "A module to test the RPC requests."
-msgstr ""
+msgstr "测试RPC请求的模块"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_uninstall
@@ -8561,7 +8780,7 @@ msgstr "验证资产打包机制的模块"
 #: model:ir.module.module,description:base.module_test_inherits_depends
 msgid ""
 "A module to verify the inheritance using _inherits in non-original modules."
-msgstr ""
+msgstr "在不是原版的模块测试继承using _inherits的模块"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
@@ -8583,7 +8802,7 @@ msgstr "模块支持仿真方法。"
 msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
-msgstr ""
+msgstr "伙伴有相同 <span><span class=\"o_vat_label\">税务编号</span></span> 已经存在("
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -8716,7 +8935,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_profile
 msgid "Access the website profile of the users"
-msgstr ""
+msgstr "访问用户的网站配置文件"
 
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
@@ -9051,7 +9270,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills_survey
 msgid "Add certification to resumé of your employees"
-msgstr ""
+msgstr "为员工简历添加认证"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills_slides
@@ -9409,7 +9628,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_map_view_contact
 msgid "Allows the viewing of contacts on a map"
-msgstr ""
+msgstr "允许查看地图上的联系人"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_map
@@ -9645,7 +9864,7 @@ msgstr "结构"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_diff
 msgid "Architecture Diff"
-msgstr ""
+msgstr "架构差异"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
@@ -11243,7 +11462,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
-msgstr ""
+msgstr "自动发票创建后，使用TaxCloud计算税金。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
@@ -11651,7 +11870,7 @@ msgstr "创建新活动"
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_report
 msgid "Create Reports for Field service workers"
-msgstr ""
+msgstr "为现场服务工作人员创建报告"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_project_timesheet_enterprise
@@ -12347,7 +12566,7 @@ msgstr "删除重复其他联系人"
 #: model:ir.model.fields,field_description:base.field_res_users__company_id
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Default Company"
-msgstr ""
+msgstr "默认公司"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
@@ -12403,6 +12622,8 @@ msgstr "定义的报告"
 #: model:ir.module.module,summary:base.module_map_view_contact
 msgid "Defines the map view for contacts"
 msgstr ""
+"定义联系人的地图视图\n"
+" "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_map
@@ -13360,7 +13581,7 @@ msgstr "员工合同"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_reports
 msgid "Employee Contracts Reporting"
-msgstr ""
+msgstr "员工合同报告"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_presence
@@ -14117,7 +14338,7 @@ msgstr "字段名称"
 #: model:ir.module.category,name:base.module_category_industry_field_service
 #: model:ir.module.module,shortdesc:base.module_industry_fsm
 msgid "Field Service"
-msgstr ""
+msgstr "现场服务"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
@@ -14242,6 +14463,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"视图来源的文件。\n"
+"                                                          用于（硬）重置断开的视图或以dev-xml模式从文件读取arch。"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -14345,7 +14568,7 @@ msgstr "车队"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_fleet
 msgid "Fleet History"
-msgstr ""
+msgstr "舰队历史"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -14624,7 +14847,7 @@ msgstr "消费税号:"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_pos
 msgid "GST Point of Sale"
-msgstr ""
+msgstr "GST POS"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase
@@ -15267,7 +15490,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_repair
 msgid "Helpdesk Repair"
-msgstr ""
+msgstr "服务台维修"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_coupon
@@ -16402,7 +16625,7 @@ msgstr "发票"
 msgid ""
 "Invoice & Delivery addresses are used in sales orders. Private addresses are"
 " only visible by authorized users."
-msgstr ""
+msgstr "发票和交货地址用于销售订单。专用地址仅供授权用户查看。"
 
 #. module: base
 #: selection:res.partner,type:0
@@ -16462,7 +16685,7 @@ msgstr "爱尔兰"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ie
 msgid "Ireland - Accounting"
-msgstr ""
+msgstr "爱尔兰 - 会计"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_lock
@@ -17000,7 +17223,7 @@ msgstr "最新版本"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login_date
 msgid "Latest authentication"
-msgstr ""
+msgstr "最新认证"
 
 #. module: base
 #: model:res.country,name:base.lv
@@ -17032,7 +17255,7 @@ msgstr "线索生成"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_website
 msgid "Lead Generation From Website Visits"
-msgstr ""
+msgstr "从网站访问产生潜在客户"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_score
@@ -17572,7 +17795,7 @@ msgstr "管理活动部门，更好地对合作伙伴进行分类，轻松进行
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills
 msgid "Manage skills, knowledge and resumé of your employees"
-msgstr ""
+msgstr "管理员工的技能，知识和简历"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_title_contact
@@ -17639,12 +17862,12 @@ msgstr "多对多 关系"
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 msgid "Map"
-msgstr ""
+msgstr "地图"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_map
 msgid "Map View"
-msgstr ""
+msgstr "地图视图"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_map_view_contact
@@ -18113,7 +18336,7 @@ msgstr "模型"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
 msgid "Modified Architecture"
-msgstr ""
+msgstr "修改架构"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
@@ -18642,7 +18865,7 @@ msgstr "外部ID访问权限不足："
 #: code:addons/base/models/ir_rule.py:233
 #, python-format
 msgid "Note: this might be a multi-company issue."
-msgstr ""
+msgstr "注意：这可能是一个多公司问题。"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -19388,7 +19611,7 @@ msgstr "Odoo 墨西哥语本地化报告"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports_closing
 msgid "Odoo Mexican Localization Reports for Closing"
-msgstr ""
+msgstr "Odoo 墨西哥语本地化报告结算"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_customs
@@ -20249,7 +20472,7 @@ msgstr "打开一个窗口"
 #: code:addons/base/models/ir_model.py:1283 code:addons/models.py:3116
 #, python-format
 msgid "Operation:"
-msgstr ""
+msgstr "操作:"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_operations
@@ -20616,7 +20839,7 @@ msgstr "方向"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_original
 msgid "Original Image"
-msgstr ""
+msgstr "原始图像"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_custom__ref_id
@@ -21028,7 +21251,7 @@ msgstr "付款收单方：Paypal实现"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_payulatam
 msgid "Payment Acquirer: PayuLatam Implementation"
-msgstr ""
+msgstr "付款收单：PayuLatam实施"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_payumoney
@@ -21310,7 +21533,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_prev
 msgid "Previous View Architecture"
-msgstr ""
+msgstr "以前的视图架构"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__lastcall
@@ -21748,7 +21971,7 @@ msgstr "MRP的质量管理"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_mrp_workorder_iot
 msgid "Quality Management with MRP and IoT"
-msgstr ""
+msgstr "MRP和物联网的质量管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_iot
@@ -21758,7 +21981,7 @@ msgstr "物联网的质量步骤"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_control_iot
 msgid "Quality checks with IoT"
-msgstr ""
+msgstr "物联网的质量检查"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_iot
@@ -21994,7 +22217,7 @@ msgstr "记录规则"
 #: code:addons/models.py:3484 code:addons/models.py:4389
 #, python-format
 msgid "Records:"
-msgstr ""
+msgstr "记录:"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
@@ -22136,17 +22359,17 @@ msgstr "移除与此报表相关的上下文动作"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_rental
 msgid "Rental"
-msgstr ""
+msgstr "出租"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock_rental
 msgid "Rental Stock Management"
-msgstr ""
+msgstr "租赁库存管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_rental_sign
 msgid "Rental/Sign Bridge"
-msgstr ""
+msgstr "出租/标志桥梁"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_repair
@@ -22245,28 +22468,28 @@ msgstr "经销商"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__reset_mode
 msgid "Reset Mode"
-msgstr ""
+msgstr "重置模式"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
 msgid "Reset View"
-msgstr ""
+msgstr "重置视图"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.reset_view_arch_wizard_action
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
 msgid "Reset View Architecture"
-msgstr ""
+msgstr "重置视图架构"
 
 #. module: base
 #: model:ir.model,name:base.model_reset_view_arch_wizard
 msgid "Reset View Architecture Wizard"
-msgstr ""
+msgstr "重置视图架构向导"
 
 #. module: base
 #: selection:reset.view.arch.wizard,reset_mode:0
 msgid "Reset to file version (hard reset)."
-msgstr ""
+msgstr "重置为文件版本（硬重置）。"
 
 #. module: base
 #: code:addons/models.py:941
@@ -22314,7 +22537,7 @@ msgstr "POS中的饭店功能扩展"
 #. module: base
 #: selection:reset.view.arch.wizard,reset_mode:0
 msgid "Restore previous version (soft reset)."
-msgstr ""
+msgstr "恢复以前的版本（软重置）。"
 
 #. module: base
 #: selection:ir.model.fields,on_delete:0
@@ -22568,7 +22791,7 @@ msgstr "销售"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchase"
-msgstr ""
+msgstr "销售和采购"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
@@ -23219,7 +23442,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills
 msgid "Skills Management"
-msgstr ""
+msgstr "技能管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills_slides
@@ -23315,7 +23538,7 @@ msgstr ""
 #: code:addons/base/models/ir_attachment.py:391
 #, python-format
 msgid "Sorry, you are not allowed to access these fields on attachments."
-msgstr ""
+msgstr "抱歉，你无权访问附件中的这些字段。"
 
 #. module: base
 #: code:addons/base/models/ir_attachment.py:339
@@ -23338,7 +23561,7 @@ msgstr ""
 msgid ""
 "Sorry, you are not allowed to delete documents of type '%(document_kind)s' "
 "(%(document_model)s)."
-msgstr ""
+msgstr "抱歉，您不能删除类型的文档 '%(document_kind)s' (%(document_model)s)。"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:1270
@@ -24518,7 +24741,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_test_l10n_be_hr_payroll_account
 #: model:ir.module.module,summary:base.module_test_l10n_be_hr_payroll_account
 msgid "Test Belgian Payroll"
-msgstr ""
+msgstr "测试比利时工资表"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -24885,6 +25108,8 @@ msgstr "唯一预设的变量是"
 #, python-format
 msgid "The operation cannot be completed:"
 msgstr ""
+"操作无法完成：\n"
+" "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__domain
@@ -25089,7 +25314,7 @@ msgstr "主题"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "There are no more contacts to merge for this request"
-msgstr ""
+msgstr "此请求没有更多要合并的联系人"
 
 #. module: base
 #: code:addons/base/models/ir_filters.py:108
@@ -25133,7 +25358,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
 msgid "This field is the same as `arch` field without translations"
-msgstr ""
+msgstr "该字段与没有翻译的`arch`字段相同"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__code
@@ -25146,11 +25371,13 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
+"访问视图arch时应使用此字段。它将使用翻译。\n"
+"                               如果在dev-xml模式中，它将读取arch_db或arch_fs。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_db
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "该字段存储视图拱。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_prev
@@ -25158,6 +25385,8 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
+"该字段将在写入之前保存当前的“arch_db”。\n"
+"                                                                         用于（软）重置断开的视图。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -25242,6 +25471,11 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"该模块包含与网站相关的测试。这些\n"
+"包含在一个单独的模块中，因为我们正在测试模块安装/卸载/升级，\n"
+"我们不希望每次都重新加载网站模块，包括它\n"
+"可能的依赖项。我们亦不希望在网站模块中添加一些仅用于运行测试的路由，视图和\n"
+"模型。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud
@@ -25249,6 +25483,8 @@ msgid ""
 "This module ensures that the taxes are computed on the invoice before a payment is created automatically for a subscription.\n"
 "    "
 msgstr ""
+"此模块可确保在为订阅自动创建付款之前在发票上计算税额。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_taxcloud_delivery
@@ -25262,7 +25498,7 @@ msgstr "此模块可确保在线计算交货价格，并使用TaxCloud计算税�
 msgid ""
 "This module lets you use the full power of certifications within your "
 "courses."
-msgstr ""
+msgstr "此模块允许您在课程中使用全部认证。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -25276,6 +25512,8 @@ msgid ""
 "This operation is allowed for the groups:\n"
 "%(groups_list)s"
 msgstr ""
+"组允许此操作：\n"
+"%(groups_list)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -25306,12 +25544,12 @@ msgstr "时间格式"
 #: model:ir.module.category,name:base.module_category_human_resources_time_off
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Time Off"
-msgstr ""
+msgstr "休息时间"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
 msgid "Time off Gantt"
-msgstr ""
+msgstr "休息时间甘特"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid
@@ -25326,7 +25564,7 @@ msgstr "时间表/预测"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_holidays
 msgid "Timesheet when on Time Off"
-msgstr ""
+msgstr "休息时的工时表"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_operations_timesheets
@@ -25807,7 +26045,7 @@ msgstr "乌克兰"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ua
 msgid "Ukraine - Accounting"
-msgstr ""
+msgstr "乌克兰 - 会计"
 
 #. module: base
 #: code:addons/models.py:3183
@@ -25960,7 +26198,7 @@ msgstr "无法识别的扩展名后缀名: 规定为 .csv, 或.po, 或 .tgz格�
 #: code:addons/base/static/src/js/res_config_settings.js:46
 #, python-format
 msgid "Unsaved changes"
-msgstr ""
+msgstr "未保存的更改"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_unsplash
@@ -26223,7 +26461,7 @@ msgstr "用户定义的筛选"
 #. module: base
 #: model:ir.module.module,summary:base.module_point_of_sale
 msgid "User-friendly PoS interface for shops and restaurants"
-msgstr ""
+msgstr "用户友好的商店和餐馆的PoS界面"
 
 #. module: base
 #: code:addons/base/models/ir_actions.py:252
@@ -26319,7 +26557,7 @@ msgstr "VOIP OnSIP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip_crm
 msgid "VOIP for crm"
-msgstr ""
+msgstr "客户关系管理的VOIP"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_phone_validation
@@ -26336,7 +26574,7 @@ msgstr "验证并规定电话号码格式"
 msgid ""
 "Validate stock moves for product added on sales orders through Field Service"
 " Management App"
-msgstr ""
+msgstr "通过现场服务管理应用程序验证销售订单上添加的产品的库存移动"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter__value
@@ -26721,12 +26959,12 @@ msgstr "网站评分"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_product_configurator
 msgid "Website Sale Product Configurator"
-msgstr ""
+msgstr "网站销售产品配置器"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock_product_configurator
 msgid "Website Sale Stock Product Configurator"
-msgstr ""
+msgstr "网站销售库存产品产品配置器"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_dashboard
@@ -26746,12 +26984,12 @@ msgstr "网站studio"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website
 msgid "Website Test"
-msgstr ""
+msgstr "网站测试"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_website
 msgid "Website Test, mainly for module install/uninstall tests"
-msgstr ""
+msgstr "网站测试，主要用于模块安装/卸载测试"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_theme_install
@@ -26761,7 +26999,7 @@ msgstr "网站主题安装"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_profile
 msgid "Website profile"
-msgstr ""
+msgstr "网站简介"
 
 #. module: base
 #: selection:res.lang,week_start:0
@@ -26820,7 +27058,7 @@ msgstr "值是否存储在数据库"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_module_module_dependency__auto_install_required
 msgid "Whether this dependency blocks automatic installation of the dependent"
-msgstr ""
+msgstr "此依赖关系是否阻止依赖项的自动安装"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__translate
@@ -26838,6 +27076,7 @@ msgid ""
 "number upon assignation, there can still be gaps in the sequence if records "
 "are deleted. The 'no gap' implementation is slower than the standard one."
 msgstr ""
+"在为记录分配序列号时，“无间隙”序列实现确保已经分配了每个先前的序列号。虽然此序列实现在分配时不会跳过任何序列号，但如果删除记录，序列中仍可能存在间隙。“无差距”实施比标准实施慢。"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_G
@@ -26885,7 +27124,7 @@ msgstr "Wkhtmltopdf 失败 (错误代码: %s). 消息: %s"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
 msgid "Work Orders, Planning, Stock Reports."
-msgstr ""
+msgstr "工单，计划，库存报告。"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
@@ -27057,7 +27296,7 @@ msgstr "您不能把联系人和其父项合并."
 #: code:addons/base/models/ir_actions.py:570
 #, python-format
 msgid "You don't have enough access rights to run this action."
-msgstr ""
+msgstr "你没有执行此操作的权限。"
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:385
@@ -27068,7 +27307,7 @@ msgstr "必须指定一个选择的筛选"
 #. module: base
 #: model:ir.model.fields,help:base.field_reset_view_arch_wizard__reset_mode
 msgid "You might want to try a soft reset first."
-msgstr ""
+msgstr "您可能想先尝试软重置。"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
@@ -27168,13 +27407,13 @@ msgstr "account_plaid"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_ponto
 msgid "account_ponto"
-msgstr ""
+msgstr "account_ponto"
 
 #. module: base
 #: code:addons/models.py:2777
 #, python-format
 msgid "allowed for groups %s"
-msgstr ""
+msgstr "允许团体%s"
 
 #. module: base
 #: code:addons/base/models/res_currency.py:124
@@ -27345,7 +27584,7 @@ msgstr ""
 #: code:addons/models.py:2782
 #, python-format
 msgid "forbidden for groups %s"
-msgstr ""
+msgstr "禁止团体%s"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:255
@@ -27433,7 +27672,7 @@ msgstr "货币"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting
 msgid "mrp_subcontracting"
-msgstr ""
+msgstr "mrp_subcontracting"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:561
@@ -27471,7 +27710,7 @@ msgstr "pos_cache"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr
 msgid "pos_hr"
-msgstr ""
+msgstr "pos_hr"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale
@@ -27551,7 +27790,7 @@ msgstr "测试继承"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits_depends
 msgid "test-inherits-depends"
-msgstr ""
+msgstr "test-inherits-depends"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
@@ -27561,7 +27800,7 @@ msgstr "test-limits"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_lint
 msgid "test-lint"
-msgstr ""
+msgstr "test-lint"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_translation_import

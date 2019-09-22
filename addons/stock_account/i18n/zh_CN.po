@@ -18,6 +18,7 @@
 # bf2549c5415a9287249cba2b8a5823c7, 2019
 # roye w <159820@qq.com>, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:31+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2019\n"
+"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,7 +192,7 @@ msgstr "成本方法"
 #: code:addons/stock_account/models/product.py:668
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
-msgstr ""
+msgstr "产品类别%s的成本核算方法更改：从%s 到%s。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id
@@ -256,7 +257,7 @@ msgid ""
 "Due to a change of product category (from %s to %s), the costing method"
 "                                has changed for product template %s: from %s"
 " to %s."
-msgstr ""
+msgstr "由于产品类别的变化（从 %s 至%s ），成本计算方法已更改为产品模板 %s：从 %s 至%s。"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -389,7 +390,7 @@ msgstr "其他信息"
 msgid ""
 "Please define an expense account for this product: \"%s\" (id:%d) - or for "
 "its category: \"%s\"."
-msgstr ""
+msgstr "请为此产品定义费用帐户： \"%s\" (id:%d) - 或其类别：\"%s\"."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__new_price
@@ -423,7 +424,7 @@ msgstr "产品模板"
 #: code:addons/stock_account/models/product.py:185
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr ""
+msgstr "手动修改产品值（从 %s 到%s）"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -542,7 +543,7 @@ msgstr "技术字段用于检索昂格鲁-撒克逊明细行"
 msgid ""
 "The Stock Input and/or Output accounts cannot be the same than the Stock "
 "Valuation account."
-msgstr ""
+msgstr "股票输入和/或输出科目不能与股票估值科目相同。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:359
@@ -582,7 +583,7 @@ msgstr "移动行处于不一致的状态:它们不属于同一个来源或目�
 msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
 " moves should impact the valuation of the stock."
-msgstr ""
+msgstr "没有评估层。当某些产品移动会影响股票的估值时，会创建评估层。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -710,7 +711,7 @@ msgstr "在进行产品实时库存计价时，此科目记录产品的当前估
 msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr ""
+msgstr "你没有在产品类别中定义任何输入评估帐户。您必须在处理此操作之前定义一个。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:336
@@ -736,6 +737,8 @@ msgstr "您没有在您的产品类别中定义任何库存评估账户。 处�
 #, python-format
 msgid "You must set a counterpart account."
 msgstr ""
+"您必须设置对应帐户。\n"
+" "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price

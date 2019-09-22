@@ -93,18 +93,18 @@ msgstr "%s (copia)"
 #: model:ir.actions.report,print_report_name:product.report_product_label
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
 msgid "'Products Labels - %s' % (object.name)"
-msgstr ""
+msgstr "Etiquetas de Productos - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_product_barcode
 #: model:ir.actions.report,print_report_name:product.report_product_template_barcode
 msgid "'Products barcode - %s' % (object.name)"
-msgstr ""
+msgstr "'Código de barras de los productos - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr ""
+msgstr "'Embalaje de productos - %s' % (object.name)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__image_big
@@ -229,6 +229,8 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "                This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"Un precio es un conjunto de precios de venta o reglas para calcular el precio de las líneas de pedido de cliente basado en productos, categorías de productos, fechas y cantidades pedidas.\n"
+"Esta es la herramienta perfecta para manejar varios precios, descuentos de temporada, etc."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__type
@@ -387,6 +389,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Precio base para el cálculo.\n"
+"Precio de venta: El precio base será el precio de venta.\n"
+"Precio de coste El precio base será el precio de coste.\n"
+"Otra lista de precios: Cálculo del precio base en base a otra lista de precios."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -1099,6 +1105,8 @@ msgid ""
 "Make this attribute value not compatible with\n"
 "        other values of the product or some attribute values of optional and accessory products."
 msgstr ""
+"Hacer que este valor de atributo no sea compatible con\n"
+"otros valores del producto o algunos valores de atributos de productos opcionales y accesorios."
 
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
@@ -1554,6 +1562,7 @@ msgstr "Informe de Lista de Precios de Productos"
 #: model:ir.model,name:product.model_product_price_list
 msgid "Product Price per Unit Based on Pricelist Version"
 msgstr ""
+"Precio del Producto por Unidad Basado en la Versión de la Lista de Precios"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -1570,7 +1579,7 @@ msgstr "Plantilla de producto"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_exclusion
 msgid "Product Template Attribute Exclusion"
-msgstr ""
+msgstr "Exclusión de Atributos del Modelo de Producto"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
@@ -1967,7 +1976,7 @@ msgstr "Tarifa de proveedor"
 #: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_wnva_ids
 msgid "Technical compute"
-msgstr ""
+msgstr "Cálculo Técnico "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__pricelist_id
@@ -2066,6 +2075,9 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr ""
+"La cantidad a comprar de este proveedor para beneficiarse del precio, "
+"expresado en la Unidad de medida del producto del proveedor, si no existe, "
+"en la unidad de medida por defecto del producto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2073,6 +2085,9 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
 " Variants' button to set the extra attribute prices."
 msgstr ""
+"El precio de venta se gestiona desde la plantilla de producto. Haga clic en "
+"el botón 'Configurar variantes' para establecer los precios de los atributos"
+" adicionales."
 
 #. module: product
 #: code:addons/product/models/product_template.py:1077
@@ -2084,13 +2099,13 @@ msgstr "No hay combinación posible."
 #: code:addons/product/models/product_template.py:1072
 #, python-format
 msgid "There are no remaining closest combination."
-msgstr ""
+msgstr "No queda ninguna combinación más cercana."
 
 #. module: product
 #: code:addons/product/models/product_template.py:1030
 #, python-format
 msgid "There are no remaining possible combination."
-msgstr ""
+msgstr "No hay ninguna combinación restante posible."
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
@@ -2213,7 +2228,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr ""
+msgstr "Líneas de Atributo de Producto Válidas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_wnva_ids
@@ -2352,13 +2367,13 @@ msgstr "Volumen"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
 msgid "Volume unit of measure"
-msgstr ""
+msgstr "Unidad de medida de volumen"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "Etiqueta de unidad de medida de volumen"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
@@ -2381,18 +2396,18 @@ msgstr "Peso"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Weight Measurement"
-msgstr ""
+msgstr "Medición de Peso"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
 msgid "Weight unit of measure"
-msgstr ""
+msgstr "Peso de Unidad de Medida"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Etiqueta de Unidad de Medida de peso"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:46
@@ -2408,6 +2423,8 @@ msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
 msgstr ""
+"Puede asignar listas de precios a sus clientes o seleccionar una al crear "
+"una nueva orden de ventas."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:482
@@ -2415,6 +2432,8 @@ msgstr ""
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
 msgstr ""
+"No se puede asignar la lista de precios principal como Otra lista de precios"
+" en el artículo de lista de precios."
 
 #. module: product
 #: code:addons/product/models/product.py:58
