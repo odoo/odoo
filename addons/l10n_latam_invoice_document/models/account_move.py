@@ -153,7 +153,8 @@ class AccountMove(models.Model):
                 lambda x: x.internal_type == internal_type) or document_types
 
             rec.l10n_latam_available_document_type_ids = document_types
-            rec.l10n_latam_document_type_id = document_type and document_type[0]
+            if not rec.l10n_latam_document_type_id:
+                rec.l10n_latam_document_type_id = document_type and document_type[0]
         remaining = self - recs_with_journal_partner
         remaining.l10n_latam_available_document_type_ids = []
         remaining.l10n_latam_document_type_id = False
