@@ -849,16 +849,14 @@ msgstr ""
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"Користувач не може мати одночасно податок B2B та B2C.\n"
-"Проблематичний користувач(і): %s\n"
-"Необхідно перейти у Загальні налаштування, та обрати для відображення Ціни товару\n"
-"або в режимі із 'Включеним податком' або 'Без податку'\n"
-"(або двічі перемкніть режим, якщо ви вже перебуваєте в потрібному)."
+"Користувач не може мати одразу податок B2B та B2C.\n"
+"Вам необхідно перейти в Загальні налаштування, та обрати відображення цін на товарах\n"
+"або в режимі 'З ПДВ' чи в 'Без ПДВ'\n"
+"(або двічі перемкніть режим, якщо ви вже у бажаному)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4213,6 +4211,12 @@ msgid ""
 "balance."
 msgstr ""
 "Різниця між обчисленим кінцевим балансом і зазначеним кінцевим балансом."
+
+#. module: account
+#: code:addons/account/models/account_move.py:408
+#, python-format
+msgid "Difference debit - credit: "
+msgstr "Різниця дебет - кредит: "
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest

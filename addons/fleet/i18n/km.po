@@ -974,7 +974,7 @@ msgstr "កម្លាំងសេះ"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower_tax
 msgid "Horsepower Taxation"
-msgstr ""
+msgstr "ពន្ធលើប្រាក់បៀរ៍វត្ត"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -1271,7 +1271,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
 msgid "Management Fee"
-msgstr ""
+msgstr "ថ្លៃ​សេវា​គ្រប់​គ្រង"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_manager
@@ -1286,7 +1286,7 @@ msgstr "ហត្ថកម្ម"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "រូបភាពមានទំហំមធ្យម"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__image_medium
@@ -1297,6 +1297,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
+"ស្លាកសញ្ញាមានទំហំមធ្យមនៃយីហោ។ "
+"វាត្រូវបានផ្លាស់ប្តូរទំហំដោយស្វ័យប្រវត្តិជារូបភាព 128 គុណ 128ភីច, "
+"មានសមាមាត្ររក្សាទុក។ ប្រើវាលនេះជាទិដ្ឋភាពសំណុំបែបបទឬទស្សនៈកានបែនមួយចំនួន។"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
@@ -1313,7 +1316,7 @@ msgstr "សារ"
 #. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Miles"
-msgstr ""
+msgstr "Miles"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_id
@@ -1600,7 +1603,7 @@ msgstr "ហួសកំណត់"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_34
 msgid "Oxygen Sensor Replacement"
-msgstr ""
+msgstr "ការជំនួសឧបករណ៍ចាប់សញ្ញាអុកស៊ីសែន"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__parent_id
@@ -1617,12 +1620,12 @@ msgstr "ឪពុកម្តាយ"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__parent_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__parent_id
 msgid "Parent cost to this current cost"
-msgstr ""
+msgstr "ថ្លៃដើមរបស់ឪពុកម្តាយចំពោះថ្លៃដើមបច្ចុប្បន្ន"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__purchaser_id
 msgid "Person to which the contract is signed for"
-msgstr ""
+msgstr "បុគ្គលដែលកិច្ចសន្យាត្រូវបានចុះហត្ថលេខា"
 
 #. module: fleet
 #: selection:fleet.vehicle,activity_state:0
@@ -1633,7 +1636,7 @@ msgstr "គ្រោងទុក"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power
 msgid "Power"
-msgstr ""
+msgstr "ថាមពល"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_35
@@ -1835,7 +1838,7 @@ msgstr "សេវាកម្ម"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_graph
 msgid "Services Costs Per Month"
-msgstr ""
+msgstr "សេវាកម្មចំណាយក្នុងមួយខែ"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
@@ -1887,12 +1890,12 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
 msgid "Snow tires"
-msgstr ""
+msgstr "សំបកកង់ព្រិល"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_41
 msgid "Spark Plug Replacement"
-msgstr ""
+msgstr "ការជំនួសដោតស្ពឺ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_start
@@ -2036,7 +2039,7 @@ msgstr "ការចំណាយសរុប (មិនរួមបញ្ចូ�
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_total
 msgid "Total of contracts due or overdue minus one"
-msgstr ""
+msgstr "សរុបកិច្ចសន្យាដែលត្រូវបង់ឬហួសកាលកំណត់ដកមួយ"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
@@ -2049,31 +2052,33 @@ msgid ""
 "Track all the services done on your vehicle.\n"
 "            Services can be of many types: occasional repair, fixed maintenance, etc."
 msgstr ""
+"តាមដានសេវាកម្មទាំងអស់ដែលបានធ្វើនៅលើយានយន្តរបស់អ្នក។\n"
+"            សេវាកម្មអាចមានច្រើនប្រភេទ៖ ការជួសជុលម្តងម្កាលការថែទាំថេរ។ ល។"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__transmission
 msgid "Transmission"
-msgstr ""
+msgstr "ការបញ្ជូន"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_47
 msgid "Transmission Filter Replacement"
-msgstr ""
+msgstr "ការជំនួសតម្រងបញ្ជូន"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_48
 msgid "Transmission Fluid Replacement"
-msgstr ""
+msgstr "ការជំនួសវត្ថុរាវបញ្ជូន"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_49
 msgid "Transmission Replacement"
-msgstr ""
+msgstr "ការជំនួសការបញ្ជូន"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__transmission
 msgid "Transmission Used by the vehicle"
-msgstr ""
+msgstr "ការបញ្ជូនត្រូវបានប្រើដោយយានយន្ត"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__cost_subtype_id
@@ -2086,7 +2091,7 @@ msgstr "ប្រភេទ"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__vin_sn
 msgid "Unique number written on the vehicle motor (VIN/SN number)"
-msgstr ""
+msgstr "លេខតែមួយគត់ដែលសរសេរលើម៉ូទ័រយានយន្ត (លេខ VIN / SN)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__odometer_unit
@@ -2105,7 +2110,7 @@ msgstr "ឯកតា"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer_unit
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer__unit
 msgid "Unit of the odometer "
-msgstr ""
+msgstr "ឯកតានៃឧបករណ៍វាស់អូម៉ូម៉ែត្រ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_unread
@@ -2173,7 +2178,7 @@ msgstr "ព័ត៌មានលម្អិតអំពីរថយន្ត"
 #: model:ir.model,name:fleet.model_fleet_vehicle_state
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
 msgid "Vehicle Status"
-msgstr ""
+msgstr "ស្ថានភាពយានយន្ត"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_tag
@@ -2218,32 +2223,32 @@ msgstr "កិច្ចសន្យារថយន្ត"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
 msgid "Vehicles Costs"
-msgstr ""
+msgstr "ថ្លៃដើមយានយន្ត"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
 msgid "Vehicles Fuel Logs"
-msgstr ""
+msgstr "កំណត់ហេតុរថយន្តដឹកឥន្ធនៈ"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
 msgid "Vehicles Model"
-msgstr ""
+msgstr "ម៉ូតយានយន្ត"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
 msgid "Vehicles Odometer"
-msgstr ""
+msgstr "យានយន្ត Odometer "
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_services_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_services_menu
 msgid "Vehicles Services Logs"
-msgstr ""
+msgstr "កំណត់ហេតុសេវាកម្មរថយន្ត"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_indicative_view_graph
@@ -2253,12 +2258,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Vehicles costs"
-msgstr ""
+msgstr "ថ្លៃដើមយានយន្ត"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 msgid "Vehicles odometers"
-msgstr ""
+msgstr "យានយន្តម៉ាទែរ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__insurer_id
@@ -2277,22 +2282,22 @@ msgstr "អ្នកលក់"
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_waiting_list
 msgid "Waiting List"
-msgstr ""
+msgstr "បញ្ជី​រង់ចាំ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__days_left
 msgid "Warning Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទព្រមាន"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Warning: renewal due soon"
-msgstr ""
+msgstr "ការព្រមានៈការបន្តជាថ្មីឆាប់ៗនេះ"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_50
 msgid "Water Pump Replacement"
-msgstr ""
+msgstr "ការជំនួសម៉ាស៊ីនបូមទឹក"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__website_message_ids
@@ -2344,12 +2349,12 @@ msgstr "សរសេរព័ត៌មានផ្សេងទៀតនៅទី
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Write here any other information related to the service completed."
-msgstr ""
+msgstr "សរសេរព័ត៌មានផ្សេងទៀតដែលទាក់ទងនឹងសេវាកម្មដែលបានបញ្ចប់។"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__model_year
 msgid "Year of the model"
-msgstr ""
+msgstr "ឆ្នាំនៃគំរូ"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -2359,7 +2364,7 @@ msgstr "ប្រចាំឆ្នាំ"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
 msgid "You can add various odometer entries for all vehicles."
-msgstr ""
+msgstr "អ្នកអាចបន្ថែមធាតុអូតូម៉ាយផ្សេងៗសម្រាប់យានយន្តទាំងអស់។"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
@@ -2367,22 +2372,24 @@ msgid ""
 "You can customize available status to track the evolution of\n"
 "            each vehicle. Example: active, being repaired, sold."
 msgstr ""
+"អ្នកអាចប្ដូរតាមបំណងនូវស្ថានភាពដែលមានដើម្បីតាមដានការវិវឌ្ឍន៍របស់។"
+"             រថយន្តនីមួយៗ។ ឧទាហរណ៍ៈសកម្មកំពុងត្រូវបានជួសជុលលក់។"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
-msgstr ""
+msgstr "អ្នកអាចកំណត់ម៉ូឌែលជាច្រើន (ឧ។ 3, ក 4) សម្រាប់ផលិតផលនីមួយៗ (អូឌី) ។"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "amount"
-msgstr ""
+msgstr "ចំនួន"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "e.g. Model S"
-msgstr ""
+msgstr "e.g. ម៉ូត S"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form

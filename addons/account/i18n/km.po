@@ -852,16 +852,10 @@ msgstr "ទីតាំងសារពើពន្ធពន្ធអាចត្
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"អ្នកប្រើមិនអាចមានទាំងពន្ធ B2B និងពន្ធ B2C ។\n"
-"អ្នកប្រើមានបញ្ហា:%s\n"
-"អ្នកគួរចូលក្នុងការកំណត់ទូទៅហើយជ្រើសរើសបង្ហាញតម្លៃផលិតផល\n"
-"ទាំងនៅក្នុង 'អាករដែលបានរួមបញ្ចូល' ឬនៅក្នុង 'ពន្ធមិនរាប់បញ្ចូល' របៀប\n"
-"(ឬប្តូររបៀបទ្វេរដងបើអ្នកមានរួចហើយក្នុងការចង់បាន) ។"
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4175,6 +4169,12 @@ msgid ""
 "Difference between the computed ending balance and the specified ending "
 "balance."
 msgstr "ភាពខុសគ្នារវាងការគណនាសមតុល្យចុងគ្រានិងសមតុល្យចុងគ្រាដែលបានបញ្ជាក់។"
+
+#. module: account
+#: code:addons/account/models/account_move.py:408
+#, python-format
+msgid "Difference debit - credit: "
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest

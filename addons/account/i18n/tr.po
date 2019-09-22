@@ -850,16 +850,10 @@ msgstr ""
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"Bir kullanıcı B2B ve B2C vergilerinin ikisine birden sahip olamaz.\n"
-"Problemli kullanıcı(lar): %s\n"
-"Genel Ayarlar’a gitmeli ve Ürün Fiyatlarını\n"
-"'Vergiler Dahil ’ya da Tax Vergiler Hariç’ modunda\n"
-" göstermeyi tercih etmelisiniz (ya da halihazırda istediğiniz durumda iseniz modu iki kere değiştirin)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4184,6 +4178,12 @@ msgid ""
 "balance."
 msgstr ""
 "Hesaplanan bitiş bakiyesi ile belirtilen bitiş bakiyesi arasındaki fark."
+
+#. module: account
+#: code:addons/account/models/account_move.py:408
+#, python-format
+msgid "Difference debit - credit: "
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest

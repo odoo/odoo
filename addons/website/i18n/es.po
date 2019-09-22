@@ -32,12 +32,12 @@
 # Martin Trigaux, 2018
 # Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
 # Carolina Gonzalez <cgo@odoo.com>, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2019
 # Efrem Jimenez <efj@odoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # 
 msgid ""
@@ -640,7 +640,7 @@ msgstr "<i class=\"fa fa-trash-o\"/>Eliminar diapositiva"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "<i title=\"Is the page SEO optimized?\" class=\"fa fa-search\"/>"
-msgstr "<i title=\"Is the page SEO optimized?\" class=\"fa fa-search\"/>"
+msgstr "<i title=\"¿Está la página optimizada para SEO?\" class=\"fa fa-search\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -648,18 +648,20 @@ msgid ""
 "<i title=\"Is the page included in the main menu?\" class=\"fa fa-thumb-"
 "tack\"/>"
 msgstr ""
-"<i title=\"Is the page included in the main menu?\" class=\"fa fa-thumb-"
-"tack\"/>"
+"<i title=\"¿Está la página incluida en el menú principal?\" class=\"fa fa-"
+"thumb-tack\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "<i title=\"Is the page indexed by search engines?\" class=\"fa fa-globe\"/>"
-msgstr "<i title=\"Is the page indexed by search engines?\" class=\"fa fa-globe\"/>"
+msgstr ""
+"<i title=\"¿Está la página indexada por los motores de búsqueda?\" "
+"class=\"fa fa-globe\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "<i title=\"Is the page published?\" class=\"fa fa-eye\"/>"
-msgstr "<i title=\"Is the page published?\" class=\"fa fa-eye\"/>"
+msgstr "<i title=\"¿Está publicada la página?\" class=\"fa fa-eye\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -721,8 +723,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
 "specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
-"specific.\" groups=\"website.group_multi_website\"/>"
+"<span class=\"fa fa-lg fa-globe\" title=\"Los valores establecidos aquí son "
+"específicos del sitio web.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.company_description
@@ -1194,7 +1196,7 @@ msgstr "Archivado"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Breadcrumb"
-msgstr "Migaja de pan"
+msgstr "Barra de migas"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -1286,6 +1288,8 @@ msgid ""
 "Choose a vibrant image and write an inspiring paragraph about it.<br/> It "
 "does not have to be long, but it should reinforce your image."
 msgstr ""
+"Elija una imagen vibrante y escriba un párrafo inspirador al respecto. "
+"<br/>No tiene que ser largo, pero debe reforzar su imagen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -3943,7 +3947,7 @@ msgstr "Permanecer en ésta página"
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 msgid "Storytelling is powerful.<br/> It draws readers in and engages them."
 msgstr ""
-"La narración de cuentos es poderosa.<br/> Atrae a los lectores y los "
+"La narración de historias es poderosa.<br/> Atrae a los lectores y los "
 "involucra."
 
 #. module: website
@@ -4029,7 +4033,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
-msgstr "La empresa a la que pertenece este sitio web"
+msgstr "La compañía a la que pertenece este sitio web"
 
 #. module: website
 #. openerp-web
@@ -4286,7 +4290,7 @@ msgstr "Menú superior"
 #: code:addons/website/models/website.py:177
 #, python-format
 msgid "Top Menu for Website %s"
-msgstr "Menú principal para el sitio web%s"
+msgstr "Menú principal para el sitio web %s"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.http_error_debug
@@ -4628,7 +4632,7 @@ msgstr "Sitio web"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_company_id
 msgid "Website Company"
-msgstr "Empresa del sitio web"
+msgstr "Compañía del sitio web"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_domain
@@ -4879,8 +4883,8 @@ msgid ""
 "You have hidden this page from search results. It won't be indexed by search"
 " engines."
 msgstr ""
-"Has ocultado esta página de los resultados de búsqueda. No será indexado por"
-" los motores de búsqueda."
+"Ha ocultado esta página de los resultados de búsqueda. No será indexado por "
+"los motores de búsqueda."
 
 #. module: website
 #. openerp-web
@@ -4961,7 +4965,7 @@ msgstr "y evaluando la siguiente expresión:"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "breadcrumb"
-msgstr "ruta"
+msgstr "barra de migas"
 
 #. module: website
 #. openerp-web

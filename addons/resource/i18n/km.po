@@ -49,6 +49,7 @@ msgstr "ម៉ោងជាមធ្យមក្នុងមួយថ្ងៃ"
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
 msgstr ""
+"ម៉ោងជាមធ្យមក្នុងមួយថ្ងៃធនធានត្រូវបានគេសន្មត់ថាធ្វើការជាមួយប្រតិទិននេះ។"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -92,7 +93,7 @@ msgstr "បង្កើតនៅ"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
 msgid "Day Period"
-msgstr ""
+msgstr "រយៈពេលថ្ងៃ។"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
@@ -111,7 +112,7 @@ msgstr ""
 #: model:ir.model.fields,help:resource.field_resource_resource__calendar_id
 #: model:ir.model.fields,help:resource.field_resource_test__resource_calendar_id
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "កំណត់កាលវិភាគនៃធនធាន"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -119,6 +120,7 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
+"កំណត់ម៉ោងធ្វើការនិងតារាងពេលវេលាដែលអាចត្រូវបានកំណត់ពេលសម្រាប់សមាជិកគំរោងរបស់អ្នក។"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
@@ -133,7 +135,7 @@ msgstr "ឈ្មោះសំរាប់បង្ហាញ"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
 msgid "Efficiency Factor"
-msgstr ""
+msgstr "កត្តាប្រសិទ្ធភាព។"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_to
@@ -162,7 +164,7 @@ msgstr "ព្រឹកថ្ងៃសុក្រ"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Leaves"
-msgstr ""
+msgstr "ស្លឹកសកល។"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -203,6 +205,10 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"  Learn to pronounce \n"
+"\n"
+" \n"
+"ប្រសិនបើវាលសកម្មត្រូវបានកំណត់ទៅមិនពិតវានឹងអនុញ្ញាតឱ្យអ្នកលាក់កំណត់ត្រាធនធានដោយមិនចាំបាច់ដកវាចេញ។"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -245,7 +251,7 @@ msgstr "សម្រាក"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទចាកចេញ។"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -328,7 +334,7 @@ msgstr "ធនធាន"
 #: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr ""
+msgstr "ស្លឹកឈើធនធាន។"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -338,7 +344,7 @@ msgstr "ព៌តមានអំពីធនធាន"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
-msgstr ""
+msgstr "ធនធានលាយ។"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
@@ -387,12 +393,12 @@ msgstr "ថ្ងៃសៅរ៌"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Search Resource"
-msgstr ""
+msgstr "ធនធានស្វែងរក។"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Leaves"
-msgstr ""
+msgstr "ស្វែងរកស្លឹករយៈពេលធ្វើការ។"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -403,7 +409,7 @@ msgstr ""
 #: code:addons/resource/models/res_company.py:22
 #, python-format
 msgid "Standard 40 hours/week"
-msgstr ""
+msgstr "ស្តង់ដារ 40 ម៉ោង / សប្តាហ៍។"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
@@ -441,13 +447,13 @@ msgstr ""
 #: code:addons/resource/models/resource.py:464
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
+msgstr "កត្តាប្រសិទ្ធភាពមិនអាចស្មើនឹង ០ ។"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:519
 #, python-format
 msgid "The start date of the leave must be earlier end date."
-msgstr ""
+msgstr "កាលបរិច្ឆេទចាប់ផ្តើមនៃការឈប់សម្រាកត្រូវតែជាកាលបរិច្ឆេទបញ្ចប់មុននេះ។"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -563,7 +569,7 @@ msgstr "ថាតើវាគួរត្រូវបានគណនាជាថ
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr ""
+msgstr "ព៌តមានការងារ។"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -593,12 +599,12 @@ msgstr "ម៉ោងធ្វើការ"
 #: code:addons/resource/models/resource.py:152
 #, python-format
 msgid "Working Hours of %s"
-msgstr ""
+msgstr "ម៉ោងធ្វើការ o ។%s"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Period"
-msgstr ""
+msgstr "រយៈពេលធ្វើការ។"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids

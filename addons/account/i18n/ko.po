@@ -832,16 +832,10 @@ msgstr "세금 재정 상태는 같은 세금들에서 오로지 한번만 선�
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"사용자는 B2B 세금과 B2C 세금을 동시에 가질 수 없습니다.\n"
-"문제가 있는 사용자 : %s\n"
-"'세금 포함' 또는 '세금 제외' 상태 중 하나로\n"
-"일반 설정에서 상품 가격 표시를 선택할 수 있습니다.\n"
-"(또는 이미 원하는 상태에 있는 경우 상태를 두 번 전환하십시오)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4100,6 +4094,12 @@ msgid ""
 "Difference between the computed ending balance and the specified ending "
 "balance."
 msgstr "계산된 결산 잔액과 지정된 결산 잔액 간의 차이입니다."
+
+#. module: account
+#: code:addons/account/models/account_move.py:408
+#, python-format
+msgid "Difference debit - credit: "
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest

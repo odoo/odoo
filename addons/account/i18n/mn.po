@@ -855,15 +855,10 @@ msgstr "Татварын тайлангийн тохируулганд нэг т
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"Хэрэглэгч B2B болон B2C татварын хамтад нь ашиглаж болохгүй.\n"
-"Татвар хэрхэн ажилдагыг ойлгоогүй бол: %s\n"
-"Та Ерөнхий тохиргоо руу очоод Барааны үнийг 'Татвар шингэсэн' эсвэл 'Татвар шингээгүй' -ын аль нэгээр нь харуулахыг тохируулна уу. \n"
-"(хэрэв та өмнө нь аль нэгийг нь сонгосон байсан бол нөгөөг нь сольж сонгоод үзээрэй)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4213,6 +4208,12 @@ msgid ""
 "Difference between the computed ending balance and the specified ending "
 "balance."
 msgstr "Тооцоолсон эцсийн баланс болон тааруулсан эцсийн балансын зөрүү"
+
+#. module: account
+#: code:addons/account/models/account_move.py:408
+#, python-format
+msgid "Difference debit - credit: "
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
@@ -8155,7 +8156,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
-msgstr "Та төлбөр төлөхдөө дараах хэрэгслүүдээс сонгоно уу:"
+msgstr "Та төлбөрөө шилжүүлэхдээ дараах гүйлгээний утгыг ашиглана уу:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_url
