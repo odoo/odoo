@@ -45,8 +45,8 @@
 # José Vicente <txusev@gmail.com>, 2019
 # Miquel Torner <miq@odoo.com>, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -54,7 +54,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
+"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +111,7 @@ msgstr "&nbsp;"
 #. module: point_of_sale
 #: model:ir.actions.report,print_report_name:point_of_sale.pos_invoice_report
 msgid "'Invoice - %s' % (object.name)"
-msgstr ""
+msgstr "'Factura- %s' % (object.name)"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:90
@@ -133,7 +133,7 @@ msgstr "+ Transacciones"
 #: code:addons/point_of_sale/models/pos_session.py:377
 #, python-format
 msgid ", we advise you to close it and to create a new one."
-msgstr ""
+msgstr ", le recomendamos cerrarlo y crear uno nuevo."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -182,7 +182,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Barcode Scanner</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Escáner de código de barras</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -630,7 +630,7 @@ msgstr "Métodos de pago disponibles"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid "Available PoS Product Categories"
-msgstr ""
+msgstr "Categorías de productos PoS disponibles"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -641,7 +641,7 @@ msgstr "Listas de Precio Disponibles"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Available Product Categories"
-msgstr ""
+msgstr "Categorías de productos disponibles"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_search_inherit_point_of_sale
@@ -969,7 +969,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Choose among fiscal positions when processing an order"
-msgstr ""
+msgstr "Elija entre las posiciones fiscales al procesar un pedido"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1612,6 +1612,9 @@ msgid ""
 "These credentials are configurable in the *HR Settings* tab of the employee "
 "form."
 msgstr ""
+"Los empleados pueden escanear su credencial o ingresar un PIN para iniciar "
+"sesión en una sesión de PdV. Estas credenciales se pueden configurar en la "
+"pestaña * Configuración de recursos humanos * del formulario del empleado."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2578,6 +2581,8 @@ msgid ""
 "Operation type used to record product pickings <br/>\n"
 "                                    Products will be taken from the default source location of this operation type"
 msgstr ""
+"Tipo de operación utilizada para registrar las selecciones de productos<br/>\n"
+"                                     Los productos se tomarán de la ubicación de origen predeterminada de este tipo de operación"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2929,13 +2934,15 @@ msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
 msgstr ""
+"Cierre todas las sesiones de punto de venta en este período antes de "
+"cerrarlo. Las sesiones abiertas son:%s"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:2029
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr ""
+msgstr "Configure un método de pago en su PdV."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:229
@@ -2998,12 +3005,12 @@ msgstr "Pedidos TPV"
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Product Categories"
-msgstr ""
+msgstr "Categorías de productos PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
-msgstr ""
+msgstr "Categoría de producto PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -3082,7 +3089,7 @@ msgstr "Estado de Cuenta Abierto del Punto de Venta"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "Tipo de operación de punto de venta"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -3128,7 +3135,7 @@ msgstr "Configuración del punto de venta"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_ids
 msgid "Pos Order"
-msgstr ""
+msgstr "Orden PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
@@ -3271,7 +3278,7 @@ msgstr "Imprimir recibo"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:92
 #, python-format
 msgid "Print a report with all the sales of the current PoS Session"
-msgstr ""
+msgstr "Imprima un informe con todas las ventas de la sesión de PdV actual"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3542,7 +3549,7 @@ msgstr "Usuario responsable"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limit_categories
 msgid "Restrict Available Product Categories"
-msgstr ""
+msgstr "Restringir categorías de productos disponibles"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__restrict_price_control
@@ -3672,7 +3679,7 @@ msgstr "Seleccionar cliente"
 #: code:addons/point_of_sale/static/src/js/screens.js:2232
 #, python-format
 msgid "Select Fiscal Position"
-msgstr ""
+msgstr "Seleccionar posición fiscal"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3751,7 +3758,7 @@ msgstr "ID de sesión :"
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
-msgstr ""
+msgstr "Sesión abierta durante 7 días."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -3847,7 +3854,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 msgid "Show employee login screen"
-msgstr ""
+msgstr "Mostrar pantalla de inicio de sesión de empleado"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4277,6 +4284,9 @@ msgid ""
 "selected category trees. If no category is specified, all available products"
 " will be shown"
 msgstr ""
+"El punto de venta solo mostrará productos que estén dentro de uno de los "
+"árboles de categorías seleccionados. Si no se especifica ninguna categoría, "
+"se mostrarán todos los productos disponibles."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -4451,6 +4461,8 @@ msgid ""
 "This barcode is already assigned to another contact. Please make sure you "
 "assign a unique barcode to this contact."
 msgstr ""
+"Este código de barras ya está asignado a otro contacto. Asegúrese de asignar"
+" un código de barras único a este contacto."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cashbox_line__default_pos_id
@@ -4801,6 +4813,8 @@ msgstr "Utilizar un teclado virtual para pantallas táctiles"
 msgid ""
 "Use employee credentials to log in to the PoS session and switch cashier"
 msgstr ""
+"Utilice las credenciales de los empleados para iniciar sesión en la sesión "
+"de PdV y cambiar de cajero"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__journal_user
@@ -4953,6 +4967,7 @@ msgstr ""
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
 msgstr ""
+"No puede crear una sesión antes de la fecha de bloqueo de contabilidad."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:160
@@ -5081,7 +5096,7 @@ msgstr "Su conexión de Internet está probablemente caída."
 #: code:addons/point_of_sale/models/pos_session.py:376
 #, python-format
 msgid "Your PoS Session is open since "
-msgstr ""
+msgstr "Su sesión de PdV está abierta desde"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:302
@@ -5186,7 +5201,7 @@ msgstr "no usado"
 #. module: point_of_sale
 #: model:mail.activity.type,summary:point_of_sale.mail_activity_old_session
 msgid "note"
-msgstr ""
+msgstr "Nota"
 
 #. module: point_of_sale
 #. openerp-web

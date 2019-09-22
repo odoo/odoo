@@ -3,13 +3,13 @@
 # 	* sale
 # 
 # Translators:
-# Michael Yeung, 2018
 # sejun huang <sejun.huang@gmail.com>, 2018
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
 # amos lin <seeing@edirect168.com>, 2019
 # Ying <acc.tou@gmail.com>, 2019
 # Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Michael Yeung, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:27+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: Michael Yeung, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +55,8 @@ msgid ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${(object.get_portal_last_transaction().state == "
+"'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -316,6 +318,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
+"title=\"Sales orders\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -363,11 +367,13 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr ""
+msgstr "確認郵件"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -408,7 +414,7 @@ msgstr "<span>通過簽訂該提議，我同意以下條款：</span>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>折扣率%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -444,7 +450,7 @@ msgstr "<strong class=\"mr16\">小計</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">銷售員</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -464,7 +470,7 @@ msgstr "<STRONG>到期日期：</STRONG>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration:</strong>"
-msgstr ""
+msgstr "<strong>到期日期：</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -485,7 +491,7 @@ msgstr "<strong>銷售員:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong>送貨地址:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -529,7 +535,7 @@ msgstr "<strong>您的參考：</strong>"
 #. module: sale
 #: sql_constraint:sale.order:0
 msgid "A confirmed sales order requires a confirmation date."
-msgstr ""
+msgstr "要確認銷售訂單需要填上確認日期"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:833
@@ -598,7 +604,7 @@ msgstr "同意 並支付"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Pay Quotation"
-msgstr ""
+msgstr "同意 並支付該報價單"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -608,7 +614,7 @@ msgstr "同意和簽名"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Sign Quotation"
-msgstr ""
+msgstr "同意 並簽署該報價單"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -797,7 +803,7 @@ msgstr "自動開立應收憑單"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Automatic email sent after the customer has signed or paid online"
-msgstr ""
+msgstr "於客戶簽署或網上付款後將自動發送電郵"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__journal_name
@@ -823,7 +829,7 @@ msgstr "按參考文件"
 msgid ""
 "Beyond this date, the customer is no longer able to accept the quotation "
 "from the portal."
-msgstr ""
+msgstr "客戶將無法於此日期後從連結確認報價單。"
 
 #. module: sale
 #: selection:product.template,sale_line_warn:0
@@ -870,7 +876,7 @@ msgstr "捕捉交易"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
 msgid "Choose how to confirm quotations"
-msgstr ""
+msgstr "選擇如何確認報價單"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -1115,7 +1121,7 @@ msgstr "客戶實體"
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Industry"
-msgstr ""
+msgstr "客戶的行業"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -1130,7 +1136,7 @@ msgstr "客戶參照"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Customer Signature"
-msgstr ""
+msgstr "客戶簽名"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -1170,7 +1176,7 @@ msgstr "訂單日期"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_on
 msgid "Date of the signature."
-msgstr ""
+msgstr "簽署日期"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__create_date
@@ -1190,7 +1196,7 @@ msgstr "日期:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr ""
+msgstr "減去預付訂金"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1293,7 +1299,7 @@ msgstr "數字內容"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Disc.%"
-msgstr ""
+msgstr "折扣率%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
@@ -1364,7 +1370,7 @@ msgstr "預付定金產品"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:142
 #, python-format
 msgid "Down Payment: %s"
-msgstr ""
+msgstr "預付定金: %s"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1410,7 +1416,7 @@ msgstr "Easypost 連接器"
 #: code:addons/sale/static/src/js/product_configurator_widget.js:73
 #, python-format
 msgid "Edit Configuration"
-msgstr ""
+msgstr "修改配置"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__template_id
@@ -1421,7 +1427,7 @@ msgstr "Email模板"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_template_id
 msgid "Email sent to the customer once the order is paid."
-msgstr ""
+msgstr "在付款後向客戶發送電子信件"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -1440,7 +1446,7 @@ msgstr "可以向客戶重新開具費用和供應商帳單。通過此選項，
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
-msgstr ""
+msgstr "截止日期"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1453,7 +1459,7 @@ msgstr "擴展篩選"
 #: code:addons/sale/static/src/js/product_configurator_widget.js:50
 #, python-format
 msgid "External Link"
-msgstr ""
+msgstr "外部連結"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1052
@@ -1547,7 +1553,7 @@ msgstr "HTML 顏色索引"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr ""
+msgstr "有預付定金"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_attribute_value__html_color
@@ -1631,13 +1637,13 @@ msgstr "收入科目"
 #: code:addons/sale/controllers/portal.py:205
 #, python-format
 msgid "Invalid order."
-msgstr ""
+msgstr "無效的訂單"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:219
 #, python-format
 msgid "Invalid signature data."
-msgstr ""
+msgstr "無效的簽署資料"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:816
@@ -1775,7 +1781,7 @@ msgstr "開立發票"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address:"
-msgstr ""
+msgstr "開立發票地址:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -1793,7 +1799,7 @@ msgstr "發票目標"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address:"
-msgstr ""
+msgstr "開立發票和送貨地址："
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
@@ -1809,7 +1815,7 @@ msgstr "是首付款嗎？"
 #: model:ir.model.fields,field_description:sale.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__is_custom
 msgid "Is custom value"
-msgstr ""
+msgstr "是自訂數值"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
@@ -2225,7 +2231,7 @@ msgstr "線上簽名"
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Online signature"
-msgstr ""
+msgstr "網上簽署"
 
 #. module: sale
 #. openerp-web
@@ -2474,7 +2480,7 @@ msgstr "付款交易"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Payment terms"
-msgstr ""
+msgstr "付款條款"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__payment_term_id
@@ -3322,12 +3328,12 @@ msgstr "訂貨時顯示利潤"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "簽署 並 付款"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr ""
+msgstr "簽署 並 付款報價單"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
@@ -3354,12 +3360,12 @@ msgstr "簽名已通過網站入口網站收到。"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
 msgid "Signed By"
-msgstr ""
+msgstr "簽署自"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
 msgid "Signed On"
-msgstr ""
+msgstr "簽署於"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -3950,7 +3956,7 @@ msgstr "驗證訂單"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "View Quotation"
-msgstr ""
+msgstr "檢視報價單"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form

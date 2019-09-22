@@ -35,6 +35,7 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
+# Manga Tsang <mts@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -42,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:26+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: Jeanphy <hzh0292@qq.com>, 2019\n"
+"Last-Translator: Manga Tsang <mts@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,7 +100,7 @@ msgstr "&nbsp;"
 #. module: point_of_sale
 #: model:ir.actions.report,print_report_name:point_of_sale.pos_invoice_report
 msgid "'Invoice - %s' % (object.name)"
-msgstr ""
+msgstr "'发票 - %s' % (object.name)"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:90
@@ -121,7 +122,7 @@ msgstr "+ 交易"
 #: code:addons/point_of_sale/models/pos_session.py:377
 #, python-format
 msgid ", we advise you to close it and to create a new one."
-msgstr ""
+msgstr "，我们建议您关闭它并创建一个新的。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -166,7 +167,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Barcode Scanner</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">条形码扫描器</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -596,7 +597,7 @@ msgstr "可用的付款方式"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid "Available PoS Product Categories"
-msgstr ""
+msgstr "可用PoS产品类别"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -607,7 +608,7 @@ msgstr "可用价格表"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Available Product Categories"
-msgstr ""
+msgstr "可用产品类别"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_search_inherit_point_of_sale
@@ -918,12 +919,12 @@ msgstr "选择销售点的价目表"
 msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
-msgstr ""
+msgstr "根据客户的类型选择订单上的具体财务状况(免税、现场与外卖等)。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Choose among fiscal positions when processing an order"
-msgstr ""
+msgstr "处理订单时在财务状况中进行选择"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1379,7 +1380,7 @@ msgstr "折扣"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Disc.%"
-msgstr ""
+msgstr "Disc.%"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -1554,7 +1555,7 @@ msgid ""
 "Employees can scan their badge or enter a PIN to log in to a PoS session. "
 "These credentials are configurable in the *HR Settings* tab of the employee "
 "form."
-msgstr ""
+msgstr "员工可以扫描徽章或输入PIN以登录PoS会话。 这些凭据可在员工表单的* HR Settings *选项中进行配置。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1747,7 +1748,7 @@ msgstr "分组销售点中的产品"
 #: code:addons/point_of_sale/static/src/js/models.js:143
 #, python-format
 msgid "HTTPS connection to IoT Box failed"
-msgstr ""
+msgstr "与IoT Box的HTTPS连接失败"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2150,7 +2151,7 @@ msgstr "使多个价目表可用于销售点。否则，将应用默认价目表
 msgid ""
 "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
 "the certificate of your IoT Box."
-msgstr ""
+msgstr "确保您使用的是IoT Box v18.12或更高版本。导航到 %s接受IoT Box的证书。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_medium
@@ -2191,7 +2192,7 @@ msgstr "杂项"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
-msgstr ""
+msgstr "模块Pos Hr"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -2497,6 +2498,8 @@ msgid ""
 "Operation type used to record product pickings <br/>\n"
 "                                    Products will be taken from the default source location of this operation type"
 msgstr ""
+"用于记录产品拣选的操作类型 <br/>\n"
+"                                    产品将从该操作类型的默认源位置获取"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2816,7 +2819,7 @@ msgstr "分拣错误"
 #: code:addons/point_of_sale/models/stock_warehouse.py:15
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "挑选POS"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2898,7 +2901,7 @@ msgstr "销售点类别"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Interface"
-msgstr ""
+msgstr "PoS接口"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:34
@@ -2912,12 +2915,12 @@ msgstr "POS 订单"
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Product Categories"
-msgstr ""
+msgstr "PoS产品类别"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
-msgstr ""
+msgstr "PoS产品类别"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -2996,7 +2999,7 @@ msgstr "销售网点开业状态"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "销售点经营类型"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -3042,7 +3045,7 @@ msgstr "销售点配置"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_ids
 msgid "Pos Order"
-msgstr ""
+msgstr "Pos 订单"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
@@ -3230,7 +3233,7 @@ msgid ""
 "Printing is not supported on some android browsers due to no default "
 "printing protocol is available. It is possible to print your tickets by "
 "making use of an IoT Box."
-msgstr ""
+msgstr "某些Android浏览器不支持打印，因为没有可用的默认打印协议。 可以使用IoT Box打印门票。"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_procurement_group

@@ -27,6 +27,7 @@
 # Martin Trigaux, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -34,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 12:27+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Jeanphy <hzh0292@qq.com>, 2019\n"
+"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,12 +57,12 @@ msgstr "&amp;次数;"
 #. module: survey
 #: model:ir.actions.report,print_report_name:survey.certification_report
 msgid "'Certification - %s' % (object.survey_id.display_name)"
-msgstr ""
+msgstr "'证书 - %s' % (object.survey_id.display_name)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_header
 msgid "00:00"
-msgstr ""
+msgstr "00:00"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
@@ -98,6 +99,32 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"                    <table style=\"width:600px;margin:5px auto;\">\n"
+"                        <tbody>\n"
+"                            <tr><td>\n"
+"                                <!-- 我们使用公司的徽标创建调查（处理多公司案例） -->\n"
+"                                <a href=\"/\"><img src=\"/logo.png?company=${object.survey_id.create_uid.company_id.id}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                                   证书: ${object.survey_id.display_name}\n"
+"                            </td></tr>\n"
+"                        </tbody>\n"
+"                    </table>\n"
+"                    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"                        <tbody>\n"
+"                            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                                <p>亲爱的 <span>${object.partner_id.name or 'participant'}</span></p>\n"
+"                                <p>\n"
+"                                    以下是附件是认书档案\n"
+"                                        <strong>${object.survey_id.display_name}</strong>\n"
+"                                </p>\n"
+"                                <p>恭喜您成功完成测试！</p>\n"
+"                            </td></tr>\n"
+"                        </tbody>\n"
+"                    </table>\n"
+"                </div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -132,6 +159,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的 ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        % if object.survey_id.certificate:\n"
+"            您已被邀请参加新认证\n"
+"        % else:\n"
+"           我们正在进行一项调查，希望得到您的答复。\n"
+"        % endif\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${('%s?answer_token=%s' % (object.survey_id.public_url, object.token)) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                % if object.survey_id.certificate:\n"
+"                    开始认证\n"
+"                % else:\n"
+"                    开始调查\n"
+"                % endif\n"
+"            </a>\n"
+"        </div>\n"
+"        % if object.deadline:\n"
+"           请回答调查${format_date(object.deadline)}.<br/><br/>\n"
+"        % endif\n"
+"       感谢您的参与!\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -263,6 +314,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_attempts_limited', '=', False)]}\"> "
 "attempts</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_attempts_limited', '=', "
+"False)]}\">尝试</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -270,6 +323,7 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_time_limited', '=', False)]}\"> "
 "minutes</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_time_limited', '=', False)]}\"> 分钟</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -330,22 +384,22 @@ msgstr "<span class=\"fa fa-filter\"/>  筛选"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "<span>Correct answer</span>:"
-msgstr ""
+msgstr "<span>正确答案</span>:"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "<span>Correct answers</span>:"
-msgstr ""
+msgstr "<span>正确答案</span>:"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.retake_survey_button
 msgid "<span>Number of attemps left</span>:"
-msgstr ""
+msgstr "<span>剩下的尝试次数</span>:"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_init
 msgid "<span>Time limit for this survey: </span>"
-msgstr ""
+msgstr "<span>本调查的时间限制: </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view
@@ -384,7 +438,7 @@ msgstr "标记必须唯一！"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_access_mode
 #: model:ir.model.fields,field_description:survey.field_survey_survey__access_mode
 msgid "Access Mode"
-msgstr ""
+msgstr "访问模式"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__access_token
@@ -394,7 +448,7 @@ msgstr "访问令牌"
 #. module: survey
 #: sql_constraint:survey.survey:0
 msgid "Access token should be unique"
-msgstr ""
+msgstr "访问记号应该是独一无二"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction
@@ -431,7 +485,7 @@ msgstr "增加一个新调查"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Add a question"
-msgstr ""
+msgstr "添加一个问题"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -446,7 +500,7 @@ msgstr "添加现有联系人..."
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__emails
 msgid "Additional emails"
-msgstr ""
+msgstr "附加的邮件"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_manager
@@ -456,7 +510,7 @@ msgstr "管理员"
 #. module: survey
 #: selection:survey.survey,questions_selection:0
 msgid "All questions"
-msgstr ""
+msgstr "所有问题"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -476,7 +530,7 @@ msgstr "答案选项"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Answer Score"
-msgstr ""
+msgstr "答案分数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__input_type
@@ -487,7 +541,7 @@ msgstr "回复类型"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__deadline
 msgid "Answer deadline"
-msgstr ""
+msgstr "回答期限"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -508,7 +562,7 @@ msgstr "答案"
 #. module: survey
 #: selection:survey.survey,access_mode:0
 msgid "Anyone with the link"
-msgstr ""
+msgstr "任何有链接的人"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -528,7 +582,7 @@ msgstr "附件"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Attempts Limit"
-msgstr ""
+msgstr "尝试限制"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__author_id
@@ -538,14 +592,14 @@ msgstr "作者"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__author_id
 msgid "Author of the message."
-msgstr ""
+msgstr "信息的作者。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__certification_mail_template_id
 msgid ""
 "Automated email sent to the user when he succeeds the certification, "
 "containing his certification document."
-msgstr ""
+msgstr "在成功通过认证后发送给用户的自动电子邮件，其中包含其认证文档。"
 
 #. module: survey
 #: model:ir.model,name:survey.model_ir_autovacuum
@@ -555,7 +609,7 @@ msgstr "自动清空"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Back Button"
-msgstr ""
+msgstr "返回键"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -565,7 +619,7 @@ msgstr "取消"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Candidates"
-msgstr ""
+msgstr "考生"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__category
@@ -579,7 +633,7 @@ msgid ""
 "Category is used to know in which context the survey is used. Various apps "
 "may define their own categories when they use survey like jobs recruitment "
 "or employee appraisal surveys."
-msgstr ""
+msgstr "类别用于了解在何种上下文中使用了调查。不同的应用程序在使用招聘或员工评估调查等调查时，可能会定义自己的类别。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certificate
@@ -590,43 +644,43 @@ msgstr "证书"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Certification"
-msgstr ""
+msgstr "认证"
 
 #. module: survey
 #: model:mail.template,report_name:survey.mail_template_certification
 msgid "Certification Document"
-msgstr ""
+msgstr "认证文件"
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
 msgid "Certification: ${object.survey_id.display_name}"
-msgstr ""
+msgstr "证书: ${object.survey_id.display_name}"
 
 #. module: survey
 #: model:ir.actions.report,name:survey.certification_report
 msgid "Certifications"
-msgstr ""
+msgstr "认证"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certified_count
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Certified"
-msgstr ""
+msgstr "具有证明的"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view
 msgid "Certifies that"
-msgstr ""
+msgstr "证明了"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Chart"
-msgstr ""
+msgstr "图表"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__is_attempts_limited
 msgid "Check this option if you want to limit the number of attempts per user"
-msgstr ""
+msgstr "如果希望限制每个用户的尝试次数，请选中此选项"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -663,7 +717,7 @@ msgstr "颜色索引"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Columns of the Matrix"
-msgstr ""
+msgstr "矩阵列"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_comments
@@ -700,7 +754,7 @@ msgstr "配置"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "Congratulations, you have passed the test!"
-msgstr ""
+msgstr "恭喜,你通过了考验!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -736,7 +790,7 @@ msgstr "创建时间"
 #: code:addons/survey/models/survey_survey.py:244
 #, python-format
 msgid "Creating test token is not allowed for you."
-msgstr ""
+msgstr "您不允许创建测试符记"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:258
@@ -744,19 +798,19 @@ msgstr ""
 msgid ""
 "Creating token for anybody else than employees is not allowed for internal "
 "surveys."
-msgstr ""
+msgstr "内部调查不允许为员工以外的任何人创建符记。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:247
 #, python-format
 msgid "Creating token for archived surveys is not allowed."
-msgstr ""
+msgstr "不允许为存档的调查创建符记。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:249
 #, python-format
 msgid "Creating token for closed surveys is not allowed."
-msgstr ""
+msgstr "不允许为已关闭的调查创建令牌。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:253
@@ -765,19 +819,19 @@ msgstr ""
 msgid ""
 "Creating token for external people is not allowed for surveys requesting "
 "authentication."
-msgstr ""
+msgstr "对于请求身份验证的调查，不允许为外部人员指定令牌。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid ""
 "Customers will receive a new token and be able to completely retake the "
 "survey."
-msgstr ""
+msgstr "客户将收到一个新的令牌，并能够重新进行调查。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Customers will receive the same token."
-msgstr ""
+msgstr "客户将收到相同的令牌"
 
 #. module: survey
 #: selection:survey.question,question_type:0
@@ -794,17 +848,17 @@ msgstr "回复日期"
 #: selection:survey.question,question_type:0
 #: selection:survey.user_input_line,answer_type:0
 msgid "Datetime"
-msgstr ""
+msgstr "日期时间"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_datetime
 msgid "Datetime answer"
-msgstr ""
+msgstr "日期时间日期时间"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
 msgid "Datetime until customer can open the survey and submit answers"
-msgstr ""
+msgstr "日期时间 客户可以打开调查并提交答案"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
@@ -853,7 +907,7 @@ msgstr "显示模式"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__display_mode
 msgid "Display mode of simple choice questions."
-msgstr ""
+msgstr "显示简单模式选择问题。"
 
 #. module: survey
 #: selection:survey.survey,state:0
@@ -878,7 +932,7 @@ msgstr "编辑问卷"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.back
 msgid "Edit Survey."
-msgstr ""
+msgstr "编辑调查。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void
@@ -898,7 +952,7 @@ msgstr "EMail模板"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__email_from
 msgid "Email address of the sender."
-msgstr ""
+msgstr "发件人的电子邮件。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_error_msg
@@ -908,12 +962,12 @@ msgstr "错误消息"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_partner_ids
 msgid "Existing Partner"
-msgstr ""
+msgstr "现有合作伙伴"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_emails
 msgid "Existing emails"
-msgstr ""
+msgstr "现有电子邮箱"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
@@ -958,7 +1012,7 @@ msgstr "从"
 #. module: survey
 #: selection:survey.survey,category:0
 msgid "Generic Survey"
-msgstr ""
+msgstr "通用的调查"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
@@ -972,7 +1026,7 @@ msgstr "分组"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_mode
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Handle existing"
-msgstr ""
+msgstr "Handle existing"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__id
@@ -1014,7 +1068,7 @@ msgstr "如果选中，用户能够返回上页。"
 #: model:ir.model.fields,help:survey.field_survey_survey__users_login_required
 msgid ""
 "If checked, users have to login before answering even with a valid token."
-msgstr ""
+msgstr "如果勾选此项，用户必须在回答之前登录并使用有效的令牌。"
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:106
@@ -1028,7 +1082,7 @@ msgstr "如果是其它，请指定"
 msgid ""
 "If randomized is selected, add the number of random questions next to the "
 "section."
-msgstr ""
+msgstr "如果选择随机随机，请在该部分旁边添加随机问题的数量。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
@@ -1064,7 +1118,7 @@ msgstr "邀请"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__invite_token
 msgid "Invite token"
-msgstr ""
+msgstr "邀请令牌"
 
 #. module: survey
 #: selection:survey.survey,access_mode:0
@@ -1084,17 +1138,17 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__is_correct
 msgid "Is a correct answer"
-msgstr ""
+msgstr "是正确答案"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_page
 msgid "Is a page?"
-msgstr ""
+msgstr "是一页吗?"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__is_time_limit_reached
 msgid "Is time limit reached?"
-msgstr ""
+msgstr "达到时限了吗?"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__sequence
@@ -1110,14 +1164,14 @@ msgstr "Labels"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__labels_ids_2
 msgid "Labels used for proposed choices: rows of matrix"
-msgstr ""
+msgstr "标签用于提出选择:行矩阵"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__labels_ids
 msgid ""
 "Labels used for proposed choices: simple choice, multiple choice and columns"
 " of matrix"
-msgstr ""
+msgstr "标签用于提出选择:简单的选择,选择题和列的矩阵"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite____last_update
@@ -1152,7 +1206,7 @@ msgstr "最后更新时间"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__last_displayed_page_id
 msgid "Last displayed question/page"
-msgstr ""
+msgstr "上次显示问题/页"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -1167,13 +1221,13 @@ msgstr "布局"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_attempts_limited
 msgid "Limited number of attempts"
-msgstr ""
+msgstr "有限的尝试次数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_users_login_required
 #: model:ir.model.fields,field_description:survey.field_survey_survey__users_login_required
 msgid "Login Required"
-msgstr ""
+msgstr "需要登录"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.auth_required
@@ -1219,7 +1273,7 @@ msgstr "最大日期不能小于最小日期！"
 #. module: survey
 #: sql_constraint:survey.question:0
 msgid "Max datetime cannot be smaller than min datetime!"
-msgstr ""
+msgstr "最大日期时间不能小于最小日期时间！"
 
 #. module: survey
 #: sql_constraint:survey.question:0
@@ -1239,7 +1293,7 @@ msgstr "最大日期"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_datetime
 msgid "Maximum Datetime"
-msgstr ""
+msgstr "最长日期时间"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_max
@@ -1274,7 +1328,7 @@ msgstr "最小日期"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_datetime
 msgid "Minimum Datetime"
-msgstr ""
+msgstr "最短日期时间"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_min
@@ -1290,7 +1344,7 @@ msgstr "最小值"
 #: code:addons/survey/controllers/main.py:627
 #, python-format
 msgid "Missed"
-msgstr ""
+msgstr "错过了"
 
 #. module: survey
 #: selection:survey.question,question_type:0
@@ -1335,7 +1389,7 @@ msgstr "新的"
 #. module: survey
 #: selection:survey.invite,existing_mode:0
 msgid "New invite"
-msgstr ""
+msgstr "新的邀请"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_date_deadline
@@ -1360,13 +1414,13 @@ msgstr "下一页"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
 msgid "Next question"
-msgstr ""
+msgstr "下一个问题"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:260
 #, python-format
 msgid "No attempts left."
-msgstr ""
+msgstr "没有尝试机会。"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
@@ -1376,7 +1430,7 @@ msgstr "没啥问题"
 #. module: survey
 #: selection:survey.survey,scoring_type:0
 msgid "No scoring"
-msgstr ""
+msgstr "没有得分"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_label_form
@@ -1412,7 +1466,7 @@ msgstr "行动数量"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__attempts_limit
 msgid "Number of attempts"
-msgstr ""
+msgstr "尝试次数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__column_nb
@@ -1463,17 +1517,17 @@ msgstr "每行一个选项"
 #. module: survey
 #: selection:survey.survey,questions_layout:0
 msgid "One page per question"
-msgstr ""
+msgstr "每题一页"
 
 #. module: survey
 #: selection:survey.survey,questions_layout:0
 msgid "One page per section"
-msgstr ""
+msgstr "每个部分一页"
 
 #. module: survey
 #: selection:survey.survey,questions_layout:0
 msgid "One page with all the questions"
-msgstr ""
+msgstr "一页包含所有问题"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -1515,7 +1569,7 @@ msgstr "部分完成"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
 msgid "Participate to ${object.survey_id.title} survey"
-msgstr ""
+msgstr "参与 ${object.survey_id.title} 调查"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__partner_id
@@ -1532,7 +1586,7 @@ msgstr "通过的"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__passing_score
 msgid "Passing score (%)"
-msgstr ""
+msgstr "合格分数 （％）"
 
 #. module: survey
 #: selection:survey.survey,activity_state:0
@@ -1550,12 +1604,12 @@ msgstr "请至少输入一个可用的收件人。"
 msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section if you chose the \"Page per section\" layout.<br/>"
-msgstr ""
+msgstr "请确保你的调查中至少有一个问题。你还需要至少一个部分如果你选择“页面每节”布局。<br/>"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__question_ids
 msgid "Predefined Questions"
-msgstr ""
+msgstr "预定义的问题"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -1565,7 +1619,7 @@ msgstr "上一页"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
 msgid "Previous question"
-msgstr ""
+msgstr "上一个问题"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -1615,12 +1669,12 @@ msgstr "问题"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__quizz_passed
 msgid "Quizz Passed"
-msgstr ""
+msgstr "通过测验"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Quizz passed"
-msgstr ""
+msgstr "通过"
 
 #. module: survey
 #: selection:survey.question,display_mode:0
@@ -1630,12 +1684,12 @@ msgstr "单选按钮"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__random_questions_count
 msgid "Random questions count"
-msgstr ""
+msgstr "随机问题计数"
 
 #. module: survey
 #: selection:survey.survey,questions_selection:0
 msgid "Randomized per section"
-msgstr ""
+msgstr "每节随机"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__partner_ids
@@ -1650,17 +1704,17 @@ msgstr "招聘"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_text
 msgid "Resend Comment"
-msgstr ""
+msgstr "重新发送评论"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
 msgid "Resend Invitation"
-msgstr ""
+msgstr "重新发送邀请"
 
 #. module: survey
 #: selection:survey.invite,existing_mode:0
 msgid "Resend invite"
-msgstr ""
+msgstr "重新发送邀请"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_user_id
@@ -1670,7 +1724,7 @@ msgstr "责任用户"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Results Overview"
-msgstr ""
+msgstr "结果概述"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.retake_survey_button
@@ -1710,7 +1764,7 @@ msgstr "表格行数"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__quizz_score
 msgid "Score (%)"
-msgstr ""
+msgstr "分数(%)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__answer_score
@@ -1732,17 +1786,17 @@ msgstr "评分"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scoring_type
 msgid "Scoring Type"
-msgstr ""
+msgstr "评分类型"
 
 #. module: survey
 #: selection:survey.survey,scoring_type:0
 msgid "Scoring with answers at the end"
-msgstr ""
+msgstr "最后给出答案"
 
 #. module: survey
 #: selection:survey.survey,scoring_type:0
 msgid "Scoring without answers at the end"
-msgstr ""
+msgstr "最后没有答案的得分"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_label_search
@@ -1767,17 +1821,17 @@ msgstr "搜索用户输入行"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Section name"
-msgstr ""
+msgstr "部分名称"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_and_page_ids
 msgid "Sections and Questions"
-msgstr ""
+msgstr "部分和问题"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "See results"
-msgstr ""
+msgstr "查看结果"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__questions_selection
@@ -1803,7 +1857,7 @@ msgstr "序号"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Set to draft"
-msgstr ""
+msgstr "设定为草案"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -1840,7 +1894,7 @@ msgstr "忽略"
 #: code:addons/survey/wizard/survey_invite.py:112
 #, python-format
 msgid "Some emails you just entered are incorrect: %s"
-msgstr ""
+msgstr "Some emails 您刚输入的某些电子邮箱不正确：%s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -1859,12 +1913,12 @@ msgstr "抱歉，没有人回答此问题。"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Sorry, no one answered this survey yet."
-msgstr ""
+msgstr "对不起，还没有人回答这个调查。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_init
 msgid "Start Certification"
-msgstr ""
+msgstr "开始认证"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -1875,7 +1929,7 @@ msgstr "开始调查"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__start_datetime
 msgid "Start date and time"
-msgstr ""
+msgstr "开始日期和时间"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_count
@@ -1913,17 +1967,17 @@ msgstr "主题..."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
 msgid "Submit Survey"
-msgstr ""
+msgstr "提交调查报告"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Success rate:"
-msgstr ""
+msgstr "成功率："
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view
 msgid "Successfully achieved"
-msgstr ""
+msgstr "成功实现"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested
@@ -1963,7 +2017,7 @@ msgstr "问卷答案明细"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_invite
 msgid "Survey Invitation Wizard"
-msgstr ""
+msgstr "调查邀请向导"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_label
@@ -2072,14 +2126,14 @@ msgstr "答案必须是正确的类别"
 #: code:addons/survey/models/survey_question.py:119
 #, python-format
 msgid "The answer you entered is not valid."
-msgstr ""
+msgstr "您输入的答案无效。"
 
 #. module: survey
 #: sql_constraint:survey.survey:0
 msgid ""
 "The attempts limit needs to be a positive number if the survey has a limited"
 " number of attempts."
-msgstr ""
+msgstr "如果调查的尝试次数有限，则尝试次数限制必须为正数。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__description
@@ -2087,19 +2141,19 @@ msgid ""
 "The description will be displayed on the home page of the survey. You can "
 "use this to give the purpose and guidelines to your candidates before they "
 "start it."
-msgstr ""
+msgstr "描述将显示在调查的主页上。您可以使用此功能在您的候选人开始之前为其提供目的和指导。"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_invite.py:85
 #, python-format
 msgid "The following customers have already received an invite"
-msgstr ""
+msgstr "以下客户已收到邀请"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_invite.py:91
 #, python-format
 msgid "The following emails have already received an invite"
-msgstr ""
+msgstr "以下电子邮箱已收到邀请"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_invite.py:136
@@ -2107,7 +2161,7 @@ msgstr ""
 msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external signup in configuration."
-msgstr ""
+msgstr "以下收件人没有用户帐户： %s 您应该为它们创建用户帐户或允许在配置中进行外部注册。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
@@ -2117,26 +2171,26 @@ msgstr "你正在查找的网页可能未被授权。"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_time_limited
 msgid "The survey is limited in time"
-msgstr ""
+msgstr "调查时间是有限的"
 
 #. module: survey
 #: sql_constraint:survey.survey:0
 msgid ""
 "The time limit needs to be a positive number if the survey is time limited."
-msgstr ""
+msgstr "如果调查时间有限，则时间限制必须为正数。"
 
 #. module: survey
 #: code:addons/survey/controllers/main.py:530
 #, python-format
 msgid "The user has not succeeded the certification"
-msgstr ""
+msgstr "用户尚未成功通过认证"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__column_nb
 msgid ""
 "These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap for "
 "dropdown-based simple and multiple choice questions."
-msgstr ""
+msgstr "这些选项引用了 col-xx-[12|6|4|3|2] classes in Bootstrap 用于基于下拉的简单和多项选择问题。"
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:181
@@ -2148,7 +2202,7 @@ msgstr "答案必须为邮件地址"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.back
 msgid "This is a test survey."
-msgstr ""
+msgstr "这是一项测试调查。"
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:229
@@ -2194,12 +2248,12 @@ msgstr "此问题需要答案。"
 msgid ""
 "This survey does not allow external people to participate. You should create"
 " user accounts or update survey access mode accordingly."
-msgstr ""
+msgstr "此调查不允许外部人员参与。 您应该创建用户帐户或更新调查访问模式。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_expired
 msgid "This survey is now closed. Thank you for your interest !"
-msgstr ""
+msgstr "该调查现已结束。 感谢您的关注 ！"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.auth_required
@@ -2209,12 +2263,12 @@ msgstr "此调查只针对已注册用户，请"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Time Limit"
-msgstr ""
+msgstr "时间限制"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__time_limit
 msgid "Time limit (minutes)"
-msgstr ""
+msgstr "时间限制（分钟）"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__title
@@ -2257,7 +2311,7 @@ msgstr "无法发布邮件，请配置发件人的EMail地址。"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "Unfortunately, you have failed the test."
-msgstr ""
+msgstr " 好可惜，你没有通过测试。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_unread
@@ -2282,14 +2336,14 @@ msgstr "使用模版"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__description
 msgid "Use this field to add additional explanations about your question"
-msgstr ""
+msgstr "使用此字段可以为您的问题添加额外的注解"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__random_questions_count
 msgid ""
 "Used on randomized sections to take X random questions from all the "
 "questions of that section."
-msgstr ""
+msgstr "用于随机分组，从该分组的所有问题中随机抽取X个问题。"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_user
@@ -2332,7 +2386,7 @@ msgstr "用户可返回"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__users_can_signup
 msgid "Users can signup"
-msgstr ""
+msgstr "用户可以注册"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_required
@@ -2365,6 +2419,8 @@ msgid ""
 "YYYY-MM-DD\n"
 "                                        <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"YYYY-MM-DD\n"
+"                                        <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2372,6 +2428,8 @@ msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
 "                                        <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"YYYY-MM-DD hh:mm:ss\n"
+"                                        <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -2386,7 +2444,7 @@ msgstr "你可以根据不同的目的创建调查：客户观点，服务回馈
 msgid ""
 "You can only create certifications for surveys that have a scoring "
 "mechanism."
-msgstr ""
+msgstr "您只能为具有评分机制的调查创建证书。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:470
@@ -2423,12 +2481,12 @@ msgstr "查看你的回答"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_expired
 msgid "survey expired"
-msgstr ""
+msgstr "调查已过期"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void
 msgid "survey is void"
-msgstr ""
+msgstr "survey is void"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
