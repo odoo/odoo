@@ -563,7 +563,7 @@ class PreforkServer(CommonServer):
                 raise KeyboardInterrupt
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
-                self.dumpstacks()
+                dumpstacks()
             elif sig == signal.SIGUSR1:
                 # log ormcache stats on kill -SIGUSR1
                 log_ormcache_stats()

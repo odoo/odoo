@@ -3,23 +3,25 @@
 # * website_quote
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
-# Mikko Salmela <salmemik@gmail.com>, 2017
-# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2017
-# Jussi Lehto <jussi@gulfeo.com>, 2017
 # Miku Laitinen <miku.laitinen@gmail.com>, 2017
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017
+# Jussi Lehto <jussi@gulfeo.com>, 2017
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
+# Mikko Salmela <salmemik@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2017
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:27+0000\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -341,7 +343,7 @@ msgstr "Aktiivinen"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Add to order lines"
-msgstr ""
+msgstr "Lisää tilauslinjoihin"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_3
@@ -691,7 +693,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_line_sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
-msgstr ""
+msgstr "Antaa sekvenssijärjestyksen, kun näyttöön tulee myyntinoteerauslinja."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
@@ -776,6 +778,7 @@ msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
 msgstr ""
+"Jos tätä ei ole valittu, voit piilottaa tarjousmallin poistamatta sitä."
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:103
@@ -785,6 +788,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Jos tallennamme maksutietosi palvelimellemme, tilauksen maksut suoritetaan "
+"automaattisesti."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -954,7 +959,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
+msgstr "Päivien lukumäärä tarjouksen voimassaolopäivämäärän laskennassa"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1174,7 +1179,7 @@ msgstr "Tarjous"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "Tarjouksen kesto"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
@@ -1257,7 +1262,7 @@ msgstr "Vaatimukset"
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "Myynnin vaihtoehdot"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_template
@@ -1274,7 +1279,7 @@ msgstr "Myyntitilauksen rivi"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
 msgid "Sales Order Reference"
-msgstr ""
+msgstr "Myyntitilausviite"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
@@ -1285,7 +1290,7 @@ msgstr "Myyntitarjouspohjan rivit"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
 msgid "Search Quotation Template"
-msgstr ""
+msgstr "Etsi tarjouspohjaa"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
@@ -1368,6 +1373,8 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
+"Ylläpitäjä voi asettaa oletusehdot myyntiasetuksissa. Tässä asetetut ehdot "
+"näkyvät sen sijaan, jos valitset tämän tarjousmallin."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1606,7 +1613,7 @@ msgstr ""
 #: code:addons/website_quote/controllers/main.py:150
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "Et voi lisätä vaihtoehtoja vahvistettuun tilaukseen."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content

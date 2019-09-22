@@ -25,6 +25,7 @@
 # Simo Suurla <simo@suurla.fi>, 2019
 # Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
 # difbit <timo.kekalainen@hotmail.com>, 2019
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
 # 
 msgid ""
 msgstr ""
@@ -32,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
 "PO-Revision-Date: 2017-09-20 10:27+0000\n"
-"Last-Translator: difbit <timo.kekalainen@hotmail.com>, 2019\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -697,6 +698,8 @@ msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
+"Pyöristys riviä kohti suositellaan, jos hinnat sisältyvät veroihin. Tällä "
+"tavoin rivinvaihtojen summa vastaa veroja."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
@@ -855,7 +858,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Apply right VAT rates for digital products sold in EU"
-msgstr ""
+msgstr "Käytä EU: ssa myytävien digitaalisten tuotteiden arvonlisäverokantoja"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -886,7 +889,7 @@ msgstr "Attribuutit"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_automatic_invoice
 msgid "Automatic Invoice"
-msgstr ""
+msgstr "Automaattinen lasku"
 
 #. module: website_sale
 #. openerp-web
@@ -1678,7 +1681,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
-msgstr ""
+msgstr "Kuinka kokonaisveron määrä lasketaan tilauksissa ja laskuissa"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_sale_note
@@ -1713,6 +1716,12 @@ msgid ""
 "telecommunications, and services that are electronically supplied instead of"
 " shipped. Gift cards sent online are not included in the definition."
 msgstr ""
+"Jos myyt digitaalisia tavaroita asiakkaille EU: ssa, sinun on veloitettava "
+"arvonlisävero asiakkaiden sijaintipaikkojen perusteella. Tätä sääntöä "
+"sovelletaan riippumatta siitä, missä olet. Digitaaliset tavarat määritellään"
+" lainsäädännössä lähetys-, televiestintä- ja palveluina, jotka toimitetaan "
+"sähköisesti lähetetyn sijasta. Verkossa lähetetyt lahjakortit eivät sisälly "
+"määritelmään."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -1954,7 +1963,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
-msgstr ""
+msgstr "Hallitse mainos &amp: kupongiohjelmia"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
@@ -2357,7 +2366,7 @@ msgstr "Tuotteen ominaisuus"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Catalog"
-msgstr ""
+msgstr "Tuotekuvasto"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_comparison
@@ -2825,7 +2834,7 @@ msgstr "Toimitusosoite"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shipping Costs"
-msgstr ""
+msgstr "Postituskulut"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_sale_delivery_settings
@@ -3129,6 +3138,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"Lasku luodaan automaattisesti ja se on saatavana asiakasportaalissa, kun maksun saaja vahvistaa tapahtuman.\n"
+"Lasku merkitään maksetuksi ja maksu rekisteröidään maksun päiväkirjaan, joka määritetään maksun saajan kokoonpanossa.\n"
+"Tätä tilaa suositellaan, jos annat lopullisen laskun tilauksesta eikä toimituksen jälkeen. "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3186,7 +3198,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "This combination does not exist."
-msgstr ""
+msgstr "Tätä yhdistelmää ei ole olemassa."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_image
