@@ -146,7 +146,7 @@
                                         <div class="text-muted">
                                             Get customer feedback
                                         </div>
-                                        <div>
+                                        <div class="mt16">
                                             <field name="rating_status" widget="radio"/>
                                             <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
                                                 Edit project's stages and set an email template on the stages on which you want to activate the rating.
@@ -635,7 +635,7 @@
                                         </t>
                                         <!-- Date value -->
                                         <t t-if="record.date_deadline.raw_value" t-set="date" t-value="moment(record.date_deadline.raw_value.toISOString()).format(date_format)" />
-                                        <span name="date" t-attf-class="#{deadline_class || ''}"><t t-esc="date" /></span>
+                                        <span name="date" title="Deadline" t-attf-class="#{deadline_class || ''}"><t t-esc="date" /></span>
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user" invisible="context.get('fsm_mode', False)"/>
