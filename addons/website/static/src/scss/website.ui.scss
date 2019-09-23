@@ -15,6 +15,7 @@ body.o_connected_user {
 
 // MAIN MENU STYLE (added above navbar.scss)
 #oe_main_menu_navbar {
+    @include o-w-preserve-dropdown-menus;
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
     z-index: $zindex-modal - 10;
@@ -107,6 +108,7 @@ body.o_connected_user {
 body .modal {
     &.o_technical_modal {
         @include o-w-preserve-base;
+        @include o-w-preserve-dropdown-menus;
         @include o-w-preserve-headings;
         @include o-w-preserve-forms;
         @include o-w-preserve-links;
