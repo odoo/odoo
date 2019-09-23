@@ -466,6 +466,10 @@ class SingleTransactionCase(BaseCase):
     def setUp(self):
         super(SingleTransactionCase, self).setUp()
         self.env.user.flush()
+        @self.addCleanup
+        def cleanup():
+            self.env.reset()
+            type(self).env = self.env()
 
     @classmethod
     def tearDownClass(cls):
