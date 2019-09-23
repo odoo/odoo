@@ -662,6 +662,7 @@ return {
         integer: formatInteger,
         many2many: formatX2Many,
         many2one: formatMany2one,
+        many2one_reference: formatInteger,
         monetary: formatMonetary,
         one2many: formatX2Many,
         percentage: formatPercentage,
