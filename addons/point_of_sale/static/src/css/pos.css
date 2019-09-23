@@ -1333,18 +1333,8 @@ td {
 .pos .paymentline > *{
     padding: 8px 12px;
 }
-.pos .paymentline .col-due,
-.pos .paymentline .col-tendered,
-.pos .paymentline .col-change {
+.pos .paymentline .col-tendered {
     min-width: 90px;
-}
-.pos .paymentline.extra .col-due {
-    border-radius: 0 0 6px 6px;
-    border-top: solid 1px rgb(230, 230, 230);
-    font-weight: bold;
-}
-.pos .paymentline .col-change.highlight {
-    background: rgb(184, 152, 204);
 }
 .pos .paymentline .col-name {
     font-size: 16px;
@@ -1438,6 +1428,29 @@ td {
     border-collapse: unset;
     text-align: center;
     font-size: 16px;
+}
+
+.payment-status-container {
+    display: flex;
+    justify-content: space-between;
+    font-size: 25px;
+    padding-top: 15px;
+}
+
+.payment-status-total-due {
+    font-size: 17px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    color: #5c5c5cd1;
+}
+
+.payment-status-container .amount.highlight {
+    font-weight: bold;
+    color: #6EC89B;
+}
+
+.payment-status-container .label {
+    padding-right: 7px;
 }
 
 /* c) The receipt screen */
