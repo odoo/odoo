@@ -375,6 +375,13 @@
         </xpath>
     </template>
 
+    <!-- (Option) Products: Enable image full for all products : Images Full -->
+    <template id="products_images_full" name="Images Full" inherit_id="website_sale.products" active="False" customize_show="True">
+        <xpath expr="//t[@t-foreach='tr_product']//td" position="attributes">
+            <attribute name="t-attf-class" add="oe_image_full" separator=" "/>
+        </xpath>
+    </template>
+
     <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
         <li class="nav-item">
             <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
