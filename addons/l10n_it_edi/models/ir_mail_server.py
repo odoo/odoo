@@ -368,6 +368,6 @@ class IrMailServer(models.Model):
 
         if self.env.context.get('wo_return_path') and headers:
             headers.pop('Return-Path', False)
-        return super(IrMailServer, self).build_email(email_from, email_to, subject, body, email_cc, email_bcc, reply_to,
-                attachments, message_id, references, object_id, subtype, headers,
-                body_alternative, subtype_alternative)
+        return super(IrMailServer, self).build_email(email_from, email_to, subject, body, email_cc=email_cc, email_bcc=email_bcc, reply_to=reply_to,
+                attachments=attachments, message_id=message_id, references=references, object_id=object_id, subtype=subtype, headers=headers,
+                body_alternative=body_alternative, subtype_alternative=subtype_alternative)
