@@ -522,22 +522,16 @@ class AccountReconciliation(models.AbstractModel):
         ])
 
         domain = expression.OR([domain_reconciliation, domain_matching])
-        partner_domain = []
         if partner_id:
-            partner_domain = [('partner_id', '=', partner_id)]
-            domain = expression.AND([domain, partner_domain])
+            domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
 
         # Domain factorized for all reconciliation use cases
         if search_str:
             str_domain = self._domain_move_lines(search_str=search_str)
-            if not partner_id:
-                partner_domain = [('partner_id.name', 'ilike', search_str)]
-
             str_domain = expression.OR([
                 str_domain,
-                partner_domain,
+                [('partner_id.name', 'ilike', search_str)]
             ])
-
             domain = expression.AND([
                 domain,
                 str_domain
@@ -553,7 +547,6 @@ class AccountReconciliation(models.AbstractModel):
 
         if st_line.company_id.account_bank_reconciliation_start:
             domain = expression.AND([domain, [('date', '>=', st_line.company_id.account_bank_reconciliation_start)]])
-
         return domain
 
     @api.model

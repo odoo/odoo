@@ -277,6 +277,17 @@ ListRenderer.include({
         this._selectCell(rowIndex, 0);
     },
     /**
+     * Gives focus to a specific cell, given its row and its related column.
+     *
+     * @param {string} recordId
+     * @param {Object} column
+     */
+    focusCell: function (recordId, column) {
+        var $row = this._getRow(recordId);
+        var cellIndex = this.columns.indexOf(column);
+        $row.find('.o_data_cell')[cellIndex].focus();
+    },
+    /**
      * Returns the recordID associated to the line which is currently in edition
      * or null if there is no line in edition.
      *
@@ -287,6 +298,16 @@ ListRenderer.include({
             return this._getRecordID(this.currentRow);
         }
         return null;
+    },
+    /**
+     * Returns whether the list is in multiple record edition from a given record.
+     *
+     * @private
+     * @param {string} recordId
+     * @returns {boolean}
+     */
+    inMultipleRecordEdition: function (recordId) {
+        return this.editable && this.selection.length > 1 && this.selection.indexOf(recordId) > -1;
     },
     /**
      * Removes the line associated to the given recordID (the index of the row
@@ -303,6 +324,7 @@ ListRenderer.include({
         }
         if ($row.prop('rowIndex') - 1 === this.currentRow) {
             this.currentRow = null;
+            this._enableRecordSelectors();
         }
 
         // destroy widgets first
@@ -397,7 +419,11 @@ ListRenderer.include({
 
         // Toggle selected class here so that style is applied at the end
         $row.toggleClass('o_selected_row', editMode);
-        $row.find('.o_list_record_selector input').prop('disabled', !record.res_id);
+        if (editMode) {
+            this._disableRecordSelectors();
+        } else {
+            this._enableRecordSelectors();
+        }
 
         return Promise.all(defs).then(function () {
             // necessary to trigger resize on fieldtexts
@@ -427,17 +453,21 @@ ListRenderer.include({
         var recordWidgets = this.allFieldWidgets[recordID];
         toggleWidgets(true);
 
-        var prom = new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             self.trigger_up('save_line', {
                 recordID: recordID,
                 onSuccess: resolve,
                 onFailure: reject,
             });
-        });
-        prom.guardedCatch(function() {
+        }).then(function (changedFields) {
+            self._enableRecordSelectors();
+            // If any field has changed and if the list is in multiple edition,
+            // we send a truthy boolean to _selectRow to tell it not to select
+            // the following record.
+            return changedFields && changedFields.length && self.inMultipleRecordEdition(recordID);
+        }).guardedCatch(function () {
             toggleWidgets(false);
         });
-        return prom;
 
         function toggleWidgets(disabled) {
             _.each(recordWidgets, function (widget) {
@@ -464,6 +494,14 @@ ListRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
+     * When editing a row, we want to disable all record selectors.
+     *
+     * @private
+     */
+    _disableRecordSelectors: function () {
+        this.$('.o_list_record_selector input').attr('disabled', 'disabled');
+    },
+    /**
      * Destroy all field widgets corresponding to a record.  Useful when we are
      * removing a useless row.
      *
@@ -475,6 +513,12 @@ ListRenderer.include({
             _.each(widgetsToDestroy, this._destroyFieldWidget.bind(this, recordID));
             delete this.allFieldWidgets[recordID];
         }
+    },
+    /**
+     * @private
+     */
+    _enableRecordSelectors: function () {
+        this.$('.o_list_record_selector input').attr('disabled', false);
     },
     /**
      * Returns the relative width according to the widget or the field type.
@@ -992,7 +1036,10 @@ ListRenderer.include({
         var recordId = this._getRecordID(rowIndex);
         // To select a row, the currently selected one must be unselected first
         var self = this;
-        return this.unselectRow().then(function () {
+        return this.unselectRow().then(function (noSelectNext) {
+            if (noSelectNext) {
+                return Promise.resolve();
+            }
             if (!recordId) {
                 // The row to selected doesn't exist anymore (probably because
                 // an onchange triggered when unselecting the previous one
@@ -1003,7 +1050,10 @@ ListRenderer.include({
             return new Promise(function (resolve) {
                 self.trigger_up('edit_line', {
                     recordId: recordId,
-                    onSuccess: resolve,
+                    onSuccess: function () {
+                        self._disableRecordSelectors();
+                        resolve();
+                    },
                 });
             });
         });
@@ -1035,7 +1085,10 @@ ListRenderer.include({
         ev.stopPropagation();
 
         var self = this;
-        var groupId = $(ev.target).data('group-id');
+        // This method can be called when selecting the parent of the link.
+        // We need to ensure that the link is the actual target
+        var target = ev.target.tagName !== 'A' ? ev.target.getElementsByTagName('A')[0] : ev.target;
+        var groupId = target.dataset.groupId;
         this.currentGroupId = groupId;
         this.unselectRow().then(function () {
             self.trigger_up('add_record', {
@@ -1213,12 +1266,13 @@ ListRenderer.include({
                 this.trigger_up('discard_changes', {
                     recordID: ev.target.dataPointID,
                     onSuccess: function () {
+                        self._enableRecordSelectors();
                         var recordId = self._getRecordID(rowIndex);
                         if (recordId) {
                             var correspondingRow = self._getRow(recordId);
                             correspondingRow.children().eq(cellIndex).focus();
                         } else if (self.currentGroupId) {
-                                self.$('a[data-group-id=' + self.currentGroupId + ']').focus();
+                            self.$('a[data-group-id="' + self.currentGroupId + '"]').focus();
                         } else {
                             self.$('.o_field_x2many_list_row_add a:first').focus(); // FIXME
                         }

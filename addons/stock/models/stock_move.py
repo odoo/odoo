@@ -896,6 +896,7 @@ class StockMove(models.Model):
         # cache invalidation when actually reserving the move.
         reserved_availability = {move: move.reserved_availability for move in self}
         roundings = {move: move.product_id.uom_id.rounding for move in self}
+        move_line_vals_list = []
         for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available']):
             rounding = roundings[move]
             missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
@@ -905,7 +906,7 @@ class StockMove(models.Model):
                 # create the move line(s) but do not impact quants
                 if move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
                     for i in range(0, int(missing_reserved_quantity)):
-                        self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=1))
+                        move_line_vals_list.append(move._prepare_move_line_vals(quantity=1))
                 else:
                     to_update = move.move_line_ids.filtered(lambda ml: ml.product_uom_id == move.product_uom and
                                                             ml.location_id == move.location_id and
@@ -917,7 +918,7 @@ class StockMove(models.Model):
                     if to_update:
                         to_update[0].product_uom_qty += missing_reserved_uom_quantity
                     else:
-                        self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=missing_reserved_quantity))
+                        move_line_vals_list.append(move._prepare_move_line_vals(quantity=missing_reserved_quantity))
                 assigned_moves |= move
             else:
                 if not move.move_orig_ids:
@@ -1008,6 +1009,7 @@ class StockMove(models.Model):
                             assigned_moves |= move
                             break
                         partially_available_moves |= move
+        self.env['stock.move.line'].create(move_line_vals_list)
         partially_available_moves.write({'state': 'partially_available'})
         assigned_moves.write({'state': 'assigned'})
         self.mapped('picking_id')._check_entire_pack()

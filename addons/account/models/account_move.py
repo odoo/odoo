@@ -1224,10 +1224,15 @@ class AccountMove(models.Model):
             lang_env = move.with_context(lang=move.partner_id.lang).env
             tax_lines = move.line_ids.filtered(lambda line: line.tax_line_id)
             res = {}
+            # There are as many tax line as there are repartition lines
+            done_taxes = set()
             for line in tax_lines:
                 res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
-                res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
+                if line.tax_line_id.id not in done_taxes:
+                    # The base should be added ONCE
+                    res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
+                    done_taxes.add(line.tax_line_id.id)
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
                 group.name, amounts['amount'],
@@ -1304,7 +1309,7 @@ class AccountMove(models.Model):
         # are already done. Then, this query MUST NOT depend of computed stored fields (e.g. balance).
         # It happens as the ORM makes the create with the 'no_recompute' statement.
         self._cr.execute('''
-            SELECT line.move_id
+            SELECT line.move_id, ROUND(SUM(debit - credit), currency.decimal_places)
             FROM account_move_line line
             JOIN account_move move ON move.id = line.move_id
             JOIN account_journal journal ON journal.id = move.journal_id
@@ -1318,7 +1323,8 @@ class AccountMove(models.Model):
         query_res = self._cr.fetchall()
         if query_res:
             ids = [res[0] for res in query_res]
-            raise UserError(_("Cannot create unbalanced journal entry. Ids: %s") % str(ids))
+            sums = [res[1] for res in query_res]
+            raise UserError(_("Cannot create unbalanced journal entry. Ids: %s\nDifferences debit - credit: %s") % (ids, sums))
 
     @api.multi
     def _check_fiscalyear_lock_date(self):

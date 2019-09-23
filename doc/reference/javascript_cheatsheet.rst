@@ -1,5 +1,7 @@
 :banner: banners/javascript.jpg
 
+.. _reference/jscs:
+
 =====================
 Javascript Cheatsheet
 =====================
@@ -280,6 +282,7 @@ using the view in the kanban arch (a specific example is the helpdesk dashboard)
 
 Promises and asynchronous code
 ===============================
+
 For a very good and complete introduction to promises, please read this excellent article https://github.com/getify/You-Dont-Know-JS/blob/master/async%20%26%20performance/ch3.md
 
 Creating new Promises
@@ -418,6 +421,7 @@ Waiting for Promises
 
 Error handling
 --------------
+
 - in general in promises
         The general idea is that a promise should not be rejected for control flow, but should only be rejected for errors.
         When that is the case, you would have multiple resolutions of your promise with, for instance status codes that you would have to check in the `then` handlers and a single `catch` handler at the end of the promise chain.
