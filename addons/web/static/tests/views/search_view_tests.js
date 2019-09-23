@@ -604,6 +604,7 @@ QUnit.module('Search View', {
         // DateTime case
         $autocomplete = $('.o_searchview_input');
         await stringToEvent($autocomplete, '07/15/1983 00:00:00');
+        await testUtils.fields.triggerKey('down', $autocomplete, 'down');
         await testUtils.fields.triggerKey('up', $autocomplete, 'enter');
 
         assert.equal($('.o_searchview_facet .o_facet_values').text().trim(), '07/15/1983 00:00:00',

@@ -13,6 +13,7 @@ from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -211,6 +212,19 @@ class PaymentAcquirer(models.Model):
     _constraints = [
         (_check_required_if_provider, 'Required fields not filled', []),
     ]
+
+    def get_base_url(self):
+        self.ensure_one()
+        # priority is always given to url_root
+        # from the request
+        url = ''
+        if request:
+            url = request.httprequest.url_root
+
+        if not url and 'website_id' in self and self.website_id:
+            url = self.website_id._get_http_domain()
+
+        return url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.

@@ -492,6 +492,9 @@ var FieldDate = InputField.extend({
     className: "o_field_date",
     tagName: "span",
     supportedFieldTypes: ['date', 'datetime'],
+    // we don't need to listen on 'input' nor 'change' events because the
+    // datepicker widget is already listening, and will correctly notify changes
+    events: AbstractField.prototype.events,
 
     /**
      * @override
@@ -888,6 +891,8 @@ var FieldBoolean = AbstractField.extend({
     _onKeydown: function (ev) {
         switch (ev.which) {
             case $.ui.keyCode.ENTER:
+                // prevent subsequent 'click' event (see _onKeydown of AbstractField)
+                ev.preventDefault();
                 this.$input.prop('checked', !this.value);
                 this._setValue(!this.value);
                 return;

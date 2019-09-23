@@ -1831,6 +1831,20 @@ class TestSinglePicking(TestStockCommon):
         back_order = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
         self.assertFalse(back_order, 'There should be no back order')
 
+    def test_unlink_move_1(self):
+        picking = Form(self.env['stock.picking'])
+        ptout = self.env['stock.picking.type'].browse(self.picking_type_out)
+        picking.picking_type_id = ptout
+        with picking.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+            move.product_uom_qty = 10
+        picking = picking.save()
+
+        picking = Form(picking)
+        picking.move_ids_without_package.remove(0)
+        picking = picking.save()
+        self.assertEqual(len(picking.move_ids_without_package), 0)
+
 
 class TestStockUOM(TestStockCommon):
     def setUp(self):
