@@ -20,7 +20,7 @@ import werkzeug.utils
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError
-from odoo.http import request, STATIC_CACHE, content_disposition
+from odoo.http import request, content_disposition
 from odoo.tools import consteq, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
@@ -393,7 +393,7 @@ class IrHttp(models.AbstractModel):
             headers.append(('ETag', filehash))
             if etag == filehash and status == 200:
                 status = 304
-        headers.append(('Cache-Control', 'max-age=%s' % (STATIC_CACHE if unique else 0)))
+        headers.append(('Cache-Control', 'max-age=%s' % (http.STATIC_CACHE_LONG if unique else 0)))
         # content-disposition default name
         if download:
             headers.append(('Content-Disposition', content_disposition(filename)))

@@ -58,8 +58,11 @@ _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
 rpc_response = logging.getLogger(__name__ + '.rpc.response')
 
-# 1 week cache for statics as advised by Google Page Speed
-STATIC_CACHE = 60 * 60 * 24 * 7
+# One week cache for static content (static files in apps, library files, ...)
+# Safe resources may use what google page speed recommends (1 year)
+# (attachments with unique hash in the URL, ...)
+STATIC_CACHE = 3600 * 24 * 7
+STATIC_CACHE_LONG = 3600 * 24 * 365
 
 # To remove when corrected in Babel
 babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
