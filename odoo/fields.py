@@ -724,7 +724,10 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Add the necessary triggers to invalidate/recompute ``self``. """
         for model, field, path in self.resolve_deps(model):
             if self.store and not field.store:
-                _logger.info("Field %s depends on non-stored field %s", self, field)
+                _logger.debug(
+                    "Field %s depends on non-stored field %s, this operation is sub-optimal"
+                    % (self, field)
+                )
             if field is not self:
                 path_str = None if path is None else ('.'.join(path) or 'id')
                 model._field_triggers.add(field, (self, path_str))
