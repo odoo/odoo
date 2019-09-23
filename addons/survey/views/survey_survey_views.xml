@@ -58,7 +58,7 @@
                                 <tree decoration-bf="is_page" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title"/>
-                                    <field name="question_type" attrs="{'invisible': [('is_page', '=', True)]}"/>
+                                    <field name="question_type" />
                                     <field name="is_page" invisible="1"/>
                                     <field name="questions_selection" invisible="1"/>
                                     <field name="random_questions_count" attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}" />
