@@ -55,5 +55,5 @@ class WebsiteSaleWishlist(WebsiteSale):
                 request.session.modified = True
                 wish.sudo().unlink()
         else:
-            wish.active = False
+            wish.unlink()
         return True
