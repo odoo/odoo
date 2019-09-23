@@ -12,7 +12,6 @@ var DateWidget = Widget.extend({
     template: "web.datepicker",
     type_of_date: "date",
     events: {
-        'change.datetimepicker': 'changeDatetime',
         'error.datetimepicker': 'errorDatetime',
         'change .o_datepicker_input': 'changeDatetime',
         'click input': '_onInputClicked',
@@ -92,6 +91,13 @@ var DateWidget = Widget.extend({
      * set datetime value
      */
     changeDatetime: function () {
+        if (this.__libInput > 0) {
+            if (this.options.warn_future) {
+                this._warnFuture(this.getValue());
+            }
+            this.trigger("datetime_changed");
+            return;
+        }
         var oldValue = this.getValue();
         if (this.isValid()) {
             this._setValueFromUi();
@@ -254,6 +260,7 @@ var DateWidget = Widget.extend({
      */
     _onDateTimePickerHide: function () {
         this.__isOpen = false;
+        this.changeDatetime();
         if (this._onScroll) {
             window.removeEventListener('scroll', this._onScroll, true);
         }

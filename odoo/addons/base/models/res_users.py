@@ -997,23 +997,20 @@ class UsersImplied(models.Model):
                 # complete 'groups_id' with implied groups
                 user = self.new(values)
                 gs = user.groups_id._origin
-                group_public = self.env.ref('base.group_public', raise_if_not_found=False)
-                group_portal = self.env.ref('base.group_portal', raise_if_not_found=False)
-                if group_public and group_public in gs:
-                    gs = group_public
-                elif group_portal and group_portal in gs:
-                    gs = group_portal
                 gs = gs | gs.trans_implied_ids
                 values['groups_id'] = type(self).groups_id.convert_to_write(gs, user)
         return super(UsersImplied, self).create(vals_list)
 
     @api.multi
     def write(self, values):
+        users_before = self.filtered(lambda u: u.has_group('base.group_user'))
         res = super(UsersImplied, self).write(values)
         if values.get('groups_id'):
             # add implied groups for all users
             for user in self:
-                if not user.has_group('base.group_user'):
+                if not user.has_group('base.group_user') and user in users_before:
+                    # if we demoted a user, we strip him of all its previous privileges
+                    # (but we should not do it if we are simply adding a technical group to a portal user)
                     vals = {'groups_id': [(5, 0, 0)] + values['groups_id']}
                     super(UsersImplied, user).write(vals)
                 gs = set(concat(g.trans_implied_ids for g in user.groups_id))

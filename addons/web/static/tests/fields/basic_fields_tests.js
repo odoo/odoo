@@ -529,6 +529,42 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float field in list view no widget', async function (assert) {
+        assert.expect(5);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" digits="[5,3]"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.doesNotHaveClass(form.$('.o_field_widget'), 'o_field_empty',
+            'Float field should be considered set for value 0.');
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '0.000',
+            'The value should be displayed properly.');
+
+        await testUtils.form.clickEdit(form);
+        assert.strictEqual(form.$('input[name=qux]').val(), '0.000',
+            'The value should be rendered with correct precision.');
+
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '108.2458938598598');
+        assert.strictEqual(form.$('input[name=qux]').val(), '108.2458938598598',
+            'The value should not be formated yet.');
+
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '18.8958938598598');
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '18.896',
+            'The new value should be rounded properly.');
+
+        form.destroy();
+    });
+
     QUnit.test('float field in form view', async function (assert) {
         assert.expect(5);
 
@@ -3093,6 +3129,63 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('datetime fields do not trigger fieldChange before datetime completly picked', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.onchanges = {
+            datetime: function () {},
+        };
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="datetime"/></form>',
+            res_id: 1,
+            translateParameters: { // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.step('onchange');
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+
+        testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget');
+
+        // select a date and time
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch').first());
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch:eq(1)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .year:contains(2017)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .month').eq(3));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .day:contains(22)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .fa-clock-o'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .timepicker-hour'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .hour:contains(08)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .timepicker-minute'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .minute:contains(25)'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .timepicker-second'));
+        assert.verifySteps([], "should not have done any onchange yet");
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .second:contains(35)'));
+
+        assert.containsNone($('body'), '.bootstrap-datetimepicker-widget');
+        assert.strictEqual(form.$('.o_datepicker_input').val(), "04/22/2017 08:25:35");
+        assert.verifySteps(['onchange'], "should have done only one onchange");
+
+        form.destroy();
+    });
 
     QUnit.test('datetime field not visible in form view should not capture the focus on keyboard navigation', async function (assert) {
         assert.expect(1);
@@ -3211,6 +3304,45 @@ QUnit.module('basic_fields', {
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
         assert.strictEqual(list.$('tr.o_data_row td:not(.o_list_record_selector)').text(), newExpectedDateString,
             'the selected datetime should be displayed after saving');
+
+        list.destroy();
+    });
+
+    QUnit.test('multi edition of datetime field in list view: edit date in input', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="datetime"/>' +
+                  '</tree>',
+            translateParameters: { // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
+        });
+
+        // select two records and edit them
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell'));
+        assert.containsOnce(list, 'input.o_datepicker_input');
+        list.$('.o_datepicker_input').val("10/02/2019 09:00:00");
+        await testUtils.dom.triggerEvents(list.$('.o_datepicker_input'), ['change']);
+
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+        assert.strictEqual(list.$('.o_data_row:first .o_data_cell').text(), "10/02/2019 09:00:00");
+        assert.strictEqual(list.$('.o_data_row:nth(1) .o_data_cell').text(), "10/02/2019 09:00:00");
 
         list.destroy();
     });

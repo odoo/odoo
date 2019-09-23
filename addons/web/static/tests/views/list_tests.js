@@ -190,7 +190,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('simple editable rendering', async function (assert) {
-        assert.expect(12);
+        assert.expect(15);
 
         var list = await createView({
             View: ListView,
@@ -201,6 +201,7 @@ QUnit.module('Views', {
 
         assert.containsN(list, 'th', 3, "should have 2 th");
         assert.containsN(list, 'th', 3, "should have 3 th");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
         assert.containsOnce(list, 'td:contains(yop)', "should contain yop");
 
         assert.isVisible(list.$buttons.find('.o_list_button_add'),
@@ -218,6 +219,7 @@ QUnit.module('Views', {
             "should have a visible save button");
         assert.isVisible(list.$buttons.find('.o_list_button_discard'),
             "should have a visible discard button");
+        assert.containsNone(list, '.o_list_record_selector input:enabled');
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
 
@@ -227,6 +229,8 @@ QUnit.module('Views', {
             "should not have a visible save button");
         assert.isNotVisible(list.$buttons.find('.o_list_button_discard'),
             "should not have a visible discard button");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
         list.destroy();
     });
 
@@ -1111,6 +1115,49 @@ QUnit.module('Views', {
 
         assert.containsNone(list, 'tbody .o_list_record_selector input:checked',
                             "no selection checkbox should be checked");
+        list.destroy();
+    });
+
+    QUnit.test('head selector is toggled by the other selectors', async function (assert) {
+        assert.expect(6);
+
+        const list = await createView({
+            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            data: this.data,
+            groupBy: ['bar'],
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.ok(!list.$('thead .o_list_record_selector input')[0].checked,
+            "Head selector should be unchecked");
+
+        await testUtils.dom.click(list.$('.o_group_header:first()'));
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        assert.containsN(list, 'tbody .o_list_record_selector input:checked',
+            3, "All visible checkboxes should be checked");
+
+        await testUtils.dom.click(list.$('.o_group_header:last()'));
+
+        assert.ok(!list.$('thead .o_list_record_selector input')[0].checked,
+            "Head selector should be unchecked");
+
+        await testUtils.dom.click(list.$('tbody .o_list_record_selector input:last()'));
+
+        assert.ok(list.$('thead .o_list_record_selector input')[0].checked,
+            "Head selector should be checked");
+
+        await testUtils.dom.click(list.$('tbody .o_list_record_selector:first() input'));
+
+        assert.ok(!list.$('thead .o_list_record_selector input')[0].checked,
+            "Head selector should be unchecked");
+
+        await testUtils.dom.click(list.$('.o_group_header:first()'));
+
+        assert.ok(list.$('thead .o_list_record_selector input')[0].checked,
+            "Head selector should be checked");
+
         list.destroy();
     });
 
@@ -2889,7 +2936,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('edition: create new line, then discard', async function (assert) {
-        assert.expect(8);
+        assert.expect(11);
 
         var list = await createView({
             View: ListView,
@@ -2904,11 +2951,13 @@ QUnit.module('Views', {
             "create button should be visible");
         assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 0,
             "discard button should be hidden");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
         assert.strictEqual(list.$buttons.find('.o_list_button_add:visible').length, 0,
             "create button should be hidden");
         assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 1,
             "discard button should be visible");
+        assert.containsNone(list, '.o_list_record_selector input:enabled');
         await testUtils.dom.click(list.$buttons.find('.o_list_button_discard'));
         assert.containsN(list, 'tr.o_data_row', 4,
             "should still have 4 records");
@@ -2916,6 +2965,8 @@ QUnit.module('Views', {
             "create button should be visible again");
         assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 0,
             "discard button should be hidden again");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
         list.destroy();
     });
 
@@ -4500,8 +4551,34 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: single edition with selected records', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch: `<tree editable="top"><field name="foo"/></tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // Select first record
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+
+        // Edit the second
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:first()'));
+        await testUtils.fields.editInput(list.$('.o_data_row:eq(1) .o_data_cell:first() input'), "oui");
+        await testUtils.dom.click($('.o_list_button_save'));
+
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell:first()').text(), "yop",
+            "First row should remain unchanged");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell:first()').text(), "oui",
+            "Second row should have been updated");
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: multi edition', async function (assert) {
-        assert.expect(19);
+        assert.expect(24);
 
         var list = await createView({
             View: ListView,
@@ -4544,7 +4621,7 @@ QUnit.module('Views', {
         assert.verifySteps(['default_get']);
 
         await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=int_field]'), 123);
-        assert.containsNone($, '.modal', "the multi edition should not be triggered during creation");
+        assert.containsNone(document.body, '.modal', "the multi edition should not be triggered during creation");
 
         await testUtils.dom.click($('.o_list_button_save'));
         assert.verifySteps(['create', 'read']);
@@ -4552,15 +4629,241 @@ QUnit.module('Views', {
         // edit a field
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
         await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
-        assert.containsOnce($, '.modal', "there should be an opened modal");
-        assert.ok($('.modal').text().includes('2 valid'), "the number of records should be correctly displayed");
-
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        assert.containsOnce(document.body, '.modal', "modal appears when switching cells");
+        await testUtils.dom.click($('.modal .btn:contains(Cancel)'));
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop10',
+            "changes have been discarded and row is back to readonly");
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:eq(0) .o_data_cell:eq(1)')[0],
+            "focus should be given to the most recently edited cell after discard");
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:eq(0)'));
+        assert.ok($('.modal').text().includes('2 selected records'), "the number of records should be correctly displayed");
         await testUtils.dom.click($('.modal .btn-primary'));
+        assert.containsNone(list, '.o_data_cell input.o_field_widget', "no field should be editable anymore");
         assert.verifySteps(['write', 'read']);
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "yop666",
             "the first row should be updated");
         assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "blip666",
             "the second row should be updated");
+        assert.containsNone(list, '.o_data_cell input.o_field_widget', "no field should be editable anymore");
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:eq(0) .o_data_cell:eq(1)')[0],
+            "focus should be given to the most recently edited cell after confirm");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: multi edition and onchanges', async function (assert) {
+        assert.expect(10);
+
+        this.data.foo.onchanges = {
+            foo: function (obj) {
+                obj.int_field = obj.foo.length;
+            },
+        };
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                    '</tree>',
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (args.method === 'write') {
+                    args.args[1].int_field = args.args[1].foo.length;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // edit a single record to validate that onchanges work
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'hi');
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.dom.click(list.$('.o_list_button_discard'));
+
+        assert.containsOnce(document.body, '.modal'); // discard dialog
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.verifySteps(['/web/dataset/search_read', 'onchange']);
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        // edit foo, first row
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'hello');
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+
+        assert.containsOnce(document.body, '.modal'); // save dialog
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "hello5");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "hello5");
+
+        assert.verifySteps(['write', 'read'], "should not perform the onchange in multi edition");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: multi edition error and cancellation handling', async function (assert) {
+        assert.expect(12);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="foo" required="1"/>' +
+                        '<field name="int_field"/>' +
+                    '</tree>',
+        });
+
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        // edit a line and cancel
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        assert.containsNone(list, '.o_list_record_selector input:enabled');
+        await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=foo]'), "abc");
+        await testUtils.dom.click($('.modal .btn:contains("Cancel")'));
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop10', "first cell should have discarded any change");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
+        // edit a line with an invalid format type
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        assert.containsNone(list, '.o_list_record_selector input:enabled');
+        await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=int_field]'), "hahaha");
+        assert.containsOnce(document.body, '.modal', "there should be an opened modal");
+        await testUtils.dom.click($('.modal .btn-primary'));
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop10', "changes should be discarded");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
+        // edit a line with an invalid value
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+        assert.containsNone(list, '.o_list_record_selector input:enabled');
+        await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=foo]'), "");
+        assert.containsOnce(document.body, '.modal', "there should be an opened modal");
+        await testUtils.dom.click($('.modal .btn-primary'));
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop10', "changes should be discarded");
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: multi edition of many2one: set same value', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="foo"/>' +
+                        '<field name="m2o"/>' +
+                    '</tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args, [[1, 2, 3, 4], { m2o: 1 }],
+                        "should force write value on all selected records");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(list.$('.o_list_many2one').text(), "Value 1Value 2Value 1Value 1");
+
+        // select all records (the first one has value 1 for m2o)
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+
+        // set m2o to 1 in first record
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.fields.many2one.searchAndClickItem('m2o', {search: 'Value 1'});
+
+        assert.containsOnce(document.body, '.modal');
+
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+        assert.strictEqual(list.$('.o_list_many2one').text(), "Value 1Value 1Value 1Value 1");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: clicking on "Discard changes" in multi edition', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+        list.$('.o_data_row:first() .o_data_cell:first() input').val("oof");
+
+        const $discardButton = list.$buttons.find('.o_list_button_discard');
+
+        // Simulates an actual click (event chain is: mousedown > change > blur > focus > mouseup > click)
+        await testUtils.dom.triggerEvents($discardButton, ['mousedown']);
+        await testUtils.dom.triggerEvents(list.$('.o_data_row:first() .o_data_cell:first() input'),
+            ['change', 'blur', 'focusout']);
+        await testUtils.dom.triggerEvents($discardButton, ['focus']);
+        $discardButton[0].dispatchEvent(new MouseEvent('mouseup'));
+        await testUtils.dom.click($discardButton);
+
+        assert.ok($('.modal').text().includes("Warning"), "Modal should ask to discard changes");
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.strictEqual(list.$('.o_data_row:first() .o_data_cell:first()').text(), "yop");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view (multi edition): mousedown on "Discard", but mouseup somewhere else', async function (assert) {
+        assert.expect(1);
+
+        const list = await createView({
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+        list.$('.o_data_row:first() .o_data_cell:first() input').val("oof");
+
+        // Simulates a pseudo drag and drop
+        await testUtils.dom.triggerEvents(list.$buttons.find('.o_list_button_discard'), ['mousedown']);
+        await testUtils.dom.triggerEvents(list.$('.o_data_row:first() .o_data_cell:first() input'),
+            ['change', 'blur', 'focusout']);
+        await testUtils.dom.triggerEvents($(document.body), ['focus']);
+        window.dispatchEvent(new MouseEvent('mouseup'));
+        await testUtils.nextTick();
+
+        assert.ok($('.modal').text().includes("Confirmation"), "Modal should ask to save changes");
+        await testUtils.dom.click($('.modal .btn-primary'));
 
         list.destroy();
     });
@@ -4602,6 +4905,65 @@ QUnit.module('Views', {
             "the first row should be updated");
         assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "2blip666",
             "the second row should be updated");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: many2one with readonly modifier', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch:
+                `<tree editable="top">
+                    <field name="m2o" readonly="1"/>
+                    <field name="foo"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // edit a field
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+
+        assert.containsOnce(list, '.o_data_row:eq(0) .o_data_cell:eq(0) a[name="m2o"]');
+        assert.strictEqual(document.activeElement, list.$('.o_data_row:eq(0) .o_data_cell:eq(1) input')[0],
+            "focus should go to the char input");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: multi edition: edit and validate last row', async function (assert) {
+        assert.expect(3);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                        '<field name="foo"/>' +
+                        '<field name="int_field"/>' +
+                    '</tree>',
+            // in this test, we want to accurately mock what really happens, that is, input
+            // fields only trigger their changes on 'change' event, not on 'input'
+            fieldDebounce: 100000,
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+
+        // select all records
+        await testUtils.dom.click(list.$('.o_list_view thead .o_list_record_selector input'));
+
+        // edit last cell of last line
+        await testUtils.dom.click(list.$('.o_data_row:last .o_data_cell:last'));
+        testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), '666');
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row .o_data_cell:last input'), 'enter');
+
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.containsN(list, '.o_data_row', 4,
+            "should not create a new row as we were in multi edition");
 
         list.destroy();
     });
@@ -6321,6 +6683,28 @@ QUnit.module('Views', {
         await testUtils.fields.editAndTrigger(list.$('tr.o_selected_row input[name="foo"]'), 'pla', 'input');
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
         assert.containsN(list, 'tbody:nth(3) .o_data_row', 2);
+
+        list.destroy();
+    });
+
+    QUnit.test('add and discard a line through keyboard navigation without crashing', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo" required="1"/></tree>',
+            groupBy: ['bar'],
+        });
+
+        await testUtils.dom.click(list.$('.o_group_header:first')); // open group
+        // Triggers ENTER on "Add a line" wrapper cell
+        await testUtils.fields.triggerKeydown(list.$('.o_group_field_row_add'), 'enter');
+        assert.containsN(list, 'tbody:nth(1) .o_data_row', 4, "new data row should be created");
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_discard'));
+        // At this point, a crash manager should appear if no proper link targetting
+        assert.containsN(list, 'tbody:nth(1) .o_data_row', 3,"new data row should be discarded.");
 
         list.destroy();
     });

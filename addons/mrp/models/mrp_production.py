@@ -394,6 +394,7 @@ class MrpProduction(models.Model):
     def _onchange_bom_id(self):
         self.product_qty = self.bom_id.product_qty
         self.product_uom_id = self.bom_id.product_uom_id.id
+        self.picking_type_id = self.bom_id.picking_type_id or self.picking_type_id
 
     @api.onchange('date_planned_start')
     def _onchange_date_planned_start(self):

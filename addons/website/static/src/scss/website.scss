@@ -341,9 +341,11 @@ table.table_desc tr td {
 // Title
 .s_title {
     .s_title_boxed {
-        display: inline-block;
-        padding: $grid-gutter-width;
-        border: 1px solid;
+        > * {
+            display: inline-block;
+            padding: $grid-gutter-width;
+            border: 1px solid;
+        }
     }
     .s_title_lines {
         overflow: hidden;

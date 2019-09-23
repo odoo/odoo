@@ -20,7 +20,7 @@ class PaymentAcquirerStripeSCA(models.Model):
     def stripe_form_generate_values(self, tx_values):
         self.ensure_one()
 
-        base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
+        base_url = self.get_base_url()
         stripe_session_data = {
             "payment_method_types[]": "card",
             "line_items[][amount]": int(
@@ -177,6 +177,9 @@ class PaymentTransactionStripeSCA(models.Model):
                 "_stripe_create_payment_intent: Values received:\n%s", pprint.pformat(res)
                 )
             return res
+        if not self.payment_token_id.stripe_payment_method:
+            # old token before installing stripe_sca, need to fetch data from the api
+            self.payment_token_id._stripe_sca_migrate_customer()
         charge_params = {
             "amount": int(
                 self.amount
@@ -366,3 +369,39 @@ class PaymentTokenStripeSCA(models.Model):
         raise NotImplementedError(
             "This method can no longer be used with the payment_stripe_sca module."
         )
+
+    def _stripe_sca_migrate_customer(self):
+        """Migrate a token from the old implementation of Stripe to the SCA one.
+
+        In the old implementation, it was possible to create a valid charge just by
+        giving the customer ref to ask Stripe to use the default source (= default
+        card). Since we have a one-to-one matching between a saved card, this used to
+        work well - but now we need to specify the payment method for each call and so
+        we have to contact stripe to get the default source for the customer and save it
+        in the payment token.
+        This conversion will happen once per token, the first time it gets used following
+        the installation of the module."""
+        self.ensure_one()
+        url = "customers/%s" % (self.acquirer_ref)
+        data = self.acquirer_id._stripe_request(url, method="GET")
+        sources = data.get('sources', {}).get('data', [])
+        pm_ref = False
+        if sources:
+            if len(sources) > 1:
+                _logger.warning('stripe sca customer conversion: there should be a single saved source per customer!')
+            pm_ref = sources[0].get('id')
+        else:
+            url = 'payment_methods'
+            params = {
+                'type': 'card',
+                'customer': self.acquirer_ref,
+            }
+            payment_methods = self.acquirer_id._stripe_request(url, params, method='GET')
+            cards = payment_methods.get('data', [])
+            if len(cards) > 1:
+                _logger.warning('stripe sca customer conversion: there should be a single saved source per customer!')
+            pm_ref = cards and cards[0].get('id')
+        if not pm_ref:
+            raise ValidationError(_('Unable to convert Stripe customer for SCA compatibility. Is there at least one card for this customer in the Stripe backend?'))
+        self.stripe_payment_method = pm_ref
+        _logger.info('converted old customer ref to sca-compatible record for payment token %s', self.id)

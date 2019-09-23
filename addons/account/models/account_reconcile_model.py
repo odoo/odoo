@@ -229,6 +229,7 @@ class AccountReconcileModel(models.Model):
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'debit': line_balance > 0 and line_balance or 0,
             'credit': line_balance < 0 and -line_balance or 0,
+            'reconcile_model_id': self.id,
         }
         new_aml_dicts.append(writeoff_line)
 
@@ -243,7 +244,11 @@ class AccountReconcileModel(models.Model):
 
         # Second write-off line.
         if self.has_second_line and self.second_account_id:
-            line_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
+            remaining_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
+            if self.second_amount_type == 'percentage':
+                line_balance = remaining_balance * (self.second_amount / 100.0)
+            else:
+                line_balance = self.second_amount * (1 if remaining_balance > 0.0 else -1)
             second_writeoff_line = {
                 'name': self.second_label or st_line.name,
                 'account_id': self.second_account_id.id,
@@ -251,6 +256,7 @@ class AccountReconcileModel(models.Model):
                 'analytic_tag_ids': [(6, 0, self.second_analytic_tag_ids.ids)],
                 'debit': line_balance > 0 and line_balance or 0,
                 'credit': line_balance < 0 and -line_balance or 0,
+                'reconcile_model_id': self.id,
             }
             new_aml_dicts.append(second_writeoff_line)
 
