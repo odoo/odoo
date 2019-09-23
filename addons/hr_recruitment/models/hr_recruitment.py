@@ -108,6 +108,8 @@ class Applicant(models.Model):
         if self._context.get('default_department_id'):
             department = self.env['hr.department'].browse(self._context['default_department_id'])
             company_id = department.company_id.id
+        if not company_id and self.job_id:
+            company_id = self.env['hr.job'].browse(self._context['default_job_id']).company_id.ids
         if not company_id:
             company_id = self.env.company
         return company_id
@@ -232,6 +234,7 @@ class Applicant(models.Model):
             job = self.env['hr.job'].browse(job_id)
             department_id = job.department_id.id
             user_id = job.user_id.id
+            company_id = job.company_id.id
             if not stage_id:
                 stage_ids = self.env['hr.recruitment.stage'].search([
                     '|',
@@ -243,6 +246,7 @@ class Applicant(models.Model):
 
         return {'value': {
             'department_id': department_id,
+            'company_id': company_id,
             'user_id': user_id,
             'stage_id': stage_id
         }}
