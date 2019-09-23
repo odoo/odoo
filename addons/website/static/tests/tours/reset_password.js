@@ -46,7 +46,7 @@ tour.register('website_reset_password', {
             var def3 = rpc.query({
                 model: 'res.partner',
                 method: 'name_search',
-                kwargs: {'name': 'Mitchell Admin'},
+                kwargs: {'name': 'Mitchell Admin', 'args': [['company_id', '=', 1]]},
             }).then(function (res) {
                 return rpc.query({
                     'model': 'res.partner',
