@@ -2199,11 +2199,15 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
     }
 
     // select nodes to clean (to remove empty font and merge same nodes)
-    nodes = [];
+    var walkpointNodes = [];
+    var lastNode = null;
     dom.walkPoint(startPoint, endPoint, function (point) {
-      nodes.push(point.node);
+        if (lastNode !== point.node) {
+            nodes.push(point.node);
+            lastNode = point.node;
+        }
     });
-    nodes = list.unique(nodes);
+    nodes = list.unique(walkpointNodes);
 
     function remove(node, to) {
       if (node === endPoint.node) {
@@ -2223,6 +2227,7 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
       if ((dom.isText(node) || dom.isBR(node)) && !dom.isVisibleText(node)) {
         remove(node);
         nodes.splice(i,1);
+        walkpointNodes = _.without(walkpointNodes, node);
         i--;
         continue;
       }
@@ -2241,6 +2246,7 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
       if (!className && !style) {
         remove(node, node.parentNode);
         nodes.splice(i,1);
+        walkpointNodes = _.without(walkpointNodes, node);
         i--;
         continue;
       }
@@ -2251,6 +2257,7 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
         if (node !== font && className === className2 && style === style2) {
           remove(node, font);
           nodes.splice(i,1);
+          walkpointNodes = _.without(walkpointNodes, node);
           i--;
           continue;
         }
