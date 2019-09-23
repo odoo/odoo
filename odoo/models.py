@@ -1662,36 +1662,32 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return lazy_name_get(recs.with_user(access_rights_uid))
 
     @api.model
-    def _add_missing_default_values(self, values):
-        # avoid overriding inherited values when parent is set
-        avoid_models = {
-            parent_model
-            for parent_model, parent_field in self._inherits.items()
-            if parent_field in values
-        }
+    def _add_missing_default_values(self, vals_list):
+        """Adds missing default values in-place in `vals_list` and returns it for
+        convenience."""
+        for vals in vals_list:
+            missing_defaults = [
+                name
+                for name, field in self._fields.items()
+                if name not in vals and not (field.inherited and field.related[0] in vals)
+            ]
 
-        # compute missing fields
-        missing_defaults = {
-            name
-            for name, field in self._fields.items()
-            if name not in values
-            if not (field.inherited and field.related_field.model_name in avoid_models)
-        }
+            if not missing_defaults:
+                continue
 
-        if not missing_defaults:
-            return values
+            defaults = self.default_get(missing_defaults)
 
-        # override defaults with the provided values, never allow the other way around
-        defaults = self.default_get(list(missing_defaults))
-        for name, value in defaults.items():
-            if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
-                # convert a list of ids into a list of commands
-                defaults[name] = [(6, 0, value)]
-            elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
-                # convert a list of dicts into a list of commands
-                defaults[name] = [(0, 0, x) for x in value]
-        defaults.update(values)
-        return defaults
+            for name, value in defaults.items():
+                if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
+                    # convert a list of ids into a list of commands
+                    value = [(6, 0, value)]
+                elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
+                    # convert a list of dicts into a list of commands
+                    value = [(0, 0, x) for x in value]
+                # never allow defaults to override the provided values
+                vals.setdefault(name, value)
+
+        return vals_list
 
     @classmethod
     def clear_caches(cls):
@@ -3564,9 +3560,7 @@ Record ids: %(records)s
         data_list = []
         inversed_fields = set()
 
-        for vals in vals_list:
-            # add missing defaults
-            vals = self._add_missing_default_values(vals)
+        for vals in self._add_missing_default_values(vals_list):
 
             # distribute fields into sets for various purposes
             data = {}

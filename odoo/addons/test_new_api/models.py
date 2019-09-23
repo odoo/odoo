@@ -104,7 +104,7 @@ class Discussion(models.Model):
             for message in self.important_messages:
                 message.body = 'not last dummy message'
             # add new dummy message
-            message_vals = self.messages._add_missing_default_values({'body': 'dummy message', 'important': True})
+            message_vals = self.messages._add_missing_default_values([{'body': 'dummy message', 'important': True}])[0]
             self.messages |= self.messages.new(message_vals)
             self.important_messages |= self.messages.new(message_vals)
 

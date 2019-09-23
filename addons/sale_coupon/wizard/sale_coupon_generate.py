@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import fields, models, _
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -12,7 +12,7 @@ class SaleCouponGenerate(models.TransientModel):
     generation_type = fields.Selection([
         ('nbr_coupon', 'Number of Coupons'),
         ('nbr_customer', 'Number of Selected Customers')
-        ], default='nbr_coupon')
+    ], default='nbr_coupon')
     partners_domain = fields.Char(string="Customer", default='[]')
 
     def generate_coupon(self):
@@ -23,14 +23,19 @@ class SaleCouponGenerate(models.TransientModel):
         vals = {'program_id': program.id}
 
         if self.generation_type == 'nbr_coupon' and self.nbr_coupons > 0:
-            for count in range(0, self.nbr_coupons):
-                self.env['sale.coupon'].create(vals)
+            self.env['sale.coupon'].create([vals for count in range(0, self.nbr_coupons)])
 
         if self.generation_type == 'nbr_customer' and self.partners_domain:
-            for partner in self.env['res.partner'].search(safe_eval(self.partners_domain)):
-                vals.update({'partner_id': partner.id})
-                coupon = self.env['sale.coupon'].create(vals)
-                subject = '%s, a coupon has been generated for you' % (partner.name)
-                template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
-                if template:
-                    template.send_mail(coupon.id, email_values={'email_to': partner.email, 'email_from': self.env.user.email or '', 'subject': subject,})
+            coupons = self.env['sale.coupon'].create([
+                dict(vals, partner_id=partner.id)
+                for partner in self.env['res.partner'].search(safe_eval(self.partners_domain))
+            ])
+            template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
+            if template:
+                for coupon in coupons:
+                    subject = _("%s, a coupon has been generated for you") % (coupon.partner_id.name)
+                    template.send_mail(coupon.id, email_values={
+                        'email_to': coupon.partner_id.email,
+                        'email_from': self.env.user.email or '',
+                        'subject': subject,
+                    })

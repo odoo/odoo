@@ -1448,7 +1448,7 @@ class AccountMove(models.Model):
             if vals.get('journal_id'):
                 ctx_vals['default_journal_id'] = vals['journal_id']
             self_ctx = self.with_context(**ctx_vals)
-            new_vals = self_ctx._add_missing_default_values(vals)
+            new_vals = self_ctx._add_missing_default_values([vals])[0]
 
             move = self_ctx.new(new_vals)
             new_vals_list.append(move._move_autocomplete_invoice_lines_values())

@@ -78,16 +78,16 @@ class TestUi(odoo.tests.HttpCase):
             'name': 'Vintage',
             'sequence': 1,
         })
-        self.values_varieties = self.env['product.attribute.value'].create({
+        self.values_varieties = self.env['product.attribute.value'].create([{
             'name': n,
             'attribute_id': self.attribute_varieties.id,
             'sequence': i,
-        } for i, n in enumerate(['Cabernet Sauvignon', 'Merlot', 'Cabernet Franc', 'Petit Verdot']))
-        self.values_vintage = self.env['product.attribute.value'].create({
+        } for i, n in enumerate(['Cabernet Sauvignon', 'Merlot', 'Cabernet Franc', 'Petit Verdot'])])
+        self.values_vintage = self.env['product.attribute.value'].create([{
             'name': n,
             'attribute_id': self.attribute_vintage.id,
             'sequence': i,
-        } for i, n in enumerate(['2018', '2017', '2016', '2015']))
+        } for i, n in enumerate(['2018', '2017', '2016', '2015'])])
         self.attribute_line_varieties = self.env['product.template.attribute.line'].create([{
             'product_tmpl_id': self.template_margaux.id,
             'attribute_id': self.attribute_varieties.id,

@@ -6,7 +6,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
 
     tour.register('product_comparison', {
         test: true,
-        url: "/shop",
+        url: "/shop?search=Three-Seat Sofa",
     }, [
     // test from shop page
     {
@@ -21,7 +21,9 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     {
         content: "check popover is closed when only one product",
         trigger: 'body:not(:has(.comparator-popover))',
-        run: function () {},
+        run: function () {
+            window.location.href = '/shop?search=Conference Chair';
+        },
     },
     {
         content: "add second product 'Conference Chair' in a comparison list",
@@ -37,7 +39,9 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
         content: "check products name are correct in the comparelist",
         extra_trigger: '.o_product_row:contains("Three-Seat Sofa")',
         trigger: '.o_product_row:contains("Conference Chair")',
-        run: function () {},
+        run: function () {
+            window.location.href = '/shop?search=Customizable Desk';
+        },
     },
     // test form product page
     {

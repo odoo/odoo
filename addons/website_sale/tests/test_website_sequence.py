@@ -68,3 +68,11 @@ class TestWebsiteSequence(odoo.tests.TransactionCase):
         })
 
         self.assertEqual(self._search_website_sequence_order()[-1], new_product, "new product should be last")
+
+    def test_02_website_sequence_default(self):
+        products = self.env['product.template'].create([{'name': 'A'}, {'name': 'B'}])
+        # products created in batch should have an increasing sequence
+        self.assertGreater(products[1].website_sequence, products[0].website_sequence)
+        # products created separately too
+        other_product = self.env['product.template'].create([{'name': 'C'}])
+        self.assertGreater(other_product.website_sequence, products[1].website_sequence)

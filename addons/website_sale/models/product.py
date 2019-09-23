@@ -186,8 +186,7 @@ class ProductTemplate(models.Model):
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
     website_style_ids = fields.Many2many('product.style', string='Styles')
-    website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
-                                      default=lambda self: self._default_website_sequence())
+    website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce", index=True)
     public_categ_ids = fields.Many2many('product.public.category', relation='product_public_category_product_template_rel', string='Website Product Category',
                                         help="The product will be available in each mentioned e-commerce category. Go to"
                                         "Shop > Customize and enable 'E-commerce categories' to view all e-commerce categories.")
@@ -316,28 +315,43 @@ class ProductTemplate(models.Model):
         website = self.website_id or kwargs.get('website')
         return website and website.company_id or res
 
-    def _default_website_sequence(self):
+    def _add_missing_default_values(self, vals_list):
         ''' We want new product to be the last (highest seq).
-        Every product should ideally have an unique sequence.
         Default sequence (10000) should only be used for DB first product.
         As we don't resequence the whole tree (as `sequence` does), this field
         might have negative value.
         '''
-        self._cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
-        max_sequence = self._cr.fetchone()[0]
-        if max_sequence is None:
-            return 10000
-        return max_sequence + 5
+        website_sequence = None
+        for vals in super()._add_missing_default_values(vals_list):
+            if 'website_sequence' not in vals:
+                if website_sequence is None:
+                    website_sequence = self.get_sequence_top() or 9995
+                website_sequence += 5
+                vals['website_sequence'] = website_sequence
+        return vals_list
+
+    @api.model
+    def get_sequence_top(self):
+        self.flush()
+        self.env.cr.execute("SELECT MAX(website_sequence) FROM %s WHERE active = true" % self._table)
+        return self.env.cr.fetchone()[0] or 0
+
+    @api.model
+    def get_sequence_bottom(self):
+        self.flush()
+        self.env.cr.execute("SELECT MIN(website_sequence) FROM %s WHERE active = true" % self._table)
+        return self.env.cr.fetchone()[0] or 0
 
     def set_sequence_top(self):
-        min_sequence = self.sudo().search([], order='website_sequence ASC', limit=1)
-        self.website_sequence = min_sequence.website_sequence - 5
+        self.ensure_one()
+        self.website_sequence = self.get_sequence_bottom() - 5
 
     def set_sequence_bottom(self):
-        max_sequence = self.sudo().search([], order='website_sequence DESC', limit=1)
-        self.website_sequence = max_sequence.website_sequence + 5
+        self.ensure_one()
+        self.website_sequence = self.get_sequence_top() + 5
 
     def set_sequence_up(self):
+        self.ensure_one()
         previous_product_tmpl = self.sudo().search([
             ('website_sequence', '<', self.website_sequence),
             ('website_published', '=', self.website_published),
@@ -348,6 +362,7 @@ class ProductTemplate(models.Model):
             self.set_sequence_top()
 
     def set_sequence_down(self):
+        self.ensure_one()
         next_prodcut_tmpl = self.search([
             ('website_sequence', '>', self.website_sequence),
             ('website_published', '=', self.website_published),

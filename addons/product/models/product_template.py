@@ -30,7 +30,7 @@ class ProductTemplate(models.Model):
             raise RedirectWarning(err_msg, self.env.ref('product.product_category_action_form').id, redir_msg)
 
     def _get_default_uom_id(self):
-        return self.env["uom.uom"].search([], limit=1, order='id').id
+        return self.env['ir.model.data'].xmlid_to_res_id('uom.product_uom_unit')
 
     def _get_default_weight_uom(self):
         return self._get_weight_uom_name_from_ir_config_parameter()
@@ -270,9 +270,11 @@ class ProductTemplate(models.Model):
         get_param = self.env['ir.config_parameter'].sudo().get_param
         product_weight_in_lbs_param = get_param('product.weight_in_lbs')
         if product_weight_in_lbs_param == '1':
-            return self.env.ref('uom.product_uom_lb')
+            xmlid = 'uom.product_uom_lb'
         else:
-            return self.env.ref('uom.product_uom_kgm')
+            xmlid = 'uom.product_uom_kgm'
+        res_model, res_id = self.env['ir.model.data'].xmlid_to_res_model_res_id(xmlid)
+        return self.env[res_model].browse(res_id)
 
     @api.model
     def _get_weight_uom_name_from_ir_config_parameter(self):

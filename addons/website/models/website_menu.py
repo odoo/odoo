@@ -13,9 +13,17 @@ class Menu(models.Model):
     _parent_store = True
     _order = "sequence, id"
 
-    def _default_sequence(self):
-        menu = self.search([], limit=1, order="sequence DESC")
-        return menu.sequence or 0
+    def _add_missing_default_values(self, vals_list):
+        sequence = None
+        for vals in super()._add_missing_default_values(vals_list):
+            if 'sequence' not in vals:
+                if sequence is None:
+                    self.flush()
+                    self.env.cr.execute("SELECT MAX(sequence) FROM %s" % self._table)
+                    sequence = self.env.cr.fetchone()[0] or 0
+                sequence += 5
+                vals['sequence'] = sequence
+        return vals_list
 
     def _compute_field_is_mega_menu(self):
         for menu in self:
@@ -35,7 +43,7 @@ class Menu(models.Model):
     url = fields.Char('Url', default='')
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
     new_window = fields.Boolean('New Window')
-    sequence = fields.Integer(default=_default_sequence)
+    sequence = fields.Integer()
     website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
