@@ -243,6 +243,8 @@
             </t>
         </t>
         <link t-if="request and website" rel="canonical" t-att-href="website._get_canonical_url(canonical_params=canonical_params)"/>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
     </xpath>
 
     <xpath expr="//head/t[@t-js='false'][last()]" position="after">
