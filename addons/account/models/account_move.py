@@ -1520,22 +1520,14 @@ class AccountMove(models.Model):
     def name_get(self):
         result = []
         for move in self:
-            if self._context.get('name_groupby') and not (move.type == 'entry' and move.state == 'draft'):
-                move_name = move.name != "/" and move.name or _("Draft %s") % dict(move._fields['type']._description_selection(self.env))[move.type]
-                name = '**%s**, %s' % (format_date(self.env, move.date), move_name or '')
+            if self._context.get('name_groupby'):
+                name = '**%s**, %s' % (format_date(self.env, move.date), move._get_move_display_name())
                 if move.ref:
                     name += '     (%s)' % move.ref
                 if move.partner_id.name:
                     name += ' - %s' % move.partner_id.name
-            elif move.type == 'entry':
-                # Miscellaneous operation.
-                if move.state == 'draft':
-                    name = _('Draft Entry (* %s)') % str(move.id)
-                else:
-                    name = move.name
             else:
-                # Invoice.
-                name = move._get_invoice_display_name(show_ref=True)
+                name = move._get_move_display_name(show_ref=True)
             result.append((move.id, name))
         return result
 
@@ -1666,23 +1658,28 @@ class AccountMove(models.Model):
             return
         return journal.refund_sequence_id
 
-    def _get_invoice_display_name(self, show_ref=False):
+    def _get_move_display_name(self, show_ref=False):
         ''' Helper to get the display name of an invoice depending of its type.
         :param show_ref:    A flag indicating of the display name must include or not the journal entry reference.
         :return:            A string representing the invoice.
         '''
         self.ensure_one()
+        draft_name = ''
         if self.state == 'draft':
-            return {
+            draft_name += {
                 'out_invoice': _('Draft Invoice'),
-                'out_refund': _('Credit Note'),
-                'in_invoice': _('Vendor Bill'),
-                'in_refund': _('Vendor Credit Note'),
-                'out_receipt': _('Sales Receipt'),
-                'in_receipt': _('Purchase Receipt'),
+                'out_refund': _('Draft Credit Note'),
+                'in_invoice': _('Draft Bill'),
+                'in_refund': _('Draft Vendor Credit Note'),
+                'out_receipt': _('Draft Sales Receipt'),
+                'in_receipt': _('Draft Purchase Receipt'),
+                'entry': _('Draft Entry'),
             }[self.type]
-        else:
-            return ('%s' % self.name) + (show_ref and self.ref and '(%s)' % self.ref or '')
+            if not self.name or self.name == '/':
+                draft_name += ' (* %s)' % str(self.id)
+            else:
+                draft_name += ' ' + self.name
+        return (draft_name or self.name) + (show_ref and self.ref and ' (%s)' % self.ref or '')
 
     def _get_invoice_delivery_partner_id(self):
         ''' Hook allowing to retrieve the right delivery address depending of installed modules.
@@ -2118,7 +2115,7 @@ class AccountMove(models.Model):
     def _get_report_base_filename(self):
         if any(not move.is_invoice() for move in self):
             raise UserError(_("Only invoices could be printed."))
-        return self._get_invoice_display_name()
+        return self._get_move_display_name()
 
     def preview_invoice(self):
         self.ensure_one()
