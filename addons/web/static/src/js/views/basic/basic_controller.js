@@ -382,10 +382,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         options = options || {};
         return this.canBeDiscarded(recordID)
             .then(function (needDiscard) {
-                if (options.noAbandon || (options.readonlyIfRealDiscard && !needDiscard)) {
+                if (options.readonlyIfRealDiscard && !needDiscard) {
                     return;
                 }
                 self.model.discardChanges(recordID);
+                if (options.noAbandon) {
+                    return;
+                }
                 if (self.model.canBeAbandoned(recordID)) {
                     self._abandonRecord(recordID);
                     return;
