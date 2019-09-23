@@ -1372,6 +1372,12 @@ class Lead(models.Model):
         save_team_id = None
         p_won, p_lost = 1, 1
         for lead_id, lead_values in leads_values_dict.items():
+            # if stage_id is null, return 0 and bypass computation
+            lead_fields = [value[0] for value in lead_values.get('values', [])]
+            if not 'stage_id' in lead_fields:
+                lead_probabilities[lead_id] = 0
+                continue
+
             lead_team_id = lead_values['team_id'] if lead_values['team_id'] else 0  # team_id = None -> Convert to 0
             lead_team_id = lead_team_id if lead_team_id in result else -1  # team_id not in frequency Table -> convert to -1
             if lead_team_id != save_team_id:
@@ -1429,7 +1435,7 @@ class Lead(models.Model):
         # Get also all the lead without probability --> These are the new leads. Activate auto probability on them.
         pls_start_date = self._pls_get_safe_start_date()
         if pls_start_date:
-            pending_lead_domain = ['&', ('create_date', '>', pls_start_date),
+            pending_lead_domain = ['&', '&', ('stage_id', '!=', False), ('create_date', '>', pls_start_date),
                                    '|', ('probability', '=', False), '&', ('probability', '<', 100), ('probability', '>', 0)]
             leads_to_update = self.env['crm.lead'].search(pending_lead_domain)
             lead_probabilities = leads_to_update._pls_get_naive_bayes_probabilities(batch_mode=True)
@@ -1652,7 +1658,7 @@ class Lead(models.Model):
         :param first_stage_id: stage with smallest sequence
         :return: won count, lost count and total count for all records in frequencies
         """
-        if str(first_stage_id.id) not in team_results['stage_id']:
+        if str(first_stage_id.id) not in team_results.get('stage_id', []):
             return 0, 0, 0
         stage_result = team_results['stage_id'][str(first_stage_id.id)]
         return stage_result['won'], stage_result['lost'], stage_result['won'] + stage_result['lost']
