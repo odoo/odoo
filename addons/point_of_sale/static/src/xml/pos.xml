@@ -578,74 +578,73 @@
     </t>
 
     <t t-name="PaymentScreenElectronicPayment">
-        <tr class="send_request paymentline electronic_payment"/>
         <tr class="paymentline electronic_payment">
             <t t-if="line.payment_status == 'pending'">
-                <td colspan="3">
+                <td colspan="2">
                     Payment request pending
                 </td>
-                <td colspan="2" class='button send_payment_request highlight' title="Send Payment Request" t-att-data-cid='line.cid'>
+                <td colspan="1" class='button send_payment_request highlight' title="Send Payment Request" t-att-data-cid='line.cid'>
                     Send
                 </td>
             </t>
             <t t-elif="line.payment_status == 'retry'">
-                <td colspan="3">
+                <td colspan="2">
                     Transaction cancelled
                 </td>
-                <td colspan="2" class='button send_payment_request highlight' title="Send Payment Request" t-att-data-cid='line.cid'>
+                <td colspan="1" class='button send_payment_request highlight' title="Send Payment Request" t-att-data-cid='line.cid'>
                     Retry
                 </td>
             </t>
             <t t-elif="line.payment_status == 'force_done'">
-                <td colspan="3">
+                <td colspan="2">
                     Connection error
                 </td>
-                <td colspan="2" class='button send_force_done' title="Force Done" t-att-data-cid='line.cid'>
+                <td colspan="1" class='button send_force_done' title="Force Done" t-att-data-cid='line.cid'>
                     Force done
                 </td>
             </t>
             <t t-elif="line.payment_status == 'waitingCard'">
-                <td colspan="3">
+                <td colspan="2">
                     Waiting for card
                 </td>
-                <td colspan="2" class='button send_payment_cancel' title="Cancel Payment Request" t-att-data-cid='line.cid'>
+                <td colspan="1" class='button send_payment_cancel' title="Cancel Payment Request" t-att-data-cid='line.cid'>
                     Cancel
                 </td>
             </t>
             <t t-elif="['waiting', 'waitingCancel'].includes(line.payment_status)">
-                <td colspan="3">
+                <td colspan="2">
                     Request sent
                 </td>
-                <td colspan="2">
+                <td colspan="1">
                     <i class='fa fa-spinner fa-spin' role='img'/>
                 </td>
             </t>
             <t t-elif="line.payment_status == 'reversing'">
-                <td colspan="3">
+                <td colspan="2">
                     Reversal request sent to terminal
                 </td>
-                <td colspan="2">
+                <td colspan="1">
                     <i class='fa fa-spinner fa-spin' role='img'/>
                 </td>
             </t>
             <t t-elif="line.payment_status == 'done'">
                 <t t-if="line.can_be_reversed">
-                    <td colspan="3">
+                    <td colspan="2">
                         Payment Successful
                     </td>
-                    <td colspan="2" class='button send_payment_reversal' title="Reverse Payment" t-att-data-cid='line.cid'>
+                    <td colspan="1" class='button send_payment_reversal' title="Reverse Payment" t-att-data-cid='line.cid'>
                         Reverse
                     </td>
                 </t>
                 <t t-else="">
-                    <td colspan="5">
+                    <td colspan="3">
                         Payment Successful
                     </td>
                 </t>
             </t>
             <t t-elif="line.payment_status == 'reversed'">
                 <tr class="paymentline electronic_payment">
-                    <td colspan="5">
+                    <td colspan="3">
                         Payment reversed
                     </td>
                  </tr>
@@ -666,19 +665,40 @@
         </t>
 
         <t t-if="paymentlines.length">
+            <div class="payment-status-container">
+                <div>
+                    <div class="payment-status-remaining">
+                        <span class="label">Remaining</span>
+                        <span t-att-class="order.get_due() > 0 ? 'amount highlight' : 'amount'">
+                            <t t-esc="widget.format_currency(order.get_due() > 0 ? order.get_due() : 0)" />
+                        </span>
+                    </div>
+                    <div class="payment-status-total-due">
+                        <span class="label">Total Due</span>
+                        <span>
+                            <t t-esc="widget.format_currency(order.get_total_with_tax())" />
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <div class="payment-status-change">
+                        <span class="label">Change</span>
+                        <span t-att-class="order.get_change() > 0 ? 'amount highlight' : 'amount'">
+                            <t t-esc="widget.format_currency(order.get_change())" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <hr />
             <table class='paymentlines'>
                 <colgroup>
-                    <col class='due' />
                     <col class='tendered' />
-                    <col class='change' />
                     <col class='method' />
                     <col class='controls' />
                 </colgroup>
                 <thead>
                     <tr class='label'>
-                        <th>Due</th>
                         <th>Tendered</th>
-                        <th>Change</th>
                         <th>Method</th>
                         <th></th>
                     </tr>
@@ -687,7 +707,6 @@
                     <t t-foreach='paymentlines' t-as='line'>
                         <t t-if='line.selected'>
                             <tr class='paymentline selected'>
-                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
                                 <t t-if="line &amp;&amp; line.payment_status &amp;&amp; ['done', 'waitingCard', 'waiting', 'reversing', 'reversed'].includes(line.payment_status)">
                                     <td class='col-tendered'>
                                         <t t-esc='widget.format_currency_no_symbol(line.get_amount())' />
@@ -698,15 +717,6 @@
                                         <t t-esc='widget.inputbuffer' />
                                     </td>
                                 </t>
-                                <t t-if='order.get_change(line)'>
-                                    <td class='col-change highlight' >
-                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
-                                    </td>
-                                </t>
-                                <t t-if='!order.get_change(line)'>
-                                    <td class='col-change' ></td>
-                                </t>
-
                                 <td class='col-name' > <t t-esc='line.name' /> </td>
                                 <t t-if="line &amp;&amp; line.payment_status &amp;&amp; ['done', 'reversed', 'reversing'].includes(line.payment_status)">
                                     <td/>
@@ -724,13 +734,7 @@
                         </t>
                         <t t-if='!line.selected'>
                             <tr class='paymentline' t-att-data-cid='line.cid'>
-                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
                                 <td class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
-                                <td class='col-change'>
-                                    <t t-if='order.get_change(line)'>
-                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
-                                     </t>
-                                </td>
                                 <td class='col-name'> <t t-esc='line.name' /> </td>
                                 <t t-if="line &amp;&amp; line.payment_status &amp;&amp; ['done', 'reversed', 'reversing'].includes(line.payment_status)">
                                     <td/>
@@ -742,11 +746,6 @@
                                 </t>
                             </tr>
                         </t>
-                    </t>
-                    <t t-if='extradue'>
-                        <tr class='paymentline extra' t-att-data-cid='0'>
-                            <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(extradue)' /> </td>
-                        </tr>
                     </t>
                 </tbody>
             </table>

@@ -354,15 +354,47 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
     steps = steps.concat(add_product_to_order('Desk Organizer'));
     steps = steps.concat(verify_order_total('10.20'));
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
-    steps = steps.concat(generate_payment_screen_keypad_steps("12.20"));
 
+    /*  add payment line of only 5.20
+        status:
+            order-total := 10.20
+            total-payment := 11.70
+        expect:
+            remaining := 0.00
+            change := 1.50
+    */
+    steps = steps.concat(generate_payment_screen_keypad_steps("5.20"));
     steps = steps.concat([{
-        content: "verify tendered",
-        trigger: '.col-tendered:contains("12.20")',
+        content: "verify remaining",
+        trigger: '.payment-status-remaining .amount:contains("5.00")',
         run: function () {}, // it's a check
     }, {
         content: "verify change",
-        trigger: '.col-change:contains("2.00")',
+        trigger: '.payment-status-change .amount:contains("0.00")',
+        run: function () {}, // it's a check
+    }]);
+
+    /*  make additional payment line of 6.50
+        status:
+            order-total := 10.20
+            total-payment := 11.70
+        expect:
+            remaining := 0.00
+            change := 1.50
+    */
+    steps = steps.concat([{
+        content: "pay with cash",
+        trigger: '.paymentmethod:contains("Cash")',
+    }]);
+    steps = steps.concat(generate_payment_screen_keypad_steps("6.50"));
+
+    steps = steps.concat([{
+        content: "verify remaining",
+        trigger: '.payment-status-remaining .amount:contains("0.00")',
+        run: function () {}, // it's a check
+    }, {
+        content: "verify change",
+        trigger: '.payment-status-change .amount:contains("1.50")',
         run: function () {}, // it's a check
     }]);
 
