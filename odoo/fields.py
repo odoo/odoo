@@ -2562,6 +2562,10 @@ class Many2oneReference(Integer):
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
+    # Important: the cache contains the ids of all the records in the relation,
+    # including inactive records.  Inactive records are filtered out by
+    # convert_to_record(), depending on the context.
+
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``,
             and return whether everything is in cache.
@@ -2575,26 +2579,17 @@ class _RelationalMulti(_Relational):
                 return
             records = model.browse(records)
 
-        cache = records.env.cache
         result = True
-        if 'active_test' in (self.depends_context or ()):
-            updates = [
-                (value.sudo().filtered('active'), records.with_context(active_test=True)),
-                (value, records.with_context(active_test=False)),
-            ]
-        else:
-            updates = [(value, records)]
 
-        for value, recs in updates:
-            if not value:
-                continue
-            for record in recs:
+        if value:
+            cache = records.env.cache
+            for record in records:
                 if cache.contains(record, self):
                     val = self.convert_to_cache(record[self.name] | value, record, validate=False)
                     cache.set(record, self, val)
                 else:
                     result = False
-            recs.modified([self.name])
+            records.modified([self.name])
 
         return result
 
@@ -2654,7 +2649,10 @@ class _RelationalMulti(_Relational):
     def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
         prefetch_ids = IterableGenerator(prefetch_x2many_ids, record, self)
-        return record.pool[self.comodel_name]._browse(record.env, value, prefetch_ids)
+        corecords = record.pool[self.comodel_name]._browse(record.env, value, prefetch_ids)
+        if 'active' in corecords and record.env.context.get('active_test', True):
+            corecords = corecords.filtered('active').with_prefetch(prefetch_ids)
+        return corecords
 
     def convert_to_read(self, value, record, use_name_get=True):
         return value.ids
@@ -2711,9 +2709,6 @@ class _RelationalMulti(_Relational):
                 for arg in self.domain
                 if isinstance(arg, (tuple, list)) and isinstance(arg[0], str)
             )
-        # make self depend on 'active_test' if there is a field 'active' in the comodel
-        if 'active' in model.env[self.comodel_name] and 'active_test' not in (self.depends_context or ()):
-            self.depends_context = (self.depends_context or ()) + ('active_test',)
 
     def create(self, record_values):
         """ Write the value of ``self`` on the given records, which have just
@@ -2824,7 +2819,9 @@ class One2many(_RelationalMulti):
 
     def read(self, records):
         # retrieve the lines in the comodel
-        comodel = records.env[self.comodel_name].with_context(**self.context)
+        context = {'active_test': False}
+        context.update(self.context)
+        comodel = records.env[self.comodel_name].with_context(**context)
         inverse = self.inverse_name
         inverse_field = comodel._fields[inverse]
         get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
@@ -3184,7 +3181,9 @@ class Many2many(_RelationalMulti):
             reflect(model, '%s_%s_fkey' % (self.relation, self.column2), 'f', None, self._module)
 
     def read(self, records):
-        comodel = records.env[self.comodel_name].with_context(**self.context)
+        context = {'active_test': False}
+        context.update(self.context)
+        comodel = records.env[self.comodel_name].with_context(**context)
         domain = self.get_domain_list(records)
         wquery = comodel._where_calc(domain)
         comodel._apply_ir_rules(wquery, 'read')

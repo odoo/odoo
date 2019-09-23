@@ -1539,6 +1539,50 @@ class TestX2many(common.TransactionCase):
         record_a.unlink()
         self.assertFalse(record_a.exists())
 
+    def test_12_active_test_one2many(self):
+        Model = self.env['test_new_api.model_active_field']
+
+        parent = Model.create({})
+        self.assertFalse(parent.children_ids)
+
+        # create with implicit active_test=True in context
+        child1, child2 = Model.create([
+            {'parent_id': parent.id, 'active': True},
+            {'parent_id': parent.id, 'active': False},
+        ])
+        act_children = child1
+        all_children = child1 + child2
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        # create with active_test=False in context
+        child3, child4 = Model.with_context(active_test=False).create([
+            {'parent_id': parent.id, 'active': True},
+            {'parent_id': parent.id, 'active': False},
+        ])
+        act_children = child1 + child3
+        all_children = child1 + child2 + child3 + child4
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        # replace active children
+        parent.write({'children_ids': [(6, 0, [child1.id])]})
+        act_children = child1
+        all_children = child1 + child2 + child4
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        # replace all children
+        parent.with_context(active_test=False).write({'children_ids': [(6, 0, [child1.id])]})
+        act_children = child1
+        all_children = child1
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_new_api.multi.tag']
