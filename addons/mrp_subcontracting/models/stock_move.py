@@ -51,13 +51,12 @@ class StockMove(models.Model):
         """ If the initial demand is updated then also update the linked
         subcontract order to the new quantity.
         """
-        res = super(StockMove, self).write(values)
         if 'product_uom_qty' in values:
             if self.env.context.get('cancel_backorder') is False:
-                return res
+                return super(StockMove, self).write(values)
             self.filtered(lambda m: m.is_subcontract and
-            m.state not in ['draft', 'cancel', 'done'])._update_subcontract_order_qty()
-        return res
+            m.state not in ['draft', 'cancel', 'done'])._update_subcontract_order_qty(values['product_uom_qty'])
+        return super(StockMove, self).write(values)
 
     def action_show_details(self):
         """ Open the produce wizard in order to register tracked components for
@@ -173,6 +172,11 @@ operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name
         vals['location_id'] = self.location_id.id
         return vals
 
+    def _prepare_move_split_vals(self, qty):
+        vals = super(StockMove, self)._prepare_move_split_vals(qty)
+        vals['location_id'] = self.location_id.id
+        return vals
+
     def _should_bypass_reservation(self):
         """ If the move is subcontracted then ignore the reservation. """
         should_bypass_reservation = super(StockMove, self)._should_bypass_reservation()
@@ -180,12 +184,13 @@ operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name
             return True
         return should_bypass_reservation
 
-    def _update_subcontract_order_qty(self):
+    def _update_subcontract_order_qty(self, quantity):
         for move in self:
+            quantity_change = quantity - move.product_uom_qty
             production = move.move_orig_ids.production_id
             if production:
                 self.env['change.production.qty'].with_context(skip_activity=True).create({
                     'mo_id': production.id,
-                    'product_qty': move.product_uom_qty
+                    'product_qty': production.product_uom_qty + quantity_change
                 }).change_prod_qty()
 
