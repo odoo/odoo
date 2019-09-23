@@ -801,3 +801,9 @@ body.editor_enable.editor_has_snippets {
     opacity: 0;
     animation: fadeInDownSmall 700ms forwards;
 }
+
+.modal-open {
+    > .modal-backdrop {
+        z-index: $zindex-dropdown - 1;
+    }
+}
