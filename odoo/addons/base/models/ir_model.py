@@ -378,6 +378,8 @@ class IrModelFields(models.Model):
         for rec in self:
             if rec.state == 'manual' and rec.relation_field:
                 rec.relation_field_id = self._get(rec.relation, rec.relation_field)
+            else:
+                rec.relation_field_id = False
 
     @api.depends('related')
     def _compute_related_field_id(self):
@@ -385,6 +387,8 @@ class IrModelFields(models.Model):
             if rec.state == 'manual' and rec.related:
                 field = rec._related_field()
                 rec.related_field_id = self._get(field.model_name, field.name)
+            else:
+                rec.related_field_id = False
 
     @api.depends('selection_ids')
     def _compute_selection(self):
