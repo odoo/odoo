@@ -1539,6 +1539,63 @@ class TestX2many(common.TransactionCase):
         record_a.unlink()
         self.assertFalse(record_a.exists())
 
+    def test_12_active_test_one2many(self):
+        Model = self.env['test_new_api.model_active_field']
+
+        parent = Model.create({})
+        self.assertFalse(parent.children_ids)
+
+        # create without active_test in context
+        child = Model.create({
+            'active': True,
+            'parent_id': parent.id,
+        })
+        self.assertIn(child, parent.children_ids)
+        self.assertIn(child, parent.with_context(active_test=True).children_ids)
+        self.assertIn(child, parent.with_context(active_test=False).children_ids)
+
+        child = Model.create({
+            'active': False,
+            'parent_id': parent.id,
+        })
+        self.assertNotIn(child, parent.children_ids)
+        self.assertNotIn(child, parent.with_context(active_test=True).children_ids)
+        self.assertIn(child, parent.with_context(active_test=False).children_ids)
+
+        # create with active_test=True in context
+        child = Model.with_context(active_test=True).create({
+            'active': True,
+            'parent_id': parent.id,
+        })
+        self.assertIn(child, parent.children_ids)
+        self.assertIn(child, parent.with_context(active_test=True).children_ids)
+        self.assertIn(child, parent.with_context(active_test=False).children_ids)
+
+        child = Model.with_context(active_test=True).create({
+            'active': False,
+            'parent_id': parent.id,
+        })
+        self.assertNotIn(child, parent.children_ids)
+        self.assertNotIn(child, parent.with_context(active_test=True).children_ids)
+        self.assertIn(child, parent.with_context(active_test=False).children_ids)
+
+        # create with active_test=False in context
+        child = Model.with_context(active_test=False).create({
+            'active': True,
+            'parent_id': parent.id,
+        })
+        self.assertIn(child, parent.children_ids)
+        self.assertIn(child, parent.with_context(active_test=True).children_ids)
+        self.assertIn(child, parent.with_context(active_test=False).children_ids)
+
+        child = Model.with_context(active_test=False).create({
+            'active': False,
+            'parent_id': parent.id,
+        })
+        self.assertNotIn(child, parent.children_ids)
+        self.assertNotIn(child, parent.with_context(active_test=True).children_ids)
+        self.assertIn(child, parent.with_context(active_test=False).children_ids)
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_new_api.multi.tag']

@@ -716,3 +716,12 @@ class Mixin(models.AbstractModel):
 class ExtendedDisplay(models.Model):
     _name = 'test_new_api.display'
     _inherit = ['test_new_api.mixin', 'test_new_api.display']
+
+
+class ModelActiveField(models.Model):
+    _name = 'test_new_api.model_active_field'
+    _description = 'A model with active field'
+
+    active = fields.Boolean(default=True)
+    parent_id = fields.Many2one('test_new_api.model_active_field')
+    children_ids = fields.One2many('test_new_api.model_active_field', 'parent_id')

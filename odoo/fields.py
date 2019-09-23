@@ -2463,11 +2463,10 @@ class Many2one(_Relational):
         record_ids = set(records._ids)
         for invf in records._field_inverses[self]:
             corecords = records.env[self.comodel_name].browse(
-                id_ for id_ in cache.get_values(records, self)
+                id_ for id_ in cache.get_values(records, self) if id_ is not None
             )
             for corecord in corecords:
-                ids0 = cache.get(corecord, invf, None)
-                if ids0 is not None:
+                for corecord1, ids0 in cache.get_context_values(corecord, invf):
                     ids1 = tuple(id_ for id_ in ids0 if id_ not in record_ids)
                     cache.set(corecord, invf, ids1)
 
@@ -2478,16 +2477,15 @@ class Many2one(_Relational):
         cache = records.env.cache
         corecord = self.convert_to_record(value, records)
         for invf in records._field_inverses[self]:
-            valid_records = records.filtered_domain(invf.get_domain_list(corecord))
-            if not valid_records:
-                continue
-            ids0 = cache.get(corecord, invf, None)
-            # if the value for the corecord is not in cache, but this is a new
-            # record, assign it anyway, as you won't be able to fetch it from
-            # database (see `test_sale_order`)
-            if ids0 is not None or not corecord.id:
-                ids1 = tuple(unique((ids0 or ()) + valid_records._ids))
-                cache.set(corecord, invf, ids1)
+            # make we have a value in cache for new records
+            if not corecord.id:
+                corecord[invf.name]
+            for corecord1, ids0 in cache.get_context_values(corecord, invf):
+                domain = invf.get_domain_list(corecord1)
+                valid = records.with_env(corecord1.env).filtered_domain(domain)
+                if valid:
+                    ids1 = tuple(unique(ids0 + valid._ids))
+                    cache.set(corecord1, invf, ids1)
 
 
 class Many2oneReference(Integer):
@@ -2516,13 +2514,12 @@ class Many2oneReference(Integer):
             if not records:
                 continue
             corecords = records.env[invf.model_name].browse(
-                id_ for id_ in cache.get_values(records, self)
+                id_ for id_ in cache.get_values(records, self) if id_ is not None
             )
             for corecord in corecords:
-                ids0 = cache.get(corecord, invf, None)
-                if ids0 is not None:
+                for corecord1, ids0 in cache.get_context_values(corecord, invf):
                     ids1 = tuple(id_ for id_ in ids0 if id_ not in record_ids)
-                    cache.set(corecord, invf, ids1)
+                    cache.set(corecord1, invf, ids1)
 
     def _update_inverses(self, records, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
@@ -2534,16 +2531,14 @@ class Many2oneReference(Integer):
             if not records:
                 continue
             corecord = records.env[invf.model_name].browse(value)
-            records = records.filtered_domain(invf.get_domain_list(corecord))
-            if not records:
-                continue
-            ids0 = cache.get(corecord, invf, None)
-            # if the value for the corecord is not in cache, but this is a new
-            # record, assign it anyway, as you won't be able to fetch it from
-            # database (see `test_sale_order`)
-            if ids0 is not None or not corecord.id:
-                ids1 = tuple(unique((ids0 or ()) + records._ids))
-                cache.set(corecord, invf, ids1)
+            if not corecord.id:
+                corecord[invf.name]
+            for corecord1, ids0 in cache.get_context_values(corecord, invf):
+                domain = invf.get_domain_list(corecord1)
+                valid = records.with_env(corecord1.env).filtered_domain(domain)
+                if valid:
+                    ids1 = tuple(unique(ids0 + valid._ids))
+                    cache.set(corecord1, invf, ids1)
 
     def _record_ids_per_res_model(self, records):
         model_ids = defaultdict(set)

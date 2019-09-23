@@ -3194,7 +3194,7 @@ Record ids: %(records)s
 
     def _filter_access_rules_python(self, operation):
         dom = self.env['ir.rule']._compute_domain(self._name, operation)
-        return self.filtered_domain(dom or [])
+        return self.filtered_domain(dom or [], active_test=False)
 
     def unlink(self):
         """ unlink()
@@ -5072,8 +5072,12 @@ Record ids: %(records)s
             func = lambda rec: any(rec.mapped(name))
         return self.browse([rec.id for rec in self if func(rec)])
 
-    def filtered_domain(self, domain):
-        if not domain: return self
+    def filtered_domain(self, domain, active_test=True):
+        if 'active' in self._fields and active_test and self._context.get('active_test', True):
+            if not any(item[0] == 'active' for item in domain):
+                domain = [('active', '=', 1)] + domain
+        if not domain:
+            return self
         result = []
         for d in reversed(domain):
             if d == '|':
@@ -5090,7 +5094,8 @@ Record ids: %(records)s
                 (key, comparator, value) = d
                 if key.endswith('.id'):
                     key = key[:-3]
-                if key == 'id': key=''
+                if key == 'id':
+                    key = ''
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
                 records = self.browse()
@@ -5148,13 +5153,13 @@ Record ids: %(records)s
                         data = [x.lower() for x in data]
                         ok = bool(fnmatch.filter(data, value and value_esc.lower()))
                     else:
-                        raise ValueError
-                    if ok: records |= rec
+                        raise ValueError("Unexpected operator %r in domain %r" % (comparator, domain))
+                    if ok:
+                        records |= rec
                 result.append(records)
-        while len(result)>1:
+        while len(result) > 1:
             result.append(result.pop() & result.pop())
         return result[0]
-
 
     def sorted(self, key=None, reverse=False):
         """ Return the recordset ``self`` ordered by ``key``.

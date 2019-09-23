@@ -774,6 +774,23 @@ class Cache(object):
                     ids.append(record_id)
         return records.browse(ids)
 
+    def get_context_values(self, record, field):
+        """ Return all the values in cache for ``field`` on ``record``, each
+            value being returned as a pair ``(record, value)``, where the
+            ``record`` part is attached to an environment corresponding to the
+            context keys.
+        """
+        try:
+            value = self._data[field][record.id]
+            if field.depends_context:
+                for key, val in value.items():
+                    context = dict(zip(field.depends_context, key))
+                    yield (record.with_context(context), val)
+            else:
+                yield (record, value)
+        except KeyError:
+            pass
+
     def get_fields(self, record):
         """ Return the fields with a value for ``record``. """
         for name, field in record._fields.items():
