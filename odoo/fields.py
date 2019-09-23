@@ -2483,10 +2483,11 @@ class Many2one(_Relational):
 
 class Many2oneReference(Integer):
     type = 'many2one_reference'
-
     _slots = {
         'model_field': None,
     }
+
+    _related_model_field = property(attrgetter('model_field'))
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: id or None
