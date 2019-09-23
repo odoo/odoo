@@ -84,6 +84,9 @@ var FieldOrgChart = AbstractField.extend({
 
         var self = this;
         return this._getOrgData().then(function (orgData) {
+            if(_.isEmpty(orgData)) {
+                return false;
+            }
             orgData.view_employee_id = self.recordData.id;
             self.$el.html(QWeb.render("hr_org_chart", orgData));
             self.$('[data-toggle="popover"]').each(function () {
