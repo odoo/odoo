@@ -23,7 +23,7 @@
         </record>
         <record id="crm_pls_start_date_param" model="ir.config_parameter">
             <field name="key">crm.pls_start_date</field>
-            <field name="value" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+            <field name="value" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d')"/>
         </record>
     </data>
 

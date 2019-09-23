@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
@@ -102,7 +103,7 @@ class Lead(models.Model):
     date_conversion = fields.Datetime('Conversion Date', readonly=True)
 
     # Probability - Only used for type opportunity
-    probability = fields.Float('Probability', group_operator="avg", default=10.0)
+    probability = fields.Float('Probability', group_operator="avg")
     automated_probability = fields.Float('Automated Probability', readonly=True)
     is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
     phone_state = fields.Selection([
@@ -1491,9 +1492,12 @@ class Lead(models.Model):
 
         # Recompute all the leads. Won : probability = 100 | Lost : probability = 0 or inactive
         # Here, inactive won't be returned anyway
+        # Get also all the lead without probability --> These are the new leads. Activate auto probability on them.
         pls_start_date = self._pls_get_safe_start_date()
         if pls_start_date:
-            pending_lead_domain = [('probability', '<', 100), ('probability', '>', 0), ('create_date', '>', pls_start_date)]
+            pending_lead_domain = [('probability', '<', 100), ('probability', '>', 0)]
+            pending_lead_domain = expression.OR([pending_lead_domain, [('probability', '=', False)]])
+            pending_lead_domain = expression.AND([pending_lead_domain, [('create_date', '>', pls_start_date)]])
             leads_to_update = self.env['crm.lead'].search(pending_lead_domain)
             lead_probabilities = leads_to_update._pls_get_naive_bayes_probabilities(batch_mode=True)
 
@@ -1660,7 +1664,7 @@ class Lead(models.Model):
             #   Build sql query in safe mode
             query = """SELECT id, %s
                         FROM crm_lead l
-                        WHERE probability > 0 AND probability < 100 AND active = True AND id in %%s order by team_id asc"""
+                        WHERE ((probability > 0 AND probability < 100) OR probability is null) AND active = True AND id in %%s order by team_id asc"""
             query = sql.SQL(query % str_fields).format(*args)
 
             self._cr.execute(query, [tuple(self.ids)])
@@ -1670,7 +1674,7 @@ class Lead(models.Model):
                         FROM crm_lead l
                         LEFT JOIN crm_lead_tag_rel rel ON l.id = rel.lead_id
                         LEFT JOIN crm_lead_tag t ON rel.tag_id = t.id
-                        WHERE l.probability > 0 AND l.probability < 100 AND l.active = True AND l.id in %s order by l.team_id asc"""
+                        WHERE ((l.probability > 0 AND l.probability < 100) OR l.probability is null) AND l.active = True AND l.id in %s order by l.team_id asc"""
             self._cr.execute(query, [tuple(self.ids)])
             tag_results = self._cr.dictfetchall()
 
