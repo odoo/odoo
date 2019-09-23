@@ -232,6 +232,24 @@ $o-checklist-before-size: 13px;
     }
 }
 
+@mixin o-w-preserve-dropdown-menus {
+    .dropdown-menu {
+        background-color: white;
+    }
+    .dropdown-item {
+        color: #212529;
+
+        @include hover-focus {
+            color: darken(#212529, 5%);
+        }
+        &.active,
+        &:active {
+            color: white;
+            @include gradient-bg($o-brand-primary);
+        }
+    }
+}
+
 // Edition colors
 
 // Colors
