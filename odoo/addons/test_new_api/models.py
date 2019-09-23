@@ -250,6 +250,7 @@ class MultiLine(models.Model):
 class MultiLine2(models.Model):
     _name = 'test_new_api.multi.line2'
     _inherit = 'test_new_api.multi.line'
+    _description = 'Test New API Multi Line 2'
 
 
 class MultiTag(models.Model):
