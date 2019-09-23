@@ -1172,7 +1172,7 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
     def test_in_invoice_duplicate_supplier_reference(self):
         ''' Ensure two vendor bills can't share the same vendor reference. '''
         self.invoice.ref = 'a supplier reference'
-        invoice2 = self.invoice.copy()
+        invoice2 = self.invoice.copy(default={'invoice_date': self.invoice.invoice_date})
 
         with self.assertRaises(ValidationError):
             invoice2.ref = 'a supplier reference'
