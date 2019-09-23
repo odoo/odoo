@@ -59,11 +59,7 @@ else:
 env = jinja2.Environment(loader=loader, autoescape=True)
 env.filters["json"] = json.dumps
 
-# 1 week cache for asset bundles as advised by Google Page Speed
-BUNDLE_MAXAGE = 60 * 60 * 24 * 7
-
-# 1 year cache for content (menus, translations, static qweb)
-CONTENT_MAXAGE = 60 * 60 * 24 * 356
+CONTENT_MAXAGE = http.STATIC_CACHE_LONG  # menus, translations, static qweb
 
 DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
 
@@ -889,7 +885,7 @@ class WebClient(http.Controller):
                         file_open('web/static/lib/moment/locale/%s.js' % code, 'rb')
                     ),
                     content_type='application/javascript; charset=utf-8',
-                    headers=[('Cache-Control', 'max-age=36000')],
+                    headers=[('Cache-Control', 'max-age=%s' % http.STATIC_CACHE)],
                     direct_passthrough=True,
                 )
             except IOError:
@@ -897,7 +893,7 @@ class WebClient(http.Controller):
 
         return request.make_response("", headers=[
             ('Content-Type', 'application/javascript'),
-            ('Cache-Control', 'max-age=36000'),
+            ('Cache-Control', 'max-age=%s' % http.STATIC_CACHE),
         ])
 
     @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
