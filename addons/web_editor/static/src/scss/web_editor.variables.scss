@@ -232,6 +232,21 @@ $o-checklist-before-size: 13px;
     }
 }
 
+@mixin o-w-preserve-dropdown-menu {
+    .dropdown-menu {
+        background-color: white;
+
+        > .dropdown-item {
+            &:hover {
+                color: black;
+            }
+            &:active {
+                background-color: transparent;
+            }
+        }
+    }
+}
+
 // Edition colors
 
 // Colors
