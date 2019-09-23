@@ -58,8 +58,8 @@
                                 <div class="o_setting_right_pane">
                                     <label for="use_mail_schedule"/>
                                     <div class="row mt16" attrs="{'invisible': [('use_mail_schedule', '=', False)]}">
-                                        <div class="col-lg-9">
-                                            <field name="event_type_mail_ids">
+                                        <div class="col-12">
+                                            <field name="event_type_mail_ids" style="width: 100%;">
                                                 <tree string="Communication" editable="bottom">
                                                     <field name="notification_type" invisible="1"/>
                                                     <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
@@ -517,7 +517,7 @@
             <field name="model">event.registration</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <kanban class="o_event_attendee_kanban">
+                <kanban class="o_event_attendee_kanban" default_order="name, create_date desc">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="state"/>
