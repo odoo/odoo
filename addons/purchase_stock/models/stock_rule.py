@@ -33,7 +33,7 @@ class StockRule(models.Model):
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         cache = {}
         suppliers = product_id.seller_ids\
-            .filtered(lambda r: (not r.company_id or r.company_id == values['company_id']) and (not r.product_id or r.product_id == product_id))
+            .filtered(lambda r: (not r.company_id or r.company_id == values['company_id']) and (not r.product_id or r.product_id == product_id) and r.name.active)
         if not suppliers:
             msg = _('There is no vendor associated to the product %s. Please define a vendor for this product.') % (product_id.display_name,)
             raise UserError(msg)   
