@@ -1948,15 +1948,21 @@ class Binary(Field):
         records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
+        if self.store:
+            # determine records that are known to be not null
+            not_null = cache.get_records_different_from(records, self, None)
+
         cache.update(records, self, [cache_value] * len(records))
 
         # retrieve the attachments that store the values, and adapt them
         if self.store:
-            atts = records.env['ir.attachment'].sudo().search([
-                ('res_model', '=', self.model_name),
-                ('res_field', '=', self.name),
-                ('res_id', 'in', records.ids),
-            ])
+            atts = records.env['ir.attachment'].sudo()
+            if not_null:
+                atts = atts.search([
+                    ('res_model', '=', self.model_name),
+                    ('res_field', '=', self.name),
+                    ('res_id', 'in', records.ids),
+                ])
             if value:
                 # update the existing attachments
                 atts.write({'datas': value})
