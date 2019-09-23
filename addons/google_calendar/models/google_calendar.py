@@ -398,7 +398,17 @@ class GoogleCalendar(models.AbstractModel):
         url = "/calendar/v3/calendars/%s/events/%s?access_token=%s" % ('primary', instance_id, self.get_token())
         headers = {'Content-type': 'application/json'}
 
-        data.update(recurringEventId=event_ori_google_id, originalStartTime=event_new.recurrent_id_date, sequence=self.get_sequence(instance_id))
+        _originalStartTime = dict()
+        if event_new.allday:
+            _originalStartTime['date'] = event_new.recurrent_id_date.strftime("%Y-%m-%d")
+        else:
+            _originalStartTime['datetime'] = event_new.recurrent_id_date.strftime("%Y-%m-%dT%H:%M:%S.%fz")
+
+        data.update(
+            recurringEventId=event_ori_google_id,
+            originalStartTime=_originalStartTime,
+            sequence=self.get_sequence(instance_id)
+        )
         data_json = json.dumps(data)
         return self.env['google.service']._do_request(url, data_json, headers, type='PUT')
 
@@ -666,8 +676,9 @@ class GoogleCalendar(models.AbstractModel):
                     else:
                         _logger.warning("Impossible to create event %s. [%s]", att.event_id.id, status)
                         _logger.debug("Response : %s", response)
-                except:
-                    pass
+                except Exception as e:
+                    _logger.warning("Exception when updating recurrent event exclusions on google: %s", e)
+
         return new_ids
 
     def update_events(self, lastSync=False):
