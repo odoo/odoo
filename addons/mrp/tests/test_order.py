@@ -541,13 +541,12 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
         mo.action_assign()
 
-        produce_wizard = self.env['mrp.product.produce'].with_context({
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo.id,
             'active_ids': [mo.id],
-        }).create({
-            'product_qty': 3.0,
-        })
-        produce_wizard._onchange_product_qty()
+        }))
+        produce_form.qty_producing = 3
+        produce_wizard = produce_form.save()
         produce_wizard.do_produce()
 
         mo.post_inventory()
@@ -571,7 +570,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertTrue(all(s == 'done' for s in mo.move_raw_ids.mapped('state')))
         self.assertEqual(sum(mo.move_raw_ids.mapped('move_line_ids.product_uom_qty')), 0)
 
-    def test_product_produce_6(self):
+    def test_product_produce_11(self):
         """ Checks that, for a BOM with two components, when creating a manufacturing order for one
         finished products and without reserving, the produce wizards proposes the corrects lines
         even if we change the quantity to produce multiple times.
