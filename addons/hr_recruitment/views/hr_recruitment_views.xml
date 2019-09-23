@@ -88,12 +88,6 @@
                          help="Schedule interview with this applicant">
                         <field name="meeting_count" widget="statinfo" string="Meetings"/>
                     </button>
-                    <button name="toggle_active" type="object"
-                            class="oe_stat_button" icon="fa-archive"
-                            attrs="{'invisible': [('active', '=', True)]}">
-                        <field name="active" widget="boolean_button"
-                            options='{"terminology": "archive"}'/>
-                    </button>
                 </div>
                 <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <field name="kanban_state" widget="kanban_state_selection"/>
