@@ -904,6 +904,11 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return 'form_save' if self.require_payment else 'form'
 
+    def _get_portal_return_action(self):
+        """ Return the action used to display orders when returning from customer portal. """
+        self.ensure_one()
+        return self.env.ref('sale.action_quotations_with_onboarding')
+
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
