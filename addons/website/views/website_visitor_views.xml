@@ -198,7 +198,6 @@
                     </div>
                     <div class="float-right" attrs="{'invisible': [('country_id', '=', False)]}"><field name="country_flag" widget="image" options='{"size": [32, 32]}'/></div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Visitor"/>
                         <h1><field name="display_name"/></h1>
                     </div>
                     <group id="general_info">
@@ -235,6 +234,9 @@
                 <field name="visit_count"/>
                 <field name="page_ids" widget="many2many_tags"/>
                 <field name="is_connected" invisible="1"/>
+                <field name="email" invisible="1"/>
+                <button string="Send Email" name="action_send_mail" type="object"
+                    icon="fa-envelope" attrs="{'invisible': [('email', '=', False)]}"/>
             </tree>
         </field>
     </record>
