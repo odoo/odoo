@@ -527,19 +527,19 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                         # Special case when value is the id of a deleted record, we do not want to
                         # block the settings screen
                         value = self.env[field.comodel_name].browse(int(value)).exists().id
-                    except ValueError:
+                    except (ValueError, TypeError):
                         _logger.warning(WARNING_MESSAGE, value, field, icp)
                         value = False
                 elif field.type == 'integer':
                     try:
                         value = int(value)
-                    except ValueError:
+                    except (ValueError, TypeError):
                         _logger.warning(WARNING_MESSAGE, value, field, icp)
                         value = 0
                 elif field.type == 'float':
                     try:
                         value = float(value)
-                    except ValueError:
+                    except (ValueError, TypeError):
                         _logger.warning(WARNING_MESSAGE, value, field, icp)
                         value = 0.0
                 elif field.type == 'boolean':
