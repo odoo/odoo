@@ -614,7 +614,7 @@ class ProductProduct(models.Model):
                 'target': 'new'}
 
     def _prepare_sellers(self, params):
-        return self.seller_ids
+        return self.seller_ids.filtered(lambda s: s.name.active)
 
     @api.multi
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
@@ -805,7 +805,6 @@ class SupplierInfo(models.Model):
         'res.partner', 'Vendor',
         domain=[('supplier', '=', True)], ondelete='cascade', required=True,
         help="Vendor of this product")
-    active = fields.Boolean(related='name.active', readonly=True)
     product_name = fields.Char(
         'Vendor Product Name',
         help="This vendor's product name will be used when printing a request for quotation. Keep empty to use the internal one.")
