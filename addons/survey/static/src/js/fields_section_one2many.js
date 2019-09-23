@@ -37,7 +37,7 @@ var SectionListRenderer = ListRenderer.extend({
         var isSection = record.data[this.sectionFieldName];
 
         if (isSection){
-            if (node.attrs.widget === "handle"){
+            if (node.attrs.widget === "handle" || node.attrs.name === "random_questions_count"){
                 return $cell;
             } else if (node.attrs.name === "title"){
                 var nbrColumns = this._getNumberOfCols();
@@ -45,6 +45,9 @@ var SectionListRenderer = ListRenderer.extend({
                     nbrColumns--;
                 }
                 if (this.addTrashIcon){
+                    nbrColumns--;
+                }
+                if (record.data.questions_selection === "random"){
                     nbrColumns--;
                 }
                 $cell.attr('colspan', nbrColumns);
