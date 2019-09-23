@@ -240,7 +240,7 @@ class Cursor(object):
             res = self._obj.execute(query, params)
         except Exception as e:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.error("bad query: %s\nERROR: %s", self._obj.query or query, e)
+                _logger.error("bad query: %s\nERROR: %s", self._obj.query.decode() or query, e)
             raise
 
         # simple query count is always computed
@@ -254,12 +254,13 @@ class Cursor(object):
         if self.sql_log:
             delay *= 1E6
 
-            res_from = re_from.match(query.lower())
+            query_lower = self._obj.query.decode().lower()
+            res_from = re_from.match(query_lower)
             if res_from:
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
                 self.sql_from_log[res_from.group(1)][0] += 1
                 self.sql_from_log[res_from.group(1)][1] += delay
-            res_into = re_into.match(query.lower())
+            res_into = re_into.match(query_lower)
             if res_into:
                 self.sql_into_log.setdefault(res_into.group(1), [0, 0])
                 self.sql_into_log[res_into.group(1)][0] += 1
