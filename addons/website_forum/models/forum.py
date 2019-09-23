@@ -484,7 +484,7 @@ class Post(models.Model):
 
         tag_ids = False
         if 'tag_ids' in vals:
-            tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
+            tag_ids = set(self.new({'tag_ids': vals['tag_ids']}).tag_ids.ids)
 
         for post in self:
             if 'state' in vals:
