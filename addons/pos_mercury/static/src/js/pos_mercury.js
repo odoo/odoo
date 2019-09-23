@@ -635,8 +635,8 @@ PaymentScreenWidget.include({
                     'body':  _t('One credit card swipe already pending.'),
                 });
             } else {
-                this._super(id);
-                if (order.get_due(order.selected_paymentline) > 0) {
+                var res = this._super(id);
+                if (res && order.get_due(order.selected_paymentline) > 0) {
                     order.selected_paymentline.mercury_swipe_pending = true;
                     this.render_paymentlines();
                     order.trigger('change', order); // needed so that export_to_JSON gets triggered
