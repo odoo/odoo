@@ -138,8 +138,8 @@ class PaymentTransaction(models.Model):
     def _compute_reference_prefix(self, values):
         prefix = super(PaymentTransaction, self)._compute_reference_prefix(values)
         if not prefix and values and values.get('sale_order_ids'):
-            many_list = self.resolve_2many_commands('sale_order_ids', values['sale_order_ids'], fields=['name'])
-            return ','.join(dic['name'] for dic in many_list)
+            sale_orders = self.new({'sale_order_ids': values['sale_order_ids']}).sale_order_ids
+            return ','.join(sale_orders.mapped('name'))
         return prefix
 
     def action_view_sales_orders(self):

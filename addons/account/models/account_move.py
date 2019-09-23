@@ -3253,8 +3253,8 @@ class AccountMoveLine(models.Model):
             if move.is_invoice(include_receipts=True):
                 currency = move.currency_id
                 partner = self.env['res.partner'].browse(vals.get('partner_id'))
-                taxes = self.resolve_2many_commands('tax_ids', vals.get('tax_ids', []), fields=['id'])
-                tax_ids = set(tax['id'] for tax in taxes)
+                taxes = self.new({'tax_ids': vals.get('tax_ids', [])}).tax_ids
+                tax_ids = set(taxes.ids)
                 taxes = self.env['account.tax'].browse(tax_ids)
 
                 # Ensure consistency between accounting & business fields.
@@ -3322,8 +3322,7 @@ class AccountMoveLine(models.Model):
                 tax = repartition_line.invoice_tax_id or repartition_line.refund_tax_id
                 vals['tax_exigible'] = tax.tax_exigibility == 'on_invoice'
             elif vals.get('tax_ids'):
-                tax_ids = [v['id'] for v in self.resolve_2many_commands('tax_ids', vals['tax_ids'], fields=['id'])]
-                taxes = self.env['account.tax'].browse(tax_ids).flatten_taxes_hierarchy()
+                taxes = self.new({'tax_ids': vals['tax_ids']}).tax_ids.flatten_taxes_hierarchy()
                 vals['tax_exigible'] = not any(tax.tax_exigibility == 'on_payment' for tax in taxes)
 
         lines = super(AccountMoveLine, self).create(vals_list)
@@ -3346,7 +3345,7 @@ class AccountMoveLine(models.Model):
                 return line[field_name].id != vals[field_name]
             if field.type in ('one2many', 'many2many'):
                 current_ids = set(line[field_name].ids)
-                after_write_ids = set(r['id'] for r in line.resolve_2many_commands(field_name, vals[field_name], fields=['id']))
+                after_write_ids = set(line.new({field_name: vals[field_name]})[field_name].ids)
                 return current_ids != after_write_ids
             if field.type == 'monetary' and line[field.currency_field]:
                 return not line[field.currency_field].is_zero(line[field_name] - vals[field_name])
