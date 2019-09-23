@@ -330,6 +330,10 @@ class PosConfig(models.Model):
         if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
             raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
 
+    def _check_cash_control_journal(self):
+        if self.cash_control and not self.payment_method_ids.mapped('is_cash_count')[0]:
+            raise ValidationError(_('Unable to use the cash control without a cash payment method.\nPlease add cash payment method.'))
+
     @api.onchange('iface_tipproduct')
     def _onchange_tipproduct(self):
         if self.iface_tipproduct:
@@ -523,6 +527,7 @@ class PosConfig(models.Model):
             self._check_company_invoice_journal()
             self._check_company_payment()
             self._check_currencies()
+            self._check_cash_control_journal()
             self.env['pos.session'].create({
                 'user_id': self.env.uid,
                 'config_id': self.id
