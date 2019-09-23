@@ -1537,6 +1537,14 @@ class AccountMove(models.Model):
         return result
 
     @api.multi
+    def _creation_subtype(self):
+        # OVERRIDE
+        if self.type in ('out_invoice', 'out_refund', 'out_receipt'):
+            return self.env.ref('account.mt_invoice_created')
+        else:
+            return super(AccountMove, self)._creation_subtype()
+
+    @api.multi
     def _track_subtype(self, init_values):
         # OVERRIDE to add custom subtype depending of the state.
         self.ensure_one()
@@ -1548,9 +1556,21 @@ class AccountMove(models.Model):
             return self.env.ref('account.mt_invoice_paid')
         elif 'state' in init_values and self.state == 'posted' and self.is_sale_document(include_receipts=True):
             return self.env.ref('account.mt_invoice_validated')
-        elif 'state' in init_values and self.state == 'draft' and self.is_sale_document(include_receipts=True):
-            return self.env.ref('account.mt_invoice_created')
         return super(AccountMove, self)._track_subtype(init_values)
+
+    @api.multi
+    def _get_creation_message(self):
+        # OVERRIDE
+        if not self.is_invoice(include_receipts=True):
+            return super()._get_creation_message()
+        return {
+            'out_invoice': _('Invoice Created'),
+            'out_refund': _('Refund Created'),
+            'in_invoice': _('Vendor Bill Created'),
+            'in_refund': _('Credit Note Created'),
+            'out_receipt': _('Sales Receipt Created'),
+            'in_receipt': _('Purchase Receipt Created'),
+        }[self.type]
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
