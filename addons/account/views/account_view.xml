@@ -694,10 +694,10 @@ action = model.setting_init_bank_account_action()
                                     <field name="note" optional="hidden"/>
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="journal_currency_id" invisible="1"/>
-                                    <field name="amount_currency" invisible="1"/>
-                                    <field name="currency_id" invisible="1" />
                                     <field name="bank_account_id" invisible="1" />
                                     <field name="account_number" optional="hidden"/>
+                                    <field name="amount_currency" optional="hidden"/>
+                                    <field name="currency_id" optional="hidden"/>
                                 </tree>
                             </field>
                         </page>
