@@ -7,6 +7,7 @@ from odoo import models
 class PaymentWizard(models.TransientModel):
     _inherit = 'payment.acquirer.onboarding.wizard'
     _name = 'website.sale.payment.acquirer.onboarding.wizard'
+    _description = 'Website Payment acquire onboarding wizard'
 
     def _set_payment_acquirer_onboarding_step_done(self):
         """ Override. """
