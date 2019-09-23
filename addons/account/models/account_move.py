@@ -71,6 +71,10 @@ class AccountMove(models.Model):
         return journal
 
     @api.model
+    def _get_default_invoice_date(self):
+        return fields.Date.today() if self._context.get('default_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') else False
+
+    @api.model
     def _get_default_currency(self):
         ''' Get the default currency from either the journal, either the default journal's company. '''
         journal = self._get_default_journal()
@@ -186,7 +190,8 @@ class AccountMove(models.Model):
         string='Payment', store=True, readonly=True, copy=False, tracking=True,
         compute='_compute_amount')
     invoice_date = fields.Date(string='Invoice/Bill Date', readonly=True, index=True, copy=False,
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)]},
+        default=_get_default_invoice_date)
     invoice_date_due = fields.Date(string='Due Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)]})
     invoice_payment_ref = fields.Char(string='Payment Reference', index=True, copy=False,
@@ -264,7 +269,7 @@ class AccountMove(models.Model):
     @api.onchange('invoice_date')
     def _onchange_invoice_date(self):
         if self.invoice_date:
-            if not self.invoice_date_due and not self.invoice_payment_term_id:
+            if not self.invoice_payment_term_id:
                 self.invoice_date_due = self.invoice_date
             self.date = self.invoice_date
             self._onchange_currency()
