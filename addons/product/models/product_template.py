@@ -4,7 +4,7 @@
 import itertools
 import logging
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 
 _logger = logging.getLogger(__name__)
@@ -38,6 +38,12 @@ class ProductTemplate(models.Model):
     def _get_default_volume_uom(self):
         return self._get_volume_uom_name_from_ir_config_parameter()
 
+    def _read_group_categ_id(self, categories, domain, order):
+        category_ids = self.env.context.get('default_categ_id')
+        if not category_ids:
+            category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        return categories.browse(category_ids)
+
     name = fields.Char('Name', index=True, required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
     description = fields.Text(
@@ -57,7 +63,7 @@ class ProductTemplate(models.Model):
     rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
-        change_default=True, default=_get_default_category_id,
+        change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',
         required=True, help="Select category for the current product")
 
     currency_id = fields.Many2one(
