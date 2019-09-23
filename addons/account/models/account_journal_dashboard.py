@@ -55,7 +55,7 @@ class account_journal(models.Model):
                     'res_id': activity.get('res_id'),
                     'res_model': activity.get('res_model'),
                     'status': activity.get('status'),
-                    'name': (activity.get('summary') or activity.get('act_type_name')) + '(' + format_date(activity.get('date'), 'MMM', locale=self._context.get('lang') or 'en_US') + ')',
+                    'name': (activity.get('summary') or activity.get('act_type_name')),
                     'activity_category': activity.get('activity_category'),
                     'date': odoo_format_date(self.env, activity.get('date_deadline'))
                 })
