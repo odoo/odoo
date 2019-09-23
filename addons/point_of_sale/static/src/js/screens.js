@@ -2129,6 +2129,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 'title': _t('Error'),
                 'body':  _t('There is already an electronic payment in progress.'),
             });
+            return false;
         } else {
             order.add_paymentline(payment_method);
             this.reset_input();
@@ -2140,6 +2141,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             this.render_paymentlines();
         }
+        return true;
     },
     render_paymentmethods: function() {
         var self = this;
