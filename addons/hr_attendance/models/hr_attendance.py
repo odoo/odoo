@@ -41,6 +41,8 @@ class HrAttendance(models.Model):
             if attendance.check_out:
                 delta = attendance.check_out - attendance.check_in
                 attendance.worked_hours = delta.total_seconds() / 3600.0
+            else:
+                attendance.worked_hours = False
 
     @api.constrains('check_in', 'check_out')
     def _check_validity_check_in_check_out(self):
