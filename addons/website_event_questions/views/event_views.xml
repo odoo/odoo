@@ -82,7 +82,7 @@
     <field name="inherit_id" ref="event.view_event_registration_form" />
     <field name="arch" type="xml">
         <group name="event" position="inside">
-            <field name="answer_ids" widget="many2many_tags" readonly="1"/>
+            <field name="answer_ids" widget="many2many_tags" domain="[('question_id.event_id', '=', event_id)]" options="{'no_create_edit': True}"/>
         </group>
     </field>
 </record>
