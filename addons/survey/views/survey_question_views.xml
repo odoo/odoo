@@ -19,7 +19,7 @@
                         <separator />
                         <field name="questions_selection" invisible="1"/>
                     </div>
-                    <group attrs="{'invisible': ['|', ('is_page', '=', False), ('questions_selection', '=', 'all')]}">
+                    <group class="o_label_nowrap" attrs="{'invisible': ['|', ('is_page', '=', False), ('questions_selection', '=', 'all')]}">
                         <field name="random_questions_count"/>
                     </group>
                     <group attrs="{'invisible': [('is_page', '=', True)]}">
