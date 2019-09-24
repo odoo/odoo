@@ -138,14 +138,14 @@ class Location(models.Model):
         putaway_location = self.env['stock.location']
         while current_location and not putaway_location:
             # Looking for a putaway about the product.
-            putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.product_id == product)
+            putaway_rules = current_location.putaway_rule_ids.filtered(lambda x: x.product_id == product)
             if putaway_rules:
                 putaway_location = putaway_rules[0].location_out_id
             # If not product putaway found, we're looking with category so.
             else:
                 categ = product.categ_id
                 while categ:
-                    putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
+                    putaway_rules = current_location.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
                     if putaway_rules:
                         putaway_location = putaway_rules[0].location_out_id
                         break
