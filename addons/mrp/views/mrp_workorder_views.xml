@@ -252,7 +252,7 @@
                 <page string="Miscellaneous" name="workorder_page_misc" groups="mrp.group_mrp_manager">
                     <group>
                         <group>
-                            <field name="workcenter_id" readonly="1"/>
+                            <field name="workcenter_id"/>
                             <field name="production_id" readonly="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
@@ -348,9 +348,25 @@
                 progress="progress" plan="0"
                 decoration-danger="date_planned_start &lt; current_date and state in ['pending', 'ready']"
                 decoration-success="state == 'done'"
-                decoration-warning="state == 'cancel'">
+                decoration-warning="state == 'cancel'"
+                color="workcenter_id">
                 <field name="date_planned_start"/>
                 <field name="state"/>
+                <field name="workcenter_id"/>
+
+                <templates>
+                    <div t-name="gantt-popover" class="container-fluid">
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <ul class="pl-1 mb-0 list-unstyled">
+                                    <li><strong>Start Date: </strong> <t t-esc="userTimezoneStartDate.format('YYYY-MM-DD HH:mm:ss')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-esc="userTimezoneStopDate.format('YYYY-MM-DD HH:mm:ss')"/></li>
+                                    <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
             </gantt>
         </field>
     </record>
@@ -363,9 +379,26 @@
                 progress="progress" plan="0"
                 decoration-danger="date_planned_start &lt; current_date and state in ['pending', 'ready']"
                 decoration-success="state == 'done'"
-                decoration-warning="state == 'cancel'">
+                decoration-warning="state == 'cancel'"
+                color="production_id">
+
                 <field name="date_planned_start"/>
                 <field name="state"/>
+                <field name="workcenter_id"/>
+
+                <templates>
+                    <div t-name="gantt-popover" class="container-fluid">
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <ul class="pl-1 mb-0 list-unstyled">
+                                    <li><strong>Start Date: </strong> <t t-esc="userTimezoneStartDate.format('YYYY-MM-DD HH:mm:ss')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-esc="userTimezoneStopDate.format('YYYY-MM-DD HH:mm:ss')"/></li>
+                                    <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
             </gantt>
         </field>
     </record>
