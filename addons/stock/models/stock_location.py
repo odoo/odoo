@@ -187,9 +187,21 @@ class Route(models.Model):
         'product.template', 'stock_route_product', 'route_id', 'product_id',
         'Products', copy=False, check_company=True)
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)
+    warehouse_domain_ids = fields.One2many('stock.warehouse', compute='_compute_warehouses')
     warehouse_ids = fields.Many2many(
         'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',
-        'Warehouses', copy=False, check_company=True)
+        'Warehouses', copy=False, domain="[('id', 'in', warehouse_domain_ids)]")
+
+    @api.depends('company_id')
+    def _compute_warehouses(self):
+        for loc in self:
+            domain = [('company_id', '=', loc.company_id.id)] if loc.company_id else []
+            loc.warehouse_domain_ids = self.env['stock.warehouse'].search(domain)
+
+    @api.onchange('company_id')
+    def _onchange_company(self):
+        if self.company_id:
+            self.warehouse_ids = self.warehouse_ids.filtered(lambda w: w.company_id == self.company_id)
 
     @api.onchange('warehouse_selectable')
     def _onchange_warehouse_selectable(self):
