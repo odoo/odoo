@@ -18,12 +18,14 @@ class TestComputeRankCommon(common.TransactionCase):
 
         patch_email = patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail', _patched_send_mail)
         patch_email.start()
-        for k in range(-5, 1030, 30):
-            self.users += self.User.create({
+
+        self.users = self.User.create([{
                 'name': str(k),
                 'login': "test_recompute_rank_%s" % k,
                 'karma': k,
-            })
+            }
+            for k in range(-5, 1030, 30)
+        ])
 
         self.env['gamification.karma.rank'].search([]).unlink()
 
