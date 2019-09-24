@@ -261,7 +261,7 @@ var FileWidget = SearchableMediaWidget.extend({
      * @override
      */
     _clear: function () {
-        if (!this.$media.is('img')) {
+        if (this.$media.is('img')) {
             return;
         }
         var allImgClasses = /(^|\s+)((img(\s|$)|img-(?!circle|rounded|thumbnail))[^\s]*)/g;
