@@ -86,7 +86,7 @@ class SmsSms(models.Model):
         return res
 
     def _split_batch(self):
-        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('sms.session.batch.size', 10))
+        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('sms.session.batch.size', 500))
         for sms_batch in tools.split_every(batch_size, self.ids):
             yield sms_batch
 
