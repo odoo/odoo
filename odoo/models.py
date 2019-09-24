@@ -3388,13 +3388,30 @@ Record ids: %(records)s
             if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
                 bad_names.update(LOG_ACCESS_COLUMNS)
 
+        regular_vals = {}                           # {field: value}
+        monetary_vals = {}                          # {field: value}
+        inherited_vals = defaultdict(dict)          # {parent_name: values}
         determine_inverses = defaultdict(list)      # {inverse: fields}
         records_to_inverse = {}                     # {field: records}
+        modified_names = []
         relational_names = []
         protected = set()
         check_company = False
-        for fname in vals:
+        for fname, val in vals.items():
+            if fname in bad_names:
+                continue
+
             field = self._fields[fname]
+            if field.inherited:
+                inherited_vals[field.related[0]][fname] = val
+                continue
+
+            modified_names.append(fname)
+            if field.type == 'monetary':
+                monetary_vals[field] = val
+            else:
+                regular_vals[field] = val
+
             if field.inverse:
                 determine_inverses[field.inverse].append(field)
                 # DLE P150: `test_cancel_propagation`, `test_manufacturing_3_steps`, `test_manufacturing_flow`
@@ -3429,11 +3446,24 @@ Record ids: %(records)s
 
             # for monetary field, their related currency field must be cached
             # before the amount so it can be rounded correctly
-            for fname in sorted(vals, key=lambda x: self._fields[x].type=='monetary'):
-                if fname in bad_names:
-                    continue
-                field = self._fields[fname]
-                field.write(self, vals[fname])
+            for values in [regular_vals, monetary_vals]:
+                for field, val in values.items():
+                    field.write(self, val)
+
+            # update parent records
+            for parent_name, parent_vals in inherited_vals.items():
+                parents = self[parent_name]
+                try:
+                    parents.write(parent_vals)
+                except AccessError as e:
+                    description = self.env['ir.model']._get(self._name).name
+                    raise AccessError(
+                        _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
+                            'previous_message': e.args[0],
+                            'document_kind': description,
+                            'document_model': self._name,
+                        }
+                    )
 
             # determine records depending on new values
             #
@@ -3448,7 +3478,7 @@ Record ids: %(records)s
             # res.partner includes display_name. The computation of display_name
             # is then done too soon because the parent_id was not yet written.
             # (`test_01_website_reset_password_tour`)
-            self.modified(vals)
+            self.modified(modified_names)
 
             if self._parent_store and self._parent_name in vals:
                 self.flush([self._parent_name])
@@ -3459,19 +3489,7 @@ Record ids: %(records)s
 
             for fields in determine_inverses.values():
                 # inverse records that are not being computed
-                try:
-                    fields[0].determine_inverse(real_recs)
-                except AccessError as e:
-                    if fields[0].inherited:
-                        description = self.env['ir.model']._get(self._name).name
-                        raise AccessError(
-                            _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
-                                'previous_message': e.args[0],
-                                'document_kind': description,
-                                'document_model': self._name,
-                            }
-                        )
-                    raise
+                fields[0].determine_inverse(real_recs)
 
             # validate inversed fields
             real_recs._validate_fields(inverse_fields)
@@ -3606,7 +3624,8 @@ Record ids: %(records)s
                     stored[key] = val
                 if field.inherited:
                     inherited[field.related_field.model_name][key] = val
-                elif field.inverse:
+                    continue
+                if field.inverse:
                     inversed[key] = val
                     inversed_fields.add(field)
                 # protect non-readonly computed fields against (re)computation
