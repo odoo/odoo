@@ -34,7 +34,7 @@ class MailChannel(models.Model):
             visitor = channel.livechat_visitor_id
             if visitor:
                 channel_infos_dict[channel.id]['visitor'] = {
-                    'name': visitor.name,
+                    'name': visitor.display_name,
                     'country_code': visitor.country_id.code.lower() if visitor.country_id else False,
                     'is_connected': visitor.is_connected,
                     'history': self._get_visitor_history(visitor),
@@ -67,7 +67,7 @@ class MailChannel(models.Model):
             if not self.channel_message_ids:
                 return
             # Notify that the visitor has left the conversation
-            name = _('The visitor') if not self.livechat_visitor_id else self.livechat_visitor_id.name
+            name = _('The visitor') if not self.livechat_visitor_id else self.livechat_visitor_id.display_name
             if type == 'cancel':
                 message = _('has started a conversation with %s. The chat request has been canceled.') % kwargs.get('speaking_with', 'an operator')
             else:
