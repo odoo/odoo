@@ -15,6 +15,19 @@ class Lead(models.Model):
 
     reveal_id = fields.Char(string='Reveal ID', index=True)
     iap_enrich_done = fields.Boolean(string='Enrichment done', help='Whether IAP service for lead enrichment based on email has been performed on this lead.')
+    show_enrich_button = fields.Boolean(string='Allow manual enrich', compute="_compute_show_enrich_button")
+
+    @api.depends('email_from', 'probability', 'iap_enrich_done', 'reveal_id')
+    def _compute_show_enrich_button(self):
+        config = self.env['ir.config_parameter'].sudo().get_param('crm.iap.lead.enrich.setting', 'manual')
+        if not config or config != 'manual':
+            self.show_enrich_button = False
+            return
+        for lead in self:
+            if not lead.active or not lead.email_from or lead.iap_enrich_done or lead.reveal_id or lead.probability == 100:
+                lead.show_enrich_button = False
+            else:
+                lead.show_enrich_button = True
 
     @api.model
     def _iap_enrich_leads_cron(self):
@@ -25,9 +38,9 @@ class Lead(models.Model):
             ('probability', 'not in', (0, 100)),
             ('create_date', '>', timeDelta)
         ])
-        leads._iap_enrich(from_cron=True)
+        leads.iap_enrich(from_cron=True)
 
-    def _iap_enrich(self, from_cron=False):
+    def iap_enrich(self, from_cron=False):
         lead_emails = {}
         for lead in self:
             if lead.probability in (0, 100) or lead.iap_enrich_done:
@@ -45,7 +58,6 @@ class Lead(models.Model):
                 iap_response = self.env['iap.enrich.api']._request_enrich(lead_emails)
             except InsufficientCreditError:
                 _logger.info('Sent batch %s enrich requests: failed because of credit', len(lead_emails))
-                self._iap_enrich_notify_no_more_credit()
                 if not from_cron:
                     data = {
                         'url': self.env['iap.account'].get_credits_url('reveal'),
@@ -59,7 +71,6 @@ class Lead(models.Model):
             else:
                 _logger.info('Sent batch %s enrich requests: success', len(lead_emails))
                 self._iap_enrich_from_response(iap_response)
-                self.env['ir.config_parameter'].sudo().set_param('crm_iap_lead_enrich.credit_notification', False)
 
     @api.model
     def _iap_enrich_from_response(self, iap_response):
@@ -122,22 +133,3 @@ class Lead(models.Model):
                 'timezone_url': company_data.get('timezone_url'),
             })
         return log_data
-
-    @api.model
-    def _iap_enrich_notify_no_more_credit(self):
-        """ Notify when user has no credits anymore. In order to avoid to spam
-        people each hour, an ir.config_parameter is set. """
-        already_notified = self.env['ir.config_parameter'].sudo().get_param('crm_iap_lead_enrich.credit_notification')
-        if already_notified == 'True':
-            return
-
-        iap_account = self.env['iap.account'].search([('service_name', '=', 'reveal')], limit=1)
-        if not iap_account:
-            return
-
-        mail_template = self.env.ref('crm_iap_lead_enrich.mail_template_data_iap_lead_enrich_nocredit')
-        if not mail_template:
-            return
-
-        mail_template.sudo().send_mail(iap_account.id, force_send=False, notif_layout='mail.mail_notification_light')
-        self.env['ir.config_parameter'].sudo().set_param('lead_enrich.already_notified', True)
