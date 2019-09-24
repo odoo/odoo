@@ -305,6 +305,8 @@ Tip.getConsumeEventType = function ($element) {
         return !type || !!type.match(/^(email|number|password|search|tel|text|url)$/);
     })) {
         return "input";
+    } else if ($element.is('div') && $element.hasClass('ui-draggable ui-draggable-handle')) {
+        return "drag";
     }
     return "click";
 };
