@@ -66,9 +66,18 @@ class Rating(models.Model):
     @api.multi
     @api.depends('rating')
     def _compute_rating_image(self):
+        # Due to some new widgets, we may have ratings different from 0/1/5/10 (e.g. slide.channel review)
+        # Let us have some custom rounding while finding a better solution for images.
         for rating in self:
+            rating_for_img = 0
+            if rating.rating >= 8:
+                rating_for_img = 10
+            elif rating.rating > 3:
+                rating_for_img = 5
+            elif rating.rating >= 1:
+                rating_for_img = 1
             try:
-                image_path = get_resource_path('rating', 'static/src/img', 'rating_%s.png' % (int(rating.rating),))
+                image_path = get_resource_path('rating', 'static/src/img', 'rating_%s.png' % rating_for_img)
                 rating.rating_image = base64.b64encode(open(image_path, 'rb').read())
             except (IOError, OSError):
                 rating.rating_image = False
