@@ -120,6 +120,12 @@ class pos_order(models.Model):
                 res |= super(pos_order, order).write(vals_hashing)
         return res
 
+    def unlink(self):
+        for order in self:
+            if order.company_id._is_accounting_unalterable():
+                raise UserError(_("According to French law, you cannot delet a point of sale order."))
+        return super(pos_order, self).unlink()
+
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
