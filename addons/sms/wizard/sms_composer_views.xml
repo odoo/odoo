@@ -39,7 +39,12 @@
                     </group>
                 </sheet>
                 <footer>
-                    <button string="Send SMS" type="object" class="oe_highlight" name="action_send_sms"/>
+                    <button string="Send SMS" type="object" class="oe_highlight" name="action_send_sms"
+                        attrs="{'invisible': [('composition_mode', 'not in', ('comment', 'numbers'))]}"/>
+                    <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms"
+                        attrs="{'invisible': [('composition_mode', '!=', 'mass')]}"/>
+                    <button string="Send Now" type="object" name="action_send_sms_mass_now"
+                        attrs="{'invisible': [('composition_mode', '!=', 'mass')]}"/>
                     <button string="Close" class="btn btn-secondary" special="cancel"/>
                 </footer>
             </form>
