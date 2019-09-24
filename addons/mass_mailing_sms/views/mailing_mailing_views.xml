@@ -29,7 +29,7 @@
                     confirm="This will schedule an SMS marketing to all recipients. Do you still want to proceed ?"/>
                 <button name="action_send_now_sms" type="object"
                     string="Send Now"
-                    attrs="{'invisible': ['|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'done'))]}"
+                    attrs="{'invisible': ['|', ('mailing_type', '=', 'mail'), ('state', 'in', ('done'))]}"
                     confirm="This will send SMS to all recipients now. Do you still want to proceed ?"/>
             </xpath>
             <!-- Headers / Warnings -->
