@@ -216,7 +216,7 @@ class AccountInvoice(models.Model):
                 amount_to_show = amount_currency
             else:
                 currency = payment.company_id.currency_id
-                amount_to_show = currency._convert(amount, self.currency_id, payment.company_id, self.date or fields.Date.today())
+                amount_to_show = currency._convert(amount, self.currency_id, payment.company_id, payment.date or fields.Date.today())
             if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
                 continue
             payment_ref = payment.move_id.name
