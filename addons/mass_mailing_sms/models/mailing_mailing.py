@@ -20,6 +20,8 @@ class Mailing(models.Model):
     sms_has_insufficient_credit = fields.Boolean(
         'Insufficient IAP credits', compute='_compute_sms_has_insufficient_credit',
         help='UX Field to propose to buy IAP credits')
+    sms_force_send = fields.Boolean(
+        'Send Directly', help='Use at your own risks.')
     # opt_out_link
     sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=True)
 
@@ -63,7 +65,15 @@ class Mailing(models.Model):
     # --------------------------------------------------
 
     def action_put_in_queue_sms(self):
-        return self.action_put_in_queue()
+        res = self.action_put_in_queue()
+        if self.sms_force_send:
+            self.action_send_mail()
+        return res
+
+    def action_send_now_sms(self):
+        if not self.sms_force_send:
+            self.write({'sms_force_send': True})
+        return self.action_send_mail()
 
     def action_test(self):
         if self.mailing_type == 'sms':
@@ -166,6 +176,7 @@ class Mailing(models.Model):
             'composition_mode': 'mass',
             'mailing_id': self.id,
             'mass_keep_log': self.keep_archives,
+            'mass_force_send': self.sms_force_send,
             'mass_sms_allow_unsubscribe': self.sms_allow_unsubscribe,
         }
 
@@ -183,11 +194,6 @@ class Mailing(models.Model):
                 raise UserError(_('There is no recipients selected.'))
 
             composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
-            # extra_context = self._get_mass_mailing_context()
-
-            # auto-commit except in testing mode
-            # auto_commit = not getattr(threading.currentThread(), 'testing', False)
-            # composer.send_mail(auto_commit=auto_commit)
             composer._action_send_sms()
             mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
         return True

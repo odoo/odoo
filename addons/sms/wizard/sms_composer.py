@@ -147,7 +147,12 @@ class SendSMS(models.TransientModel):
         self._action_send_sms()
         return False
 
-    def _action_send_sms(self, force_send=False):
+    def action_send_sms_mass_now(self):
+        if not self.mass_force_send:
+            self.write({'mass_force_send': True})
+        return self.action_send_sms()
+
+    def _action_send_sms(self):
         records = self._get_records()
         if self.composition_mode == 'numbers':
             return self._action_send_sms_numbers()
@@ -183,16 +188,15 @@ class SendSMS(models.TransientModel):
         records = records if records is not None else self._get_records()
 
         sms_record_values = self._prepare_mass_sms_values(records)
-        sms_create_vals = [sms_record_values[record.id] for record in records]
-        sms = self.env['sms.sms'].sudo().create(sms_create_vals)
+        sms = self._prepare_mass_sms(records, sms_record_values)
 
         if sms and self.mass_keep_log and records and issubclass(type(records), self.pool['mail.thread']):
-            log_values = self._prepare_mass_log_values(sms_record_values)
+            log_values = self._prepare_mass_log_values(records, sms_record_values)
             records._message_log_batch(**log_values)
 
         if sms and self.mass_force_send:
             sms.send(auto_commit=False, raise_exception=False)
-
+            return self.env['sms.sms'].sudo().search([('id', 'in', sms.ids)])
         return sms
 
     # ------------------------------------------------------------
@@ -230,8 +234,7 @@ class SendSMS(models.TransientModel):
             all_bodies = self.env['mail.template']._render_template(self.body, records._name, records.ids)
         return all_bodies
 
-    def _prepare_mass_sms_values(self, records=None):
-        records = records if records is not None else self._get_records()
+    def _prepare_mass_sms_values(self, records):
         all_bodies = self._prepare_body_values(records)
         all_recipients = self._prepare_recipient_values(records)
         blacklist_ids = self._get_blacklist_record_ids(records, all_recipients)
@@ -263,13 +266,17 @@ class SendSMS(models.TransientModel):
             }
         return result
 
+    def _prepare_mass_sms(self, records, sms_record_values):
+        sms_create_vals = [sms_record_values[record.id] for record in records]
+        return self.env['sms.sms'].sudo().create(sms_create_vals)
+
     def _prepare_log_body_values(self, sms_records_values):
         result = {}
         for record_id, sms_values in sms_records_values.items():
             result[record_id] = sms_values['body']
         return result
 
-    def _prepare_mass_log_values(self, sms_records_values):
+    def _prepare_mass_log_values(self, records, sms_records_values):
         return {
             'bodies': self._prepare_log_body_values(sms_records_values),
             'message_type': 'sms',
