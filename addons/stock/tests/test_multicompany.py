@@ -266,6 +266,45 @@ class TestMultiCompany(SavepointCase):
         with self.assertRaises(UserError):
             orderpoint.company_id = self.company_b.id
 
+    def test_product_1(self):
+        """ As an user of Company A, checks we can or cannot create new product
+        depending of its `company_id`."""
+        # Creates a new product with no company_id and set a responsible.
+        # The product must be created as there is no company on the product.
+        product_form = Form(self.env['product.template'].with_user(self.user_a))
+        product_form.name = 'Paramite Pie'
+        product_form.responsible_id = self.user_b
+        product = product_form.save()
+
+        self.assertEqual(product.company_id.id, False)
+        self.assertEqual(product.responsible_id.id, self.user_b.id)
+
+        # Creates a new product belong to Company A and set a responsible belong
+        # to Company B. The product mustn't be created as the product and the
+        # user don't belong of the same company.
+        self.user_b.company_ids = [(6, 0, [self.company_b.id])]
+        product_form = Form(self.env['product.template'].with_user(self.user_a))
+        product_form.name = 'Meech Munchy'
+        product_form.company_id = self.company_a
+        product_form.responsible_id = self.user_b
+
+        with self.assertRaises(UserError):
+            # Raises an UserError for company incompatibility.
+            product = product_form.save()
+
+        # Creates a new product belong to Company A and set a responsible belong
+        # to Company A & B (default B). The product must be created as the user
+        # belongs to product's company.
+        self.user_b.company_ids = [(6, 0, [self.company_a.id, self.company_b.id])]
+        product_form = Form(self.env['product.template'].with_user(self.user_a))
+        product_form.name = 'Scrab Cake'
+        product_form.company_id = self.company_a
+        product_form.responsible_id = self.user_b
+        product = product_form.save()
+
+        self.assertEqual(product.company_id.id, self.company_a.id)
+        self.assertEqual(product.responsible_id.id, self.user_b.id)
+
     def test_warehouse_1(self):
         """As a user of Company A, on its main warehouse, see it is impossible to change the
         company_id, to use a view location of another company, to set a picking type to one
