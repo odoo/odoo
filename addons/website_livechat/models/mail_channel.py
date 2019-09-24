@@ -50,13 +50,8 @@ class MailChannel(models.Model):
         :param visitor: website.visitor of the channel
         :return: arrow separated string containing navigation history information
         """
-        history = []
-        for page in visitor.website_track_ids:
-            if page.page_id:
-                history += page.page_id.name + ' (' + page.visit_datetime.strftime('%H:%M') + ')'
-            if len(history) == 3:
-                break
-        return ' → '.join(history)
+        recent_history = self.env['website.track'].search([('page_id', '!=', False), ('visitor_id', '=', visitor.id)], limit=3)
+        return ' → '.join(visit.page_id.name + ' (' + visit.visit_datetime.strftime('%H:%M') + ')' for visit in reversed(recent_history))
 
     def close_livechat_request_session(self, type='leave', **kwargs):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
