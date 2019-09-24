@@ -422,6 +422,7 @@ class MrpProduction(models.Model):
         self.product_qty = self.bom_id.product_qty
         self.product_uom_id = self.bom_id.product_uom_id.id
         self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
+        self.picking_type_id = self.bom_id.picking_type_id or self.picking_type_id
 
     @api.onchange('date_planned_start')
     def _onchange_date_planned_start(self):

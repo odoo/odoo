@@ -109,7 +109,7 @@ class AccountMove(models.Model):
             raise UserError(_("%s must have a country.") % (seller.display_name))
 
         # <1.4.1>
-        if not buyer.vat and not buyer.l10n_it_codice_fiscale and buyer.country_id.code != 'IT':
+        if not buyer.vat and not buyer.l10n_it_codice_fiscale and buyer.country_id.code == 'IT':
             raise UserError(_("The buyer, %s, or his company must have either a VAT number either a tax code (Codice Fiscale).") % (buyer.display_name))
 
         # <1.4.2>
@@ -270,11 +270,12 @@ class AccountMove(models.Model):
             'body': _('Sending file: %s to ES: %s') % (self.l10n_it_einvoice_id.name, self.env.company.l10n_it_address_recipient_fatturapa),
             'author_id': self.env.user.partner_id.id,
             'email_from': self.env.company.l10n_it_address_send_fatturapa,
+            'reply_to': self.env.company.l10n_it_address_send_fatturapa,
             'mail_server_id': self.env.company.l10n_it_mail_pec_server_id.id,
             'attachment_ids': [(6, 0, self.l10n_it_einvoice_id.ids)],
         })
 
-        mail_fattura = self.env['mail.mail'].create({
+        mail_fattura = self.env['mail.mail'].with_context(wo_return_path=True).create({
             'mail_message_id': message.id,
             'email_to': self.env.company.l10n_it_address_recipient_fatturapa,
         })
