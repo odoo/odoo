@@ -459,10 +459,12 @@ return AbstractRenderer.extend({
             eventMouseout: function (eventData) {
                 self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).removeClass('o_cw_custom_hover');
             },
-            eventDragStart: function () {
+            eventDragStart: function (eventData) {
+                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_hover');
                 self._unselectEvent();
             },
-            eventResizeStart: function () {
+            eventResizeStart: function (eventData) {
+                self.$calendar.find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_hover');
                 self._unselectEvent();
             },
             eventLimitClick: function () {
