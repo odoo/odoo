@@ -123,11 +123,11 @@ class StockPicking(models.Model):
         res = super(StockPicking, self)._pre_put_in_pack_hook(move_line_ids)
         if not res:
             if self.carrier_id:
-                return self._set_delivery_packaging()
+                return self._set_delivery_packaging(move_line_ids)
         else:
             return res
 
-    def _set_delivery_packaging(self):
+    def _set_delivery_packaging(self, move_line_ids):
         """ This method returns an action allowing to set the product packaging and the shipping weight
          on the stock.quant.package.
         """
@@ -144,7 +144,8 @@ class StockPicking(models.Model):
             'context': dict(
                 self.env.context,
                 current_package_carrier_type=self.carrier_id.delivery_type,
-                default_picking_id=self.id
+                default_picking_id=self.id,
+                default_move_line_ids=move_line_ids.ids
             ),
         }
 

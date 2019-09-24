@@ -1128,12 +1128,26 @@ class Picking(models.Model):
         else:
             return {}
 
+    def _get_move_lines_to_package(self):
+        self.ensure_one()
+        move_line_ids = self.move_line_ids.filtered(lambda ml:
+            float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+            and not ml.result_package_id
+        )
+        if not move_line_ids:
+            move_line_ids = self.move_line_ids.filtered(lambda ml: 
+            float_compare(ml.product_uom_qty, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 
+            and float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) == 0)
+        return move_line_ids
+
     def _put_in_pack(self, move_line_ids):
         package = False
         for pick in self:
             move_lines_to_pack = self.env['stock.move.line']
             package = self.env['stock.quant.package'].create({})
             for ml in move_line_ids:
+                if float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding):
+                    ml.qty_done = ml.product_uom_qty
                 if float_compare(ml.qty_done, ml.product_uom_qty,
                                  precision_rounding=ml.product_uom_id.rounding) >= 0:
                     move_lines_to_pack |= ml
@@ -1168,16 +1182,7 @@ class Picking(models.Model):
             if not self.picking_type_id.show_reserved:
                 picking_move_lines = self.move_line_nosuggest_ids
 
-            move_line_ids = picking_move_lines.filtered(lambda ml:
-                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
-                and not ml.result_package_id
-            )
-            if not move_line_ids:
-                move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) == 0)
-                for line in move_line_ids:
-                    line.qty_done = line.product_uom_qty
+            move_line_ids = self._get_move_lines_to_package()
             if move_line_ids:
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:
