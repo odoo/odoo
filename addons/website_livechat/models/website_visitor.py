@@ -54,7 +54,7 @@ class WebsiteVisitor(models.Model):
         for visitor in self:
             operator = self.env.user
             country = visitor.country_id
-            visitor_name = "%s (%s)" % (visitor.name, country.name) if country else visitor.name
+            visitor_name = "%s (%s)" % (visitor.display_name, country.name) if country else visitor.display_name
             mail_channel_vals_list.append({
                 'channel_partner_ids':  [(4, operator.partner_id.id)],
                 'livechat_channel_id': visitor.website_id.channel_id.id,
