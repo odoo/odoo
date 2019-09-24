@@ -247,9 +247,13 @@ class account_payment(models.Model):
     def _compute_journal_domain_and_types(self):
         journal_type = ['bank', 'cash']
         domain = []
+<<<<<<< HEAD
         if self.invoice_ids:
             domain.append(('company_id', '=', self.invoice_ids[0].company_id.id))
         if self.currency_id.is_zero(self.amount) and self.has_invoices:
+=======
+        if self.currency_id.is_zero(self.amount) and hasattr(self, "has_invoices") and self.has_invoices:
+>>>>>>> e55ee93bfbe... temp
             # In case of payment with 0 amount, allow to select a journal of type 'general' like
             # 'Miscellaneous Operations' and set this journal by default.
             journal_type = ['general']
