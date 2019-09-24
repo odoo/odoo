@@ -131,9 +131,10 @@ class Applicant(models.Model):
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     company_id = fields.Many2one('res.company', "Company", default=_default_company_id)
     user_id = fields.Many2one('res.users', "Responsible", tracking=True, default=lambda self: self.env.uid)
-    date_closed = fields.Datetime("Closed", readonly=True, index=True)
-    date_open = fields.Datetime("Assigned", readonly=True, index=True)
-    date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
+    date_closed = fields.Datetime("Closed", index=True, compute='_compute_date_closed', store=True)
+    date_open = fields.Datetime("Assigned",  index=True, compute='_compute_date_open', store=True)
+    date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now,
+        compute='_compute_date_last_stage_update', store=True)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
     job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages")
@@ -159,7 +160,7 @@ class Applicant(models.Model):
         ('normal', 'Grey'),
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
-        copy=False, default='normal', required=True)
+        copy=False, default='normal', required=True, compute='_compute_kanban_state', store=True, readonly=False)
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked', readonly=False)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid', readonly=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing', readonly=False)
@@ -273,19 +274,24 @@ class Applicant(models.Model):
         self.partner_mobile = self.partner_id.mobile
         self.email_from = self.partner_id.email
 
-    @api.onchange('stage_id')
-    def onchange_stage_id(self):
-        vals = self._onchange_stage_id_internal(self.stage_id.id)
-        if vals['value'].get('date_closed'):
-            self.date_closed = vals['value']['date_closed']
+    @api.depends('user_id')
+    def _compute_date_open(self):
+        for rec in self:
+            if rec.user_id:
+                rec.date_open = fields.Datetime.now()
 
-    def _onchange_stage_id_internal(self, stage_id):
-        if not stage_id:
-            return {'value': {}}
-        stage = self.env['hr.recruitment.stage'].browse(stage_id)
-        if stage.fold:
-            return {'value': {'date_closed': fields.datetime.now()}}
-        return {'value': {'date_closed': False}}
+    @api.depends('stage_id')
+    def _compute_kanban_state(self):
+        # when the stage changes, reset the kanban stage to normal
+        self.kanban_state = 'normal'
+
+    @api.depends('stage_id')
+    def _compute_date_closed(self):
+        now = fields.Datetime.now()
+        for rec in self:
+            if rec.stage_id:
+                rec.date_last_stage_update = now
+                rec.date_closed = now if rec.stage_id.fold else False
 
     @api.model
     def create(self, vals):
@@ -296,22 +302,11 @@ class Applicant(models.Model):
             for key, value in self._onchange_job_id_internal(job_id)['value'].items():
                 if key not in vals:
                     vals[key] = value
-        if vals.get('user_id'):
-            vals['date_open'] = fields.Datetime.now()
-        if 'stage_id' in vals:
-            vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
         return super(Applicant, self).create(vals)
 
     def write(self, vals):
-        # user_id change: update date_open
-        if vals.get('user_id'):
-            vals['date_open'] = fields.Datetime.now()
         # stage_id: track last stage before update
         if 'stage_id' in vals:
-            vals['date_last_stage_update'] = fields.Datetime.now()
-            vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
-            if 'kanban_state' not in vals:
-                vals['kanban_state'] = 'normal'
             for applicant in self:
                 vals['last_stage_id'] = applicant.stage_id.id
                 res = super(Applicant, self).write(vals)
