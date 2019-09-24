@@ -493,6 +493,11 @@ class SavepointCase(SingleTransactionCase):
         super(SavepointCase, self).setUp()
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+        # restore environments after the test to avoid invoking flush() with an
+        # invalid environment (inexistent user id) from another test
+        envs = self.env.all.envs
+        self.addCleanup(envs.update, list(envs))
+        self.addCleanup(envs.clear)
 
     def tearDown(self):
         self.cr.execute('ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
