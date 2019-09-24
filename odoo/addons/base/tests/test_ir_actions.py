@@ -428,7 +428,7 @@ class TestCustomFields(common.TransactionCase):
         model = self.env['ir.model'].search([('model', '=', self.MODEL)])
         field = self.env['ir.model.fields'].create({
             'model_id': model.id,
-            'name': 'x_sel',
+            'name': 'x_Sel',
             'field_description': "Custom Selection",
             'ttype': 'selection',
             'selection_ids': [
@@ -437,7 +437,7 @@ class TestCustomFields(common.TransactionCase):
             ],
         })
 
-        x_sel = Model._fields['x_sel']
+        x_sel = Model._fields['x_Sel']
         self.assertEqual(x_sel.type, 'selection')
         self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar')])
 
@@ -445,34 +445,34 @@ class TestCustomFields(common.TransactionCase):
         field.selection_ids.create({
             'field_id': field.id, 'value': 'baz', 'name': 'Baz', 'sequence': 2,
         })
-        x_sel = Model._fields['x_sel']
+        x_sel = Model._fields['x_Sel']
         self.assertEqual(x_sel.type, 'selection')
         self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')])
 
         # assign values to records
-        rec1 = Model.create({'name': 'Rec1', 'x_sel': 'foo'})
-        rec2 = Model.create({'name': 'Rec2', 'x_sel': 'bar'})
-        rec3 = Model.create({'name': 'Rec3', 'x_sel': 'baz'})
-        self.assertEqual(rec1.x_sel, 'foo')
-        self.assertEqual(rec2.x_sel, 'bar')
-        self.assertEqual(rec3.x_sel, 'baz')
+        rec1 = Model.create({'name': 'Rec1', 'x_Sel': 'foo'})
+        rec2 = Model.create({'name': 'Rec2', 'x_Sel': 'bar'})
+        rec3 = Model.create({'name': 'Rec3', 'x_Sel': 'baz'})
+        self.assertEqual(rec1.x_Sel, 'foo')
+        self.assertEqual(rec2.x_Sel, 'bar')
+        self.assertEqual(rec3.x_Sel, 'baz')
 
         # remove selection value 'foo'
         field.selection_ids[0].unlink()
-        x_sel = Model._fields['x_sel']
+        x_sel = Model._fields['x_Sel']
         self.assertEqual(x_sel.type, 'selection')
         self.assertEqual(x_sel.selection, [('bar', 'Bar'), ('baz', 'Baz')])
 
-        self.assertEqual(rec1.x_sel, False)
-        self.assertEqual(rec2.x_sel, 'bar')
-        self.assertEqual(rec3.x_sel, 'baz')
+        self.assertEqual(rec1.x_Sel, False)
+        self.assertEqual(rec2.x_Sel, 'bar')
+        self.assertEqual(rec3.x_Sel, 'baz')
 
         # update selection value 'bar'
         field.selection_ids[0].value = 'quux'
-        x_sel = Model._fields['x_sel']
+        x_sel = Model._fields['x_Sel']
         self.assertEqual(x_sel.type, 'selection')
         self.assertEqual(x_sel.selection, [('quux', 'Bar'), ('baz', 'Baz')])
 
-        self.assertEqual(rec1.x_sel, False)
-        self.assertEqual(rec2.x_sel, 'quux')
-        self.assertEqual(rec3.x_sel, 'baz')
+        self.assertEqual(rec1.x_Sel, False)
+        self.assertEqual(rec2.x_Sel, 'quux')
+        self.assertEqual(rec3.x_Sel, 'baz')
