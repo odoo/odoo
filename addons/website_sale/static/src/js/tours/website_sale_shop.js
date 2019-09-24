@@ -45,6 +45,9 @@ odoo.define("website_sale.tour_shop", function (require) {
             actions.auto(".modal-footer .btn-secondary");
         },
     }, {
+        trigger: "button.o_we_add_snippet_btn",
+        auto: true,
+    }, {
         trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
         extra_trigger: "body:not(.modal-open)",
         content: _t("Drag this website block and drop it in your page."),
