@@ -24,7 +24,7 @@ class TestLeadEnrich(crm_iap_lead_enrich_common.CrmCase, crm_iap_lead_enrich_com
         leads[0].write({'partner_name': 'Already set', 'email_from': 'test@test1'})
         leads.flush()
         with self.mockIAPEnrichGateway(email_data={'test1': {'country_code': 'AU', 'state_code': 'NSW'}}):
-            leads._iap_enrich()
+            leads.iap_enrich()
 
         leads.flush()
         self.assertEqual(leads[0].partner_name, 'Already set')
@@ -39,13 +39,13 @@ class TestLeadEnrich(crm_iap_lead_enrich_common.CrmCase, crm_iap_lead_enrich_com
     # def test_enrich_error_credit(self):
     #     leads = self.env['crm.lead'].browse(self.leads.ids)
     #     with self.mockIAPEnrichGateway(sim_error='credit'):
-    #         leads._iap_enrich()
+    #         leads.iap_enrich()
 
     @users('sales_manager')
     def test_enrich_error_jsonrpc_exception(self):
         leads = self.env['crm.lead'].browse(self.leads.ids)
         with self.mockIAPEnrichGateway(sim_error='jsonrpc_exception'):
-            leads._iap_enrich()
+            leads.iap_enrich()
 
         for lead in leads:
             self.assertEqual(lead.street, False)

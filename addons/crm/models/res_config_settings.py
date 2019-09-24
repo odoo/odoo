@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from datetime import datetime, date
+from datetime import date
 
 
 class ResConfigSettings(models.TransientModel):
@@ -14,6 +14,10 @@ class ResConfigSettings(models.TransientModel):
     module_crm_iap_lead = fields.Boolean("Generate new leads based on their country, industries, size, etc.")
     module_crm_iap_lead_website = fields.Boolean("Create Leads/Opportunities from your website's traffic")
     module_crm_iap_lead_enrich = fields.Boolean("Enrich your leads automatically with company data based on their email address.")
+    lead_enrich_auto = fields.Selection([
+        ('manual', 'Enrich leads on demand only'),
+        ('auto', 'Enrich all leads automatically'),
+    ], string='Enrich lead automatically', default='manual', config_parameter='crm.iap.lead.enrich.setting')
     lead_mining_in_pipeline = fields.Boolean("Create a lead mining request directly from the opportunity pipeline.", config_parameter='crm.lead_mining_in_pipeline')
     predictive_lead_scoring_start_date = fields.Date(string='Lead Scoring Starting Date', compute="_compute_pls_start_date", inverse="_inverse_pls_start_date_str")
     predictive_lead_scoring_start_date_str = fields.Char(string='Lead Scoring Starting Date in String', config_parameter='crm.pls_start_date')
