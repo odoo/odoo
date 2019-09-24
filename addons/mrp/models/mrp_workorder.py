@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from math import floor
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 
@@ -15,6 +15,12 @@ class MrpWorkorder(models.Model):
     _name = 'mrp.workorder'
     _description = 'Work Order'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'mrp.abstract.workorder']
+
+    def _read_group_workcenter_id(self, workcenters, domain, order):
+        workcenter_ids = self.env.context.get('default_workcenter_id')
+        if not workcenter_ids:
+            workcenter_ids = workcenters._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        return workcenters.browse(workcenter_ids)
 
     name = fields.Char(
         'Work Order', required=True,
@@ -26,7 +32,7 @@ class MrpWorkorder(models.Model):
     workcenter_id = fields.Many2one(
         'mrp.workcenter', 'Work Center', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        check_company=True)
+        group_expand='_read_group_workcenter_id', check_company=True)
     working_state = fields.Selection(
         'Workcenter Status', related='workcenter_id.working_state', readonly=False,
         help='Technical: used in views only')
@@ -288,6 +294,14 @@ class MrpWorkorder(models.Model):
             self.date_planned_finished = self.date_planned_start + relativedelta(minutes=self.duration_expected)
 
     def write(self, values):
+        if 'production_id' in values:
+            raise UserError(_('You cannot link this work order to another manufacturing order.'))
+        if 'workcenter_id' in values:
+            for workorder in self:
+                if workorder.workcenter_id.id != values['workcenter_id']:
+                    if workorder.state in ('progress', 'done', 'cancel'):
+                        raise UserError(_('You cannot change the workcenter of a work order that is in progress or done.'))
+                    workorder.leave_id.resource_id = self.env['mrp.workcenter'].browse(values['workcenter_id']).resource_id
         if list(values.keys()) != ['time_ids'] and any(workorder.state == 'done' for workorder in self):
             raise UserError(_('You can not change the finished work order.'))
         if 'date_planned_start' in values or 'date_planned_finished' in values:
