@@ -109,3 +109,13 @@ class AccountInvoiceTax(models.Model):
         res['l10n_in_product_id'] = self.l10n_in_product_id.id
         res['l10n_in_uom_id'] = self.l10n_in_uom_id.id
         return res
+
+    @api.model
+    def _get_tax_key_for_group_add_base(self, taxline):
+        tax_key = super(AccountInvoiceTax, self)._get_tax_key_for_group_add_base(taxline)
+        if taxline.invoice_id.company_id.country_id.code == 'IN':
+            tax_key += [
+                taxline.l10n_in_product_id,
+                taxline.l10n_in_uom_id
+            ]
+        return tax_key

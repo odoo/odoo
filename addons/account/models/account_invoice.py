@@ -1791,12 +1791,13 @@ class AccountInvoice(models.Model):
             for line in invoice.tax_line_ids:
                 tax = line.tax_id
                 group_key = (tax.tax_group_id, tax.amount_type, tax.amount)
+                tax_key_add_base = tuple(line._get_tax_key_for_group_add_base(line))
                 res.setdefault(group_key, {'base': 0.0, 'amount': 0.0})
                 res[group_key]['amount'] += line.amount_total
-                if tax.id not in done_taxes:
+                if tax_key_add_base not in done_taxes:
                     # The base should be added ONCE
                     res[group_key]['base'] += line.base
-                    done_taxes.add(tax.id)
+                    done_taxes.add(tax_key_add_base)
             res = sorted(res.items(), key=lambda l: l[0][0].sequence)
             invoice.amount_by_group = [(
                 r[0][0].name, r[1]['amount'], r[1]['base'],
@@ -2159,3 +2160,13 @@ class AccountInvoiceTax(models.Model):
     def _compute_amount_total(self):
         for tax_line in self:
             tax_line.amount_total = tax_line.amount + tax_line.amount_rounding
+
+    @api.model
+    def _get_tax_key_for_group_add_base(self, taxline):
+        """
+        Useful for _amout_by_group
+        should take account.tax.get_grouping_key into account
+
+        @return list
+        """
+        return [taxline.tax_id.id]
