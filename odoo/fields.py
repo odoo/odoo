@@ -2462,9 +2462,9 @@ class Many2one(_Relational):
         cache = records.env.cache
         record_ids = set(records._ids)
         for invf in records._field_inverses[self]:
-            corecords = records.env[self.comodel_name].browse(
+            corecords = records.env[self.comodel_name].browse({
                 id_ for id_ in cache.get_values(records, self) if id_ is not None
-            )
+            })
             for corecord in corecords:
                 for corecord1, ids0 in cache.get_context_values(corecord, invf):
                     ids1 = tuple(id_ for id_ in ids0 if id_ not in record_ids)
@@ -2513,9 +2513,9 @@ class Many2oneReference(Integer):
             records = records.browse(model_ids[invf.model_name])
             if not records:
                 continue
-            corecords = records.env[invf.model_name].browse(
+            corecords = records.env[invf.model_name].browse({
                 id_ for id_ in cache.get_values(records, self) if id_ is not None
-            )
+            })
             for corecord in corecords:
                 for corecord1, ids0 in cache.get_context_values(corecord, invf):
                     ids1 = tuple(id_ for id_ in ids0 if id_ not in record_ids)
