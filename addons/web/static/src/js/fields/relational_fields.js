@@ -828,6 +828,8 @@ var ListFieldMany2One = FieldMany2One.extend({
     }),
 
     /**
+     * Should never be allowed to be opened while in readonly mode in a list
+     *
      * @override
      */
     init: function () {

@@ -57,6 +57,7 @@ class TestReconciliationWidget(TestReconciliation):
     def test_filter_partner1(self):
         inv1 = self.create_invoice(currency_id=self.currency_euro_id)
         inv2 = self.create_invoice(currency_id=self.currency_euro_id)
+        partner = inv1.partner_id
 
         receivable1 = inv1.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
         receivable2 = inv2.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
@@ -75,7 +76,33 @@ class TestReconciliationWidget(TestReconciliation):
             'date': time.strftime('%Y-07-15'),
         })
 
-        # This is like opening the widget, and type "deco" in the filter
+        # This is like input a partner in the widget
+        mv_lines_rec = self.env['account.reconciliation.widget'].get_move_lines_for_bank_statement_line(
+            bank_stmt_line.id,
+            partner_id=partner.id,
+            excluded_ids=[],
+            search_str=False,
+            mode="rp",
+        )
+        mv_lines_ids = [l['id'] for l in mv_lines_rec]
+
+        self.assertIn(receivable1.id, mv_lines_ids)
+        self.assertIn(receivable2.id, mv_lines_ids)
+
+        # With a partner set, type the invoice reference in the filter
+        mv_lines_rec = self.env['account.reconciliation.widget'].get_move_lines_for_bank_statement_line(
+            bank_stmt_line.id,
+            partner_id=partner.id,
+            excluded_ids=[],
+            search_str=inv1.invoice_payment_ref,
+            mode="rp",
+        )
+        mv_lines_ids = [l['id'] for l in mv_lines_rec]
+
+        self.assertIn(receivable1.id, mv_lines_ids)
+        self.assertNotIn(receivable2.id, mv_lines_ids)
+
+        # Without a partner set, type "deco" in the filter
         mv_lines_rec = self.env['account.reconciliation.widget'].get_move_lines_for_bank_statement_line(
             bank_stmt_line.id,
             partner_id=False,
@@ -88,8 +115,7 @@ class TestReconciliationWidget(TestReconciliation):
         self.assertIn(receivable1.id, mv_lines_ids)
         self.assertIn(receivable2.id, mv_lines_ids)
 
-        # This is like clicking on the first receivable
-        partner = inv1.partner_id
+        # With a partner set, type "deco" in the filter and click on the first receivable
         mv_lines_rec = self.env['account.reconciliation.widget'].get_move_lines_for_bank_statement_line(
             bank_stmt_line.id,
             partner_id=partner.id,
