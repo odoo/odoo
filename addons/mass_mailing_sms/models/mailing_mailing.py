@@ -75,6 +75,21 @@ class Mailing(models.Model):
             self.write({'sms_force_send': True})
         return self.action_send_mail()
 
+    def action_retry_failed(self):
+        mass_sms = self.filtered(lambda m: m.mailing_type == 'sms')
+        if mass_sms:
+            mass_sms.action_retry_failed_sms()
+        return super(Mailing, self - mass_sms).action_retry_failed()
+
+    def action_retry_failed_sms(self):
+        failed_sms = self.env['sms.sms'].sudo().search([
+            ('mailing_id', 'in', self.ids),
+            ('state', '=', 'error')
+        ])
+        failed_sms.mapped('mailing_trace_ids').unlink()
+        failed_sms.unlink()
+        self.write({'state': 'in_queue'})
+
     def action_test(self):
         if self.mailing_type == 'sms':
             ctx = dict(self.env.context, default_mailing_id=self.id)
