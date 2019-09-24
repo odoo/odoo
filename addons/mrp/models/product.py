@@ -111,7 +111,6 @@ class ProductProduct(models.Model):
         for product in self:
             bom_kit = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
             if bom_kit:
-                kits |= product
                 boms, bom_sub_lines = bom_kit.explode(product, 1)
                 ratios_virtual_available = []
                 ratios_qty_available = []
@@ -131,6 +130,7 @@ class ProductProduct(models.Model):
                     ratios_outgoing_qty.append(component.outgoing_qty / qty_per_kit)
                     ratios_free_qty.append(component.free_qty / qty_per_kit)
                 if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
+                    kits |= product
                     product.virtual_available = min(ratios_virtual_available) // 1
                     product.qty_available = min(ratios_qty_available) // 1
                     product.incoming_qty = min(ratios_incoming_qty) // 1
