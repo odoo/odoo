@@ -54,6 +54,19 @@ var ListController = BasicController.extend({
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
         this.fieldChangedPrevented = false;
+        this._onMouseupWindowDiscard = null;
+    },
+
+    /**
+     * Overriden to properly unbind any mouseup listeners still bound to the window
+     *
+     * @override
+     */
+    destroy: function () {
+        if (this._onMouseupWindowDiscard) {
+            window.removeEventListener('mouseup', this._onMouseupWindowDiscard, true);
+        }
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------

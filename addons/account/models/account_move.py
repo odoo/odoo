@@ -1220,10 +1220,15 @@ class AccountMove(models.Model):
             lang_env = move.with_context(lang=move.partner_id.lang).env
             tax_lines = move.line_ids.filtered(lambda line: line.tax_line_id)
             res = {}
+            # There are as many tax line as there are repartition lines
+            done_taxes = set()
             for line in tax_lines:
                 res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
-                res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
+                if line.tax_line_id.id not in done_taxes:
+                    # The base should be added ONCE
+                    res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
+                    done_taxes.add(line.tax_line_id.id)
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
                 group.name, amounts['amount'],
@@ -1315,7 +1320,7 @@ class AccountMove(models.Model):
         self.env['account.move.line'].flush(['debit', 'credit', 'move_id'])
         self.env['account.move'].flush(['journal_id'])
         self._cr.execute('''
-            SELECT line.move_id
+            SELECT line.move_id, ROUND(SUM(debit - credit), currency.decimal_places)
             FROM account_move_line line
             JOIN account_move move ON move.id = line.move_id
             JOIN account_journal journal ON journal.id = move.journal_id
@@ -1329,7 +1334,8 @@ class AccountMove(models.Model):
         query_res = self._cr.fetchall()
         if query_res:
             ids = [res[0] for res in query_res]
-            raise UserError(_("Cannot create unbalanced journal entry. Ids: %s") % str(ids))
+            sums = [res[1] for res in query_res]
+            raise UserError(_("Cannot create unbalanced journal entry. Ids: %s\nDifferences debit - credit: %s") % (ids, sums))
 
     def _check_fiscalyear_lock_date(self):
         for move in self:
@@ -2060,7 +2066,6 @@ class AccountMove(models.Model):
         """
         if any(not move.is_invoice(include_receipts=True) for move in self):
             raise UserError(_("Only invoices could be printed."))
-        self._check_tax_lock_date()
 
         self.filtered(lambda inv: not inv.invoice_sent).write({'invoice_sent': True})
         if self.user_has_groups('account.group_account_invoice'):
@@ -2309,7 +2314,7 @@ class AccountMoveLine(models.Model):
         ),
         (
             'check_accountable_required_fields',
-             "CHECK(display_type IN ('line_section', 'line_note') OR account_id IS NOT NULL)",
+             "CHECK(COALESCE(display_type IN ('line_section', 'line_note'), 'f') OR account_id IS NOT NULL)",
              "Missing required account on accountable invoice line."
         ),
         (
@@ -2794,7 +2799,7 @@ class AccountMoveLine(models.Model):
             currency = record.company_id.currency_id
             audit_str = ''
             for tag in record.tag_ids:
-                tag_amount = (tag.tax_negate and -1 or 1) * (record.move_id.is_outbound() and -1 or 1) * record.balance
+                tag_amount = (tag.tax_negate and -1 or 1) * (record.move_id.is_inbound() and -1 or 1) * record.balance
 
                 if tag.tax_report_line_ids:
                     #Then, the tag comes from a report line, and hence has a + or - sign (also in its name)

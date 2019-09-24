@@ -120,6 +120,53 @@ QUnit.test('messaging menu widget: menu with no records', async function (assert
     messagingMenu.destroy();
 });
 
+QUnit.test('messaging menu widget: messaging not ready', async function (assert) {
+    assert.expect(8);
+
+    const messagingReadyProm = testUtils.makeTestPromise();
+
+    const messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        async mockRPC(route, args) {
+            if (route === '/mail/init_messaging') {
+                const _super = this._super.bind(this, ...arguments); // limitation of class.js
+                assert.step('/mail/init_messaging:pending');
+                await messagingReadyProm;
+                assert.step('/mail/init_messaging:resolved');
+                return _super();
+            }
+            if (args.method === 'message_fetch') {
+                return [];
+            }
+            return this._super(...arguments);
+        },
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    assert.verifySteps(['/mail/init_messaging:pending']);
+    assert.ok(
+        messagingMenu.el,
+        "messaging menu should be rendered");
+    assert.strictEqual(
+        document.querySelector('.o_mail_systray_item'),
+        messagingMenu.el,
+        "should display messaging menu even when messaging is not ready");
+    assert.hasClass(
+        messagingMenu.$('.o_mail_messaging_menu_icon'),
+        'fa-spinner',
+        "Messaging menu icon should be a spinner when messaging menu is not ready");
+
+    messagingReadyProm.resolve();
+    await testUtils.nextTick();
+    assert.verifySteps(['/mail/init_messaging:resolved']);
+    assert.doesNotHaveClass(
+        messagingMenu.$('.o_mail_messaging_menu_icon'),
+        'fa-spinner',
+        "Messaging menu icon should no longer be a spinner when messaging menu is ready");
+
+    messagingMenu.destroy();
+});
+
 QUnit.test('messaging menu widget: messaging menu with 1 record', async function (assert) {
     assert.expect(3);
     var messagingMenu = new MessagingMenu();
