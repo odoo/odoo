@@ -80,6 +80,13 @@ class AccountInvoice(models.Model):
         vals['l10n_in_quantity'] = line.quantity
         return vals
 
+    def _prepare_tax_line_vals_for_refund(self, tax_line, refund_repartition_line):
+        res = super(AccountInvoice, self)._prepare_tax_line_vals_for_refund(tax_line, refund_repartition_line)
+        res['l10n_in_product_id'] = tax_line.l10n_in_product_id.id
+        res['l10n_in_uom_id'] = tax_line.l10n_in_uom_id.id
+        res['l10n_in_quantity'] = tax_line.l10n_in_quantity
+        return res
+
     @api.multi
     def get_taxes_values(self, tax_group_fields=False):
         if tax_group_fields:
