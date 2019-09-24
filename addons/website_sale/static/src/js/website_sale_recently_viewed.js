@@ -12,6 +12,7 @@ var qweb = core.qweb;
 publicWidget.registry.productsRecentlyViewedSnippet = publicWidget.Widget.extend({
     selector: '.s_wsale_products_recently_viewed',
     xmlDependencies: ['/website_sale/static/src/xml/website_sale_recently_viewed.xml'],
+    disabledInEditableMode: false,
     events: {
         'click .js_add_cart': '_onAddToCart',
         'click .js_remove': '_onRemove',
@@ -36,6 +37,14 @@ publicWidget.registry.productsRecentlyViewedSnippet = publicWidget.Widget.extend
         });
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super(...arguments);
+        this.$el.addClass('d-none');
+        this.$el.find('.slider').html('');
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -47,42 +56,70 @@ publicWidget.registry.productsRecentlyViewedSnippet = publicWidget.Widget.extend
     _fetch: function () {
         return this._rpc({
             route: '/shop/products/recently_viewed',
+        }).then(res => {
+            var products = res['products'];
+
+            // In edit mode, if the current visitor has no recently viewed
+            // products, use demo data.
+            if (this.editableMode && (!products || !products.length)) {
+                return {
+                    'products': [{
+                        id: 0,
+                        website_url: '#',
+                        display_name: 'Product 1',
+                        price: '$ <span class="oe_currency_value">750.00</span>',
+                    }, {
+                        id: 0,
+                        website_url: '#',
+                        display_name: 'Product 2',
+                        price: '$ <span class="oe_currency_value">750.00</span>',
+                    }, {
+                        id: 0,
+                        website_url: '#',
+                        display_name: 'Product 3',
+                        price: '$ <span class="oe_currency_value">750.00</span>',
+                    }, {
+                        id: 0,
+                        website_url: '#',
+                        display_name: 'Product 4',
+                        price: '$ <span class="oe_currency_value">750.00</span>',
+                    }],
+                };
+            }
+
+            return res;
         });
     },
     /**
      * @private
      */
     _render: function (res) {
-        if (!res) {
-            return;
-        }
         var products = res['products'];
-        if (products && products.length) {
-            var mobileProducts = [], webProducts = [], productsTemp = [];
-            _.each(products, function (product) {
-                if (productsTemp.length === 4) {
-                    webProducts.push(productsTemp);
-                    productsTemp = [];
-                }
-                productsTemp.push(product);
-                mobileProducts.push([product]);
-            });
-            if (productsTemp.length) {
+        var mobileProducts = [], webProducts = [], productsTemp = [];
+        _.each(products, function (product) {
+            if (productsTemp.length === 4) {
                 webProducts.push(productsTemp);
+                productsTemp = [];
             }
-
-            this.mobileCarousel = $(qweb.render('website_sale.productsRecentlyViewed', {
-                uniqueId: this.uniqueId,
-                productFrame: 1,
-                productsGroups: mobileProducts,
-            }));
-            this.webCarousel = $(qweb.render('website_sale.productsRecentlyViewed', {
-                uniqueId: this.uniqueId,
-                productFrame: 4,
-                productsGroups: webProducts,
-            }));
-            this._addCarousel();
+            productsTemp.push(product);
+            mobileProducts.push([product]);
+        });
+        if (productsTemp.length) {
+            webProducts.push(productsTemp);
         }
+
+        this.mobileCarousel = $(qweb.render('website_sale.productsRecentlyViewed', {
+            uniqueId: this.uniqueId,
+            productFrame: 1,
+            productsGroups: mobileProducts,
+        }));
+        this.webCarousel = $(qweb.render('website_sale.productsRecentlyViewed', {
+            uniqueId: this.uniqueId,
+            productFrame: 4,
+            productsGroups: webProducts,
+        }));
+        this._addCarousel();
+        this.$el.toggleClass('d-none', !(products && products.length));
     },
     /**
      * Add the right carousel depending on screen size.
@@ -90,7 +127,7 @@ publicWidget.registry.productsRecentlyViewedSnippet = publicWidget.Widget.extend
      */
     _addCarousel: function () {
         var carousel = config.device.size_class <= config.device.SIZES.SM ? this.mobileCarousel : this.webCarousel;
-        this.$('.slider').html(carousel).fadeIn(1000);
+        this.$('.slider').html(carousel).css('display', ''); // TODO removing the style is useless in master
     },
 
     //--------------------------------------------------------------------------
@@ -114,9 +151,11 @@ publicWidget.registry.productsRecentlyViewedSnippet = publicWidget.Widget.extend
         }).then(function (data) {
             wSaleUtils.updateCartNavBar(data);
             var $navButton = wSaleUtils.getNavBarButton('.o_wsale_my_cart');
-            wSaleUtils.animateClone($navButton, $(ev.currentTarget).parents('.o_carousel_product_card'), 25, 40);
-
-            self._dp.add(self._fetch()).then(self._render.bind(self));
+            var fetch = self._fetch();
+            var animation = wSaleUtils.animateClone($navButton, $(ev.currentTarget).parents('.o_carousel_product_card'), 25, 40);
+            Promise.all([fetch, animation]).then(function (values) {
+                self._render(values[0]);
+            });
         });
     },
 
