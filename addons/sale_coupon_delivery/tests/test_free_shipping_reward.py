@@ -10,7 +10,12 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
     def setUp(self):
         super(TestSaleCouponProgramRules, self).setUp()
-        self.iPadMini = self.env.ref('product.product_product_6')
+        self.iPadMini = self.env['product.product'].create({
+            'name': 'Large Cabinet',
+            'list_price': 320.0,
+            'standard_price': 800.0,
+            'taxes_id': False
+        })
 
     # Test a free shipping reward + some expected behavior
     # (automatic line addition or removal)
@@ -47,7 +52,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # I add delivery cost in Sales order
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
             'default_order_id': order.id,
-            'default_carrier_id': self.env['delivery.carrier'].search([])[1]
+            'default_carrier_id': self.env['delivery.carrier'].search([])[0]
         }))
         choose_delivery_carrier = delivery_wizard.save()
         choose_delivery_carrier.button_confirm()
@@ -121,12 +126,12 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         })
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "We should get the 10% discount line since we bought 872.73$")
-        order.carrier_id = self.env['delivery.carrier'].search([])[1]
+        order.carrier_id = self.env['delivery.carrier'].search([])[0]
 
         # I add delivery cost in Sales order
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
             'default_order_id': order.id,
-            'default_carrier_id': self.env['delivery.carrier'].search([])[1]
+            'default_carrier_id': self.env['delivery.carrier'].search([])[0]
         }))
         choose_delivery_carrier = delivery_wizard.save()
         choose_delivery_carrier.button_confirm()
@@ -139,7 +144,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # I add delivery cost in Sales order
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
             'default_order_id': order.id,
-            'default_carrier_id': self.env['delivery.carrier'].search([])[1]
+            'default_carrier_id': self.env['delivery.carrier'].search([])[0]
         }))
         choose_delivery_carrier = delivery_wizard.save()
         choose_delivery_carrier.button_confirm()
@@ -181,7 +186,39 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # The delivery product has 15% tax on dball but not on dbbase. A module is probably adding the tax at some point.
         # We want that tax to be set so we can be sure it is not added to the order total paid amount used in coupon as
         # it was wrongly done before.
-        carrier = self.env.ref('delivery.delivery_carrier')
+        carrier_product = self.env['product.product'].create({
+            'name': 'The Poste',
+            'default_code': 'Delivery_009',
+            'categ_id': self.ref('delivery.product_category_deliveries'),
+            'type': 'service',
+            'sale_ok': False,
+            'purchase_ok': False,
+            'list_price': 20.0
+        })
+        carrier = self.env['delivery.carrier'].create({
+            'name': 'The Poste',
+            'fixed_price': 20.0,
+            'delivery_type': 'base_on_rule',
+            'product_id': carrier_product.id
+        })
+        self.env['delivery.price.rule'].create([
+            {
+                'carrier_id': carrier.id,
+                'max_value': 5,
+                'list_base_price': 20,
+            }, {
+                'carrier_id': carrier.id,
+                'max_value': 5,
+                'operator': '>',
+                'list_base_price': 50,
+            }, {
+                'carrier_id': carrier.id,
+                'max_value': 300,
+                'operator': '>',
+                'variable': 'price',
+                'list_base_price': 0,
+            }
+        ])
         carrier.product_id.taxes_id = tax_15pc_excl
 
         # I add delivery cost in Sales order
