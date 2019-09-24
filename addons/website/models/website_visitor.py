@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 import uuid
 
-from odoo import fields, models, api, _
+from odoo import fields, models, api, registry, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.tools.misc import _format_time_ago, format_time
@@ -23,19 +23,10 @@ class WebsiteTrack(models.Model):
     url = fields.Text('Url', index=True)
     visit_datetime = fields.Datetime('Visit Date', default=fields.Datetime.now, required=True, readonly=True)
 
-
-class VisitorLastConnection(models.Model):
-    _name = 'website.visitor.lastconnection'
-    _description = 'temporary table for Visitor'
-
-    visitor_id = fields.Many2one('website.visitor', ondelete="cascade", index=True, required=True, readonly=True)
-    connection_datetime = fields.Datetime(default=fields.Datetime.now, required=True, readonly=True)
-
-
 class WebsiteVisitor(models.Model):
     _name = 'website.visitor'
     _description = 'Website Visitor'
-    _order = 'create_date DESC'
+    _order = 'last_connection_datetime DESC'
 
     name = fields.Char('Name')
     access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, index=True, copy=False, groups='base.group_website_publisher')
@@ -53,7 +44,7 @@ class WebsiteVisitor(models.Model):
     mobile = fields.Char(string='Mobile Phone', compute='_compute_email_phone')
 
     # Visit fields
-    visit_count = fields.Integer('Number of visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 24 hours ago.")
+    visit_count = fields.Integer('Number of visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
     website_track_ids = fields.One2many('website.track', 'visitor_id', string='Visited Pages History', readonly=True)
     visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics", help="Total number of visits on tracked pages")
     page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics")
@@ -62,8 +53,7 @@ class WebsiteVisitor(models.Model):
 
     # Time fields
     create_date = fields.Datetime('First connection date', readonly=True)
-    last_connection_datetime = fields.Datetime('Last Connection', compute="_compute_time_statistics", help="Last page view date", search='_search_last_connection', readonly=True)
-    last_connections_ids = fields.One2many('website.visitor.lastconnection', 'visitor_id', readonly=True)
+    last_connection_datetime = fields.Datetime('Last Connection', default=fields.Datetime.now, help="Last page view date", readonly=True)
     time_since_last_action = fields.Char('Last action', compute="_compute_time_statistics", help='Time since last page view. E.g.: 2 minutes ago')
     is_connected = fields.Boolean('Is connected ?', compute='_compute_time_statistics', help='A visitor is considered as connected if his last page view was within the last 5 minutes.')
 
@@ -73,19 +63,6 @@ class WebsiteVisitor(models.Model):
             record.id,
             (record.name or _('Website Visitor #%s') % record.id)
         ) for record in self]
-
-    @api.model
-    def _search_last_connection(self, operator, value):
-        assert operator in expression.TERM_OPERATORS
-        self.env['website.visitor.lastconnection'].flush(['visitor_id'])
-        query = """
-            SELECT v.visitor_id
-            FROM website_visitor_lastconnection v
-            WHERE v.connection_datetime %s %%s
-            GROUP BY v.visitor_id, v.connection_datetime
-            ORDER BY v.connection_datetime
-        """ % (operator,)
-        return [('id', 'inselect', (query, [value]))]
 
     @api.depends('user_partner_id.email_normalized', 'user_partner_id.mobile')
     def _compute_email_phone(self):
@@ -132,16 +109,15 @@ class WebsiteVisitor(models.Model):
         for visitor in self:
             visitor.last_visited_page_id = mapped_data.get(visitor.id, False)
 
-    @api.depends('last_connections_ids')
+    @api.depends('last_connection_datetime')
     def _compute_time_statistics(self):
-        results = self.env['website.visitor.lastconnection'].read_group([('visitor_id', 'in', self.ids)], ['visitor_id', 'connection_datetime:max'], ['visitor_id'])
-        mapped_data = {result['visitor_id'][0]: result['connection_datetime'] for result in results}
+        results = self.env['website.visitor'].search_read([('id', 'in', self.ids)], ['id', 'last_connection_datetime'])
+        mapped_data = {result['id']: result['last_connection_datetime'] for result in results}
+
         for visitor in self:
-            last_connection_datetime = mapped_data.get(visitor.id, False)
-            if last_connection_datetime:
-                visitor.last_connection_datetime = last_connection_datetime
-                visitor.time_since_last_action = _format_time_ago(self.env, (datetime.now() - last_connection_datetime))
-                visitor.is_connected = (datetime.now() - last_connection_datetime) < timedelta(minutes=5)
+            last_connection_date = mapped_data[visitor.id]
+            visitor.time_since_last_action = _format_time_ago(self.env, (datetime.now() - last_connection_date))
+            visitor.is_connected = (datetime.now() - last_connection_date) < timedelta(minutes=5)
 
     def _prepare_visitor_send_mail_values(self):
         if self.user_partner_id.email:
@@ -227,10 +203,7 @@ class WebsiteVisitor(models.Model):
         if not last_view or last_view.visit_datetime < datetime.now() - timedelta(minutes=30):
             website_track_values['visitor_id'] = self.id
             self.env['website.track'].create(website_track_values)
-        self.env['website.visitor.lastconnection'].create({
-            'visitor_id': self.id,
-            'connection_datetime': website_track_values['visit_datetime']
-        })
+        self._update_visitor_last_visit()
 
     def _create_visitor(self, website_track_values=None):
         """ Create a visitor and add a track to it if website_track_values is set."""
@@ -240,7 +213,6 @@ class WebsiteVisitor(models.Model):
             'lang_id': request.lang.id,
             'country_id': country_id,
             'website_id': request.website.id,
-            'last_connections_ids': [(0, 0, {'connection_datetime': website_track_values['visit_datetime'] or datetime.now()})],
         }
         if not self.env.user._is_public():
             vals['user_partner_id'] = self.env.user.partner_id.id
@@ -250,28 +222,24 @@ class WebsiteVisitor(models.Model):
         return self.sudo().create(vals)
 
     def _cron_archive_visitors(self):
-        self.flush(['visit_count'])
-        yesterday = datetime.now() - timedelta(days=1)
-        query = """
-            UPDATE website_visitor
-            SET visit_count = visit_count + 1
-            WHERE id in (
-                SELECT visitor_id
-                FROM website_visitor_lastconnection
-                GROUP BY visitor_id
-                HAVING COUNT(*) > 1)
-        """
-        self.env.cr.execute(query, [yesterday])
-
-        query = """
-            DELETE FROM website_visitor_lastconnection
-            WHERE (visitor_id, connection_datetime) not in (
-               SELECT v.visitor_id, max(connection_datetime)
-               FROM website_visitor_lastconnection v
-               GROUP BY v.visitor_id)
-        """
-        self.env.cr.execute(query, [])
-
         one_week_ago = datetime.now() - timedelta(days=7)
         visitors_to_archive = self.env['website.visitor'].sudo().search([('last_connection_datetime', '<', one_week_ago)])
         visitors_to_archive.write({'active': False})
+
+    def _update_visitor_last_visit(self):
+        """ We need to do this part here to avoid concurrent updates error. """
+        with registry(self.env.cr.dbname).cursor() as cr:
+            date_now = datetime.now()
+            query = "UPDATE website_visitor SET "
+            if self.last_connection_datetime < (date_now - timedelta(hours=8)):
+                query += "visit_count = visit_count + 1,"
+            query += """
+                active = True,
+                last_connection_datetime = %s
+                WHERE id = %s
+            """
+            try:
+                cr.execute(query, (date_now, self.id), log_exceptions=False)
+                cr.commit()
+            except Exception:
+                cr.rollback()
