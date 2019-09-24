@@ -6,6 +6,7 @@ from . import test_account_move_closed_period
 from . import test_account_supplier_invoice
 from . import test_account_validate_account_move
 from . import test_account_invoice_rounding
+from . import test_account_move_rounding
 from . import test_bank_statement_reconciliation
 from . import test_fiscal_position
 from . import test_invoice_onchange
