@@ -94,6 +94,9 @@ var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 
+// field types that can be aggregated in grouped views
+const AGGREGATABLE_TYPES = ['float', 'integer', 'monetary'];
+
 var x2ManyCommands = {
     // (0, virtualID, {values})
     CREATE: 0,
@@ -4451,8 +4454,9 @@ var BasicModel = AbstractModel.extend({
                 _.each(groups, function (group) {
                     var aggregateValues = {};
                     _.each(group, function (value, key) {
-                        if (_.contains(fields, key) && key !== groupByField) {
-                            aggregateValues[key] = value;
+                        if (_.contains(fields, key) && key !== groupByField &&
+                            AGGREGATABLE_TYPES.includes(list.fields[key].type)) {
+                                aggregateValues[key] = value;
                         }
                     });
                     // When a view is grouped, we need to display the name of each group in
