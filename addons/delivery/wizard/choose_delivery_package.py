@@ -43,10 +43,7 @@ class ChooseDeliveryPackage(models.TransientModel):
             return {'warning': warning_mess}
 
     def put_in_pack(self):
-        move_line_ids = self.picking_id.move_line_ids.filtered(lambda ml:
-            float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
-            and not ml.result_package_id
-        )
+        move_line_ids = self.picking_id._get_move_lines_to_package()
         delivery_package = self.picking_id._put_in_pack(move_line_ids)
         # write shipping weight and product_packaging on 'stock_quant_package' if needed
         if self.delivery_packaging_id:
