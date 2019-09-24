@@ -251,15 +251,17 @@ class Survey(http.Controller):
     def print_survey(self, survey, token=None, **post):
         '''Display an survey in printable view; if <token> is set, it will
         grab the answers of the user_input_id that has <token>.'''
+        return self._print_survey(survey, token)
 
-        if survey.auth_required and request.env.user == request.website.user_id:
-            return request.render("survey.auth_required", {'survey': survey, 'token': token})
-
-        return request.render('survey.survey_print',
-                                      {'survey': survey,
-                                       'token': token,
-                                       'page_nr': 0,
-                                       'quizz_correction': True if survey.quizz_mode and token else False})
+    def _print_survey(self, survey, token=None):
+        return request.render(
+            'survey.survey_print', {
+                'survey': survey,
+                'token': token,
+                'page_nr': 0,
+                'quizz_correction': True if survey.quizz_mode and token else False
+            }
+        )
 
     @http.route(['/survey/results/<model("survey.survey"):survey>'],
                 type='http', auth='user', website=True)
