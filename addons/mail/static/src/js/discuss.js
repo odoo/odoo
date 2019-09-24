@@ -506,6 +506,7 @@ var Discuss = AbstractAction.extend({
      */
     _initRender: function () {
         var self = this;
+        this.$('.o_mail_discuss_loading').remove();
         this._basicComposer = new BasicComposer(this, {
             mentionPartnersRestricted: true,
             showTyping: true,
@@ -1420,7 +1421,6 @@ var Discuss = AbstractAction.extend({
         if (!this._isStarted) {
             return;
         }
-        this.$('.o_mail_discuss_loading').remove();
         this._initRender();
     },
     /**
