@@ -242,7 +242,7 @@ class ResPartner(models.Model):
             RIGHT JOIN account_account acc ON aml.account_id = acc.id
             WHERE acc.internal_type = %s
               AND NOT acc.deprecated AND acc.company_id = %s
-              AND move.state == 'posted'
+              AND move.state = 'posted'
             GROUP BY partner.id
             HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, self.env.user.company_id.id, sign, operand))
         res = self._cr.fetchall()
