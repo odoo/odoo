@@ -3076,7 +3076,12 @@ Fields:
             # The first part of the check verifies that all records linked via relation fields are compatible
             # with the company of the origin document, i.e. `self.account_id.company_id == self.company_id`
             for name in regular_fields:
-                if not (record[name].company_id <= company):
+                # Special case with `res.users` since an user can belong to multiple companies.
+                if record[name]._name == 'res.users' and record[name].company_ids:
+                    if not (company <= record[name].company_ids):
+                        inconsistent_fields.add(name)
+                        inconsistent_recs |= record
+                elif not (record[name].company_id <= company):
                     inconsistent_fields.add(name)
                     inconsistent_recs |= record
             # The second part of the check (for property / company-dependent fields) verifies that the records
@@ -3088,7 +3093,12 @@ Fields:
             else:
                 company = self.env.company
             for name in property_fields:
-                if not (record[name].company_id <= company):
+                # Special case with `res.users` since an user can belong to multiple companies.
+                if record[name]._name == 'res.users' and record[name].company_ids:
+                    if not (company <= record[name].company_ids):
+                        inconsistent_fields.add(name)
+                        inconsistent_recs |= record
+                elif not (record[name].company_id <= company):
                     inconsistent_fields.add(name)
                     inconsistent_recs |= record
 
