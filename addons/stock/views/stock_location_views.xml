@@ -184,6 +184,7 @@
                         </group>
                         <group>
                             <field name="warehouse_selectable" string="Warehouses"/>
+                            <field name="warehouse_domain_ids" invisible="1"/>
                             <field name="warehouse_ids"  widget="many2many_tags" nolabel="1"
                                    attrs="{'invisible': [('warehouse_selectable', '=', False)]}"/>
                         </group>
