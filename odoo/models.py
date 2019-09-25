@@ -22,6 +22,7 @@
 """
 
 import collections
+import contextlib
 import datetime
 import dateutil
 import fnmatch
@@ -872,18 +873,35 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         current[i] = field.convert_to_export(value, record)
                     else:
                         primary_done.append(name)
-
-                        # in import_compat mode, m2m should always be exported as
-                        # a comma-separated list of xids in a single cell
-                        if import_compatible and field.type == 'many2many' and len(path) > 1 and path[1] == 'id':
-                            xml_ids = [xid for _, xid in value.__ensure_xml_id()]
-                            current[i] = ','.join(xml_ids)
-                            continue
-
                         # recursively export the fields that follow name; use
                         # 'display_name' where no subfield is exported
                         fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
                                    for p in fields]
+
+                        # in import_compat mode, m2m should always be exported as
+                        # a comma-separated list of xids or names in a single cell
+                        if import_compatible and field.type == 'many2many':
+                            index = None
+                            # find out which subfield the user wants & its
+                            # location as we might not get it as the first
+                            # column we encounter
+                            for name in ['id', 'name', 'display_name']:
+                                with contextlib.suppress(ValueError):
+                                    index = fields2.index([name])
+                                    break
+                            if index is None:
+                                # not found anything, assume we just want the
+                                # name_get in the first column
+                                name = None
+                                index = i
+
+                            if name == 'id':
+                                xml_ids = [xid for _, xid in value.__ensure_xml_id()]
+                                current[index] = ','.join(xml_ids) or False
+                            else:
+                                current[index] = field.convert_to_export(value, record) or False
+                            continue
+
                         lines2 = value._export_rows(fields2, _is_toplevel_call=False)
                         if lines2:
                             # merge first line with record's main line
