@@ -1033,6 +1033,9 @@ class Meeting(models.Model):
                     'event_id': meeting.id,
                 }
 
+                if self._context.get('google_internal_event_id', False):
+                    values['google_internal_event_id'] = self._context.get('google_internal_event_id')
+
                 # current user don't have to accept his own meeting
                 if partner == self.env.user.partner_id:
                     values['state'] = 'accepted'
