@@ -2503,7 +2503,9 @@ class AccountMoveLine(models.Model):
             elif self.account_id.tax_ids:
                 tax_ids = self.account_id.tax_ids
             else:
-                tax_ids = None
+                tax_ids = self.env['account.tax']
+            if not tax_ids and not self.exclude_from_invoice_tab:
+                tax_ids = self.move_id.company_id.account_sale_tax_id
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
             if self.product_id.supplier_taxes_id:
@@ -2511,7 +2513,9 @@ class AccountMoveLine(models.Model):
             elif self.account_id.tax_ids:
                 tax_ids = self.account_id.tax_ids
             else:
-                tax_ids = None
+                tax_ids = self.env['account.tax']
+            if not tax_ids and not self.exclude_from_invoice_tab:
+                tax_ids = self.move_id.company_id.account_purchase_tax_id
         else:
             # Miscellaneous operation.
             tax_ids = self.account_id.tax_ids
@@ -2732,8 +2736,10 @@ class AccountMoveLine(models.Model):
 
     @api.onchange('account_id')
     def _onchange_account_id(self):
-        ''' Recompute 'tax_ids' based on 'account_id'. '''
-        if not self.display_type in ('line_section', 'line_note'):
+        ''' Recompute 'tax_ids' based on 'account_id'.
+        /!\ Don't remove existing taxes if there is no explicit taxes set on the account.
+        '''
+        if not self.display_type and (self.account_id.tax_ids or not self.tax_ids):
             self.tax_ids = self._get_computed_taxes()
 
     def _onchange_balance(self):

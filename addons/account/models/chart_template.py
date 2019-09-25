@@ -250,11 +250,6 @@ class AccountChartTemplate(models.Model):
         company.account_sale_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company.id)], limit=1).id
         company.account_purchase_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company.id)], limit=1).id
 
-        # set default taxes to income/expense accounts
-        if company.account_sale_tax_id:
-            self.env['account.account'].browse(acc_template_ref.values()).filtered(lambda x: x.user_type_id.internal_group == 'income' and x != company.income_currency_exchange_account_id).tax_ids = company.account_sale_tax_id
-        if company.account_purchase_tax_id:
-            self.env['account.account'].browse(acc_template_ref.values()).filtered(lambda x: x.user_type_id.internal_group == 'expense' and x != company.expense_currency_exchange_account_id).tax_ids = company.account_purchase_tax_id
         return {}
 
     @api.model
