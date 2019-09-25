@@ -572,7 +572,7 @@ class ProductProduct(models.Model):
                 'target': 'new'}
 
     def _prepare_sellers(self, params):
-        return self.seller_ids.sorted(lambda s: (s.sequence, -s.min_qty, s.price))
+        return self.seller_ids.filtered(lambda s: s.name.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price))
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
@@ -710,7 +710,6 @@ class SupplierInfo(models.Model):
         'res.partner', 'Vendor',
         ondelete='cascade', required=True,
         help="Vendor of this product", check_company=True)
-    active = fields.Boolean(related='name.active', readonly=True)
     product_name = fields.Char(
         'Vendor Product Name',
         help="This vendor's product name will be used when printing a request for quotation. Keep empty to use the internal one.")
