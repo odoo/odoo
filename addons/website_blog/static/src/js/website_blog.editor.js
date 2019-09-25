@@ -75,12 +75,6 @@ WysiwygMultizone.include({
      */
     start: function () {
         $('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
-        _.each($('.oe_structure[data-editor-message!="False"]'), function (el) {
-            if (!$.trim($(el).html()).length) {
-                $(el).empty();
-            }
-            $(el).toggleClass('oe_empty', !$.trim($(el).html()).length);
-        });
         return this._super.apply(this, arguments);
     },
 });

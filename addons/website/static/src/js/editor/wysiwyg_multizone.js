@@ -77,6 +77,15 @@ var WysiwygMultizone = Wysiwyg.extend({
                 });
         });
 
+        // TODO review why this is needed
+        _.each(this.$('.oe_structure[data-editor-message!="False"]'), el => {
+            var isBlank = !el.innerHTML.trim();
+            if (isBlank) {
+                el.innerHTML = '';
+            }
+            el.classList.toggle('oe_empty', isBlank);
+        });
+
         return this._super.apply(this, arguments).then(() => {
             // Showing Mega Menu snippets if one dropdown is already opened
             if (this.$('.o_mega_menu').hasClass('show')) {
