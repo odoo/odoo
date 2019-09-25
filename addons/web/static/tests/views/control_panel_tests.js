@@ -1,16 +1,18 @@
 odoo.define('web.control_panel_tests', function (require) {
 "use strict";
 
-var ControlPanelView = require('web.ControlPanelView');
-var testUtils = require('web.test_utils');
+const AbstractAction = require('web.AbstractAction');
+const ControlPanelView = require('web.ControlPanelView');
+const core = require('web.core');
+const testUtils = require('web.test_utils');
 
-var createControlPanel = testUtils.createControlPanel;
+const createActionManager = testUtils.createActionManager;
+const createControlPanel = testUtils.createControlPanel;
 
-function createControlPanelFactory(arch, fields, params) {
-    params = params || {};
+function createControlPanelFactory(arch, fields) {
     arch = arch || "<search></search>";
     fields = fields || {};
-    var viewInfo = {arch:  arch, fields: fields};
+    var viewInfo = {arch: arch, fields: fields};
     var controlPanelFactory = new ControlPanelView({viewInfo: viewInfo, context: {}});
     return controlPanelFactory;
 }
@@ -337,29 +339,6 @@ QUnit.module('Views', {
         );
     });
 
-    QUnit.module('Control Panel Rendering');
-
-    QUnit.test('invisible filters are not rendered', async function (assert) {
-        assert.expect(2);
-        var controlPanel = await createControlPanel({
-            model: 'partner',
-            arch: "<search>" +
-                        "<filter name=\"filterA\" string=\"A\" domain=\"[]\"/>" +
-                        "<filter name=\"filterB\" string=\"B\" invisible=\"1\" domain=\"[]\"/>" +
-                    "</search>",
-            data: this.data,
-            searchMenuTypes: ['filter'],
-            context: {
-                search_disable_custom_filters: true,
-            },
-        });
-        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
-        assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
-        assert.containsOnce(controlPanel, '.o_menu_item.d-none a:contains("B")');
-
-        controlPanel.destroy();
-    });
-
     QUnit.module('Control Panel behaviour');
 
     QUnit.test('remove a facet with backspace', async function (assert) {
@@ -396,6 +375,26 @@ QUnit.module('Views', {
     });
 
     QUnit.module('Control Panel Rendering');
+
+    QUnit.test('default breadcrumb in abstract action', async function (assert) {
+        assert.expect(1);
+
+        const ConcreteAction = AbstractAction.extend({
+            hasControlPanel: true,
+        });
+        core.action_registry.add('ConcreteAction', ConcreteAction);
+
+        const actionManager = await createActionManager();
+        await actionManager.doAction({id: 1,
+            name: 'A Concrete Action',
+            tag: 'ConcreteAction',
+            type: 'ir.actions.client',
+        });
+
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'A Concrete Action');
+
+        actionManager.destroy();
+    });
 
     QUnit.test('invisible filters are not rendered', async function (assert) {
         assert.expect(2);
