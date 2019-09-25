@@ -1465,8 +1465,15 @@ class Lead(models.Model):
             lead_probabilities = leads_to_update._pls_get_naive_bayes_probabilities(batch_mode=True)
 
             # Update in execute batch to avoid server roundtrips + page_size to 10000 to avoid memory errors
-            sql = "update crm_lead set automated_probability = %s where id = %s"
-            batch_params = [(lead_probabilities[lead.id], lead.id) for lead in leads_to_update if lead.id in lead_probabilities]
+            # Update both probability and automated_probability if they were equal, else, update only automated_probability
+            sql = """UPDATE crm_lead
+                        SET automated_probability = %s,
+                            probability = CASE WHEN (ROUND(probability::numeric, 2) = ROUND(automated_probability::numeric, 2) or probability is null)
+                                               THEN (%s)
+                                               ELSE (probability)
+                                               END
+                        WHERE id = %s"""
+            batch_params = [(lead_probabilities[lead.id], lead_probabilities[lead.id], lead.id) for lead in leads_to_update if lead.id in lead_probabilities]
             extras.execute_batch(self._cr, sql, batch_params, page_size=10000)
             _logger.info("Predictive Lead Scoring : all automated probability updated (count: %d)" % (len(leads_to_update)))
 
