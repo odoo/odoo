@@ -597,8 +597,6 @@ class TestMrpOrder(TestMrpCommon):
             'mo_id': mo.id,
             'product_qty': 3,
         })
-        with self.assertRaises(UserError):
-            update_quantity_wizard.change_prod_qty()
 
         mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity_done = 0
         update_quantity_wizard.change_prod_qty()
