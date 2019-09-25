@@ -1318,6 +1318,7 @@ class Lead(models.Model):
 
         # get stages
         first_stage_id = self.env['crm.stage'].search([], order='sequence', limit=1)
+        won_stage_ids = self.env['crm.stage'].search([('is_won', '=', True)]).ids
 
         # Get all leads values, no matter the team_id
         leads_values_dict = self._pls_get_lead_pls_values(batch_mode=batch_mode)
@@ -1326,8 +1327,11 @@ class Lead(models.Model):
 
         # Get unique couples to search in frequency table
         leads_values = set()
-        for values in leads_values_dict.values():
+        won_leads = set()
+        for lead_id, values in leads_values_dict.items():
             for couple in values['values']:
+                if couple[0] == 'stage_id' and couple[1] in won_stage_ids:
+                    won_leads.add(lead_id)
                 leads_values.add(couple)
 
         # get all variable related records from frequency table, no matter the team_id
@@ -1376,6 +1380,10 @@ class Lead(models.Model):
             lead_fields = [value[0] for value in lead_values.get('values', [])]
             if not 'stage_id' in lead_fields:
                 lead_probabilities[lead_id] = 0
+                continue
+            # if lead stage is won, return 100
+            elif lead_id in won_leads:
+                lead_probabilities[lead_id] = 100
                 continue
 
             lead_team_id = lead_values['team_id'] if lead_values['team_id'] else 0  # team_id = None -> Convert to 0
