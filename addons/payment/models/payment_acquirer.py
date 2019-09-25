@@ -1038,6 +1038,7 @@ class PaymentToken(models.Model):
     short_name = fields.Char('Short name', compute='_compute_short_name')
     partner_id = fields.Many2one('res.partner', 'Partner', required=True)
     acquirer_id = fields.Many2one('payment.acquirer', 'Acquirer Account', required=True)
+    company_id = fields.Many2one(related='acquirer_id.company_id', store=True, index=True)
     acquirer_ref = fields.Char('Acquirer Ref.', required=True)
     active = fields.Boolean('Active', default=True)
     payment_ids = fields.One2many('payment.transaction', 'payment_token_id', 'Payment Transactions')
