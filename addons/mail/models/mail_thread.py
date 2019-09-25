@@ -1384,7 +1384,7 @@ class MailThread(models.AbstractModel):
         msg_dict['cc'] = ','.join(email_cc_list) if email_cc_list else email_cc
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        msg_dict['recipients'] = ','.join(formatted_email
+        msg_dict['recipients'] = ','.join(set(formatted_email
             for address in [
                 tools.decode_message_header(message, 'Delivered-To'),
                 tools.decode_message_header(message, 'To'),
@@ -1392,14 +1392,15 @@ class MailThread(models.AbstractModel):
                 tools.decode_message_header(message, 'Resent-To'),
                 tools.decode_message_header(message, 'Resent-Cc')
             ] if address
-            for formatted_email in tools.email_split_and_format(address)
+            for formatted_email in tools.email_split_and_format(address))
         )
-        msg_dict['to'] = ','.join(formatted_email
+        msg_dict['to'] = ','.join(set(formatted_email
             for address in [
                 tools.decode_message_header(message, 'Delivered-To'),
                 tools.decode_message_header(message, 'To')
             ] if address
             for formatted_email in tools.email_split_and_format(address))
+        )
         partner_ids = [x.id for x in self._mail_find_partner_from_emails(tools.email_split(msg_dict['recipients']), records=self) if x]
         msg_dict['partner_ids'] = partner_ids
         # compute references to find if email_message is a reply to an existing thread
