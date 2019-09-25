@@ -619,6 +619,10 @@ class SaleOrder(models.Model):
         ''' Opens a wizard to compose an email, with relevant mail template loaded by default '''
         self.ensure_one()
         template_id = self._find_mail_template()
+        lang = self.env.context.get('lang')
+        template = self.env['mail.template'].browse(template_id)
+        if template.lang:
+            lang = template._render_template(template.lang, 'sale.order', self.ids[0])
         ctx = {
             'default_model': 'sale.order',
             'default_res_id': self.ids[0],
@@ -629,7 +633,7 @@ class SaleOrder(models.Model):
             'custom_layout': "mail.mail_notification_paynow",
             'proforma': self.env.context.get('proforma', False),
             'force_email': True,
-            'model_description': self.type_name
+            'model_description': self.with_context(lang=lang).type_name,
         }
         return {
             'type': 'ir.actions.act_window',
