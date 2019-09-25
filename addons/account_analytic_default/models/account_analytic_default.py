@@ -73,11 +73,11 @@ class AccountMoveLine(models.Model):
         defaults = super().default_get(fields_list)
         if {'account_analytic_id', 'analytic_tag_ids'} & set(fields_list):
             rec = self.env['account.analytic.default'].account_get(
-                self.product_id.id,
-                self.invoice_id.commercial_partner_id.id,
-                self.invoice_id.user_id.id or self.env.uid,
-                fields.Date.today(),
-                company_id=self.company_id.id
+                product_id=self.product_id.id,
+                partner_id=self.move_id.commercial_partner_id.id,
+                user_id=self.move_id.user_id.id or self.env.uid,
+                date=fields.Date.today(),
+                company_id=self.company_id.id,
             )
             if rec:
                 if 'account_analytic_id' in fields_list:
