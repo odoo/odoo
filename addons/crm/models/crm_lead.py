@@ -481,9 +481,24 @@ class Lead(models.Model):
     # Actions Methods
     # ----------------------------------------
 
+    def _rebuild_pls_frequency_table_threshold(self):
+        """ Called by action_set_lost and action_set_won.
+         Will run the cron to update the frequency table only if the number of lead is above
+         a specified value (from config_parameter) for onboarding purpose.
+         Once the threshold is reached, the config_param is set to 0 to avoid re-run the cron
+         and, mainly, to avoid making useless search_count in the future."""
+        pls_threshold = int(self.env['ir.config_parameter'].sudo().get_param('crm.pls_rebuild_threshold'))
+        if pls_threshold:
+            lead_count = self.env['crm.lead'].sudo().search_count([])
+            if lead_count < pls_threshold:
+                self.sudo()._cron_update_automated_probabilities()
+            else:
+                self.env['ir.config_parameter'].sudo().set_param('crm.pls_rebuild_threshold', 0)
+
     def action_set_lost(self, **additional_values):
         """ Lost semantic: probability = 0 or active = False """
         result = self.write({'active': False, 'probability': 0, **additional_values})
+        self._rebuild_pls_frequency_table_threshold()
         return result
 
     def action_set_won(self):
@@ -491,6 +506,7 @@ class Lead(models.Model):
         for lead in self:
             stage_id = lead._stage_find(domain=[('is_won', '=', True)])
             lead.write({'stage_id': stage_id.id, 'probability': 100})
+        self._rebuild_pls_frequency_table_threshold()
         return True
 
     def action_set_automated_probability(self):
