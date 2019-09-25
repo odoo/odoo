@@ -10,8 +10,10 @@ class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
     payment_transaction_id = fields.Many2one('payment.transaction', string='Payment Transaction', readonly=True)
-    payment_token_id = fields.Many2one('payment.token', string="Saved payment token", domain=[('acquirer_id.capture_manually', '=', False)],
-                                       help="Note that tokens from acquirers set to only authorize transactions (instead of capturing the amount) are not available.")
+    payment_token_id = fields.Many2one(
+        'payment.token', string="Saved payment token",
+        domain="[('acquirer_id.capture_manually', '=', False), ('company_id', '=', company_id)]",
+        help="Note that tokens from acquirers set to only authorize transactions (instead of capturing the amount) are not available.")
 
     def _get_payment_chatter_link(self):
         self.ensure_one()
