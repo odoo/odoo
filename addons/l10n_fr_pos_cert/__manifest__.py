@@ -30,6 +30,7 @@ The module adds following features:
         'views/account_views.xml',
         'views/l10n_fr_pos_cert_templates.xml',
         'views/pos_views.xml',
+        'report/pos_hash_integrity.xml',
     ],
     'qweb': ['static/src/xml/pos.xml'],
     'post_init_hook': '_setup_inalterability',
