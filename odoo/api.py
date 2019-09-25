@@ -840,7 +840,7 @@ class Cache(object):
     def check(self, env):
         """ Check the consistency of the cache for the given environment. """
         # flush fields to be recomputed before evaluating the cache
-        env['res.partner'].recompute()
+        env['base'].flush()
 
         # make a full copy of the cache, and invalidate it
         dump = defaultdict(dict)
