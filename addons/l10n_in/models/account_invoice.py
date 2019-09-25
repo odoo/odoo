@@ -36,6 +36,7 @@ class AccountMove(models.Model):
         res['product_id'] = tax_line.product_id.id
         return res
 
+<<<<<<< HEAD
     @api.model
     def _get_tax_grouping_key_from_base_line(self, base_line, tax_vals):
         # OVERRIDE to group taxes also by product.
@@ -45,4 +46,51 @@ class AccountMove(models.Model):
             'product_uom_id': base_line.product_uom_id.id,
             'quantity': base_line.quantity,
         })
+=======
+    def _prepare_tax_line_vals(self, line, tax):
+        vals = super(AccountInvoice, self)._prepare_tax_line_vals(line, tax)
+        vals['l10n_in_product_id'] = line.product_id.id
+        vals['l10n_in_uom_id'] = line.uom_id.id
+        vals['l10n_in_quantity'] = line.quantity
+        return vals
+
+    def _prepare_tax_line_vals_for_refund(self, tax_line, refund_repartition_line):
+        res = super(AccountInvoice, self)._prepare_tax_line_vals_for_refund(tax_line, refund_repartition_line)
+        res['l10n_in_product_id'] = tax_line.l10n_in_product_id.id
+        res['l10n_in_uom_id'] = tax_line.l10n_in_uom_id.id
+        res['l10n_in_quantity'] = tax_line.l10n_in_quantity
         return res
+
+    @api.multi
+    def get_taxes_values(self, tax_group_fields=False):
+        if tax_group_fields:
+            tax_group_fields |= set(['l10n_in_quantity'])
+        else:
+            tax_group_fields = set(['l10n_in_quantity'])
+        return super(AccountInvoice, self).get_taxes_values(tax_group_fields)
+
+
+class AccountInvoiceTax(models.Model):
+    _inherit = "account.invoice.tax"
+
+    l10n_in_product_id = fields.Many2one('product.product', string='Product')
+    l10n_in_uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
+    l10n_in_quantity = fields.Float(string='Quantity')
+
+    @api.multi
+    def _prepare_invoice_tax_val(self):
+        res = super(AccountInvoiceTax, self)._prepare_invoice_tax_val()
+        res['l10n_in_product_id'] = self.l10n_in_product_id.id
+        res['l10n_in_uom_id'] = self.l10n_in_uom_id.id
+>>>>>>> 1c9e08ef247... temp
+        return res
+
+    @api.model
+    def _get_tax_key_for_group_add_base(self, taxline):
+        tax_key = super(AccountInvoiceTax, self)._get_tax_key_for_group_add_base(taxline)
+        if taxline.invoice_id.company_id.country_id.code == 'IN':
+            tax_key += [
+                taxline.l10n_in_product_id,
+                taxline.l10n_in_uom_id
+            ]
+        return tax_key
