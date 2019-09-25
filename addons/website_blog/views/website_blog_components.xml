@@ -43,22 +43,6 @@
     </t>
 </template>
 
-<!-- ======   Template: COVER   ================================================
-============================================================================ -->
-<template id="blog_cover">
-    <div
-        t-att-data-use_size="use_size"
-        t-att-data-use_filters="use_filters"
-        t-att-data-use_text_size="use_text_size"
-        t-att-data-use_text_align="use_text_align"
-        t-attf-class="o_blog_cover_container d-flex flex-column #{use_size and cover_properties.get('resize_class') or ''}  #{use_text_size and cover_properties.get('text_size_class') or ''} #{use_text_align and cover_properties.get('text_align_class') or ''} #{additionnal_classes or ''}">
-
-        <div class="o_blog_cover_component o_blog_cover_image" t-attf-style="background-image: #{cover_properties.get('background-image')};"/>
-        <div t-if="use_filters" t-attf-class="o_blog_cover_component o_blog_cover_filter #{cover_properties.get('background-color')}" t-attf-style="opacity: #{cover_properties.get('opacity', 0.0)};"/>
-        <t t-raw="0"/>
-    </div>
-</template>
-
 <!-- ======   Template: Date Selector   ========================================
 ============================================================================ -->
 <template id="date_selector">
