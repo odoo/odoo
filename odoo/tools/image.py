@@ -215,8 +215,8 @@ class ImageProcess():
                 new_w, new_h = (new_w * h) // new_h, h
 
             # Correctly place the center of the crop.
-            x_offset = (w - new_w) * center_x
-            h_offset = (h - new_h) * center_y
+            x_offset = int((w - new_w) * center_x)
+            h_offset = int((h - new_h) * center_y)
 
             if new_w != w or new_h != h:
                 self.image = self.image.crop((x_offset, h_offset, x_offset + new_w, h_offset + new_h))
