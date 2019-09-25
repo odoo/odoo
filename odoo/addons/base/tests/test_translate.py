@@ -429,6 +429,8 @@ class TestTranslationWrite(TransactionCase):
         })
 
         self.category.with_context(lang='en_US').write({'name': 'English Name'})
+        translation.flush()
+        translation.invalidate_cache()
         translation_value = translation.read(['value'])
         self.assertEqual(translation_value[0]['value'], "English Name", "Existing translation was not updated")
 
@@ -471,6 +473,8 @@ class TestTranslationWrite(TransactionCase):
 
         self.category.with_context(lang='fr_FR').write({'name': 'French Name'})
         self.category.with_context(lang='en_US').write({'name': 'English Name'})
+        self.category.flush()
+        self.category.invalidate_cache()
         translations = self.env['ir.translation'].search([
             ('name', '=', 'res.partner.category,name'),
             ('res_id', '=', self.category.id),

@@ -1434,6 +1434,8 @@ class _String(Field):
             if single_lang:
                 # a single language is installed
                 update_trans = True
+                if records.env.lang:
+                    cache.update(records.with_context(lang=None), self, [cache_value] * len(records))
             elif callable(self.translate) or lang == 'en_US':
                 # update the source and synchronize translations
                 update_column = True
