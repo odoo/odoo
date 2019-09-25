@@ -24,7 +24,7 @@ $o-wblog-title-sizes-variants: (
         title: $display1-size,
         subtitle: $lead-font-size*1.75
     )
-);
+) !default;
 
 // ======= ANIMATIONS =======
 // Attention keeper for the "scroll down" top-banner button
@@ -72,21 +72,6 @@ $o-wblog-title-sizes-variants: (
     }
 
     background-image: linear-gradient(#{$stops});
-}
-
-// ======== Cover container =========
-// A generic component that can be used even outside blog using snippets.
-// In website_blog it's used for blog post posts.
-.o_blog_cover_container {
-    position: relative;
-
-    .o_blog_cover_component {
-        @include o-position-absolute(0, 0, 0, 0);
-
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
 }
 
 //------------------------------------------------------------------------------
@@ -191,19 +176,19 @@ $o-wblog-title-sizes-variants: (
     // ==============================================
     .o_wblog_post_page_cover {
         // By default (no image defined), inner filters elements are hidden.
-        .o_blog_cover_component {
+        .o_record_cover_component {
             display: none;
         }
 
         // If a cover image is defined, show filters + adapt inner typography
-        &.o_wblog_has_cover {
-            .o_blog_cover_image:after {
+        &.o_record_has_cover {
+            .o_record_cover_image:after {
                 content: "";
                 display: block;
                 @include o-position-absolute(0,0,50%,0);
                 @include o-wbblog-scrim-gradient(rgba(black, 0.5), transparent);
             }
-            .o_blog_cover_component {
+            .o_record_cover_component {
                 display: block;
             }
 
@@ -254,7 +239,7 @@ $o-wblog-title-sizes-variants: (
             // "Regular Cover" design sizes
             // ==============================================
             &.o_wblog_post_page_cover_regular {
-                .o_blog_cover_image:after {
+                .o_record_cover_image:after {
                     visibility: hidden;
                 }
 
@@ -294,7 +279,7 @@ $o-wblog-title-sizes-variants: (
 
     // Size variants
     @each $size, $map in $o-wblog-title-sizes-variants {
-        .o_wblog_cover_font_#{$size} .o_wblog_post_title {
+        .o_record_cover_font_#{$size} .o_wblog_post_title {
             #o_wblog_post_name {
                 @include font-size(map-get($map, title));
             }
@@ -343,14 +328,14 @@ $o-wblog-title-sizes-variants: (
     // Blog Index Pages
     // ==============================================
     #o_wblog_posts_loop {
-        .o_blog_cover_container {
+        .o_record_cover_container {
             box-shadow: inset 0 0 0 1px rgba(white, 0.3);
             background: rgba(black, 0.1);
 
             padding-top: 33%;
             height: auto!important;
 
-            &:hover .o_blog_cover_image {
+            &:hover .o_record_cover_image {
                 opacity: 0.8;
             }
         }
@@ -366,10 +351,10 @@ $o-wblog-title-sizes-variants: (
         }
 
         &.o_wblog_list_view {
-            .o_blog_cover_container {
+            .o_record_cover_container {
                 padding-top: 20%;
             }
-            .o_wblog_post_cover_nocard .o_blog_cover_container {
+            .o_wblog_post_cover_nocard .o_record_cover_container {
                 padding-top: 33%;
             }
         }
@@ -380,7 +365,7 @@ $o-wblog-title-sizes-variants: (
     // ==============================================
     body.editor_enable & {
         // Make empty covers visible in edit mode
-        .o_blog_cover_container.o_wblog_post_page_cover:not(.o_wblog_has_cover) {
+        .o_record_cover_container.o_wblog_post_page_cover:not(.o_record_has_cover) {
             background-color: $gray-100;
             padding: 30px 0;
             border: 1px dashed $gray-500;
@@ -445,7 +430,7 @@ $o-wblog-title-sizes-variants: (
         .s_latest_posts_post_cover {
             min-height: 100%;
 
-            .o_blog_cover_container {
+            .o_record_cover_container {
                 top: 0;
             }
         }
