@@ -17,16 +17,17 @@ class StockProductionLot(models.Model):
         help='This is the date on which the goods with this Serial Number should be removed from the stock. This date will be used in FEFO removal strategy.')
     alert_date = fields.Datetime(string='Alert Date',
         help='Date to determine the expired lots and serial numbers using the filter "Expiration Alerts".')
-    product_expiry_alert = fields.Boolean(compute='_compute_product_expiry_alert', help="The Alert Date has been reached.")
+    product_expiry_alert = fields.Boolean(compute='_compute_product_expiry_alert', help="The Expiration Date has been reached.")
     product_expiry_reminded = fields.Boolean(string="Expiry has been reminded")
 
-    @api.depends('alert_date')
+    @api.depends('expiration_date')
     def _compute_product_expiry_alert(self):
         current_date = fields.Datetime.now()
-        lots = self.filtered(lambda l: l.alert_date)
-        for lot in lots:
-            lot.product_expiry_alert = lot.alert_date <= current_date
-        (self - lots).product_expiry_alert = False
+        for lot in self:
+            if lot.expiration_date:
+                lot.product_expiry_alert = lot.expiration_date <= current_date
+            else:
+                lot.product_expiry_alert = False
 
     def _get_dates(self, product_id=None):
         """Returns dates based on number of days configured in current lot's product."""
