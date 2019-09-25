@@ -3973,6 +3973,49 @@ QUnit.module('Views', {
         list.el.click();
 
         assert.strictEqual(list.$('.o_data_row:first').text(), "aaa", "value should have been updated");
+        list.destroy();
+    });
+
+    QUnit.test('readonly boolean in editable list is readonly', function (assert) {
+        assert.expect(6);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                      '<field name="foo"/>' +
+                      '<field name="bar" attrs="{\'readonly\': [(\'foo\', \'!=\', \'yop\')]}"/>' +
+                  '</tree>',
+        });
+
+        // clicking on disabled checkbox with active row does not work
+        var $disabledCell = list.$('.o_data_row:eq(1) .o_data_cell:last-child');
+        $disabledCell.prev().click();
+        assert.strictEqual($disabledCell.find(':disabled:checked').length, 1);
+        var $disabledLabel = $disabledCell.find('.custom-control-label');
+        $disabledLabel.click();
+        assert.strictEqual($disabledCell.find(':checked').length, 1,
+            "clicking disabled checkbox did not work"
+        );
+        assert.ok(
+            $(document.activeElement).is('input[type="text"]'),
+            "disabled checkbox is not focused after click"
+        );
+
+        // clicking on enabled checkbox with active row toggles check mark
+        var $enabledCell = list.$('.o_data_row:eq(0) .o_data_cell:last-child');
+        $enabledCell.prev().click();
+        assert.strictEqual($enabledCell.find(':checked:not(:disabled)').length, 1);
+        var $enabledLabel = $enabledCell.find('span');
+        $enabledLabel.click();
+        assert.strictEqual($enabledCell.find(':checked').length, 0,
+            "clicking enabled checkbox worked and unchecked it"
+        );
+        assert.ok(
+            $(document.activeElement).is('input[type="checkbox"]'),
+            "enabled checkbox is focused after click"
+        );
 
         list.destroy();
     });
