@@ -28,6 +28,10 @@
             <field name="key">crm.pls_start_date</field>
             <field name="value" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d')"/>
         </record>
+        <record id="crm_pls_rebuild_threshold_param" model="ir.config_parameter">
+            <field name="key">crm.pls_rebuild_threshold</field>
+            <field name="value">100</field>
+        </record>
     </data>
 
 	<record id="website_crm_score_cron" model="ir.cron">
