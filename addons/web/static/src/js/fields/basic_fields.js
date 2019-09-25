@@ -689,7 +689,7 @@ var FieldBoolean = AbstractField.extend({
      * @returns {jQuery} the focusable checkbox input
      */
     getFocusableElement: function () {
-        return this.$input || $();
+        return this.mode === 'readonly' ? $() : this.$input;
     },
     /**
      * A boolean field is always set since false is a valid value.
