@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api
+from datetime import timedelta
+
+from odoo import api, fields, models
 from odoo.http import request
 
 
@@ -50,7 +52,6 @@ class SaleOrder(models.Model):
                     })
                     order.website_order_line -= program_lines
 
-
     def _compute_cart_info(self):
         super(SaleOrder, self)._compute_cart_info()
         for order in self:
@@ -75,3 +76,20 @@ class SaleOrder(models.Model):
             return self.env['sale.order.line']
         free_shipping_product_ids = free_shipping_prgs_ids.mapped('discount_line_product_id')
         return self.order_line.filtered(lambda l: l.product_id in free_shipping_product_ids)
+
+    @api.model
+    def _garbage_collector(self, *args, **kwargs):
+        """Remove/free coupon from abandonned ecommerce order."""
+        ICP = self.env['ir.config_parameter']
+        validity = ICP.get_param('website_sale_coupon.abandonned_coupon_validity', 4)
+        validity = fields.Datetime.to_string(fields.datetime.now() - timedelta(days=int(validity)))
+        coupon_to_reset = self.env['sale.coupon'].search([
+            ('state', '=', 'used'),
+            ('sales_order_id.state', '=', 'draft'),
+            ('sales_order_id.write_date', '<', validity),
+            ('sales_order_id.website_id', '!=', False),
+        ])
+        for coupon in coupon_to_reset:
+            coupon.sales_order_id.applied_coupon_ids -= coupon
+        coupon_to_reset.write({'state': 'new'})
+        coupon_to_reset.mapped('sales_order_id').recompute_coupon_lines()
