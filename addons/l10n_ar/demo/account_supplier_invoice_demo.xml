@@ -22,9 +22,9 @@
         ]"/>
     </record>
 
-    <!-- Invoice from Asustek with vat 21, 27 and 10,5 -->
+    <!-- Invoice from Foreign with vat 21, 27 and 10,5 -->
     <record id="demo_sup_invoice_2" model="account.move">
-        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="partner_id" ref="res_partner_foreign"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">in_invoice</field>
@@ -37,9 +37,9 @@
         ]"/>
     </record>
 
-    <!-- Invoice from Asustek with vat zero and 21 -->
+    <!-- Invoice from Foreign with vat zero and 21 -->
     <record id="demo_sup_invoice_3" model="account.move">
-        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="partner_id" ref="res_partner_foreign"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">in_invoice</field>
@@ -51,9 +51,9 @@
         ]"/>
     </record>
 
-    <!-- Invoice to Asustek with vat exempt and 21 -->
+    <!-- Invoice to Foreign with vat exempt and 21 -->
     <record id="demo_sup_invoice_4" model="account.move">
-        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="partner_id" ref="res_partner_foreign"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">in_invoice</field>
@@ -65,9 +65,9 @@
         ]"/>
     </record>
 
-    <!-- Invoice to Asustek with all type of taxes  -->
+    <!-- Invoice to Foreign with all type of taxes  -->
     <record id="demo_sup_invoice_5" model="account.move">
-        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="partner_id" ref="res_partner_foreign"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">in_invoice</field>
@@ -132,6 +132,7 @@
         <field name="product_id" ref="l10n_ar.product_product_quote_despacho"/>
         <field name="product_uom_id" ref="uom.product_uom_unit"/>
         <field name="tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA 21%'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        <field name="account_id" model="account.move.line" eval="obj().env.ref('l10n_ar.product_product_quote_despacho').categ_id.property_account_income_categ_id.id"/>
     </record>
     <record id="demo_despacho_1_line_2" model="account.move.line" context="{'check_move_validity': False}">
         <field name="move_id" ref="demo_despacho_1"/>
@@ -141,6 +142,7 @@
         <field name="product_id" ref="l10n_ar.product_product_tasa_estadistica"/>
         <field name="product_uom_id" ref="uom.product_uom_unit"/>
         <field name="tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA 21%'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        <field name="account_id" model="account.move.line" eval="obj().env.ref('l10n_ar.product_product_tasa_estadistica').categ_id.property_account_income_categ_id.id"/>
     </record>
     <record id="demo_despacho_1_line_3" model="account.move.line" context="{'check_move_validity': False}">
         <field name="move_id" ref="demo_despacho_1"/>
@@ -150,6 +152,7 @@
         <field name="product_id" ref="l10n_ar.product_product_arancel"/>
         <field name="product_uom_id" ref="uom.product_uom_unit"/>
         <field name="tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        <field name="account_id" model="account.move.line" eval="obj().env.ref('l10n_ar.product_product_arancel').categ_id.property_account_income_categ_id.id"/>
     </record>
     <record id="demo_despacho_1_line_4" model="account.move.line" context="{'check_move_validity': False}">
         <field name="move_id" ref="demo_despacho_1"/>
@@ -159,6 +162,7 @@
         <field name="product_id" ref="l10n_ar.product_product_servicio_de_guarda"/>
         <field name="product_uom_id" ref="uom.product_uom_unit"/>
         <field name="tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        <field name="account_id" model="account.move.line" eval="obj().env.ref('l10n_ar.product_product_servicio_de_guarda').categ_id.property_account_income_categ_id.id"/>
     </record>
     <record id="demo_despacho_1_line_5" model="account.move.line" context="{'check_move_validity': False}">
         <field name="name">FOB Total</field>
@@ -167,6 +171,7 @@
         <field name="quantity">1</field>
         <field name="product_uom_id" ref="uom.product_uom_unit"/>
         <field name="tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA 21%'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        <field name="account_id" model="account.move.line" eval="obj().env.ref('product.product_category_all').property_account_income_categ_id.id"/>
     </record>
     <record id="demo_despacho_1_line_6" model="account.move.line" context="{'check_move_validity': False}">
         <field name="name">Flete</field>
@@ -175,6 +180,7 @@
         <field name="quantity">1</field>
         <field name="product_uom_id" ref="uom.product_uom_unit"/>
         <field name="tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA 21%'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        <field name="account_id" model="account.move.line" eval="obj().env.ref('product.product_category_all').property_account_income_categ_id.id"/>
     </record>
     <record id="demo_despacho_1_line_7" model="account.move.line" context="{'check_move_validity': False}">
         <field name="name">Seguro</field>
@@ -183,6 +189,7 @@
         <field name="quantity">1</field>
         <field name="product_uom_id" ref="uom.product_uom_unit"/>
         <field name="tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA 21%'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        <field name="account_id" model="account.move.line" eval="obj().env.ref('product.product_category_all').property_account_income_categ_id.id"/>
     </record>
     <record id="demo_despacho_1_line_8" model="account.move.line" context="{'check_move_validity': False}">
         <field name="name">-FOB Total</field>
@@ -191,6 +198,7 @@
         <field name="quantity">1</field>
         <field name="product_uom_id" ref="uom.product_uom_unit"/>
         <field name="tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        <field name="account_id" model="account.move.line" eval="obj().env.ref('product.product_category_all').property_account_income_categ_id.id"/>
     </record>
     <record id="demo_despacho_1_line_9" model="account.move.line" context="{'check_move_validity': False}">
         <field name="name">-Flete</field>
@@ -199,6 +207,7 @@
         <field name="quantity">1</field>
         <field name="product_uom_id" ref="uom.product_uom_unit"/>
         <field name="tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        <field name="account_id" model="account.move.line" eval="obj().env.ref('product.product_category_all').property_account_income_categ_id.id"/>
     </record>
     <record id="demo_despacho_1_line_10" model="account.move.line" context="{'check_move_validity': False}">
         <field name="name">-Seguro</field>
@@ -207,6 +216,7 @@
         <field name="quantity">1</field>
         <field name="product_uom_id" ref="uom.product_uom_unit"/>
         <field name="tax_ids" model="account.tax" eval="[(6, 0, obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA No Gravado'), ('type_tax_use', '=', 'purchase')], limit=1).ids)]"/>
+        <field name="account_id" model="account.move.line" eval="obj().env.ref('product.product_category_all').property_account_income_categ_id.id"/>
     </record>
 
     <!-- TODO add this once odoo tell us how manual taxes are encoded -->
