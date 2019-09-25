@@ -382,6 +382,7 @@ class MrpBomLine(models.Model):
 class MrpByProduct(models.Model):
     _name = 'mrp.bom.byproduct'
     _description = 'Byproduct'
+    _rec_name = "product_id"
     _check_company_auto = True
 
     product_id = fields.Many2one('product.product', 'By-product', required=True, check_company=True)
