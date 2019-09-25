@@ -37,6 +37,51 @@ class MrpProductProduce(models.TransientModel):
                 res['serial'] = bool(serial_finished)
             if 'product_qty' in fields:
                 res['product_qty'] = todo_quantity
+<<<<<<< HEAD
+=======
+            if 'produce_line_ids' in fields:
+                qty_by_bom = production.product_uom_id._compute_quantity(todo_quantity, production.bom_id.product_uom_id)
+                lines = []
+                for move in production.move_raw_ids.filtered(lambda x: (x.product_id.tracking != 'none') and x.state not in ('done', 'cancel') and x.bom_line_id):
+                    qty_to_consume = float_round(qty_by_bom / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty,
+                                                 precision_rounding=move.product_uom.rounding, rounding_method="UP")
+                    for move_line in move.move_line_ids:
+                        if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) <= 0:
+                            break
+                        if move_line.lot_produced_id or float_compare(move_line.product_uom_qty, move_line.qty_done, precision_rounding=move.product_uom.rounding) <= 0:
+                            continue
+                        to_consume_in_line = min(qty_to_consume, move_line.product_uom_qty)
+                        lines.append({
+                            'move_id': move.id,
+                            'qty_to_consume': to_consume_in_line,
+                            'qty_done': 0.0,
+                            'lot_id': move_line.lot_id.id,
+                            'product_uom_id': move.product_uom.id,
+                            'product_id': move.product_id.id,
+                        })
+                        qty_to_consume -= to_consume_in_line
+                    if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) > 0:
+                        if move.product_id.tracking == 'serial':
+                            while float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) > 0:
+                                lines.append({
+                                    'move_id': move.id,
+                                    'qty_to_consume': 1,
+                                    'qty_done': 0.0,
+                                    'product_uom_id': move.product_uom.id,
+                                    'product_id': move.product_id.id,
+                                })
+                                qty_to_consume -= 1
+                        else:
+                            lines.append({
+                                'move_id': move.id,
+                                'qty_to_consume': qty_to_consume,
+                                'qty_done': 0.0,
+                                'product_uom_id': move.product_uom.id,
+                                'product_id': move.product_id.id,
+                            })
+
+                res['produce_line_ids'] = [(0, 0, x) for x in lines]
+>>>>>>> a38f36459f9... temp
         return res
 
     serial = fields.Boolean('Requires Serial')
