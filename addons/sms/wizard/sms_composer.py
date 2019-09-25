@@ -111,7 +111,7 @@ class SendSMS(models.TransientModel):
                 if len(records) == 1:
                     self.recipient_description = '%s (%s)' % (
                         res[records.id]['partner'].name or records.display_name,
-                        res[records.id]['sanitized']
+                        res[records.id]['sanitized'] or _("Invalid number")
                     )
             else:
                 self.recipient_invalid_count = 0 if (self.sanitized_numbers or (self.composition_mode == 'mass' and self.use_active_domain)) else 1
