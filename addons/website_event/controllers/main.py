@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
 
 
@@ -24,6 +25,7 @@ class WebsiteEventController(http.Controller):
         Event = request.env['event.event']
         EventType = request.env['event.type']
 
+        searches.setdefault('search', '')
         searches.setdefault('date', 'all')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
@@ -65,6 +67,10 @@ class WebsiteEventController(http.Controller):
 
         # search domains
         domain_search = {'website_specific': website.website_domain()}
+
+        if searches['search']:
+            domain_search['search'] = [('name', 'ilike', searches['search'])]
+
         current_date = None
         current_type = None
         current_country = None
@@ -73,6 +79,7 @@ class WebsiteEventController(http.Controller):
                 domain_search["date"] = date[2]
                 if date[0] != 'all':
                     current_date = date[1]
+
         if searches["type"] != 'all':
             current_type = EventType.browse(int(searches['type']))
             domain_search["type"] = [("event_type_id", "=", int(searches["type"]))]
@@ -113,7 +120,7 @@ class WebsiteEventController(http.Controller):
         event_count = Event.search_count(dom_without("none"))
         pager = website.pager(
             url="/event",
-            url_args={'date': searches.get('date'), 'type': searches.get('type'), 'country': searches.get('country')},
+            url_args=searches,
             total=event_count,
             page=page,
             step=step,
@@ -127,6 +134,8 @@ class WebsiteEventController(http.Controller):
         order = 'is_published desc, ' + order
         events = Event.search(dom_without("none"), limit=step, offset=pager['offset'], order=order)
 
+        keep = QueryURL('/event', **{key: value for key, value in searches.items() if (key == 'search' or value != 'all')})
+
         values = {
             'current_date': current_date,
             'current_country': current_country,
@@ -137,7 +146,7 @@ class WebsiteEventController(http.Controller):
             'countries': countries,
             'pager': pager,
             'searches': searches,
-            'search_path': "?%s" % werkzeug.url_encode(searches),
+            'keep': keep,
         }
 
         if searches['date'] == 'old':
@@ -188,11 +197,14 @@ class WebsiteEventController(http.Controller):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
+        urls = event._get_event_resource_urls()
         values = {
             'event': event,
             'main_object': event,
             'range': range,
-            'registrable': event.sudo()._is_event_registrable()
+            'registrable': event.sudo()._is_event_registrable(),
+            'google_url': urls.get('google_url'),
+            'iCal_url': urls.get('iCal_url'),
         }
         return request.render("website_event.event_description_full", values)
 
@@ -282,7 +294,7 @@ class WebsiteEventController(http.Controller):
             Attendees += Attendees.sudo().create(
                 Attendees._prepare_attendee_values(registration))
 
-        urls = event._get_event_resource_urls(Attendees.ids)
+        urls = event._get_event_resource_urls()
         return request.render("website_event.registration_complete", {
             'attendees': Attendees.sudo(),
             'event': event,

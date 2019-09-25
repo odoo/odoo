@@ -232,30 +232,37 @@ class DateTimeConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         if not value:
             return ''
+        options = options or {}
+
         lang = self.user_lang()
         locale = babel.Locale.parse(lang.code)
-
+        format_func = babel.dates.format_datetime
         if isinstance(value, str):
             value = fields.Datetime.from_string(value)
 
         value = fields.Datetime.context_timestamp(self, value)
 
-        if options and 'format' in options:
+        if 'format' in options:
             pattern = options['format']
         else:
-            if options and options.get('time_only'):
+            if options.get('time_only'):
                 strftime_pattern = (u"%s" % (lang.time_format))
-            elif options and options.get('date_only'):
+            elif options.get('date_only'):
                 strftime_pattern = (u"%s" % (lang.date_format))
             else:
                 strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
 
             pattern = posix_to_ldml(strftime_pattern, locale=locale)
 
-        if options and options.get('hide_seconds'):
+        if options.get('hide_seconds'):
             pattern = pattern.replace(":ss", "").replace(":s", "")
 
-        return pycompat.to_text(babel.dates.format_datetime(value, format=pattern, locale=locale))
+        if options.get('time_only'):
+            format_func = babel.dates.format_time
+        if options.get('date_only'):
+            format_func = babel.dates.format_date
+
+        return pycompat.to_text(format_func(value, format=pattern, locale=locale))
 
 
 class TextConverter(models.AbstractModel):
