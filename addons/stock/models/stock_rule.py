@@ -149,7 +149,7 @@ class StockRule(models.Model):
                 move._push_apply()
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
-            new_move = move.copy(new_move_vals)
+            new_move = move.sudo().copy(new_move_vals)
             move.write({'move_dest_ids': [(4, new_move.id)]})
             new_move._action_confirm()
 
@@ -160,7 +160,7 @@ class StockRule(models.Model):
             'location_dest_id': self.location_id.id,
             'date': new_date,
             'date_expected': new_date,
-            'company_id': self.company_id.id,
+            'company_id': self.company_id.id or self.sudo().picking_type_id.warehouse_id.company_id.id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
             'propagate': self.propagate,
