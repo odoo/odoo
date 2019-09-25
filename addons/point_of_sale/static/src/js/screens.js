@@ -1029,6 +1029,12 @@ var ActionButtonWidget = PosBaseWidget.extend({
 var ProductScreenWidget = ScreenWidget.extend({
     template:'ProductScreenWidget',
 
+    init: function() {
+        this._super.apply(this, arguments);
+        this.timeout = null;
+        this.buffered_key_events = [];
+    },
+
     start: function(){ 
 
         var self = this;
@@ -1098,11 +1104,40 @@ var ProductScreenWidget = ScreenWidget.extend({
         $(document).off('keydown.productscreen', this._onKeypadKeyDown);
     },
 
+    /**
+     * Buffers the key typed and distinguishes between actual keystrokes and
+     * scanner inputs.
+     *
+     * @private
+     * @param {event} ev - The keyboard event.
+    */
     _onKeypadKeyDown: function (ev) {
         //prevent input and textarea keydown event
         if(!_.contains(["INPUT", "TEXTAREA"], $(ev.target).prop('tagName'))) {
-            if ((ev.key >= "0" && ev.key <= "9") || ev.key === "."){
-                this.numpad.state.appendNewChar(ev.key)
+            clearTimeout(this.timeout);
+            this.buffered_key_events.push(ev);
+            this.timeout = setTimeout(_.bind(this._handleBufferedKeys, this), BarcodeEvents.max_time_between_keys_in_ms);
+        }
+    },
+
+    /**
+     * Processes the buffer of keys filled by _onKeypadKeyDown and
+     * distinguishes between the actual keystrokes and scanner inputs.
+     *
+     * @private
+    */
+    _handleBufferedKeys: function () {
+        // If more than 2 keys are recorded in the buffer, chances are high that the input comes
+        // from a barcode scanner. In this case, we don't do anything.
+        if (this.buffered_key_events.length > 2) {
+            this.buffered_key_events = [];
+            return;
+        }
+
+        for (var i = 0; i < this.buffered_key_events.length; ++i) {
+            var ev = this.buffered_key_events[i];
+            if ((ev.key >= "0" && ev.key <= "9") || ev.key === ".") {
+               this.numpad.state.appendNewChar(ev.key);
             }
             else {
                 switch (ev.key){
@@ -1124,6 +1159,7 @@ var ProductScreenWidget = ScreenWidget.extend({
                 }
             }
         }
+        this.buffered_key_events = [];
     },
 });
 gui.define_screen({name:'products', widget: ProductScreenWidget});
