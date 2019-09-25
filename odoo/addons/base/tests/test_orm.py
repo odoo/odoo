@@ -382,6 +382,7 @@ class TestInherits(TransactionCase):
 
         # write base64 image
         user.write({'image_1920': 'R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='})
+        user.flush()
         write_date_after = user.write_date
         self.assertNotEqual(write_date_before, write_date_after)
 
