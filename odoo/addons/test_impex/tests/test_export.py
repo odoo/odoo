@@ -25,6 +25,7 @@ class CreatorCase(common.TransactionCase):
 
     def export(self, value, fields=('value',), context=None):
         record = self.make(value, context=context)
+        record.flush()
         record.invalidate_cache()
         return record._export_rows([f.split('/') for f in fields])
 
