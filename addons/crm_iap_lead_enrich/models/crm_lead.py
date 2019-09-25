@@ -19,10 +19,11 @@ class Lead(models.Model):
     @api.model
     def _iap_enrich_leads_cron(self):
         timeDelta = fields.datetime.now() - datetime.timedelta(hours=1)
+        # Get all leads not lost nor won (lost: active = False)
         leads = self.search([
             ('iap_enrich_done', '=', False),
             ('reveal_id', '=', False),
-            ('probability', 'not in', (0, 100)),
+            ('probability', '<', 100),
             ('create_date', '>', timeDelta)
         ])
         leads._iap_enrich(from_cron=True)
@@ -30,7 +31,8 @@ class Lead(models.Model):
     def _iap_enrich(self, from_cron=False):
         lead_emails = {}
         for lead in self:
-            if lead.probability in (0, 100) or lead.iap_enrich_done:
+            # If lead is lost, active == False, but is anyway removed from the search in the cron.
+            if lead.probability == 100 or lead.iap_enrich_done:
                 continue
             normalized_email = tools.email_normalize(lead.partner_address_email) or tools.email_normalize(lead.email_from)
             if normalized_email:
