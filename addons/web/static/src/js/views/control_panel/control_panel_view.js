@@ -15,7 +15,6 @@ var DEFAULT_PERIOD = controlPanelViewParameters.DEFAULT_PERIOD;
 var INTERVAL_OPTIONS = controlPanelViewParameters.INTERVAL_OPTIONS;
 var PERIOD_OPTIONS = controlPanelViewParameters.PERIOD_OPTIONS;
 const OPTION_GENERATORS = controlPanelViewParameters.OPTION_GENERATORS;
-const YEAR_OPTIONS = controlPanelViewParameters.YEAR_OPTIONS;
 
 var Factory = mvc.Factory;
 
@@ -38,6 +37,8 @@ var ControlPanelView = Factory.extend({
      * @param {Object} [params.state] used to determine the control panel model
      *   essential content at load. For instance, state can be the state of an
      *   other control panel model that we want to use.
+     * @param {string} [params.title] the name of the action, to display in the
+     *   breadcrumb
      * @param {string} [params.template] the QWeb template to render
      * @param {Object} [params.viewInfo={arch: '<search/>', fields: {}}] a
      *   search fieldsview
@@ -99,6 +100,7 @@ var ControlPanelView = Factory.extend({
         this.rendererParams.context = context;
         this.rendererParams.searchMenuTypes = params.searchMenuTypes || [];
         this.rendererParams.template = params.template;
+        this.rendererParams.title = params.title;
         this.rendererParams.withBreadcrumbs = params.withBreadcrumbs !== false;
         this.rendererParams.withSearchBar = 'withSearchBar' in params ? params.withSearchBar : true;
 
