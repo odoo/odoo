@@ -733,6 +733,86 @@
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
                                         <field name="account_internal_type" invisible="1"/>
                                     </tree>
+                                    <kanban class="o_kanban_mobile">
+                                        <field name="name"/>
+                                        <field name="product_id"/>
+                                        <field name="price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                        <field name="price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                                        <field name="quantity"/>
+                                        <field name="product_uom_id" groups="uom.group_uom"/>
+                                        <field name="price_unit"/>
+                                        <field name="display_type"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
+                                                    <t t-if="!record.display_type.raw_value">
+                                                        <div class="row">
+                                                            <div class="col-2">
+                                                                <img t-att-src="kanban_image('product.product', 'image_128', record.product_id.raw_value)" t-att-title="record.product_id.value" t-att-alt="record.product_id.value" style="max-width: 100%;"/>
+                                                            </div>
+                                                            <div class="col-10">
+                                                                <strong>
+                                                                    <span>
+                                                                        <t t-esc="record.product_id.value"/>
+                                                                    </span>
+                                                                </strong>
+                                                                <div class="text-muted">
+                                                                    Quantity:
+                                                                    <t t-esc="record.quantity.value"/>
+                                                                    <t t-esc="record.product_uom_id.value"/>
+                                                                </div>
+                                                                <div class="text-muted">
+                                                                    Unit Price:
+                                                                    <t t-esc="record.price_unit.value"/>
+                                                                </div>
+                                                                <strong>
+                                                                    <span class="float-right text-right">
+                                                                        <t t-esc="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                                                        <t t-esc="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
+                                                                    </span>
+                                                                </strong>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                    <t t-if="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <span>
+                                                                    <t t-esc="record.name.value"/>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                    <form>
+                                        <sheet>
+                                            <field name="display_type" invisible="1"/>
+                                            <field name="parent_state" invisible="1"/>
+                                            <group>
+                                                <field name="partner_id" invisible="1"/>
+                                                <field name="company_id" invisible="1"/>
+                                                <field name="product_id" widget="many2one_barcode"/>
+                                                <field name="quantity"/>
+                                                <field name="product_uom_id" groups="uom.group_uom"/>
+                                                <field name="price_unit"/>
+                                                <field name="discount" groups="base.group_no_one"/>
+                                                <field name="currency_id" invisible="1"/>
+                                            </group>
+                                            <group>
+                                                <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                                                <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                                <field name="tax_ids" widget="many2many_tags"/>
+                                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                            </group>
+                                            <label for="name" string="Description" attrs="{'invisible': [('display_type', '!=', False)]}"/>
+                                            <label for="name" string="Section" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
+                                            <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
+                                            <field name="name"/>
+                                        </sheet>
+                                    </form>
                                 </field>
 
                                 <!-- Totals (only invoices / receipts) -->
