@@ -292,22 +292,22 @@
 </template>
 
 <template id="s_share" name="Share">
-    <div t-attf-class="s_share #{_classes or ''}">
+    <div t-attf-class="s_share #{_classes}">
         <h4 t-if="not _no_title" class="s_share_title">Share</h4>
-        <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank">
-            <i class="fa fa-1x fa-facebook rounded shadow-sm"/>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={url}" t-attf-class="s_share_facebook #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-facebook #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" class="s_share_twitter" target="_blank">
-            <i class="fa fa-1x fa-twitter rounded shadow-sm"/>
+        <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" t-attf-class="s_share_twitter #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-twitter #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" class="s_share_linkedin" target="_blank">
-            <i class="fa fa-1x fa-linkedin rounded shadow-sm"/>
+        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-linkedin #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="https://plus.google.com/share?url={url}" class="s_share_google" target="_blank">
-            <i class="fa fa-1x fa-google-plus rounded shadow-sm"/>
+        <a href="https://plus.google.com/share?url={url}" t-attf-class="s_share_google #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-1x fa-google-plus #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="mailto:?body={url}&amp;subject={title}" class="s_share_email">
-            <i class="fa fa-1x fa-envelope rounded shadow-sm"/>
+        <a href="mailto:?body={url}&amp;subject={title}" t-attf-class="s_share_email #{_link_classes}">
+            <i t-attf-class="fa fa-1x fa-envelope #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
     </div>
 </template>
