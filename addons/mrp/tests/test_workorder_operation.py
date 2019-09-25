@@ -1070,6 +1070,64 @@ class TestWorkOrderProcess(TestMrpCommon):
         self.assertAlmostEqual(mo.date_planned_start, planned_date, delta=timedelta(seconds=10))
         self.assertAlmostEqual(mo.date_planned_start, mo.workorder_ids.date_planned_start, delta=timedelta(seconds=10))
 
+    def test_kit_planning(self):
+        """ Bom made of component 1 and component 2 which is a kit made of
+        component 1 too. Check the workorder lines are well created after reservation
+        Main bom :
+            - comp1 (qty=1)
+            - kit (qty=1)
+                - comp1 (qty=4)
+                - comp2 (qty=1)
+        should give :
+            - wo line 1 (comp1, qty=1)
+            - wo line 2 (comp1, qty=4)
+            - wo line 3 (comp2, qty=1) """
+        # Kit bom
+        self.env['mrp.bom'].create({
+            'product_id': self.product_4.id,
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 1}),
+                (0, 0, {'product_id': self.product_1.id, 'product_qty': 4})
+            ]})
+
+        # Main bom
+        main_bom = self.env['mrp.bom'].create({
+            'product_id': self.product_5.id,
+            'product_tmpl_id': self.product_5.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'routing_id': self.routing_1.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_1.id, 'product_qty': 1}),
+                (0, 0, {'product_id': self.product_4.id, 'product_qty': 1})
+            ]})
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_5
+        mo_form.bom_id = main_bom
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+        mo.button_plan()
+
+        self.assertEqual(len(mo.workorder_ids), 1)
+        self.assertEqual(len(mo.workorder_ids.raw_workorder_line_ids), 3)
+        line1 = mo.workorder_ids.raw_workorder_line_ids[0]
+        line2 = mo.workorder_ids.raw_workorder_line_ids[1]
+        line3 = mo.workorder_ids.raw_workorder_line_ids[2]
+        self.assertEqual(line1.product_id, self.product_1)
+        self.assertEqual(line1.qty_done, 1)
+        self.assertEqual(line2.product_id, self.product_2)
+        self.assertEqual(line2.qty_done, 1)
+        self.assertEqual(line3.product_id, self.product_1)
+        self.assertEqual(line3.qty_done, 4)
+
 
 class TestRoutingAndKits(SavepointCase):
     @classmethod

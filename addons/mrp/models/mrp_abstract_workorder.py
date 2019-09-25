@@ -190,7 +190,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 continue
             # search wo line on which the lot is not fully consumed or other reserved lot
             linked_wo_line = self._workorder_line_ids().filtered(
-                lambda line: line.product_id == move_line.product_id and
+                lambda line: line.move_id == move and
                 line.lot_id == move_line.lot_id
             )
             if linked_wo_line:
