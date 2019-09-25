@@ -12,12 +12,12 @@ class AccountJournal(models.Model):
     l10n_in_import_export = fields.Boolean("Import/Export", help="Tick this if this journal is use for Import/Export Under Indian GST.")
     l10n_in_gstin_partner_id = fields.Many2one('res.partner', string="GSTIN", ondelete="restrict", help="GSTIN related to this journal. If empty then consider as company GSTIN.")
 
-    @api.depends('name', 'state')
     def name_get(self):
         result = []
         for journal in self:
             name = journal.name
-            if journal.l10n_in_gstin_partner_id and journal.l10n_in_gstin_partner_id.vat:
+            if journal.company_id.country_id.code != 'IN' and journal.l10n_in_gstin_partner_id \
+                and journal.l10n_in_gstin_partner_id.vat:
                 name = "%s - %s" % (journal.name, journal.l10n_in_gstin_partner_id.vat)
             result.append((journal.id, name))
         return result

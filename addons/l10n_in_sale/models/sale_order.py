@@ -13,20 +13,14 @@ class SaleOrder(models.Model):
 
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
+        invoice_vals['l10n_in_reseller_partner_id'] = self.l10n_in_reseller_partner_id.id
         if self.l10n_in_journal_id:
             invoice_vals['journal_id'] = self.l10n_in_journal_id.id
         return invoice_vals
 
     @api.onchange('company_id')
     def l10n_in_onchange_company_id(self):
-        company_id = self._context.get('default_company_id')
-        company = False
-        if company_id:
-            company = self.env['res.company'].browse(company_id)
-        else:
-            company = self.env.company
-
-        domain = [('company_id', '=', company.id), ('type', '=', 'sale')]
+        domain = [('company_id', '=', self.company_id.id), ('type', '=', 'sale')]
 
         journal = self.env['account.journal'].search(domain, limit=1)
         if journal:

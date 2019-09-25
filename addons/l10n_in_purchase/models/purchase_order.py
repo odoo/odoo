@@ -12,14 +12,7 @@ class PurchaseOrder(models.Model):
 
     @api.onchange('company_id')
     def l10n_in_onchange_company_id(self):
-        company_id = self._context.get('default_company_id')
-        company = False
-        if company_id:
-            company = self.env['res.company'].browse(company_id)
-        else:
-            company = self.env.company
-
-        domain = [('company_id', '=', company.id), ('type', '=', 'purchase')]
+        domain = [('company_id', '=', self.company_id.id), ('type', '=', 'purchase')]
 
         journal = self.env['account.journal'].search(domain, limit=1)
         if journal:
