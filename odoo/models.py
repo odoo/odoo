@@ -2884,10 +2884,6 @@ Fields:
             return
         self.check_access_rights('read')
 
-        # if a read() follows a write(), we must flush updates, as read() will
-        # fetch from database and overwrites the cache (`test_update_with_id`)
-        self.flush(fields, self)
-
         field_names = []
         inherited_field_names = []
         for name in fields:
@@ -3993,6 +3989,7 @@ Record ids: %(records)s
                 domain = [('active', '=', 1)] + domain
 
         if domain:
+            self._flush_search(domain)
             e = expression.expression(domain, self)
             tables = e.get_tables()
             where_clause, where_params = e.to_sql()
