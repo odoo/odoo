@@ -256,6 +256,8 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def get_nearest_lang(cls, lang):
         # Try to find a similar lang. Eg: fr_BE and fr_FR
+        if lang in request.env['ir.module.module']._installed():
+            return False
         short = lang.partition('_')[0]
         short_match = False
         for code, dummy in cls._get_language_codes():
