@@ -7,7 +7,8 @@
 
     'description': """
         Define default sales journal on the warehouse,
-        help you to choose correct sales journal on the sale order.
+        help you to choose correct sales journal on the sales order when
+        you change the picking operation.
 
         useful when you setup the multiple gstn units.
     """,
