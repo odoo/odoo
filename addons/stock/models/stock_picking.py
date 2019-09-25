@@ -927,6 +927,9 @@ class Picking(models.Model):
         """
         for (parent, responsible), rendering_context in documents.items():
             note = render_method(rendering_context)
+            # FIXME workaround for purchase_requistion not inheriting from mail.activity.mixin
+            if not hasattr(parent, 'activity_schedule'):
+                continue
             parent.activity_schedule(
                 'mail.mail_activity_data_warning',
                 date.today(),
