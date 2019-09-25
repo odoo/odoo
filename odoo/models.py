@@ -2957,7 +2957,7 @@ Fields:
                         values[index] = translate(ids[index], values[index])
 
                 # store values in cache
-                self.env.cache.update(fetched, field, values)
+                self.env.cache.update(fetched, field, values, overwrite=False)
 
             # determine the fields that must be processed now;
             # for the sake of simplicity, we ignore inherited fields

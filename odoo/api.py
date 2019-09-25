@@ -726,15 +726,23 @@ class Cache(object):
         else:
             self._data[field][record._ids[0]] = value
 
-    def update(self, records, field, values):
+    def update(self, records, field, values, overwrite=True):
         """ Set the values of ``field`` for several ``records``. """
+        field_cache = self._data[field]
         if field.depends_context:
             key = field.cache_key(records.env)
-            field_cache = self._data[field]
-            for record_id, value in zip(records._ids, values):
-                field_cache.setdefault(record_id, {})[key] = value
+            if overwrite:
+                for record_id, value in zip(records._ids, values):
+                    field_cache.setdefault(record_id, {})[key] = value
+            else:
+                for record_id, value in zip(records._ids, values):
+                    field_cache.setdefault(record_id, {}).setdefault(key, value)
         else:
-            self._data[field].update(zip(records._ids, values))
+            if overwrite:
+                field_cache.update(zip(records._ids, values))
+            else:
+                for record_id, value in zip(records._ids, values):
+                    field_cache.setdefault(record_id, value)
 
     def remove(self, record, field):
         """ Remove the value of ``field`` for ``record``. """
