@@ -69,7 +69,7 @@
                                     </group>
                                     <group string="Analytic" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags">
                                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"
-                                            domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" 
+                                            domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                                             attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="analytic_tag_ids" groups="analytic.group_analytic_tags"
                                             widget="many2many_tags"/>
@@ -1055,7 +1055,7 @@
             view_id="account.view_move_line_tax_audit_tree"/>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_sales':1, 'name_groupby':1}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'name_groupby':1}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
