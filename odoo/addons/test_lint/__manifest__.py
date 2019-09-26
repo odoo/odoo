@@ -6,7 +6,7 @@
     'description': """A module to test Odoo code with various linters.""",
     'maintainer': 'Odoo SA',
     'depends': ['base'],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
     'pre_init_hook': 'uninstall_test_pylint',
     'license': 'LGPL-3',
