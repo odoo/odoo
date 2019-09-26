@@ -47,7 +47,7 @@ class Country(models.Model):
              "\n%(country_name)s: the name of the country"
              "\n%(country_code)s: the code of the country",
         default='%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s')
-    contact_format = fields.Char(
+    contact_format = fields.Text(
         string="Contact layout",
         help="Display format to use for contact person belonging to this country.\n",
         default="%s, %s",
