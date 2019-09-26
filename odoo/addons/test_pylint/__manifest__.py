@@ -6,7 +6,7 @@
     'description': """Deprecated empty module in favor of test-lint.""",
     'maintainer': 'Odoo SA',
     'depends': ['base'],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
     'license': 'LGPL-3',
 }
