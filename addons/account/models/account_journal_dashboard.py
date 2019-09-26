@@ -490,9 +490,9 @@ class account_journal(models.Model):
         })
 
         if self.type == 'sale':
-            action['domain'] = [('type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
+            action['domain'] = [('move_id.type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
         elif self.type == 'purchase':
-            action['domain'] = [('type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
+            action['domain'] = [('move_id.type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
 
         return action
 
