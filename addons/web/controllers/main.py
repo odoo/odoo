@@ -646,6 +646,11 @@ class GroupsTreeNode:
         count = group.pop('__count')
         aggregated_values = group
 
+        keys = list(aggregated_values)
+        for key in keys:
+            if not isinstance(aggregated_values[key], (int, float)):
+                del aggregated_values[key]
+
         records = self._model.search(domain, offset=0, limit=False, order=False)
 
         # Follow the path from the top level group to the deepest
