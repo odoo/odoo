@@ -401,15 +401,15 @@ class AccountReconcileModel(models.Model):
                 params += [rule.match_amount_min, rule.match_amount_max]
 
         # Filter on label, note and transaction_type
-        for field in ['label', 'note', 'transaction_type']:
+        for field, column in [('label', 'name'), ('note', 'note'), ('transaction_type', 'transaction_type')]:
             if rule['match_' + field] == 'contains':
-                query += ' AND st_line.name ILIKE %s'
+                query += ' AND st_line.{} ILIKE %s'.format(column)
                 params += ['%%%s%%' % rule['match_' + field + '_param']]
             elif rule['match_' + field] == 'not_contains':
-                query += ' AND st_line.name NOT ILIKE %s'
+                query += ' AND st_line.{} NOT ILIKE %s'.format(column)
                 params += ['%%%s%%' % rule['match_' + field + '_param']]
             elif rule['match_' + field] == 'match_regex':
-                query += ' AND st_line.name ~* %s'
+                query += ' AND st_line.{} ~* %s'.format(column)
                 params += [rule['match_' + field + '_param']]
 
         # Filter on partners.
