@@ -33,8 +33,10 @@ class WebsiteVisitor(models.Model):
         mapped_data = {}
         for result in results:
             visitor_info = mapped_data.get(result['visitor_id'], {'email': '', 'mobile': ''})
-            visitor_info['email'] += result['email'] + ','
-            visitor_info['mobile'] = result['mobile']
+            if result['email']:
+                visitor_info['email'] = result['email']
+            if result['mobile']:
+                visitor_info['mobile'] = result['mobile']
             mapped_data[result['visitor_id']] = visitor_info
 
         for visitor in self:
