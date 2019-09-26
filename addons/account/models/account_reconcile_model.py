@@ -5,6 +5,7 @@ from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
 
 import re
+from math import copysign
 
 
 class AccountReconcileModel(models.Model):
@@ -249,7 +250,7 @@ class AccountReconcileModel(models.Model):
         elif self.amount_type == "regex":
             match = re.search(self.amount_from_label_regex, st_line.name)
             if match:
-                line_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')) * (1 if balance > 0.0 else -1)
+                line_balance = copysign(float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')) * (1 if balance > 0.0 else -1), balance)
             else:
                 line_balance = 0
         else:
@@ -286,7 +287,7 @@ class AccountReconcileModel(models.Model):
             elif self.second_amount_type == "regex":
                 match = re.search(self.second_amount_from_label_regex, st_line.name)
                 if match:
-                    line_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.'))
+                    line_balance = copysign(float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.')), remaining_balance)
                 else:
                     line_balance = 0
             else:

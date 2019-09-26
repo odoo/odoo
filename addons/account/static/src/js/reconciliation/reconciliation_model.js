@@ -1243,6 +1243,7 @@ var StatementModel = BasicModel.extend({
                     matching = matching[1].replace(new RegExp('\\D' + values.decimal_separator, 'g'), '');
                     matching = matching.replace(values.decimal_separator, '.');
                     amount = parseFloat(matching);
+                    amount = line.balance.amount > 0 ? amount : -amount;
                 }
                 break;
             case 'fixed':
