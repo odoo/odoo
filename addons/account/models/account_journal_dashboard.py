@@ -494,10 +494,12 @@ class account_journal(models.Model):
             'search_default_journal_id': self.id,
         })
 
+        domain_type_field = action['res_model'] == 'account.move.line' and 'move_id.type' or 'type' # The model can be either account.move or account.move.line
+
         if self.type == 'sale':
-            action['domain'] = [('move_id.type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
+            action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
         elif self.type == 'purchase':
-            action['domain'] = [('move_id.type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
+            action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
 
         return action
 
