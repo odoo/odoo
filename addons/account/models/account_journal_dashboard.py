@@ -281,6 +281,11 @@ class account_journal(models.Model):
             if read:
                 number_to_check = read[0]['__count']
                 to_check_balance = read[0]['amount_total']
+        elif self.type == 'general':
+            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total'], 'journal_id', lazy=False)
+            if read:
+                number_to_check = read[0]['__count']
+                to_check_balance = read[0]['amount_total']
 
         difference = currency.round(last_balance-account_sum) + 0.0
 
