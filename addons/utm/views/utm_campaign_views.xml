@@ -58,13 +58,13 @@
         <field name="name">utm.campaign.view.kanban</field>
         <field name="model">utm.campaign</field>
         <field name="arch" type="xml">
-            <kanban default_group_by='stage_id'>
+            <kanban default_group_by='stage_id' class="o_utm_kanban">
                 <field name='color'/>
                 <field name='user_id'/>
                 <field name="stage_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click p-0">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown">
                                 <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
@@ -82,19 +82,20 @@
                                 </div>
                             </div>
                             <div class="oe_kanban_content">
-                                <div class="o_kanban_record_top p-2">
+                                <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <h3 class="oe_margin_bottom_8 o_kanban_record_title"><field name="name"/></h3>
                                     </div>
                                 </div>
-                                <div class="o_kanban_record_body px-2">
+                                <div class="o_kanban_record_body">
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <ul id="o_utm_actions" class="list-group list-group-horizontal"/>
                                 </div>
-                                <div id="utm_statistics" class="d-flex bg-100 px-3 py-1 border-bottom border-top justify-content-between"/>
-                                <div class="d-flex flex-grow-0 flex-column align-items-end px-3 py-2">
-                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
-                                        t-att-data-member_id="record.user_id.raw_value"
-                                        t-att-alt="record.user_id.raw_value" width="32" height="32" class="oe_kanban_avatar"/>
+                                <div class="o_kanban_record_bottom h5 mt-2 mb-0">
+                                    <div id="utm_statistics" class="d-flex flex-grow-1 text-600 mt-1"/>
+                                    <div class="oe_kanban_bottom_right">
+                                        <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-data-member_id="record.user_id.raw_value" t-att-alt="record.user_id.raw_value" width="32" height="32" class="oe_kanban_avatar"/>
+                                    </div>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
