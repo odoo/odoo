@@ -247,6 +247,8 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         """ Context manager that clears the environment upon failure. """
         with super(BaseCase, self).assertRaises(exception) as cm:
             if hasattr(self, 'env'):
+                # the cache is normally going to be cleared below
+                self.env['base'].flush()
                 with self.env.clear_upon_failure():
                     yield cm
             else:
