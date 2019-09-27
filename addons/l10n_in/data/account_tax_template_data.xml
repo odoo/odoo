@@ -84,7 +84,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11235'),
-                'minus_report_line_ids': [ref('tax_report_line_cess')],
+                'plus_report_line_ids': [ref('tax_report_line_cess')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -97,7 +97,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10055'),
-                'plus_report_line_ids': [ref('tax_report_line_cess')],
+                'minus_report_line_ids': [ref('tax_report_line_cess')],
             }),
         ]"/>
     </record>
@@ -120,7 +120,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11235'),
-                'minus_report_line_ids': [ref('tax_report_line_cess')],
+                'plus_report_line_ids': [ref('tax_report_line_cess')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -133,7 +133,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10055'),
-                'plus_report_line_ids': [ref('tax_report_line_cess')],
+                'minus_report_line_ids': [ref('tax_report_line_cess')],
             }),
         ]"/>
     </record>
@@ -170,7 +170,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11235'),
-                'minus_report_line_ids': [ref('tax_report_line_cess')],
+                'plus_report_line_ids': [ref('tax_report_line_cess')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -183,7 +183,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10055'),
-                'plus_report_line_ids': [ref('tax_report_line_cess')],
+                'minus_report_line_ids': [ref('tax_report_line_cess')],
             }),
         ]"/>
     </record>
@@ -202,7 +202,7 @@ if tax > result:result=tax</field>
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_line_exempt')],
+                'plus_report_line_ids': [ref('tax_report_line_exempt')],
 
             }),
             (0,0, {
@@ -215,7 +215,7 @@ if tax > result:result=tax</field>
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_exempt')],
+                'minus_report_line_ids': [ref('tax_report_line_exempt')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -239,7 +239,7 @@ if tax > result:result=tax</field>
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_line_nil_rated')],
+                'plus_report_line_ids': [ref('tax_report_line_nil_rated')],
 
             }),
             (0,0, {
@@ -252,7 +252,7 @@ if tax > result:result=tax</field>
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_nil_rated')],
+                'minus_report_line_ids': [ref('tax_report_line_nil_rated')],
             }),
             (0,0, {
                 'factor_percent': 100,
@@ -1185,7 +1185,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10053'),
-                'plus_report_line_ids': [ref('tax_report_line_igst')],
+                'minus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1198,7 +1198,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11234'),
-                'minus_report_line_ids': [ref('tax_report_line_igst')],
+                'plus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
     </record>
@@ -1221,7 +1221,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10053'),
-                'plus_report_line_ids': [ref('tax_report_line_igst')],
+                'minus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1234,7 +1234,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11234'),
-                'minus_report_line_ids': [ref('tax_report_line_igst')],
+                'plus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
     </record>
@@ -1257,7 +1257,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10053'),
-                'plus_report_line_ids': [ref('tax_report_line_igst')],
+                'minus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1270,7 +1270,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11234'),
-                'minus_report_line_ids': [ref('tax_report_line_igst')],
+                'plus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
     </record>
@@ -1293,7 +1293,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10053'),
-                'plus_report_line_ids': [ref('tax_report_line_igst')],
+                'minus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1306,7 +1306,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11234'),
-                'minus_report_line_ids': [ref('tax_report_line_igst')],
+                'plus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
     </record>
@@ -1329,7 +1329,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10053'),
-                'plus_report_line_ids': [ref('tax_report_line_igst')],
+                'minus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1342,7 +1342,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11234'),
-                'minus_report_line_ids': [ref('tax_report_line_igst')],
+                'plus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
     </record>
@@ -1365,7 +1365,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10053'),
-                'plus_report_line_ids': [ref('tax_report_line_igst')],
+                'minus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1378,7 +1378,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11234'),
-                'minus_report_line_ids': [ref('tax_report_line_igst')],
+                'plus_report_line_ids': [ref('tax_report_line_igst')],
             }),
         ]"/>
     </record>
@@ -1402,7 +1402,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10051'),
-                'plus_report_line_ids': [ref('tax_report_line_sgst')],
+                'minus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1414,7 +1414,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11232'),
-                'minus_report_line_ids': [ref('tax_report_line_sgst')],
+                'plus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
     </record>
@@ -1436,7 +1436,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10052'),
-                'plus_report_line_ids': [ref('tax_report_line_cgst')],
+                'minus_report_line_ids': [ref('tax_report_line_cgst')],
             })
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1448,7 +1448,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11233'),
-                'minus_report_line_ids': [ref('tax_report_line_cgst')],
+                'plus_report_line_ids': [ref('tax_report_line_cgst')],
             })
         ]"/>
     </record>
@@ -1482,7 +1482,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10051'),
-                'plus_report_line_ids': [ref('tax_report_line_sgst')],
+                'minus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1495,7 +1495,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11232'),
-                'minus_report_line_ids': [ref('tax_report_line_sgst')],
+                'plus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
     </record>
@@ -1517,7 +1517,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10052'),
-                'plus_report_line_ids': [ref('tax_report_line_cgst')],
+                'minus_report_line_ids': [ref('tax_report_line_cgst')],
             })
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1529,7 +1529,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11233'),
-                'minus_report_line_ids': [ref('tax_report_line_cgst')],
+                'plus_report_line_ids': [ref('tax_report_line_cgst')],
             })
         ]"/>
 
@@ -1563,7 +1563,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10051'),
-                'plus_report_line_ids': [ref('tax_report_line_sgst')],
+                'minus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1575,7 +1575,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11232'),
-                'minus_report_line_ids': [ref('tax_report_line_sgst')],
+                'plus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
     </record>
@@ -1597,7 +1597,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10052'),
-                'plus_report_line_ids': [ref('tax_report_line_cgst')],
+                'minus_report_line_ids': [ref('tax_report_line_cgst')],
             })
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1609,7 +1609,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11233'),
-                'minus_report_line_ids': [ref('tax_report_line_cgst')],
+                'plus_report_line_ids': [ref('tax_report_line_cgst')],
             })
         ]"/>
     </record>
@@ -1643,7 +1643,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10051'),
-                'plus_report_line_ids': [ref('tax_report_line_sgst')],
+                'minus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1656,7 +1656,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11232'),
-                'minus_report_line_ids': [ref('tax_report_line_sgst')],
+                'plus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
     </record>
@@ -1678,7 +1678,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10052'),
-                'plus_report_line_ids': [ref('tax_report_line_cgst')],
+                'minus_report_line_ids': [ref('tax_report_line_cgst')],
             })
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1690,7 +1690,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11233'),
-                'minus_report_line_ids': [ref('tax_report_line_cgst')],
+                'plus_report_line_ids': [ref('tax_report_line_cgst')],
             })
         ]"/>
     </record>
@@ -1724,7 +1724,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10051'),
-                'plus_report_line_ids': [ref('tax_report_line_sgst')],
+                'minus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1737,7 +1737,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11232'),
-                'minus_report_line_ids': [ref('tax_report_line_sgst')],
+                'plus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
     </record>
@@ -1759,7 +1759,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10052'),
-                'plus_report_line_ids': [ref('tax_report_line_cgst')],
+                'minus_report_line_ids': [ref('tax_report_line_cgst')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1771,7 +1771,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11233'),
-                'minus_report_line_ids': [ref('tax_report_line_cgst')],
+                'plus_report_line_ids': [ref('tax_report_line_cgst')],
             })
         ]"/>
     </record>
@@ -1805,7 +1805,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10051'),
-                'plus_report_line_ids': [ref('tax_report_line_sgst')],
+                'minus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1818,7 +1818,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11232'),
-                'minus_report_line_ids': [ref('tax_report_line_sgst')],
+                'plus_report_line_ids': [ref('tax_report_line_sgst')],
             })
         ]"/>
     </record>
@@ -1840,7 +1840,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p10052'),
-                'plus_report_line_ids': [ref('tax_report_line_cgst')],
+                'minus_report_line_ids': [ref('tax_report_line_cgst')],
             })
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1852,7 +1852,7 @@ if tax > result:result=tax</field>
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('p11233'),
-                'minus_report_line_ids': [ref('tax_report_line_cgst')],
+                'plus_report_line_ids': [ref('tax_report_line_cgst')],
             })
         ]"/>
     </record>
