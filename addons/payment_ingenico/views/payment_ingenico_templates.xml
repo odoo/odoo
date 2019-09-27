@@ -61,11 +61,19 @@
         <t t-call="portal.frontend_layout">
             <div class="wrap">
                 <div class="container payment_feedback">
-                    <div class="o_payment_feedback" t-att-data-json-route="json_route" t-att-data-form="form_data">
+                    <div class="o_payment_feedback" t-att-data-json-route="json_route"  t-att-data-form="form_data">
                         <div class="row">
                             <!-- The content here is handled by JS -->
                         </div>
                     </div>
+                </div>
+            </div>
+        </t>
+        </template>
+        <template id="payment_error_page" name="Payment error page">
+             <t t-call="portal.frontend_layout">
+            <div class="wrap">
+                <div class="container error_message" t-esc="error">
                 </div>
             </div>
         </t>

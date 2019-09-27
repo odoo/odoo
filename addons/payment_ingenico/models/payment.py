@@ -146,7 +146,6 @@ class PaymentAcquirerOgone(models.Model):
             }
             try:
                 token = request.env['payment.token'].with_user(SUPERUSER_ID).create(token_parameters, )
-                print(token)
                 form_data['pm_id'] = token.id
                 parameters = {'json_route': post['FORM_ACTION_URL'],
                               'form_data': json.dumps(form_data, ensure_ascii=True, indent=None)}
@@ -200,9 +199,7 @@ class PaymentAcquirerOgone(models.Model):
         # 3DS validation feedback. The payment has been made.
         # Next step: modify the transaction status and redirect to /payment/process
         amount = post.get('AMOUNT', 0)
-        currency = post.get('CURRENCY', '')
         reference = post.get('ORDERID', '')
-        alias = post.get('ALIAS', '')
         partner_name = post.get('CN', '')
         status = int(post.get('STATUS', '0'))
         tx = request.env['payment.transaction'].with_user(SUPERUSER_ID).search([('amount', '=', amount),
@@ -381,6 +378,21 @@ class PaymentAcquirerOgone(models.Model):
         environment = 'prod' if self.state == 'enabled' else 'test'
         return self._get_ogone_urls(environment)['ogone_standard_order_url']
 
+    def ogone_s2s_form_process(self, data):
+        # ARJ QUESTION: token created in _ogone_alias_gateway_feedback
+        # but this function is needed to provide the pm_id (crash if not defined)
+        # only one âyment token is created thought (in _ogone_alias_gateway_feedback)
+        values = {
+            'cc_number': data.get('cc_number'),
+            'cc_cvc': int(data.get('cc_cvc')),
+            'cc_holder_name': data.get('cc_holder_name'),
+            'cc_expiry': data.get('cc_expiry'),
+            'cc_brand': data.get('cc_brand'),
+            'acquirer_id': int(data.get('acquirer_id')),
+            'partner_id': int(data.get('partner_id'))
+        }
+        pm_id = self.env['payment.token'].sudo().create(values)
+        return pm_id
 
 class PaymentTxOgone(models.Model):
     _inherit = 'payment.transaction'

@@ -95,28 +95,27 @@ class OgoneController(http.Controller):
     def ogone_alias_gateway_feedback(self, **post):
         post = {key.upper(): value for key, value in post.items()}
         acquirer = request.env['payment.acquirer'].with_user(SUPERUSER_ID).search([('provider', '=', 'ogone')])
-        shasign = acquirer.with_user(SUPERUSER_ID)._ogone_generate_shasign('out', post)
         try:
             if not acquirer._ogone_sha_check(post['SHASIGN'], post):
                 _logger.error('Ingnico: feeback Alias creation %s', pprint.pformat(post))
                 # This may be triggerd if the alias is not created
-                msg = 'ERROR: Invalid Signature'
-                _logger.error(msg)
-                # TODO: redirect with error message
-                return Response(msg, status=200)
-                # return str(msg)
+                error_message = _('ERROR: Invalid Signature')
+                _logger.error(error_message)
+                return request.render("payment_ingenico.payment_error_page", {'error': error_message})
         except KeyError:
             # TODO: redirect with error message
-            _logger.error('Ingnico: feeback Alias creation %s', pprint.pformat(post))
-            msg = 'ERROR: Cannot verify the signature'
-            return Response(msg, status=200)
+            _logger.error('Ingenico: feeback Alias creation %s', pprint.pformat(post))
+            error_message = _('ERROR: No payement data provided')
+            return request.render("payment_ingenico.payment_error_page", {'error': error_message})
 
-        if 'ACCEPTANCE' not in post:
+        if 'ACCEPTANCE' in post:
+            # Post transaction feedback
+            acquirer._ogone_transaction_feedback(post)
+            return werkzeug.utils.redirect("/payment/process")
+        else:
+            # Alias gateway feedback
             feedback = acquirer._ogone_alias_gateway_feedback(post)
             if feedback['success']:
                 return request.render("payment_ingenico.payment_feedback_page", feedback['parameters'])
             else:
                 return Response(feedback['error'], status=200)
-        else:
-            acquirer._ogone_transaction_feedback(post)
-            return werkzeug.utils.redirect("/payment/process")
