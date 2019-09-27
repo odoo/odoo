@@ -1222,3 +1222,16 @@ table.table_desc tr td {
 .modal-footer > .float-left {
     margin-right: auto;
 }
+
+// CoverProperties
+.o_record_cover_container {
+    position: relative;
+
+    .o_record_cover_component {
+        @include o-position-absolute(0, 0, 0, 0);
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}

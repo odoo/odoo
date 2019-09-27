@@ -43,8 +43,8 @@
 <template id="agenda">
     <t t-call="website_event.layout">
         <div class="oe_structure" id="oe_structure_website_event_track_agenda_1"/>
-        <section class="container">
-            <h1 class="text-center" t-field="event.name"/>
+        <section class="container pt48">
+            <h1 t-field="event.name"/>
             <div class="form-inline float-right">
                 <label class="invisible text-muted" id="search_summary"><span id="search_number">0</span> Found </label>
                 <input type="text" class="form-control" placeholder="Filter Tracks..." id="event_track_search"/>
@@ -112,51 +112,56 @@
     </t>
 </template>
 
-
 <template id="tracks">
-    <t t-call="website_event.event_details">
-        <div class="oe_structure" id="oe_structure_website_event_track_tracks_1"/>
-        <div id="left_column">
-        </div>
-        <div class="col-lg-9">
-            <div class="alert alert-warning" t-if="not len(tracks)" role="alert">
-                No tracks found!
-            </div>
-            <div class="row mb-2" t-foreach="tracks" t-as="track">
-                <div class="col-md-2">
-                    <t t-if="track.image">
-                        <span t-field="track.image"
-                            t-options='{"widget": "image", "class": "rounded-circle"}'/>
-                    </t>
+    <t t-call="website_event.layout">
+    <div class="oe_structure" id="oe_structure_website_event_track_tracks_1"/>
+        <section class="pt48 pb48">
+            <div class="container">
+                <div class="row">
+                    <div id="left_column">
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="alert alert-warning" t-if="not len(tracks)" role="alert">
+                            No tracks found!
+                        </div>
+                        <div class="row mb-2" t-foreach="tracks" t-as="track">
+                            <div class="col-md-2">
+                                <t t-if="track.image">
+                                    <span t-field="track.image"
+                                        t-options='{"widget": "image", "class": "rounded-circle"}'/>
+                                </t>
+                            </div>
+                            <div class="col-md-10">
+                                <h3 class="mt0 mb0">
+                                    <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }" class="text-secondary"><span t-field="track.name"> </span></a>
+                                    <small t-if="not track.website_published" class="badge badge-danger">unpublished</small>
+                                </h3>
+                                <ul class="list-inline mb0">
+                                    <li t-if="track.partner_id" class="list-inline-item">
+                                        <i class="fa fa-user text-primary"/>
+                                        <t t-esc="track.partner_id.sudo().name"/>
+                                    </li>
+                                    <li t-if="track.date" class="list-inline-item"> <i class="fa fa-calendar text-primary"/><span t-field="track.date" t-options='{"hide_seconds":"True"}'/></li>
+                                    <li class="list-inline-item" t-if="track.location_id">
+                                        <i class="fa fa-map-marker"/>
+                                        <span t-field="track.location_id"/>
+                                    </li>
+                                </ul>
+                                <ul class="list-inline">
+                                    <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item fa fa-tags" t-if="tag_id.color != 0">
+                                        <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
+                                            <i class="fa fa-tags"/>
+                                            <span t-field="tag_id.name"/>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <p class="mt8"><t t-esc="html2plaintext(track.description or '')[0:500]"/><t t-if="track.description">...</t></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-10">
-                    <h3 class="mt0 mb0">
-                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }" class="text-secondary"><span t-field="track.name"> </span></a>
-                        <small t-if="not track.website_published" class="badge badge-danger">unpublished</small>
-                    </h3>
-                    <ul class="list-inline mb0">
-                        <li t-if="track.partner_id" class="list-inline-item">
-                            <i class="fa fa-user text-primary"/>
-                            <t t-esc="track.partner_id.sudo().name"/>
-                        </li>
-                        <li t-if="track.date" class="list-inline-item"> <i class="fa fa-calendar text-primary"/><span t-field="track.date" t-options='{"hide_seconds":"True"}'/></li>
-                        <li class="list-inline-item" t-if="track.location_id">
-                            <i class="fa fa-map-marker"/>
-                            <span t-field="track.location_id"/>
-                        </li>
-                    </ul>
-                    <ul class="list-inline">
-                        <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item fa fa-tags" t-if="tag_id.color != 0">
-                            <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
-                                <i class="fa fa-tags"/>
-                                <span t-field="tag_id.name"/>
-                            </a>
-                        </li>
-                    </ul>
-                    <p class="mt8"><t t-esc="html2plaintext(track.description or '')[0:500]"/><t t-if="track.description">...</t></p>
-                </div>
             </div>
-        </div>
+        </section>
         <div class="oe_structure" id="oe_structure_website_event_track_tracks_2"/>
     </t>
 </template>
@@ -186,100 +191,75 @@
     </xpath>
 </template>
 <template id="track_view">
-    <t t-call="website.layout">
-        <div id="wrap" class="js_event">
+    <t t-call="website_event.layout">
+        <section class="pt48">
             <div class="container">
-                <div class="row mt8">
-                    <div class="col-md-7" id="event_menu">
-                        <ol name="Event Menu" class="breadcrumb" id="event_menu" t-if="event.menu_id" t-att-data-content_menu_id="editable and event.menu_id.id">
-                            <t t-foreach="event.menu_id.child_id" t-as="submenu">
-                                <t t-call="website.submenu">
-                                    <t t-set="item_class" t-value="'breadcrumb-item'"/>
-                                    <t t-set="link_class" t-value="None"/>
-                                </t>
-                            </t>
-                        </ol>
+                <div class="row">
+                    <div class="col-12">
+                        <h1 t-field="track.name"/>
+                        <small>Proposed by
+                            <span t-if="track.partner_id" t-field="track.partner_id.sudo().name"/>
+                            <span t-if="not track.partner_id" t-field="track.partner_name"/>
+                        </small>
+                        <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
+                            <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item" t-if="tag_id.color != 0">
+                                <span class="fa fa-tags"></span>
+                                <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
+                                    <span t-field="tag_id.name"/>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container">
-            <div class="clearfix"/>
-
-            <h2 t-field="track.name" class="text-center"/>
-            <h3 t-field="event.name" class="text-center text-muted"/>
-            <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
-                <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item" t-if="tag_id.color != 0">
-                    <span class="fa fa-tags"></span>
-                    <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
-                        <span t-field="tag_id.name"/>
-                    </a>
-                </li>
-            </ul>
-
-            <section class="row mt32">
-                <div class="col-lg-8">
-                    <section>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-12 text-center">
-                                    <h2 t-field="track.name"/>
-                                    <small>Proposed by
-                                        <span t-if="track.partner_id" t-field="track.partner_id.sudo().name"/>
-                                        <span t-if="not track.partner_id" t-field="track.partner_name"/>
-                                    </small>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div t-field="track.description"/>
-                                </div>
-                                <div class="col-lg-12">
-                                    <h3>About The Speaker</h3>
-                                    <div t-field="track.partner_biography"/>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <div t-if="track.partner_id" class="mt32">
-                        <div class="row">
+        </section>
+        <section class="pt32">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div t-field="track.description"/>
+                        <h3>About The Speaker</h3>
+                        <div t-field="track.partner_biography"/>
+                        <div t-if="track.partner_id" class="row mt32">
                             <div class="col-md-2">
-                                <span t-field="track.partner_id.sudo().image_128"
-                                    t-options='{"widget": "image", "class": "rounded-circle"}'/>
-                            </div><div class="col-md-10">
-                               <h4 t-field="track.partner_id.name" class="mb4"/>
-                               <div class="fa fa-home mb16" t-if="track.partner_id.website">
-                                   <a t-att-href="track.partner_id.website"><span t-field="track.partner_id.website"/></a>
-                               </div>
-                               <div t-field="track.partner_id.website_description"/>
+                                <span t-field="track.partner_id.sudo().image_128" t-options='{"widget": "image", "class": "rounded-circle"}'/>
+                            </div>
+                            <div class="col-md-10">
+                                <h4 t-field="track.partner_id.name" class="mb4"/>
+                                <div class="mb16" t-if="track.partner_id.website">
+                                    <i class="fa fa-home mr-2"/><a t-att-href="track.partner_id.website"><span t-field="track.partner_id.website"/></a>
+                                </div>
+                                <div t-field="track.partner_id.website_description"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4" id="right_column">
+                        <div class="card">
+                            <h4 class="card-header">Practical Info</h4>
+                            <div class="card-body">
+                                <b>Date</b><br/>
+                                <span t-field="track.date" t-options='{"hide_seconds":"True"}'/>
+                                <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
+                                <br/>
+                                <b>Duration</b><br/>
+                                <span t-field="track.duration" t-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/><br/>
+                                <b>Location</b><br/>
+                                <span t-field="track.location_id"/><br/>
+                            </div>
+                        </div>
+
+                        <div class="card" t-if="False">
+                            <h4 class="card-header">Documents</h4>
+                            <div class="card-body">
+                                Put here the list of documents, like slides of
+                                the presentations. Remove the above t-if when
+                                it's implemented.
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4" id="right_column">
-                    <div class="card">
-                        <h4 class="card-header">Practical Info</h4>
-                        <div class="card-body">
-                            <b>Date</b><br/>
-                            <span t-field="track.date" t-options='{"hide_seconds":"True"}'/>
-                            <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
-                            <br/>
-                            <b>Duration</b><br/>
-                            <span t-field="track.duration" t-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/><br/>
-                            <b>Location</b><br/>
-                            <span t-field="track.location_id"/><br/>
-                        </div>
-                    </div>
-
-                    <div class="card" t-if="False">
-                        <h4 class="card-header">Documents</h4>
-                        <div class="card-body">
-                            Put here the list of documents, like slides of
-                            the presentations. Remove the above t-if when
-                            it's implemented.
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </t>
 </template>
 
@@ -308,7 +288,7 @@
     <t t-call="website_event.layout">
         <div class="oe_structure" id="oe_structure_website_event_track_proposal_1"/>
         <div class="container">
-            <section>
+            <section class="pt48">
                 <h1 class="o_page_header">Call for Proposals</h1>
                 <h2 class="text-center text-secondary font-weight-bold my-4" t-esc="event.name"/>
             </section>

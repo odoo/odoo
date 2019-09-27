@@ -181,8 +181,8 @@ according to the enabled options.
        t-attf-class="text-decoration-none d-block #{classes or 'mb-2'}"
        t-att-style="not blog_post.website_published and 'opacity:0.6;'">
 
-        <t t-call="website_blog.blog_cover">
-            <t t-set="cover_properties" t-value="json.loads(blog_post.cover_properties)"/>
+        <t t-call="website.record_cover">
+            <t t-set="_record" t-value="blog_post"/>
             <t t-set="additionnal_classes" t-value="'o_list_cover' + (not opt_blog_cards_design and ' rounded overflow-hidden shadow mb-3' or '')"/>
 
             <t t-if="opt_posts_loop_show_author" t-call="website_blog.post_author">

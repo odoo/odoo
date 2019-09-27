@@ -1673,4 +1673,139 @@ options.registry.anchorName = options.Class.extend({
         this.$target.trigger('content_changed');
     },
 });
+
+/**
+ * Allows edition of 'cover_properties' in website models which have such
+ * fields (blogs, posts, events, ...).
+ */
+options.registry.CoverProperties = options.Class.extend({
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        this.$image = this.$target.find('.o_record_cover_image');
+        this.$filter = this.$target.find('.o_record_cover_filter');
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$filterValueOpts = this.$el.find('[data-filter-value]');
+        this.$filterColorOpts = this.$el.find('[data-filter-color]');
+        this.filterColorClasses = this.$filterColorOpts.map(function () {
+            return $(this).data('filterColor');
+        }).get().join(' ');
+
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    clear: function (previewMode, value, $opt) {
+        this.selectClass(previewMode, '', $());
+        this.$image.css('background-image', '');
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    change: function (previewMode, value, $opt) {
+        var $image = $('<img/>');
+        var background = this.$image.css('background-image');
+        if (background && background !== 'none') {
+            $image.attr('src', background.match(/^url\(["']?(.+?)["']?\)$/)[1]);
+        }
+
+        var editor = new weWidgets.MediaDialog(this, {
+            mediaWidth: 1920,
+            onlyImages: true,
+            firstFilters: ['background']
+        }, $image[0]).open();
+        editor.on('save', this, function (image) {
+            var src = image.src;
+            this.$image.css('background-image', src ? ('url(' + src + ')') : '');
+            if (!this.$target.hasClass('o_record_has_cover')) {
+                var $opt = this.$el.find('.o_record_cover_opt_size_default[data-select-class]');
+                this.selectClass(previewMode, $opt.data('selectClass'), $opt);
+            }
+            this._setActive();
+        });
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    filterValue: function (previewMode, value, $opt) {
+        this.$filter.css('opacity', value);
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    filterColor: function (previewMode, value, $opt) {
+        this.$filter.removeClass(this.filterColorClasses);
+        if (value) {
+            this.$filter.addClass(value);
+        }
+
+        var $firstVisibleFilterOpt = this.$filterValueOpts.eq(1);
+        if (parseFloat(this.$filter.css('opacity')) < parseFloat($firstVisibleFilterOpt.data('filterValue'))) {
+            this.filterValue(previewMode, $firstVisibleFilterOpt.data('filterValue'), $firstVisibleFilterOpt);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @override
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+
+        _.each(this.$el.children(), el => {
+            var $el = $(el);
+
+            if (!$el.is('[data-change]')) {
+                $el.removeClass('d-none');
+
+                ['size', 'filters', 'text_size', 'text_align'].forEach(optName => {
+                    var $opts = $el.find('[data-cover-opt="' + optName + '"]');
+                    var notAllowed = (this.$target.data('use_' + optName) !== 'True');
+
+                    if ($opts.length && (!this.$target.hasClass('o_record_has_cover') || notAllowed)) {
+                        $el.addClass('d-none');
+                    }
+                });
+            }
+        });
+
+        this.$el.find('[data-clear]').toggleClass('d-none', !this.$target.hasClass('o_record_has_cover'));
+
+        this.$filterValueOpts.removeClass('active');
+        this.$filterColorOpts.removeClass('active');
+
+        var activeFilterValue = this.$filterValueOpts
+            .filter(el => {
+                return (parseFloat($(el).data('filterValue')).toFixed(1) === parseFloat(this.$filter.css('opacity')).toFixed(1));
+            }).addClass('active').data('filterValue');
+
+        var activeFilterColor = this.$filterColorOpts
+            .filter(el => {
+                return this.$filter.hasClass($(el).data('filterColor'));
+            }).addClass('active').data('filterColor');
+
+        this.$target[0].dataset.coverClass = this.$el.find('.active[data-cover-opt="size"]').data('selectClass') || '';
+        this.$target[0].dataset.textSizeClass = this.$el.find('.active[data-cover-opt="text_size"]').data('selectClass') || '';
+        this.$target[0].dataset.textAlignClass = this.$el.find('.active[data-cover-opt="text_align"]').data('selectClass') || '';
+        this.$target[0].dataset.filterValue = activeFilterValue || 0.0;
+        this.$target[0].dataset.filterColor = activeFilterColor || '';
+    },
+});
 });
