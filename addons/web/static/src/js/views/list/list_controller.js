@@ -410,7 +410,7 @@ var ListController = BasicController.extend({
             if (validRecordIds.length > 0) {
                 const dialogOptions = {
                     confirm_callback: () => {
-                        this.model.saveRecords(recordId, validRecordIds, fieldName)
+                        this.model.saveRecords(this.handle, recordId, validRecordIds, fieldName)
                             .then(async () => {
                                 this._updateButtons('readonly');
                                 const state = this.model.get(this.handle);
