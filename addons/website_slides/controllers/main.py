@@ -666,6 +666,7 @@ class WebsiteSlides(WebsiteProfile):
             slide.action_like()
         else:
             slide.action_dislike()
+        slide.flush()
         slide.invalidate_cache()
         return slide.read(['likes', 'dislikes', 'user_vote'])[0]
 
