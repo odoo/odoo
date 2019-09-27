@@ -577,7 +577,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         # group fields: modify group / implied groups
         current_settings = self.default_get(list(self.fields_get()))
         with self.env.norecompute():
-            for name, groups, implied_group in classified['group']:
+            for name, groups, implied_group in sorted(classified['group'], key=lambda k: self[k[0]]):
                 if self[name] == current_settings[name]:
                     continue
                 if self[name]:
