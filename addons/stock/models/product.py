@@ -787,7 +787,7 @@ class ProductTemplate(models.Model):
         return action
 
     def action_product_tmpl_forecast_report(self):
-        action = self.env.ref('stock.report_stock_quantity_action').read()[0]
+        action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
         action['domain'] = [
             ('product_id', 'in', self.product_variant_ids.ids),
             ('warehouse_id', '!=', False),
