@@ -832,7 +832,8 @@ var Discuss = AbstractAction.extend({
      */
     _renderThread: function () {
         this._threadWidget = new ThreadWidget(this, {
-            loadMoreOnScroll: true
+            areMessageAttachmentsDeletable: false,
+            loadMoreOnScroll: true,
         });
 
         this._threadWidget
