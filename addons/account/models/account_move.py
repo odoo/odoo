@@ -2297,13 +2297,13 @@ class AccountMoveLine(models.Model):
 
     # ==== Business fields ====
     move_id = fields.Many2one('account.move', string='Journal Entry',
-        index=True, required=True, auto_join=True, ondelete="cascade",
+        index=True, required=True, readonly=True, auto_join=True, ondelete="cascade",
         help="The move of this entry line.")
     move_name = fields.Char(string='Number', related='move_id.name', store=True, index=True)
     date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False, group_operator='min')
     ref = fields.Char(related='move_id.ref', store=True, copy=False, index=True, readonly=False)
     parent_state = fields.Selection(related='move_id.state', store=True, readonly=True)
-    journal_id = fields.Many2one(related='move_id.journal_id', store=True, readonly=False, index=True, copy=False)
+    journal_id = fields.Many2one(related='move_id.journal_id', store=True, index=True, copy=False)
     company_id = fields.Many2one(related='move_id.company_id', store=True, readonly=True)
     company_currency_id = fields.Many2one(related='company_id.currency_id', string='Company Currency',
         readonly=True, store=True,
@@ -2344,7 +2344,7 @@ class AccountMoveLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
 
     # ==== Origin fields ====
-    reconcile_model_id = fields.Many2one('account.reconcile.model', string="Reconciliation Model", copy=False)
+    reconcile_model_id = fields.Many2one('account.reconcile.model', string="Reconciliation Model", copy=False, readonly=True)
     payment_id = fields.Many2one('account.payment', string="Originator Payment", copy=False,
         help="Payment that created this entry")
     statement_line_id = fields.Many2one('account.bank.statement.line',

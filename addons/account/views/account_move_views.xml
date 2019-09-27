@@ -136,28 +136,28 @@
             <field name="model">account.move.line</field>
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false">
+                <tree string="Journal Items" create="false" edit="false">
                     <field name="date" optional="show"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="journal_id" options='{"no_open":True}'/>
                     <field name="move_id" optional="show"/>
-                    <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_user"/>
+                    <field name="account_id" options="{'no_open': True}" groups="account.group_account_user"/>
                     <field name="partner_id" optional="show"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="ref" optional="show"/>
                     <field name="name" optional="show"/>
-                    <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="account.group_account_user" optional="show" />
+                    <field name="analytic_account_id" groups="account.group_account_user" optional="show"/>
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" optional="hide"/>
-                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="show"/>
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
-                    <field name="amount_currency" readonly="True" groups="base.group_multi_currency" optional="hide"/>
+                    <field name="amount_currency" groups="base.group_multi_currency" optional="hide"/>
                     <field name="tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
                     <field name="full_reconcile_id" optional="show"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="reconciled" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
-                    <field name="currency_id" readonly="True" invisible="1" />
+                    <field name="currency_id" readonly="1" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
                 </tree>
@@ -169,27 +169,31 @@
             <field name="model">account.move.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" expand="context.get('expand', False)">
-                    <field name="date" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                <tree string="Journal Items" create="false" expand="context.get('expand', False)" multi_edit="1">
+                    <field name="date" optional="show" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
-                    <field name="move_id" optional="show" readonly="1"/>
-                    <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_user" optional="show"/>
+                    <field name="move_id" optional="show"/>
+                    <field name="account_id" optional="show" options="{'no_open': True, 'no_create': True}"
+                           domain="[('company_id', '=', company_id)]"
+                           groups="account.group_account_user"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id" optional="show" readonly="1"/>
                     <field name="ref" optional="hide"/>
                     <field name="name"/>
                     <field name="reconciled" invisible="1"/>
-                    <field name="full_reconcile_id" string="Matching" optional="show" readonly="1"/>
+                    <field name="full_reconcile_id" string="Matching" optional="show"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
-                    <field name="amount_currency" readonly="True" groups="base.group_multi_currency"/>
-                    <field name="currency_id" readonly="True" invisible="1" />
+                    <field name="amount_currency" readonly="1" groups="base.group_multi_currency"/>
+                    <field name="currency_id" readonly="1" invisible="1" />
                     <field name="company_currency_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
-                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="hide" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                    <field name="tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
+                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="hide" readonly="1"/>
+                    <field name="tag_ids" widget="many2many_tags" width="0.5" optional="hide" string="Tax Grids"
+                           options="{'no_open': True, 'no_create': True}"
+                           domain="[('applicability', '=', 'taxes')]"/>
                     <groupby name="move_id">
                         <field name="state" invisible="1"/>
                         <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
@@ -209,19 +213,10 @@
             <field name="arch" type="xml">
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="partner_id" position="attributes">
-                    <attribute name="optional">hide</attribute>
-                    <attribute name="readonly">1</attribute>
-                </field>
+                <field name="partner_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="full_reconcile_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="tax_ids" position="attributes"><attribute name="optional">show</attribute></field>
-                <field name="tag_ids" position="attributes">
-                    <attribute name="optional">show</attribute>
-                    <attribute name="string">Tax Grids</attribute>
-                    <attribute name="domain">[('applicability', '=', 'taxes')]</attribute>
-                    <attribute name="readonly">1</attribute>
-                </field>
-                <field name="name" position="attributes"><attribute name="readonly">1</attribute></field>
+                <field name="tag_ids" position="attributes"><attribute name="optional">show</attribute></field>
             </field>
         </record>
 
@@ -233,13 +228,8 @@
             <field name="arch" type="xml">
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="ref" position="attributes">
-                    <attribute name="optional">show</attribute>
-                    <attribute name="readonly">1</attribute>
-                </field>
+                <field name="ref" position="attributes"><attribute name="optional">show</attribute></field>
                 <field name="full_reconcile_id" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="name" position="attributes"><attribute name="readonly">1</attribute></field>
-                <field name="partner_id" position="attributes"><attribute name="readonly">1</attribute></field>
             </field>
         </record>
 
@@ -251,10 +241,6 @@
             <field name="arch" type="xml">
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="name" position="attributes"><attribute name="readonly">1</attribute></field>
-                <field name="account_id" position="attributes"><attribute name="readonly">1</attribute></field>
-                <field name="partner_id" position="attributes"><attribute name="readonly">1</attribute></field>
-                <field name="full_reconcile_id" position="attributes"><attribute name="readonly">1</attribute></field>
             </field>
         </record>
 
@@ -264,7 +250,10 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
             <field name="arch" type="xml">
-                <field name="account_id" position="attributes"><attribute name="optional">hide</attribute></field>
+                <field name="account_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                    <attribute name="readonly">1</attribute>
+                </field>
             </field>
         </record>
 
@@ -1192,7 +1181,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_partner"/>
-            <field name="search_view_id" ref="view_account_move_line_filter_with_root_selection"/>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="view_mode">tree,pivot,graph</field>
         </record>
 
