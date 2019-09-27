@@ -7,6 +7,7 @@ from hashlib import sha1
 from pprint import pformat
 from unicodedata import normalize
 import json
+import pprint
 
 import requests
 from lxml import etree, objectify
@@ -66,6 +67,169 @@ class PaymentAcquirerOgone(models.Model):
             'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (environment,),
             'ogone_alias_gateway_url': alias_gateway_url
         }
+
+    def _ogone_sha_check(self, shasign, data):
+        # verify shasign
+        shasign_check = self._ogone_generate_shasign('out', data)
+        try:
+            if shasign_check.upper() != shasign.upper():
+                error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (
+                shasign, shasign_check, data)
+                _logger.info(error_msg)
+                raise ValidationError(error_msg)
+        except ValidationError:
+            return False
+        return True
+
+    def _ogone_alias_gateway_feedback(self, post):
+        # First feedback: The Alias has been created on the Alias gateway.
+        # Next step: create the token and process the payment.
+        payload = {}
+        for key in ['FLAG3D', 'WIN3DS', 'BROWSERCOLORDEPTH', 'BROWSERJAVAENABLED', 'BROWSERLANGUAGE',
+                    'BROWSERSCREENHEIGHT', 'BROWSERSCREENWIDTH', 'BROWSERTIMEZONE',
+                    'BROWSERUSERAGENT', 'ALIAS']:
+            try:
+                payload[key] = post[key]
+            except KeyError as e:
+                _logger.error(str(e))
+                print('error : ', key)
+                pass
+        payload['BROWSERACCEPTHEADER'] = request.httprequest.headers.environ['HTTP_ACCEPT']
+        # Unquote the urls values
+        for f in ['BROWSERUSERAGENT', 'FORM_ACTION_URL', 'FORM_VALUES', 'RETURN_URL']:
+            post[f] = urlparse.unquote(post[f])
+
+        data_odoo = post['FORM_VALUES'].split(',')
+        form_data = {}
+        for val in data_odoo:
+            # Fixme regex ?
+            val = val.replace('\\', '').replace('+', '').replace('{', '').replace('}', '').replace("\'", '')
+            key, value = val.split(':')
+            form_data[key] = value
+
+        _logger.info('Ingenico: feeback Alias gateway with post data %s', pprint.pformat(post))
+
+        status = int(post.get('STATUS', '0'))
+        if status != 0:
+            error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s\n %(error_cardno)s\n' \
+                    '%(error_cn)s\n%(error_cvc)s\n%(error_ed)s' % {
+                        'error_str': post.get('NCERRORPLUS', ''),
+                        'error_code': post.get('NCERROR', ''),
+                        'error_code_cardno': post.get('NCERRORCARDNO', ''),
+                        'error_code_cn': post.get('NCERRORCN', ''),
+                        'error_code_cvc': post.get('NCERRORCVC', ''),
+                        'error_code_ed': post.get('NCERRORED', ''),
+                        'error_msg': ogone.OGONE_ERROR_MAP.get(post.get('NCERROR', ''), ''),
+                        'error_cardno': ogone.OGONE_ERROR_MAP.get(post.get('NCERRORCARDNO', ''), ''),
+                        'error_cn': ogone.OGONE_ERROR_MAP.get(post.get('NCERRORCN', ''), ''),
+                        'error_cvc': ogone.OGONE_ERROR_MAP.get(post.get('NCERRORCVC', ''), ''),
+                        'error_ed': ogone.OGONE_ERROR_MAP.get(post.get('NCERRORED', ''), '')
+                    }
+            return False, {'error': error}
+        # TODO: verify what happends with anonymous client
+        if post.get('PARTNER_ID'):
+            cvc_masked = 'XXX'
+            card_number_masked = post['CARDNO']
+            # Could be done in _ogone_form_get_tx_from_data ?
+            token_parameters = {
+                'cc_number': card_number_masked,
+                'cc_cvc': cvc_masked,
+                'cc_holder_name': post.get('CN'),
+                'cc_expiry': post.get('ED'),
+                'cc_brand': post.get('BRAND'),
+                'acquirer_id': self.id,
+                'partner_id': int(post.get('PARTNER_ID')),
+                'alias_gateway': True,
+                'alias': post.get('ALIAS'),
+                'acquirer_ref': post.get('ALIAS'),
+                'ogone_params': json.dumps(payload, ensure_ascii=True, indent=None)
+            }
+            try:
+                token = request.env['payment.token'].with_user(SUPERUSER_ID).create(token_parameters, )
+                print(token)
+                form_data['pm_id'] = token.id
+                parameters = {'json_route': post['FORM_ACTION_URL'],
+                              'form_data': json.dumps(form_data, ensure_ascii=True, indent=None)}
+                return {'success': True, 'parameters': parameters}
+
+            except Exception as e:
+                _logger.error(e)
+                error = "ERROR: no token created\n" + str(e)
+                _logger.error(error)
+                return {'success': False, 'error': error}
+        else:
+            error = "An error occurred, contact the webmaster"
+            return {'success': False, 'error': error}
+
+    def _ogone_transaction_feedback(self, post):
+        _logger.info('Ingnico: feeback 3DS with post data %s', pprint.pformat(post))
+        # 3DS validation feedback. The payment has been made.
+        # Next step: modify the transaction status and redirect to /payment/process
+        amount = post.get('AMOUNT', 0)
+        currency = post.get('CURRENCY', '')
+        reference = post.get('ORDERID', '')
+        alias = post.get('ALIAS', '')
+        partner_name = post.get('CN', '')
+        status = int(post.get('STATUS', '0'))
+        tx = request.env['payment.transaction'].with_user(SUPERUSER_ID).search([('amount', '=', amount),
+                                                                                ('reference', '=', reference),
+                                                                                ('partner_name', '=', partner_name),
+                                                                                ('state', '=', 'pending')])
+        if status in tx._ogone_valid_tx_status:
+            tx._set_transaction_done()  # or  _set_transaction_authorized if status = 5 ?
+        elif status in tx._ogone_cancel_tx_status:
+            tx._set_transaction_cancel()
+        elif status in tx._ogone_authorisation_refused_status:
+            tx._set_transaction_error(_("The authorization could not be performed"))
+        else:
+            # _set_transaction_error
+            _logger.error("Unknown STATUS : {}".format(status))
+
+        """"
+        Notes: status U: (Authentication/ Account Verification Could Not Be Performed;Technical or other problem, as indicated inRReq)
+        Il renvoie status 9 alors pendant un temps le système demande de cliquer pour s'authentifier puis ça passe en done...
+
+        status A: Not Authenticated/Verified, but a proof of attempted authentication/verification is provided)
+        Au final, ça passe et on a un check vert à côté. C'est normal?
+
+        Transaction Status R
+        Authentication/ Account Verification Rejected; 
+        ça passe alors que ça devrait pas. La transaction est verte dans ogone...
+        """
+        _logger.info('Ingnico: feeback 3DS with post data %s', pprint.pformat(post))
+        # 3DS validation feedback. The payment has been made.
+        # Next step: modify the transaction status and redirect to /payment/process
+        amount = post.get('AMOUNT', 0)
+        currency = post.get('CURRENCY', '')
+        reference = post.get('ORDERID', '')
+        alias = post.get('ALIAS', '')
+        partner_name = post.get('CN', '')
+        status = int(post.get('STATUS', '0'))
+        tx = request.env['payment.transaction'].with_user(SUPERUSER_ID).search([('amount', '=', amount),
+                                                                                ('reference', '=', reference),
+                                                                                ('partner_name', '=', partner_name),
+                                                                                ('state', '=', 'pending')])
+        if status in tx._ogone_valid_tx_status:
+            tx._set_transaction_done()  # or  _set_transaction_authorized if status = 5 ?
+        elif status in tx._ogone_cancel_tx_status:
+            tx._set_transaction_cancel()
+        elif status in tx._ogone_authorisation_refused_status:
+            tx._set_transaction_error(_("The authorization could not be performed"))
+        else:
+            # _set_transaction_error
+            _logger.error("Unknown STATUS : {}".format(status))
+
+        """"
+        Notes: status U: (Authentication/ Account Verification Could Not Be Performed;Technical or other problem, as indicated inRReq)
+        Il renvoie status 9 alors pendant un temps le système demande de cliquer pour s'authentifier puis ça passe en done...
+
+        status A: Not Authenticated/Verified, but a proof of attempted authentication/verification is provided)
+        Au final, ça passe et on a un check vert à côté. C'est normal?
+
+        Transaction Status R
+        Authentication/ Account Verification Rejected; 
+        ça passe alors que ça devrait pas. La transaction est verte dans ogone...
+        """
 
     def _ogone_generate_shasign(self, inout, values):
         """ Generate the shasign for incoming or outgoing communications.
@@ -177,7 +341,6 @@ class PaymentAcquirerOgone(models.Model):
         shasign = self.with_user(SUPERUSER_ID)._ogone_generate_shasign('in', ogone_alias_values)
         return ogone_alias_values, shasign
 
-
     def ogone_form_generate_values(self, values):
         base_url = self.get_base_url()
         ogone_tx_values = dict(values)
@@ -208,7 +371,7 @@ class PaymentAcquirerOgone(models.Model):
                 'ALIAS': 'ODOO-NEW-ALIAS-%s' % time.time(),    # something unique,
                 'ALIASUSAGE': values.get('alias_usage') or self.ogone_alias_usage,
             })
-        shasign = self._ogone_generate_shasign('in', temp_ogone_tx_values)
+        shasign = self.with_user(SUPERUSER_ID)._ogone_generate_shasign('in', temp_ogone_tx_values)
         temp_ogone_tx_values['SHASIGN'] = shasign
         ogone_tx_values.update(temp_ogone_tx_values)
         return ogone_tx_values
@@ -254,11 +417,8 @@ class PaymentTxOgone(models.Model):
             raise ValidationError(error_msg)
 
         # verify shasign
-        shasign_check = tx.acquirer_id._ogone_generate_shasign('out', data)
-        if shasign_check.upper() != shasign.upper():
-            error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (shasign, shasign_check, data)
-            _logger.info(error_msg)
-            raise ValidationError(error_msg)
+        if not tx.acquirer_id._ogone_sha_check(shasign.upper(), data):
+            return None
 
         if not tx.acquirer_reference:
             tx.acquirer_reference = pay_id
@@ -347,7 +507,6 @@ class PaymentTxOgone(models.Model):
     # S2S RELATED METHODS
     # --------------------------------------------------
     def ogone_s2s_do_transaction(self, **kwargs):
-        # TODO: create tx with s2s type
         base_url = base_url = self.get_base_url()
         path_url = "/payment/ogone/feedback"
         account = self.acquirer_id
