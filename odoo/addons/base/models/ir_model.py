@@ -1505,6 +1505,7 @@ class IrModelAccess(models.Model):
 
     @api.model
     def call_cache_clearing_methods(self):
+        self.flush()
         self.invalidate_cache()
         self.check.clear_cache(self)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
