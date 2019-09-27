@@ -196,13 +196,26 @@ var AbstractField = Widget.extend({
      *
      * @returns {Promise}
      */
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self.$el.attr('name', self.name);
-            self.$el.addClass('o_field_widget');
-            return self._render();
-        });
+    start: async function () {
+        await this._super.apply(this, arguments);
+        this.$el.attr('name', this.name);
+        this.$el.addClass('o_field_widget');
+        await this._render();
+        this.preventAutofill();
+    },
+    /**
+     * Avoid the browser to autofill the element with tag input, textarea or select.
+     */
+    preventAutofill: function () {
+        this.$el.each(function (i, el) {
+            if (['INPUT', 'TEXTAREA','SELECT'].some(t => t === el.tagName)
+                && !el.hasAttribute('autocomplete')) {
+                el.setAttribute('autocomplete', 'none');
+            }
+        })
+        this.$('input, select, textarea')
+            .filter((i, el) => !el.hasAttribute('autocomplete'))
+            .attr('autocomplete', 'none');
     },
 
     //--------------------------------------------------------------------------
