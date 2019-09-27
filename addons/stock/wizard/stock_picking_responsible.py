@@ -5,6 +5,9 @@ from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# TODO: REMOVE THIS FILE IN 13.1 !
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 class StockPickingResponsible(models.TransientModel):
     _name = 'stock.picking.responsible'
     _description = 'Assign Responsible'
