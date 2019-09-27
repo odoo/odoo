@@ -203,6 +203,49 @@ QUnit.module('Chatter', {
     }
 });
 
+QUnit.test('messaging becomes ready', async function (assert) {
+    assert.expect(2);
+
+    const initMessagingProm = testUtils.makeTestPromise();
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: `<form string="Partners">
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>`,
+        async mockRPC(route, args) {
+            const _super = this._super.bind(this, route, args); // limitation on class.js with async/await
+            if (route === '/mail/init_messaging') {
+                await initMessagingProm;
+            }
+            return _super();
+        },
+        res_id: 2,
+    });
+    await testUtils.nextTick();
+    assert.containsOnce(
+        form,
+        '.o_mail_thread_loading',
+        "thread should be loading when messaging is not yet ready");
+
+    // simulate messaging becoming ready
+    initMessagingProm.resolve();
+    await testUtils.nextTick();
+    assert.containsNone(
+        form,
+        '.o_mail_thread_loading',
+        "thread should no longer be loading when messaging becomes ready");
+
+    form.destroy();
+});
+
 QUnit.test('basic rendering', async function (assert) {
     assert.expect(9);
 
