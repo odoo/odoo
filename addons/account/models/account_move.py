@@ -3133,8 +3133,12 @@ class AccountMoveLine(models.Model):
         PROTECTED_FIELDS_LOCK_DATE = PROTECTED_FIELDS_TAX_LOCK_DATE + ['account_id', 'journal_id', 'amount_currency', 'currency_id', 'partner_id']
         PROTECTED_FIELDS_RECONCILIATION = ('account_id', 'date', 'debit', 'credit', 'amount_currency', 'currency_id')
 
-        if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
+        account_to_write = self.env['account.account'].browse(vals['account_id']) if 'account_id' in vals else None
+
+        # Check writing a deprecated account.
+        if account_to_write and account_to_write.deprecated:
             raise UserError(_('You cannot use a deprecated account.'))
+
         # when making a reconciliation on an existing liquidity journal item, mark the payment as reconciled
         for line in self:
             if line.parent_state == 'posted':
@@ -3159,6 +3163,18 @@ class AccountMoveLine(models.Model):
             # Check the reconciliation.
             if any(field_will_change(line, field_name) for field_name in PROTECTED_FIELDS_RECONCILIATION):
                 line._check_reconciliation()
+
+            # Check switching receivable / payable accounts.
+            if account_to_write:
+                account_type = line.account_id.user_type_id.type
+                if line.move_id.is_sale_document(include_receipts=True):
+                    if (account_type == 'receivable' and account_to_write.user_type_id.type != account_type) \
+                            or (account_type != 'receivable' and account_to_write.user_type_id.type == 'receivable'):
+                        raise UserError(_("You can only set an account having the receivable type on payment terms lines for customer invoice."))
+                if line.move_id.is_purchase_document(include_receipts=True):
+                    if (account_type == 'payable' and account_to_write.user_type_id.type != account_type) \
+                            or (account_type != 'payable' and account_to_write.user_type_id.type == 'payable'):
+                        raise UserError(_("You can only set an account having the payable type on payment terms lines for vendor bill."))
 
         result = super(AccountMoveLine, self).write(vals)
 

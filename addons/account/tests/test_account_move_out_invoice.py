@@ -3,6 +3,7 @@ from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
+from odoo.exceptions import UserError
 
 from unittest.mock import patch
 
@@ -1153,6 +1154,30 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             **self.move_vals,
             'currency_id': self.currency_data['currency'].id,
         })
+
+    def test_out_invoice_write_2(self):
+        ''' Ensure to not messing the invoice when writing a bad account type. '''
+        move = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                (0, None, self.product_line_vals_1),
+            ]
+        })
+
+        receivable_lines = move.line_ids.filtered(lambda line: line.account_id.user_type_id.type == 'receivable')
+        not_receivable_lines = move.line_ids - receivable_lines
+
+        # Write a receivable account on a not-receivable line.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            not_receivable_lines.write({'account_id': receivable_lines[0].account_id.copy().id})
+
+        # Write a not-receivable account on a receivable line.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            receivable_lines.write({'account_id': not_receivable_lines[0].account_id.copy().id})
+
+        # Write another receivable account on a receivable line.
+        receivable_lines.write({'account_id': receivable_lines[0].account_id.copy().id})
 
     def test_out_invoice_post_1(self):
         ''' Check the invoice_date will be set automatically at the post date. '''
