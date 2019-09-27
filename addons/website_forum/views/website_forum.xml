@@ -988,7 +988,8 @@
         <article t-attf-class="question o_wforum_post row no-gutters #{can_bump and 'oe_js_bump'}"
             data-type="question"
             t-att-data-last-update="question.write_date"
-            t-att-data-id="question.id">
+            t-att-data-id="question.id"
+            t-att-data-state="question.state">
 
             <div t-if="question.state == 'active'" class="col-6 mb-3 col-md-auto pr-2 pr-md-3 pr-lg-4">
                 <t t-call="website_forum.vote">
