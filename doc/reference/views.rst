@@ -197,6 +197,10 @@ root can have the following attributes:
 
     .. note:: if the ``edit`` attribute is set to ``false``, the ``editable`` option will be ignored.
 
+``multi_edit``
+    editable or not editable list can activate the multi-edition feature by defining
+    the multi_edit=1
+
 ``default_order``
     overrides the ordering of the view, replacing the model's default order.
     The value is a comma-separated list of fields, postfixed by ``desc`` to
