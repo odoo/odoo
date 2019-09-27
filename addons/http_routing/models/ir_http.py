@@ -302,11 +302,11 @@ class IrHttp(models.AbstractModel):
         """ Try to find a similar lang. Eg: fr_BE and fr_FR
             :param lang_code: the lang `code` (en_US)
         """
-        short_match = False
         if not lang_code:
-            return short_match
+            return False
+        short_match = False
         short = lang_code.partition('_')[0]
-        for code in [code for code, _, _ in request.env['res.lang'].get_available()]:
+        for (code, _) in request.env['res.lang'].get_installed():
             if code == lang_code:
                 return code
             if not short_match and code.startswith(short):
