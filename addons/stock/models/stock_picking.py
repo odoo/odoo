@@ -242,8 +242,7 @@ class Picking(models.Model):
 
     name = fields.Char(
         'Reference', default='/',
-        copy=False,  index=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        copy=False, index=True, readonly=True)
     origin = fields.Char(
         'Source Document', index=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -251,8 +250,7 @@ class Picking(models.Model):
     note = fields.Text('Notes')
     backorder_id = fields.Many2one(
         'stock.picking', 'Back Order of',
-        copy=False, index=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        copy=False, index=True, readonly=True,
         check_company=True,
         help="If this shipment was split, then this field links to the shipment which contains the already processed part.")
     backorder_ids = fields.One2many('stock.picking', 'backorder_id', 'Back Orders')
@@ -288,6 +286,7 @@ class Picking(models.Model):
     scheduled_date = fields.Datetime(
         'Scheduled Date', compute='_compute_scheduled_date', inverse='_set_scheduled_date', store=True,
         index=True, default=fields.Datetime.now, tracking=True,
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
     date = fields.Datetime(
         'Creation Date',
@@ -330,6 +329,7 @@ class Picking(models.Model):
     user_id = fields.Many2one(
         'res.users', 'Responsible', tracking=True,
         domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)],
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         default=lambda self: self.env.user)
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])

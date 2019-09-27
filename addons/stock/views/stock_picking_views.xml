@@ -187,7 +187,9 @@
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date" string="Picking list">
+                <tree string="Picking list" multi_edit="1"
+                      decoration-info="state == 'draft'" decoration-muted="state == 'cancel'"
+                      decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date">
                     <field name="name"/>
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show"/>
@@ -266,7 +268,7 @@
                         </button>
                     </div>
                     <h1 class="d-none d-md-block">
-                        <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
+                        <field name="name" attrs="{'invisible': [('name','=','/')]}"/>
                     </h1>
                     <group>
                         <group>
@@ -282,10 +284,10 @@
                             <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
                             <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
-                            <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
+                            <field name="backorder_id" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
-                            <field name="scheduled_date" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))], 'required': [('id', '!=', False)]}"/>
+                            <field name="scheduled_date" attrs="{'required': [('id', '!=', False)]}"/>
                             <field name="date_done" string="Effective Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             <field name="origin" placeholder="e.g. PO0032"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"
