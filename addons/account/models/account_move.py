@@ -3791,7 +3791,7 @@ class AccountPartialReconcile(models.Model):
                                 'name': line.name,
                                 'debit': rounded_amt if rounded_amt > 0 else 0.0,
                                 'credit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
-                                'account_id': line.tax_repartition_line_id.account_id.id,
+                                'account_id': line.tax_repartition_line_id.account_id.id or line.account_id.id,
                                 'analytic_account_id': line.analytic_account_id.id,
                                 'analytic_tag_ids': line.analytic_tag_ids.ids,
                                 'tax_exigible': True,
