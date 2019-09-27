@@ -226,13 +226,13 @@ class WebsiteForum(WebsiteProfile):
     def question_toggle_favorite(self, forum, question, **post):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        # TDE: add check for not public
-        favourite = False if question.user_favourite else True
+        favourite = not question.user_favourite
+        question.sudo().favourite_ids = [(favourite and 4 or 3, request.uid)]
         if favourite:
-            favourite_ids = [(4, request.uid)]
-        else:
-            favourite_ids = [(3, request.uid)]
-        question.sudo().write({'favourite_ids': favourite_ids})
+            # Automatically add the user as follower of the posts that he
+            # favorites (on unfavorite we chose to keep him as a follower until
+            # he decides to not follow anymore).
+            question.sudo().message_subscribe(request.env.user.partner_id.ids)
         return favourite
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", methods=['POST'], website=True)
