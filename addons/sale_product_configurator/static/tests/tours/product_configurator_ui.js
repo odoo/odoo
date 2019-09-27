@@ -71,12 +71,12 @@ tour.register('sale_product_configurator_tour', {
 },
 // check that 3 products were added to the SO
 {
-    trigger: 'td.o_data_cell:contains("Customizable Desk (Aluminium, White)")',
+    trigger: 'td.o_data_cell:contains("Customizable Desk (CONFIG) (Aluminium, White)")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){}
 }, {
-    trigger: 'td.o_data_cell:contains("Conference Chair (Aluminium)")',
+    trigger: 'td.o_data_cell:contains("Conference Chair (CONFIG) (Aluminium)")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){}
