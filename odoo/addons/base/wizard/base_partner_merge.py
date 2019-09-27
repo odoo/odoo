@@ -521,6 +521,7 @@ class MergePartnerAutomatic(models.TransientModel):
         """
         self.ensure_one()
         self.action_start_manual_process()  # here we don't redirect to the next screen, since it is automatic process
+        self.flush()
         self.invalidate_cache() # FIXME: is this still necessary?
 
         for line in self.line_ids:
