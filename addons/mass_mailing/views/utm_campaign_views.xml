@@ -80,9 +80,9 @@
             <xpath expr="//field[@name='user_id']" position="after">
                 <field name="mailing_mail_ids"/>
             </xpath>
-            <xpath expr="//div[hasclass('o_kanban_record_body')]">
+            <xpath expr="//ul[@id='o_utm_actions']">
                 <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
-                    class="oe_mailings o_kanban_record_subtitle d-inline-block">
+                    t-attf-class="oe_mailings #{record.mailing_mail_ids.raw_value.length === 0 ? 'text-muted' : ''}">
                     <t t-raw="record.mailing_mail_ids.raw_value.length"/> Mailings
                 </a>
             </xpath>

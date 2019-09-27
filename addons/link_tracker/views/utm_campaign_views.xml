@@ -23,8 +23,8 @@
                 <field name="click_count"/>
             </xpath>
             <xpath expr="//div[@id='utm_statistics']" position="inside">
-                <div class="px-2 text-center">
-                    <small>Clicks:</small>
+                <div class="mr-3" title="Clicks">
+                    <i class="fa fa-mouse-pointer text-muted"></i>
                     <small class="font-weight-bold" t-esc="record.click_count.raw_value" />
                 </div>
             </xpath>
