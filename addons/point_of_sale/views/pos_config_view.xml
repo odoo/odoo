@@ -527,7 +527,7 @@
             <tree string="Point of Sale Configuration">
                 <field name="name" />
                 <field name="picking_type_id"/>
-                <field name="company_id"  options="{'no_create': True}" groups="base.group_multi_company"/>
+                <field name="company_id" readonly="1" options="{'no_create': True}" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>

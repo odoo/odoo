@@ -28,6 +28,7 @@ class PosSession(models.Model):
     config_id = fields.Many2one(
         'pos.config', string='Point of Sale',
         help="The physical point of sale you will use.",
+        readonly=True,
         required=True,
         index=True)
     name = fields.Char(string='Session ID', required=True, readonly=True, default='/')
