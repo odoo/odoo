@@ -3,7 +3,7 @@ from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 from unittest.mock import patch
 
@@ -1178,6 +1178,40 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
 
         # Write another receivable account on a receivable line.
         receivable_lines.write({'account_id': receivable_lines[0].account_id.copy().id})
+
+    def test_out_invoice_write_3(self):
+        ''' Ensure the partner / currency set on the journal items is always consistent with the invoice. '''
+        move = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                (0, None, self.product_line_vals_1),
+            ]
+        })
+
+        random_line = move.line_ids[0]
+
+        # An invoice can't have multiple partners.
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            random_line.write({'partner_id': self.partner_b.id})
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            random_line.create({
+                'move_id': random_line.move_id.id,
+                'account_id': random_line.account_id.id,
+            })
+
+        # An invoice can't have multiple currencies.
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            random_line.write({
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': random_line.balance,
+            })
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            random_line.create({
+                'move_id': random_line.move_id.id,
+                'account_id': random_line.account_id.id,
+                'currency_id': self.currency_data['currency'].id,
+            })
 
     def test_out_invoice_post_1(self):
         ''' Check the invoice_date will be set automatically at the post date. '''

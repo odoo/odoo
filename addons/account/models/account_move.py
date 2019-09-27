@@ -1358,6 +1358,17 @@ class AccountMove(models.Model):
             sums = [res[1] for res in query_res]
             raise UserError(_("Cannot create unbalanced journal entry. Ids: %s\nDifferences debit - credit: %s") % (ids, sums))
 
+    @api.constrains('line_ids')
+    def _check_invoice_consistency(self):
+        ''' Ensure the values set on lines are consistent with the invoice itself. '''
+        for move in self:
+            if not move.is_invoice(include_receipts=True):
+                continue
+            if any(line.partner_id != move.commercial_partner_id for line in move.line_ids):
+                raise ValidationError(_('The partner set on journal items is not consistent with the one set on the invoice.'))
+            if any(line.always_set_currency_id != move.currency_id for line in move.line_ids):
+                raise ValidationError(_('The currency set on journal items is not consistent with the one set on the invoice.'))
+
     def _check_fiscalyear_lock_date(self):
         for move in self.filtered(lambda move: move.state == 'posted'):
             lock_date = max(move.company_id.period_lock_date or date.min, move.company_id.fiscalyear_lock_date or date.min)
@@ -1536,8 +1547,9 @@ class AccountMove(models.Model):
                 res |= super(AccountMove, move).write(vals_hashing)
 
         # Ensure the move is still well balanced.
-        if 'line_ids' in vals and self._context.get('check_move_validity', True):
-            self._check_balanced()
+        if 'line_ids' in vals:
+            if self._context.get('check_move_validity', True):
+                self._check_balanced()
 
         # Check the lock date.
         # /!\ The tax lock date is managed in the lines level, don't check it there.
@@ -3031,6 +3043,7 @@ class AccountMoveLine(models.Model):
         moves = lines.mapped('move_id')
         if self._context.get('check_move_validity', True):
             moves._check_balanced()
+            moves._check_invoice_consistency()
         moves._check_fiscalyear_lock_date()
         lines._check_tax_lock_date()
 
@@ -3129,7 +3142,9 @@ class AccountMoveLine(models.Model):
 
         # Check total_debit == total_credit in the related moves.
         if self._context.get('check_move_validity', True):
-            self.mapped('move_id')._check_balanced()
+            moves = self.mapped('move_id')
+            moves._check_balanced()
+            moves._check_invoice_consistency()
 
         return result
 
