@@ -1912,9 +1912,8 @@ class Binary(Field):
         # Note: the 'bin_size' flag is handled by the field 'datas' itself
         data = {att.res_id: att.datas
                 for att in records.env['ir.attachment'].sudo().search(domain)}
-        cache = records.env.cache
-        for record in records:
-            cache.set(record, self, data.get(record.id, False))
+        values = [data.get(id_) for id_ in records._ids]
+        records.env.cache.update(records, self, values, overwrite=False)
 
     def create(self, record_values):
         assert self.attachment
@@ -2835,9 +2834,8 @@ class One2many(_RelationalMulti):
             group[get_id(line[inverse])].append(line.id)
 
         # store result in cache
-        cache = records.env.cache
-        for record in records:
-            cache.set(record, self, tuple(group[record.id]))
+        values = [tuple(group[id_]) for id_ in records._ids]
+        records.env.cache.update(records, self, values, overwrite=False)
 
     def write_real(self, records_commands_list, create=False):
         """ Update real records. """
@@ -3203,9 +3201,8 @@ class Many2many(_RelationalMulti):
             group[row[0]].append(row[1])
 
         # store result in cache
-        cache = records.env.cache
-        for record in records:
-            cache.set(record, self, tuple(group[record.id]))
+        values = [tuple(group[id_]) for id_ in records._ids]
+        records.env.cache.update(records, self, values, overwrite=False)
 
     def write_real(self, records_commands_list, create=False):
         # records_commands_list = [(records, commands), ...]
