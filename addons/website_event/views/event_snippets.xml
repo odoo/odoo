@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Snippet to display local events -->
+<template id="s_country_events" name="Local Events">
+    <div t-attf-class="oe_country_events #{_classes or 'my-3'}">
+        <div class="country_events_list">
+            <h5>
+                <i class="fa fa-flag"/> Events from Your Country
+            </h5>
+        </div>
+    </div>
+</template>
+
+<!-- Misc templates -->
+<template id="country_events_list" name="Country">
+    <t t-ignore="true">
+        <t t-if="events">
+            <div class="country_events_list">
+                <t t-if="country">
+                    <img class="img-fluid" t-att-src="website.image_url(country, 'image')" alt=""></img>
+                    <h4><b>Events: <span t-esc="country.name"></span></b></h4>
+                </t>
+                <t t-if="not country">
+                    <img class="img-fluid" src="/website_event/static/src/img/world_map.jpg" alt=""></img>
+                    <h4><b>Upcoming Events</b></h4>
+                </t>
+                <div t-foreach="events[:5]" t-as="event_dict" class="oe_website_overflow_ellipsis mb8">
+                    <t t-if="not event_dict['event'].website_published">
+                        <span class="badge badge-danger" role="img" aria-label="Attention: not published" title="Not published"><i class="fa fa-ban"></i></span>
+                    </t>
+                    <t t-if="event_dict['event'].address_id">
+                        <i class="fa fa-map-marker" title="It is a physical event" role="img" aria-label="It is a physical event"></i>
+                    </t>
+                    <t t-if="not event_dict['event'].address_id">
+                        <i class="fa fa-cloud" title="It is an online event" role="img" aria-label="It is an online event"></i>
+                    </t>
+                    <b><span t-esc="event_dict['date']"/>: <span><a t-att-href="event_dict['url']"><t t-esc="event_dict['event'].name"/></a></span></b>
+                </div>
+                <t t-if="len(events) &gt; 5">
+                    <div t-if="country">
+                        <b><a t-att-href="'/event?country='+str(country.id)">See all events from <span t-esc="country.name"></span></a></b>
+                    </div>
+                    <div t-if="not country">
+                        <b><a href="/event"> See all upcoming events </a></b>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+</template>
+
+<!-- Replace snippet demo with actual snippet and options -->
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='website_event']" position="replace"/>
+</template>
+<template id="country_events" name="Country Events" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_event.s_country_events" t-thumbnail="/website_event/static/src/img/world_map.jpg"/>
+    </xpath>
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-selector=".oe_country_events"
+            data-drop-near="p, h1, h2, h3, blockquote, .card"
+            data-drop-in=".content"/>
+    </xpath>
+</template>
+
+</odoo>
