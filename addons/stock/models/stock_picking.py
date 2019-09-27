@@ -1143,6 +1143,12 @@ class Picking(models.Model):
         for pick in self:
             move_lines_to_pack = self.env['stock.move.line']
             package = self.env['stock.quant.package'].create({})
+
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if float_is_zero(move_line_ids[0].qty_done, precision_digits=precision_digits):
+                for line in move_line_ids:
+                    line.qty_done = line.product_uom_qty
+
             for ml in move_line_ids:
                 if float_compare(ml.qty_done, ml.product_uom_qty,
                                  precision_rounding=ml.product_uom_id.rounding) >= 0:
@@ -1186,8 +1192,6 @@ class Picking(models.Model):
                 move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) == 0)
-                for line in move_line_ids:
-                    line.qty_done = line.product_uom_qty
             if move_line_ids:
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:
