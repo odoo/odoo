@@ -1404,6 +1404,8 @@ class Lead(models.Model):
         return lead_probabilities
 
     def _cron_update_automated_probabilities(self):
+        self.flush()
+
         # Clear the frequencies table (in sql to speed up the cron)
         try:
             self.check_access_rights('unlink')
@@ -1424,6 +1426,7 @@ class Lead(models.Model):
 
         # create all frequencies from all company and team in batch
         self.env['crm.lead.scoring.frequency'].create(values_to_create)
+        self.flush()
         _logger.info("Predictive Lead Scoring : crm.lead.scoring.frequency table rebuilt")
 
         # Recompute all the leads. Won : probability = 100 | Lost : probability = 0 or inactive
@@ -1439,6 +1442,9 @@ class Lead(models.Model):
             batch_params = [(lead_probabilities[lead.id], lead.id) for lead in leads_to_update if lead.id in lead_probabilities]
             extras.execute_batch(self._cr, sql, batch_params, page_size=10000)
             _logger.info("Predictive Lead Scoring : all automated probability updated (count: %d)" % (len(leads_to_update)))
+
+        # As the cron is computing and writing in SQL queries, we need to invalidate the cache
+        self.invalidate_cache()
 
     # ----------------------------
     # Utility Tools for PLS

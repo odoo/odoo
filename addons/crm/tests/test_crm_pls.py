@@ -75,8 +75,5 @@ class TestCRMPLS(TransactionCase):
         # rebuild frequencies table and recompute automated_probability for all leads.
         Lead._cron_update_automated_probabilities()
 
-        # As the cron is computing and writing in SQL queries, we need to invalidate the cache
-        leads.invalidate_cache()
-
         self.assertEquals(tools.float_compare(leads[3].automated_probability, 33.49, 2), 0)
         self.assertEquals(tools.float_compare(leads[7].automated_probability, 7.74, 2), 0)
