@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="acquirer_form_ogone" model="ir.ui.view">
+            <field name="name">acquirer.form.ogone</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer"]' position='after'>
+                    <group attrs="{'invisible': [('provider', '!=', 'ogone')]}">
+                        <field name="ogone_pspid"/>
+                        <field name="ogone_userid"/>
+                        <field name="ogone_password"/>
+                        <field name="ogone_shakey_in"/>
+                        <field name="ogone_shakey_out"/>
+                        <field name="ogone_alias_usage"/>
+                        <a colspan="2" href="https://payment-services.ingenico.com/int/en/ogone/support/guides/user%20guides/use-your-account" target="_blank">How to use your Ingenico ePayments account?</a>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
