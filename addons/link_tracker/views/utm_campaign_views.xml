@@ -23,8 +23,9 @@
                 <field name="click_count"/>
             </xpath>
             <xpath expr="//div[@id='utm_statistics']" position="inside">
-                <div class="d-flex justify-content-between align-items-center w-100 order-1 mb-1">
-                    <strong>Clicks</strong> <span><t t-esc="record.click_count.raw_value"/></span>
+                <div class="px-2 text-center">
+                    <small>Clicks:</small>
+                    <small class="font-weight-bold" t-esc="record.click_count.raw_value" />
                 </div>
             </xpath>
         </field>
