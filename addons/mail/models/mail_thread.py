@@ -280,10 +280,9 @@ class MailThread(models.AbstractModel):
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not self._context.get('mail_create_nolog'):
-            doc_name = self.env['ir.model']._get(self._name).name
-            body = _('%s created') % doc_name
             threads_no_subtype = self.env[self._name]
             for thread in threads:
+                body = thread._get_creation_message()
                 subtype = thread._creation_subtype()
                 if subtype:  # if we have a subtype, post message to notify users from _message_auto_subscribe
                     thread.sudo().message_post(body=body, subtype_id=subtype.id, author_id=self.env.user.partner_id.id)
@@ -561,6 +560,14 @@ class MailThread(models.AbstractModel):
         :returns: a subtype browse record (empty if no subtype is triggered)
         """
         return self.env['mail.message.subtype']
+
+    def _get_creation_message(self):
+        """ Get the creation message to log into the chatter at the record's creation.
+        :returns: The message's body to log.
+        """
+        self.ensure_one()
+        doc_name = self.env['ir.model']._get(self._name).name
+        return _('%s created') % doc_name
 
     def _track_subtype(self, init_values):
         """ Give the subtypes triggered by the changes on the record according
