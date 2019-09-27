@@ -23,6 +23,7 @@ class MassMailingList(models.Model):
 
     # Compute number of contacts non opt-out, non blacklisted and valid email recipient for a mailing list
     def _compute_contact_nbr(self):
+        self.flush()
         self.env.cr.execute('''
             select
                 list_id, count(*)
