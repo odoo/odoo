@@ -4,7 +4,7 @@
 from odoo import api, fields, models, tools
 
 
-class L10nInProductHsnReport(models.Model):
+class L10nInProductHsnReport(models.AbstractModel):
     _name = "l10n_in.product.hsn.report"
     _description = "Product HSN Statistics"
     _auto = False

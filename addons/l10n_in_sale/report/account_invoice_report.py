@@ -4,7 +4,7 @@
 from odoo import models
 
 
-class L10nInAccountInvoiceReport(models.Model):
+class L10nInAccountInvoiceReport(models.AbstractModel):
     _inherit = "l10n_in.account.invoice.report"
 
     def _where(self):

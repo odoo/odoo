@@ -4,7 +4,7 @@
 from odoo import api, fields, models, tools
 
 
-class L10nInAccountInvoiceReport(models.Model):
+class L10nInAccountInvoiceReport(models.AbstractModel):
     _name = "l10n_in.account.invoice.report"
     _description = "Account Invoice Statistics"
     _auto = False

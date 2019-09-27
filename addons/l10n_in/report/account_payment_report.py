@@ -111,7 +111,7 @@ class L10nInPaymentReport(models.AbstractModel):
             %s %s %s)""" % (self._table, self._select(), self._from(), self._where()))
 
 
-class AdvancesPaymentReport(models.Model):
+class AdvancesPaymentReport(models.AbstractModel):
     _name = "l10n_in.advances.payment.report"
     _inherit = 'l10n_in.payment.report'
     _description = "Advances Payment Analysis"
@@ -153,7 +153,7 @@ class AdvancesPaymentReport(models.Model):
         return select_str
 
 
-class L10nInAdvancesPaymentAdjustmentReport(models.Model):
+class L10nInAdvancesPaymentAdjustmentReport(models.AbstractModel):
     _name = "l10n_in.advances.payment.adjustment.report"
     _inherit = 'l10n_in.payment.report'
     _description = "Advances Payment Adjustment Analysis"
