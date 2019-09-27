@@ -973,7 +973,7 @@ class Orderpoint(models.Model):
         return res
 
     name = fields.Char(
-        'Name', copy=False, required=True,
+        'Name', copy=False, required=True, readonly=True,
         default=lambda self: self.env['ir.sequence'].next_by_code('stock.orderpoint'))
     active = fields.Boolean(
         'Active', default=True,
