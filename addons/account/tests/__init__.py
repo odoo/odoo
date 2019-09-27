@@ -14,6 +14,7 @@ from . import test_reconciliation_widget
 from . import test_payment
 from . import test_reconciliation
 from . import test_search
+from . import test_settings
 from . import test_tax
 from . import test_invoice_taxes
 from . import test_templates_consistency
