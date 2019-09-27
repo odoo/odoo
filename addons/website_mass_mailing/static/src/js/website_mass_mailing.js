@@ -168,6 +168,9 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
         });
         this.massMailingPopup.opened().then(function () {
             var $modal = self.massMailingPopup.$modal;
+            $modal.find('header button.close').on('mouseup', function (ev) {
+                ev.stopPropagation();
+            });
             $modal.addClass('o_newsletter_modal');
             $modal.find('.oe_structure').attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
             $modal.find('.modal-dialog').addClass('modal-dialog-centered');
