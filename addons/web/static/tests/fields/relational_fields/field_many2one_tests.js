@@ -571,7 +571,7 @@ QUnit.module('fields', {}, function () {
 
             const list = await createView({
                 arch: `
-                    <tree editable="top">
+                    <tree multi_edit="1">
                         <field name="trululu"/>
                     </tree>`,
                 data: this.data,

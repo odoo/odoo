@@ -39,12 +39,14 @@ ListRenderer.include({
      * @param {boolean} params.addCreateLineInGroups
      * @param {boolean} params.addTrashIcon
      * @param {boolean} params.isMany2Many
+     * @param {boolean} params.isMultiEditable
      */
     init: function (parent, state, params) {
         var self = this;
         this._super.apply(this, arguments);
 
         this.editable = params.editable;
+        this.isMultiEditable = params.isMultiEditable;
         this.columnWidths = false;
 
         // if addCreateLine (resp. addCreateLineInGroups) is true, the renderer
@@ -348,7 +350,7 @@ ListRenderer.include({
      * @returns {boolean}
      */
     isInMultipleRecordEdition: function (recordId) {
-        return this.isEditable() && this.selection.length > 1 && this.selection.includes(recordId);
+        return this.isEditable() && this.isMultiEditable && this.selection.includes(recordId);
     },
     /**
      * Returns whether the list can be edited.
@@ -359,7 +361,7 @@ ListRenderer.include({
      * @returns {boolean}
      */
     isEditable: function () {
-        return this.editable || this.selection.length;
+        return this.editable || (this.isMultiEditable && this.selection.length);
     },
     /**
      * Removes the line associated to the given recordID (the index of the row
@@ -817,7 +819,7 @@ ListRenderer.include({
      * @returns {boolean}
      */
     _isRecordEditable: function (recordID) {
-        return this.editable || this.selection.includes(recordID);
+        return this.editable || (this.isMultiEditable && this.selection.includes(recordID));
     },
     /**
      * Moves to the next row in the list
