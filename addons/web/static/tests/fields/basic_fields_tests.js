@@ -3711,7 +3711,7 @@ QUnit.module('basic_fields', {
             View: ListView,
             model: 'partner',
             data: this.data,
-            arch: '<tree editable="bottom">' +
+            arch: '<tree multi_edit="1">' +
                     '<field name="datetime"/>' +
                   '</tree>',
             translateParameters: { // Avoid issues due to localization formats
