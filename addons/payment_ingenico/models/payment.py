@@ -211,7 +211,9 @@ class PaymentAcquirerOgone(models.Model):
         elif status in tx._ogone_cancel_tx_status:
             tx._set_transaction_cancel()
         elif status in tx._ogone_authorisation_refused_status:
-            tx._set_transaction_error(_("The authorization could not be performed"))
+            # Error message not defined in PaymentAcquirer
+            tx._set_transaction_cancel()
+            # tx._set_transaction_error(_("The authorization could not be performed"))
         else:
             # _set_transaction_error
             _logger.error("Unknown STATUS : {}".format(status))

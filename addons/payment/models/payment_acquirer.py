@@ -132,7 +132,7 @@ class PaymentAcquirer(models.Model):
         help='Message displayed, if order is done successfully after having done the payment process.')
     cancel_msg = fields.Html(
         'Cancel Message', translate=True,
-        default=lambda s: _('Your payment has been cancelled.'),
+        default=lambda s: _('Your payment has been cancelled or refused.'),
         help='Message displayed, if order is cancel during the payment process.')
     save_token = fields.Selection([
         ('none', 'Never'),
