@@ -6042,6 +6042,38 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: m2m tags in grouped list', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch: `
+                <tree editable="top" multi_edit="1">
+                    <field name="bar"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            data: this.data,
+            groupBy: ['bar'],
+            model: 'foo',
+            View: ListView,
+        });
+
+        // Opens first group
+        await testUtils.dom.click(list.$('.o_group_header:first'));
+
+        assert.notEqual(list.$('.o_data_row:first').text(), list.$('.o_data_row:last').text(),
+            "First row and last row should have different values");
+
+        await testUtils.dom.click(list.$('thead .o_list_record_selector:first input'));
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(1)'));
+        await testUtils.dom.click(list.$('.o_selected_row .o_field_many2manytags .o_delete:first'));
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.strictEqual(list.$('.o_data_row:first').text(), list.$('.o_data_row:last').text(),
+            "All rows should have been correctly updated");
+
+        list.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 

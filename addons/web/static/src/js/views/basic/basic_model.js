@@ -3356,7 +3356,15 @@ var BasicModel = AbstractModel.extend({
         var viewType = view ? view.type : fieldInfo.viewType;
 
         var toFetch = {};
-        _.each(list.data, function (dataPoint) {
+
+        // flattens the list.data ids in a grouped case
+        let dataPointIds = list.data;
+        for (let i = 0; i < list.groupedBy.length; i++) {
+            dataPointIds = dataPointIds.reduce((acc, groupId) =>
+                acc.concat(this.localData[groupId].data), []);
+        }
+
+        dataPointIds.forEach(function (dataPoint) {
             var record = self.localData[dataPoint];
             if (typeof record.data[fieldName] === 'string'){
                 // in this case, the value is a local ID, which means that the
