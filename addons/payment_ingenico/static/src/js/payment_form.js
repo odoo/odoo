@@ -66,25 +66,25 @@ odoo.define('payment_ogone.payment_form', function (require) {
                 result['CN'] = formData.cc_holder_name;
                 var wrongInput = false;
                 inputsForm.toArray().forEach(function (element) {
-                //skip the check of non visible inputs
-                if ($(element).attr('type') === 'hidden') {
-                    return true;
-                }
-                var message;
-                $(element).closest('div.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
-                $(element).siblings(".o_invalid_field").remove();
-                //force check of forms validity (useful for Firefox that refill forms automatically on f5)
-                $(element).trigger("focusout");
-                if (element.dataset.isRequired && element.value.length === 0) {
-                        $(element).closest('div.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-                        message = '<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>';
-                        $(element).closest('div.form-group').append(message);
+                    //skip the check of non visible inputs
+                    if ($(element).attr('type') === 'hidden') {
+                        return true;
+                    }
+                    var message;
+                    $(element).closest('div.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+                    $(element).siblings(".o_invalid_field").remove();
+                    //force check of forms validity (useful for Firefox that refill forms automatically on f5)
+                    $(element).trigger("focusout");
+                    if (element.dataset.isRequired && element.value.length === 0) {
+                            $(element).closest('div.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+                            message = '<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>';
+                            $(element).closest('div.form-group').append(message);
+                            wrongInput = true;
+                    } else if ($(element).closest('div.form-group').hasClass('o_has_error')) {
                         wrongInput = true;
-                } else if ($(element).closest('div.form-group').hasClass('o_has_error')) {
-                    wrongInput = true;
-                     message = '<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>';
-                    $(element).closest('div.form-group').append(message);
-                }
+                         message = '<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>';
+                        $(element).closest('div.form-group').append(message);
+                    }
             });
 
             if (wrongInput) {
@@ -109,30 +109,6 @@ odoo.define('payment_ogone.payment_form', function (require) {
             document.body.appendChild(ogoneForm);
             ogoneForm.submit();
             });
-            // FLOW:
-            // STEP 1
-                // GET THE NEEDED INFORMATION FROM THE BACKEND;
-                // ACCEPTURL
-                // ALIASPERSISTEDAFTERUSE
-                // EXCEPTIONURL
-                // ORDERID
-                // PSPID
-                // SHASIGN
-                // PARAMPLUS
-                // TODO talk about step 3 : transaction with additionnals parameters
-            // STEP 2
-                // Create the Token which is named Alias in Ogone denomination. This alias is created when submitting this form.(Pay Now)
-                // The alias creation depends on the following fields:
-                // ACCEPTURL
-                // ALIASPERSISTEDAFTERUSE
-                // CARDNO
-                // CN
-                // CVC
-                // ED
-                // EXCEPTIONURL
-                // ORDERID
-                // PSPID= SEE XML FILE
-                // SHASIGN= xxx
         },
 
         /**

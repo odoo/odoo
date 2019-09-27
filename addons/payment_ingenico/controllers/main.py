@@ -3,13 +3,10 @@ import logging
 import pprint
 import werkzeug
 
-
-
 from odoo import http, SUPERUSER_ID, _
-from odoo.http import request, Response
+from odoo.http import request
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.controllers.portal import PaymentProcessing
-from odoo.addons.payment_ingenico.data import ogone
 
 _logger = logging.getLogger(__name__)
 
@@ -26,7 +23,7 @@ class OgoneController(http.Controller):
         '/payment/ogone/exception', '/payment/ogone/test/exception',
         '/payment/ogone/cancel', '/payment/ogone/test/cancel',
     ], type='http', auth='public')
-    def ogone_form_feedback(self, **post):#ok on ogone
+    def ogone_form_feedback(self, **post):# used when redirected on ogone website
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
         request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
@@ -39,7 +36,7 @@ class OgoneController(http.Controller):
         new_id = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
         return new_id.id
 
-    @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False)
+    @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False) # verify if used when redirected on ogone website
     def ogone_s2s_create(self, **post):
         error = ''
         acq = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))
@@ -103,8 +100,9 @@ class OgoneController(http.Controller):
                 _logger.error(error_message)
                 return request.render("payment_ingenico.payment_error_page", {'error': error_message})
         except KeyError:
+            # FIXME better error messages
             _logger.error('Ingenico: feeback Alias creation %s', pprint.pformat(post))
-            error_message = _('ERROR: No payement data provided')
+            error_message = _('No payment data provided by the payment acquirer.')
             return request.render("payment_ingenico.payment_error_page", {'error': error_message})
 
         if 'ACCEPTANCE' in post:
@@ -117,4 +115,4 @@ class OgoneController(http.Controller):
             if feedback['success']:
                 return request.render("payment_ingenico.payment_feedback_page", feedback['parameters'])
             else:
-                return Response(feedback['error'], status=200)
+                return request.render("payment_ingenico.payment_error_page", {'error': feedback['error']})

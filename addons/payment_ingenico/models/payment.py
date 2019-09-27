@@ -5,7 +5,6 @@ import logging
 import time
 from hashlib import sha1
 from pprint import pformat
-from unicodedata import normalize
 import json
 import pprint
 
@@ -57,7 +56,8 @@ class PaymentAcquirerOgone(models.Model):
         """ Ogone URLS:
          - standard order: POST address for form-based """
         if environment == 'test':
-            alias_gateway_url = "https://ogone.test.v-psp.com/ncol/test/alias_gateway_utf8.asp"
+            alias_gateway_url = "https://ogone.test.v-psp.com/ncol/test/alias_gateway_utf8.asp" # defined in the documentation
+            alias_gateway_url = "https://secure.ogone.com/ncol/test/alias_gateway_utf8.asp" # works anyway
         else:
             alias_gateway_url = "https://secure.ogone.com/ncol/prod/alias_gateway_utf8.asp"
         return {
@@ -92,17 +92,17 @@ class PaymentAcquirerOgone(models.Model):
                 payload[key] = post[key]
             except KeyError as e:
                 _logger.error(str(e))
-                print('error : ', key)
+                error_msg = 'error : ' + key
+                _logger.error(error_msg)
                 pass
         payload['BROWSERACCEPTHEADER'] = request.httprequest.headers.environ['HTTP_ACCEPT']
-        # Unquote the urls values
         for f in ['BROWSERUSERAGENT', 'FORM_ACTION_URL', 'FORM_VALUES', 'RETURN_URL']:
             post[f] = urlparse.unquote(post[f])
 
         data_odoo = post['FORM_VALUES'].split(',')
         form_data = {}
         for val in data_odoo:
-            # Fixme regex ?
+            # Fixme, use a regex ?
             val = val.replace('\\', '').replace('+', '').replace('{', '').replace('}', '').replace("\'", '')
             key, value = val.split(':')
             form_data[key] = value
@@ -153,12 +153,12 @@ class PaymentAcquirerOgone(models.Model):
 
             except Exception as e:
                 _logger.error(e)
-                error = "ERROR: no token created\n" + str(e)
-                _logger.error(error)
-                return {'success': False, 'error': error}
+                error_message = "ERROR: no token created\n" + str(e)
+                _logger.error(error_message)
+                return {'success': False, 'error': error_message}
         else:
-            error = "An error occurred, contact the webmaster"
-            return {'success': False, 'error': error}
+            error_message = "An error occurred, contact the webmaster"
+            return {'success': False, 'error': error_message}
 
     def _ogone_transaction_feedback(self, post):
         _logger.info('Ingnico: feeback 3DS with post data %s', pprint.pformat(post))
@@ -184,17 +184,6 @@ class PaymentAcquirerOgone(models.Model):
             # _set_transaction_error
             _logger.error("Unknown STATUS : {}".format(status))
 
-        """"
-        Notes: status U: (Authentication/ Account Verification Could Not Be Performed;Technical or other problem, as indicated inRReq)
-        Il renvoie status 9 alors pendant un temps le système demande de cliquer pour s'authentifier puis ça passe en done...
-
-        status A: Not Authenticated/Verified, but a proof of attempted authentication/verification is provided)
-        Au final, ça passe et on a un check vert à côté. C'est normal?
-
-        Transaction Status R
-        Authentication/ Account Verification Rejected; 
-        ça passe alors que ça devrait pas. La transaction est verte dans ogone...
-        """
         _logger.info('Ingnico: feeback 3DS with post data %s', pprint.pformat(post))
         # 3DS validation feedback. The payment has been made.
         # Next step: modify the transaction status and redirect to /payment/process
@@ -383,7 +372,7 @@ class PaymentAcquirerOgone(models.Model):
     def ogone_s2s_form_process(self, data):
         # ARJ QUESTION: token created in _ogone_alias_gateway_feedback
         # but this function is needed to provide the pm_id (crash if not defined)
-        # only one âyment token is created thought (in _ogone_alias_gateway_feedback)
+        # only one payment token is created thought (in _ogone_alias_gateway_feedback)
         values = {
             'cc_number': data.get('cc_number'),
             'cc_cvc': int(data.get('cc_cvc')),
@@ -395,6 +384,7 @@ class PaymentAcquirerOgone(models.Model):
         }
         pm_id = self.env['payment.token'].sudo().create(values)
         return pm_id
+
 
 class PaymentTxOgone(models.Model):
     _inherit = 'payment.transaction'
