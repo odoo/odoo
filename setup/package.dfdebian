@@ -16,6 +16,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -qq &&  \
     apt-get upgrade -qq -y && \
+    DEBIAN_FRONTEND=noninteractive \
     apt-get install -qq -y\
         adduser \
         dh-python \
