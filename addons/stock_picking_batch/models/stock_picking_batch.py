@@ -13,7 +13,7 @@ class StockPickingBatch(models.Model):
 
     name = fields.Char(
         string='Batch Transfer', default='New',
-        copy=False, required=True,
+        copy=False, required=True, readonly=True,
         help='Name of the batch transfer')
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True, check_company=True,
@@ -30,7 +30,7 @@ class StockPickingBatch(models.Model):
         ('in_progress', 'In progress'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')], default='draft',
-        copy=False, tracking=True, required=True)
+        copy=False, tracking=True, required=True, readonly=True)
 
     @api.model
     def create(self, vals):
