@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Onii Onii <onii0223@yahoo.com>, 2019
-# Martin Trigaux, 2019
 # Otgonbayar.A <gobi.mn@gmail.com>, 2019
 # Purevsuren Demberel <purevsurento@gmail.com>, 2019
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
+# Martin Trigaux, 2019
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-27 09:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
 "Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
@@ -91,12 +91,12 @@ msgid ""
 "                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR CART.</h1>\n"
 "                    Would you like to complete your purchase?<br/><br/>\n"
 "                    % if object.order_line:\n"
-"                        % for line in object.order_line:\n"
+"                        % for line in object.website_order_line:\n"
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
 "                                    <td style=\"padding: 10px; width:150px;\">\n"
-"                                        <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" height=\"100px\" width=\"100px\" alt=\"Product image\"/>\n"
+"                                        <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                                    </td>\n"
 "                                    <td>\n"
 "                                        <strong>${line.product_id.display_name}</strong><br/>${line.name}\n"
@@ -551,6 +551,13 @@ msgid "Add product suggestions"
 msgstr ""
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_recently_viewed.xml:0
+#, python-format
+msgid "Add to Cart"
+msgstr "Сагс руу нэмэх"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Address"
 msgstr "Хаяг"
@@ -622,11 +629,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Assignation of online orders"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_catalog_variants_action
-msgid "Attribute Values"
-msgstr "Шинжийн утгууд"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
@@ -820,6 +822,11 @@ msgstr "Бүтээгдэхүүнийг үүсгэхийн тулд <em>Үргэ�
 #, python-format
 msgid "Click on this button so your customers can see it."
 msgstr "Захиалагч нарт харуулахын тулд энэ товч дээр дарна уу."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
+msgid "Close"
+msgstr "Хаах"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
@@ -1333,12 +1340,6 @@ msgid "Image 512"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_image__image_64
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_64
-msgid "Image 64"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "Зургийн нэр"
@@ -1543,6 +1544,13 @@ msgid "New Product"
 msgstr "Шинэ Бүтээгдэхүүн"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_recently_viewed.xml:0
+#, python-format
+msgid "Next"
+msgstr "Дараагийн"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Next <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
@@ -1561,6 +1569,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined in category \""
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
+msgid "No product views yet for this visitor"
 msgstr ""
 
 #. module: website_sale
@@ -1875,6 +1888,13 @@ msgid "Please proceed your current cart."
 msgstr ""
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_recently_viewed.xml:0
+#, python-format
+msgid "Previous"
+msgstr "Өмнөх"
+
+#. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Month"
@@ -1890,7 +1910,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Year"
-msgstr ""
+msgstr "Өмнөх жил"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -1935,9 +1955,11 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.model,name:website_sale.model_product_product
+#: model:ir.model.fields,field_description:website_sale.field_website_track__product_id
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
 #, python-format
 msgid "Product"
 msgstr "Бараа"
@@ -2010,6 +2032,16 @@ msgid "Product Variants"
 msgstr "Барааны хувилбар"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__visitor_product_count
+msgid "Product Views"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.website_sale_visitor_product_action
+msgid "Product Views History"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
 msgid "Product not found!"
 msgstr "Бүтээгдэхүүн олдсонгүй!"
@@ -2020,12 +2052,18 @@ msgid "Product prices displaying in web catalog"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
+msgid "Product views"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_settings
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
 msgid "Products"
 msgstr "Бараа"
 
@@ -2034,6 +2072,11 @@ msgstr "Бараа"
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 #, python-format
 msgid "Products Search Bar"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
+msgid "Products Views"
 msgstr ""
 
 #. module: website_sale
@@ -2101,6 +2144,11 @@ msgstr "Тоо хэмжээ"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "REVENUE BY"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
+msgid "Recently viewed Products"
 msgstr ""
 
 #. module: website_sale
@@ -2634,6 +2682,13 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
+msgid ""
+"This is a preview of the recently viewed products by the user.<br/>\n"
+"                    Once the user has seen at least one product this snippet will be visible."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "This is your current cart."
 msgstr ""
@@ -2659,9 +2714,19 @@ msgid "This promo code is not available."
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
+msgid "Total number of product viewed"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_website_visitor__visitor_product_count
+msgid "Total number of views on products"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "True"
-msgstr ""
+msgstr "Үнэн"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2724,6 +2789,27 @@ msgid "View Cart ("
 msgstr "Сагсыг үзэх ("
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_website_track
+msgid "Visited Pages"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_ids
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_kanban
+msgid "Visited Products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_graph
+msgid "Visitor Product Views"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_tree
+msgid "Visitor Product Views History"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_searchbar
 msgid "We have amazing products in our shop, check them now !"
 msgstr ""
@@ -2740,6 +2826,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Website"
 msgstr "Вэбсайт"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard
+msgid "Website Payment acquire onboarding wizard"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
@@ -2768,6 +2859,11 @@ msgstr "Вэбсайт Дэлгүүр"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
 msgid "Website URL"
 msgstr "Вебсайт URL"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_visitor
+msgid "Website Visitor"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
@@ -3028,8 +3124,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "website"
 msgstr "вэбсайт"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard
-msgid "website.sale.payment.acquirer.onboarding.wizard"
-msgstr ""

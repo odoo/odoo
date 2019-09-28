@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:28+0000\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
@@ -280,11 +280,6 @@ msgid "Advanced price rules (discounts, formulas)"
 msgstr "Reglas de precio avanzadas (descuentos, fórmulas)"
 
 #. module: product
-#: model:product.category,name:product.product_category_all
-msgid "All"
-msgstr "Todos"
-
-#. module: product
 #: code:addons/product/models/product_pricelist.py:0
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
 #, python-format
@@ -362,7 +357,6 @@ msgid "Attribute Value"
 msgstr "Valor del Atributo"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.variants_action
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -793,15 +787,17 @@ msgid "Exclude for"
 msgstr "Excluir para"
 
 #. module: product
-#: model:product.category,name:product.cat_expense
-msgid "Expenses"
-msgstr "Gastos"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price
 msgid "Explicit rule name for this pricelist line."
 msgstr "Nombre de regla explícita para esta línea de tarifa."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
+msgid ""
+"Extra price for the variant with this attribute value on sale price. eg. 200"
+" price extra, 1000 + 200 = 1200."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -971,12 +967,6 @@ msgstr "Imagen 256"
 #: model:ir.model.fields,field_description:product.field_product_template__image_512
 msgid "Image 512"
 msgstr "Imagen 512"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__image_64
-#: model:ir.model.fields,field_description:product.field_product_template__image_64
-msgid "Image 64"
-msgstr "Imagen 64"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -1164,11 +1154,9 @@ msgstr "Adjuntos principales"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
 msgid ""
-"Make this attribute value not compatible with\n"
-"        other values of the product or some attribute values of optional and accessory products."
+"Make this attribute value not compatible with other values of the product or"
+" some attribute values of optional and accessory products."
 msgstr ""
-"Hacer que este valor de atributo no sea compatible con\n"
-"otros valores del producto o algunos valores de atributos de productos opcionales y accesorios."
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1307,21 +1295,17 @@ msgstr "Número de mensajes no leidos"
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"On the product %s you cannot associate the value <strong>%s</strong> with "
-"the attribute <strong>%s</strong> because they do not match."
+"On the product %s you cannot associate the value %s with the attribute %s "
+"because they do not match."
 msgstr ""
-"En el producto %s no se puede asociar el valor <strong>%s</strong> con el "
-"atributo <strong>%s</strong> porque no coinciden."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"On the product %s you cannot transform the attribute <strong>%s</strong> "
-"into the attribute %s."
+"On the product %s you cannot transform the attribute %s into the attribute "
+"%s."
 msgstr ""
-"En el producto %s no se puede transformar el atributo <strong>%s</strong> en"
-" el atributo %s."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1415,15 +1399,6 @@ msgstr "Cálculo del precio"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_discount
 msgid "Price Discount"
 msgstr "Descuento precio"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
-msgid ""
-"Price Extra: Extra price for the variant with\n"
-"        this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr ""
-"Precio Extra: Precio adicional para la variante con\n"
-"este valor de atributo en el precio de venta. Ej. 200 precio extra, 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -1824,6 +1799,7 @@ msgstr "Referencia"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Related Products"
 msgstr "Productos relacionados"
 
@@ -1848,11 +1824,6 @@ msgstr "Método redondeo"
 #: model:ir.model.fields,field_description:product.field_product_template__list_price
 msgid "Sale Price"
 msgstr "Precio de venta"
-
-#. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
-msgstr "Se puede vender"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2029,12 +2000,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"The attribute <strong>%s</strong> must have at least one value for the "
-"product %s."
+msgid "The attribute %s must have at least one value for the product %s."
 msgstr ""
-"El atributo <strong>%s</strong> debe tener al menos un valor para el "
-"producto %s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -2135,12 +2102,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"The value <strong>%s</strong> is not defined for the attribute "
-"<strong>%s</strong> on the product %s."
+msgid "The value %s is not defined for the attribute %s on the product %s."
 msgstr ""
-"El valor <strong>%s</strong> no está definido para el atributo "
-"<strong>%s</strong> en el producto %s."
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2322,11 +2285,6 @@ msgid "Variant Image 512"
 msgstr "Imagen de variante 512"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__image_variant_64
-msgid "Variant Image 64"
-msgstr "Imagen de variante 64"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
 msgstr "Información de la variante"
@@ -2344,7 +2302,6 @@ msgstr "Variante del vendedor"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
-#: model_terms:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
 msgstr "Valores de las variantes"
 
@@ -2430,18 +2387,6 @@ msgid "Volume unit of measure label"
 msgstr "Etiqueta de unidad de medida de volumen"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
-msgid "Website Messages"
-msgstr "Mensajes del sitio web"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product__website_message_ids
-#: model:ir.model.fields,help:product.field_product_template__website_message_ids
-msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
 msgid "Weight"
@@ -2485,34 +2430,28 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"You cannot change the Variants Creation Mode of the attribute <strong>%s</strong> because it is used on the following products:\n"
+"You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
-"No se puede modificar el Modo de creación de variantes del atributo <strong>%s</strong> porque se utiliza en los siguientes productos:\n"
-"%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"You cannot change the attribute of the value <strong>%s</strong> because it "
-"is used on the following products:%s"
+"You cannot change the attribute of the value %s because it is used on the "
+"following products:%s"
 msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot change the product of the value <strong>%s</strong> set on "
-"product %s."
+msgid "You cannot change the product of the value %s set on product %s."
 msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot change the value of the value <strong>%s</strong> set on product "
-"%s."
+msgid "You cannot change the value of the value %s set on product %s."
 msgstr ""
 
 #. module: product
@@ -2541,7 +2480,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"You cannot delete the attribute <strong>%s</strong> because it is used on the following products:\n"
+"You cannot delete the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
 
@@ -2549,7 +2488,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"You cannot delete the value <strong>%s</strong> because it is used on the following products:\n"
+"You cannot delete the value %s because it is used on the following products:\n"
 "%s"
 msgstr ""
 
@@ -2557,8 +2496,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"You cannot move the attribute <strong>%s</strong> from the product %s to the"
-" product %s."
+"You cannot move the attribute %s from the product %s to the product %s."
 msgstr ""
 
 #. module: product

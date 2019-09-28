@@ -12,7 +12,6 @@
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019
 # Mehmet Demirel <mdemirell@gmail.com>, 2019
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2019
-# Ediz Duman <neps1192@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
 # Murat Kaplan <muratk@projetgrup.com>, 2019
@@ -22,14 +21,15 @@
 # Umur Akın <umura@projetgrup.com>, 2019
 # Buket Şeker <buket_skr@hotmail.com>, 2019
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4516,6 +4516,14 @@ msgstr "Lütfen bekle"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/discuss.xml:0
+#: code:addons/mail/static/src/xml/discuss.xml:0
+#, python-format
+msgid "Please wait..."
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/js/composers/basic_composer.js:0
 #, python-format
 msgid "Please, wait while the file is uploading."
@@ -5159,7 +5167,7 @@ msgstr "Bir mesaj gönder"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
 msgid "Send email"
-msgstr ""
+msgstr "Eposta Gönder"
 
 #. module: mail
 #. openerp-web
@@ -5733,20 +5741,13 @@ msgstr "Gecikme türü"
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"Sunucu eylemi türü. Aşağıdaki değerler mevcuttur: \\ n- 'Execute Python "
-"Code': yürütülecek bir python kod bloğu \\ n- 'Yeni Kayıt Oluşturun veya "
-"Kopyala': yeni değerlerle yeni bir kayıt oluşturun veya mevcut bir kaydı "
-"kopyalayın \\ N- 'Bir kaydın üzerine yaz': bir kaydın değerlerini güncelle "
-"\\ n- 'Birkaç eylemi uygula': birkaç diğer sunucu eylemini tetikleyen bir "
-"eylem tanımla \\ n- 'Takipçileri ekle': bir kaydın takipçileri ekle ( "
-"Tartışmada mevcuttur) \\ n- 'E-postayı gönder': otomatik olarak bir e-posta "
-"gönder (e-posta_template'de mevcuttur)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration

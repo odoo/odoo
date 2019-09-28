@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -4570,6 +4570,14 @@ msgstr "Even geduld"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/discuss.xml:0
+#: code:addons/mail/static/src/xml/discuss.xml:0
+#, python-format
+msgid "Please wait..."
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/js/composers/basic_composer.js:0
 #, python-format
 msgid "Please, wait while the file is uploading."
@@ -5805,20 +5813,13 @@ msgstr "Soort vertraging"
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"Type van server actie. De volgende opties zijn beschikbaar:\n"
-"- 'Voer Python code uit': een blok van Python code dat wordt uitgevoerd\n"
-"- 'Trigger een workflow signaal': stuur een signaal naar een workflow\n"
-"- 'Aanmaken of kopiëren van een nieuw record': maak een nieuw record aan met nieuwe waardes of kopieer een bestand record in uw database\n"
-"- 'Schrijf op record': update de waardes van een record\n"
-"- 'Voer verschillende acties uit': definieer een actie die meerdere andere server acties doet afgaan\n"
-"- 'Voeg volgers toe': Voeg volgers toe aan een record (beschikbaar in discussie)\n"
-"- 'Verstuur e-mail': stuur automatisch een e-mail (beschikbaar in email_template)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration

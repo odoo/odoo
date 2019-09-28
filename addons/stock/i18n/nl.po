@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:26+0000\n"
+"POT-Creation-Date: 2019-09-23 13:48+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -1826,6 +1826,11 @@ msgid ""
 msgstr ""
 "Levertijd, in dagen. Het is het aantal dagen, beloofd aan de klant, tussen "
 "de bevestiging van de verkooporder en de levering."
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Demand"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -4408,7 +4413,7 @@ msgstr "Productcategorieën"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Product Category"
-msgstr "Product categorie"
+msgstr "Productcategorie"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_product
@@ -7145,8 +7150,8 @@ msgid ""
 "When ticked, if the move created by this rule is cancelled, the next move "
 "will be cancelled too."
 msgstr ""
-"Indien aangevinkt, en de beweging die door deze regel is geannuleerd, zal de"
-" volgende beweging ook worden geannuleerd."
+"Indien aangevinkt wordt bij het splitsen of annuleren van deze mutate ook de"
+" opvolgende mutatie geannuleerd of gesplitst."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
@@ -7524,6 +7529,14 @@ msgstr "U kunt alleen leveringen die gereed zijn retourneren."
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr "U kunt maar één picking tegelijk retourneren."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You need to activate storage locations to be able to do internal operation "
+"types."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

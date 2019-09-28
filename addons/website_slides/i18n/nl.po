@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:29+0000\n"
+"POT-Creation-Date: 2019-09-27 09:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
 "Last-Translator: Charles Vervaecke <cvk@odoo.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -349,6 +349,13 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-home d-md-none\"/><span class=\"d-none d-md-inline-block "
 "ml-1\">Terug naar opleiding</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid ""
+"<i class=\"fa fa-home\"/>\n"
+"                                            Course"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -1282,6 +1289,7 @@ msgstr "Soort opleiding"
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses_courses
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_report_courses
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_graph
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree
@@ -1856,12 +1864,6 @@ msgid "Image 512"
 msgstr "Afbeelding 512"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_64
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_64
-msgid "Image 64"
-msgstr "Afbeelding "
-
-#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
@@ -2049,7 +2051,7 @@ msgid "Latest Published"
 msgstr "Laatste publicatie"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_achievements_small
+#: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
 msgid "Latest achievements"
 msgstr "Laatste prestaties"
 
@@ -2299,7 +2301,7 @@ msgid "No Course created yet."
 msgstr "Nog geen opleiding aangemaakt."
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_achievements_small
+#: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
 msgid "No achievements currently :("
 msgstr "Nog geen prestaties :("
 

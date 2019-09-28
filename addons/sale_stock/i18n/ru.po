@@ -3,23 +3,23 @@
 # 	* sale_stock
 # 
 # Translators:
-# Gennady Marchenko <gennadym@gmail.com>, 2019
-# Collex100, 2019
 # Sergey Vilizhanin, 2019
 # Max Belyanin <maxbelyanin@gmail.com>, 2019
 # Viktor Pogrebniak <vp@aifil.ru>, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Konstantin Korovin <korovin74@gmail.com>, 2019
 # sorin Rusu <to.rusu.sorin@gmail.com>, 2019
+# Gennady Marchenko <gennadym@gmail.com>, 2019
 # Martin Trigaux, 2019
+# Collex100, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Collex100, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,6 +126,13 @@ msgid "After-Sale"
 msgstr "После продажи"
 
 #. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "All planned operations included"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
 msgstr ""
@@ -141,6 +148,13 @@ msgstr "Как можно быстрее"
 #, python-format
 msgid "Availability"
 msgstr "Наличие"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "Available"
+msgstr "Доступно"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -378,8 +392,8 @@ msgstr "Move forward expected delivery dates by"
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "On Hand - Reserved"
-msgstr ""
+msgid "On"
+msgstr "Вкл"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -534,13 +548,6 @@ msgid "Sold in the last 365 days"
 msgstr ""
 
 #. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Stock Available"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
 msgstr "Перемещение запасов"
@@ -550,13 +557,6 @@ msgstr "Перемещение запасов"
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
 msgstr "Движения запасов"
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Stock On Hand"
-msgstr "Товар в наличии"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -609,8 +609,8 @@ msgstr "Перемещения"
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "View Detailed Forecast"
-msgstr ""
+msgid "View Forecast"
+msgstr "Вид прогноза"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
