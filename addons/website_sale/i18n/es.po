@@ -11,7 +11,6 @@
 # Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
@@ -27,20 +26,21 @@
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2019
-# Jose Núñez <jose@comunitea.com>, 2019
 # Sabina Batlle <sbb@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
 # Efrem Jimenez <efj@odoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Jose Núñez <jose@comunitea.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-27 09:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
+"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,12 +114,12 @@ msgid ""
 "                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR CART.</h1>\n"
 "                    Would you like to complete your purchase?<br/><br/>\n"
 "                    % if object.order_line:\n"
-"                        % for line in object.order_line:\n"
+"                        % for line in object.website_order_line:\n"
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
 "                                    <td style=\"padding: 10px; width:150px;\">\n"
-"                                        <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" height=\"100px\" width=\"100px\" alt=\"Product image\"/>\n"
+"                                        <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                                    </td>\n"
 "                                    <td>\n"
 "                                        <strong>${line.product_id.display_name}</strong><br/>${line.name}\n"
@@ -178,100 +178,6 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
-"<?xml version=\"1.0\"?>\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\">\n"
-"                    % set company = object.company_id or object.user_id.company_id or user.company_id\n"
-"                    <span style=\"font-size: 10px;\">Your Cart</span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                        ${object.name}\n"
-"                    </span>\n"
-"                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
-"                </td></tr>\n"
-"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- CONTENT -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">HAY ALGO EN SU CARRITO.</h1>\n"
-"                    ¿Desea completar su compra?<br/><br/>\n"
-"                    % if object.order_line:\n"
-"                        % for line in object.order_line:\n"
-"                            <hr/>\n"
-"                            <table width=\"100%\">\n"
-"                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;\">\n"
-"                                        <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" height=\"100px\" width=\"100px\" alt=\"Product image\"/>\n"
-"                                    </td>\n"
-"                                    <td>\n"
-"                                        <strong>${line.product_id.display_name}</strong><br/>${line.name}\n"
-"                                    </td>\n"
-"                                    <td width=\"100px\" align=\"right\">\n"
-"                                        ${(line.product_uom_qty) | int} ${(line.product_uom.name)}\n"
-"                                    </td>\n"
-"                                </tr>\n"
-"                            </table>\n"
-"                        % endfor\n"
-"                        <hr/>\n"
-"                    % endif\n"
-"                    <div style=\"text-align: center; margin: 16px 0px 16px 0px; font-size: 14px;\">\n"
-"                        <a href=\"${object.get_base_url()}/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                            Reanudar orden\n"
-"                        </a>\n"
-"                    </div>\n"
-"                    <div style=\"text-align: center;\"><strong>Gracias por comprar con ${user.company_id.name}!</strong></div>\n"
-"                </td></tr>\n"
-"                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    ${company.name}\n"
-"                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    ${company.phone}\n"
-"                    % if company.email\n"
-"                        | <a href=\"'mailto:%s' % ${company.email}\" style=\"text-decoration:none; color: #454748;\">${company.email}</a>\n"
-"                    % endif\n"
-"                    % if company.website\n"
-"                        | <a href=\"'%s' % ${company.website}\" style=\"text-decoration:none; color: #454748;\">${company.website}</a>\n"
-"                    % endif\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
-"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Con tecnología de <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" style=\"color: #875A7B;\">Odoo</a>\n"
-"      </td></tr>\n"
-"    </table>\n"
-"</td></tr>\n"
-"</table>\n"
-"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -711,6 +617,13 @@ msgid "Add product suggestions"
 msgstr "Agregar sugerencias de productos"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_recently_viewed.xml:0
+#, python-format
+msgid "Add to Cart"
+msgstr "Añadir a la carrito"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Address"
 msgstr "Dirección"
@@ -783,11 +696,6 @@ msgstr "Aplicar precios específicos por país, descuentos, etc"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Assignation of online orders"
 msgstr "Asignación de pedidos online"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_catalog_variants_action
-msgid "Attribute Values"
-msgstr "Valores de atributo"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
@@ -981,6 +889,11 @@ msgstr "Haga clic en <em>Continuar</em> para crear el producto."
 #, python-format
 msgid "Click on this button so your customers can see it."
 msgstr "Haga clic en este botón para que sus clientes puedan verlo."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
+msgid "Close"
+msgstr "Cerrar"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
@@ -1498,12 +1411,6 @@ msgid "Image 512"
 msgstr "Imagen 512"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_image__image_64
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_64
-msgid "Image 64"
-msgstr "Imagen 64"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "Nombre de la imagen"
@@ -1712,6 +1619,13 @@ msgid "New Product"
 msgstr "Nuevo producto"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_recently_viewed.xml:0
+#, python-format
+msgid "Next"
+msgstr "Siguiente"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Next <span class=\"fa fa-chevron-right\"/>"
 msgstr "Siguiente <span class=\"fa fa-chevron-right\"/>"
@@ -1731,6 +1645,11 @@ msgstr "Ningún producto definido"
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined in category \""
 msgstr "No hay productos definidos en la categoría \""
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
+msgid "No product views yet for this visitor"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -2049,6 +1968,13 @@ msgid "Please proceed your current cart."
 msgstr "Continúe con su carro actual."
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_recently_viewed.xml:0
+#, python-format
+msgid "Previous"
+msgstr "Anterior"
+
+#. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Month"
@@ -2109,9 +2035,11 @@ msgstr "Procesar el pedido una vez que se reciba el pago."
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.model,name:website_sale.model_product_product
+#: model:ir.model.fields,field_description:website_sale.field_website_track__product_id
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
 #, python-format
 msgid "Product"
 msgstr "Producto"
@@ -2184,6 +2112,16 @@ msgid "Product Variants"
 msgstr "Variantes de producto"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__visitor_product_count
+msgid "Product Views"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.website_sale_visitor_product_action
+msgid "Product Views History"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
 msgid "Product not found!"
 msgstr "Producto no encontrado"
@@ -2194,12 +2132,18 @@ msgid "Product prices displaying in web catalog"
 msgstr "Precios de producto a mostrar en catálogo web"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
+msgid "Product views"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_settings
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
 msgid "Products"
 msgstr "Productos"
 
@@ -2209,6 +2153,11 @@ msgstr "Productos"
 #, python-format
 msgid "Products Search Bar"
 msgstr "Barra de búsqueda de productos"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
+msgid "Products Views"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2281,6 +2230,11 @@ msgstr "Cantidad"
 #, python-format
 msgid "REVENUE BY"
 msgstr "INGRESOS POR"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
+msgid "Recently viewed Products"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2836,6 +2790,13 @@ msgstr ""
 "cuando envía un correo electrónico de recuperación."
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
+msgid ""
+"This is a preview of the recently viewed products by the user.<br/>\n"
+"                    Once the user has seen at least one product this snippet will be visible."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "This is your current cart."
 msgstr "Este es su carro actual."
@@ -2859,6 +2820,16 @@ msgstr "Este producto no está publicado."
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "This promo code is not available."
 msgstr "Este código de promoción no está disponible."
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
+msgid "Total number of product viewed"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_website_visitor__visitor_product_count
+msgid "Total number of views on products"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2926,6 +2897,27 @@ msgid "View Cart ("
 msgstr "Ver carrito ("
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_website_track
+msgid "Visited Pages"
+msgstr "Páginas visitadas"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_ids
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_kanban
+msgid "Visited Products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_graph
+msgid "Visitor Product Views"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_tree
+msgid "Visitor Product Views History"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_searchbar
 msgid "We have amazing products in our shop, check them now !"
 msgstr "¡Tenemos productos asombrosos en nuestra tienda, conózcalos ahora!"
@@ -2942,6 +2934,11 @@ msgstr "¡Tenemos productos asombrosos en nuestra tienda, conózcalos ahora!"
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Website"
 msgstr "Sitio web"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard
+msgid "Website Payment acquire onboarding wizard"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
@@ -2970,6 +2967,11 @@ msgstr "Tienda del sitio web"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
 msgid "Website URL"
 msgstr "URL del sitio web"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_visitor
+msgid "Website Visitor"
+msgstr "Visitante del sitio web"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
@@ -3242,8 +3244,3 @@ msgstr "w-100 w-md-auto mt-2"
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "website"
 msgstr "sitio web"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard
-msgid "website.sale.payment.acquirer.onboarding.wizard"
-msgstr "website.sale.payment.acquirer.onboarding.wizard"

@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:26+0000\n"
+"POT-Creation-Date: 2019-09-23 13:48+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -1809,6 +1809,11 @@ msgid ""
 msgstr ""
 "Visas pristatymo laikas dinomis. Tai skaičius dienų, pažadėtų klientui, nuo "
 "pardavimo užsakymo patvirtinimo iki pristatymo."
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Demand"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -7458,6 +7463,14 @@ msgstr "Galite grąžinti tik atliktus paėmimus."
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr "Vienu metu galite grąžinti tik vieną paėmimą."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You need to activate storage locations to be able to do internal operation "
+"types."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-23 11:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -29,6 +29,10 @@ msgid ""
 "                Your tracking reference is ${object.carrier_tracking_ref}.\n"
 "            %endif"
 msgstr ""
+"${object.company_id.name}: Jsme rádi, že vás můžeme informovat, že vaše objednávka byla odeslána.\n"
+"%if object.carrier_tracking_ref:\n"
+"Vaše sledovací reference je ${object.carrier_tracking_ref}.\n"
+"%endif"
 
 #. module: stock_sms
 #: model:mail.template,body_html:stock_sms.mail_template_no_more_credit_sms
@@ -42,6 +46,14 @@ msgid ""
 "                <p>Odoo S.A.</p>\n"
 "            "
 msgstr ""
+"<p>Vážený pane ${object.name},</p>\n"
+"                <br/>\n"
+"                <p>Na vašem IAP SMS účtu již nejsou žádné kredity.<br/>\n"
+"                Svůj účet IAP SMS můžete nabíjet z Nastavení aplikace Inventář nebo z Obecného nastavení.<br/></p>\n"
+"                <br/>\n"
+"                <p>S pozdravem,</p>\n"
+"                <p>Odoo S.A.</p>\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -71,7 +83,7 @@ msgstr "Potvrdit"
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_confirm_stock_sms
 msgid "Confirm Stock SMS"
-msgstr ""
+msgstr "Potvrzovací skladová SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
@@ -86,12 +98,12 @@ msgstr "Vytvořeno"
 #. module: stock_sms
 #: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
 msgid "Delivery: Send by SMS Text Message"
-msgstr ""
+msgstr "Doručení: Odesláno prostřednictvím SMS zprávy"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "Disable SMS"
-msgstr ""
+msgstr "Vypnout SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
@@ -101,22 +113,17 @@ msgstr "Zobrazované jméno"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
 msgid "Has Received Warning Stock Sms"
-msgstr ""
+msgstr "Obdržel varovnou skladovou SMS"
 
 #. module: stock_sms
 #: model:mail.template,subject:stock_sms.mail_template_no_more_credit_sms
 msgid "IAP SMS Confirmation Notification"
-msgstr ""
+msgstr "IAP SMS Potvrzovací oznámení"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
 msgid "ID"
 msgstr "ID"
-
-#. module: stock_sms
-#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__iap_account
-msgid "Iap Account"
-msgstr ""
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms____last_update
@@ -134,49 +141,39 @@ msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
 #. module: stock_sms
-#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
-msgid "Odoo Privacy Policy"
-msgstr ""
-
-#. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__picking_id
 msgid "Picking"
 msgstr "Dodání"
-
-#. module: stock_sms
-#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
-msgid "Privacy Policy"
-msgstr ""
 
 #. module: stock_sms
 #: code:addons/stock_sms/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 #, python-format
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
 msgid "SMS Confirmation"
-msgstr ""
+msgstr "SMS potvrzení"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 #: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
 msgid "SMS Template"
-msgstr ""
+msgstr "SMS šablona"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
 msgid "SMS Validation with stock move"
-msgstr ""
+msgstr "SMS ověření pohybu ve skladu"
 
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 msgid "SMS sent to the customer once the order is done."
-msgstr ""
+msgstr "SMS odeslaná zákazníkovi v okamžiku kdy je objednávka hotova. "
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_stock_picking
@@ -186,21 +183,8 @@ msgstr "Převod"
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid ""
-"When confirming the sending of the SMS Text Message, you will be granted free trial credits.<br/>\n"
-"                By buying a pack and using the IAP service, you accept the"
-msgstr ""
-
-#. module: stock_sms
-#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
-msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
-"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>\n"
-"                <br/>"
+"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
-
-#. module: stock_sms
-#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
-msgid ""
-"of the service provider\n"
-"                and the"
-msgstr ""
+"Chystáte se potvrdit tuto objednávku doručení pomocí SMS zprávy.<br/>\n"
+"Tuto funkci lze snadno deaktivovat z Nastavení inventáře nebo kliknutím na „Zakázat SMS“.<br/>"

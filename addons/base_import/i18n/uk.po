@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -19,6 +19,20 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "%d records successfully imported..."
+msgstr "%d записи успішно імпортовано..."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "%d records tested..."
+msgstr "%d записи протестовано..."
 
 #. module: base_import
 #. openerp-web
@@ -77,6 +91,13 @@ msgstr "Зіставлення імпорту бази"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Batch limit"
+msgstr "Груповий ліміт"
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Between rows %d and %d"
@@ -88,6 +109,14 @@ msgstr "Між рядками %d та %d"
 #, python-format
 msgid "Cancel"
 msgstr "Скасувати"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Click 'Resume' to proceed with the import, resuming at line"
+msgstr ""
+"Натисніть 'Продовжити', щоби продовжити імпорт, відновлюючись у рядках"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -222,13 +251,6 @@ msgid "Decimal Separator:"
 msgstr "Десятковий розділювач:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Defer parent/child computation"
-msgstr "Відкласти батьківське/дочірнє обчислення"
-
-#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__display_name
@@ -274,6 +296,13 @@ msgstr "Скачати"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
 msgstr "Dt"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Due to its large size, the file will be imported by batches."
+msgstr "Завдяки великому розміру файл буде імпортований групою."
 
 #. module: base_import
 #. openerp-web
@@ -356,6 +385,16 @@ msgid "Formatting Options…"
 msgstr "Функції форматування..."
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
+msgstr ""
+"Знайдені недійсні дані зображення, зображення слід імпортувати у вигляді "
+"URL-адрес або даних, кодованих base64."
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
@@ -403,26 +442,12 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid ""
-"If the model uses openchatter, history tracking                             "
-"will set up subscriptions and send notifications"
-"                             during the import, but lead to a slower import."
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
 msgstr ""
-"Якщо модель використовує openchatter, відстеження історії встановить "
-"підписки та надсилатиме сповіщення під час імпорту, але призведе до "
-"повільного імпорту."
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid ""
-"If the model uses parent/child relations, computing the                     "
-"parent / child relation occurs on every line, and lead to a slower import."
-"                     Defering it can speed up import."
-msgstr ""
-"Якщо модель використовує батьківські/дочірні з'єднання, їх обчислення "
-"відбувається на кожному рядку і призводить до більш повільного імпорту. "
-"Затримка може прискорити імпорт."
+"Якщо модель використовує openchatter, відстеження історії налаштовує "
+"підписки та надсилає сповіщення під час імпорту, але призводить до "
+"повільнішого імпорту."
 
 #. module: base_import
 #. openerp-web
@@ -570,6 +595,7 @@ msgid "Model"
 msgstr "Модель"
 
 #. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
 msgid "Name"
 msgstr "Ім'я"
@@ -623,6 +649,13 @@ msgstr "Перезавантажити файл"
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
 msgstr "Модель резервування"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Resume"
+msgstr "Продовжити"
 
 #. module: base_import
 #. openerp-web
@@ -681,6 +714,13 @@ msgstr "Пробіл"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Start at line"
+msgstr "Почніть в рядку"
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Tab"
@@ -690,8 +730,8 @@ msgstr "Tab"
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Test Import"
-msgstr "Тестувати імпорт"
+msgid "Test"
+msgstr "Тест"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
@@ -781,10 +821,17 @@ msgstr "Роздільник тексту:"
 #, python-format
 msgid ""
 "The first row\n"
-"                 contains the label of the column"
+"                         contains the label of the column"
 msgstr ""
 "Перший рядок\n"
-"містить мітку колонки"
+"                         містить мітку колонки"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "This file has been successfully imported up to line %d."
+msgstr "Цей файл успішно імпортовано в рядок %d."
 
 #. module: base_import
 #. openerp-web
@@ -845,6 +892,17 @@ msgid "Value2"
 msgstr "Значення2"
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and"
+"                             lines composed only of empty cells"
+msgstr ""
+"Попередження: ігнорує рядок міток, порожні рядки та рядки, що складаються "
+"лише з порожніх клітинок"
+
+#. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
@@ -853,6 +911,15 @@ msgid ""
 msgstr ""
 "Не можна імпортувати зображення за допомогою URL-адреси, зверніться до свого"
 " адміністратора чи служби підтримки з цієї причини."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "You can test or reload your file before resuming the import."
+msgstr ""
+"Ви можете протестувати або перезавантажити ваш файл перед відновленням "
+"імпорту."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

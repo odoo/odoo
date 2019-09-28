@@ -3,7 +3,6 @@
 # 	* sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2019
 # 卓忆科技 <zhanghao@jointd.com>, 2019
 # v2exerer <9010446@qq.com>, 2019
 # 苏州远鼎 <tiexinliu@126.com>, 2019
@@ -23,15 +22,17 @@
 # John An <johnxan@163.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
+# Martin Trigaux, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
+# Ted Wang <feiyuwang2012@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2019\n"
+"Last-Translator: Ted Wang <feiyuwang2012@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -151,6 +152,13 @@ msgid "After-Sale"
 msgstr "售后"
 
 #. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "All planned operations included"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
 msgstr "应用特定路线"
@@ -166,6 +174,13 @@ msgstr "尽快"
 #, python-format
 msgid "Availability"
 msgstr "可用量"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "Available"
+msgstr "可用"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -398,8 +413,8 @@ msgstr "将预期交货日期提前"
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "On Hand - Reserved"
-msgstr "在手 - 已预留"
+msgid "On"
+msgstr "开"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -554,13 +569,6 @@ msgid "Sold in the last 365 days"
 msgstr "已在过去365天内出售"
 
 #. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Stock Available"
-msgstr "库存可用"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
 msgstr "库存转移"
@@ -570,13 +578,6 @@ msgstr "库存转移"
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
 msgstr "库存移动"
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
-#, python-format
-msgid "Stock On Hand"
-msgstr "在手库存"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -632,8 +633,8 @@ msgstr "调拨"
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "View Detailed Forecast"
-msgstr "查看详细预测"
+msgid "View Forecast"
+msgstr "查看预测"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
