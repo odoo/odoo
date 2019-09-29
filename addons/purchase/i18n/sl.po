@@ -14,6 +14,7 @@
 # Grega Vavtar <grega@hbs.si>, 2019
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
+# Jasmina Macur <jasmina@hbs.si>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +55,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
-msgstr ""
+msgstr "3-stransko ujemanje: nakupi, sprejemi in računi"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -187,7 +188,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "<span class=\"o_stat_text\">Purchased</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kupljeno</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -295,7 +296,7 @@ msgstr ""
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
-msgstr ""
+msgstr "Na izdelek ali stranko je mogoče nastaviti opozorilo (Nabava)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
@@ -374,7 +375,7 @@ msgstr "Število prilog"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__vendor_bill_purchase_id
 msgid "Auto-Complete"
-msgstr ""
+msgstr "Samodejno dokončaj"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -404,12 +405,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
 msgid "Billed Qty"
-msgstr ""
+msgstr "Zaračunana Kol."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Billed Quantity:"
-msgstr ""
+msgstr "Zaračunana količina:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_status
@@ -571,7 +572,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "Create a request for quotation"
-msgstr "Ustvari predračun"
+msgstr "Ustvari zahtevo za ponubo"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -915,6 +916,7 @@ msgstr "Glavna priponka"
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
 msgstr ""
+"Prepričajte se, da plačate samo račune, za katere ste prejeli naročeno blago"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
@@ -1016,7 +1018,7 @@ msgstr "Naziv"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr ""
+msgstr "Ime, TIN, e-pošta ali sklic"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:40
@@ -1347,7 +1349,7 @@ msgstr "Nabavni nalog #"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
 msgid "Purchase Order Approval"
-msgstr ""
+msgstr "Odobritev naročila"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1460,18 +1462,18 @@ msgstr "Standardna cena nabave"
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchased_product_qty
 msgid "Purchased"
-msgstr ""
+msgstr "Kupljeno"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchased Last 365 Days"
-msgstr ""
+msgstr "Kupljeno zadnjih 365 dni"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "Purchased in the last 365 days"
-msgstr ""
+msgstr "Kupljeno v zadnjih 365 dneh"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
@@ -1544,7 +1546,7 @@ msgstr "Povpraševanja in naročila"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Re-Send by Email"
-msgstr ""
+msgstr "Ponovno pošljite po e-pošti"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received
@@ -1616,13 +1618,13 @@ msgstr "Zahtevek za ponudbo"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Request for Quotation #"
-msgstr "Povpraševanja po predračunu #"
+msgstr "Zahtevek za ponudbo #"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr "Predračuni"
+msgstr "Zahtevki za ponudbo"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -1659,7 +1661,7 @@ msgstr "Varnostni žeton"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_invoice_supplier_purchase_form
 msgid "Select a purchase order or an old bill"
-msgstr ""
+msgstr "Izberite naročilo ali stari račun"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__purchase_line_warn

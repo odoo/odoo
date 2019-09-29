@@ -320,7 +320,7 @@ msgstr "<strong>パッケージ</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "<strong>Product(s) tracked: </strong>"
-msgstr ""
+msgstr "<strong>追跡対象プロダクト: </strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5217,7 +5217,7 @@ msgstr "この移動用の在庫状況に関する様々な情報を表示"
 msgid ""
 "Some products of the inventory adjustment are tracked. Are you sure you "
 "don't want to specify a serial or lot number for them?"
-msgstr ""
+msgstr "在庫調整の中に追跡対象のプロダクトがあります。これらへのロット/シリアル番号の指定は不要ですか？"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -6016,17 +6016,17 @@ msgstr "倉庫内のプロダクト保管場所を管理"
 #: code:addons/stock/models/stock_inventory.py:173
 #, python-format
 msgid "Tracked Products in Inventory Adjustment"
-msgstr ""
+msgstr "在庫調整に追跡対象プロダクトあり"
 
 #. module: stock
 #: selection:stock.track.line,tracking:0
 msgid "Tracked by lot"
-msgstr ""
+msgstr "ロットで追跡"
 
 #. module: stock
 #: selection:stock.track.line,tracking:0
 msgid "Tracked by serial number"
-msgstr ""
+msgstr "シリアルで追跡"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__tracking
@@ -6602,6 +6602,7 @@ msgid ""
 "type. To change this, go on the operation type and tick the box \"Create New"
 " Lots/Serial Numbers\"."
 msgstr ""
+"このオペレーションタイプではロットやシリアル番号は作成できません。これを変更するには、オペレーションタイプの画面にて「ロット/シリアル番号を新規作成」を選択してください。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -6883,14 +6884,6 @@ msgstr "先に梱包に入れる数量を指定してください。"
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
 msgstr "プロダクト %s にロット/シリアル番号を指定してください。"
-
-#. module: stock
-#: code:addons/stock/models/res_config_settings.py:70
-#, python-format
-msgid ""
-"You should not remove the 'lots and serial numbers' option while the following products are still tracked by lot or serial number:\n"
-" %s"
-msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product.py:394

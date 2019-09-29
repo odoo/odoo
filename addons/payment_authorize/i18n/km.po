@@ -110,6 +110,8 @@ msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
+"រកឃើញថូខឹនមិនត្រឹមត្រូវ៖ បាត់ព័ត៌មានផ្ទាល់ខ្លួន។ "
+"សូមប្រាកដថាថូខឹនមានឯកសារយោងត្រឹមត្រូវ។"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -150,13 +152,13 @@ msgstr "Paypal"
 #: code:addons/payment_authorize/controllers/main.py:66
 #, python-format
 msgid "Please complete your profile. "
-msgstr ""
+msgstr "សូមបំពេញទម្រង់របស់អ្នក។"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:61
 #, python-format
 msgid "Please sign in to complete the payment."
-msgstr ""
+msgstr "សូមចូលដើម្បីបញ្ចប់ការទូទាត់។"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -167,23 +169,23 @@ msgstr "ការផ្តល់ជូន"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "រក្សាទុកកាត"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "ឆ្នូត"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:365
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "ការបង្កើតប្រវត្តិរូបអតិថិជននៅក្នុង Authorize.NET បានបរាជ័យ។"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:58
@@ -192,6 +194,7 @@ msgid ""
 "The transaction cannot be processed because some contact details are missing"
 " or invalid: "
 msgstr ""
+"ប្រតិបត្តិការមិនអាចដំណើរការបានទេពីព្រោះព័ត៌មានលំអិតទំនាក់ទំនងមួយចំនួនត្រូវបានបាត់ឬមិនត្រឹមត្រូវ។"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -199,6 +202,8 @@ msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"នេះមានឯកសារយោងតែមួយគត់សម្រាប់ការរួមបញ្ចូលគ្នានៃនិមិត្តសញ្ញា / "
+"ការទូទាត់នៅក្នុងកម្មវិធីខាងក្រោយ Authorize.net ។"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
@@ -208,6 +213,9 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"ជម្រើសនេះអនុញ្ញាតឱ្យអតិថិជនរក្សាទុកកាតឥណទានរបស់ពួកគេជានិមិត្តសញ្ញាទូទាត់និងប្រើវាឡើងវិញសម្រាប់ការទិញនៅពេលក្រោយ។"
+" ប្រសិនបើអ្នកគ្រប់គ្រងការជាវ (វិក្កយបត្រកើតឡើង) "
+"អ្នកត្រូវគិតថ្លៃអតិថិជនដោយស្វ័យប្រវត្តិនៅពេលអ្នកចេញវិក្កយបត្រ។"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0

@@ -25,8 +25,8 @@
 # Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2019
 # Paolo Valier, 2019
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Davide Speranza <dsp@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-08 13:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Davide Speranza <dsp@odoo.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -827,7 +827,7 @@ msgid ""
 msgstr ""
 "Non è possibile effettuare registrazioni di pagamento manuali su registri "
 "configurati per la generazione automatica dopo una riconciliazione bancaria."
-" Verranno registrate automaticamente dopo la riconciliazione."
+" Vengono registrati automaticamente dopo la riconciliazione."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -1180,7 +1180,7 @@ msgid ""
 "Account that will be set on invoice tax lines for credit notes. Leave empty "
 "to use the expense account."
 msgstr ""
-"Conto che verrà impostato sulle righe imposta per le note di credito. "
+"Conto che viene impostato sulle righe imposta per le note di credito. "
 "Lasciare vuoto per usare il conto di costo."
 
 #. module: account
@@ -1190,7 +1190,7 @@ msgid ""
 "Account that will be set on invoice tax lines for invoices. Leave empty to "
 "use the expense account."
 msgstr ""
-"Conto che verrà impostato sulle righe imposta per le fatture. Lasciare vuoto"
+"Conto che viene impostato sulle righe imposta per le fatture. Lasciare vuoto"
 " per usare il conto di costo."
 
 #. module: account
@@ -1199,8 +1199,8 @@ msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
 msgstr ""
-"Il conto che verrà assegnato sulle righe imposta per i rimborsi. Lasciare "
-"vuoto per usare il conto di costo."
+"Conto che viene assegnato sulle righe imposta per i rimborsi. Lasciare vuoto"
+" per usare il conto di costo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_base_account_id
@@ -1209,7 +1209,7 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
-"Conto usato per tenere traccia della base imponibile delle imposte. Verrà "
+"Conto usato per tenere traccia della base imponibile delle imposte. Viene "
 "impostato sulle righe create nella registrazione in regime di cassa."
 
 #. module: account
@@ -1559,9 +1559,9 @@ msgid ""
 msgstr ""
 "Le registrazioni create in modo manuale si trovano solitamente nello stato "
 "\"Non registrato\". È possibile disattivare tale stato impostando l'opzione "
-"che si trova nel relativo registro. In questo caso, le registrazioni "
-"verranno create automaticamente dal sistema, con stato \"Registrato\", "
-"all'atto di validazione del documento (fatture, estratti conto bancari...)."
+"che si trova nel relativo registro. In questo caso, le registrazioni vengono"
+" create automaticamente dal sistema, con stato \"Registrato\", all'atto di "
+"validazione del documento (fatture, estratti conto bancari...)."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:243
@@ -5316,8 +5316,8 @@ msgid ""
 "If set, taxes which are computed after this one will be computed based on "
 "the price tax included."
 msgstr ""
-"Se selezionata, le imposte successive a questa verranno calcolate in base al"
-" prezzo imposta inclusa."
+"Se selezionata, le imposte successive a questa vengono calcolate in base al "
+"prezzo imposta inclusa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__accounting_date
@@ -5333,7 +5333,7 @@ msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
 msgstr ""
-"Se impostato, l'importo calcolato da questa imposta verrà assegnato allo "
+"Se impostato, l'importo calcolato da questa imposta viene assegnato allo "
 "stesso conto analitico della riga fattura (se esistente)"
 
 #. module: account
@@ -5405,7 +5405,7 @@ msgid ""
 " date empty, it means direct payment. The payment terms may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
-"Usando i termini di pagamento la data di scadenza verrà calcolata "
+"Usando i termini di pagamento la data di scadenza viene calcolata "
 "automaticamente alla creazione delle registrazioni contabili. Lasciare vuoti"
 " i termini di pagamento e la data di scadenza corrisponde al pagamento "
 "diretto. I termini di pagamento possono includere varie scadenze, es. 50% "
@@ -5420,7 +5420,7 @@ msgid ""
 " due date, make sure that the payment term is not set on the invoice. If you"
 " keep the Payment terms and the due date empty, it means direct payment."
 msgstr ""
-"Usando i termini di pagamento la data di scadenza verrà calcolata "
+"Usando i termini di pagamento la data di scadenza viene calcolata "
 "automaticamente alla creazione delle registrazioni contabili. I termini di "
 "pagamento possono includere varie scadenze, es. 50% adesso, 50% fra un mese."
 " Per forzare una data assicurarsi che nella fattura non sia impostato il "
@@ -7430,9 +7430,9 @@ msgid ""
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
 msgstr ""
-"La fatture in bozza, una volta confermate, non potranno\n"
-"                        essere modificate. Riceveranno un numero univoco\n"
-"                        e verranno generati i movimenti contabili nel piano dei\n"
+"La fatture in bozza, una volta confermate, non possono\n"
+"                        essere modificate. Ricevono un numero univoco\n"
+"                        e vengono generati i movimenti contabili nel piano dei\n"
 "                        conti."
 
 #. module: account
@@ -9232,9 +9232,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Selezionando l'opzione \"Avviso\" l'utente verrà notificato con un "
-"messaggio. Selezionando \"Messaggio bloccante\" verrà inviata un'eccezione "
-"con il messaggio e verrà bloccato il flusso. Scrivere il messaggio nel campo"
+"Selezionando l'opzione \"Avviso\" l'utente viene notificato con un "
+"messaggio. Selezionando \"Messaggio bloccante\" viene inviata un'eccezione "
+"con il messaggio e viene bloccato il flusso. Scrivere il messaggio nel campo"
 " successivo."
 
 #. module: account
@@ -9515,7 +9515,7 @@ msgid ""
 "Specify which way will be used to round the invoice amount to the rounding "
 "precision"
 msgstr ""
-"Specifica in che modo verrà arrotondato l'importo fattura alla precisione "
+"Specifica in che modo viene arrotondato l'importo fattura alla precisione "
 "definita"
 
 #. module: account
@@ -10572,7 +10572,7 @@ msgstr "Il conto ricavi o costi relativo al prodotto selezionato."
 #: model:ir.model.fields,help:account.field_account_journal__code
 msgid "The journal entries of this journal will be named using this prefix."
 msgstr ""
-"Le registrazioni contabili di questo registro verranno identificate usando "
+"Le registrazioni contabili di questo registro vengono identificate usando "
 "questo prefisso."
 
 #. module: account
@@ -10705,7 +10705,7 @@ msgid ""
 "The payment communication that will be automatically populated once the "
 "invoice validation. You can also write a free communication."
 msgstr ""
-"La comunicazione per il pagamento che verrà generata automaticamente dopo la"
+"La comunicazione per il pagamento che viene generata automaticamente dopo la"
 " validazione della fattura. È possibile anche scrivere un testo libero."
 
 #. module: account
@@ -10724,7 +10724,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
-"Il modello di riconciliazione verrà applicato solo alle categorie "
+"Il modello di riconciliazione viene applicato solo alle categorie "
 "cliente/venditore selezionate. "
 
 #. module: account
@@ -10734,7 +10734,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customers/vendors."
 msgstr ""
-"Il modello di riconciliazione verrà applicato solo ai clienti/venditori "
+"Il modello di riconciliazione viene applicato solo ai clienti/venditori "
 "selezionati."
 
 #. module: account
@@ -10746,7 +10746,7 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
-"Il modello di riconciliazione verrà applicato solo al tipo di operazione selezionato:\n"
+"Il modello di riconciliazione viene applicato solo al tipo di operazione selezionato:\n"
 "        * importo ricevuto: applicato solo alla ricezione di un importo.\n"
 "        * importo pagato: applicato solo al pagamento di un importo.\n"
 "        * importo pagato/ricevuto: applicato in entrambi i casi. "
@@ -10757,7 +10757,7 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
 msgstr ""
-"Il modello di riconciliazione verrà applicato solo quando viene impostato un"
+"Il modello di riconciliazione viene applicato solo quando viene impostato un"
 " cliente/venditore."
 
 #. module: account
@@ -10767,7 +10767,7 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
-"Il modello di riconciliazione verrà applicato solo quando l'importo è "
+"Il modello di riconciliazione viene applicato solo quando l'importo è "
 "minore, uguale, maggiore di, oppure tra importi specificati."
 
 #. module: account
@@ -10779,7 +10779,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Il modello di riconciliazione verrà applicato solo quando l'etichetta:\n"
+"Il modello di riconciliazione viene applicato solo quando l'etichetta:\n"
 "        * contiene: l'etichetta deve contenere questa stringa (senza distinzione maiusc./minusc.).\n"
 "        * non contiene: negazione di \"contiene\".\n"
 "        * corrisponde a regex: definire un'espressione regolare."
@@ -10951,7 +10951,7 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
-"Questo conto verrà usato, al posto del predefinito, come conto fornitore per"
+"Questo conto viene usato, al posto del predefinito, come conto fornitore per"
 " il partner corrente."
 
 #. module: account
@@ -10961,13 +10961,13 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"Questo conto verrà usato, al posto del predefinito, come conto cliente per "
+"Questo conto viene usato, al posto del predefinito, come conto cliente per "
 "il partner corrente."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
 msgid "This account will be used when validating a customer invoice."
-msgstr "Questo conto verrà usato alla validazione di una fattura cliente."
+msgstr "Questo conto viene usato alla validazione di una fattura cliente."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11149,7 +11149,7 @@ msgid ""
 "This parameter will be bypassed in case of a statement line communication "
 "matching exactly existing entries"
 msgstr ""
-"Il parametro verrà ignorato se la riga di estratto conto è abbinata in modo "
+"Il parametro viene ignorato se la riga di estratto conto è abbinata in modo "
 "esatto alle registrazioni esistenti"
 
 #. module: account
@@ -11166,7 +11166,7 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"Questo termine di pagamento verrà usato, al posto del predefinito, per "
+"Questo termine di pagamento viene usato, al posto del predefinito, per "
 "ordini di acquisto e fatture fornitori "
 
 #. module: account
@@ -11176,7 +11176,7 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
-"Questo termine di pagamento verrà usato, al posto del predefinito, per "
+"Questo termine di pagamento viene usato, al posto del predefinito, per "
 "ordini di vendita e fatture clienti"
 
 #. module: account
@@ -11188,7 +11188,7 @@ msgid ""
 msgstr ""
 "Questo campo tecnico può essere usato alla creazione/importazione della riga"
 " di estratto conto per evitare il successivo processo di riconciliazione. "
-"Verrà semplicemente creata una contropartita su questo conto"
+"Viene semplicemente creata una contropartita su questo conto"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1460
@@ -12003,7 +12003,7 @@ msgstr "Indica se questo registro deve essere visualizzato nella bacheca"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "Will be used to name the Journal related to this bank account"
 msgstr ""
-"Verrà usato come nome per il registro collegato a questo conto bancario"
+"Viene usato come nome per il registro collegato a questo conto bancario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__amount_currency

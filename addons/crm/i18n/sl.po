@@ -10,6 +10,7 @@
 # matjaz k <matjaz@mentis.si>, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
+# Jasmina Macur <jasmina@hbs.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
 # 
 msgid ""
@@ -99,6 +100,10 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead_kanban
@@ -557,6 +562,8 @@ msgid ""
 "Convert visitors of your website into leads in the CRM. We do data "
 "enrichment based on their IP address."
 msgstr ""
+"Pretvorite obiskovalce svojega spletnega mesta v potencialne stranke v CRM-"
+"ju. Obogatimo podatke na podlagi njihovega naslova IP."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
@@ -821,7 +828,7 @@ msgstr "E-pošta"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Email Alias"
-msgstr "Email Alias"
+msgstr "Email alias"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_from
@@ -979,6 +986,8 @@ msgid ""
 "Generate leads from incoming emails and assign them\n"
 "                                    to a Sales Team manually"
 msgstr ""
+"Ustvarite potencialne indice iz dohodnih e-poštnih sporočil in jih ročno dodelite\n"
+"                                    prodajni ekipi"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -1020,7 +1029,7 @@ msgstr "Združi po"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__dashboard_graph_group_pipeline
 msgid "Grouping Method"
-msgstr ""
+msgstr "Metoda razvrščanja"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_activities
@@ -1380,7 +1389,7 @@ msgstr "Ročno dodeljevanje e-pošte"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manual Assignation of Incoming Emails"
-msgstr ""
+msgstr "Ročna dodelitev dohodnih e-poštnih sporočil"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_activities_done
@@ -1550,7 +1559,7 @@ msgstr "Novo"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
 msgid "New Leads/Opportunities"
-msgstr ""
+msgstr "Novi indici/priložnosti"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
@@ -1713,7 +1722,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won
 msgid "Opportunities Won"
-msgstr ""
+msgstr "Pridobljene priložnosti"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1984,7 +1993,7 @@ msgstr "Odgovorni uporabnik"
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Restore"
-msgstr ""
+msgstr "Obnovi"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_model:0
@@ -2548,7 +2557,7 @@ msgstr "Spletna stran"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Website Lead Generation"
-msgstr ""
+msgstr "Generacija spletnih indicev"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__website_message_ids
@@ -2603,7 +2612,7 @@ msgstr "Dobljeno"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_won
 msgid "Won in Opportunities Target"
-msgstr ""
+msgstr "Zmaga v ciljnih priložnostih"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:402
@@ -2678,7 +2687,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:946
 #, python-format
 msgid "or send an email to %s"
-msgstr ""
+msgstr "ali pošljite e-poštno sporočilo na %s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
