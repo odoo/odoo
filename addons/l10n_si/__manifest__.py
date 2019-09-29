@@ -13,7 +13,6 @@
     "depends": [
         "account",
         "base_iban",
-        "account_cancel",
     ],
     "data": [
         "data/l10n_si_chart_data.xml",
