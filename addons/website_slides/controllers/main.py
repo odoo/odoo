@@ -138,6 +138,10 @@ class WebsiteSlides(WebsiteProfile):
                 } for answer in question.sudo().answer_ids],
             } for question in slide.question_ids]
         }
+        if 'slide_answer_quiz' in request.session:
+            slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])
+            if str(slide.id) in slide_answer_quiz:
+                values['session_answers'] = slide_answer_quiz[str(slide.id)]
         values.update(self._get_slide_quiz_partner_info(slide))
         return values
 
@@ -238,6 +242,22 @@ class WebsiteSlides(WebsiteProfile):
         if my:
             domain = expression.AND([domain, [('partner_ids', '=', request.env.user.partner_id.id)]])
         return domain
+
+    def _channel_remove_session_answers(self, channel, slide=False):
+        """ Will remove the answers saved in the session for a specific channel / slide. """
+
+        if 'slide_answer_quiz' not in request.session:
+            return
+
+        slides_domain = [('channel_id', '=', channel.id)]
+        if slide:
+            slides_domain = expression.AND([slides_domain, [('id', '=', slide.id)]])
+        slides = request.env['slide.slide'].search_read(slides_domain, ['id'])
+
+        session_slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])
+        for slide in slides:
+            session_slide_answer_quiz.pop(str(slide['id']), None)
+        request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
 
     # --------------------------------------------------
     # SLIDE.CHANNEL MAIN / SEARCH
@@ -538,7 +558,9 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/leave'], type='json', auth='user', website=True)
     def slide_channel_leave(self, channel_id):
-        request.env['slide.channel'].browse(channel_id)._remove_membership(request.env.user.partner_id.ids)
+        channel = request.env['slide.channel'].browse(channel_id)
+        channel._remove_membership(request.env.user.partner_id.ids)
+        self._channel_remove_session_answers(channel)
         return True
 
     @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
@@ -782,7 +804,7 @@ class WebsiteSlides(WebsiteProfile):
         return result
 
     # --------------------------------------------------
-    # QUIZZ SECTION
+    # QUIZ SECTION
     # --------------------------------------------------
 
     @http.route('/slides/slide/quiz/question_add_or_update', type='json', methods=['POST'], auth='user', website=True)
@@ -865,6 +887,7 @@ class WebsiteSlides(WebsiteProfile):
         slide = fetch_res['slide']
 
         if slide.user_membership_id.sudo().completed:
+            self._channel_remove_session_answers(slide.channel_id, slide)
             return {'error': 'slide_quiz_done'}
 
         all_questions = request.env['slide.question'].sudo().search([('slide_id', '=', slide.id)])
@@ -889,6 +912,7 @@ class WebsiteSlides(WebsiteProfile):
                 'last_rank': not request.env.user._get_next_rank(),
                 'level_up': rank_progress['previous_rank']['lower_bound'] != rank_progress['new_rank']['lower_bound']
             })
+        self._channel_remove_session_answers(slide.channel_id, slide)
         return {
             'answers': {
                 answer.question_id.id: {
@@ -903,6 +927,13 @@ class WebsiteSlides(WebsiteProfile):
             'quizAttemptsCount': quiz_info['quiz_attempts_count'],
             'rankProgress': rank_progress,
         }
+
+    @http.route(['/slides/slide/quiz/save_to_session'], type='json', auth='public', website=True)
+    def slide_quiz_save_to_session(self, quiz_answers):
+        session_slide_answer_quiz = json.loads(request.session.get('slide_answer_quiz', '{}'))
+        slide_id = quiz_answers['slide_id']
+        session_slide_answer_quiz[str(slide_id)] = quiz_answers['slide_answers']
+        request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
 
     def _get_rank_values(self, user):
         lower_bound = user.rank_id.karma_min or 0

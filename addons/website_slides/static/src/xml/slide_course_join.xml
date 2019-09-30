@@ -1,11 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="slide.course.join">
-        <div class="p-0 col-md-2">
+        <div>
             <a role="button"
-                class="btn btn-primary btn-block o_wslides_js_course_join_link text-uppercase font-weight-bold"
-                title="Start Course" aria-label="Start Course Channel"
+                class="btn btn-primary o_wslides_js_course_join_link text-uppercase font-weight-bold"
+                title="Join the Course" aria-label="Join the Course"
                 href="#">
-                <span class="cta-title text_small_caps">Join Course</span>
+                <t t-if="widget.channel.channelEnroll == 'public'">
+                    <t t-if="widget.publicUser">
+                        Sign in
+                    </t>
+                    <t t-else="" t-esc="widget.joinMessage" />
+                </t>
             </a>
         </div>
     </t>
