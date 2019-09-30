@@ -392,7 +392,7 @@ class TestHeavyMailPerformance(BaseMailPerformance):
         record = self.umbrella.with_user(self.env.user)
         template_id = self.env.ref('test_mail.mail_test_tpl').id
 
-        with self.assertQueryCount(__system__=81, emp=82):
+        with self.assertQueryCount(__system__=82, emp=83):
             record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
