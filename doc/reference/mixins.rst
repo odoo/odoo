@@ -198,8 +198,16 @@ Logging changes
 '''''''''''''''
 
 The ``mail`` module adds a powerful tracking system on fields, allowing you
+<<<<<<< HEAD
 to log changes to specific fields in the record's chatter. To add tracking
 to a field, simple set the tracking attribute to True.
+=======
+to log changes to specific fields in the record's chatter.
+
+To add tracking to a field, simple add the track_visibility attribute with the
+value ``True`` to be displayed in the notification only if the
+field changed.
+>>>>>>> 8d549f3ae0a... temp
 
 .. admonition:: Example
 
@@ -212,9 +220,15 @@ to a field, simple set the tracking attribute to True.
             _inherit = ['mail.thread']
             _description = 'Business Trip'
 
+<<<<<<< HEAD
             name = fields.Char(tracking=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
                                          tracking=True)
+=======
+            name = fields.Char(track_visibility=True)
+            partner_id = fields.Many2one('res.partner', 'Responsible',
+                                         track_visibility=True)
+>>>>>>> 8d549f3ae0a... temp
             guest_ids = fields.Many2many('res.partner', 'Participants')
 
     From now on, every change to a trip's name or responsible will log a note
@@ -302,12 +316,21 @@ can override the ``_track_subtype()`` function:
             _inherit = ['mail.thread']
             _description = 'Business Trip'
 
+<<<<<<< HEAD
             name = fields.Char(tracking=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
                                          tracking=True)
             guest_ids = fields.Many2many('res.partner', 'Participants')
             state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
                                      tracking=True)
+=======
+            name = fields.Char(track_visibility=True)
+            partner_id = fields.Many2one('res.partner', 'Responsible',
+                                         track_visibility=True)
+            guest_ids = fields.Many2many('res.partner', 'Participants')
+            state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
+                                     track_visibility=True)
+>>>>>>> 8d549f3ae0a... temp
 
             def _track_subtype(self, init_values):
                 # init_values contains the modified fields' values before the changes
@@ -622,12 +645,21 @@ you to make your alias easily configurable from the record's form view.
             _inherit = ['mail.thread', 'mail.alias.mixin']
             _description = 'Business Trip'
 
+<<<<<<< HEAD
             name = fields.Char(tracking=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
                                          tracking=True)
             guest_ids = fields.Many2many('res.partner', 'Participants')
             state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
                                      tracking=True)
+=======
+            name = fields.Char(track_visibility=True)
+            partner_id = fields.Many2one('res.partner', 'Responsible',
+                                         track_visibility=True)
+            guest_ids = fields.Many2many('res.partner', 'Participants')
+            state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
+                                     track_visibility=True)
+>>>>>>> 8d549f3ae0a... temp
             expense_ids = fields.One2many('business.expense', 'trip_id', 'Expenses')
             alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict",
                                        required=True)
