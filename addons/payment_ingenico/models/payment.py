@@ -726,16 +726,15 @@ class PaymentToken(models.Model):
         }
 
     @api.model
-    def ogone_prepare_token(self, *args, **paramplus):
+    def ogone_prepare_token(self, params):
         """
         Prepare the data needed to the token creation.
         Needed values:
         :return:
         :rtype:
         """
-
         acquirer = self.env['payment.acquirer'].with_user(SUPERUSER_ID).search([('provider', '=', 'ogone')])
-        data, shasign = acquirer.ogone_alias_values(paramplus=paramplus)
+        data, shasign = acquirer.ogone_alias_values(params)
         data['SHASIGN'] = shasign
         environment = 'prod' if acquirer.state == 'enabled' else 'test'
         data['api_url'] = acquirer._get_ogone_urls(environment)['ogone_alias_gateway_url']

@@ -49,16 +49,13 @@ odoo.define('payment_ogone.payment_form', function (require) {
             paramPlus['browserTimeZone'] = new Date().getTimezoneOffset();
             paramPlus['browserUserAgent'] = navigator.userAgent;
             paramPlus['FLAG3D'] = 'Y',
-            paramPlus['WIN3DS'] = 'POPUP'; // 'MAINW';
+            paramPlus['WIN3DS'] = 'MAINW'; // 'POPUP';
             paramPlus['return_url'] = formData['return_url'];
             paramPlus['form_values'] = processData;
             paramPlus['form_action_url'] = this.el["action"];
-
             self._rpc({
-                model: 'payment.token',
-                method: 'ogone_prepare_token',
-                context: self.context,
-                kwargs: paramPlus,
+                route: '/payment/ogone/prepare_token',
+                params: paramPlus
             }).then(function (result) {
                 result['CVC'] = formData.cc_cvc;
                 result['CARDNO'] = formData.cc_number.replace(/\s/g, '');
