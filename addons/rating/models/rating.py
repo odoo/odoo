@@ -73,7 +73,7 @@ class Rating(models.Model):
             rating_for_img = 0
             if rating.rating >= 8:
                 rating_for_img = 10
-            elif rating > 3:
+            elif rating.rating > 3:
                 rating_for_img = 5
             elif rating.rating >= 1:
                 rating_for_img = 1
