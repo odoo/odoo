@@ -137,7 +137,6 @@
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="name" required="False" groups="base.group_no_one" string="Name"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"
                                 attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                             <field name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
@@ -186,6 +185,7 @@
                             <page string="Settings">
                                 <group>
                                     <group>
+                                        <field name="name" required="False" groups="base.group_no_one" string="Name"/>
                                         <field name="user_id"/>
                                         <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="reply_to"/>
