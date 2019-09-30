@@ -982,7 +982,12 @@
                 <tr>
                     <th class="td-img">Product</th>
                     <th></th>
-                    <th class="text-center td-qty">Quantity</th>
+                    <th class="text-center td-qty">
+                        <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
+                        <t t-if="show_qty">
+                            Quantity
+                        </t>
+                    </th>
                     <th class="text-center td-price">Price</th>
                     <th class="text-center td-action"></th>
                 </tr>
@@ -1012,18 +1017,23 @@
                         </td>
                         <td class="text-center td-qty">
                             <div class="css_quantity input-group mx-auto">
-                                 <t t-if="not line._is_not_sellable_line()">
-                                    <div class="input-group-prepend">
-                                        <a t-attf-href="#" class="btn btn-link js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
-                                            <i class="fa fa-minus"></i>
-                                        </a>
-                                    </div>
-                                    <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
-                                    <div class="input-group-append">
-                                        <a t-attf-href="#" class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                    </div>
+                                <t t-if="not line._is_not_sellable_line()">
+                                    <t t-if="show_qty">
+                                        <div class="input-group-prepend">
+                                            <a t-attf-href="#" class="btn btn-link js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
+                                                <i class="fa fa-minus"></i>
+                                            </a>
+                                        </div>
+                                        <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
+                                        <div class="input-group-append">
+                                            <a t-attf-href="#" class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <input type="hidden" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
+                                    </t>
                                 </t>
                                 <t t-else="">
                                     <span class="text-muted w-100" t-esc="int(line.product_uom_qty)"/>
