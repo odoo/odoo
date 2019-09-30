@@ -409,7 +409,11 @@ class PurchaseOrder(models.Model):
             result['domain'] = "[('id', 'in', " + str(self.invoice_ids.ids) + ")]"
         else:
             res = self.env.ref('account.invoice_supplier_form', False)
-            result['views'] = [(res and res.id or False, 'form')]
+            form_view = [(res and res.id or False, 'form')]
+            if 'views' in result:
+                result['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                result['views'] = form_view
             # Do not set an invoice_id if we want to create a new bill.
             if not create_bill:
                 result['res_id'] = self.invoice_ids.id or False
