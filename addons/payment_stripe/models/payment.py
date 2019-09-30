@@ -132,6 +132,19 @@ class PaymentTransactionStripe(models.Model):
     _inherit = 'payment.transaction'
 
     stripe_payment_intent = fields.Char(string='Stripe Payment Intent ID', readonly=True)
+    stripe_payment_intent_secret = fields.Char(string='Stripe Payment Intent Secret', readonly=True)
+
+
+    def _get_processing_info(self):
+        res = super()._get_processing_info()
+        if self.acquirer_id.provider == 'stripe':
+            stripe_info = {
+                'stripe_payment_intent': self.stripe_payment_intent,
+                'stripe_payment_intent_secret': self.stripe_payment_intent_secret,
+                'stripe_publishable_key': self.acquirer_id.stripe_publishable_key,
+            }
+            res.update(stripe_info)
+        return res
 
     def form_feedback(self, data, acquirer_name):
         if data.get('reference') and acquirer_name == 'stripe':
@@ -154,11 +167,14 @@ class PaymentTransactionStripe(models.Model):
         charge_params = {
             'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else float_round(self.amount * 100, 2)),
             'currency': self.currency_id.name.lower(),
-            'setup_future_usage': 'off_session',
+            'off_session': True,
             'confirm': True,
             'payment_method': self.payment_token_id.stripe_payment_method,
             'customer': self.payment_token_id.acquirer_ref,
+            "description": self.reference,
         }
+        if not self.env.context.get('off_session'):
+            charge_params.update(setup_future_usage='off_session', off_session=False)
         _logger.info('_stripe_create_payment_intent: Sending values to stripe, values:\n%s', pprint.pformat(charge_params))
 
         res = self.acquirer_id._stripe_request('payment_intents', charge_params)
@@ -196,7 +212,7 @@ class PaymentTransactionStripe(models.Model):
     def _stripe_form_get_tx_from_data(self, data):
         """ Given a data dict coming from stripe, verify it and find the related
         transaction record. """
-        reference = data.get('metadata', {}).get('reference')
+        reference = data.get('reference')
         if not reference:
             stripe_error = data.get('error', {}).get('message', '')
             _logger.error('Stripe: invalid reply received from stripe API, looks like '
@@ -222,15 +238,18 @@ class PaymentTransactionStripe(models.Model):
 
     def _stripe_s2s_validate_tree(self, tree):
         self.ensure_one()
-        if self.state != 'draft':
+        if self.state not in ("draft", "pending"):
             _logger.info('Stripe: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
         status = tree.get('status')
         tx_id = tree.get('id')
+        tx_secret = tree.get("client_secret")
         vals = {
-            'date': fields.datetime.now(),
-            'acquirer_reference': tx_id,
+            "date": fields.datetime.now(),
+            "acquirer_reference": tx_id,
+            "stripe_payment_intent": tx_id,
+            "stripe_payment_intent_secret": tx_secret
         }
         if status == 'succeeded':
             self.write(vals)
