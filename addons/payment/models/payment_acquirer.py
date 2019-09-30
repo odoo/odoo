@@ -876,7 +876,11 @@ class PaymentTransaction(models.Model):
             invoice = invoice_ids[0]
             action['res_id'] = invoice
             action['view_mode'] = 'form'
-            action['views'] = [(self.env.ref('account.invoice_form').id, 'form')]
+            form_view = [(self.env.ref('account.invoice_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
         else:
             action['view_mode'] = 'tree,form'
             action['domain'] = [('id', 'in', invoice_ids)]
