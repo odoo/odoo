@@ -11,6 +11,7 @@ import pprint
 import requests
 from lxml import etree, objectify
 from werkzeug import urls, url_encode
+import urllib.parse as urlparse
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -57,7 +58,7 @@ class PaymentAcquirerOgone(models.Model):
          - standard order: POST address for form-based """
         if environment == 'test':
             alias_gateway_url = "https://ogone.test.v-psp.com/ncol/test/alias_gateway_utf8.asp" # defined in the documentation
-            alias_gateway_url = "https://secure.ogone.com/ncol/test/alias_gateway_utf8.asp" # works anyway
+            # alias_gateway_url = "https://secure.ogone.com/ncol/test/alias_gateway_utf8.asp" # works but support depreciate it
         else:
             alias_gateway_url = "https://secure.ogone.com/ncol/prod/alias_gateway_utf8.asp"
         return {
@@ -165,29 +166,6 @@ class PaymentAcquirerOgone(models.Model):
         # 3DS validation feedback. The payment has been made.
         # Next step: modify the transaction status and redirect to /payment/process
         amount = post.get('AMOUNT', 0)
-        currency = post.get('CURRENCY', '')
-        reference = post.get('ORDERID', '')
-        alias = post.get('ALIAS', '')
-        partner_name = post.get('CN', '')
-        status = int(post.get('STATUS', '0'))
-        tx = request.env['payment.transaction'].with_user(SUPERUSER_ID).search([('amount', '=', amount),
-                                                                                ('reference', '=', reference),
-                                                                                ('partner_name', '=', partner_name),
-                                                                                ('state', '=', 'pending')])
-        if status in tx._ogone_valid_tx_status:
-            tx._set_transaction_done()  # or  _set_transaction_authorized if status = 5 ?
-        elif status in tx._ogone_cancel_tx_status:
-            tx._set_transaction_cancel()
-        elif status in tx._ogone_authorisation_refused_status:
-            tx._set_transaction_error(_("The authorization could not be performed"))
-        else:
-            # _set_transaction_error
-            _logger.error("Unknown STATUS : {}".format(status))
-
-        _logger.info('Ingnico: feeback 3DS with post data %s', pprint.pformat(post))
-        # 3DS validation feedback. The payment has been made.
-        # Next step: modify the transaction status and redirect to /payment/process
-        amount = post.get('AMOUNT', 0)
         reference = post.get('ORDERID', '')
         partner_name = post.get('CN', '')
         status = int(post.get('STATUS', '0'))
@@ -201,11 +179,12 @@ class PaymentAcquirerOgone(models.Model):
             tx._set_transaction_cancel()
         elif status in tx._ogone_authorisation_refused_status:
             # Error message not defined in PaymentAcquirer
-            tx._set_transaction_cancel()
-            # tx._set_transaction_error(_("The authorization could not be performed"))
+            tx._set_transaction_error(_("The authorization could not be performed"))
         else:
             # _set_transaction_error
             _logger.error("Unknown STATUS : {}".format(status))
+
+        _logger.info('Ingnico: feeback 3DS with post data %s', pprint.pformat(post))
 
         """"
         Notes: status U: (Authentication/ Account Verification Could Not Be Performed;Technical or other problem, as indicated inRReq)
@@ -551,7 +530,6 @@ class PaymentTxOgone(models.Model):
             data['REMOTE_ADDR'] = request.httprequest.remote_addr
 
         # FIXME kwargs is empty
-        print(kwargs)
         kwargs['3d_secure'] = True
         if kwargs.get('3d_secure'):
             data.update({

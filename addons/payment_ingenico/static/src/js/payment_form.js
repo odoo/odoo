@@ -1,13 +1,8 @@
 odoo.define('payment_ogone.payment_form', function (require) {
     "use strict";
     
-    // var ajax = require('web.ajax');
     var core = require('web.core');
-    // var Dialog = require('web.Dialog');
-    // var Widget = require('web.Widget');
     var PaymentForm = require('payment.payment_form');
-    // var qweb = core.qweb;
-    // var _t = core._t;
 
     PaymentForm.include({
     
@@ -28,7 +23,6 @@ odoo.define('payment_ogone.payment_form', function (require) {
             var acquirerID = this.getAcquirerIdFromRadio($checkedRadio);
             var acquirerForm = this.$('#o_payment_add_token_acq_' + acquirerID);
             var inputsForm = $('input', acquirerForm);
-            // var ds = $('input[name="data_set"]', acquirerForm)[0];
             var formData = this.getFormData(inputsForm);
             var $ProcessingForm = $('#payment_method')
             var processData = this.getFormData($('input', $ProcessingForm));
@@ -118,9 +112,8 @@ odoo.define('payment_ogone.payment_form', function (require) {
                 return;
             }
     
-            //  hide add token form for ngenico
+            //  hide add token form for Ingenico
             if ($checkedRadio.data('provider') === 'ogone' && this.isNewPaymentRadio($checkedRadio)) {
-                //this.$('[id*="o_payment_add_token_acq_"]');
                 this.$('#o_payment_add_token_acq_' + acquirerId).removeClass('d-none');
             } else {
                 this._super.apply(this, arguments);

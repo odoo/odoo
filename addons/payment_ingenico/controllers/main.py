@@ -96,7 +96,7 @@ class OgoneController(http.Controller):
             if not acquirer._ogone_sha_check(post['SHASIGN'], post):
                 _logger.error('Ingnico: feeback Alias creation %s', pprint.pformat(post))
                 # This may be triggerd if the alias is not created
-                error_message = _('We are not able to verify the Signature')
+                error_message = _('We are not able to verify the Signature. Please contact the webmaster.')
                 _logger.error(error_message)
                 return request.render("payment_ingenico.payment_error_page", {'error': error_message})
         except KeyError:
