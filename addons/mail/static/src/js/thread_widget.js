@@ -58,6 +58,7 @@ var ThreadWidget = Widget.extend({
         // options when the thread is enabled (e.g. can send message,
         // interact on messages, etc.)
         this._enabledOptions = _.defaults(options || {}, {
+            areMessageAttachmentsDeletable: true,
             displayOrder: ORDER.ASC,
             displayMarkAsRead: true,
             displayModerationCommands: false,
@@ -71,6 +72,7 @@ var ThreadWidget = Widget.extend({
         });
         // options when the thread is disabled
         this._disabledOptions = {
+            areMessageAttachmentsDeletable: false,
             displayOrder: this._enabledOptions.displayOrder,
             displayMarkAsRead: false,
             displayModerationCommands: false,

@@ -261,6 +261,7 @@
         @param {Object} options
         @param {mail.model.AbstractMessage} message
         @param {Object} options
+        @param {boolean} options.areMessageAttachmentsDeletable
         @param {boolean} [options.displayAvatars]
         @param {boolean} [options.displayDocumentLinks]
         @param {boolean} [options.displayEmailIcons]
@@ -362,12 +363,16 @@
                     <t t-if="message.hasAttachments()">
                         <div t-if="message.hasImageAttachments()" class="o_attachments_previews">
                             <t t-foreach="message.getImageAttachments()" t-as="attachment">
-                                <t t-call="mail.AttachmentPreview"/>
+                                <t t-call="mail.AttachmentPreview">
+                                    <t t-set="isNotDeletable" t-value="!options.areMessageAttachmentsDeletable"/>
+                                </t>
                             </t>
                         </div>
                         <div t-if="message.hasNonImageAttachments()" class="o_attachments_list">
                             <t t-foreach="message.getNonImageAttachments()" t-as="attachment">
-                                <t t-call="mail.Attachment"/>
+                                <t t-call="mail.Attachment">
+                                    <t t-set="isNotDeletable" t-value="!options.areMessageAttachmentsDeletable"/>
+                                </t>
                             </t>
                         </div>
                     </t>
@@ -470,6 +475,7 @@
         @param {integer} attachment.id
         @param {string} attachment.name
         @param {string} attachment.url
+        @param {boolean} [isNotDeletable]
     -->
     <t t-name="mail.AttachmentPreview">
         <div class="o_attachment" t-att-title="attachment.name">
@@ -477,7 +483,7 @@
                 <div class="o_image_box">
                     <div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true')"/>
                     <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
-                        <span class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                        <span t-if="!isNotDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
                         <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
                         <a class="o_attachment_download" t-att-href='attachment.url'>
                             <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" role="img" aria-label="Download"></i>
@@ -496,12 +502,13 @@
         @param {string} attachment.name
         @param {boolean} attachment.upload
         @param {string} attachment.url
+        @param {boolean} [isNotDeletable]
     -->
     <t t-name="mail.Attachment">
         <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{ editable ? 'o_attachment_editable' : '' } #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <div class="o_attachment_wrap">
-                <span t-if="!editable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                <span t-if="!editable and !isNotDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
                 <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
                 <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
 
