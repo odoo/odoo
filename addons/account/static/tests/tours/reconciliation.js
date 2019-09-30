@@ -86,11 +86,11 @@ Tour.register('bank_statement_reconciliation', {
         {
             content: "enter an account",
             trigger: '.o_reconciliation_line:nth-child(2) .o_field_many2one[name="account_id"] input',
-            run: 'text 100000'
+            run: 'text 151000'
         },
         {
             content: "select the first account",
-            trigger: '.ui-autocomplete:visible li:last:contains(100000)',
+            trigger: '.ui-autocomplete:visible li:last:contains(151000)',
         },
         {
             content: "reconcile the line with the write-off",
