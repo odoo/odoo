@@ -557,7 +557,7 @@ QUnit.module('fields', {}, function () {
 
             // save the modal and make sure an onchange is triggered
             await testUtils.dom.click($('.modal .modal-footer .btn-primary').first());
-            assert.verifySteps(['read', 'get_formview_id', 'load_views', 'read', 'write', 'onchange', 'read']);
+            assert.verifySteps(['read', 'get_formview_id', 'load_views', 'read', 'write', 'read', 'onchange']);
 
             // save the main record, and check that no extra rpcs are done (record
             // is not dirty, only a related record was modified)

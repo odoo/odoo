@@ -726,8 +726,13 @@ var FieldMany2One = AbstractField.extend({
                     readonly: !self.can_write,
                     on_saved: function (record, changed) {
                         if (changed) {
-                            self._setValue(self.value.data, {forceChange: true}).then(function() {
-                                self.trigger_up('reload', {db_id: self.value.id});
+                            const _setValue = self._setValue.bind(self, self.value.data, {
+                                forceChange: true,
+                            });
+                            self.trigger_up('reload', {
+                                db_id: self.value.id,
+                                onSuccess: _setValue,
+                                onFailure: _setValue,
                             });
                         }
                     },

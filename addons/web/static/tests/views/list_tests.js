@@ -6074,6 +6074,48 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list: edit many2one from external link', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch: `
+                <tree editable="top" multi_edit="1">
+                    <field name="m2o"/>
+                </tree>`,
+            archs: {
+                'bar,false,form': '<form string="Bar"><field name="display_name"/></form>',
+            },
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return Promise.resolve(false);
+                }
+                return this._super(route, args);
+            },
+            model: 'foo',
+            View: ListView,
+        });
+
+        await testUtils.dom.click(list.$('thead .o_list_record_selector:first input'));
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0)'));
+        await testUtils.dom.click(list.$('.o_external_button:first'));
+
+        // Change the M2O value in the Form dialog
+        await testUtils.fields.editInput($('.modal input:first'), "OOF");
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.strictEqual($('.modal .o_field_widget[name=m2o]').text(), "OOF",
+            "Value of the m2o should be updated in the confirmation dialog");
+
+        // Close the confirmation dialog
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.strictEqual(list.$('.o_data_cell:first').text(), "OOF",
+            "Value of the m2o should be updated in the list");
+
+        list.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 
