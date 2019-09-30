@@ -46,7 +46,7 @@ class MassMailingContact(models.Model):
     base."""
     _name = 'mailing.contact'
     _inherit = ['mail.thread.blacklist']
-    _description = 'Mass Mailing Contact'
+    _description = 'Mailing Contact'
     _order = 'email'
 
     name = fields.Char()
