@@ -12,6 +12,7 @@
     'auto_install': True,
     'data': [
         'views/assets.xml',
+        'views/website_sale_product_configurator_templates.xml',
     ],
     'demo': [
         'data/demo.xml',
