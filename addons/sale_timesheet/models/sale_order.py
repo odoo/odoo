@@ -43,7 +43,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
         for order in self:
-            projects = order.order_line.mapped('product_id.project_id')
+            projects = order.order_line.sudo().mapped('product_id.project_id')
             projects |= order.order_line.mapped('project_id')
             order.project_ids = projects
 
