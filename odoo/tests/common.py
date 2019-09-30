@@ -1539,7 +1539,7 @@ class Form(object):
         for f in fields:
             descr = fields[f]
             v = self._values[f]
-            if self._get_modifier(f, 'required') and not descr['type'] == 'boolean':
+            if self._get_modifier(f, 'required') and not (descr['type'] == 'boolean' or self._get_modifier(f, 'invisible')):
                 assert v is not False, "{} is a required field".format(f)
 
             # skip unmodified fields
@@ -1764,7 +1764,7 @@ class O2MForm(Form):
         values._changed.update(self._changed)
 
         for f in self._view['fields']:
-            if self._get_modifier(f, 'required'):
+            if self._get_modifier(f, 'required') and not (self._get_modifier(f, 'column_invisible') or self._get_modifier(f, 'invisible')):
                 assert self._values[f] is not False, "{} is a required field".format(f)
 
         return values
