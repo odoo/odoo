@@ -67,7 +67,7 @@
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
             <xpath expr="//span[@name='next_departure_text']" position='after'>
-                <span name="next_departure_text" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">This SMS marketing is scheduled for</span>
+                <span name="next_departure_text" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">This SMS marketing is scheduled for </span>
             </xpath>
             <!-- Stat Buttons -->
             <xpath expr="//button[@id='button_view_sent']" position="attributes">
@@ -103,7 +103,7 @@
             </xpath>
             <xpath expr="//page[@name='mail_body']" position="after">
                 <page string="SMS Content" name="sms_body" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
-                    <field name="body_plaintext" widget="sms_widget" required="1"/>
+                    <field name="body_plaintext" widget="sms_widget" attrs="{'required': [('mailing_type', '=', 'sms')]}"/>
                     <group>
                         <field name="sms_force_send" invisible="1"/>
                         <field name="sms_allow_unsubscribe"/>
@@ -182,7 +182,7 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <tree string="SMS Marketing">
-                <field name="name"/>
+                <field name="subject"/>
                 <field name="mailing_type" invisible="1"/>
                 <field name="sent"/>
                 <field name="clicked"/>
