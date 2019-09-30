@@ -14,6 +14,17 @@ class AccountMoveReversal(models.TransientModel):
     l10n_latam_sequence_id = fields.Many2one('ir.sequence', compute='_compute_l10n_latam_sequence')
     l10n_latam_document_number = fields.Char(string='Document Number')
 
+    @api.model
+    def default_get(self, fields):
+        res = super(AccountMoveReversal, self).default_get(fields)
+        move_ids = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.env['account.move']
+        if len(move_ids) > 1:
+            move_ids_use_document = move_ids.filtered(lambda move: move.l10n_latam_use_documents)
+            if move_ids_use_document:
+                raise UserError(_('You can only reverse documents with legal invoicing documents from Latin America one at a time.\nProblematic documents: %s') % ", ".join(move_ids_use_document.mapped('name')))
+
+        return res
+
     @staticmethod
     def _reverse_type_map(move_type):
         match = {
