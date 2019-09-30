@@ -296,7 +296,7 @@
     <tr t-if="line.display !== false" t-attf-class="mv_line #{line.already_paid ? ' already_reconciled' : ''} #{line.__invalid ? 'invalid' : ''} #{line.is_tax ? 'is_tax' : ''}" t-att-data-line-id="line.id" t-att-data-selected="selected">
         <td class="cell_account_code"><t t-esc="line.account_code"/>&#8203;</td> <!-- zero width space to make empty lines the height of the text -->
         <td class="cell_due_date">
-            <t t-if="typeof(line.id) != 'number' &amp;&amp; line.amount">
+            <t t-if="typeof(line.id) != 'number' &amp;&amp; line.id">
                 <span class="badge badge-secondary">New</span>
             </t>
             <t t-else="" t-esc="line.date_maturity || line.date"/>
