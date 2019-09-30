@@ -1238,11 +1238,11 @@ var StatementModel = BasicModel.extend({
                 break;
             case 'regex':
                 var matching = line.st_line.name.match(new RegExp(values.amount_from_label_regex))
-                amount = null;
+                amount = 0;
                 if (matching && matching.length == 2) {
                     matching = matching[1].replace(new RegExp('\\D' + values.decimal_separator, 'g'), '');
                     matching = matching.replace(values.decimal_separator, '.');
-                    amount = parseFloat(matching);
+                    amount = parseFloat(matching) || 0;
                     amount = line.balance.amount > 0 ? amount : -amount;
                 }
                 break;
