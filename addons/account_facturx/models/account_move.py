@@ -239,12 +239,21 @@ class AccountMove(models.Model):
         return res
 
     def _create_invoice_from_attachment(self, attachment):
+<<<<<<< HEAD
         if 'pdf' in attachment.mimetype:
             for move in self:
                 move._create_invoice_from_pdf(attachment)
         if 'xml' in attachment.mimetype:
             for move in self:
                 move._create_invoice_from_xml(attachment)
+=======
+        def _get_attachment_mimetype(attachment):
+            return hasattr(attachment, 'mimetype') and getattr(attachment, 'mimetype') or attachment.fname.split('.')[-1]
+        if 'pdf' in _get_attachment_mimetype(attachment):
+            self._create_invoice_from_pdf(attachment)
+        if 'xml' in _get_attachment_mimetype(attachment):
+            self._create_invoice_from_xml(attachment)
+>>>>>>> dc5f86415d0... temp
 
     def _create_invoice_from_pdf(self, attachment):
         def _get_attachment_filename(attachment):

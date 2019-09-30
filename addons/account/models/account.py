@@ -789,7 +789,11 @@ class AccountJournal(models.Model):
             if self.company_id != self.env.ref('base.main_company'):
                 alias_name += '-' + str(self.company_id.name)
         return {
+<<<<<<< HEAD
             'alias_defaults': {'type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'company_id': self.company_id.id, 'journal_id': self.id},
+=======
+            'alias_defaults': {'type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'journal_id': self.id, 'company_id': self.company_id.id},
+>>>>>>> dc5f86415d0... temp
             'alias_parent_thread_id': self.id,
             'alias_name': alias_name,
         }
