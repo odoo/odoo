@@ -23,7 +23,7 @@ class Mailing(models.Model):
     sms_force_send = fields.Boolean(
         'Send Directly', help='Use at your own risks.')
     # opt_out_link
-    sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=True)
+    sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=False)
 
     @api.onchange('mailing_type')
     def _onchange_mailing_type(self):
