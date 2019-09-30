@@ -1495,7 +1495,7 @@ class AccountMoveLine(models.Model):
     @api.model
     def compute_amount_fields(self, amount, src_currency, company_currency, invoice_currency=False):
         """ Method kept for compatibility reason """
-        return self.compute_amount_fields(amount, src_currency, company_currency)
+        return self._compute_amount_fields(amount, src_currency, company_currency)
 
     @api.model
     def _compute_amount_fields(self, amount, src_currency, company_currency):
