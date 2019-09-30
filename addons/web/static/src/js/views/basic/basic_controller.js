@@ -705,21 +705,25 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *   re-render (reload the whole form by default)
      * @param {string[]} [ev.data.fieldNames] list of the record's fields to
      *   reload
+     * @param {Function} [ev.data.onSuccess] callback executed after reload is resolved
+     * @param {Function} [ev.data.onFailure] callback executed when reload is rejected
      */
     _onReload: function (ev) {
         ev.stopPropagation(); // prevent other controllers from handling this request
         var data = ev && ev.data || {};
         var handle = data.db_id;
+        var prom;
         if (handle) {
             // reload the relational field given its db_id
-            this.model.reload(handle).then(this._confirmSave.bind(this, handle));
+            prom = this.model.reload(handle).then(this._confirmSave.bind(this, handle));
         } else {
             // no db_id given, so reload the main record
-            this.reload({
+            prom = this.reload({
                 fieldNames: data.fieldNames,
                 keepChanges: data.keepChanges || false,
             });
         }
+        prom.then(ev.data.onSuccess).guardedCatch(ev.data.onFailure);
     },
     /**
      * Resequence records in the given order.
