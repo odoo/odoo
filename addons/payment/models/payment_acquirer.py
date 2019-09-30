@@ -60,7 +60,7 @@ class PaymentAcquirer(models.Model):
     """
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
-    _order = 'state desc, sequence, name'
+    _order = 'module_state, state, sequence, name'
 
     def _get_default_view_template_id(self):
         return self.env.ref('payment.default_acquirer_button', raise_if_not_found=False)
