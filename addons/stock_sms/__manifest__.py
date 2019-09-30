@@ -10,7 +10,6 @@
     'depends': ['stock', 'sms'],
     'data': [
         'data/sms_data.xml',
-        'data/mail_data.xml',
         'views/res_config_settings_views.xml',
         'wizard/confirm_stock_sms_views.xml',
         'security/ir.model.access.csv',
