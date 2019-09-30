@@ -152,7 +152,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
             'rate': 9.56564564,
             'name': '2018-04-01',
         })
-        refund_invoice_wiz = self.env['account.move.reversal'].with_context(active_ids=[invoice.id]).create({
+        refund_invoice_wiz = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=[invoice.id]).create({
             'reason': 'test_invoice_shipment_refund',
             'refund_method': 'cancel',
         })
