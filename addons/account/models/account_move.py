@@ -2,12 +2,11 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare, safe_eval, date_utils
+from odoo.tools import float_is_zero, float_compare, safe_eval, date_utils, email_split, email_escape_char, email_re
 from odoo.tools.misc import formatLang, format_date
 
-from collections import OrderedDict
 from datetime import date, timedelta
-from itertools import groupby, chain
+from itertools import groupby
 from stdnum.iso7064 import mod_97_10
 from itertools import zip_longest
 from hashlib import sha256
@@ -1953,6 +1952,54 @@ class AccountMove(models.Model):
 
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
+
+    @api.model
+    def message_new(self, msg_dict, custom_values=None):
+        # OVERRIDE
+        # Add custom behavior when receiving a new invoice through the mail's gateway.
+        if custom_values.get('type', 'entry') not in ('out_invoice', 'in_invoice'):
+            return False
+
+        def is_internal_partner(partner):
+            # Helper to know if the partner is an internal one.
+            return partner.user_ids and all(user.has_group('base.group_user') for user in partner.user_ids)
+
+        # Search for partners in copy.
+        cc_mail_addresses = email_split(msg_dict.get('cc', ''))
+        followers = [partner for partner in self._mail_find_partner_from_emails(cc_mail_addresses) if partner]
+
+        # Search for partner that sent the mail.
+        from_mail_addresses = email_split(msg_dict.get('from', ''))
+        senders = partners = [partner for partner in self._mail_find_partner_from_emails(from_mail_addresses) if partner]
+
+        # Search for partners using the user.
+        if not senders:
+            senders = partners = list(self._mail_search_on_user(from_mail_addresses))
+
+        if partners:
+            # Check we are not in the case when an internal user forwarded the mail manually.
+            if is_internal_partner(partners[0]):
+                # Search for partners in the mail's body.
+                body_mail_addresses = set(email_re.findall(msg_dict.get('body')))
+                partners = [partner for partner in self._mail_find_partner_from_emails(body_mail_addresses) if not is_internal_partner(partner)]
+
+        # Little hack: Inject the mail's subject in the body.
+        if msg_dict.get('subject') and msg_dict.get('body'):
+            msg_dict['body'] = '<div><div><h3>%s</h3></div>%s</div>' % (msg_dict['subject'], msg_dict['body'])
+
+        # Create the invoice.
+        values = {
+            'name': self.default_get(['name'])['name'],
+            'invoice_source_email': from_mail_addresses[0],
+            'partner_id': partners and partners[0].id or False,
+        }
+        move_ctx = self.with_context(default_type=custom_values['type'], default_journal_id=custom_values['journal_id'])
+        move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
+
+        # Assign followers.
+        all_followers_ids = set(partner.id for partner in followers + senders + partners)
+        move.message_subscribe(list(all_followers_ids))
+        return move
 
     def post(self):
         for move in self:
