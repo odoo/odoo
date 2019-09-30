@@ -164,12 +164,22 @@
             </kanban>
         </field>
     </record>
+    <record model="ir.ui.view" id="view_pos_order_pivot">
+        <field name="name">pos.order.pivot</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <pivot string="PoS Orders">
+                <field name="date_order" type="row"/>
+                <field name="amount_total" type="measure"/>
+            </pivot>
+        </field>
+    </record>
 
     <record id="action_pos_pos_form" model="ir.actions.act_window">
         <field name="name">Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">tree,form,kanban,pivot</field>
         <field name="view_id" eval="False"/>
         <field name="domain">[]</field>
         <field name="help" type="html">
@@ -185,7 +195,7 @@
         <field name="name">Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order</field>
-        <field name="view_mode">graph,tree,kanban,form</field>
+        <field name="view_mode">graph,tree,form,kanban,pivot</field>
         <field name="domain">[('state', 'not in', ['draft', 'cancel', 'invoiced'])]</field>
     </record>
 
