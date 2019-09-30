@@ -1171,3 +1171,35 @@ class TestReconciliation(AccountingTestCase):
 
         self.assertEquals(inv1.state, 'paid')
         self.assertEquals(inv2.state, 'paid')
+
+    def test_reconciliation_wizard(self):
+        inv1 = self.create_invoice(invoice_amount=800, currency_id=self.currency_euro_id)
+        inv2 = self.create_invoice(type='out_refund', invoice_amount=700, currency_id=self.currency_euro_id)
+
+        payment = self.env['account.payment'].create({
+            'payment_method_id': self.inbound_payment_method.id,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': inv1.partner_id.id,
+            'amount': 200.00,
+            'journal_id': self.bank_journal_euro.id,
+        })
+        payment.post()
+
+        inv1_rec = inv1.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+        inv2_rec = inv2.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+        pay_rec = payment.move_line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+
+        ReconcileWizard = self.env['account.move.line.reconcile']
+        fields = list(ReconcileWizard._fields.keys())
+
+        defaults = ReconcileWizard.with_context(active_ids=(inv1_rec + inv2_rec).ids).default_get(fields)
+        self.assertEqual(defaults['debit'], 800)
+        self.assertEqual(defaults['credit'], 700)
+        self.assertEqual(defaults['writeoff'], 100)
+
+        (inv1_rec + inv2_rec).reconcile()
+        defaults = ReconcileWizard.with_context(active_ids=(inv1_rec + pay_rec).ids).default_get(fields)
+        self.assertEqual(defaults['debit'], 100)
+        self.assertEqual(defaults['credit'], 200)
+        self.assertEqual(defaults['writeoff'], -100)
