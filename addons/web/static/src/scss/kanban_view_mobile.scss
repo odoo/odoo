@@ -30,7 +30,6 @@
         // [class] to get same specificity as elsewhere (kanban_view.less)
         &[class] .o_kanban_group:not(.o_column_folded) {
             @include o-position-absolute($top: $o-kanban-mobile-tabs-height, $left: 0, $bottom: 0);
-            overflow-x: scroll;
             width: 100%;
             padding: 0;
             margin-left: 0; // override the margin-left: -1px of the desktop mode
