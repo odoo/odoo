@@ -6,6 +6,22 @@
         </main>
     </template>
 
+    <template id="product_quantity_config">
+        <div class="css_quantity input-group">
+            <div class="input-group-prepend">
+                <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+            <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
+            <div class="input-group-append">
+                <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+
     <!-- backend -->
     <template id="configure" name="Configure">
         <div class="js_product main_product">
@@ -37,19 +53,9 @@
                                     "display_currency": (pricelist or product).currency_id
                                 }'/>
                         </h2>
-                        <div class="css_quantity input-group" t-if="product.visible_qty_configurator">
-                            <div class="input-group-prepend">
-                                <button t-attf-href="#" class="btn btn-primary js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
-                            <div class="input-group-append">
-                                <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
+                        <t t-if="product.visible_qty_configurator">
+                            <t t-call="sale_product_configurator.product_quantity_config" />
+                        </t>
                         <p class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
                     </div>
                     <div class="col-lg-1 d-inline-block"></div>
@@ -72,10 +78,10 @@
         <table class="table table-striped table-sm">
         <thead>
             <tr>
-                <th class="td-img">Product</th>
-                <th></th>
-                <th class="text-center td-qty">Quantity</th>
-                <th class="text-center td-price">Price</th>
+                <th class="td-img"><span class='label'>Product</span></th>
+                <th><span class='label'></span></th>
+                <th class="text-center td-qty"><span class='label'>Quantity</span></th>
+                <th class="text-center td-price"><span class='label'>Price</span></th>
             </tr>
         </thead>
         <tbody>
@@ -98,19 +104,7 @@
                     </div>
                 </td>
                 <td class="text-center td-qty">
-                    <div class="css_quantity input-group">
-                        <div class="input-group-prepend">
-                            <button t-attf-href="#" class="btn btn-primary js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
-                                <i class="fa fa-minus"></i>
-                            </button>
-                        </div>
-                        <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
-                        <div class="input-group-append">
-                            <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <t t-call='sale_product_configurator.product_quantity_config' />
                 </td>
                 <td class="text-center td-price" name="price">
                     <ul class="d-none js_add_cart_variants" t-att-data-attribute_exclusions="{'exclusions: []'}"></ul>
@@ -178,19 +172,7 @@
                         </div>
                     </td>
                     <td class="text-center td-qty d-none">
-                        <div class="css_quantity input-group">
-                            <div class="input-group-prepend">
-                                <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
-                            <div class="input-group-append">
-                                <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
+                        <t t-call='sale_product_configurator.product_quantity_config' />
                     </td>
                     <td class="text-center td-price">
                         <div t-attf-class="text-danger oe_default_price oe_optional oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
