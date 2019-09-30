@@ -32,6 +32,7 @@ With this module you will have:
     """,
     "depends": [
         "account",
+        "account_tax_python",
     ],
     "data": [
         "data/account_tag_data.xml",
@@ -47,5 +48,6 @@ With this module you will have:
         "views/res_bank_view.xml",
         "views/res_config_settings_views.xml",
         "views/account_views.xml",
+        "views/account_move_views.xml",
     ],
 }

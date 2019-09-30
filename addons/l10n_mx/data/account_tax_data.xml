@@ -527,5 +527,43 @@
             }),
         ]"/>
     </record>
+    <record id="tax_importation" model="account.tax.template">
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="name">IVA(16%) IMPORTATION</field>
+        <field name="description">IMP(16%)</field>
+        <field name="amount">0</field>
+        <field name="python_compute">result = price_unit * 0.16</field>
+        <field name="amount_type">code</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_iva_16"/>
+        <field name="tax_exigibility">on_payment</field>
+        <field name="cash_basis_transition_account_id" ref="cuenta118_01"/>
+        <field name="cash_basis_base_account_id" ref="cuenta801_01_99"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('cuenta208_01'),
+                'tag_ids': [ref('tag_iva')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('cuenta208_01'),
+                'tag_ids': [ref('tag_iva')],
+            }),
+        ]"/>
+    </record>
   </data>
 </odoo>

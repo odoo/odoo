@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_account_invoice_line_invoice_broker_form">
+        <field name="name">view.account.move.line.invoice.broker.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']//tree/field[@name='tax_ids']" position="after">
+                <field name="l10n_mx_invoice_broker_id"
+                    attrs="{'column_invisible': [('parent.type', '!=', 'in_invoice')]}"
+                    options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
