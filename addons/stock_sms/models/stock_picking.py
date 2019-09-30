@@ -40,7 +40,6 @@ class Picking(models.Model):
     def _send_confirmation_email(self):
         super(Picking, self)._send_confirmation_email()
         if not getattr(threading.currentThread(), 'testing', False) and not self.env.registry.in_test_mode():
-            sms_sent = False
             pickings = self.filtered(lambda p: p.company_id.stock_move_sms_validation and p.picking_type_id.code == 'outgoing' and (p.partner_id.mobile or p.partner_id.phone))
 
             for picking in pickings:
@@ -49,33 +48,3 @@ class Picking(models.Model):
                     partner_ids=picking.partner_id.ids,
                     put_in_queue=False
                 )
-                sms_sent = True
-
-            if sms_sent:
-                pickings._check_credit_sms()
-
-    def _check_credit_sms(self):
-        mail_message_ids = self.env['mail.message'].search([
-            ('res_id', 'in', self.ids),
-            ('model', '=', 'stock.picking')]).ids
-        if self.env['ir.config_parameter'].sudo().get_param('stock_sms.already_notified', False):
-            if self.env['sms.sms'].sudo().search_count([
-                    ('mail_message_id', 'in', mail_message_ids),
-                    ('state', '=', 'sent'),
-                    ('error_code', '=', False)]):
-                # The SMS is sent, the company has again credits
-                self.env['ir.config_parameter'].sudo().set_param('stock_sms.already_notified', False)
-        else:
-            if self.env['sms.sms'].sudo().search_count([
-                    ('mail_message_id', 'in', mail_message_ids),
-                    ('error_code', '=', 'sms_credit')]):
-                # The SMS is sent, the company has no more credits
-                for admin in self.env.ref('base.group_system').users:
-                    mail_template = self.env.ref('stock_sms.mail_template_no_more_credit_sms')
-                    email_values = {
-                        'model': 'res.users',
-                        'res_id': admin.id,
-                    }
-                    mail_template.sudo().send_mail(admin.id, email_values=email_values, notif_layout='mail.mail_notification_light')
-
-                self.env['ir.config_parameter'].sudo().set_param('stock_sms.already_notified', True)
