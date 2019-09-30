@@ -29,7 +29,8 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Mailings">
-                    <field name="subject"/>
+                    <field name="state" invisible="1"/>
+                    <field name="subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                     <field name="mailing_type" invisible="1"/>
                     <field name="sent"/>
                     <field name="delivered"/>
