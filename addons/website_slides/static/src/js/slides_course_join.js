@@ -3,7 +3,6 @@ odoo.define('website_slides.course.join.widget', function (require) {
 
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
-require('website_slides.slides');
 
 var _t = core._t;
 
@@ -13,15 +12,49 @@ var CourseJoinWidget = publicWidget.Widget.extend({
     events: {
         'click .o_wslides_js_course_join_link': '_onClickJoin',
     },
-
-    init: function (parent, channelId){
-        this.channelId = channelId;
-        return this._super.apply(this, arguments);
+    
+    init: function (parent, options) {
+        this._super.apply(this, arguments);
+        this.channel = options.channel;
+        this.isMember = options.isMember;
+        this.publicUser = options.publicUser;
+        this.beforeJoin = options.beforeJoin;
+        this.afterJoin = options.afterJoin || function () {location.reload();};
     },
 
     //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickJoin: function (ev) {
+        ev.preventDefault();
+        if (this.channel.channelEnroll === 'public') {
+            if (this.publicUser) {
+                this._signInAndJoinCourse();
+            } else if (!this.isMember) {
+                this.joinChannel(this.channel.channelId);
+            }
+        }
+    },
+    
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+    /**
+     * @private
+     */
+    _createLoginRedirectUrl: function (url) {
+        var baseUrl = url || window.location.pathname;
+        var params = {};
+        if (window.location.href.indexOf("fullscreen") > -1) {
+            params.fullscreen = 1;
+        }
+        baseUrl = _.str.sprintf('%s?%s', baseUrl, $.param(params));
+        return _.str.sprintf('/web/login?redirect=%s', encodeURIComponent(baseUrl));
+    },
 
     /**
      * @private
@@ -39,16 +72,26 @@ var CourseJoinWidget = publicWidget.Widget.extend({
             }
         }).popover('show');
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
     /**
      * @private
      */
-    _onClickJoin: function (event) {
-        var channelId = this.channelId || $(event.currentTarget).data('channel-id');
+    _signInAndJoinCourse: function () {
+        if (this.channel.channelEnroll === 'public') {
+            var self = this;
+            this.beforeJoin().then(function () {
+                window.location.href = self._createLoginRedirectUrl(); 
+            });
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+    /**
+     * @public
+     * @param {integer} channelId
+     */
+    joinChannel: function (channelId) {
         var self = this;
         this._rpc({
             route: '/slides/channel/join',
@@ -56,8 +99,8 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                 channel_id: channelId,
             },
         }).then(function (data) {
-            if (! data.error) {
-                location.reload();
+            if (!data.error) {
+                self.afterJoin();
             } else {
                 if (data.error === 'public_user') {
                     var message = _t('Please <a href="/web/login?redirect=%s">login</a> to join this course');
@@ -86,13 +129,14 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         var proms = [this._super.apply(this, arguments)];
+        var data = self.$el.data();
+        var options = {channel: {channelEnroll: data.channelEnroll, channelId: data.channelId}};
         $('.o_wslides_js_course_join').each(function () {
-            proms.push(new CourseJoinWidget(self).attachTo($(this)));
+            proms.push(new CourseJoinWidget(self, options).attachTo($(this)));
         });
         return Promise.all(proms);
     },
 });
-
 
 return {
     courseJoinWidget: CourseJoinWidget,

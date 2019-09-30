@@ -10,7 +10,8 @@
         <div class="o_wslides_fs_main d-flex flex-column font-weight-light"
             t-att-data-channel-id="slide.channel_id.id"
             t-att-data-channel-enroll="slide.channel_id.enroll"
-            t-att-data-signup-allowed="signup_allowed">
+            t-att-data-signup-allowed="signup_allowed"
+            t-att-data-answers="answers">
 
             <div class="o_wslides_slide_fs_header d-flex flex-shrink-0 text-white">
                 <div class="d-flex">
@@ -97,7 +98,8 @@
                     t-att-data-is-quiz="0"
                     t-att-data-completed="1 if slide_completed else 0"
                     t-att-data-embed-code="slide.embed_code if slide.slide_type in ['video', 'document', 'presentation', 'infographic'] else False"
-                    t-att-data-readonly="not is_member"
+                    t-att-data-is-member="is_member"
+                    t-att-data-answers="answers"
                     >
                     <span class="ml-3">
                         <i t-if="slide_completed and is_member" class="o_wslides_slide_completed fa fa-check fa-fw text-success" t-att-data-slide-id="slide.id"/>
@@ -134,7 +136,8 @@
                                 t-att-data-has-question="1 if slide.question_ids else 0"
                                 t-att-data-is-quiz="1"
                                 t-att-data-completed="1 if slide_completed else 0"
-                                t-att-data-readonly="not is_member">
+                                t-att-data-is-member="is_member"
+                                t-att-data-answers="answers">
                                 <a t-if="can_access" class="o_wslides_fs_slide_quiz" href="#" t-att-index="i">
                                     <i class="fa fa-flag-checkered text-warning mr-2"/>Quiz
                                 </a>

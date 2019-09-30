@@ -271,7 +271,8 @@
                     class="btn btn-primary btn-block o_wslides_js_course_join_link"
                     title="Start Course" aria-label="Start Course Channel"
                     t-att-href="'#'"
-                    t-att-data-channel-id="channel.id">
+                    t-att-data-channel-id="channel.id"
+                    t-att-data-channel-enroll="channel.enroll">
                     <span class="cta-title text_small_caps">
                         <t t-if="channel.channel_type == 'documentation'">Start Course</t>
                         <t t-else="">Join Course</t>

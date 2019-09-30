@@ -416,7 +416,7 @@
         t-att-data-id="slide.id"
         t-att-data-name="slide.name"
         t-att-data-slide-type="slide.slide_type"
-        t-att-data-readonly="not slide.channel_id.is_member"
+        t-att-data-is-member="slide.channel_id.is_member"
         t-att-data-completed="1 if slide_completed else 0"
         t-att-data-quiz-attempts-count="quiz_attempts_count"
         t-att-data-quiz-karma-max="quiz_karma_max"
@@ -427,7 +427,8 @@
         t-att-data-channel-id="slide.channel_id.id"
         t-att-data-channel-enroll="slide.channel_id.enroll"
         t-att-data-channel-can-upload="slide.channel_id.can_upload"
-        t-att-data-signup-allowed="signup_allowed">
+        t-att-data-signup-allowed="signup_allowed"
+        t-att-data-answers="answers">
         <t t-foreach="slide_questions" t-as="question">
             <t t-call="website_slides.lesson_content_quiz_question"/>
         </t>
@@ -437,7 +438,7 @@
 </template>
 
 <template id="lesson_content_quiz_question" name="Lesson: Quiz question template">
-    <div t-att-class="'o_wslides_js_lesson_quiz_question mt-3 %s' % ('completed-disabled' if slide_completed else ('disabled' if not slide.channel_id.is_member else ''))"
+    <div t-att-class="'o_wslides_js_lesson_quiz_question mt-3 %s' % ('completed-disabled' if slide_completed else ('disabled' if not (slide.channel_id.is_member or slide.is_preview) else ''))"
          t-att-data-question-id="question['id']" t-att-data-title="question['question']" >
         <div class="row d-flex mb-2 mx-0">
             <div class="h4">

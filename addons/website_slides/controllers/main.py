@@ -149,6 +149,15 @@ class WebsiteSlides(WebsiteProfile):
             'sequence': channel.slide_ids[-1]['sequence'] + 1 if channel.slide_ids else 1,
         }
 
+    def _slide_remove_saved_answers(self, channel_id):
+        if 'slide_quiz_answers' not in request.session:
+            return
+        quiz_slides = request.env['slide.slide'].search([('channel_id', '=', channel_id), ('slide_type', '=', 'quiz')])
+        session_slide_quiz_answers = json.loads(request.session.get('slide_quiz_answers', '{}'))
+        for slide_id in quiz_slides.ids:
+            session_slide_quiz_answers.pop(str(slide_id), None)
+        request.session['slide_quiz_answers'] = json.dumps(session_slide_quiz_answers)
+
     # CHANNEL UTILITIES
     # --------------------------------------------------
 
@@ -526,6 +535,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/leave'], type='json', auth='user', website=True)
     def slide_channel_leave(self, channel_id):
+        self._slide_remove_saved_answers(channel_id)
         request.env['slide.channel'].browse(channel_id)._remove_membership(request.env.user.partner_id.ids)
         return True
 
@@ -558,6 +568,10 @@ class WebsiteSlides(WebsiteProfile):
 
         values = self._get_slide_detail(slide)
         # quiz-specific: update with karma and quiz information
+        if 'slide_quiz_answers' in request.session:
+            slide_quiz_answers = json.loads(request.session['slide_quiz_answers'])
+            if str(slide.id) in slide_quiz_answers:
+                values['answers'] = slide_quiz_answers[str(slide.id)]
         if slide.question_ids:
             values.update(self._get_slide_quiz_data(slide))
         # sidebar: update with user channel progress
@@ -707,7 +721,7 @@ class WebsiteSlides(WebsiteProfile):
         return result
 
     # --------------------------------------------------
-    # QUIZZ SECTION
+    # QUIZ SECTION
     # --------------------------------------------------
 
     @http.route('/slides/slide/quiz/question_add_or_update', type='json', methods=['POST'], auth='user', website=True)
@@ -789,6 +803,7 @@ class WebsiteSlides(WebsiteProfile):
         slide = fetch_res['slide']
 
         if slide.user_membership_id.sudo().completed:
+            self._slide_remove_saved_answers(slide.channel_id.id)
             return {'error': 'slide_quiz_done'}
 
         all_questions = request.env['slide.question'].sudo().search([('slide_id', '=', slide.id)])
@@ -814,6 +829,7 @@ class WebsiteSlides(WebsiteProfile):
                 'last_rank': not request.env.user._get_next_rank(),
                 'level_up': rank_progress['previous_rank']['lower_bound'] != rank_progress['new_rank']['lower_bound']
             })
+        self._slide_remove_saved_answers(slide.channel_id.id)
         return {
             'goodAnswers': user_good_answers.ids,
             'badAnswers': user_bad_answers.ids,
@@ -824,6 +840,16 @@ class WebsiteSlides(WebsiteProfile):
             'quizAttemptsCount': quiz_info['quiz_attempts_count'],
             'rankProgress': rank_progress,
         }
+    
+    @http.route(['/slides/slide/quiz/save_slide_answers'], type='json', auth='public', website=True)
+    def slide_save_answers(self, quiz_answers):
+        if 'slide_quiz_answers' not in request.session:
+            request.session['slide_quiz_answers'] = json.dumps({})
+        session_slide_quiz_answers = json.loads(request.session['slide_quiz_answers'])
+        session_slide_quiz_answers.update({
+            str(quiz_answers['slide_id']): quiz_answers['slide_answers']
+        })
+        request.session['slide_quiz_answers'] = json.dumps(session_slide_quiz_answers)
 
     def _get_rank_values(self, user):
         lower_bound = user.rank_id.karma_min or 0
@@ -948,6 +974,9 @@ class WebsiteSlides(WebsiteProfile):
             redirect_url = "/slides/%s" % (slug(channel))
         if slide.slide_type == 'webpage':
             redirect_url += "?enable_editor=1"
+        if slide.slide_type == "quiz":
+            action_id = request.env.ref('website_slides.slide_slide_action').id
+            redirect_url = '/web#id=%s&action=%s&model=slide.slide&view_type=form' % (slide.id, action_id)
         return {
             'url': redirect_url,
             'channel_type': channel.channel_type,
