@@ -239,9 +239,11 @@ class AccountMove(models.Model):
 
     @api.one
     def _create_invoice_from_attachment(self, attachment):
-        if 'pdf' in attachment.mimetype:
+        def _get_attachment_mimetype(attachment):
+            return hasattr(attachment, 'mimetype') and getattr(attachment, 'mimetype') or attachment.fname.split('.')[-1]
+        if 'pdf' in _get_attachment_mimetype(attachment):
             self._create_invoice_from_pdf(attachment)
-        if 'xml' in attachment.mimetype:
+        if 'xml' in _get_attachment_mimetype(attachment):
             self._create_invoice_from_xml(attachment)
 
     def _create_invoice_from_pdf(self, attachment):
