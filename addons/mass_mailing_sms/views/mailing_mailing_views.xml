@@ -82,11 +82,20 @@
                     <field name="sent" string="Sent" widget="statinfo"/>
                 </button>
             </xpath>
+            <xpath expr="//button[@name='action_view_opened']" position="after">
+                <button name="action_view_clicked"
+                    type="object"
+                    context="{'search_default_filter_clicked': True}" 
+                    class="oe_stat_button"
+                    attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
+                    <field name="clicks_ratio" string="Clicked" widget="percentpie"/>
+                </button>
+            </xpath>
             <xpath expr="//button[@name='action_view_opened']" position="attributes">
-                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+                <attribute name="attrs">{'invisible': ['|',('mailing_type', '!=', 'mail'),('state', 'in', ('draft','test'))]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_view_replied']" position="attributes">
-                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+                <attribute name="attrs">{'invisible': ['|',('mailing_type', '!=', 'mail'),('state', 'in', ('draft','test'))]}</attribute>
             </xpath>
             <!-- Form -->
             <xpath expr="//page[@name='mail_body']" position="attributes">
