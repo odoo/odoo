@@ -22,7 +22,7 @@ _logger = logging.getLogger(__name__)
 
 # Used to agglomerate the attendances in order to find the hour_from and hour_to
 # See _onchange_request_parameters
-DummyAttendance = namedtuple('DummyAttendance', 'hour_from, hour_to, dayofweek, day_period')
+DummyAttendance = namedtuple('DummyAttendance', 'hour_from, hour_to, dayofweek, day_period, week_type')
 
 class HolidaysRequest(models.Model):
     """ Leave Requests Access specifications
@@ -284,29 +284,29 @@ class HolidaysRequest(models.Model):
 
         resource_calendar_id = self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
         domain = [('calendar_id', '=', resource_calendar_id.id), ('display_type', '=', False)]
-        attendances = self.env['resource.calendar.attendance'].read_group(domain, ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)', 'dayofweek', 'day_period'], ['dayofweek', 'day_period'], lazy=False)
+        attendances = self.env['resource.calendar.attendance'].read_group(domain, ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)', 'week_type', 'dayofweek', 'day_period'], ['week_type', 'dayofweek', 'day_period'], lazy=False)
 
         # Must be sorted by dayofweek ASC and day_period DESC
-        attendances = sorted([DummyAttendance(group['hour_from'], group['hour_to'], group['dayofweek'], group['day_period']) for group in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
+        attendances = sorted([DummyAttendance(group['hour_from'], group['hour_to'], group['dayofweek'], group['day_period'], group['week_type']) for group in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
 
-        default_value = DummyAttendance(0, 0, 0, 'morning')
+        default_value = DummyAttendance(0, 0, 0, 'morning', False)
 
         if resource_calendar_id.two_weeks_calendar:
             # find week type of start_date
             start_week_type = int(math.floor((self.request_date_from.toordinal() - 1) / 7) % 2)
-            attendance_actual_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) == start_week_type)
-            attendance_actual_next_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) != start_week_type)
+            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == start_week_type]
+            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != start_week_type]
             # First, add days of actual week coming after date_from
-            attendance_filtred = list(attendance_actual_week.filtered(lambda att: int(att.dayofweek) >= self.request_date_from.weekday()))
+            attendance_filtred = [att for att in attendance_actual_week if int(att.dayofweek) >= self.request_date_from.weekday()]
             # Second, add days of the other type of week
             attendance_filtred += list(attendance_actual_next_week)
             # Third, add days of actual week (to consider days that we have remove first because they coming before date_from)
             attendance_filtred += list(attendance_actual_week)
 
             end_week_type = int(math.floor((self.request_date_to.toordinal() - 1) / 7) % 2)
-            attendance_actual_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) == end_week_type)
-            attendance_actual_next_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) != end_week_type)
-            attendance_filtred_reversed = list(reversed(attendance_actual_week.filtered(lambda att: int(att.dayofweek) <= self.request_date_to.weekday())))
+            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == end_week_type]
+            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != end_week_type]
+            attendance_filtred_reversed = list(reversed([att for att in attendance_actual_week if int(att.dayofweek) <= self.request_date_to.weekday()]))
             attendance_filtred_reversed += list(reversed(attendance_actual_next_week))
             attendance_filtred_reversed += list(reversed(attendance_actual_week))
 
