@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 
@@ -11,17 +10,7 @@ class AccountMoveReversal(models.TransientModel):
     _name = 'account.move.reversal'
     _description = 'Account Move Reversal'
 
-    @api.model
-    def _get_default_move(self):
-        if self._context.get('active_id'):
-            move = self.env['account.move'].browse(self._context['active_id'])
-            if move.state != 'posted' or move.type in ('out_refund', 'in_refund'):
-                raise UserError(_('Only posted journal entries being not already a refund can be reversed.'))
-            return move
-        return self.env['account.move']
-
     move_id = fields.Many2one('account.move', string='Journal Entry',
-        default=lambda self: self._get_default_move(),
         domain=[('state', '=', 'posted'), ('type', 'not in', ('out_refund', 'in_refund'))])
     date = fields.Date(string='Reversal date', default=fields.Date.context_today, required=True)
     reason = fields.Char(string='Reason')
@@ -29,17 +18,35 @@ class AccountMoveReversal(models.TransientModel):
             ('refund', 'Partial Refund'),
             ('cancel', 'Full Refund'),
             ('modify', 'Full refund and new draft invoice')
-        ], default='refund', string='Credit Method', required=True,
+        ], string='Credit Method', required=True,
         help='Choose how you want to credit this invoice. You cannot "modify" nor "cancel" if the invoice is already reconciled.')
     journal_id = fields.Many2one('account.journal', string='Use Specific Journal', help='If empty, uses the journal of the journal entry to be reversed.')
 
-    # related fields
-    residual = fields.Monetary(related='move_id.amount_residual')
-    currency_id = fields.Many2one(related='move_id.currency_id')
-    move_type = fields.Selection(related='move_id.type')
+    # computed fields
+    residual = fields.Monetary(compute="_compute_from_moves")
+    currency_id = fields.Many2one('res.currency', compute="_compute_from_moves")
+    move_type = fields.Char(compute="_compute_from_moves")
+
+    @api.model
+    def default_get(self, fields):
+        res = super(AccountMoveReversal, self).default_get(fields)
+        move_ids = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.env['account.move']
+        res['refund_method'] = (len(move_ids) > 1 or move_ids.type == 'entry') and 'cancel' or 'refund'
+        res['residual'] = len(move_ids) == 1 and move_ids.amount_residual or 0
+        res['currency_id'] = len(move_ids.currency_id) == 1 and move_ids.currency_id.id or False
+        res['move_type'] = len(move_ids) == 1 and move_ids.type or False
+        return res
+
+    @api.depends('move_id')
+    def _compute_from_moves(self):
+        move_ids = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.move_id
+        for record in self:
+            record.residual = len(move_ids) == 1 and move_ids.amount_residual or 0
+            record.currency_id = len(move_ids.currency_id) == 1 and move_ids.currency_id or False
+            record.move_type = len(move_ids) == 1 and move_ids.type or False
 
     def reverse_moves(self):
-        moves = self.move_id or self.env['account.move'].browse(self._context['active_ids'])
+        moves = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.move_id
 
         # Create default values.
         default_values_list = []
@@ -53,17 +60,17 @@ class AccountMoveReversal(models.TransientModel):
             })
 
         # Handle reverse method.
-        if self.refund_method == 'cancel' or (moves and moves[0].type == 'entry'):
+        if self.refund_method == 'cancel':
             new_moves = moves._reverse_moves(default_values_list, cancel=True)
         elif self.refund_method == 'modify':
-            new_moves = moves._reverse_moves(default_values_list, cancel=True)
+            moves._reverse_moves(default_values_list, cancel=True)
             moves_vals_list = []
             for move in moves.with_context(include_business_fields=True):
                 moves_vals_list.append(move.copy_data({
                     'invoice_payment_ref': move.name,
                     'date': self.date or move.date,
                 })[0])
-            new_moves = moves.create(moves_vals_list)
+            new_moves = self.env['account.move'].create(moves_vals_list)
         elif self.refund_method == 'refund':
             new_moves = moves._reverse_moves(default_values_list)
         else:
