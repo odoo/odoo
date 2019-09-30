@@ -666,10 +666,12 @@ var FieldDateRange = InputField.extend({
             endDate = this._formatValue(this.value);
         }
         this.dateRangePickerOptions.startDate = startDate || moment();
-        this.dateRangePickerOptions.endDate = endDate || (startDate && moment(startDate) || moment()).add(24, 'hour');
+        this.dateRangePickerOptions.endDate = endDate ||
+            (startDate && moment(startDate, this.isDateField ? time.getLangDateFormat() : time.getLangDatetimeFormat()) || moment()).add(24, 'hour');
 
         this.$el.daterangepicker(this.dateRangePickerOptions);
         this.$el.on('apply.daterangepicker', this._applyChanges.bind(this));
+        this.$el.on('cancel.daterangepicker', this._applyChanges.bind(this));
         this.$el.on('show.daterangepicker', this._applyChanges.bind(this));
         this.$el.on('clickDate.daterangepicker', this._applyChanges.bind(this));
         this.$el.on('timeChanged.daterangepicker', this._applyChanges.bind(this));
