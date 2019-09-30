@@ -83,5 +83,26 @@
         <record id="base.group_portal" model="res.groups"><!-- Add the demo user to the portal (and therefore to the portal member group) -->
             <field name="users" eval="[(4,ref('demo_user0'))]"/>
         </record>
+
+        <record id="test1" model="res.partner">
+            <field name="name">Test1</field>
+            <field name="email">joel.willis63@example.com</field>
+            <field name="street">858 Lynn Street</field>
+            <field name="city">Bayonne</field>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','NJ')]"/>
+            <field name="zip">07002</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="company_name">YourCompany</field>
+            <field name="image_1920" type="base64" file="base/static/img/partner_demo_portal.jpg"/>
+            <field name="phone">(683)-556-5104</field>
+        </record>
+        <record id="test1_user0" model="res.users" context="{'no_reset_password': True}">
+            <field name="partner_id" ref="test1"/>
+            <field name="login">test1</field>
+            <field name="password">test1</field>
+            <field name="signature"><![CDATA[<span>-- <br/>Mr Demo Portal</span>]]></field>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        </record>
+
     </data>
 </odoo>

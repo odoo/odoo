@@ -14,8 +14,9 @@ var CourseJoinWidget = publicWidget.Widget.extend({
         'click .o_wslides_js_course_join_link': '_onClickJoin',
     },
 
-    init: function (parent, channelId){
+    init: function (parent, channelId, quiz = false){
         this.channelId = channelId;
+        this.quiz = quiz;
         return this._super.apply(this, arguments);
     },
 
@@ -50,6 +51,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
     _onClickJoin: function (event) {
         var channelId = this.channelId || $(event.currentTarget).data('channel-id');
         var self = this;
+        console.log(this.quiz)
         this._rpc({
             route: '/slides/channel/join',
             params: {
@@ -57,7 +59,13 @@ var CourseJoinWidget = publicWidget.Widget.extend({
             },
         }).then(function (data) {
             if (! data.error) {
-                location.reload();
+                if (self.quiz === true){
+                    console.log("hello")
+                    self.trigger_up('submit_answers');
+                }
+                else{
+                    location.reload();
+                }
             } else {
                 if (data.error === 'public_user') {
                     var message = _t('Please <a href="/web/login?redirect=%s">login</a> to join this course');

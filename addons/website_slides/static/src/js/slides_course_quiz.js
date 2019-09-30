@@ -29,6 +29,10 @@ odoo.define('website_slides.quiz', function (require) {
             "click .o_wslides_js_lesson_quiz_submit": '_onSubmitQuiz',
             "click .o_wslides_quiz_btn": '_onClickNext',
             "click .o_wslides_quiz_continue": '_onClickNext'
+        },    
+        
+        custom_events: {
+            'submit_answers': '_onSubmitQuizAfterJoin',
         },
 
         /**
@@ -73,7 +77,7 @@ odoo.define('website_slides.quiz', function (require) {
                 self._renderAnswers();
                 self._renderAnswersHighlighting();
                 self._renderValidationInfo();
-                new CourseJoinWidget(self, self.channel.channelId).appendTo(self.$('.o_wslides_course_join_widget'));
+                new CourseJoinWidget(self, self.channel.channelId, true).appendTo(self.$('.o_wslides_course_join_widget'));
             });
         },
 
@@ -128,7 +132,7 @@ odoo.define('website_slides.quiz', function (require) {
         _renderAnswers: function () {
             var self = this;
             this.$('input[type=radio]').each(function () {
-                $(this).prop('disabled', self.slide.readonly || self.slide.completed);
+                $(this).prop('disabled', self.slide.completed);
             });
         },
 
@@ -231,7 +235,7 @@ odoo.define('website_slides.quiz', function (require) {
          */
         _onAnswerClick: function (ev) {
             ev.preventDefault();
-            if (! this.slide.readonly && ! this.slide.completed) {
+            if (! this.slide.completed) {
                 $(ev.currentTarget).find('input[type=radio]').prop('checked', true);
             }
             this._alertHide();
@@ -267,6 +271,17 @@ odoo.define('website_slides.quiz', function (require) {
             } else {
                 this._alertShow();
             }
+        },
+
+        /**
+         * Submit a quiz and get the correction, after joing the course
+         *
+         * @private
+         * @param OdooEvent ev
+         */
+        _onSubmitQuizAfterJoin: function (ev) {
+            this.readonly = false;
+            this._onSubmitQuiz(ev)
         },
     });
 
