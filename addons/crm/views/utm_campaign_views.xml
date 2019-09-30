@@ -8,13 +8,13 @@
             <xpath expr="//div[@id='utm_statistics']" position="inside">
                 <field name="crm_lead_activated" invisible="1"/>
                 <div class="px-2 text-center" groups="sales_team.group_sale_salesman"
-                    attrs="{'invisible': [('crm_lead_activated', '=', False)]}">
-                    <small>Leads:</small>
+                    attrs="{'invisible': [('crm_lead_activated', '=', False)]}" title="Leads">
+                    <i class="fa fa-star"></i>
                     <small class="font-weight-bold"><field name="lead_count"/></small>
                 </div>
                 <div class="px-2 text-center" groups="sales_team.group_sale_salesman"
-                    attrs="{'invisible': [('crm_lead_activated', '=', True)]}">
-                    <small>Opportunities:</small>
+                    attrs="{'invisible': [('crm_lead_activated', '=', True)]}" title="Opportunities">
+                    <i class="fa fa-star"></i>
                     <small class="font-weight-bold"><field name="opportunity_count"/></small>
                 </div>
             </xpath>
