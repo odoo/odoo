@@ -812,7 +812,8 @@
                                         <field name="credit"
                                                sum="Total Credit"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
-                                        <field name="tag_ids" widget="many2many_tags" string="Tax Grids" optional="show"/>
+                                        <field name="country_id" invisible="1"/>
+                                        <field name="tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', country_id), ('applicability', '=', 'taxes')]"/>
 
                                         <!-- Others fields -->
                                         <field name="payment_id" invisible="1"/>
