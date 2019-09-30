@@ -6,6 +6,7 @@ from odoo import models, api, fields
 from odoo.fields import Datetime as FieldDateTime
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
+from odoo.osv.expression import AND
 
 
 class AccountClosing(models.Model):
@@ -27,8 +28,8 @@ class AccountClosing(models.Model):
     total_interval = fields.Monetary(string="Period Total", help='Total in receivable accounts during the interval, excluding overlapping periods', readonly=True, required=True)
     cumulative_total = fields.Monetary(string="Cumulative Grand Total", help='Total in receivable accounts since the beginnig of times', readonly=True, required=True)
     sequence_number = fields.Integer('Sequence #', readonly=True, required=True)
-    last_move_id = fields.Many2one('account.move', string='Last journal entry', help='Last Journal entry included in the grand total', readonly=True)
-    last_move_hash = fields.Char(string='Last journal entry\'s inalteralbility hash', readonly=True)
+    last_order_id = fields.Many2one('pos.order', string='Last Pos Order', help='Last Pos order included in the grand total', readonly=True)
+    last_order_hash = fields.Char(string='Last Order entry\'s inalteralbility hash', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', help="The company's currency", readonly=True, related='company_id.currency_id', store=True)
 
     def _query_for_aml(self, company, first_move_sequence_number, date_start):
@@ -77,28 +78,35 @@ class AccountClosing(models.Model):
             ('frequency', '=', frequency),
             ('company_id', '=', company.id)], limit=1, order='sequence_number desc')
 
-        first_move = self.env['account.move']
+        first_order = self.env['pos.order']
         date_start = interval_dates['interval_from']
         cumulative_total = 0
         if previous_closing:
-            first_move = previous_closing.last_move_id
+            first_order = previous_closing.last_order_id
             date_start = previous_closing.create_date
             cumulative_total += previous_closing.cumulative_total
 
-        aml_aggregate = self._query_for_aml(company, first_move.secure_sequence_number, date_start)
+        domain = [('company_id', '=', company.id), ('state', 'in', ('paid', 'done', 'invoiced'))]
+        if first_order.l10n_fr_secure_sequence_number is not False and first_order.l10n_fr_secure_sequence_number is not None:
+            domain = AND([domain, [('l10n_fr_secure_sequence_number', '>', first_order.l10n_fr_secure_sequence_number)]])
+        elif date_start:
+            #the first time we compute the closing, we consider only from the installation of the module
+            domain = AND([domain, [('date_order', '>=', date_start)]])
 
-        total_interval = aml_aggregate['balance'] or 0
+        orders = self.env['pos.order'].search(domain, order='date_order desc')
+
+        total_interval = sum(orders.mapped('amount_total'))
         cumulative_total += total_interval
 
         # We keep the reference to avoid gaps (like daily object during the weekend)
-        last_move = first_move
-        if aml_aggregate['move_ids']:
-            last_move = last_move.browse(aml_aggregate['move_ids'][0])
+        last_order = first_order
+        if orders:
+            last_order = orders[0]
 
         return {'total_interval': total_interval,
                 'cumulative_total': cumulative_total,
-                'last_move_id': last_move.id,
-                'last_move_hash': last_move.inalterable_hash,
+                'last_order_id': last_order.id,
+                'last_order_hash': last_order.l10n_fr_secure_sequence_number,
                 'date_closing_stop': interval_dates['date_stop'],
                 'date_closing_start': date_start,
                 'name': interval_dates['name_interval'] + ' - ' + interval_dates['date_stop'][:10]}
