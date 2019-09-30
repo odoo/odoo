@@ -78,6 +78,7 @@ var AbstractThreadWindow = Widget.extend({
         this.$input = this.$('.o_composer_text_field');
         this.$header = this.$('.o_thread_window_header');
         var options = {
+           areMessageAttachmentsDeletable: false,
            displayMarkAsRead: false,
            displayStars: this.options.displayStars,
         };
