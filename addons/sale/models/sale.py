@@ -1054,8 +1054,9 @@ class SaleOrderLine(models.Model):
         lines = super().create(vals_list)
         for line in lines:
             if line.product_id and line.order_id.state == 'sale':
-                msg = _("Extra line with %s ") % (line.product_id.display_name,)
-                line.order_id.message_post(body=msg)
+                if not self.env.context.get('sale_order_no_message_post'):
+                    msg = _("Extra line with %s ") % (line.product_id.display_name,)
+                    line.order_id.message_post(body=msg)
                 # create an analytic account if at least an expense product
                 if line.product_id.expense_policy not in [False, 'no'] and not line.order_id.analytic_account_id:
                     line.order_id._create_analytic_account()
@@ -1089,7 +1090,7 @@ class SaleOrderLine(models.Model):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError(_("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type."))
 
-        if 'product_uom_qty' in values:
+        if 'product_uom_qty' in values and not self.env.context.get('sale_order_no_message_post'):
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
