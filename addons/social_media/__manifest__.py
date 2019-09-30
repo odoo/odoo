@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "social_media",
+    'name': "Social Media",
 
     'summary': "Social media connectors for company settings.",
 
