@@ -33,6 +33,9 @@ function linkify(text, attrs) {
     if (attrs.target === undefined) {
         attrs.target = '_blank';
     }
+    if (attrs.target === '_blank') {
+      attrs.rel = 'noreferrer noopener';
+    }
     attrs = _.map(attrs, function (value, key) {
         return key + '="' + _.escape(value) + '"';
     }).join(' ');
