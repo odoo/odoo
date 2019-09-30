@@ -743,11 +743,28 @@ class Field(MetaField('DummyField', (object,), {})):
                 if not (field is self and not index):
                     yield tuple(field_seq)
 
+<<<<<<< HEAD
                 if field.type in ('one2many', 'many2many'):
                     for inv_field in field_model._field_inverses[field]:
                         yield tuple(field_seq) + (inv_field,)
 
                 field_model = model.env.get(field.comodel_name)
+=======
+    def setup_triggers(self, model):
+        """ Add the necessary triggers to invalidate/recompute ``self``. """
+        for model, field, path in self.resolve_deps(model):
+            if self.store and not field.store:
+                _logger.debug(
+                    "Field %s depends on non-stored field %s, this operation is sub-optimal"
+                    % (self, field)
+                )
+            if field is not self:
+                path_str = None if path is None else ('.'.join(path) or 'id')
+                model._field_triggers.add(field, (self, path_str))
+            elif path:
+                self.recursive = True
+                model._field_triggers.add(field, (self, '.'.join(path)))
+>>>>>>> 825e6a52c00... temp
 
     ############################################################################
     #
