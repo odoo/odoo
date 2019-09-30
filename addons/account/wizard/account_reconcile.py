@@ -35,9 +35,10 @@ class AccountMoveLineReconcile(models.TransientModel):
         credit = debit = 0
         lines = self.env['account.move.line'].browse(context.get('active_ids', []))
         for line in lines:
-            if not line.full_reconcile_id:
-                credit += line.credit
-                debit += line.debit
+            if line.amount_residual < 0.0:
+                credit += abs(line.amount_residual)
+            elif line.amount_residual > 0.0:
+                debit += line.amount_residual
         precision = self.env.user.company_id.currency_id.decimal_places
         writeoff = float_round(debit - credit, precision_digits=precision) + 0.0 #remove -0.0 result
         credit = float_round(credit, precision_digits=precision)
