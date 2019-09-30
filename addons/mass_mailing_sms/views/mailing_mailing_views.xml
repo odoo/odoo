@@ -106,9 +106,11 @@
                     <field name="body_plaintext" widget="sms_widget" attrs="{'required': [('mailing_type', '=', 'sms')]}"/>
                     <group>
                         <field name="sms_force_send" invisible="1"/>
-                        <field name="sms_allow_unsubscribe"/>
                     </group>
                 </page>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="sms_allow_unsubscribe"/>
             </xpath>
             <!-- Option page tweaks -->
             <xpath expr="//field[@name='email_from']" position="attributes">
