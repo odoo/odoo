@@ -135,8 +135,8 @@ class FieldConverter(models.AbstractModel):
 
         :returns: Model[res.lang]
         """
-        lang_code = self._context.get('lang') or 'en_US'
-        return self.env['res.lang']._lang_get(lang_code)
+        lang_code = self._context.get('lang')
+        return self.env['res.lang']._lang_get(lang_code) or self.env['res.lang'].search([('code', '=', 'en_US')])
 
 
 class IntegerConverter(models.AbstractModel):
