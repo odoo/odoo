@@ -14,13 +14,13 @@ class PaymentAcquirerTest(models.Model):
 
     @api.model
     def create(self, values):
-        if values.get('provider') == 'test' and 'state' in values and values.get('state') != 'test':
-            raise exceptions.UserError(_('This acquirer should not be used for other purpose than testing.'))
+        if values.get('provider') == 'test' and 'state' in values and values.get('state') not in ('test', 'disabled'):
+            raise exceptions.UserError(_('This acquirer should not be used for other purposes than testing.'))
         return super(PaymentAcquirerTest, self).create(values)
 
     def write(self, values):
-        if any(rec.provider == 'test' for rec in self) and 'state' in values and values.get('state') != 'test':
-            raise exceptions.UserError(_('This acquirer should not be used for other purpose than testing.'))
+        if any(rec.provider == 'test' for rec in self) and 'state' in values and values.get('state') not in ('test', 'disabled'):
+            raise exceptions.UserError(_('This acquirer should not be used for other purposes than testing.'))
         return super(PaymentAcquirerTest, self).write(values)
 
     @api.model
