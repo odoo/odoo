@@ -4938,7 +4938,10 @@ Record ids: %(records)s
         if not isinstance(flag, bool):
             _logger.warning("deprecated use of sudo(user), use with_user(user) instead", stack_info=True)
             return self.with_user(flag)
-        return self.with_env(self.env(su=flag))
+        res = self.with_env(self.env(su=flag))
+        if self.env.cache != res.env.cache:
+            _logger.warning("Wrong cache after with_env().", stack_info=True)
+        return res
 
     def with_user(self, user):
         """ with_user(user)
