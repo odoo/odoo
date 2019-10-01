@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, new_test_user
 from odoo import fields
 from odoo.exceptions import ValidationError, UserError
 
@@ -299,3 +299,25 @@ class TestAccountMove(InvoiceTestCommon):
         test_move2 = self.test_move.copy()
         with self.assertRaises(ValidationError):
             test_move2.post()
+
+    def test_add_followers_on_post(self):
+        # Add some existing partners, some from another company
+        company = self.env['res.company'].create({'name': 'Oopo'})
+        existing_partners = self.env['res.partner'].create([{
+            'name': 'Jean',
+            'company_id': company.id,
+        },{
+            'name': 'Paulus',
+        }])
+        self.test_move.message_subscribe(existing_partners.ids)
+
+        user = new_test_user(self.env, login='jag', groups='account.group_account_invoice')
+
+        move = self.test_move.with_user(user)
+        partner = self.env['res.partner'].create({'name': 'Belouga'})
+        commercial_partner = self.env['res.partner'].create({'name': 'Rorqual'})
+        move.partner_id = partner
+        move.commercial_partner_id = commercial_partner
+
+        move.post()
+        self.assertEqual(move.message_partner_ids, self.env.user.partner_id | existing_partners | partner | commercial_partner)
