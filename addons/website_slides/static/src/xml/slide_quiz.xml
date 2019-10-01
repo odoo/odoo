@@ -73,8 +73,14 @@
                     </span>
                 </div>
                 <div>
-                    <button t-if="! widget.slide.completed" role="button" title="Check answers not logged" aria-label="Check answers"
-                        class="btn btn-primary text-uppercase font-weight-bold o_wslides_js_lesson_quiz_submit_not_logged">Sign in</button>
+                    <div t-if="!widget.slide.completed">
+                            <a role="button"
+                            class="btn btn-primary o_wslides_js_course_signin_join text-uppercase font-weight-bold"
+                            title="Sign in and join Course" aria-label="Sign in and join Course"
+                            href="#">
+                            <span class="cta-title text_small_caps">Sign in</span>
+                            </a>
+                    </div>
                     <span t-if="widget.channel.signupAllowed" class="d-block mt-2">Don't have an account ? <a class="font-weight-bold" t-att-href="'/web/signup?redirect=' + widget.url">Sign Up !</a></span>
                 </div>
             </div>

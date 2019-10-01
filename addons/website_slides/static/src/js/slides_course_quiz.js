@@ -28,7 +28,8 @@ odoo.define('website_slides.quiz', function (require) {
             "click .o_wslides_quiz_answer": '_onAnswerClick',
             "click .o_wslides_js_lesson_quiz_submit": '_onSubmitQuiz',
             "click .o_wslides_quiz_btn": '_onClickNext',
-            "click .o_wslides_quiz_continue": '_onClickNext'
+            "click .o_wslides_quiz_continue": '_onClickNext',
+            "click .o_wslides_js_course_signin_join": '_onClicksigninJoin'
         },    
         
         custom_events: {
@@ -77,32 +78,22 @@ odoo.define('website_slides.quiz', function (require) {
                 self._renderAnswers();
                 self._renderAnswersHighlighting();
                 self._renderValidationInfo();
-                new CourseJoinWidget(self, self.channel.channelId, true).appendTo(self.$('.o_wslides_course_join_widget'));
+                var courseJoinWidget = new CourseJoinWidget(self, self.channel.channelId,true);
+                return courseJoinWidget;
+            }).then(function(courseJoinWidget){
+                courseJoinWidget.appendTo(self.$('.o_wslides_course_join_widget'))
+                if(self.readonly && !self.publicUser && self.slide.answerIds){
+                    courseJoinWidget.joinCours(self.channel.channelId)
+                }
+                if(!self.readonly && !self.publicUser && self.slide.answerIds){
+                    self._onSubmitQuiz();
+                }
             });
         },
 
         //--------------------------------------------------------------------------
         // Private
         //--------------------------------------------------------------------------
-
-        _alertHide: function () {
-            this.$('.o_wslides_js_lesson_quiz_error').addClass('d-none');
-        },
-
-        _alertShow: function (alert_code) {
-            var message = _t('There was an error validating this quiz.');
-            if (! alert_code || alert_code === 'slide_quiz_incomplete') {
-                message = _t('All questions must be answered !');
-            }
-            else if (alert_code === 'slide_quiz_done') {
-                message = _t('This quiz is already done. Retaking it is not possible.');
-            }
-            else if (alert_code === 'public_user') {
-                message = _t('You must be logged to submit the quiz.');
-            }
-            this.$('.o_wslides_js_lesson_quiz_error span:first').html(message);
-            this.$('.o_wslides_js_lesson_quiz_error').removeClass('d-none');
-        },
 
         /*
          * @private
@@ -149,19 +140,24 @@ odoo.define('website_slides.quiz', function (require) {
                     $answer.removeClass('list-group-item-danger').addClass('list-group-item-success');
                     $answer.find('i.fa').addClass('d-none');
                     $answer.find('i.fa-check-circle').removeClass('d-none');
+                    $answer.find('input[type=radio]').prop('checked', true);
                 }
                 else if (_.contains(self.quiz.badAnswers, answerId)) {
                     $answer.removeClass('list-group-item-success').addClass('list-group-item-danger');
                     $answer.find('i.fa').addClass('d-none');
                     $answer.find('i.fa-times-circle').removeClass('d-none');
                     $answer.find('label input').prop('checked', false);
+                    $answer.find('input[type=radio]').prop('checked', true);
                 }
-                else {
-                    if (!self.slide.completed) {
-                        $answer.removeClass('list-group-item-danger list-group-item-success');
-                        $answer.find('i.fa').addClass('d-none');
-                        $answer.find('i.fa-circle').removeClass('d-none');
-                    }
+                else if (_.contains(self.slide.answerIds, answerId)) {
+                    $answer.find('i.fa').addClass('d-none');
+                    $answer.find('i.fa-check-circle').removeClass('d-none');
+                    $answer.find('input[type=radio]').prop('checked', true);
+                }
+                else if (!self.slide.completed) {
+                    $answer.removeClass('list-group-item-danger list-group-item-success');
+                    $answer.find('i.fa').addClass('d-none');
+                    $answer.find('i.fa-circle').removeClass('d-none');
                 }
             });
         },
@@ -223,6 +219,77 @@ odoo.define('website_slides.quiz', function (require) {
             });
         },
 
+        /**
+         * @private
+         */
+        _onClicksigninJoin: function (event) {
+            event.preventDefault();
+            var self = this;
+            var values = self._getAnswers()
+            if (values.length === self.quiz.questions.length){
+                self._alertHide();
+                if (this.publicUser){
+                    var url = this._createLoginRedirectUrl(values)
+                    window.location.href = url;
+                }
+            } else {
+                self._alertShow();
+            }
+
+        
+        },
+        /**
+         * @private
+         * @param Array[Integer] values
+         */
+        _createLoginRedirectUrl: function( values){
+            var urlParts = window.location.pathname.split('/');
+            console.log(urlParts)
+            var url =  urlParts.join('/');
+            console.log(url)
+            var params = {};
+            if (window.location.href.indexOf("fullscreen") > -1) {
+                params.fullscreen=1;
+            }
+            params.answerIds= values.toString();
+            this.redirectURL= _.str.sprintf('%s?%s', url, $.param(params));
+            return _.str.sprintf('/web/login?redirect=%s', encodeURIComponent(this.redirectURL));
+        },
+        //--------------------------------------------------------------------------
+        // Public
+        //--------------------------------------------------------------------------
+        _alertHide: function () {
+            this.$('.o_wslides_js_lesson_quiz_error').addClass('d-none');
+        },
+
+        _alertShow: function (alert_code) {
+            var message = _t('There was an error validating this quiz.');
+            if (! alert_code || alert_code === 'slide_quiz_incomplete') {
+                message = _t('All questions must be answered !');
+            }
+            else if (alert_code === 'slide_quiz_done') {
+                message = _t('This quiz is already done. Retaking it is not possible.');
+            }
+            else if (alert_code === 'public_user') {
+                message = _t('You must be logged to submit the quiz.');
+            }
+            this.$('.o_wslides_js_lesson_quiz_error span:first').html(message);
+            this.$('.o_wslides_js_lesson_quiz_error').removeClass('d-none');
+        },
+        /**
+         * Get the answers filled in by the User
+         *
+         * @private
+         * @param 
+         */
+        _getAnswers: function () {
+            var inputs = this.$('input[type=radio]:checked');
+            var values = [];
+            for (var i = 0; i < inputs.length; i++){
+                values.push(parseInt($(inputs[i]).val()));
+            }
+            return values;
+        },
         //--------------------------------------------------------------------------
         // Handlers
         //--------------------------------------------------------------------------
@@ -259,12 +326,7 @@ odoo.define('website_slides.quiz', function (require) {
          * @param OdooEvent ev
          */
         _onSubmitQuiz: function (ev) {
-            var inputs = this.$('input[type=radio]:checked');
-            var values = [];
-            for (var i = 0; i < inputs.length; i++){
-                values.push(parseInt($(inputs[i]).val()));
-            }
-
+            var values = this._getAnswers()
             if (values.length === this.quiz.questions.length){
                 this._alertHide();
                 this._submitQuiz(values);
@@ -281,6 +343,7 @@ odoo.define('website_slides.quiz', function (require) {
          */
         _onSubmitQuizAfterJoin: function (ev) {
             this.readonly = false;
+            this._renderValidationInfo();
             this._onSubmitQuiz(ev)
         },
     });
@@ -309,6 +372,7 @@ odoo.define('website_slides.quiz', function (require) {
                 var channelData = self._extractChannelData(slideData);
                 slideData.quizData = {
                     questions: self._extractQuestionsAndAnswers(),
+                    answerIds: slideData.answerIds || false,
                     quizKarmaMax: slideData.quizKarmaMax,
                     quizKarmaWon: slideData.quizKarmaWon,
                     quizKarmaGain: slideData.quizKarmaGain,
@@ -342,7 +406,7 @@ odoo.define('website_slides.quiz', function (require) {
 
         _extractChannelData: function (slideData){
             return {
-                id: slideData.channelId,
+                channelId: slideData.channelId,
                 channelEnroll: slideData.channelEnroll,
                 signupAllowed: slideData.signupAllowed
             };

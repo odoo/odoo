@@ -537,6 +537,10 @@ odoo.define('website_slides.fullscreen', function (require) {
             var url =  urlParts.join('/');
             this.$('.o_wslides_fs_exit_fullscreen').attr('href', url);
             var params = {'fullscreen': 1 };
+            var answerIds = $('.o_wslides_fs_main').data('answer-ids');
+            if(answerIds){
+                params.answerIds= answerIds.toString();
+            }
             if (this.get('slide').isQuiz){
                 params.quiz = 1;
             }

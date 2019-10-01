@@ -2,6 +2,7 @@ odoo.define('website_slides.course.join.widget', function (require) {
 'use strict';
 
 var core = require('web.core');
+var session = require('web.session');
 var publicWidget = require('web.public.widget');
 require('website_slides.slides');
 
@@ -50,8 +51,14 @@ var CourseJoinWidget = publicWidget.Widget.extend({
      */
     _onClickJoin: function (event) {
         var channelId = this.channelId || $(event.currentTarget).data('channel-id');
+        this.joinCours(channelId); 
+    },
+
+    /**
+     * @public
+     */
+    joinCours: function (channelId){
         var self = this;
-        console.log(this.quiz)
         this._rpc({
             route: '/slides/channel/join',
             params: {
@@ -60,7 +67,6 @@ var CourseJoinWidget = publicWidget.Widget.extend({
         }).then(function (data) {
             if (! data.error) {
                 if (self.quiz === true){
-                    console.log("hello")
                     self.trigger_up('submit_answers');
                 }
                 else{
@@ -81,7 +87,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                 }
             }
         });
-    },
+    }
 });
 
 publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
