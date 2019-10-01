@@ -1064,7 +1064,7 @@ class StockMove(models.Model):
 
     def _should_bypass_reservation(self):
         self.ensure_one()
-        return self.location_id.should_bypass_reservation() or self.product_id.type != 'product' or self.picking_id.immediate_transfer
+        return self.location_id.should_bypass_reservation() or self.product_id.type != 'product'
 
     def _action_assign(self):
         """ Reserve stock moves by creating their stock move lines. A stock move is
