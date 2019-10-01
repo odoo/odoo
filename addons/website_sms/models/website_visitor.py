@@ -9,11 +9,11 @@ class WebsiteVisitor(models.Model):
     _inherit = 'website.visitor'
 
     def _prepare_visitor_send_sms_values(self):
-        if self.user_partner_id.mobile:
+        if self.partner_id.mobile:
             return {
                 'res_model': 'res.partner',
-                'res_id': self.user_partner_id.id,
-                'partner_ids': [self.user_partner_id.id],
+                'res_id': self.partner_id.id,
+                'partner_ids': [self.partner_id.id],
                 'number_field_name': 'mobile',
             }
         return {}

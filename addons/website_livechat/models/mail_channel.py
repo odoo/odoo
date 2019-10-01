@@ -40,7 +40,7 @@ class MailChannel(models.Model):
                     'history': self._get_visitor_history(visitor),
                     'website': visitor.website_id.name,
                     'lang': visitor.lang_id.name,
-                    'partner_id': visitor.user_partner_id.id,
+                    'partner_id': visitor.partner_id.id,
                 }
         return list(channel_infos_dict.values())
 
