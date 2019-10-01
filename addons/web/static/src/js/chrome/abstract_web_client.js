@@ -312,6 +312,24 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the left and top scroll positions of the main scrolling area
+     * (i.e. the '.o_content' div in desktop).
+     *
+     * @returns {Object} with keys left and top
+     */
+    getScrollPosition: function () {
+        var scrollingEl = this.action_manager.el.getElementsByClassName('o_content')[0];
+        return {
+            left: scrollingEl ? scrollingEl.scrollLeft : 0,
+            top: scrollingEl ? scrollingEl.scrollTop : 0,
+        };
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -401,14 +419,15 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         }
     },
     /**
-     * This function must be implemented to provide to the caller the current
-     * scroll position (left and top) of the webclient.
+     * Provides to the caller the current scroll position (left and top) of the
+     * main scrolling area of the webclient.
      *
-     * @abstract
+     * @private
      * @param {OdooEvent} ev
      * @param {function} ev.data.callback
      */
     _onGetScrollPosition: function (ev) {
+        ev.data.callback(this.getScrollPosition());
     },
     /**
      * Loads an action from the database given its ID.
@@ -432,11 +451,10 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         this.do_push_state(_.extend(e.data.state, {'cids': $.bbq.getState().cids}));
     },
     /**
-     * This function must be implemented by actual webclient to scroll either to
-     * a given offset or to a target element (given a selector).
+     * Scrolls either to a given offset or to a target element (given a selector).
      * It must be called with: trigger_up('scrollTo', options).
      *
-     * @abstract
+     * @private
      * @param {OdooEvent} ev
      * @param {integer} [ev.data.top] the number of pixels to scroll from top
      * @param {integer} [ev.data.left] the number of pixels to scroll from left
@@ -444,6 +462,19 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
      *   scroll to
      */
     _onScrollTo: function (ev) {
+        var scrollingEl = this.action_manager.el.getElementsByClassName('o_content')[0];
+        if (!scrollingEl) {
+            return;
+        }
+        var offset = {top: ev.data.top, left: ev.data.left || 0};
+        if (!offset.top) {
+            offset = dom.getPosition(document.querySelector(ev.data.selector));
+            // Substract the position of the scrolling element
+            offset.top -= dom.getPosition(scrollingEl).top;
+        }
+
+        scrollingEl.scrollTop = offset.top;
+        scrollingEl.scrollLeft = offset.left;
     },
     /**
      * @private
