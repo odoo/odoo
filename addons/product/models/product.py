@@ -720,7 +720,6 @@ class SupplierInfo(models.Model):
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
     product_uom = fields.Many2one(
         'uom.uom', 'Unit of Measure',
-        related='product_tmpl_id.uom_po_id',
         help="This comes from the product form.")
     min_qty = fields.Float(
         'Quantity', default=0.0, required=True,
@@ -754,3 +753,10 @@ class SupplierInfo(models.Model):
             'label': _('Import Template for Vendor Pricelists'),
             'template': '/product/static/xls/product_supplierinfo.xls'
         }]
+
+    @api.model_create_single
+    def create(self, vals):
+        if 'product_uom' not in vals:
+            vals['product_uom'] = self.env['product.template'].browse(vals['product_tmpl_id']).uom_po_id.id
+
+        return super().create(vals)
