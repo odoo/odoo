@@ -56,6 +56,7 @@ class MrpProduction(models.Model):
         'Reference', copy=False, readonly=True, default=lambda x: _('New'))
     origin = fields.Char(
         'Source', copy=False,
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Reference of the document that generated this production order request.")
 
     product_id = fields.Many2one(
@@ -191,6 +192,7 @@ class MrpProduction(models.Model):
         help='Technical field to check when we can post')
     user_id = fields.Many2one(
         'res.users', 'Responsible', default=lambda self: self.env.user,
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=lambda self: [('groups_id', 'in', self.env.ref('mrp.group_mrp_user').id)])
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env.company,
