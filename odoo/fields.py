@@ -649,6 +649,10 @@ class Field(MetaField('DummyField', (object,), {})):
             # both new (see `test_base_objects.py`, `test_basic`)
             if target and bool(target.id) == bool(record.id):
                 target[field.name] = record_value[record]
+                # If the target `write` is overriding the value, write the
+                # updated value on self.
+                if target[field.name] != record_value[record]:
+                    record[self.name] = target[field.name]
 
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field ``self``. """

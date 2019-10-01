@@ -1497,6 +1497,57 @@ class TestFields(common.TransactionCase):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (2000, 4000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
 
+    def test_95_inherits_write_override(self):
+        page = self.env['test_new_api.model_page'].create({'name': 'page 0'})
+        view = page.model_view_id
+
+        fields = ['name', 'name_related', 'name_compute', 'name_compute_context']
+
+        def assertValueOnFields(record, value):
+            # Test the expected value has been correctly set on all fields that
+            # are related to each other.
+            for field in fields:
+                self.assertEqual(record[field], value)
+
+        # verify initial conditions
+        assertValueOnFields(page, 'page 0')
+        assertValueOnFields(view, 'page 0')
+
+        for field in fields:
+            # test write from view
+
+            # test write without context: should work
+            view.write({field: 'page 1'})
+            assertValueOnFields(view, 'page 1')
+            assertValueOnFields(page, 'page 1')
+
+            # test no write with context: should not write
+            view.with_context(no_write=True).write({field: 'page 2'})
+            assertValueOnFields(view, 'page 1')
+            assertValueOnFields(page, 'page 1')
+
+            # test write with context: should write
+            view.with_context(not_whatever=True).write({field: 'page 3'})
+            assertValueOnFields(view, 'page 3')
+            assertValueOnFields(page, 'page 3')
+
+            # test write from page
+
+            # test write without context: should work
+            page.write({field: 'page 4'})
+            assertValueOnFields(page, 'page 4')
+            assertValueOnFields(view, 'page 4')
+
+            # test no write with context: should not write
+            page.with_context(no_write=True).write({field: 'page 5'})
+            assertValueOnFields(page, 'page 4')
+            assertValueOnFields(view, 'page 4')
+
+            # test write with context: should write
+            page.with_context(not_whatever=True).write({field: 'page 6'})
+            assertValueOnFields(page, 'page 6')
+            assertValueOnFields(view, 'page 6')
+
 
 class TestX2many(common.TransactionCase):
     def test_definition_many2many(self):
