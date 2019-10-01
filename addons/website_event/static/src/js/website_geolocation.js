@@ -5,6 +5,7 @@ var publicWidget = require('web.public.widget');
 
 publicWidget.registry.visitor = publicWidget.Widget.extend({
     selector: ".oe_country_events, .country_events",
+    disabledInEditableMode: false,
 
     /**
      * @override
