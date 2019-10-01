@@ -416,6 +416,7 @@ class Bar(models.Model):
     value2 = fields.Integer(related='foo.value2', readonly=False)
     text1 = fields.Char('Text1', related='foo.text', readonly=False)
     text2 = fields.Char('Text2', related='foo.text', readonly=False, trim=True)
+    is_good = fields.Boolean()
 
     @api.depends('name')
     def _compute_foo(self):
@@ -426,6 +427,15 @@ class Bar(models.Model):
         assert operator == 'in'
         records = self.env['test_new_api.foo'].browse(value)
         return [('name', 'in', records.mapped('name'))]
+
+
+class Baz(models.Model):
+    _name = 'test_new_api.baz'
+    _description = 'Test New API Baz'
+
+    name = fields.Char()
+    is_good = fields.Boolean()
+    bar = fields.Many2one('test_new_api.bar', domain="[('is_good', '=', is_good)]")
 
 
 class Related(models.Model):

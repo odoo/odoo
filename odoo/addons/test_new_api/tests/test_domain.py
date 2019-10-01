@@ -2,7 +2,7 @@
 from itertools import combinations
 
 from odoo import Command
-from odoo.tests import common
+from odoo.tests import common, Form
 
 
 class TestDomain(common.TransactionCase):
@@ -217,3 +217,26 @@ class TestDomain(common.TransactionCase):
 
         res_search = Child.search([('tag_ids', 'not any', [('name', '=', 'Urgent')])])
         self.assertEqual(res_search, child_2 + child_3)
+
+    def test_form_domain(self):
+        """
+        Check domain attribute works as expected
+        """
+
+        bar1 = self.env['test_new_api.bar'].create({
+            'name': '1',
+            'is_good': True,
+        })
+        baz = Form(self.env['test_new_api.baz'])
+        baz.is_good = True
+        baz.bar = bar1
+        assert baz.bar == bar1
+        assert baz.bar.is_good is True
+        baz.bar = self.env['test_new_api.bar'].create({
+            'name': '2',
+            'is_good': False,
+        })
+        assert baz.bar.is_good is False  # wrong, domain was avoided!!!
+        baz = baz.save()
+        assert baz
+        assert baz.is_good != baz.bar.is_good  # T_T
