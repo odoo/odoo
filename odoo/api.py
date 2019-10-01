@@ -177,6 +177,16 @@ def onchange(*args):
             If the type is set to notification, the warning will be displayed in a notification.
             Otherwise it will be displayed in a dialog as default.
 
+        .. danger::
+
+            Since ``@onchange`` returns a recordset of pseudo-records,
+            calling any one of the CRUD methods
+            (:meth:`create`, :meth:`read`, :meth:`write`, :meth:`unlink`)
+            on the aforementioned recordset is undefined behaviour,
+            as they potentially do not exist in the database yet.
+
+            Instead, simply set the record's field like shown in the example
+            above or call the :meth:`update` method.
 
         .. warning::
 
