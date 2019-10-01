@@ -6,6 +6,7 @@ ebaysdk==2.1.5
 feedparser==5.2.1
 gevent==1.1.2 ; sys_platform != 'win32' and python_version < '3.7'
 gevent==1.3.4 ; sys_platform != 'win32' and python_version >= '3.7'
+gevent==1.4.0 ; sys_platform == 'win32' and python_version >= '3.7'
 greenlet==0.4.10 ; python_version < '3.7'
 greenlet==0.4.13 ; python_version >= '3.7'
 html2text==2016.9.19
@@ -20,9 +21,12 @@ mock==2.0.0
 num2words==0.5.6
 ofxparse==0.16
 passlib==1.6.5
-Pillow==4.0.0
+Pillow==4.0.0 ; python_version < '3.7'
+Pillow==6.1.0 ; python_version >= '3.7'
 psutil==4.3.1; sys_platform != 'win32'
+psutil==5.6.3; sys_platform == 'win32'
 psycopg2==2.7.3.1; sys_platform != 'win32'
+psycopg2==2.8.3; sys_platform == 'win32'
 pydot==1.2.3
 pyldap==2.4.28; sys_platform != 'win32'
 pyparsing==2.1.10
