@@ -182,15 +182,15 @@
         <field name="name">equipment.request.tree</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <tree string="maintenance Request" decoration-bf="message_needaction==True">
+            <tree string="maintenance Request" multi_edit="1" decoration-bf="message_needaction==True">
                 <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <field name="request_date" groups="base.group_no_one"/>
                 <field name="owner_user_id"/>
                 <field name="user_id"/>
-                <field name="category_id" groups="maintenance.group_equipment_manager"/>
+                <field name="category_id" readonly="1" groups="maintenance.group_equipment_manager"/>
                 <field name="stage_id"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="company_id" readonly="1" groups="base.group_multi_company"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
