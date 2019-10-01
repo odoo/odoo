@@ -1842,15 +1842,15 @@ class AccountPartialReconcile(models.Model):
             #when running the manual reconciliation wizard, don't check the partials separately for full
             #reconciliation or exchange rate because it is handled manually after the whole processing
             return self
-        #check if the reconcilation is full
-        #first, gather all journal items involved in the reconciliation just created
+
+        # check if the reconcilation is full
+        # Determine the main foreign currency across all past partial reconciliations
+        currency = None
+
         aml_set = aml_to_balance = self.env['account.move.line']
         total_debit = 0
         total_credit = 0
         total_amount_currency = 0
-        #make sure that all partial reconciliations share the same secondary currency otherwise it's not
-        #possible to compute the exchange difference entry and it has to be done manually.
-        currency = self[0].currency_id
         maxdate = '0000-00-00'
 
         seen = set()
@@ -1858,9 +1858,14 @@ class AccountPartialReconcile(models.Model):
         while todo:
             partial_rec = todo.pop()
             seen.add(partial_rec)
-            if partial_rec.currency_id != currency:
-                #no exchange rate entry will be created
-                currency = None
+            # make sure that all partial reconciliations share the same secondary currency otherwise it's not
+            # possible to compute the exchange difference entry and it has to be done manually.
+            if currency is None and partial_rec.currency_id:
+                currency = partial_rec.currency_id
+            elif currency and partial_rec.currency_id and partial_rec.currency_id != currency:
+                # no exchange rate entry will be created
+                currency = False
+
             for aml in [partial_rec.debit_move_id, partial_rec.credit_move_id]:
                 if aml not in aml_set:
                     if aml.amount_residual or aml.amount_residual_currency:
