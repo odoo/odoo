@@ -87,7 +87,7 @@
                         <group>
                             <group name="apply_on" string="Applicability">
                                 <field name="route_id"/>
-                                <field name="warehouse_id" attrs="{'invisible': [('action', '=', 'push')]}" groups="base.group_no_one"/>
+                                <field name="warehouse_id" groups="base.group_no_one"/>
                                 <field name="company_id" attrs="{'required': [('action', '=', 'push')]}" groups="base.group_multi_company"/>
                                 <field name="sequence" string="Sequence" groups="base.group_no_one"/>
                             </group>
