@@ -18,14 +18,10 @@
                         <span t-if="o.type == 'out_refund'">Credit Note</span>
                         <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
                         <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
-                        <span t-field="o.name"/>
+                        <span t-if="o.name != '/'" t-field="o.name"/>
                     </h2>
 
                     <div id="informations" class="row mt32 mb32">
-                        <div class="col-auto mw-100 mb-2" t-if="o.name" name="description">
-                            <strong>Description:</strong>
-                            <p class="m-0" t-field="o.name"/>
-                        </div>
                         <div class="col-auto mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
                             <strong>Invoice Date:</strong>
                             <p class="m-0" t-field="o.invoice_date"/>
