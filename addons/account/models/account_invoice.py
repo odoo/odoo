@@ -187,25 +187,27 @@ class AccountInvoice(models.Model):
             return []
         payment_vals = []
         currency_id = self.currency_id
+        if self.type in ('out_invoice', 'in_refund'):
+            matched_field = 'matched_debit_ids'
+            partial_field = 'debit_move_id'
+        elif self.type in ('in_invoice', 'out_refund'):
+            matched_field = 'matched_credit_ids'
+            partial_field = 'credit_move_id'
+
         for payment in self.payment_move_line_ids:
-            payment_currency_id = False
-            if self.type in ('out_invoice', 'in_refund'):
-                amount = sum([p.amount for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
-                amount_currency = sum(
-                    [p.amount_currency for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
-                if payment.matched_debit_ids:
-                    payment_currency_id = all([p.currency_id == payment.matched_debit_ids[0].currency_id for p in
-                                               payment.matched_debit_ids]) and payment.matched_debit_ids[
-                                              0].currency_id or False
-            elif self.type in ('in_invoice', 'out_refund'):
-                amount = sum(
-                    [p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
-                amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if
-                                       p.credit_move_id in self.move_id.line_ids])
-                if payment.matched_credit_ids:
-                    payment_currency_id = all([p.currency_id == payment.matched_credit_ids[0].currency_id for p in
-                                               payment.matched_credit_ids]) and payment.matched_credit_ids[
-                                              0].currency_id or False
+            amount = 0
+            amount_currency = 0
+            payment_currency_id = None
+            for partial_rec in payment[matched_field]:
+                if partial_rec[partial_field] in self.move_id.line_ids:
+                    amount += partial_rec.amount
+                    amount_currency += partial_rec.amount_currency
+
+                if payment_currency_id is None and partial_rec.currency_id:
+                    payment_currency_id = partial_rec.currency_id
+                elif payment_currency_id and partial_rec.currency_id and partial_rec.currency_id != payment_currency_id:
+                    payment_currency_id = False
+
             # get the payment value in invoice currency
             if payment_currency_id and payment_currency_id == self.currency_id:
                 amount_to_show = amount_currency
