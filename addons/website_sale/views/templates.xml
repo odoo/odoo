@@ -93,7 +93,10 @@
             <attribute name="data-display-price">true</attribute>
             <attribute name="data-display-image">true</attribute>
         </xpath>
-        <xpath expr="//div[hasclass('input-group')]" position="replace">
+        <xpath expr="//div[@role='search']" position="attributes">
+            <attribute name="t-attf-class" remove="#{_classes}" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@role='search']" position="replace">
             <form t-attf-class="o_wsale_products_searchbar_form o_wait_lazy_js #{_classes}" t-att-action="action if action else '/shop'" method="get">
                 <t>$0</t>
                 <input name="order" type="hidden" class="o_wsale_search_order_by" value=""/>

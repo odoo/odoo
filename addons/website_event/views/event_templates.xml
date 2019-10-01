@@ -146,7 +146,7 @@
 
 <!-- Search Box -->
 <template id="events_search_box" inherit_id="website.website_search_box" primary="True">
-    <xpath expr="//div[hasclass('input-group')]" position="replace">
+    <xpath expr="//div[@role='search']" position="replace">
         <form t-attf-class="o_wevent_event_searchbar_form o_wait_lazy_js my-1 my-lg-0 #{_classes}"
               t-att-action="action if action else '/event'" method="get">
             <t t-set="search" t-value="search or _searches and _searches['search']"/>
