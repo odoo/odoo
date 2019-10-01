@@ -254,12 +254,6 @@ class AccountMove(models.Model):
         def _get_attachment_content(attachment):
             # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
             return hasattr(attachment, 'content') and getattr(attachment, 'content') or base64.b64decode(attachment.datas)
-        filename = _get_attachment_filename(attachment)
-
-        # Check if the attachment is a pdf.
-        if not filename.endswith('.pdf'):
-            return
-
         content = _get_attachment_content(attachment)
 
         with io.BytesIO(content) as buffer:
