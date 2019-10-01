@@ -508,7 +508,7 @@ msgstr "Усі завдання"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All employees"
-msgstr ""
+msgstr "Усі співробітники"
 
 #. module: project
 #. openerp-web
@@ -1001,6 +1001,11 @@ msgid ""
 "- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
+"Визначає видимість завдань проекту:\n"
+"- Залучені співробітники: співробітники можуть бачити лише додані товари та завдання.\n"
+"- Усі співробітники: співробітники можуть бачити усі проекти та завдання.\n"
+"- Користувачі порталу та всі співробітники: співробітники можуть бачити усе. Користувачі порталу можуть бачити проекти та завдання, додані ними\n"
+"   або кимось іншим з їхньої компанії."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1247,7 +1252,7 @@ msgstr "Додано"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Followed Tasks"
-msgstr ""
+msgstr "Додані завдання"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
@@ -1285,7 +1290,7 @@ msgstr "GTD"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr ""
+msgstr "Отримайте відгук клієнта"
 
 #. module: project
 #. openerp-web
@@ -1341,6 +1346,9 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea"
 msgstr ""
+"Збирайте ваші ідеї всередині завдань вашого нового проекту та обговорюйте їх"
+" у чаті під завданнями. Використовуйте %s та %s, щоби сповістити, який "
+"поточний статус вашої ідеї"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -1522,7 +1530,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
-msgstr ""
+msgstr "Залучені співробітники"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -2117,7 +2125,7 @@ msgstr "URL доступу до порталу"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Portal users and all employees"
-msgstr ""
+msgstr "Користувачі порталу та всі співробітники"
 
 #. module: project
 #. openerp-web
@@ -3204,7 +3212,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot create recursive tasks."
-msgstr ""
+msgstr "Ви не можете створити рекурсивні завдання."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3220,7 +3228,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Your task must be in the same company as its project."
-msgstr ""
+msgstr "Ваше завдання повинно бути у тій же компанії, що і проект."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
