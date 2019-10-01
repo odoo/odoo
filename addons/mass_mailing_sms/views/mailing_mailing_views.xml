@@ -87,7 +87,7 @@
                     type="object"
                     context="{'search_default_filter_clicked': True}" 
                     class="oe_stat_button"
-                    attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
+                    attrs="{'invisible': ['|',('mailing_type', '!=', 'sms'),('state', 'in', ('draft','test'))]}">
                     <field name="clicks_ratio" string="Clicked" widget="percentpie"/>
                 </button>
             </xpath>
