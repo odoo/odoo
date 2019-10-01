@@ -4,7 +4,7 @@
 from odoo import models
 
 
-class CrmLead(models.AbstractModel):
+class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
     def _sms_get_number_fields(self):
