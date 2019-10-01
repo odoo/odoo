@@ -1116,10 +1116,11 @@ class AccountMoveLine(models.Model):
         taxes = self.env['account.tax'].browse(tax_ids)
         currency = self.env['res.currency'].browse(vals.get('currency_id'))
         partner = self.env['res.partner'].browse(vals.get('partner_id'))
+        product = self.env['product.product'].browse(vals.get('product_id'))
         ctx = dict(self._context)
         ctx['round'] = ctx.get('round', True)
         res = taxes.with_context(ctx).compute_all(amount,
-            currency, 1, vals.get('product_id'), partner)
+            currency, 1, product, partner)
         # Adjust line amount if any tax is price_include
         if abs(res['total_excluded']) < abs(amount):
             if vals['debit'] != 0.0: vals['debit'] = res['total_excluded']
