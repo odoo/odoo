@@ -152,10 +152,6 @@ class AccountReconcileModel(models.Model):
         for model in self:
             model.number_entries = mapped_data.get(model.id, 0)
 
-    @api.onchange('name')
-    def onchange_name(self):
-        self.label = self.name
-
     @api.onchange('tax_ids')
     def _onchange_tax_ids(self):
         # Multiple taxes with force_tax_included results in wrong computation, so we
