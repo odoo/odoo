@@ -266,12 +266,6 @@ class AccountMove(models.Model):
             self._create_invoice_from_xml(attachment)
 
     def _create_invoice_from_pdf(self, attachment):
-        filename = _get_attachment_filename(attachment)
-
-        # Check if the attachment is a pdf.
-        if not filename.endswith('.pdf'):
-            return
-
         content = _get_attachment_content(attachment)
 
         with io.BytesIO(content) as buffer:
