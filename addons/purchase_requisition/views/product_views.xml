@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
         <field name="arch" type="xml">
           <xpath expr="//field[@name='name']" position="after">
-              <field name="purchase_requisition_id"/>
+              <field name="purchase_requisition_id" readonly="1"/>
           </xpath>
         </field>
     </record>
