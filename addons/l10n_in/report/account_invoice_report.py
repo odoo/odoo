@@ -233,8 +233,10 @@ class L10nInAccountInvoiceReport(models.Model):
                     ELSE (CASE WHEN aml.tax_base_amount <> 0 THEN aml.tax_base_amount ELSE NULL END)
                     END AS price_total,
                 (CASE WHEN aj.type = 'sale' AND (am.type IS NULL OR am.type != 'out_refund') THEN -1 ELSE 1 END) AS amount_sign,
-                at.id AS tax_id,
-                at.amount AS tax_rate
+                (CASE WHEN atr.parent_tax IS NOT NULL THEN atr.parent_tax
+                    ELSE at.id END) AS tax_id,
+                (CASE WHEN atr.parent_tax IS NOT NULL THEN parent_at.amount
+                    ELSE at.amount END) AS tax_rate
         """
         return sub_select_str
 
@@ -254,6 +256,8 @@ class L10nInAccountInvoiceReport(models.Model):
                 LEFT JOIN res_partner p ON p.id = aml.partner_id
                 LEFT JOIN res_country_state ps ON ps.id = p.state_id
                 LEFT JOIN res_partner rp ON rp.id = am.l10n_in_reseller_partner_id
+                LEFT JOIN account_tax_filiation_rel atr ON atr.child_tax = at.id
+                LEFT JOIN account_tax parent_at ON parent_at.id = atr.parent_tax
                 """
         return from_str
 
