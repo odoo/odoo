@@ -446,23 +446,46 @@
         <t t-set="pageName" t-value="'website_forum'"/>
         <div id="wrap">
             <div class="oe_structure oe_empty" id="oe_structure_forum_all_top"/>
-            <div class="container pt-4 pb-5">
+            <div id="o_wforum_forums_index_list" class="container pt-4 pb-5">
                 <div t-if="forums" class="row">
-                    <div t-foreach="forums.with_context(bin_size=True)" t-as="forum"
-                        class="col-sm-6 col-lg-4 col-xl-3 mb-3 mb-lg-5">
-                        <a t-attf-href="/forum/#{slug(forum)}" class="text-reset">
-                            <h2 class="h5" t-field="forum.name"/>
-                            <div class="oe_img_bg rounded shadow-sm mb-2 py-5 o_wforum_forum_card_bg"
-                                t-attf-style="#{forum.image_256 and ('background-image: url(%s);' % website.image_url(forum, 'image_256'))} background-position: center;"/>
-                        </a>
-                        <div class="text-muted" t-if="forum.description" t-esc="forum.description"/>
-                    </div>
+                    <t t-call="website_forum.forum_all_all_entries">
+                        <t t-set="_forums" t-value="forums"/>
+                    </t>
                 </div>
                 <t t-else="">
                     <div class="alert alert-info">No forum is available yet.</div>
                 </t>
             </div>
             <div class="oe_structure oe_empty" id="oe_structure_forum_all_bottom"/>
+        </div>
+    </t>
+</template>
+
+<template id="forum_all_all_entries">
+    <!-- Check if at least one forum without description exist -->
+    <t t-set="no_description_exist" t-value="bool(_forums.filtered(lambda f: not f.description))"/>
+    <t t-set="sorted_forums" t-value="_forums.sorted(lambda f: (not f.description, f.sequence, f.id))"/>
+
+    <!-- First, list all forums (those with descriptions first) -->
+    <t t-foreach="sorted_forums" t-as="forum">
+        <t t-set="has_desc" t-value="forum.description"/>
+        <div t-attf-class="mb-3 col-sm-6 #{not has_desc and 'col-md-3'}">
+            <div t-attf-class="#{has_desc and 'row' or 'd-flex flex-column h-100'} #{no_description_exist and has_desc and 'py-4 bg-200'}">
+                <div t-attf-class="#{has_desc and 'col-md-4 pr-md-0' or 'flex-lg-grow-1'}">
+                    <a t-attf-href="/forum/#{slug(forum)}">
+                        <div t-attf-class="oe_img_bg rounded shadow-sm py-4 px-5 o_wforum_forum_card_bg flex-shrink-0 h-100 o_not_editable {not has_desc and 'h-100'}"
+                            t-attf-style="#{forum.image_256 and ('background-image: url(%s);' % website.image_url(forum, 'image_256'))} background-position: center;"/>
+                    </a>
+                </div>
+                <div t-attf-class="mt-2 #{has_desc and 'col-md-8 mt-md-0'}">
+                    <a t-attf-href="/forum/#{slug(forum)}" class="text-reset" t-att-title="forum.name">
+                        <h3 t-attf-class="#{has_desc and 'h4' or 'h5 m-0'}" t-field="forum.name"/>
+                    </a>
+                    <p t-attf-class="m-0 #{has_desc and not no_description_exist and 'text-muted' or not has_desc and 'css_non_editable_mode_hidden'}"
+                    placeholder="Description"
+                    t-field="forum.description"/>
+                </div>
+            </div>
         </div>
     </t>
 </template>
