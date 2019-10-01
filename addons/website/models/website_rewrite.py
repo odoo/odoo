@@ -54,11 +54,11 @@ class WebsiteRewrite(models.Model):
     route_id = fields.Many2one('website.route')
     url_to = fields.Char("URL to")
     redirect_type = fields.Selection([
-        ('not_found', '404 Not Found'),
-        ('redirect_301', '301 Moved permanently'),
-        ('redirect_302', '302 Moved temporarily'),
-        ('rewrite', '308 Redirect / Rewrite'),
-    ], string='Action', default="redirect_302",
+        ('404', '404 Not Found'),
+        ('301', '301 Moved permanently'),
+        ('302', '302 Moved temporarily'),
+        ('308', '308 Redirect / Rewrite'),
+    ], string='Action', default="302",
         help='''Type of redirect/Rewrite:\n
         301 Moved permanently: The browser will keep in cache the new url.
         302 Moved temporarily: The browser will not keep in cache the new url and ask again the next time the new url.
@@ -76,7 +76,7 @@ class WebsiteRewrite(models.Model):
     def name_get(self):
         result = []
         for rewrite in self:
-            name = rewrite.redirect_type + ' - ' + rewrite.name
+            name = "%s - %s" % (rewrite.redirect_type, rewrite.name)
             result.append((rewrite.id, name))
         return result
 

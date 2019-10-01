@@ -90,7 +90,7 @@ class Http(models.AbstractModel):
     def _generate_routing_rules(cls, modules, converters):
         website_id = request.website_routing
         logger.debug("_generate_routing_rules for website: %s", website_id)
-        domain = [('redirect_type', 'in', ('rewrite', 'not_found')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
+        domain = [('redirect_type', 'in', ('308', '404')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
 
         rewrites = dict([(x.url_from, x) for x in request.env['website.rewrite'].sudo().search(domain)])
         cls._rewrite_len[website_id] = len(rewrites)
@@ -100,7 +100,7 @@ class Http(models.AbstractModel):
             if url in rewrites:
                 rewrite = rewrites[url]
                 url_to = rewrite.url_to
-                if rewrite.redirect_type == 'rewrite':
+                if rewrite.redirect_type == '308':
                     logger.debug('Add rule %s for %s' % (url_to, website_id))
                     yield url_to, endpoint, routing  # yield new url
 
@@ -109,7 +109,7 @@ class Http(models.AbstractModel):
                         _slug_matching = partial(cls._slug_matching, endpoint=endpoint)
                         routing['redirect_to'] = _slug_matching
                         yield url, endpoint, routing  # yield original redirected to new url
-                elif rewrite.redirect_type == 'not_found':
+                elif rewrite.redirect_type == '404':
                     logger.debug('Return 404 for %s for website %s' % (url, website_id))
                     continue
             else:
@@ -245,7 +245,7 @@ class Http(models.AbstractModel):
     def _serve_redirect(cls):
         req_page = request.httprequest.path
         domain = [
-            ('redirect_type', 'in', ('redirect_301', 'redirect_302')),
+            ('redirect_type', 'in', ('301', '302')),
             ('url_from', '=', req_page)
         ]
         domain += request.website.website_domain()
