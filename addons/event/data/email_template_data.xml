@@ -65,14 +65,14 @@
                     <div>
                         Hello ${object.name or ''},<br/>
                         We are happy to confirm your registration to the event
-                        % if 'website_url' in object.event_id and object.event_id.website_url:
+                        % if 'website_published' in object.event_id and object.event_id.website_published:
                             <a href="${object.event_id.website_url}" style="color:#875A7B;text-decoration:none;">${object.event_id.name}</a>
                         % else:
                             <strong>${object.event_id.name}</strong>
                         % endif
                         for attendee ${object.name}.
                     </div>
-                    % if 'website_url' in object.event_id and object.event_id.website_url:
+                    % if 'website_published' in object.event_id and object.event_id.website_published:
                     <div style="margin: 16px 0px 16px 0px;">
                         <a href="${object.event_id.website_url}"
                             style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">View Event</a><br />
@@ -262,14 +262,14 @@
                     <div>
                         Hello ${object.name},<br/>
                         We are excited to remind you that the event
-                        % if 'website_url' in object.event_id and object.event_id.website_url:
+                        % if 'website_published' in object.event_id and object.event_id.website_published:
                             <a href="${object.event_id.website_url}" style="color:#875A7B;text-decoration:none;">${object.event_id.name}</a>
                         % else:
                             <strong>${object.event_id.name}</strong>
                         % endif
                         is starting <strong>${object.get_date_range_str()}</strong>.
                     </div>
-                    % if 'website_url' in object.event_id and object.event_id.website_url:
+                    % if 'website_published' in object.event_id and object.event_id.website_published:
                     <div style="margin: 16px 0px 16px 0px;">
                         <a href="${object.event_id.website_url}"
                             style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">View Event</a><br />
