@@ -653,15 +653,18 @@
             <field name="name">product.supplierinfo.tree.view</field>
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
-                <tree string="Vendor Information">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                    <field name="product_id" invisible="context.get('product_template_invisible_variant', False)" groups="product.group_product_variant" optional="hide"/>
-                    <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
+                <tree string="Vendor Information" multi_edit="1">
+                    <field name="sequence" widget="handle" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="product_id" readonly="1" optional="hide"
+                        invisible="context.get('product_template_invisible_variant', False)"
+                        groups="product.group_product_variant"/>
+                    <field name="product_tmpl_id" string="Product" readonly="1"
+                        invisible="context.get('visible_product_tmpl_id', True)"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="date_start" optional="hide"/>
                     <field name="date_end" optional="hide"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
                     <field name="min_qty"/>
                     <field name="product_uom" groups="uom.group_uom"/>
                     <field name="price" string="Price"/>
