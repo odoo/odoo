@@ -189,7 +189,6 @@ class IrModuleModule(models.Model):
                                 ON CONFLICT DO NOTHING""",
                              (dst_field, new_rec.id, src_field, old_rec.id))
 
-
     def _theme_load(self, website):
         """
             For every type of model in ``self._theme_model_names``, and for every theme in ``self``:
