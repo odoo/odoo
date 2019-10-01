@@ -914,7 +914,7 @@ class IrModelFields(models.Model):
             attrs['translate'] = bool(field_data['translate'])
             attrs['size'] = field_data['size'] or None
         elif field_data['ttype'] in ('selection', 'reference'):
-            attrs['selection'] = self.env['ir.model.fields.selection']._get_selection(field_data['id'])
+            attrs['selection'] = self.env['ir.model.fields.selection']._get_selection_data(field_data['id'])
         elif field_data['ttype'] == 'many2one':
             if not self.pool.loaded and field_data['relation'] not in self.env:
                 return
@@ -983,6 +983,9 @@ class IrModelSelection(models.Model):
     def _get_selection(self, field_id):
         """ Return the given field's selection as a list of pairs (value, string). """
         self.flush(['value', 'name', 'field_id', 'sequence'])
+        return self._get_selection_data(field_id)
+
+    def _get_selection_data(self, field_id):
         self._cr.execute("""
             SELECT value, name
             FROM ir_model_fields_selection
@@ -1123,6 +1126,7 @@ class IrModelSelection(models.Model):
         result = super().write(vals)
 
         # setup models; this re-initializes model in registry
+        self.flush()
         self.pool.setup_models(self._cr)
 
         return result
