@@ -3846,6 +3846,35 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test("quickcreate in a many2one in a list", function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            arch: '<tree editable="top"><field name="m2o"/></tree>',
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        list.$('.o_data_row:first .o_data_cell:first').click();
+
+        var $input = list.$('.o_data_row:first .o_data_cell:first input');
+        $input.val("aaa");
+        $input.trigger('keyup');
+        $input.trigger('blur');
+        list.el.click();
+
+        assert.strictEqual(document.body.getElementsByClassName('modal').length, 1,
+            "the quick_create modal should appear");
+
+        $('.modal .btn-primary:first').click();
+        list.el.click();
+
+        assert.strictEqual(list.$('.o_data_row:first').text(), "aaa", "value should have been updated");
+
+        list.destroy();
+    });
 });
 
 });
