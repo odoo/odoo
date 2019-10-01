@@ -61,7 +61,7 @@ class WebsiteForm(WebsiteForm):
             lead_sudo = request.env['crm.lead'].browse(result).sudo()
             if lead_sudo.exists():
                 vals = {'lead_ids': [(4, result)]}
-                if not visitor_sudo.lead_ids and not visitor_sudo.user_partner_id:
+                if not visitor_sudo.lead_ids and not visitor_sudo.partner_id:
                     vals['name'] = request.env['crm.lead'].browse(result).sudo().contact_name
                 visitor_sudo.write(vals)
         return result
