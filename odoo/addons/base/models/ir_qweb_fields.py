@@ -10,6 +10,7 @@ from lxml import etree
 import math
 
 from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, format_duration, pycompat
+from odoo.tools.misc import get_lang
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -130,13 +131,11 @@ class FieldConverter(models.AbstractModel):
         """ user_lang()
 
         Fetches the res.lang record corresponding to the language code stored
-        in the user's context. Fallbacks to en_US if no lang is present in the
-        context *or the language code is not valid*.
+        in the user's context.
 
         :returns: Model[res.lang]
         """
-        lang_code = self._context.get('lang') or 'en_US'
-        return self.env['res.lang']._lang_get(lang_code)
+        return get_lang(self.env)
 
 
 class IntegerConverter(models.AbstractModel):
