@@ -127,7 +127,12 @@ class ResPartner(models.Model):
         else:
             result = {}
 
-        if error:
+        if response and response.get('credit_error'):
+            result.update({
+                'error': True,
+                'error_message': 'Insufficient Credit'
+            })
+        elif error:
             result.update({
                 'error': True,
                 'error_message': error
