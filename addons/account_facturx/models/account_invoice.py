@@ -4,6 +4,7 @@ from odoo import api, models, fields, tools, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr
 from odoo.tests.common import Form
 from odoo.exceptions import UserError
+from odoo.tools.mimetypes import guess_mimetype
 
 from datetime import datetime
 from lxml import etree
@@ -18,6 +19,25 @@ _logger = logging.getLogger(__name__)
 
 
 DEFAULT_FACTURX_DATE_FORMAT = '%Y%m%d'
+
+# Series of helper to handle both attachment as namedtuples or records
+def _get_attachment_filename(attachment):
+    return hasattr(attachment, 'fname') and getattr(attachment, 'fname') or attachment.name
+
+
+def _get_attachment_content(attachment):
+    return hasattr(attachment, 'content') and getattr(attachment, 'content') or base64.b64decode(attachment.datas)
+
+
+def _get_attachment_mimetype(attachment):
+    if hasattr(attachment, 'mimetype'):
+        mimetype = attachment.mimetype
+    else:
+        try:
+            mimetype = guess_mimetype(_get_attachment_content(attachment), default='application/octet-stream')
+        except Exception:  # we could refine on base64.binascii.Error and such, but we want to be very lax
+            mimetype = 'application/octet-stream'
+    return mimetype
 
 
 class AccountInvoice(models.Model):
@@ -238,19 +258,13 @@ class AccountInvoice(models.Model):
 
     @api.one
     def _create_invoice_from_attachment(self, attachment):
-        if 'pdf' in attachment.mimetype:
+        mimetype = _get_attachment_mimetype(attachment)
+        if 'pdf' in mimetype:
             self._create_invoice_from_pdf(attachment)
-        if 'xml' in attachment.mimetype:
+        if 'xml' in mimetype:
             self._create_invoice_from_xml(attachment)
 
     def _create_invoice_from_pdf(self, attachment):
-        def _get_attachment_filename(attachment):
-            # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
-            return hasattr(attachment, 'fname') and getattr(attachment, 'fname') or attachment.name
-
-        def _get_attachment_content(attachment):
-            # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
-            return hasattr(attachment, 'content') and getattr(attachment, 'content') or base64.b64decode(attachment.datas)
         filename = _get_attachment_filename(attachment)
         content = _get_attachment_content(attachment)
 
@@ -303,11 +317,11 @@ class AccountInvoice(models.Model):
         decoders = self._get_xml_decoders()
 
         # Convert attachment -> etree
-        content = base64.b64decode(attachment.datas)
+        content = _get_attachment_content(attachment)
         try:
             tree = etree.fromstring(content)
         except Exception:
-            raise UserError(_('The xml file is badly formatted : {}').format(attachment.datas_fname))
+            raise UserError(_('The xml file is badly formatted : {}').format(_get_attachment_filename(attachment)))
 
         for xml_type, check_func, decode_func in decoders:
             check_res = check_func(tree)
@@ -326,4 +340,4 @@ class AccountInvoice(models.Model):
         try:
             return invoice
         except UnboundLocalError:
-            raise UserError(_('No decoder was found for the xml file: {}. The file is badly formatted, not supported or the decoder is not installed').format(attachment.datas_fname))
+            raise UserError(_('No decoder was found for the xml file: {}. The file is badly formatted, not supported or the decoder is not installed').format(_get_attachment_filename(attachment)))
