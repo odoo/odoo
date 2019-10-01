@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Argentinian Accounting',
-    'version': '13.0.1.0.0',
+    'version': "3.0",
     'description': """
 Functional
 ----------
