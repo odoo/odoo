@@ -64,14 +64,13 @@ class ResUsers(models.Model):
                 visitor_sudo = env['website.visitor']._get_visitor_from_request()
                 if visitor_sudo:
                     partner = env.user.partner_id
-                    partner_visitor = env['website.visitor'].sudo().search([('user_partner_id', '=', partner.id)])
+                    partner_visitor = env['website.visitor'].sudo().search([('partner_id', '=', partner.id)])
                     if partner_visitor and partner_visitor.id != visitor_sudo.id:
-                        tracks = visitor_sudo.website_track_ids
-                        tracks.write({'visitor_id': partner_visitor.id})
+                        visitor_sudo.website_track_ids.write({'visitor_id': partner_visitor.id})
                         visitor_sudo.unlink()
                     else:
                         vals = {
-                            'user_partner_id': partner.id,
+                            'partner_id': partner.id,
                             'name': partner.name
                         }
                         visitor_sudo.write(vals)

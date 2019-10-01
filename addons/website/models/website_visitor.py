@@ -33,8 +33,8 @@ class WebsiteVisitor(models.Model):
     access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, index=True, copy=False, groups='base.group_website_publisher')
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
-    user_partner_id = fields.Many2one('res.partner', string="Linked Partner", help="Partner of the last logged in user.")
-    partner_image = fields.Binary(related='user_partner_id.image_1920')
+    partner_id = fields.Many2one('res.partner', string="Linked Partner", help="Partner of the last logged in user.")
+    partner_image = fields.Binary(related='partner_id.image_1920')
 
     # localisation and info
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
@@ -60,7 +60,7 @@ class WebsiteVisitor(models.Model):
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique.'),
-        ('partner_uniq', 'unique(user_partner_id)', 'A partner is linked to only one visitor.'),
+        ('partner_uniq', 'unique(partner_id)', 'A partner is linked to only one visitor.'),
     ]
 
     @api.depends('name')
@@ -70,10 +70,10 @@ class WebsiteVisitor(models.Model):
             (record.name or _('Website Visitor #%s') % record.id)
         ) for record in self]
 
-    @api.depends('user_partner_id.email_normalized', 'user_partner_id.mobile')
+    @api.depends('partner_id.email_normalized', 'partner_id.mobile')
     def _compute_email_phone(self):
         results = self.env['res.partner'].search_read(
-            [('id', 'in', self.user_partner_id.ids)],
+            [('id', 'in', self.partner_id.ids)],
             ['id', 'email_normalized', 'mobile'],
         )
         mapped_data = {
@@ -84,8 +84,8 @@ class WebsiteVisitor(models.Model):
         }
 
         for visitor in self:
-            visitor.email = mapped_data.get(visitor.user_partner_id.id, {}).get('email_normalized')
-            visitor.mobile = mapped_data.get(visitor.user_partner_id.id, {}).get('mobile')
+            visitor.email = mapped_data.get(visitor.partner_id.id, {}).get('email_normalized')
+            visitor.mobile = mapped_data.get(visitor.partner_id.id, {}).get('mobile')
 
     @api.depends('website_track_ids')
     def _compute_page_statistics(self):
@@ -126,11 +126,11 @@ class WebsiteVisitor(models.Model):
             visitor.is_connected = (datetime.now() - last_connection_date) < timedelta(minutes=5)
 
     def _prepare_visitor_send_mail_values(self):
-        if self.user_partner_id.email:
+        if self.partner_id.email:
             return {
                 'res_model': 'res.partner',
-                'res_id': self.user_partner_id.id,
-                'partner_ids': [self.user_partner_id.id],
+                'res_id': self.partner_id.id,
+                'partner_ids': [self.partner_id.id],
             }
         return {}
 
@@ -174,10 +174,10 @@ class WebsiteVisitor(models.Model):
 
         if not request.env.user._is_public():
             partner_id = request.env.user.partner_id
-            if not visitor or visitor.user_partner_id != partner_id:
+            if not visitor or visitor.partner_id != partner_id:
                 # Partner and no cookie or wrong cookie
-                visitor = Visitor.with_context(active_test=False).search([('user_partner_id', '=', partner_id.id)])
-        elif visitor and visitor.user_partner_id:
+                visitor = Visitor.with_context(active_test=False).search([('partner_id', '=', partner_id.id)])
+        elif visitor and visitor.partner_id:
             # Cookie associated to a Partner
             visitor = Visitor
         return visitor
@@ -236,7 +236,7 @@ class WebsiteVisitor(models.Model):
             'website_id': request.website.id,
         }
         if not self.env.user._is_public():
-            vals['user_partner_id'] = self.env.user.partner_id.id
+            vals['partner_id'] = self.env.user.partner_id.id
             vals['name'] = self.env.user.partner_id.name
         if website_track_values:
             vals['website_track_ids'] = [(0, 0, website_track_values)]

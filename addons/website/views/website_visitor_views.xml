@@ -87,7 +87,7 @@
                 <field name="display_name"/>
                 <field name="last_visited_page_id"/>
                 <field name="page_ids"/>
-                <field name="user_partner_id"/>
+                <field name="partner_id"/>
                 <field name="partner_image"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -96,7 +96,7 @@
                             <div class="o_kanban_detail_ungrouped row">
                                 <div class="o_wvisitor_kanban_image">
                                      <img t-if="record.partner_image.raw_value"
-                                        t-att-src="kanban_image('res.partner', 'image_128', record.user_partner_id.raw_value)"
+                                        t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)"
                                         width="54px" height="54px" alt="Visitor"/>
                                      <img t-else=""
                                         t-attf-src="/base/static/img/avatar_grey.png"
@@ -203,7 +203,7 @@
                     <group id="general_info">
                         <group string="Visitor Informations">
                             <field name="is_connected" invisible="1"/>
-                            <field name="user_partner_id" attrs="{'invisible': [('user_partner_id', '=', False)]}"/>
+                            <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                             <field name="email"/>
                             <field name="mobile"/>
                             <field name="country_id" attrs="{'invisible': [('country_id', '=', False)]}"/>
@@ -261,8 +261,8 @@
                 <field name="country_id"/>
                 <field name="visit_count"/>
                 <field name="page_ids"/>
-                <filter string="Visitors" name="type_visitor" domain="[('user_partner_id', '=', False)]"/>
-                <filter string="Customers" name="type_customer" domain="[('user_partner_id', '!=', False)]"/>
+                <filter string="Visitors" name="type_visitor" domain="[('partner_id', '=', False)]"/>
+                <filter string="Customers" name="type_customer" domain="[('partner_id', '!=', False)]"/>
                 <separator/>
                 <filter string="Archived" name="is_archived" domain="[('active', '=', False)]"/>
                 <separator/>
