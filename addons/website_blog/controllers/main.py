@@ -13,6 +13,7 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
 from odoo.tools import html2plaintext
+from odoo.tools.misc import get_lang
 
 
 class WebsiteBlog(http.Controller):
@@ -43,7 +44,7 @@ class WebsiteBlog(http.Controller):
             group['date_begin'] = start
             group['date_end'] = end
 
-            locale = request.context.get('lang') or 'en_US'
+            locale = get_lang(request.env).code
             start = pytz.UTC.localize(fields.Datetime.from_string(start))
             tzinfo = pytz.timezone(request.context.get('tz', 'utc') or 'utc')
 

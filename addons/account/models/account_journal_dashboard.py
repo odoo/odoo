@@ -6,7 +6,7 @@ from odoo import models, api, _, fields
 from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
-from odoo.tools.misc import formatLang, format_date as odoo_format_date
+from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
 import random
 
 import ast
@@ -90,7 +90,7 @@ class account_journal(models.Model):
         data = []
         today = datetime.today()
         last_month = today + timedelta(days=-30)
-        locale = self._context.get('lang') or 'en_US'
+        locale = get_lang(self.env).code
 
         #starting point of the graph is the last statement
         last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', today.strftime(DF))], order='date desc, id desc', limit=1)
@@ -139,7 +139,7 @@ class account_journal(models.Model):
         data = []
         today = fields.Datetime.now(self)
         data.append({'label': _('Due'), 'value':0.0, 'type': 'past'})
-        day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang') or 'en_US'))
+        day_of_week = int(format_datetime(today, 'e', locale=get_lang(self.env).code))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
         for i in range(-1,4):
             if i==0:
@@ -150,9 +150,9 @@ class account_journal(models.Model):
                 start_week = first_day_of_week + timedelta(days=i*7)
                 end_week = start_week + timedelta(days=6)
                 if start_week.month == end_week.month:
-                    label = str(start_week.day) + '-' +str(end_week.day)+ ' ' + format_date(end_week, 'MMM', locale=self._context.get('lang') or 'en_US')
+                    label = str(start_week.day) + '-' + str(end_week.day) + ' ' + format_date(end_week, 'MMM', locale=get_lang(self.env).code)
                 else:
-                    label = format_date(start_week, 'd MMM', locale=self._context.get('lang') or 'en_US')+'-'+format_date(end_week, 'd MMM', locale=self._context.get('lang') or 'en_US')
+                    label = format_date(start_week, 'd MMM', locale=get_lang(self.env).code) + '-' + format_date(end_week, 'd MMM', locale=get_lang(self.env).code)
             data.append({'label':label,'value':0.0, 'type': 'past' if i<0 else 'future'})
 
         # Build SQL query to find amount aggregated by week

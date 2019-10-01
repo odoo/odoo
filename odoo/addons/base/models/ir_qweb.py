@@ -13,6 +13,7 @@ from werkzeug import urls
 
 from odoo import api, models, tools
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, _SAFE_OPCODES
+from odoo.tools.misc import get_lang
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 
@@ -112,7 +113,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         return super(IrQWeb, self).compile(id_or_xml_id, options=options)
 
     def load(self, name, options):
-        lang = options.get('lang', 'en_US')
+        lang = options.get('lang', get_lang(self.env).code)
         env = self.env
         if lang != env.context.get('lang'):
             env = env(context=dict(env.context, lang=lang))
@@ -148,7 +149,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     # compile directives
 
     def _compile_directive_lang(self, el, options):
-        lang = el.attrib.pop('t-lang', 'en_US')
+        lang = el.attrib.pop('t-lang', get_lang(self.env).code)
         if el.get('t-call-options'):
             el.set('t-call-options', el.get('t-call-options')[0:-1] + u', "lang": %s}' % lang)
         else:

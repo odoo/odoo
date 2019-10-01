@@ -5,6 +5,7 @@ from itertools import chain
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import get_lang
 
 
 class Pricelist(models.Model):
@@ -40,7 +41,7 @@ class Pricelist(models.Model):
         if name and operator == '=' and not args:
             # search on the name of the pricelist and its currency, opposite of name_get(),
             # Used by the magic context filter in the product search view.
-            query_args = {'name': name, 'limit': limit, 'lang': self._context.get('lang') or 'en_US'}
+            query_args = {'name': name, 'limit': limit, 'lang': get_lang(self.env).code}
             query = """SELECT p.id
                        FROM ((
                                 SELECT pr.id, pr.name

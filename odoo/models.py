@@ -56,7 +56,7 @@ from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
                    groupby
 from .tools.config import config
 from .tools.func import frame_codeinfo
-from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
 from .tools.safe_eval import safe_eval
 from .tools.translate import _
 from .tools import date_utils
@@ -1991,7 +1991,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if ftype == 'many2one':
                     value = value[0]
                 elif ftype in ('date', 'datetime'):
-                    locale = self._context.get('lang') or 'en_US'
+                    locale = get_lang(self.env).code
                     fmt = DEFAULT_SERVER_DATETIME_FORMAT if ftype == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                     tzinfo = None
                     range_start = value

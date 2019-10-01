@@ -20,6 +20,7 @@ from odoo import tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.osv import expression
 from odoo.tools.translate import _
+from odoo.tools.misc import get_lang
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.exceptions import UserError, ValidationError
 
@@ -1352,11 +1353,11 @@ class Meeting(models.Model):
 
         elif interval == 'month':
             # Localized month name and year
-            result = babel.dates.format_date(date=date, format='MMMM y', locale=self._context.get('lang') or 'en_US')
+            result = babel.dates.format_date(date=date, format='MMMM y', locale=get_lang(self.env).code)
 
         elif interval == 'dayname':
             # Localized day name
-            result = babel.dates.format_date(date=date, format='EEEE', locale=self._context.get('lang') or 'en_US')
+            result = babel.dates.format_date(date=date, format='EEEE', locale=get_lang(self.env).code)
 
         elif interval == 'time':
             # Localized time
