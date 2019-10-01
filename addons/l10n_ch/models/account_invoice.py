@@ -192,14 +192,14 @@ class AccountMove(models.Model):
             self.filtered(lambda inv: not inv.l10n_ch_isr_sent).write({'l10n_ch_isr_sent': True})
         return super(AccountMove, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
-    def _get_reference_ch_invoice(self):
+    def _get_invoice_reference_ch_invoice(self):
         """ This sets ISR reference number which is generated based on customer's `Bank Account` and set it as
         `Payment Reference` of the invoice when invoice's journal is using Switzerland's communication standard
         """
         self.ensure_one()
         return self.l10n_ch_isr_number_spaced
 
-    def _get_reference_ch_partner(self):
+    def _get_invoice_reference_ch_partner(self):
         """ This sets ISR reference number which is generated based on customer's `Bank Account` and set it as
         `Payment Reference` of the invoice when invoice's journal is using Switzerland's communication standard
         """
