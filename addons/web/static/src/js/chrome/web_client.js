@@ -238,49 +238,6 @@ return AbstractWebClient.extend({
     _openMenu: function (action, options) {
         return this.do_action(action, options);
     },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Returns the left and top scroll positions of the main scrolling area
-     * (i.e. the action manager in desktop).
-     *
-     * @returns {Object} with keys left and top
-     */
-    getScrollPosition: function () {
-        return {
-            left: this.action_manager.el.scrollLeft,
-            top: this.action_manager.el.scrollTop,
-        };
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     * @private
-     */
-    _onGetScrollPosition: function (ev) {
-        ev.data.callback(this.getScrollPosition());
-    },
-    /**
-     * @override
-     * @private
-     */
-    _onScrollTo: function (ev) {
-        var offset = {top: ev.data.top, left: ev.data.left || 0};
-        if (!offset.top) {
-            offset = dom.getPosition(document.querySelector(ev.data.selector));
-            // Substract the position of the action_manager as it is the scrolling part
-            offset.top -= dom.getPosition(this.action_manager.el).top;
-        }
-        this.action_manager.el.scrollTop = offset.top;
-        this.action_manager.el.scrollLeft = offset.left;
-    },
 });
 
 });
