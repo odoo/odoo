@@ -725,3 +725,45 @@ class ModelActiveField(models.Model):
     active = fields.Boolean(default=True)
     parent_id = fields.Many2one('test_new_api.model_active_field')
     children_ids = fields.One2many('test_new_api.model_active_field', 'parent_id')
+
+
+class ModelView(models.Model):
+    _name = 'test_new_api.model_view'
+    _description = 'Model View'
+
+    name = fields.Char()
+    name_related = fields.Char(related='name', string="Name Related", readonly=False)
+    name_compute = fields.Char(compute='_compute_name_compute', inverse='_set_name_compute')
+    name_compute_context = fields.Char(compute='_compute_name_compute_context', inverse='_set_name_compute_context')
+
+    @api.depends('name')
+    def _compute_name_compute(self):
+        for view in self:
+            view.name_compute = view.name
+
+    def _set_name_compute(self):
+        for view in self:
+            view.name = view.name_compute
+
+    @api.depends('name')
+    @api.depends_context('whatever')
+    def _compute_name_compute_context(self):
+        for view in self:
+            view.name_compute_context = view.name
+
+    def _set_name_compute_context(self):
+        for view in self:
+            view.name = view.name_compute_context
+
+    def write(self, vals):
+        if self.env.context.get('no_write'):
+            return True
+        return super().write(vals)
+
+
+class ModelPage(models.Model):
+    _name = 'test_new_api.model_page'
+    _description = 'Model Page'
+    _inherits = {'test_new_api.model_view': 'model_view_id'}
+
+    model_view_id = fields.Many2one('test_new_api.model_view', required=True, ondelete='cascade')
