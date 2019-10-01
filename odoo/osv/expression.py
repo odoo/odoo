@@ -123,6 +123,7 @@ from zlib import crc32
 from datetime import date, datetime, time
 import odoo.modules
 from odoo.tools import pycompat
+from odoo.tools.misc import get_lang
 from ..models import MAGIC_COLUMNS, BaseModel
 import odoo.tools as tools
 
@@ -1145,7 +1146,7 @@ class expression(object):
 
                     params = (
                         model._name + ',' + left,
-                        model.env.lang or 'en_US',
+                        get_lang(model.env).code,
                         'model',
                         right,
                     )

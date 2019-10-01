@@ -5,6 +5,7 @@ import pytz
 from odoo import _, api, fields, models
 from odoo.osv.expression import AND
 from odoo.tools import lazy
+from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 
 
@@ -142,7 +143,7 @@ class Base(models.AbstractModel):
 
             # Again, imitating what _read_group_format_result and _read_group_prepare_data do
             if group_by_value and field_type in ['date', 'datetime']:
-                locale = self._context.get('lang') or 'en_US'
+                locale = get_lang(self.env).code
                 group_by_value = fields.Datetime.to_datetime(group_by_value)
                 group_by_value = pytz.timezone('UTC').localize(group_by_value)
                 tz_info = None
