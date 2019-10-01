@@ -164,9 +164,27 @@ class AccountInvoice(models.Model):
                     # get the outstanding residual value in invoice currency
                     if line.currency_id and line.currency_id == self.currency_id:
                         amount_to_show = abs(line.amount_residual_currency)
-                    else:
+                    elif line.currency_id and line.currency_id != self.currency_id:
+                        amount_to_show = line.currency_id._convert(
+                            abs(line.amount_residual_currency),
+                            self.currency_id,
+                            self.company_id,
+                            self.move_id.date or fields.Date.today()
+                        )
+                    elif self.currency_id != self.company_id.currency_id:
+                        # if a potential payment is not in a foreign currency, but the invoice is
+                        # then we must compute the amount in foreign currency of that payment
+                        # at the date of the payment !
                         currency = line.company_id.currency_id
-                        amount_to_show = currency._convert(abs(line.amount_residual), self.currency_id, self.company_id, line.date or fields.Date.today())
+                        amount_to_show = currency._convert(
+                            abs(line.amount_residual),
+                            self.currency_id,
+                            self.company_id,
+                            line.date or fields.Date.today()
+                        )
+                    else:
+                        amount_to_show = abs(line.amount_residual)
+
                     if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
                         continue
                     if line.ref :
@@ -192,31 +210,56 @@ class AccountInvoice(models.Model):
             return []
         payment_vals = []
         currency_id = self.currency_id
+        if self.type in ('out_invoice', 'in_refund'):
+            matched_field = 'matched_debit_ids'
+            partial_field = 'debit_move_id'
+        elif self.type in ('in_invoice', 'out_refund'):
+            matched_field = 'matched_credit_ids'
+            partial_field = 'credit_move_id'
+
         for payment in self.payment_move_line_ids:
-            payment_currency_id = False
-            if self.type in ('out_invoice', 'in_refund'):
-                amount = sum([p.amount for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
-                amount_currency = sum(
-                    [p.amount_currency for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
-                if payment.matched_debit_ids:
-                    payment_currency_id = all([p.currency_id == payment.matched_debit_ids[0].currency_id for p in
-                                               payment.matched_debit_ids]) and payment.matched_debit_ids[
-                                              0].currency_id or False
-            elif self.type in ('in_invoice', 'out_refund'):
-                amount = sum(
-                    [p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
-                amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if
-                                       p.credit_move_id in self.move_id.line_ids])
-                if payment.matched_credit_ids:
-                    payment_currency_id = all([p.currency_id == payment.matched_credit_ids[0].currency_id for p in
-                                               payment.matched_credit_ids]) and payment.matched_credit_ids[
-                                              0].currency_id or False
-            # get the payment value in invoice currency
-            if payment_currency_id and payment_currency_id == self.currency_id:
-                amount_to_show = amount_currency
-            else:
-                currency = payment.company_id.currency_id
-                amount_to_show = currency._convert(amount, self.currency_id, payment.company_id, payment.date or fields.Date.today())
+            amount = 0
+            amount_to_show = 0
+            only_one_foreign_currency = None
+            for partial_rec in payment[matched_field]:
+
+                opposite_line = partial_rec[partial_field]
+                if opposite_line in self.move_id.line_ids:
+                    amount += partial_rec.amount
+
+                    if partial_rec.currency_id and partial_rec.currency_id == self.currency_id:
+                        amount_to_show += partial_rec.amount_currency
+                    elif partial_rec.currency_id and partial_rec.currency_id != self.currency_id:
+                        if opposite_line.balance and opposite_line.amount_currency:
+                            # Get real exchange rate: no information loss
+                            rate = opposite_line.balance / opposite_line.amount_currency
+                        else:
+                            rate = partial_rec.currency_id._get_conversion_rate(
+                                partial_rec.currency_id,
+                                self.currency_id,
+                                payment.company_id,
+                                self.move_id.date or fields.Date.today()
+                            )
+                        amount_to_show += self.currency_id.round(abs(partial_rec.amount_currency) * rate)
+
+                    elif self.currency_id != self.company_id.currency_id:
+                        amount_to_show += self.company_id.currency_id._convert(
+                            partial_rec.amount,
+                            self.currency_id,
+                            payment.company_id,
+                            opposite_line.date or fields.Date.today()
+                        )
+                    else:
+                        amount_to_show += partial_rec.amount
+
+                if only_one_foreign_currency is None and partial_rec.currency_id:
+                    only_one_foreign_currency = partial_rec.currency_id
+                elif only_one_foreign_currency and partial_rec.currency_id and partial_rec.currency_id != only_one_foreign_currency:
+                    only_one_foreign_currency = False
+
+            if not only_one_foreign_currency:
+                amount_to_show = amount
+
             if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
                 continue
             payment_ref = payment.move_id.name
