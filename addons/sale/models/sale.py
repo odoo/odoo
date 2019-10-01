@@ -133,7 +133,7 @@ class SaleOrder(models.Model):
         ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')
     date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now, help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.")
     validity_date = fields.Date(string='Expiration', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        help="Beyond this date, the customer is no longer able to accept the quotation from the portal.", default=_default_validity_date)
+                                default=_default_validity_date)
     is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
     require_signature = fields.Boolean('Online Signature', default=_get_default_require_signature, readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
@@ -151,25 +151,22 @@ class SaleOrder(models.Model):
         'res.partner', string='Customer', readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         required=True, change_default=True, index=True, tracking=1,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="You can find a customer from their name, email, tax ID or reference.")
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_invoice_id = fields.Many2one(
         'res.partner', string='Invoice Address',
         readonly=True, required=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="Invoice address for current sales order.")
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_shipping_id = fields.Many2one(
         'res.partner', string='Delivery Address', readonly=True, required=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="Delivery address for current sales order.")
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
 
     pricelist_id = fields.Many2one(
         'product.pricelist', string='Pricelist', check_company=True,  # Unrequired company
         required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="Pricelist for current order. If you change the pricelist, only new lines will consider this pricelist.")
+        help="If you change the pricelist, only newly added lines will be affected.")
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
     analytic_account_id = fields.Many2one(
         'account.analytic.account', 'Analytic Account',
@@ -199,8 +196,7 @@ class SaleOrder(models.Model):
 
     payment_term_id = fields.Many2one(
         'account.payment.term', string='Payment Terms', check_company=True,  # Unrequired company
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="Payment terms applies to all invoices issued from this order.")
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position', string='Fiscal Position',
         domain="[('company_id', '=', company_id)]", check_company=True,
