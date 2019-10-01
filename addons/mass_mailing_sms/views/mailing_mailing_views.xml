@@ -112,6 +112,12 @@
             <xpath expr="//field[@name='user_id']" position="after">
                 <field name="sms_allow_unsubscribe" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}"/>
             </xpath>
+
+            <xpath expr="//field[@name='contact_list_ids']" position="attributes">
+                <attribute name="context">
+                    {'mailing_sms' : context.get('mailing_sms')}
+                </attribute>
+            </xpath>
             <!-- Option page tweaks -->
             <xpath expr="//field[@name='email_from']" position="attributes">
                 <attribute name="attrs">{
