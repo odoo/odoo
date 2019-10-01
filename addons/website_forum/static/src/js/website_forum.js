@@ -2,6 +2,7 @@ odoo.define('website_forum.website_forum', function (require) {
 'use strict';
 
 var core = require('web.core');
+var weDefaultOptions = require('web_editor.wysiwyg.default_options');
 var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
@@ -22,11 +23,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .flag:not(.karma_required)': '_onFlagAlertClick',
         'click .vote_up:not(.karma_required), .vote_down:not(.karma_required)': '_onVotePostClick',
         'click .o_js_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
-        'click .accept_answer:not(.karma_required)': '_onAcceptAnswerClick',
-        'click .validate_answer [data-href]': '_onAcceptAnswerClick',
-        'mouseenter .validate_answer [data-href]': '_onRemoveValidAnswerMouse',
-        'mouseleave .validate_answer [data-href]': '_onRemoveValidAnswerMouse',
-        'click .favourite_question': '_onFavoriteQuestionClick',
+        'click .o_wforum_validate_toggler:not(.karma_required)': '_onAcceptAnswerClick',
+        'click .o_wforum_favourite_toggle': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
         'click .js_close_intro': '_onCloseIntroClick',
     },
@@ -48,6 +46,10 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             escape(window.location.href)
         );
         $('.forum_register_url').attr('href', forumLogin);
+
+        // Initialize forum's tooltips
+        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
+        this.$('[data-toggle="popover"]').popover({offset: 8});
 
         $('input.js_select2').select2({
             tags: true,
@@ -127,9 +129,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             toolbar.push(['history', ['undo', 'redo']]);
 
             var options = {
-                height: 150,
+                height: 200,
+                minHeight: 80,
                 toolbar: toolbar,
                 styleWithSpan: false,
+                styleTags: _.without(weDefaultOptions.styleTags, 'h1', 'h2', 'h3'),
                 recordInfo: {
                     context: self._getContext(),
                     res_model: 'forum.post',
@@ -151,12 +155,13 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             });
         });
 
-        // Check all answer status to add text-success on answer if needed
-        _.each($('.accept_answer'), function (el) {
-            var $el = $(el);
-            if ($el.hasClass('oe_answer_true')) {
-                $el.addClass('text-success');
-            }
+        _.each(this.$('.o_wforum_bio_popover'), authorBox => {
+            $(authorBox).popover({
+                trigger: 'hover',
+                offset: 10,
+                animation: false,
+                html: true,
+            });
         });
 
         return this._super.apply(this, arguments);
@@ -278,9 +283,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onVotePostClick: function (ev) {
         var self = this;
         ev.preventDefault();
-        var $link = $(ev.currentTarget);
+        var $btn = $(ev.currentTarget);
         this._rpc({
-            route: $link.data('href'),
+            route: $btn.data('href'),
         }).then(function (data) {
             if (data.error) {
                 var message;
@@ -296,17 +301,28 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     sticky: false,
                 });
             } else {
-                $link.parent().find('.vote_count').html(data.vote_count);
-                if (data.user_vote === 0) {
-                    $link.parent().find('.text-success').removeClass('text-success');
-                    $link.parent().find('.text-warning').removeClass('text-warning');
-                } else {
-                    if (data.user_vote === 1) {
-                        $link.addClass('text-success');
-                    } else {
-                        $link.addClass('text-warning');
-                    }
+                var $container = $btn.closest('.vote');
+                var $items = $container.children();
+                var $voteUp = $items.filter('.vote_up');
+                var $voteDown = $items.filter('.vote_down');
+                var $voteCount = $items.filter('.vote_count');
+                var userVote = parseInt(data['user_vote']);
+
+                $voteUp.prop('disabled', userVote === 1);
+                $voteDown.prop('disabled', userVote === -1);
+
+                $items.removeClass('text-success text-danger text-muted o_forum_vote_animate');
+                void $container[0].offsetWidth; // Force a refresh
+
+                if (userVote === 1) {
+                    $voteUp.addClass('text-success');
+                    $voteCount.addClass('text-success');
                 }
+                if (userVote === -1) {
+                    $voteDown.addClass('text-danger');
+                    $voteCount.addClass('text-danger');
+                }
+                $voteCount.html(data['vote_count']).addClass('o_forum_vote_animate');
             }
         });
     },
@@ -318,11 +334,14 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         $link.parents('.post_to_validate').hide();
-        $.get($link.attr('href')).then(function () {
+        $.get($link.attr('href')).then(() => {
             var left = $('.o_js_validation_queue:visible').length;
             var type = $('h2.o_page_header a.active').data('type');
             $('#count_post').text(left);
             $('#moderation_tools a[href*="/' + type + '_"]').find('strong').text(left);
+            if (!left) {
+                this.$('.o_caught_up_alert').removeClass('d-none');
+            }
         }, function () {
             $link.parents('.o_js_validation_queue > div').addClass('bg-danger text-white').css('background-color', '#FAA');
             $link.parents('.post_to_validate').show();
@@ -333,59 +352,36 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onAcceptAnswerClick: function (ev) {
-        var self = this;
         ev.preventDefault();
-        var self = this;
-        var $acceptAnswerLinks = this.$('.accept_answer');
         var $link = $(ev.currentTarget);
+        var target = $link.data('target');
+
         this._rpc({
             route: $link.data('href'),
-        }).then(function (data) {
+        }).then(data => {
             if (data.error) {
                 if (data.error === 'anonymous_user') {
                     var message = _t("Sorry, anonymous users cannot choose correct answer.");
                 }
-                self.call('crash_manager', 'show_warning', {
+                this.call('crash_manager', 'show_warning', {
                     message: message,
                     title: _t("Access Denied"),
                 }, {
                     sticky: false,
                 });
             } else {
-                $acceptAnswerLinks.removeClass('oe_answer_true')
-                                  .addClass('oe_answer_false');
-                $link.toggleClass('oe_answer_true', !!data)
-                     .toggleClass('oe_answer_false', !data);
+                _.each(this.$('.forum_answer'), answer => {
+                    var $answer = $(answer);
+                    var isCorrect = $answer.is(target) ? data : false;
+                    var $toggler = $answer.find('.o_wforum_validate_toggler');
+                    var newHelper = isCorrect ? $toggler.data('helper-decline') : $toggler.data('helper-accept');
 
-                // TODO in master, review the utility of this function...
-                self._onCheckAnswerStatus(ev);
-
-                // If we are removing an accepted answer, reload the page as the
-                // design is quite different with or without an accepted answer.
-                if ($link.closest('.validate_answer').length) {
-                    window.location.reload();
-                }
+                    $answer.toggleClass('o_wforum_answer_correct', isCorrect);
+                    $toggler.tooltip('dispose')
+                            .attr('data-original-title', newHelper)
+                            .tooltip({delay: 0});
+                });
             }
-        });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onRemoveValidAnswerMouse: function (ev) {
-        var hover = (ev.type === 'mouseenter');
-        $(ev.currentTarget).find('.fa')
-            .toggleClass('fa-times-circle text-danger', hover)
-            .toggleClass('fa-check-circle text-success', !hover);
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCheckAnswerStatus: function (ev) {
-        _.each(this.$('.accept_answer'), function (link) {
-            var $link = $(link);
-            $link.toggleClass('text-success', $link.hasClass('oe_answer_true'));
         });
     },
     /**
@@ -398,7 +394,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         this._rpc({
             route: $link.data('href'),
         }).then(function (data) {
-            $link.toggleClass('forum_favourite_question', !!data);
+            $link.toggleClass('o_wforum_gold fa-star', data)
+                 .toggleClass('fa-star-o text-muted', !data);
         });
     },
     /**
@@ -408,10 +405,19 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onDeleteCommentClick: function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
+        var $container = $link.closest('.o_wforum_post_comments_container');
+
         this._rpc({
             route: $link.closest('form').attr('action'),
         }).then(function () {
-            $link.parents('.comment').first().remove();
+            $link.closest('.o_wforum_post_comment').remove();
+
+            var count = $container.find('.o_wforum_post_comment').length;
+            if (count) {
+                $container.find('.o_wforum_comments_count').text(count);
+            } else {
+                $container.find('.o_wforum_comments_count_header').remove();
+            }
         });
     },
     /**

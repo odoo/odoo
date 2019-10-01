@@ -133,14 +133,41 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 .o_wprofile_all_users_nav {
     border-width: 1px 0;
 
-    &, .o_wprofile_course_nav_search {
+    &, .o_wprofile_course_nav_search, .o_wprofile_all_users_nav_btn {
         background-color: rgba(white, 0.05);
         border-color: rgba(white, 0.1);
         border-style: solid;
     }
 
-    .o_wprofile_course_nav_search {
+    .o_wprofile_course_nav_search, .o_wprofile_all_users_nav_btn {
         border-width: 0 1px;
+    }
+
+    .o_wprofile_all_users_nav_btn {
+        @include media-breakpoint-up(md) {
+            @include o-hover-text-color(white, $gray-800);
+            margin-top: -1px;
+            border-radius: 0;
+            min-height: 35px;
+
+            &:hover {
+                background-color: white;
+            }
+        }
+    }
+
+    .o_wprofile_all_users_nav_btn_container {
+        @include media-breakpoint-down(sm) {
+            ~ .o_wprofile_user_profile_sub_nav_mobile_col {
+                padding-left: 0;
+            }
+
+            .o_wprofile_all_users_nav_btn {
+                @include o-hover-text-color(white, white);
+                border-radius: $btn-border-radius;
+                background-color: rgba(black, 0.25);
+            }
+        }
     }
 
     .breadcrumb-item.active a, .breadcrumb-item a:hover {
