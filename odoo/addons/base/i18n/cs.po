@@ -2503,6 +2503,18 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Zahrnutí následujících údajů do účetních standardů pro obchodní podniky\n"
+"包含 企业 会计 准则 以下 数据\n"
+"\n"
+"* Graf účtů\n"
+"* 科目表 模板\n"
+"\n"
+"* Šablony účtů\n"
+"* 科目 模板\n"
+"\n"
+"* Daňové šablony\n"
+"* 税金 模板"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -3039,6 +3051,20 @@ msgid ""
 "of recall defined. You can define different policies for different companies. \n"
 "\n"
 msgstr ""
+"\n"
+"Modul pro automatizaci dopisů pro nezaplacené faktury, s víceúrovňovými upomínkami.\n"
+"================================================= ========================\n"
+"\n"
+"V nabídce můžete definovat několik úrovní upomínek:\n"
+"-------------------------------------------------- -------------\n"
+"Úrovně konfigurace / následování / úrovně následování\n"
+"\n"
+"Jakmile je definován, můžete automaticky vytisknout upomínky každý den jednoduše kliknutím na nabídku:\n"
+"-------------------------------------------------- -------------------------------------------------- -\n"
+"Sledování plateb / Odeslat e-mail a dopisy\n"
+"\n"
+"Bude generovat PDF / posílat e-maily / nastavovat manuální akce podle různých úrovní\n"
+"vzpomínky definované. Můžete definovat různé zásady pro různé společnosti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -3050,6 +3076,11 @@ msgid ""
 "Improve the import of bank statement feature to support the SEPA recommanded Cash Management format (CAMT.053).\n"
 "    "
 msgstr ""
+"\n"
+"Modul pro import CAMT bankovních výpisů.\n"
+"=======================================\n"
+"\n"
+"Vylepšete import funkce výpisu z bankovního účtu a podporujte formát Cash Management doporučený  SEPA (CAMT.053)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -3101,6 +3132,34 @@ msgid ""
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
 msgstr ""
+"\n"
+"Modul pro import bankovních výpisů CODA.\n"
+"======================================\n"
+"\n"
+"Podporovány jsou flat soubory CODA ve formátu V2 z belgických bankovních účtů.\n"
+"-------------------------------------------------- --------------------\n"
+"* Podpora CODA v1.\n"
+"* Podpora CODA v2.2.\n"
+"* Podpora v cizí měně.\n"
+"* Podpora pro všechny typy datových záznamů (0, 1, 2, 3, 4, 8, 9).\n"
+"* Analýza a protokolování všech transakčních kódů a strukturovaných formátů komunikace.\n"
+"* Automatické přiřazení finančního deníku prostřednictvím konfiguračních parametrů CODA.\n"
+"* Podpora více žurnálů na číslo bankovního účtu.\n"
+"* Podpora více výpisů z různých bankovních účtů v jednom souboru CODA.\n"
+"* Podpora bankovních účtů CODA „pouze analyzujících“ (definovaných jako type='info' v záznamech o konfiguraci bankovního účtu CODA).\n"
+"* Vícejazyčná analýza CODA, analýza konfiguračních dat poskytnutých pro EN, NL, FR.\n"
+"\n"
+"Strojově čitelné soubory CODA jsou analyzovány a ukládány v lidsky čitelném formátu ve výpisech CODA Bank. Generují se také bankovní výpisy obsahující podmnožinu informací CODA (pouze ty transakční linie, které jsou potřebné pro vytvoření záznamů finančního účetnictví). Bankovní výpis CODA je objektem jen pro čtení, a proto zůstává spolehlivou reprezentací originálu souboru CODA, zatímco bankovní výpis bude upraven podle požadavků účetních obchodních procesů.\n"
+"\n"
+"Bankovní účty CODA nakonfigurované jako typ „Info“ generují pouze bankovní výpisy CODA.\n"
+"\n"
+"Odstranění jednoho objektu ve zpracování CODA má za následek odstranění přidružených objektů. Odstraněním souboru CODA obsahujícího více výpisů z účtu budou tyto související výpisy také odstraněny.\n"
+"\n"
+"Namísto ručního přizpůsobení vygenerovaných výpisů z účtu můžete CODA znovu importovat po aktualizaci databáze OpenERP informacemi, které chyběly, aby bylo možné automatické odsouhlasení.\n"
+"\n"
+"Poznámka k podpoře CODA V1:\n"
+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+"V některých případech byl transakčnímu kódu, kategorii transakce nebo strukturovanému komunikačnímu kódu dán nový nebo jasnější popis v CODA V2. Popis poskytovaný konfiguračními tabulkami CODA je založen na specifikacích CODA V2.2. V případě potřeby můžete popisy upravit ručně pomocí konfigurační nabídky CODA.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_csv
@@ -3117,6 +3176,17 @@ msgid ""
 "Because of the CSV format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
+"Modul pro import bankovních výpisů CSV.\n"
+"======================================\n"
+"\n"
+"Tento modul umožňuje importovat soubory CSV do aplikace Odoo: jsou analyzovány a uloženy v lidsky čitelném formátu ve formátu\n"
+"Účetnictví \\ Bankovní a hotovost \\ Bankovní výpisy.\n"
+"\n"
+"Důležitá poznámka\n"
+"---------------------------------------------\n"
+"Z důvodu omezení formátu CSV nemůžeme zajistit, aby stejné transakce nebyly importovány několikrát, nebo bylo možné zpracovávat více měn.\n"
+"Kdykoli je to možné, měli byste použít vhodnější formát souboru, například OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -3132,6 +3202,14 @@ msgid ""
 "creation of the Financial Accounting records).\n"
 "    "
 msgstr ""
+"\n"
+"Modul pro import OFX bankovních výpisů.\n"
+"======================================\n"
+"\n"
+"Tento modul umožňuje importovat strojově čitelné soubory OFX v Odoo: jsou analyzovány a ukládány v lidském formátu\n"
+"Účetnictví \\ Bankovní a hotovost \\ Bankovní výpisy.\n"
+"\n"
+"Bankovní výpisy mohou být generovány obsahující podmnožinu informací OFX (pouze ty transakční řádky, které jsou vyžadovány pro vytvoření záznamů finančního účetnictví)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_qif
@@ -3148,6 +3226,17 @@ msgid ""
 "Because of the QIF format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
+"Modul pro import QIF bankovních výpisů.\n"
+"======================================\n"
+"\n"
+"Tento modul umožňuje importovat strojově čitelné soubory QIF do Odoo: jsou analyzovány a ukládány v lidském formátu\n"
+"Účetnictví \\ Bankovní a hotovost \\ Bankovní výpisy.\n"
+"\n"
+"Důležitá poznámka\n"
+"---------------------------------------------\n"
+"Z důvodu omezení formátu QIF nemůžeme zajistit, aby stejné transakce nebyly importovány několikrát nebo schopné zpracovávat více měn.\n"
+"Kdykoli je to možné, měli byste použít vhodnější formát souboru, například OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_expense
@@ -3183,6 +3272,15 @@ msgid ""
 "    - sets up New Zealand taxes.\n"
 "    "
 msgstr ""
+"\n"
+"Novozélandský účetní modul\n"
+"=============================\n"
+"\n"
+"Novozélandské účetní základní grafy a lokalizace.\n"
+"\n"
+"Také:\n"
+"- aktivuje řadu regionálních měn.\n"
+"- stanoví daně z Nového Zélandu."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
@@ -3219,6 +3317,12 @@ msgid ""
 "\n"
 "In future this module will include some payroll rules for ME .\n"
 msgstr ""
+"\n"
+"Arabská lokalizace Odoo pro většinu arabských zemí a Saúdskou Arábii.\n"
+"\n"
+"Toto zpočátku zahrnuje účetní účty USA přeložené do arabštiny.\n"
+"\n"
+"V budoucnu bude tento modul zahrnovat některá pravidla pro výplatu mezd pro ME.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
@@ -3271,6 +3375,11 @@ msgid ""
 "This module modifies the web addon to provide Enterprise design and responsiveness.\n"
 "        "
 msgstr ""
+"\n"
+"Webový klient Odoo Enterprise.\n"
+"===========================\n"
+"\n"
+"Tento modul modifikuje webový doplněk, aby poskytoval podnikový design a schopnost reagovat."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form_editor
@@ -3494,6 +3603,16 @@ msgid ""
 "* Manage your Events and Registrations\n"
 "* Use emails to automatically confirm and send acknowledgments for any event registration\n"
 msgstr ""
+"\n"
+"Organizace a řízení akcí.\n"
+"======================================\n"
+"\n"
+"Modul události umožňuje efektivně organizovat události a všechny související úkoly: plánování, sledování registrace, docházky atd.\n"
+"\n"
+"Klíčové vlastnosti\n"
+"------------\n"
+"* Spravujte své události a registrace\n"
+"* Použijte e-maily k automatickému potvrzení a odeslání potvrzení o registraci jakékoli události\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr
@@ -3529,6 +3648,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Panamský účetní plán  a lokalizace daní.\n"
+"\n"
+"Panamský účetní plán a daně podle současných ustanovení\n"
+"\n"
+"Se spoluprací společnosti\n"
+"- AHMNET CORP http://www.ahmnet.com"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_geolocalize
@@ -3642,6 +3768,12 @@ msgid ""
 "* Different approval flows possible depending on the type of change order\n"
 "\n"
 msgstr ""
+"\n"
+"Řízení životnosti produktu\n"
+"========================\n"
+"\n"
+"* Verzování kusovníku a směrování\n"
+"* Různé schvalovací toky jsou možné v závislosti na typu objednávky změn\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_extended
@@ -3841,6 +3973,17 @@ msgid ""
 "    * Date\n"
 "    "
 msgstr ""
+"\n"
+"Nastavuje výchozí hodnoty analytických účtů.\n"
+"===============================================\n"
+"\n"
+"Umožňuje automaticky vybrat analytické účty na základě kritérií:\n"
+"---------------------------------------------------------------------\n"
+"* Produkt\n"
+"* Partner\n"
+"* Uživatel\n"
+"* Společnost\n"
+"* Datum"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -3856,6 +3999,16 @@ msgid ""
 " * Channel Subscription\n"
 " * Supported document types : PDF, images, YouTube videos and Google Drive documents)\n"
 msgstr ""
+"\n"
+"Sdílejte a publikujte videa, prezentace a dokumenty\n"
+"======================================================\n"
+"\n"
+"* Webová aplikace\n"
+"* Správa kanálů\n"
+"* Filtry a značkování\n"
+"* Statistiky prezentace\n"
+"* Předplatné kanálu\n"
+"* Podporované typy dokumentů: PDF, obrázky, videa na YouTube a dokumenty na Disku Google)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sign
@@ -3924,6 +4077,16 @@ msgid ""
 "\n"
 "Note: Only the admin user is allowed to make those customizations.\n"
 msgstr ""
+"\n"
+"Studio - přizpůsobení Odoo\n"
+"========================\n"
+"\n"
+"Tento doplněk umožňuje uživateli přizpůsobit většinu prvků uživatelského rozhraní jednoduchým a grafickým způsobem. Má dva hlavní rysy:\n"
+"\n"
+"* lze vytvořit novou aplikaci (přidat modul, položku nabídky nejvyšší úrovně a výchozí akci)\n"
+"* lze přizpůsobit existující aplikaci (upravit nabídky, akce, pohledy, překlady, ...)\n"
+"\n"
+"Poznámka: Tyto úpravy může provádět pouze uživatel admin.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey_crm
@@ -3982,6 +4145,11 @@ msgid ""
 "\n"
 "Yodlee interface.\n"
 msgstr ""
+"\n"
+"Synchronizujte své bankovní kanály s Yodlee\n"
+"================================\n"
+"\n"
+"Rozhraní Yodlee.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_synchro
@@ -4081,6 +4249,19 @@ msgid ""
 "If you want to save your employees' time and avoid them to always have coins in their pockets, this module is essential.\n"
 "    "
 msgstr ""
+"\n"
+"Základní modul pro řízení oběda.\n"
+"================================\n"
+"\n"
+"Mnoho společností objednává sendviče, pizzy a další od běžných prodejců, aby jim jejich zaměstnanci nabídli více zařízení.\n"
+"\n"
+"Správa obědů v rámci společnosti však vyžaduje řádnou správu, zejména pokud je důležitý počet zaměstnanců nebo prodejců.\n"
+"\n"
+"Modul „Lunch Order“ byl vyvinut s cílem usnadnit tuto správu, ale také nabídnout zaměstnancům více nástrojů a použitelnosti.\n"
+"\n"
+"Kromě kompletního stravování a správy dodavatelů nabízí tento modul možnost zobrazit varování a poskytuje rychlý výběr objednávek podle preferencí zaměstnance.\n"
+"\n"
+"Pokud chcete ušetřit čas zaměstnanců a zabránit jim, aby měli vždy v kapsách mince, je tento modul nezbytný."
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm
@@ -4134,6 +4315,9 @@ msgid ""
 "The module adds the possibility to display data from Odoo in Google Spreadsheets in real time.\n"
 "=================================================================================================\n"
 msgstr ""
+"\n"
+"Modul přidává možnost zobrazovat data z Odoo v tabulkách Google v reálném čase.\n"
+"================================================== ==============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_calendar
@@ -4336,6 +4520,14 @@ msgid ""
 "* The main taxes used in Domincan Republic\n"
 "* Fiscal position for local "
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní tabulky pro Dominikánskou republiku.\n"
+"================================================== ============================\n"
+"\n"
+"* Graf účtů.\n"
+"* Tabulka daňových kódů pro Dominikánskou republiku\n"
+"* Hlavní daně používané v Dominikánské republice\n"
+"* Fiskální pozice pro místní"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -4347,6 +4539,11 @@ msgid ""
 "Accounting chart and localization for Ecuador.\n"
 "    "
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní tabulky pro Ekvádor v Odoo.\n"
+"================================================== ============================\n"
+"\n"
+"Účetní schéma a lokalizace pro Ekvádor."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -4358,6 +4555,11 @@ msgid ""
 "Greek accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní tabulky pro Řecko.\n"
+"================================================= ================\n"
+"\n"
+"Řecká účetní tabulka a lokalizace."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gt
@@ -4389,6 +4591,11 @@ msgid ""
 "moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
 "and the Lempira currency."
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní tabulky pro Honduras.\n"
+"================================================== ===================\n"
+"\n"
+"Přidejte účetní nomenklaturu pro Honduras. Zahrnuje také daně a měnu Lempira. - Přidá účetní schéma pro Honduras. Zahrnuje také daně a měnu Lempira."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -4433,6 +4640,12 @@ msgid ""
 "L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
 "Seddik au cours du troisième trimestre 2010."
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní tabulky pro Maroko.\n"
+"================================================== ===============\n"
+"\n"
+"Tento modul načítá model standardního plánu marockých účtů a umožňuje generovat účetní výkazy podle marockých standardů (rozvaha, CPC (účty příjmů a výdajů), 6-sloupec obecného zůstatku, kumulativní hlavní kniha ...).\n"
+"Účetní integrace byla ve třetím čtvrtletí roku 2010 ověřena pomocí účetní firmy Seddik."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_coa
@@ -4444,6 +4657,11 @@ msgid ""
 "Install some generic chart of accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Toto je základní modul pro správu obecné účetní tabulky v Odoo.\n"
+"================================================== ============================\n"
+"\n"
+"Nainstalujte si obecné schéma účtů."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -4456,6 +4674,13 @@ msgid ""
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
 msgstr ""
+"\n"
+"Toto je nejnovější lokalizace ve Velké Británii Odoo, která je nezbytná ke spuštění účtování Odoo pro malé a střední podniky ve Velké Británii s:\n"
+"================================================== ==============================================\n"
+"- přehled účtů připravených na CT600\n"
+"- daňová struktura připravená k DPH100\n"
+"- Seznam InfoLogic ve Velké Británii\n"
+"- několik dalších úprav"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement
@@ -4532,6 +4757,27 @@ msgid ""
 "position.\n"
 "    "
 msgstr ""
+"\n"
+"Toto je modul pro správu kanadské účetní tabulky v Odoo.\n"
+"================================================== =========================================\n"
+"\n"
+"Kanadské účetní grafy a lokalizace.\n"
+"\n"
+"Fiskální pozice\n"
+"----------------\n"
+"\n"
+"Při zvažování použití daní je důležitá provincie, kde dochází k dodávce.\n"
+"Proto jsme se rozhodli implementovat nejběžnější případ ve fiskálních pozicích: dodání je odpovědností dodavatele a provádí se u zákazníka.\n"
+"\n"
+"Nějaké příklady:\n"
+"\n"
+"1) Máte zákazníka z jiné provincie a doručujete na jeho místo. Na zákazníka nastavte fiskální pozici do své provincie.\n"
+"\n"
+"2) Máte zákazníka z jiné provincie. Tento zákazník však přichází s vámi kamionem, aby si vyzvedl produkty. Na zákazníka nenastavujte žádnou fiskální pozici.\n"
+"\n"
+"3) Mezinárodní prodejce vám neúčtuje žádnou daň. Daně jsou vybírány na celních poplatcích celním makléřem. Na prodejci nastavte fiskální pozici na mezinárodní.\n"
+"\n"
+"4) Mezinárodní prodejce vám účtuje vaši provinční daň. Jsou registrováni podle vaší pozice."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -4610,6 +4856,15 @@ msgid ""
 "    - General Solutions.\n"
 "    - Trobz\n"
 msgstr ""
+"\n"
+"Toto je modul pro správu účetní tabulky pro Vietnam v Odoo.\n"
+"================================================== ========================\n"
+"\n"
+"Tento modul se vztahuje na společnosti se sídlem ve Vietnamském účetním standardu (VAS) s účtovou osnovou pod oběžníkem č. 200/2014 / TT-BTC\n"
+"\n"
+"**Kredity:**\n"
+"- Obecná řešení.\n"
+"- Trobzi\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn_reports
@@ -4622,6 +4877,13 @@ msgid ""
 "\n"
 "**Credits:** General Solutions.\n"
 msgstr ""
+"\n"
+"Toto je modul pro správu účetních výkazů pro Vietnam v Odoo.\n"
+"================================================== ========================\n"
+"\n"
+"Tento modul se vztahuje na společnosti založené ve Vietnamském účetním standardu (VAS).\n"
+"\n"
+"*Kredity:** Obecná řešení.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating_project
@@ -4638,6 +4900,9 @@ msgid ""
 "=================================================\n"
 "    "
 msgstr ""
+"\n"
+"Tento modul přidá PAD do všech zobrazení projektových formulářů.\n"
+"================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_sale
@@ -4821,6 +5086,11 @@ msgid ""
 "actions(Check in/Check out) performed by them.\n"
 "       "
 msgstr ""
+"\n"
+"Cílem tohoto modulu je spravovat docházky zaměstnanců.\n"
+"==================================================\n"
+"\n"
+"Vede účet o účasti zaměstnanců na základě akcí, které provedli (Check in / Check out)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating_project_issue
@@ -4954,6 +5224,19 @@ msgid ""
 "invoice and send propositions for membership renewal.\n"
 "    "
 msgstr ""
+"\n"
+"Tento modul umožňuje spravovat všechny operace pro správu členství.\n"
+"================================================== ========================\n"
+"\n"
+"Podporuje různé druhy členů:\n"
+"------------------------------------------\n"
+"     * Volný člen\n"
+"     * Přidružený člen (např .: skupina se přihlásila k členství u všech dceřiných společností)\n"
+"     * Placení členové\n"
+"     * Speciální ceny členů\n"
+"\n"
+"Je integrován s prodejem a účetnictvím, což vám umožní automaticky\n"
+"fakturovat a zasílat návrhy na obnovení členství."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_contract
@@ -5114,6 +5397,19 @@ msgid ""
 "    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
 "    "
 msgstr ""
+"\n"
+"Tento modul implementuje účetní tabulku pro oblast OHADA.\n"
+"================================================== =========\n"
+"\n"
+"Umožňuje jakékoli společnosti nebo sdružení spravovat své finanční účetnictví.\n"
+"\n"
+"Země, které používají OHADA, jsou následující:\n"
+"-------------------------------------------\n"
+"Benin, Burkina Faso, Kamerun, Středoafrická republika, Komory, Kongo,\n"
+"\n"
+"Pobřeží slonoviny, Gabun, Guinea, Guinea Bissau, Rovníková Guinea, Mali, Niger,\n"
+"\n"
+"Replika Demokratického Konga, Senegal, Čad, Togo."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -5144,6 +5440,11 @@ msgid ""
 "membership products (schemes).\n"
 "    "
 msgstr ""
+"\n"
+"Tento modul slouží ke konfiguraci modulů souvisejících s asociacemi.\n"
+"===============================================================\n"
+"\n"
+"Nainstaluje profil pro asociace pro správu událostí, registrace, členství, produkty členství (schémata)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -5230,6 +5531,10 @@ msgid ""
 "============================================================================================================= \n"
 "Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.\n"
 msgstr ""
+"\n"
+"Tento modul poskytuje standardní účetní schéma pro Rakousko, které je založeno na šabloně z BMF.gv.at.\n"
+"================================================== ===========================================================\n"
+"Nezapomeňte, že byste ji měli zkontrolovat a upravit se svým účetním, než ji použijete v živém prostředí.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_note_pad
@@ -5768,7 +6073,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%w - Weekday number [0(Sunday),6].\""
-msgstr ""
+msgstr "%w - číslo dne v týdnu [0(Sunday),6].\""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -11354,6 +11659,8 @@ msgid ""
 "Helps you manage your mass mailing for design\n"
 "                professional emails and reuse templates."
 msgstr ""
+"Pomáhá spravovat vaše hromadné zasílání návrhů profesionálních e-mailů a "
+"šablon pro opakované použití."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_payroll
@@ -13691,7 +13998,7 @@ msgstr ""
 #: code:addons/model.py:147 code:addons/model.py:157
 #, python-format
 msgid "Model:"
-msgstr ""
+msgstr "Model:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -14764,12 +15071,12 @@ msgstr "Příjemce platby"
 #: model:ir.module.module,description:base.module_payment
 #: model:ir.module.module,summary:base.module_payment
 msgid "Payment Acquirer Base Module"
-msgstr ""
+msgstr "Základní modul pro odběratele plateb"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_adyen
 msgid "Payment Acquirer: Adyen Implementation"
-msgstr ""
+msgstr "Příjemce plateb: Implementace Adyen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_authorize
@@ -14794,7 +15101,7 @@ msgstr "Příjemce platby: implementace PayPal"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_payumoney
 msgid "Payment Acquirer: PayuMoney Implementation"
-msgstr ""
+msgstr "Příjemce plateb: Implementace PayuMoney"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
@@ -14821,7 +15128,7 @@ msgstr "Platba: Integrace webových stránek"
 #: model:ir.module.module,description:base.module_payment_paypal
 #: model:ir.module.module,shortdesc:base.module_payment_paypal
 msgid "Paypal Payment Acquirer"
-msgstr ""
+msgstr "Příjemce plateb Paypal"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_payroll
@@ -14837,7 +15144,7 @@ msgstr "Mzdové účetnictví"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payumoney
 msgid "PayuMoney Payment Acquirer"
-msgstr ""
+msgstr "Příjemce plateb PayuMoney"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
@@ -15414,7 +15721,7 @@ msgstr "Kontrola kvality"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_mrp
 msgid "Quality Management with MRP"
-msgstr ""
+msgstr "Řízení kvality s MRP"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_questions
@@ -15746,7 +16053,7 @@ msgstr "Zápatí sestavy"
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Model"
-msgstr ""
+msgstr "Model sestavy"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -19204,7 +19511,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat
 msgid "Website Live Chat"
-msgstr ""
+msgstr "Živý chat na webové straně"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_im_livechat

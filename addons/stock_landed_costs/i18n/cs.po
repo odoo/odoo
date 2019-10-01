@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:380
 #, python-format
 msgid " already out"
-msgstr ""
+msgstr "již není skladem"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_account_id
@@ -45,7 +45,7 @@ msgstr "Účetní deník"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr ""
+msgstr "Dodatečné náklady při dodání"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -187,6 +187,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Rovnoměrné: Náklady budou rovnoměrně rozděleny.\n"
+"Podle množství: Cena bude rozdělena podle množství produktu.\n"
+"Podle aktuálních nákladů: Cena bude rozdělena podle aktuálních nákladů na produkt.\n"
+"Podle hmotnosti: Cena bude rozdělena v závislosti na její hmotnosti.\n"
+"Podle objemu: Cena bude rozdělena v závislosti na jejím objemu."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -423,7 +428,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "Úpravy ocenění"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_volume

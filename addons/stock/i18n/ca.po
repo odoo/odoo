@@ -3,21 +3,23 @@
 # * stock
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
 # Bàrbara Partegàs <barbararof@gmail.com>, 2016
-# Eric Antones <eantones@users.noreply.github.com>, 2016
 # Josep Sànchez <papapep@gmx.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Gemma Bochaca <gemma.bochaca@gmail.com>, 2016
+# Eric Antones <eantones@users.noreply.github.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Martin Trigaux, 2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2017
+# Arnau Ros, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
-"PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Gemma Bochaca <gemma.bochaca@gmail.com>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:29+0000\n"
+"Last-Translator: Arnau Ros, 2019\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +35,9 @@ msgid ""
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 msgstr ""
+"\n"
+"\n"
+"%s --> El producte UoM és %s (%s) - Moviment UoM és %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:231
@@ -42,6 +47,9 @@ msgid ""
 "\n"
 "Blocking: %s"
 msgstr ""
+"\n"
+"\n"
+"Bloqueig: %s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
@@ -3211,7 +3219,7 @@ msgstr "Línia inventari"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_line_tree
 msgid "Inventory Lines"
-msgstr ""
+msgstr "Línies d'inventari"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
@@ -3527,7 +3535,7 @@ msgstr "Quant enllaçat"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "List view of lines"
-msgstr ""
+msgstr "Vista de llista de línies"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -5238,7 +5246,7 @@ msgstr "Quantitat"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_qty_done_uom_ordered
 msgid "Quantity Done"
-msgstr ""
+msgstr "Quantitat feta"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -5266,7 +5274,7 @@ msgstr "La quantitat no pot ser negativa."
 #: code:addons/stock/models/stock_move.py:394
 #, python-format
 msgid "Quantity decreased!"
-msgstr ""
+msgstr "Ha disminuït la quantitat"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_qty_done_uom_ordered
@@ -5820,7 +5828,7 @@ msgstr "Cerca inventari"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Search Inventory Lines"
-msgstr ""
+msgstr "Cercar línies d'inventari"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
@@ -7676,7 +7684,7 @@ msgstr "No es pot eliminar ferralla feta."
 #: code:addons/stock/models/stock_inventory.py:103
 #, python-format
 msgid "You cannot delete a validated inventory adjustement."
-msgstr ""
+msgstr "No pots eliminar un ajust d'inventari validat"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:374
@@ -7839,6 +7847,8 @@ msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
+"Encara tens actives normes de reordenació per aquest producte. Si us plau "
+"arxiva o elimina-ho abans. "
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:226
