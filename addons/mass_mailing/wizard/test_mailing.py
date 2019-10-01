@@ -32,6 +32,7 @@ class TestMassMailing(models.TransientModel):
                 'notification': True,
                 'mailing_id': mailing.id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
+                'mail_server_id': mailing.mail_server_id.id,
                 'auto_delete': True,
             }
             mail = self.env['mail.mail'].create(mail_values)
