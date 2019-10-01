@@ -1090,7 +1090,9 @@ class GroupsView(models.Model):
             xml1.append(E.separator(string='User Type', colspan="2", groups='base.group_no_one'))
 
             user_type_field_name = ''
-            for app, kind, gs, category_name in self.get_groups_by_application():
+            sorted_tuples = sorted(self.get_groups_by_application(),
+                                   key=lambda t: t[0].xml_id != 'base.module_category_user_type')
+            for app, kind, gs, category_name in sorted_tuples:  # we process the user type first
                 attrs = {}
                 # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
                 if app.xml_id in ('base.module_category_hidden', 'base.module_category_extra', 'base.module_category_usability'):
@@ -1102,6 +1104,7 @@ class GroupsView(models.Model):
                     # application name with a selection field
                     field_name = name_selection_groups(gs.ids)
                     user_type_field_name = field_name
+                    user_type_readonly = str({'readonly': [(user_type_field_name, '!=', group_employee.id)]})
                     attrs['widget'] = 'radio'
                     attrs['groups'] = 'base.group_no_one'
                     xml1.append(E.field(name=field_name, **attrs))
@@ -1110,6 +1113,7 @@ class GroupsView(models.Model):
                 elif kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(gs.ids)
+                    attrs['attrs'] = user_type_readonly
                     if category_name not in xml_by_category:
                         xml_by_category[category_name] = []
                         xml_by_category[category_name].append(E.newline())
@@ -1120,6 +1124,7 @@ class GroupsView(models.Model):
                     # application separator with boolean fields
                     app_name = app.name or 'Other'
                     xml3.append(E.separator(string=app_name, colspan="4", **attrs))
+                    attrs['attrs'] = user_type_readonly
                     for g in gs:
                         field_name = name_boolean_group(g.id)
                         if g == group_no_one:
