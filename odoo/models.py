@@ -5517,7 +5517,7 @@ Record ids: %(records)s
                 if node:
                     trigger_tree_merge(tree, node)
         if tree:
-            self.sudo()._modified_triggers(tree, create)
+            self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
 
     def _modified_triggers(self, tree, create=False):
         """ Process a tree of field triggers on ``self``. """
@@ -5549,7 +5549,7 @@ Record ids: %(records)s
                 continue
             else:
                 # val is another tree of dependencies
-                model = self.env[key.model_name].with_context(active_test=False)
+                model = self.env[key.model_name]
                 for invf in model._field_inverses[key]:
                     # use an inverse of field without domain
                     if not (invf.type in ('one2many', 'many2many') and invf.domain):
