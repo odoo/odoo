@@ -57,7 +57,7 @@ options.registry.newsletter_popup = mass_mailing_common.extend({
             ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'mail.mass_mailing.list',
                 method: 'read',
-                args: [[parseInt(mailing_list_id)], ['popup_content'], self.options.recordInfo.context],
+                args: [[parseInt(mailing_list_id.val)], ['popup_content'], self.options.recordInfo.context],
             }).then(function (data) {
                 self.$target.find(".o_popup_content_dev").empty();
                 if (data && data[0].popup_content) {
@@ -78,6 +78,13 @@ WysiwygMultizone.include({
         if ($target && $target.length) {
             this.close_dialog();
             $('.o_popup_bounce_small').show();
+            // add hidden copy of input in case of Html field sanitize
+            $target.find('.o_popup_bounce_small input').each(function () {
+                var $copy = $(this).next('span.popup_newsletter_input_conserve');
+                $copy = $copy.length ? $copy : $('<span />').insertAfter(this);
+                $copy.attr($(this).getAttributes());
+                $copy.addClass('d-none popup_newsletter_input_conserve');
+            });
             if (!$target.find('.o_popup_content_dev').length) {
                 $target.find('.o_popup_modal_body').prepend($('<div class="o_popup_content_dev" data-oe-placeholder="' + _t("Type Here ...") + '"></div>'));
             }
