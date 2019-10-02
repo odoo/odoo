@@ -466,7 +466,7 @@ class AssetsBundle(object):
                         fname = os.path.basename(asset.url)
                         url = asset.html_url
                         with self.env.cr.savepoint():
-                            self.env['ir.attachment'].sudo().create(dict(
+                            self.env['ir.attachment'].sudo().with_context(not_force_website_id=True).create(dict(
                                 datas=base64.b64encode(asset.content.encode('utf8')),
                                 mimetype='text/css',
                                 type='binary',

@@ -41,7 +41,7 @@ def geo_find(addr, apikey=False):
     try:
         geo = result['results'][0]['geometry']['location']
         return float(geo['lat']), float(geo['lng'])
-    except (KeyError, ValueError):
+    except (KeyError, ValueError, IndexError):
         return None
 
 

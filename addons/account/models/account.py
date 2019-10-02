@@ -541,7 +541,7 @@ class AccountJournal(models.Model):
         for journal in self:
             if journal.refund_sequence_id and journal.refund_sequence and journal.refund_sequence_number_next:
                 sequence = journal.refund_sequence_id._get_current_sequence()
-                sequence.number_next = journal.refund_sequence_number_next
+                sequence.sudo().number_next = journal.refund_sequence_number_next
 
     @api.one
     @api.constrains('currency_id', 'default_credit_account_id', 'default_debit_account_id')
