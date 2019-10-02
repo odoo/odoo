@@ -506,7 +506,7 @@ class Slide(models.Model):
                 sep = '?' if not extra_params else '&'
                 base_url = base_url + '%s%s' % (sep, urlencode(data))
             req = urllib2.Request(base_url)
-            content = urllib2.urlopen(req).read()
+            content = urllib2.urlopen(req, timeout=3).read()
             if content_type == 'json':
                 result['values'] = json.loads(content)
             elif content_type in ('image', 'pdf'):
