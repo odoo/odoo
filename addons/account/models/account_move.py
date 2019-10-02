@@ -1240,10 +1240,11 @@ class AccountMove(models.Model):
             for line in tax_lines:
                 res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
-                if line.tax_line_id.id not in done_taxes:
+                tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
+                if tax_key_add_base not in done_taxes:
                     # The base should be added ONCE
                     res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
-                    done_taxes.add(line.tax_line_id.id)
+                    done_taxes.add(tax_key_add_base)
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
                 group.name, amounts['amount'],
@@ -1253,6 +1254,15 @@ class AccountMove(models.Model):
                 len(res),
                 group.id
             ) for group, amounts in res]
+
+    @api.model
+    def _get_tax_key_for_group_add_base(self, line):
+        """
+        Useful for _compute_invoice_taxes_by_group
+        must be consistent with _get_tax_grouping_key_from_tax_line
+         @return list
+        """
+        return [line.tax_line_id.id]
 
     @api.depends('date', 'line_ids.debit', 'line_ids.credit', 'line_ids.tax_line_id', 'line_ids.tax_ids', 'line_ids.tag_ids')
     def _compute_tax_lock_date_message(self):
