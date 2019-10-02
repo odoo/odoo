@@ -13,7 +13,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-6" name="div_outgoing_address">
                                     <div t-if="o.move_ids_without_package and o.move_ids_without_package[0].partner_id and o.move_ids_without_package[0].partner_id.id != o.partner_id.id">
                                         <span><strong>Delivery Address:</strong></span>
                                         <div t-field="o.move_ids_without_package[0].partner_id"
@@ -25,7 +25,7 @@
                                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                                     </div>
                                 </div>
-                                <div class="col-5 offset-1">
+                                <div class="col-5 offset-1" name="div_incoming_address">
                                     <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
                                         <span><strong>Vendor Address:</strong></span>
                                     </div>
@@ -45,11 +45,11 @@
                             <br/>
                             <h1 t-field="o.name" class="mt0 float-left"/>
                             <div class="row mt48 mb32">
-                                <div t-if="o.origin" class="col-auto">
+                                <div t-if="o.origin" class="col-auto" name="div_origin">
                                     <strong>Order:</strong>
                                     <p t-field="o.origin"/>
                                 </div>
-                                <div class="col-auto">
+                                <div class="col-auto" name="div_state">
                                     <strong>Status:</strong>
                                     <p t-field="o.state"/>
                                 </div>
@@ -63,22 +63,22 @@
                                 <t t-set="has_serial_number" t-value="o.move_line_ids.filtered(lambda ml: ml.lot_id or ml.lot_name)" groups="stock.group_production_lot"/>
                                 <thead>
                                     <tr>
-                                        <th>
+                                        <th name="th_product">
                                             <strong>Product</strong>
                                         </th>
                                         <th>
                                             <strong>Quantity</strong>
                                         </th>
-                                        <th t-if="o.picking_type_id.code != 'incoming'" align="left" groups="stock.group_stock_multi_locations">
+                                        <th name="th_from" t-if="o.picking_type_id.code != 'incoming'" align="left" groups="stock.group_stock_multi_locations">
                                             <strong>From</strong>
                                         </th>
-                                        <th t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <th name="th_to" t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
                                             <strong>To</strong>
                                         </th>
-                                        <th class="text-center" t-if="has_serial_number">
+                                        <th name="th_serial_number" class="text-center" t-if="has_serial_number">
                                            <strong>Lot/Serial Number</strong>
                                         </th>
-                                        <th class="text-center" t-if="has_barcode">
+                                        <th name="th_barcode" class="text-center" t-if="has_barcode">
                                             <strong>Product Barcode</strong>
                                         </th>
                                     </tr>
@@ -135,15 +135,15 @@
                             <table class="table table-sm" t-if="o.package_level_ids and o.picking_type_entire_packs and o.state in ['assigned', 'done']">
                                 <thead>
                                     <tr>
-                                        <th>Package</th>
-                                        <th t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">From</th>
-                                        <th t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">To</th>
+                                        <th name="th_package">Package</th>
+                                        <th name="th_pko_from" t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">From</th>
+                                        <th name="th_pki_from" t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">To</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr t-foreach="o.package_level_ids.sorted(key=lambda p: p.package_id.name)" t-as="package">
                                         <t t-set="package" t-value="package.with_context(picking_id=o.id)" />
-                                        <td>
+                                        <td name="td_pk_barcode">
                                             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', package.package_id.name, 600, 100)" style="width:300px;height:50px; margin-left: -50px;" alt="Barcode"/><br/>
                                         </td>
                                         <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
@@ -179,7 +179,7 @@
                                       </th>
                                     </tr>
                                     <tr>
-                                        <td style="text-align: center; vertical-align: middle;" class="col-5">
+                                        <td name="td_pt_barcode" style="text-align: center; vertical-align: middle;" class="col-5">
                                             <img t-if="o.barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.barcode, 600, 150)" style="width:100%;height:20%;"/>
                                         </td>
                                     </tr>

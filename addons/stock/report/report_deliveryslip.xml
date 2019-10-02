@@ -18,7 +18,7 @@
                         <span t-field="o.name"/>
                     </h2>
                     <div class="row mt32 mb32">
-                        <div t-if="o.origin" class="col-auto">
+                        <div t-if="o.origin" class="col-auto" name="div_origin">
                             <strong>Order:</strong>
                             <p t-field="o.origin"/>
                         </div>
@@ -35,8 +35,8 @@
                     <table class="table table-sm" t-if="o.state!='done'" name="stock_move_table">
                         <thead>
                             <tr>
-                                <th><strong>Product</strong></th>
-                                <th><strong>Quantity</strong></th>
+                                <th name="th_sm_product"><strong>Product</strong></th>
+                                <th name="th_sm_quantity"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,11 +62,11 @@
                         <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" />
                         <thead>
                             <tr>
-                                <th><strong>Product</strong></th>
+                                <th name="th_sml_product"><strong>Product</strong></th>
                                 <th name="lot_serial" t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">
                                     Lot/Serial Number
                                 </th>
-                                <th class="text-center"><strong>Quantity</strong></th>
+                                <th name="th_sml_quantity" class="text-center"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
                         <tbody>
