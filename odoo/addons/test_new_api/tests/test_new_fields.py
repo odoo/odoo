@@ -1583,6 +1583,12 @@ class TestX2many(common.TransactionCase):
         self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
         self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
 
+        # check recomputation of inactive records
+        parent.write({'children_ids': [(6, 0, child4.ids)]})
+        self.assertTrue(child4.parent_active)
+        parent.active = False
+        self.assertFalse(child4.parent_active)
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_new_api.multi.tag']
