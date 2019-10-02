@@ -99,7 +99,7 @@ class Employee(models.Model):
                     SELECT holiday_status_id, number_of_days,
                         state, employee_id
                     FROM hr_leave_allocation
-                    UNION
+                    UNION ALL
                     SELECT holiday_status_id, (number_of_days * -1) as number_of_days,
                         state, employee_id
                     FROM hr_leave
