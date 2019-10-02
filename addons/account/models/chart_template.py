@@ -232,9 +232,12 @@ class AccountChartTemplate(models.Model):
         })
 
         # Set default PoS receivable account in company
-        if acc_template_ref.get(self.default_pos_receivable_account_id.id):
+        default_pos_receivable = self.default_pos_receivable_account_id.id
+        if not default_pos_receivable and self.parent_id:
+            default_pos_receivable = self.parent_id.default_pos_receivable_account_id.id
+        if acc_template_ref.get(default_pos_receivable):
             company.write({
-                'account_default_pos_receivable_account_id': acc_template_ref[self.default_pos_receivable_account_id.id]
+                'account_default_pos_receivable_account_id': acc_template_ref[default_pos_receivable]
             })
 
         # Set the transfer account on the company
