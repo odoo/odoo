@@ -215,8 +215,13 @@ class AccountInvoice(models.Model):
             if payment_currency_id and payment_currency_id == self.currency_id:
                 amount_to_show = amount_currency
             else:
+<<<<<<< HEAD
                 currency = payment.company_id.currency_id
                 amount_to_show = currency._convert(amount, self.currency_id, payment.company_id, payment.date or fields.Date.today())
+=======
+                amount_to_show = payment.company_id.currency_id.with_context(date=payment.date).compute(amount,
+                                                                                                        self.currency_id)
+>>>>>>> 05f0df48138... temp
             if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
                 continue
             payment_ref = payment.move_id.name
