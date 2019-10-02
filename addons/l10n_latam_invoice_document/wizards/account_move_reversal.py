@@ -45,7 +45,6 @@ class AccountMoveReversal(models.TransientModel):
                 'partner_id': self.move_id.partner_id.id,
                 'company_id': self.move_id.company_id.id,
             })
-            refund._compute_l10n_latam_documents()
             self.l10n_latam_document_type_id = refund.l10n_latam_document_type_id
             return {'domain': {
                 'l10n_latam_document_type_id': [('id', 'in', refund.l10n_latam_available_document_type_ids.ids)]}}
