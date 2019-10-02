@@ -140,6 +140,20 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEqual(invoice3.amount_total, 8 * self.product_map['serv_order'].list_price, 'Sale: second invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything (including the upsel) should be "invoiced"')
 
+    def test_sale_sequence(self):
+        self.env['ir.sequence'].search([
+            ('code', '=', 'sale.order'),
+        ]).write({
+            'use_date_range': True, 'prefix': 'SO/%(range_year)s/',
+        })
+        sale_order = self.sale_order.copy({'date_order': '2019-01-01'})
+        self.assertTrue(sale_order.name.startswith('SO/2019/'))
+        sale_order = self.sale_order.copy({'date_order': '2020-01-01'})
+        self.assertTrue(sale_order.name.startswith('SO/2020/'))
+        # In EU/BXL tz, this is actually already 01/01/2020
+        sale_order = self.sale_order.with_context(tz='Europe/Brussels').copy({'date_order': '2019-12-31 23:30:00'})
+        self.assertTrue(sale_order.name.startswith('SO/2020/'))
+
     def test_unlink_cancel(self):
         """ Test deleting and cancelling sales orders depending on their state and on the user's rights """
         # SO in state 'draft' can be deleted
