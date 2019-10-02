@@ -309,7 +309,6 @@ class PosSession(models.Model):
             'journal_id': journal.id,
             'date': fields.Date.context_today(self),
             'ref': self.name,
-            'name': journal.sequence_id.next_by_id()
         })
         self.write({'move_id': account_move.id})
 
