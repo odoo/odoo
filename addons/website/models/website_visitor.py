@@ -175,7 +175,8 @@ class WebsiteVisitor(models.Model):
         if access_token:
             visitor = Visitor.with_context(active_test=False).search([('access_token', '=', access_token)])
 
-        if not request.env.user._is_public():
+        # Check that the user is logged in
+        if request.env.user.id != request.website.user_id.id:
             partner_id = request.env.user.partner_id
             if not visitor or visitor.partner_id != partner_id:
                 # Partner and no cookie or wrong cookie
