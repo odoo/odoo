@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime
 from dateutil import relativedelta
 from itertools import groupby
@@ -257,18 +258,27 @@ class StockMove(models.Model):
         """
         MoveLine = self.env['stock.move.line']
         ProductUom = self.env['product.uom']
+        
+        move_lines = self.env['stock.move.line']
+        for move in self:
+            move_lines |= move._get_move_lines()
+
+        data = MoveLine.read_group(
+            [('id', 'in', move_lines.ids)],
+            ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
+            lazy=False
+        )
+
+        rec = defaultdict(list)
+        for d in data:
+            rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
+        
         for move in self:
             uom = move.product_uom
-            move_lines = MoveLine.read_group(
-                [('id', 'in', move._get_move_lines().ids)],
-                ['product_uom_id', 'qty_done'],
-                ['product_uom_id']
+            move.quantity_done = sum(
+                ProductUom.browse(line_uom_id)._compute_quantity(qty, uom, round=False)
+                for line_uom_id, qty in rec.get(move.id, [])
             )
-            quantity_done = sum(
-                ProductUom.browse(vals['product_uom_id'][0])._compute_quantity(vals['qty_done'], uom, round=False)
-                for vals in move_lines
-            )
-            move.quantity_done = quantity_done
 
     def _quantity_done_set(self):
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`
