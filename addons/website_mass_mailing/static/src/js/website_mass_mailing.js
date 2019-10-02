@@ -137,11 +137,15 @@ sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
     show_banner: function () {
         var self = this;
         if (!utils.get_cookie("newsletter-popup-"+ self.$target.data('list-id')) && self.$target) {
-           $('#o_newsletter_popup:first').modal('show').css({
+            $('#o_newsletter_popup:first').modal('show').css({
                 'margin-top': '70px',
                 'position': 'fixed'
-            });
-             document.cookie = "newsletter-popup-"+ self.$target.data('list-id') +"=" + true + ";path=/";
+            }).find('.o_popup_bounce_small span.popup_newsletter_input_conserve').each(function () {
+                if ($(this).prev('input').length === 0) {
+                    $(this).before($('<input>').attr($(this).getAttributes()).removeClass('d-none popup_newsletter_input_conserve'));
+                }
+            }).remove();
+            document.cookie = "newsletter-popup-"+ self.$target.data('list-id') +"=" + true + ";path=/";
         }
     }
 });
