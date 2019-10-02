@@ -3866,7 +3866,7 @@ Record ids: %(records)s
         if prefix:
             parent_ids = {int(label) for label in prefix.split('/')[:-1]}
             if not parent_ids.isdisjoint(self._ids):
-                raise UserError(_("Recursivity Detected."))
+                raise UserError(_("Recursion Detected."))
 
         # update parent_path of all records and their descendants
         query = """
