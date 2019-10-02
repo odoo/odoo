@@ -2912,17 +2912,25 @@ class TestReconciliationInvoiceWidgets(TestReconciliation):
         self.inv2.assign_outstanding_credit(pay1_rec.id)
 
         # Reconcile From F003 document F002
+        refund1_residual = self.refund1.residual
         refund1_outstanding = self._get_outstanding_or_assigned_amount(self.refund1, inv2_rec)
         self.assertEqual(
             refund1_outstanding, inv2_rec.amount_residual,  # This is in EUR (company currency) since refund1 is in EUR
             'Amount in Payment Widget for Refund 1 is not the same as the one taken away in the residual')
 
         self.inv2.assign_outstanding_credit(refund1_rec.id)
+        self.assertEqual(self.refund1.state, 'paid')
 
         refund1_payment = self._get_outstanding_or_assigned_amount(self.refund1, inv2_rec, False)
         self.assertEqual(
             refund1_outstanding, refund1_payment,
             'Amount in Outstanding Widget shall be equal to amount in Payment Widget for Refund 1')
+
+        # /!\ NOTE: for transitive property: refund1_outstanding = refund1_payment = refund1_residual
+        # As refund1 was fully paid. Then Amount in Payment Widget shall be equal to last residual
+        self.assertEqual(
+            refund1_payment, refund1_residual,
+            'Amount in Payment Widget shall be equal to amount that was paid for Refund 1')
 
         # /!\ NOTE: Refund has changed. The only way for this to happen is that
         # `assign_outstanding_credit` method is used. Nor `reconcile()` neither
