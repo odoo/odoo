@@ -211,7 +211,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_assignation_email(self):
         self.user_test.write({'notification_type': 'email'})
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=56, emp=59):  # com runbot: 56 - 59 // test_mail only: 56 - 59
+        with self.assertQueryCount(__system__=57, emp=61):  # com runbot: 57 - 61 // test_mail only: 57 - 61
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -220,7 +220,7 @@ class TestAdvMailPerformance(TransactionCase):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=34, emp=40):  # test_mail only: 34 - 40
+        with self.assertQueryCount(__system__=37, emp=43):  # test_mail only: 37 - 43
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -485,7 +485,7 @@ class TestHeavyMailPerformance(TransactionCase):
             'user_id': self.env.uid,
         })
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id)
-        with self.assertQueryCount(__system__=56, emp=58):  # com runbot: 55 - 58 // test_mail only: 55 - 58
+        with self.assertQueryCount(__system__=56, emp=59):  # com runbot: 56 - 59 // test_mail only: 56 - 59
             rec.write({'user_id': self.user_portal.id})
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
@@ -505,7 +505,7 @@ class TestHeavyMailPerformance(TransactionCase):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(__system__=147, emp=155):  # com runbot: 147 - 155 // test_mail only: 147 - 155
+        with self.assertQueryCount(__system__=147, emp=156):  # com runbot: 147 - 156 // test_mail only: 147 - 156
             rec = self.env['mail.test.full'].create({
                 'name': 'Test',
                 'umbrella_id': umbrella_id,
