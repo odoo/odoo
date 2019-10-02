@@ -46,3 +46,12 @@ class AccountMove(models.Model):
             'quantity': base_line.quantity,
         })
         return res
+
+    @api.model
+    def _get_tax_key_for_group_add_base(self, line):
+        tax_key = super(AccountMove, self)._get_tax_key_for_group_add_base(line)
+
+        tax_key += [
+            line.product_id.id,
+        ]
+        return tax_key
