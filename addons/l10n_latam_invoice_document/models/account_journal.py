@@ -31,3 +31,10 @@ class AccountJournal(models.Model):
             if rec.env['account.move'].search([('journal_id', '=', rec.id), ('state', '!=', 'draft')]):
                 raise ValidationError(_(
                     'You can not modify the field "Use Documents?" if there are validated invoices in this journal!'))
+
+    @api.onchange('type', 'l10n_latam_use_documents')
+    def _onchange_type(self):
+        res = super()._onchange_type()
+        if self.l10n_latam_use_documents:
+            self.refund_sequence = False
+        return res
