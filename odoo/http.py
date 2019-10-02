@@ -589,7 +589,7 @@ class JsonRequest(WebRequest):
         self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
+
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             def handler():
@@ -607,7 +607,7 @@ class JsonRequest(WebRequest):
             # jsonp 2 steps step2 GET: run and return result
             request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
         else:
-            # regular jsonrpc2
+            # regular jsonrpc2 or pure json
             request = self.httprequest.get_data().decode(self.httprequest.charset)
 
         # Read POST content or POST Form Data named "request"
@@ -620,6 +620,9 @@ class JsonRequest(WebRequest):
 
         self.params = dict(self.jsonrequest.get("params", {}))
         self.context = self.params.pop('context', dict(self.session.context))
+        if not jsonp and self.jsonrequest.get("jsonrpc") is None and not self.params:
+            # Allow non JSON-RPC controllers to handle application/json body as kwargs
+            self.params = self.jsonrequest
 
     def _json_response(self, result=None, error=None):
 
