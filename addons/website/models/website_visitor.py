@@ -164,7 +164,10 @@ class WebsiteVisitor(models.Model):
             It is possible that the partner has changed or has disconnected.
             In that case the cookie is still referencing the old visitor and need to be replaced
             with the one of the visitor returned !!!. """
-        if not request:
+
+        # This function can be called in json with mobile app.
+        # In case of mobile app, no uid is set on the jsonRequest env.
+        if not request or not request.env.uid:
             return None
         Visitor = self.env['website.visitor'].sudo()
         visitor = Visitor
