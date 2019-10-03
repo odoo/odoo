@@ -114,7 +114,7 @@ class AccountMove(models.Model):
                 internal_ref = invoice_ref.zfill(l10n_ch_ISR_NUMBER_LENGTH - l10n_ch_ISR_NUMBER_ISSUER_LENGTH - 1) # -1 for mod10r check character
 
                 isr_number = mod10r(invoice_issuer_ref + internal_ref)
-                isr_number_spaced = _space_isr_number(record._get_isrb_id_number)
+                isr_number_spaced = _space_isr_number(isr_number)
             record.l10n_ch_isr_number = isr_number
             record.l10n_ch_isr_number_spaced = isr_number_spaced
 
