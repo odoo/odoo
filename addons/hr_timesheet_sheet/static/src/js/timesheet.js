@@ -17,7 +17,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         "click .oe_timesheet_weekly_account a": "go_to",
     },
     ignore_fields: function() {
-        return ['line_id'];
+        return ['line_id','tag_ids'];
     },
     init: function() {
         this._super.apply(this, arguments);
