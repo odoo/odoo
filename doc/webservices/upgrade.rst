@@ -55,7 +55,7 @@ The ``create`` method
 
     :param str contract: (required) your enterprise contract reference
     :param str email: (required) your email address
-    :param str target: (required) the Odoo version you want to upgrade to. Valid choices: 10.0, 11.0, 12.0
+    :param str target: (required) the Odoo version you want to upgrade to. Valid choices: 11.0, 12.0, 13.0
     :param str aim: (required) the purpose of your upgrade database request. Valid choices: test, production.
     :param str filename: (required) a purely informative name for you database dump file
     :param str timezone: (optional) the timezone used by your server. Only for Odoo source version < 6.1
@@ -96,9 +96,9 @@ See a sample output aside.
               "failures": [
                 {
                   "expected": [
-                    "10.0",
                     "11.0",
                     "12.0",
+                    "13.0",
                   ],
                   "message": "Invalid value \"5.0\"",
                   "reason": "TARGET:INVALID",
