@@ -522,7 +522,7 @@ class Slide(models.Model):
     def _fetch_data(self, base_url, data, content_type=False, extra_params=False):
         result = {'values': dict()}
         try:
-            response = requests.get(base_url, params=data)
+            response = requests.get(base_url, timeout=3, params=data)
             response.raise_for_status()
             if content_type == 'json':
                 result['values'] = response.json()
