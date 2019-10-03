@@ -3396,6 +3396,14 @@ Record ids: %(records)s
         for fname in vals:
             field = self._fields[fname]
             if field.inverse:
+                if field.type in ('one2many', 'many2many'):
+                    # The written value is a list of commands that must applied
+                    # on the field's current value. Because the field is
+                    # protected while being written, the field's current value
+                    # will not be computed and default to an empty recordset. So
+                    # make sure the field's value is in cache before writing, in
+                    # order to avoid an inconsistent update.
+                    self[fname]
                 determine_inverses[field.inverse].append(field)
                 # DLE P150: `test_cancel_propagation`, `test_manufacturing_3_steps`, `test_manufacturing_flow`
                 # TODO: check whether still necessary
@@ -3403,7 +3411,17 @@ Record ids: %(records)s
             if field.relational or self._field_inverses[field]:
                 relational_names.append(fname)
             if field.compute and not field.readonly:
-                protected.update(self._field_computed.get(field, [field]))
+                if field.store or field.type not in ('one2many', 'many2many'):
+                    # Protect the field from being recomputed while being
+                    # inversed. In the case of non-stored x2many fields, the
+                    # field's value may contain unexpeced new records (created
+                    # by command 0). Those new records are necessary for
+                    # inversing the field, but should no longer appear if the
+                    # field is recomputed afterwards. Not protecting the field
+                    # will automatically invalidate the field from the cache,
+                    # forcing its value to be recomputed once dependencies are
+                    # up-to-date.
+                    protected.update(self._field_computed.get(field, [field]))
             if fname == 'company_id' or (field.relational and field.check_company):
                 check_company = True
 
