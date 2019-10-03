@@ -248,8 +248,8 @@ exports.PosModel = Backbone.Model.extend({
               }).then(function (taxes) {
                   _.each(taxes, function (tax) {
                       self.taxes_by_id[tax.id].amount = tax.amount;
-                  resolve();
                   });
+                  resolve();
               });
             });
         },
