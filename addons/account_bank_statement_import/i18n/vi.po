@@ -37,7 +37,7 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr "%d giao dịch đã được nhập rồi và đã bị bỏ qua"
+msgstr "%d giao dịch đã được nhập/import rồi và đã bị bỏ qua"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
@@ -63,7 +63,7 @@ msgstr "Số tài khoản"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type_control_ids
 msgid "Account Types Allowed"
-msgstr "Kiểu tài khoản cho phép"
+msgstr "Kiểu tài khoản được phép"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__account_control_ids
@@ -108,7 +108,7 @@ msgstr "Alias Name"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_domain
 msgid "Alias domain"
-msgstr "Alias domain"
+msgstr "Miền bí danh"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
@@ -146,7 +146,7 @@ msgstr "Tài khoản ngân hàng"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
 msgid "Bank Feeds"
-msgstr "Phí ngân hàng"
+msgstr "Nguồn Dữ liệu Ngân hàng"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -156,7 +156,7 @@ msgstr "Tên Sổ nhật ký Ngân hàng"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Giao dịch trên sổ phụ ngân hàng"
+msgstr "Cho tiết Sao kê ngân hàng"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
@@ -186,7 +186,7 @@ msgid ""
 " credit notes made from this journal"
 msgstr ""
 "Chọn ô này nếu bạn không muốn chia sẻ chung định dạng đánh mã của hóa đơn và"
-" khoản số dư được tạo trong nhật kí này"
+" hoá đơn hoàn tiền được tạo trong nhật kí này"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__color
@@ -233,7 +233,7 @@ msgstr "Được tạo bởi"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__create_date
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__create_date
 msgid "Created on"
-msgstr "Thời điểm tạo"
+msgstr "Được tạo vào"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
@@ -258,7 +258,7 @@ msgstr "Mã hóa đơn giảm dùng riêng"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
 msgid "Default Credit Account"
-msgstr "Tài khoản ghi có mặc định"
+msgstr "Tài khoản Ghi có Mặc định"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_debit_account_id
@@ -279,7 +279,7 @@ msgstr "Tên hiển thị"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
 msgid "Entry Sequence"
-msgstr "Mã bút toán"
+msgstr "Trình tự Bút toán"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__filename
@@ -467,13 +467,13 @@ msgstr "Sửa lần cuối"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__write_uid
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật gần đây bởi"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__write_date
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật gần đây vào"
+msgstr "Cập nhật lần cuối"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
@@ -576,7 +576,7 @@ msgstr "Số tin chưa đọc"
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "OK"
-msgstr "OK"
+msgstr "Đồng ý"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at
@@ -611,10 +611,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Chọn 'Bán hàng' đối với sổ nhật ký ghi nhận hạch toán Hoá đơn khách hàng.\n"
+"Chọn 'Bán hàng' đối với sổ nhật ký ghi nhận hạch toán hoá đơn khách hàng.\n"
 "Chọn 'Mua hàng' đối với sổ nhật ký ghi nhận hạch toán hoá đơn từ nhà cung cấp.\n"
 "Chọn 'Ngân hàng' hoặc 'Tiền mặt' đối với các số nhật ký ghi nhận hạch toán các khoản thanh toán.\n"
-"Chọn 'Khác' đối với các sổ nhật ký dành cho các hoạt động khác."
+"Chọn 'Khác' đối với các sổ nhật ký dành cho các hoạt động khác.\"\n"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -639,12 +639,12 @@ msgstr "Chọn không kích hoạt để ẩn đi sổ nhật ký nhằm tránh 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
 msgid "Short Code"
-msgstr "Mã viết tắt"
+msgstr "Mã"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr "Hiển thị nhật kí trên bảng tin"
+msgstr "Hiển thị ở Bảng thông tin"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
@@ -687,13 +687,13 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
 msgid "The currency used to enter statement"
-msgstr "Đơn vị tiền được sử dụng để nhập bảng kê khai"
+msgstr "Tiền tệ được sử dụng để nhập bảng kê khai"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
 msgid "The journal entries of this journal will be named using this prefix."
 msgstr ""
-"Bút toán của sổ nhật kí này sẽ được đặt tên dựa tên theo chữ bắt đầu của nó."
+"Các bút toán sổ nhật ký của sổ nhật ký này sẽ được đặt tên với tiền tố này."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
@@ -738,7 +738,7 @@ msgstr "Tập tin này không chứa bất kỳ giao dịch nào."
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
 msgid "Type"
-msgstr "Loại"
+msgstr "Kiểu"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_decoration
@@ -769,7 +769,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "Được dùng để sắp xếp sổ nhật kí trong dạng xem Bảng thông tin"
+msgstr "Được sử dụng để sắp xếp Sổ nhật ký ở giao diện Bảng thông tin"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
@@ -802,8 +802,7 @@ msgstr "Lịch sử thông tin liên lạc website"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
-"Cái này dùng để cho bút toán có hiển thị trên Bảng thông tin hay không"
+msgstr "Sổ nhật ký này có nên hiển thị ở bảng thông tin hay không"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
