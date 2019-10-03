@@ -278,7 +278,12 @@
             <field name="name">My Expenses</field>
             <field name="res_model">hr.expense</field>
             <field name="view_mode">tree,kanban,form,graph,pivot,activity</field>
+<<<<<<< HEAD
             <field name="search_view_id" ref="hr_expense_view_search"/>
+=======
+            <field name="search_view_id" ref="view_hr_expense_filter"/>
+            <field name="domain">[]</field>
+>>>>>>> 428c8ed5b34... temp
             <field name="context">{'search_default_my_expenses': 1, 'search_default_no_report': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
