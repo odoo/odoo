@@ -1688,7 +1688,7 @@
                 <div class="carousel-inner h-100">
                     <t t-foreach="product_images" t-as="product_image">
                         <div t-attf-class="carousel-item h-100#{' active' if product_image_first else ''}">
-                            <div t-field="product_image.image" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_be_zoomed and "image_original"}'/>
+                            <div t-field="product_image.image" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_be_zoomed and "image_original", "itemprop": "image"}'/>
                         </div>
                     </t>
                 </div>
