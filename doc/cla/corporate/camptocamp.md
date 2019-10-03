@@ -39,3 +39,4 @@ Frédéric Junod frederic.junod@camptocamp.com https://github.com/fredj
 Thomas Nowicki thomas.nowicki@camptocamp.com https://github.com/Tonow-c2c
 Stéphane Mangin stephane.mangin@camptocamp.com https://github.com/StephaneMangin
 Anna Janiszewska anna.janiszewska@camptocamp.com https://github.com/ajaniszewska-dev
+Sébastien Alix sebastien.alix@camptocamp.com https://github.com/sebalix
