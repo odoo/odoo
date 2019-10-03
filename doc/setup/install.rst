@@ -110,7 +110,7 @@ Linux
 Debian/Ubuntu
 '''''''''''''
 
-Odoo 12.0 'deb' package currently supports `Debian Stretch`_, `Ubuntu 18.04`_ or above.
+Odoo 13.0 'deb' package currently supports `Debian Buster`_, `Ubuntu 18.04`_ or above.
 
 Prepare
 ^^^^^^^
@@ -143,7 +143,7 @@ following commands as root:
 .. code-block:: console
 
     # wget -O - https://nightly.odoo.com/odoo.key | apt-key add -
-    # echo "deb http://nightly.odoo.com/12.0/nightly/deb/ ./" >> /etc/apt/sources.list.d/odoo.list
+    # echo "deb http://nightly.odoo.com/13.0/nightly/deb/ ./" >> /etc/apt/sources.list.d/odoo.list
     # apt-get update && apt-get install odoo
 
 You can then use the usual ``apt-get upgrade`` command to keep your installation up-to-date.
@@ -176,7 +176,7 @@ Or ``dpkg``:
 This will install Odoo as a service, create the necessary PostgreSQL_ user
 and automatically start the server.
 
-.. warning:: The python3-xlwt Debian package does not exists in Debian Stretch nor Ubuntu 18.04.
+.. warning:: The python3-xlwt Debian package does not exists in Debian Buster nor Ubuntu 18.04.
              This python module is needed to export into xls format.
 
 If you need the feature, you can install it manually.
@@ -200,9 +200,9 @@ If you need this feature, you can install the python module like this:
 Fedora
 ''''''
 
-Odoo 12.0 'rpm' package supports Fedora 26.
+Odoo 13.0 'rpm' package supports Fedora 26.
 As of 2017, CentOS does not have the minimum Python requirements (3.5) for
-Odoo 12.0.
+Odoo 13.0.
 
 Prepare
 ^^^^^^^
@@ -234,7 +234,7 @@ commands:
 
 .. code-block:: console
 
-    $ sudo dnf config-manager --add-repo=https://nightly.odoo.com/12.0/nightly/rpm/odoo.repo
+    $ sudo dnf config-manager --add-repo=https://nightly.odoo.com/13.0/nightly/rpm/odoo.repo
     $ sudo dnf install -y odoo
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
@@ -252,7 +252,7 @@ Once downloaded, the package can be installed using the 'dnf' package manager:
 
 .. code-block:: console
 
-    $ sudo dnf localinstall odoo_12.0.latest.noarch.rpm
+    $ sudo dnf localinstall odoo_13.0.latest.noarch.rpm
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
 
@@ -734,7 +734,7 @@ Docker
 The full documentation on how to use Odoo with Docker can be found on the
 official Odoo `docker image <https://registry.hub.docker.com/_/odoo/>`_ page.
 
-.. _Debian Stretch: https://www.debian.org/releases/stretch/
+.. _Debian Buster: https://www.debian.org/releases/buster/
 .. _demo: https://demo.odoo.com
 .. _docker: https://www.docker.com
 .. _download: https://www.odoo.com/page/download
