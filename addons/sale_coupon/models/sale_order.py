@@ -53,8 +53,8 @@ class SaleOrder(models.Model):
 
     def action_cancel(self):
         res = super(SaleOrder, self).action_cancel()
-        self.generated_coupon_ids.write({'state': 'expired'})
-        self.applied_coupon_ids.write({'state': 'new'})
+        self.mapped('generated_coupon_ids').write({'state': 'expired'})
+        self.mapped('applied_coupon_ids').write({'state': 'new'})
         return res
 
     def action_draft(self):
