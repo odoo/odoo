@@ -71,6 +71,7 @@ var LinkDialog = Dialog.extend({
         if (this.data.url) {
             var match = /mailto:(.+)/.exec(this.data.url);
             this.$('input[name="url"]').val(match ? match[1] : this.data.url);
+            this._onURLInput();
         }
 
         // Hide the duplicate color buttons (most of the times, primary = alpha
@@ -184,6 +185,8 @@ var LinkDialog = Dialog.extend({
 
         if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {
             url = ('mailto:' + url);
+        } else if (url.indexOf(location.origin) === 0 && this.$('#o_link_dialog_url_strip_domain').prop("checked")) {
+            url = url.slice(location.origin.length);
         }
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;
@@ -211,8 +214,10 @@ var LinkDialog = Dialog.extend({
     _onURLInput: function () {
         var $linkUrlInput = this.$('#o_link_dialog_url_input');
         $linkUrlInput.closest('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
-        var isLink = $linkUrlInput.val().indexOf('@') < 0;
+        let value = $linkUrlInput.val();
+        let isLink = value.indexOf('@') < 0;
         this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
+        this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
     },
 });
 
