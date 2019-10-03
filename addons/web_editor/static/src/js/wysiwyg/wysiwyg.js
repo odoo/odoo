@@ -207,7 +207,8 @@ var Wysiwyg = Widget.extend({
         $editable.find('a.o_image, span.fa, i.fa').html('');
         $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-original-title');
 
-        return $editable.html() || $editable.val();
+        var method = $editable.is('textarea') ? 'val' : 'html';
+        return $editable[method]();
     },
     /**
      * Save the content in the target
@@ -241,7 +242,9 @@ var Wysiwyg = Widget.extend({
         this._summernote.invoke('HistoryPlugin.clear');
         this._summernote.invoke('editor.hidePopover');
         this._summernote.invoke('editor.clearTarget');
-        var $editable = this.getEditable().html(value + '');
+        var $editable = this.getEditable();
+        var method = $editable.is('textarea') ? 'val' : 'html';
+        $editable[method](value + '');
         this._summernote.invoke('UnbreakablePlugin.secureArea');
         if (!options || options.notifyChange !== false) {
             $editable.change();

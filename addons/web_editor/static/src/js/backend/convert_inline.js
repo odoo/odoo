@@ -417,12 +417,13 @@ FieldHtml.include({
     _toInline: function () {
         var $editable = this.wysiwyg.getEditable();
         var html = this.wysiwyg.getValue();
-        $editable.html(html);
+        var method = $editable.is('textarea') ? 'val' : 'html';
+        $editable[method](html);
 
         attachmentThumbnailToLinkImg($editable);
         fontToImg($editable);
         classToStyle($editable);
-        this.wysiwyg.setValue($editable.html(), {
+        this.wysiwyg.setValue($editable[method](), {
             notifyChange: false,
         });
     },
@@ -434,12 +435,13 @@ FieldHtml.include({
     _fromInline: function () {
         var $editable = this.wysiwyg.getEditable();
         var html = this.wysiwyg.getValue();
-        $editable.html(html);
+        var method = $editable.is('textarea') ? 'val' : 'html';
+        $editable[method](html);
 
         styleToClass($editable);
         imgToFont($editable);
         linkImgToAttachmentThumbnail($editable);
-        this.wysiwyg.setValue($editable.html(), {
+        this.wysiwyg.setValue($editable[method](), {
             notifyChange: false,
         });
     },
