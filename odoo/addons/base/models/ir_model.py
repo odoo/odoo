@@ -115,6 +115,7 @@ class IrModel(models.Model):
 
     @api.depends()
     def _inherited_models(self):
+        self.inherited_model_ids = False
         for model in self:
             parent_names = list(self.env[model.model]._inherits)
             if parent_names:
@@ -137,6 +138,7 @@ class IrModel(models.Model):
     @api.depends()
     def _compute_count(self):
         cr = self.env.cr
+        self.count = 0
         for model in self:
             records = self.env[model.model]
             if not records._abstract:
