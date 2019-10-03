@@ -157,6 +157,62 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Xin chào ${partner.name},<br/>\n"
+"            Vui lòng dành thời gian để đánh giá về dịch vụ của chúng tôi liên quan đến tác vụ \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                được phân công cho <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Hãy cho chúng tôi biết cảm nhận của bạn về dịch vụ của chúng tôi</strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(click on one of these smileys)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/10\">\n"
+"                                    <img alt=\"Hài lòng\" src=\"/rating/static/src/img/rating_10.png\" title=\"Hài lòng\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/5\">\n"
+"                                    <img alt=\"Không Hài lòng\" src=\"/rating/static/src/img/rating_5.png\" title=\"Không Hài lòng\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/1\">\n"
+"                                    <img alt=\"Rất thất vọng\" src=\"/rating/static/src/img/rating_1.png\" title=\"Rất thất vọng\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Chúng tôi hoan nghênh đánh giá của bạn. Điều đó giúp chúng tôi tiếp tục nâng cao chất lượng.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Khảo sát khách hàng này được gửi cho bạn vì tác vụ của bạn đã được chuyển sang giai đoạn <b>${object.stage_id.name}</b></span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Khảo sát khách hàng này được gửi <b>${object.project_id.rating_status_period}</b> ngay khi tác vụ được chuyển sang giai đoạn <b>${object.stage_id.name}</b>.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -171,6 +227,15 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Dear ${object.partner_id.name or 'customer'},<br/>\n"
+"    Cám ơn về yêu cầu của bạn.<br/>\n"
+"    Nếu bạn có bất kỳ câu hỏi, vui lòng cho chúng tôi biết.\n"
+"    <br/><br/>\n"
+"    Trân trọng,\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -180,7 +245,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right \"/> Xem phản hồi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-calendar\"/> End date :"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\"/> Ngày kết thúc: "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -234,18 +299,20 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Tạo một dự án mới</p>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>Một khi tác vụ đã sẵn sàng, bạn có thể lưu nó.</p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<small class=\"text-muted\">Project - </small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Dự án - </small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -265,17 +332,17 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Attachments</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Đính kèm</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Description</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Mô tả</strong>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
-msgstr ""
+msgstr "<strong style=\"font-size: 16px;\">Thử mail gateway</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -305,7 +372,7 @@ msgstr "<strong>Dự án:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "<strong>Rated by: </strong>"
-msgstr ""
+msgstr "<strong>Đánh giá bởi: </strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -379,6 +446,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
 "Progress - Done</i>"
 msgstr ""
+"Thêm các cột để cấu hình <b>các giai đoạn cho các tác vụ</b>.<br/><i>vd: Mới"
+" - Đang Thực hiện - Hoàn thành</i>"
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -431,7 +500,7 @@ msgstr "Tất cả"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
-msgstr ""
+msgstr "Toàn bộ Tác vụ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
@@ -544,6 +613,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Tự động thay đổi trạng thái kanban khi khách hàng phúc đáp cho phản hồi đối với giai đoạn này.\n"
+" * Một phản hồi tốt từ khách hàng sẽ cập nhật trạng thái kanban thành 'sẵn sàng cho giai đoạn kế tiếp' (biểu tượng xanh).\n"
+" * Một phản hồi trung bình hoặc Tồi tệ sẽ thiết lập trạng thái kan ban thành 'chặn' (biểu tượng đỏ).\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -618,7 +690,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
-msgstr ""
+msgstr "Chọn <b>tên tác vụ</b>. (vd: Thiết kế website, Mua hàng hoá, v.v.)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -633,7 +705,7 @@ msgstr "Thành phố"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Click <i>Create</i> to start a new task."
-msgstr ""
+msgstr "Bấm <i>Tạo</i> để bắt đầu một tác vụ mới."
 
 #. module: project
 #. openerp-web
@@ -715,7 +787,7 @@ msgstr "Danh bạ"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Copywriting"
-msgstr ""
+msgstr "Bản quyền"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
@@ -736,12 +808,12 @@ msgstr "Tạo một Dự án"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project"
-msgstr ""
+msgstr "Tạo một dự án mới"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "Tạo một giai đoạn mới ở pipeline nhiệm vụ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -756,7 +828,7 @@ msgstr "Tạo một tác vụ mới"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr ""
+msgstr "Được tạo vào"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__create_uid
@@ -822,7 +894,7 @@ msgstr "Email khách hàng"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "Phản hồi của Khách hàng"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -864,6 +936,10 @@ msgid ""
 "feedback is accepted %s and which feedback is moved to the \"Refused\" "
 "column."
 msgstr ""
+"Khách hàng đưa ra phản hồi bằng email; Odoo tự động tạo nhiệm vụ, và bạn có "
+"thể thông tin liên lạc trực tiếp tại nhiệm vụ đó. Quản lý của bạn quyết định"
+" phản hồi nào thì được chập nhận %s và phản hồi nào thì được chuyển tới cột "
+"\"Bị từ chối\""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1022,6 +1098,8 @@ msgid ""
 "Edit project's stages and set an email template on the stages on which you "
 "want to activate the rating."
 msgstr ""
+"Điều chỉnh các giai đoạn cho dự án và thiết lập mẫu email đối với các giai "
+"đoạn mà bạn muốn kích hoạt tính năng đánh giá cho nó."
 
 #. module: project
 #. openerp-web
@@ -1508,7 +1586,7 @@ msgstr "Cập nhật giai đoạn lần cuối"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Cập nhật lần cuối"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__write_uid
@@ -1823,7 +1901,7 @@ msgstr "Mỗi tháng một lần"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 msgid "Open Tasks"
-msgstr ""
+msgstr "Nhiệm vụ được Mở"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -2675,7 +2753,7 @@ msgstr "Phân tích Nhiệm vụ"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr ""
+msgstr "Quản lý Nhiệm vụ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
@@ -2739,6 +2817,8 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Dự án này không thể được chia sẻ với người nhận được chọn dưới đây do Tính riêng tư  của dự án quá chặt chẽ. Thiết lập Tính riêng tư thành 'Thấy được bởi Khách hàng dưới đây' để cho phép những người nhận này có thể truy cập.\n"
+"Lưu ý: Liên kết dưới đây được sử dụng để chia sẻ Dự án mà không cần đăng nhập."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2748,6 +2828,8 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Nhiệm vụ này không thể được thấy bởi người nhận được chọn dưới đây do Tính riêng tư  của dự án quá chặt chẽ. Thiết lập Tính riêng tư của dự án thành 'Thấy được bởi Khách hàng dưới đây' để cho phép những người nhận này có thể truy cập.\n"
+"Lưu ý: Liên kết dưới đây được sử dụng để chia sẻ nhiệm vụ mà không cần đăng nhập."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -2913,12 +2995,12 @@ msgstr "Bộ đếm tin chưa đọc"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
 #: model:res.groups,name:project.group_project_rating
 msgid "Use Rating on Project"
-msgstr ""
+msgstr "Sử dụng Đánh giá cho Dự án"
 
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtasks"
-msgstr ""
+msgstr "Sử dụng Nhiệm vụ con"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
