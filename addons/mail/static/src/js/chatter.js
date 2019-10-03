@@ -65,12 +65,7 @@ var Chatter = Widget.extend(chat_mixin, {
         this.$topbar = this.$('.o_chatter_topbar');
 
         // render and append the buttons
-        this.$topbar.append(QWeb.render('mail.Chatter.Buttons', {
-            new_message_btn: !!this.fields.thread,
-            log_note_btn: this.hasLogButton,
-            schedule_activity_btn: !!this.fields.activity,
-            isMobile: config.device.isMobile,
-        }));
+        this.$topbar.append(this._renderButtons());
 
         // start and append the widgets
         var fieldDefs = _.invoke(this.fields, 'appendTo', $('<div>'));
@@ -213,6 +208,14 @@ var Chatter = Widget.extend(chat_mixin, {
                 self.fields.thread.$el.appendTo(self.$el);
             }
         }).always($spinner.remove.bind($spinner));
+    },
+    _renderButtons: function () {
+        return QWeb.render('mail.Chatter.Buttons', {
+            new_message_btn: !!this.fields.thread,
+            log_note_btn: this.hasLogButton,
+            schedule_activity_btn: !!this.fields.activity,
+            isMobile: config.device.isMobile,
+        });
     },
     _setState: function (record) {
         if (!this.record || this.record.res_id !== record.res_id) {
