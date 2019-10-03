@@ -119,6 +119,7 @@ options.registry.newsletter_popup = options.registry.mailing_list_subscribe.exte
     },
 });
 
+<<<<<<< HEAD
 WysiwygMultizone.include({
 
     //--------------------------------------------------------------------------
@@ -143,6 +144,28 @@ WysiwygMultizone.include({
                         'content': content,
                     },
                 }));
+=======
+web_editor.Class.include({
+    start: function () {
+        $('body').on('click','#edit_dialog',_.bind(this.edit_dialog, this.rte.editor));
+        return this._super();
+    },
+    save: function () {
+        var $target = $('#wrapwrap').find('#o_newsletter_popup');
+        if ($target && $target.length) {
+            $target.modal('hide');
+            $target.css("display", "none");
+            $('.o_popup_bounce_small').show();
+            // add hidden copy of input in case of Html field sanitize
+            $target.find('.o_popup_bounce_small input').each(function () {
+                var $copy = $(this).next('span.popup_newsletter_input_conserve');
+                $copy = $copy.length ? $copy : $('<span />').insertAfter(this);
+                $copy.attr($(this).getAttributes());
+                $copy.addClass('d-none popup_newsletter_input_conserve');
+            });
+            if (!$target.find('.o_popup_content_dev').length) {
+                $target.find('.o_popup_modal_body').prepend($('<div class="o_popup_content_dev" data-oe-placeholder="' + _t("Type Here ...") + '"></div>'));
+>>>>>>> 8c03496d5b4... temp
             }
         });
         return Promise.all(defs);
