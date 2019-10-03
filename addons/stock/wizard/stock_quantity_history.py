@@ -13,6 +13,7 @@ class StockQuantityHistory(models.TransientModel):
         (1, 'At a Specific Date')
     ], string="Compute", help="Choose to analyze the current inventory or from a specific date in the past.")
     date = fields.Datetime('Inventory at Date', help="Choose a date to get the inventory at that date", default=fields.Datetime.now)
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help='Filter inventory by warehouse, empty value for all warehauses')
 
     def open_table(self):
         self.ensure_one()
@@ -28,7 +29,7 @@ class StockQuantityHistory(models.TransientModel):
                 'view_mode': 'tree,form',
                 'name': _('Products'),
                 'res_model': 'product.product',
-                'context': dict(self.env.context, to_date=self.date),
+                'context': dict(self.env.context, to_date=self.date, warehouse=self.warehouse_id.id),
             }
             return action
         else:

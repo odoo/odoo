@@ -9,6 +9,7 @@
                     <group>
                         <field name="compute_at_date" widget="radio"/>
                         <field name="date" attrs="{'invisible': [('compute_at_date', '=', 0)]}"/>
+                        <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" attrs="{'invisible': [('compute_at_date', '=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
                     </group>
                 </group>
                 <footer>
