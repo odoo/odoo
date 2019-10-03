@@ -29,7 +29,6 @@ class ResConfigSettings(models.TransientModel):
         domain="[('type', '=', 'service')]",
         config_parameter='sale.default_deposit_product_id',
         help='Default product used for payment advances')
-    module_website_sale_digital = fields.Boolean("Digital Content")
 
     auth_signup_uninvited = fields.Selection([
         ('b2b', 'On invitation'),
