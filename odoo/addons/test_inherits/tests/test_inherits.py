@@ -48,6 +48,14 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(box.line_ids.mapped('name'), ['First line', 'Line 2'])
         self.assertEqual(box.line_ids, box.unit_id.line_ids)
 
+    def test_write_5_field_readonly(self):
+        """ Check that we can write on an inherited readonly field. """
+        self.assertTrue(self.env['test.box']._fields['readonly_name'])
+        box = self.env.ref('test_inherits.box_a')
+        box.write({'readonly_name': "Superuser's box"})
+        self.assertEqual(box.readonly_name, "Superuser's box")
+        self.assertEqual(box.unit_id.readonly_name, "Superuser's box")
+
     def test_ir_model_data_inherits(self):
         """ Check the existence of the correct ir.model.data """
         IrModelData = self.env['ir.model.data']
