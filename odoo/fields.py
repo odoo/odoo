@@ -554,7 +554,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.depends is None:
             self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
-        if not (self.readonly or field.readonly):
+        if self.inherited or not (self.readonly or field.readonly):
             self.inverse = self._inverse_related
         if field._description_searchable:
             # allow searching on self only if the related field is searchable

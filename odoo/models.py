@@ -3410,7 +3410,7 @@ Record ids: %(records)s
                 records_to_inverse[field] = self.filtered('id')
             if field.relational or self._field_inverses[field]:
                 relational_names.append(fname)
-            if field.compute and not field.readonly:
+            if field.inverse or (field.compute and not field.readonly):
                 if field.store or field.type not in ('one2many', 'many2many'):
                     # Protect the field from being recomputed while being
                     # inversed. In the case of non-stored x2many fields, the

@@ -12,6 +12,7 @@ class Unit(models.Model):
     state = fields.Selection([('a', 'A'), ('b', 'B')], string='State')
     surname = fields.Char(compute='_compute_surname')
     line_ids = fields.One2many('test.unit.line', 'unit_id')
+    readonly_name = fields.Char('Readonly Name', readonly=True)
 
     @api.depends('name')
     def _compute_surname(self):
