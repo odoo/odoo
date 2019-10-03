@@ -369,6 +369,68 @@ QUnit.module('widgets', {
 
         list.destroy();
     });
+
+    QUnit.test('preselected=False in node options should not be available in export wizard by default', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree>' +
+                '<field name="foo" />' +
+                '<field name="bar" widget="activity_exception"/>' +
+            '</tree>',
+            viewOptions: {
+                hasSidebar: true,
+            },
+            mockRPC: function (route) {
+                if (route === '/web/export/formats') {
+                    return Promise.resolve([
+                        {tag: 'csv', label: 'CSV'},
+                        {tag: 'xls', label: 'Excel'},
+                    ]);
+                }
+                if (route === '/web/export/get_fields') {
+                    return Promise.resolve([
+                        {
+                            children: false,
+                            field_type: 'char',
+                            id: "bar",
+                            relation_field: null,
+                            required: false,
+                            string: 'bar',
+                            value: "bar",
+                        },
+                        {
+                            children: false,
+                            field_type: 'char',
+                            id: "foo",
+                            relation_field: null,
+                            required: false,
+                            string: 'foo',
+                            value: "foo",
+                        },
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
+
+        assert.strictEqual($('.modal').length, 1, "a modal dialog should be open");
+        assert.strictEqual($('.modal .o_fields_list .o_export_field').length, 1,
+            "There should be one item in the fields list");
+        assert.strictEqual($('.modal .o_export_tree_item:visible').length, 2,
+            "Only two items visible");
+        assert.notStrictEqual($('.modal .o_export_field').data('field_id'), 'bar',
+            "preselect=False item should not be there in select list by default");
+
+        list.destroy();
+    });
 });
 
 });
