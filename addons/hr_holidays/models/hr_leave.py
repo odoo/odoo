@@ -114,7 +114,7 @@ class HolidaysRequest(models.Model):
         "\nThe status is 'Refused', when time off request is refused by manager." +
         "\nThe status is 'Approved', when time off request is approved by manager.")
     payslip_status = fields.Boolean('Reported in last payslips', help='Green this button when the time off has been taken into account in the payslip.', copy=False)
-    report_note = fields.Text('HR Comments', copy=False)
+    report_note = fields.Text('HR Comments', copy=False, groups="hr_holidays.group_hr_holidays_manager")
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, compute_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
     manager_id = fields.Many2one('hr.employee')
     # leave type configuration
