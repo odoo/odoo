@@ -6637,6 +6637,25 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('input autocomplete attribute set to none by default', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="display_name"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        assert.hasAttrValue(form.$('input[name="display_name"]'), 'autocomplete', 'none',
+            "attribute autocomplete should be set to none by default");
+        form.destroy();
+    });
+
     QUnit.test('context is correctly passed after save & new in FormViewDialog', async function (assert) {
         assert.expect(3);
 
