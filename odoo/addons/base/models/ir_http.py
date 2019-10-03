@@ -189,7 +189,7 @@ class IrHttp(models.AbstractModel):
 
         # check authentication level
         try:
-            auth_method = cls._authenticate(func.routing["auth"])
+            auth_method = cls._authenticate(func.routing["auth"] if request.httprequest.method != 'OPTIONS' else 'none')
         except Exception as e:
             return cls._handle_exception(e)
 

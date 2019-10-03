@@ -304,7 +304,7 @@ class WebRequest(object):
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
-           be used as response.""" 
+           be used as response."""
         self._failed = exception # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
@@ -589,7 +589,7 @@ class JsonRequest(WebRequest):
         self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
+
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             def handler():
@@ -791,7 +791,7 @@ class HttpRequest(WebRequest):
             return e
 
     def dispatch(self):
-        if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
+        if request.httprequest.method == 'OPTIONS' and request.endpoint:
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
                 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, X-Debug-Mode'
@@ -1242,14 +1242,18 @@ class Response(werkzeug.wrappers.Response):
         self.qcontext['response_template'] = self.template
         self.uid = uid
         # Support for Cross-Origin Resource Sharing
-        if request.endpoint and 'cors' in request.endpoint.routing:
-            self.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
-            methods = 'GET, POST'
-            if request.endpoint.routing['type'] == 'json':
-                methods = 'POST'
-            elif request.endpoint.routing.get('methods'):
-                methods = ', '.join(request.endpoint.routing['methods'])
-            self.headers.set('Access-Control-Allow-Methods', methods)
+        if request.endpoint:
+            if 'cors' in request.endpoint.routing:
+                self.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
+                methods = 'GET, POST'
+                if request.endpoint.routing['type'] == 'json':
+                    methods = 'POST'
+                elif request.endpoint.routing.get('methods'):
+                    methods = ', '.join(request.endpoint.routing['methods'])
+                self.headers.set('Access-Control-Allow-Methods', methods)
+            elif request.endpoint.routing['type'] == 'json':
+                self.headers.set('Access-Control-Allow-Credentials', 'true')
+                self.headers.set('Access-Control-Allow-Origin', request.httprequest.headers.get('ORIGIN'))
 
     @property
     def is_qweb(self):
