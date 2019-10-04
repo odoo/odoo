@@ -385,7 +385,7 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         line = self[0]
         order = line.order_id
-        price_unit = line.price_unit
+        price_unit = line._prepare_compute_all_values()['price_unit']
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         if line.taxes_id:
             qty = line.product_qty or 1
