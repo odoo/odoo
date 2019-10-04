@@ -500,7 +500,7 @@
                                 attrs="{'invisible': [('type', '!=', 'entry')]}"/>
                         <!-- Cancel -->
                         <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice"
-                                attrs="{'invisible' : ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
+                                attrs="{'invisible' : ['|', ('id', '=', False), ('state', '!=', 'posted')]}"/>
                         <button name="button_draft" string="Reset to Draft" type="object" groups="account.group_account_invoice"
                                 attrs="{'invisible' : ['|', ('restrict_mode_hash_table', '=', True), ('state', 'not in', ('posted', 'cancel'))]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
