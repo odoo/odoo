@@ -315,7 +315,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" role="menu">
                     <t t-foreach="website_sale_sortable" t-as="sortby">
-                        <a role="menuitem" t-att-href="keep('/shop', order=sortby[1])" class="dropdown-item">
+                        <a role="menuitem" rel="noindex,nofollow" t-att-href="keep('/shop', order=sortby[1])" class="dropdown-item">
                             <span t-raw="sortby[0]"/>
                         </a>
                     </t>
