@@ -298,8 +298,9 @@ class PurchaseOrderLine(models.Model):
         if line.product_uom.id != line.product_id.uom_id.id:
             price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
+            conversion_rate_date = self.env.context.get('conversion_rate_date', fields.Date.context_today(self))
             price_unit = order.currency_id._convert(
-                price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
+                price_unit, order.company_id.currency_id, self.company_id, conversion_rate_date, round=False)
         return price_unit
 
     @api.multi
@@ -312,7 +313,9 @@ class PurchaseOrderLine(models.Model):
         if self.product_id.type not in ['product', 'consu']:
             return res
         qty = 0.0
-        price_unit = self._get_stock_move_price_unit()
+        price_unit = self.with_context(
+            conversion_rate_date=self.date_order or fields.Date.today(),
+        )._get_stock_move_price_unit()
         for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
             qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         template = {
