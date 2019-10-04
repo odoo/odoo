@@ -400,19 +400,18 @@ class Holidays(models.Model):
 
     @api.multi
     def action_draft(self):
-        for holiday in self:
-            if not holiday.can_reset:
-                raise UserError(_('Only an HR Manager or the concerned employee can reset to draft.'))
-            if holiday.state not in ['confirm', 'refuse']:
-                raise UserError(_('Leave request state must be "Refused" or "To Approve" in order to reset to Draft.'))
-            holiday.write({
-                'state': 'draft',
-                'manager_id': False,
-                'manager_id2': False,
-            })
-            linked_requests = holiday.mapped('linked_request_ids')
-            for linked_request in linked_requests:
-                linked_request.action_draft()
+        if any(not record.can_reset for record in self):
+            raise UserError(_('Only an HR Manager or the concerned employee can reset to draft.'))
+        if any(record.state not in ('confirm', 'refuse') for record in self):
+            raise UserError(_('Leave request state must be "Refused" or "To Approve" in order to reset to Draft.'))
+        self.write({
+            'state': 'draft',
+            'manager_id': False,
+            'manager_id2': False,
+        })
+        linked_requests = self.mapped('linked_request_ids')
+        if linked_requests:
+            linked_requests.action_draft()
             linked_requests.unlink()
         return True
 
@@ -508,21 +507,18 @@ class Holidays(models.Model):
     def action_refuse(self):
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
-
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        for holiday in self:
-            if holiday.state not in ['confirm', 'validate', 'validate1']:
-                raise UserError(_('Leave request must be confirmed or validated in order to refuse it.'))
-
-            if holiday.state == 'validate1':
-                holiday.write({'state': 'refuse', 'manager_id': manager.id})
-            else:
-                holiday.write({'state': 'refuse', 'manager_id2': manager.id})
-            # Delete the meeting
-            if holiday.meeting_id:
-                holiday.meeting_id.unlink()
-            # If a category that created several holidays, cancel all related
-            holiday.linked_request_ids.action_refuse()
+        if any(record.state not in ('confirm', 'validate', 'validate1') for record in self):
+            raise UserError(_('Leave request must be confirmed or validated in order to refuse it.'))
+        validate1 = self.filtered(lambda r: r.state == 'validate1')
+        other = self - validate1
+        validate1.write({'state': 'refuse', 'manager_id': manager.id})
+        other.write({'state': 'refuse', 'manager_id2': manager.id})
+        meetings = self.mapped('meeting_id')
+        meetings.unlink()
+        linked_requests = self.mapped('linked_request_ids')
+        if linked_requests:
+            linked_requests.action_refuse()
         self._remove_resource_leave()
         return True
 
