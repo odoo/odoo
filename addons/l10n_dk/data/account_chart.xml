@@ -49,7 +49,7 @@ account.data_account_type_current_year_ernings          Årets overskud
             <field name="spoken_languages" eval="'da_DK'"/>
             <field name="cash_account_code_prefix">681</field> 
             <field name="bank_account_code_prefix">682</field>                          
-            <field name="transfer_account_code_prefix">682</field>  
+            <field name="transfer_account_code_prefix">683</field>  
         </record>
 
         <!--Resultatopgørelse-->
@@ -1257,7 +1257,7 @@ account.data_account_type_current_year_ernings          Årets overskud
         </record>
         <record id="a6670" model="account.account.template" >
           <field name="code">6670</field>
-          <field name="reconcile" eval="False" />
+          <field name="reconcile" eval="True" />
           <field name="user_type_id" ref="account.data_account_type_current_assets" />
           <field name="group_id" ref="l10n_dk.account_group_other_receivables" />
           <field name="name">Varer leveret, faktura ikke sendt</field>
@@ -1265,7 +1265,7 @@ account.data_account_type_current_year_ernings          Årets overskud
         </record>
         <record id="a6680" model="account.account.template" >
           <field name="code">6680</field>
-          <field name="reconcile" eval="False" />
+          <field name="reconcile" eval="True" />
           <field name="user_type_id" ref="account.data_account_type_current_assets" />
           <field name="group_id" ref="l10n_dk.account_group_other_receivables" />
           <field name="name">Periodeafgrænsningsposter, tilgodehavender</field>
@@ -1286,7 +1286,6 @@ account.data_account_type_current_year_ernings          Årets overskud
           <field name="name">Bank</field>
           <field name="chart_template_id" ref="dk_chart_template"/>
         </record>
-        -->
         <record id="a6830" model="account.account.template">
             <field name="code">6830</field>
             <field name="reconcile" eval="True"/>
@@ -1295,6 +1294,7 @@ account.data_account_type_current_year_ernings          Årets overskud
             <field name="name">Bank i transfer</field>
             <field name="chart_template_id" ref="dk_chart_template"/>
         </record>
+        -->
         <record id="a6860" model="account.account.template" >
           <field name="code">6860</field>
           <field name="reconcile" eval="True" />
@@ -1490,7 +1490,7 @@ account.data_account_type_current_year_ernings          Årets overskud
         </record>
         <record id="a8450" model="account.account.template" >
           <field name="code">8450</field>
-          <field name="reconcile" eval="False" />
+          <field name="reconcile" eval="True" />
           <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
           <field name="group_id" ref="l10n_dk.account_group_payable" />
           <field name="name">Vare modtaget, faktura ikke modtaget</field>
@@ -1731,7 +1731,7 @@ account.data_account_type_current_year_ernings          Årets overskud
 
         <!-- Chart template -->
         <record id="dk_chart_template" model="account.chart.template">
-            <field name="transfer_account_id" ref="a6830"/>
+            <!--<field name="transfer_account_id" ref="a6830"/>-->
             <field name="property_account_receivable_id" ref="a6610"/>
             <field name="property_account_payable_id" ref="a8440"/>
             <field name="property_account_expense_categ_id" ref="a2010"/>
