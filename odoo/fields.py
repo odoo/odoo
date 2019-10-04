@@ -1318,6 +1318,11 @@ class _String(Field):
             kwargs['translate'] = bool(kwargs['translate'])
         super(_String, self).__init__(string=string, **kwargs)
 
+    def _setup_attrs(self, model, name):
+        super(_String, self)._setup_attrs(model, name)
+        if callable(self.translate):
+            self.prefetch = False
+
     _related_translate = property(attrgetter('translate'))
 
     def _description_translate(self, env):
@@ -1451,6 +1456,7 @@ class Html(_String):
         # Translated sanitized html fields must use html_translate or a callable.
         if self.translate is True and self.sanitize:
             self.translate = html_translate
+            self.prefetch = False
 
     _related_sanitize = property(attrgetter('sanitize'))
     _related_sanitize_tags = property(attrgetter('sanitize_tags'))
