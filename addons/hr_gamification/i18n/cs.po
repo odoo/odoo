@@ -35,6 +35,8 @@ msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
 msgstr ""
+"Všechny odznaky zaměstnanců spojené se zaměstnancem přímo, nebo "
+"prostřednictvím uživatele"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -43,6 +45,10 @@ msgid ""
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                    The goals are created for the specified users or member of the group."
 msgstr ""
+"Vybraným uživatelům přiřaďte seznam cílů k jejich vyhodnocení.\n"
+"\n"
+"Výzva může použít období (týdenní, měsíční ...) pro automatické vytváření cílů.\n"
+"Cíle jsou vytvářeny pro určené uživatele nebo člena skupiny."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
@@ -61,7 +67,7 @@ msgstr ""
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
 msgid "Badges directly linked to the employee"
-msgstr ""
+msgstr "Odznaky přímo spojené se zaměstnancem"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -83,7 +89,7 @@ msgstr "Vytvořit novou výzvu"
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
 msgid "Create a new goal"
-msgstr ""
+msgstr "Vytvořit nový cíl"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -93,7 +99,7 @@ msgstr "Popište, co udělali a proč je to důležité (bude veřejné)"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
 msgid "Direct Badge"
-msgstr ""
+msgstr "Přímý odznak"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee
@@ -105,22 +111,22 @@ msgstr "Zaměstnanec"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__badge_ids
 msgid "Employee Badges"
-msgstr ""
+msgstr "Odznaky zaměstnanců"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__goal_ids
 msgid "Employee HR Goals"
-msgstr ""
+msgstr "Cíle zaměstnanců personálního oddělení"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "Odznak gamifikace"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr ""
+msgstr "Odznak uživatele gamifikace"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
@@ -136,37 +142,37 @@ msgstr "Cíl"
 #: model:ir.actions.act_window,name:hr_gamification.goals_menu_groupby_action2
 #: model:ir.ui.menu,name:hr_gamification.gamification_goal_menu_hr
 msgid "Goals History"
-msgstr ""
+msgstr "Historie cílů"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant a Badge"
-msgstr ""
+msgstr "Udělit odznak"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant this employee his first badge"
-msgstr ""
+msgstr "Udělit tomuto zaměstnanci jeho první odznak"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
-msgstr ""
+msgstr "Uděleno"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__granted_employees_count
 msgid "Granted Employees Count"
-msgstr ""
+msgstr "Počet zaměstnanců s udělenými odznaky"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__has_badges
 msgid "Has Badges"
-msgstr ""
+msgstr "Má odznaky"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Received Badges"
-msgstr ""
+msgstr "Přijaté odznaky"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_gamification_badge_user_wizard__user_id
@@ -177,18 +183,18 @@ msgstr "Vztažené uživatelské jméno pro zdroj ke spravování jeho přístup
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
-msgstr ""
+msgstr "Odměnit zaměstnance"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee with"
-msgstr ""
+msgstr "Odměnit zaměstnance s"
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/models/gamification.py:18
 #, python-format
 msgid "The selected employee does not correspond to the selected user."
-msgstr ""
+msgstr "Vybraný zaměstnanec neodpovídá vybranému uživateli."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__user_id
@@ -203,21 +209,21 @@ msgstr "Uživatelé"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "What are you thankful for?"
-msgstr ""
+msgstr "Za co jsi vděčný?"
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:22
 #, python-format
 msgid "You can not send a badge to yourself."
-msgstr ""
+msgstr "Odznak si nemůžete poslat sami sobě."
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:19
 #, python-format
 msgid "You can send badges only to employees linked to a user."
-msgstr ""
+msgstr "Odznaky můžete odesílat pouze zaměstnancům propojeným s uživatelem."
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
-msgstr ""
+msgstr "odměnit tohoto zaměstnance za dobrou akci"

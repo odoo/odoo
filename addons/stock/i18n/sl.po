@@ -13,8 +13,8 @@
 # matjaz k <matjaz@mentis.si>, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2019
-# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Jasmina Macur <jasmina@hbs.si>, 2019
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
 # 
 msgid ""
@@ -305,7 +305,7 @@ msgstr "<strong>Naročilo</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Package</strong>"
-msgstr "<strong>Paket</strong>"
+msgstr "<strong>Pakiranje</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -322,7 +322,7 @@ msgstr "<strong>Artikel</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Production Lot</strong>"
-msgstr "<strong>Proizvodna serija</strong>"
+msgstr "<strong>Proizvodni lot</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_kanban
@@ -344,7 +344,7 @@ msgstr "<strong>Načrtovani datum</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>State</strong>"
-msgstr "<strong>Regija</strong>"
+msgstr "<strong>Stanje</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -527,7 +527,7 @@ msgid ""
 "All items couldn't be shipped, the remaining ones will be shipped as soon as"
 " they become available."
 msgstr ""
-"Vseh elementov ni bilo mogoče odpremiti, preostali elementi bodo poslani "
+"Vseh postavk ni bilo mogoče odpremiti, preostali postavke bodo odpremljene "
 "takoj, ko bodo na voljo."
 
 #. module: stock
@@ -577,7 +577,9 @@ msgstr "Uporabljivo pri skladišču"
 msgid ""
 "Apply specific route(s) for the replenishment instead of product's default "
 "routes."
-msgstr "Uporabite določene poti za polnjenje namesto privzetih poti izdelka."
+msgstr ""
+"Uporabi določeno pot (določene poti) za polnjenje zalog namesto privzetih "
+"prog izdelka."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_view_search
@@ -1127,13 +1129,13 @@ msgstr "Lokacije protipostavke"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr "Ustvari naknadno naročilo"
+msgstr "Ustvari zaostalo naročilo"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:755
 #, python-format
 msgid "Create Backorder?"
-msgstr "Ustvari naknadno naročilo?"
+msgstr "Ustvari zaostalo naročilo?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_tree_view
@@ -1160,9 +1162,9 @@ msgid ""
 "                        products later. Do not create a backorder if you will not\n"
 "                        process the remaining products."
 msgstr ""
-"Ustavarite naknando naročilo za nov kasnejši prejem\n"
-"                        preostalih izdelkov.  Ne ustvarite naknadnega naročila za nov\n"
-"                        kasnejši prejem preostalih izdelkov."
+"Ustvarite zaostalo naročilo za nov kasnejši prejem\n"
+"                        preostalih izdelkov.  Ne ustvarite zaostalega naročila, če\n"
+"                        preostanka izdelkov ne nameravate obdelati."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -1393,7 +1395,7 @@ msgstr "Planirani datum"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__date_planned
 msgid "Date at which the replenishment should take place."
-msgstr "Datum, ko bi moralo biti polnjenje."
+msgstr "Datum, ko bi se moralo vršiti polnjenje zalog."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
@@ -1558,7 +1560,7 @@ msgstr ""
 #: code:addons/stock/models/product.py:335
 #, python-format
 msgid "Delivered Qty"
-msgstr "Dobavljena količina"
+msgstr "Dobavljena kol"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -2358,7 +2360,7 @@ msgstr "Vhodni tip"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__exhausted
 msgid "Include Exhausted Products"
-msgstr "Vključite izčrpane izdelke"
+msgstr "Vključite izpraznjene izdelke"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
@@ -3002,7 +3004,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_name
 msgid "Lot/Serial Number Name"
-msgstr "Naziv Lota/serijske številke"
+msgstr "Naziv lota/serijske številke"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_production_lot
@@ -3359,7 +3361,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr "Brez naknadnega naročila"
+msgstr "Brez zaostalega naročila"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
@@ -3390,7 +3392,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "No operation made on this lot."
-msgstr "Na tem lot-u ni bilo narejeno nobene operacije."
+msgstr "Na tem lot-u ni izvedenih operacij."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:305
@@ -3783,7 +3785,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Package Content"
-msgstr "Vsebina paketa"
+msgstr "Vsebina pakiranja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__package_level_id
@@ -3811,7 +3813,7 @@ msgstr "Sklic pakiranja"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Reference:"
-msgstr "Sklic paketa:"
+msgstr "Sklic pakiranja:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -3827,7 +3829,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type:"
-msgstr "Vrsta paketa:"
+msgstr "Tip pakiranja:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4359,7 +4361,7 @@ msgstr "Skladišči"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Putaway:"
-msgstr "Skladišči:"
+msgstr "Odlagališče:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
@@ -4414,7 +4416,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 msgid "Quantity Done"
-msgstr "Poknjižena količina"
+msgstr "Opravljena količina"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -4536,7 +4538,7 @@ msgstr "Realna količina"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_qty
 msgid "Real Reserved Quantity"
-msgstr ""
+msgstr "Realna rezervirana količina"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_route_id
@@ -4696,12 +4698,12 @@ msgstr "Iskanje pravil oskrbe"
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Replenish"
-msgstr "Polnjenje"
+msgstr "Napolni"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid "Replenish wizard"
-msgstr "Pomočnik za polnjenje"
+msgstr "Čarovnik za polnjenje zalog"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -5005,7 +5007,7 @@ msgstr "Išči po odpisih"
 #: code:addons/stock/models/stock_inventory.py:116
 #, python-format
 msgid "Select products manually"
-msgstr "Ročno izberite izdelke"
+msgstr "Ročna izbira izdelkov"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -6298,7 +6300,7 @@ msgstr "Osveži količine"
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Update Qty On Hand"
-msgstr "Ročno posodobite Kol."
+msgstr "Ročno posodobi razp. kol."
 
 #. module: stock
 #: code:addons/stock/models/product.py:563
@@ -6325,8 +6327,8 @@ msgid ""
 "                a manufacturing order or a transfer."
 msgstr ""
 "S tem pomočnikom lahko napolnite vašo zalogo. \n"
-"                Glede na konfiguracijo izdelka, lahko začetek polnjenja sproži zahtevo za povpraševanje,\n"
-"                naročilo za proizvodnjo ali prenos."
+"                Glede na konfiguracijo izdelka, lahko začetek polnjenja sproži povpraševanje po ponudbi,\n"
+"                proizvodni nalog ali transfer."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6840,7 +6842,7 @@ msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
 "numbers encoded."
 msgstr ""
-"Ne morete uporabiti iste serijske številke dvakrat. Popravite kodirane "
+"Ne morete dvakrat uporabiti iste serijske številke. Popravite vnesene "
 "serijske številke."
 
 #. module: stock
@@ -6864,13 +6866,13 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on <i>apply</i>\n"
 "                        Odoo will process all the <i>reserved</i> quantities."
 msgstr ""
-"Niste še zabeležili količine<i>Opravljeno</i>, s klikom na <i>Uveljavi</i>\n"
-"                        bo Odoo obdelal vso <i>Rezervirano</i> količino."
+"Niste še vpisali <i>opravljenih</i> količin, s klikom na <i>uveljavi</i>\n"
+"                        bo Odoo obdelal vse <i>rezervirane</i> količine."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
-msgstr "Prejeli ste manj izdelkov od prvotnega povpraševanja."
+msgstr "Obdelali ste manj izdelkov od začetnega povpraševanja."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer

@@ -315,11 +315,16 @@ msgid ""
 "                                The email will be sent for all the records selected in the list.<br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
+"<strong>រាល់កំណត់ត្រាដែលត្រូវគ្នានឹងតម្រងស្វែងរកបច្ចុប្បន្នរបស់អ្នកនឹងត្រូវបានផ្ញើ,\n"
+"មិនត្រឹមតែលេខដែលបានជ្រើសរើសនៅក្នុងបញ្ជីមើលប៉ុណ្ណោះទេ។\n"
+"</strong><br/>\n"
+"អ៊ីមែលនឹងត្រូវបានផ្ញើសម្រាប់កំណត់ត្រាទាំងអស់ដែលបានជ្រើសរើសនៅក្នុងបញ្ជី។<br/>\n"
+"ការបញ្ជាក់អ្នកជំនួយការនេះប្រហែលជាចំណាយពេលពីរបីនាទីដើម្បីរារាំងកម្មវិធីរុករករបស់អ្នក។"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong> Feedback</strong>"
-msgstr ""
+msgstr "<strong>ព៌តមានត្រលប់</strong>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -327,6 +332,8 @@ msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
 "note. Followers won't receive any email notification."
 msgstr ""
+"<strong>ការទំនាក់ទំនងផ្ទៃក្នុងៈ</strong>ការឆ្លើយតបនឹងបញ្ចូលកំណត់ត្រាផ្ទៃក្នុង។"
+" អ្នកតាមនឹងមិនទទួលបានការជូនដំណឹងតាមអ៊ីមែលទេ។"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -334,11 +341,13 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>ប្រើតែទិន្នន័យដែលបានធីកនៅក្នុងបញ្ជីមើលប៉ុណ្ណោះដែលនឹងត្រូវបានប្រើ។</strong><br/>\n"
+"                                 អ៊ីមែលនឹងត្រូវបានផ្ញើសម្រាប់កំណត់ត្រាទាំងអស់ដែលបានជ្រើសរើសនៅក្នុងបញ្ជី។"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "<strong>Recommended Activities</strong>"
-msgstr ""
+msgstr "<strong>សកម្មភាពផ្តល់ជូន</strong>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_defaults
@@ -355,7 +364,7 @@ msgstr ""
 #: code:addons/mail/models/ir_actions.py:69
 #, python-format
 msgid "A next activity can only be planned on models that use the chatter"
-msgstr ""
+msgstr "សកម្មភាពបន្ទាប់អាចត្រូវបានគ្រោងទុកតែលើម៉ូដែលដែលប្រើឆាត។"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -363,6 +372,8 @@ msgid ""
 "A shortcode is a keyboard shortcut. For instance, you type #gm and it will "
 "be transformed into \"Good Morning\"."
 msgstr ""
+"លេខកូដខ្លីគឺជាផ្លូវកាត់ក្តារចុច។ ឧទាហរណ៍អ្នកវាយ #gm ហើយវានឹងប្រែទៅជា“ "
+"អរុណសួស្តី” ។"
 
 #. module: mail
 #. openerp-web
@@ -384,7 +395,7 @@ msgstr "ការទទួលយកការជ្រើសរើសនៃសា
 #: code:addons/mail/static/src/xml/thread.xml:412
 #, python-format
 msgid "Accept |"
-msgstr ""
+msgstr "ទទួល"
 
 #. module: mail
 #: selection:mail.compose.message,moderation_status:0
@@ -419,7 +430,7 @@ msgstr "សកម្មភាពWindow View"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
 msgid "Activated by default when subscribing."
-msgstr ""
+msgstr "ធ្វើឱ្យសកម្មតាមលំនាំដើមនៅពេលជាវ។"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__active
@@ -468,7 +479,7 @@ msgstr "សកម្មភាព"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr ""
+msgstr "សកម្មភាពលាយ។"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
@@ -514,7 +525,7 @@ msgstr "បន្ថែម"
 #: code:addons/mail/static/src/xml/chatter.xml:30
 #, python-format
 msgid "Add Attachments"
-msgstr ""
+msgstr "បន្ថែមឯកសារភ្ជាប់។"
 
 #. module: mail
 #. openerp-web
@@ -527,7 +538,7 @@ msgstr "បន្ថែមប៉ុស្ត៌៏"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Add Email Blacklist"
-msgstr ""
+msgstr "អ៊ីម៉ែលប្រអប់ខ្មៅ"
 
 #. module: mail
 #. openerp-web
@@ -543,7 +554,7 @@ msgstr "បន្ថែមការតាមដាន"
 #: code:addons/mail/models/ir_actions.py:63
 #, python-format
 msgid "Add Followers can only be done on a mail thread model"
-msgstr ""
+msgstr "បន្ថែមអ្នកតាមអាចធ្វើបានតែលើគំរូខ្សែស្រឡាយម៉ែល។"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__add_sign
@@ -564,20 +575,20 @@ msgstr "បន្ថែមហត្តលេខា"
 #: code:addons/mail/static/src/xml/discuss.xml:242
 #, python-format
 msgid "Add a channel"
-msgstr ""
+msgstr "បន្ថែមឆានែល។"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:383
 #, python-format
 msgid "Add a new %(document)s or send an email to %(email_link)s"
-msgstr ""
+msgstr "បន្ថែមថ្មី%(document)sផ្ងើទៅកាន់អ៊ីម៉ែល%(email_link)s"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:71
 #, python-format
 msgid "Add a private channel"
-msgstr ""
+msgstr "បន្ថែមឆានែលឯកជន។"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
@@ -1144,7 +1155,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_type
 msgid "Channel Type"
-msgstr ""
+msgstr "ប្រភេទឆានែល"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_moderation
@@ -1194,7 +1205,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr ""
+msgstr "ការពិភាក្សាជជែក"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -2759,7 +2770,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Join"
-msgstr ""
+msgstr "ការចូលរួម"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -2926,7 +2937,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_partner
 msgid "Listeners of a Channel"
-msgstr ""
+msgstr "អ្នកស្តាប់ឆានែល"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0

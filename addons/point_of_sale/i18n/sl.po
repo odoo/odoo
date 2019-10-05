@@ -8,11 +8,11 @@
 # Vida Potočnik <vida.potocnik@mentis.si>, 2019
 # Martin Trigaux, 2019
 # matjaz k <matjaz@mentis.si>, 2019
-# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2019
-# Jasmina Macur <jasmina@hbs.si>, 2019
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
+# Jasmina Macur <jasmina@hbs.si>, 2019
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2019\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +64,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1477
 #, python-format
 msgid "% discount"
-msgstr "% Popust"
+msgstr "% popust"
 
 #. module: point_of_sale
 #. openerp-web
@@ -142,7 +142,7 @@ msgstr "<span class=\"o_form_label\">Vnosi v dnevnik</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Order Reference</span>"
-msgstr "<span class=\"o_form_label\">Številka naročila</span>"
+msgstr "<span class=\"o_form_label\">Sklic naročila</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -359,7 +359,7 @@ msgstr "ABC"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a credit card reader"
-msgstr "Sprejemite plačila s čitalcem kreditnih kartic"
+msgstr "Sprejem plačil z bralnikom kreditnih kartic"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -489,7 +489,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
 msgid "An internal identification of the point of sale."
-msgstr ""
+msgstr "Notrajna identifikacija za POS"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:161
@@ -522,7 +522,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_auto
 msgid "Automatic Receipt Printing"
-msgstr "Samodejno tiskanje računov"
+msgstr "Samodejno tiskanje prejemkov"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_cashdrawer
@@ -551,7 +551,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__available_in_pos
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 msgid "Available in POS"
-msgstr ""
+msgstr "Na voljo v POSu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__average_price
@@ -628,7 +628,7 @@ msgstr "Base Amount"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Bills &amp; Receipts"
-msgstr "Računi in potrdila"
+msgstr "Računi in prejemki"
 
 #. module: point_of_sale
 #. openerp-web
@@ -862,7 +862,7 @@ msgstr "Podrejene kategorije"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Choose a pricelist for the Point Of Sale"
-msgstr ""
+msgstr "Izberi cenik za POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1087,7 +1087,7 @@ msgstr "Kreditna kartica"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Credit Card Reader"
-msgstr "Čitalec kreditnih kartic"
+msgstr "Bralnik kreditnih kartic"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1255,14 +1255,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1356
 #, python-format
 msgid "Delete Unpaid Orders"
-msgstr ""
+msgstr "Izbrišite neplačana naročila"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/chrome.js:274
 #, python-format
 msgid "Delete Unpaid Orders ?"
-msgstr ""
+msgstr "Ali želite izbrisati neplačana naročila?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1454,7 +1454,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1360
 #, python-format
 msgid "Download Unpaid Orders"
-msgstr ""
+msgstr "Prenesite neplačana naročila"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1475,7 +1475,7 @@ msgstr "Zapadlo"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:409
 #, python-format
 msgid "Edit"
-msgstr "Urejanje"
+msgstr "Uredi"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1583,7 +1583,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1359
 #, python-format
 msgid "Export Unpaid Orders"
-msgstr ""
+msgstr "Izvozi neplačana naročila"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1632,7 +1632,7 @@ msgstr "Splošni podatki"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Generation of your order references"
-msgstr "Ustvarjanje vaše številke naročila"
+msgstr "Ustvarjanje sklicev naročil"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1766,7 +1766,8 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Improve navigation for imprecise industrial touchscreens"
-msgstr "Izboljšajte navigacijo za natančne industrijske zaslone na dotik"
+msgstr ""
+"Izboljšajte navigacijo pri nenatančnih industrijskih zaslonih na dotik"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2119,7 +2120,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_sales_price
 msgid "Multiple Product Prices"
-msgstr "Več različni cen za izdelke"
+msgstr "Več različnih cen za izdelek"
 
 #. module: point_of_sale
 #: selection:res.config.settings,pos_pricelist_setting:0
@@ -2423,7 +2424,7 @@ msgstr "Zaporedje naročil"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Order Interface"
-msgstr "Naročilni vmesnik"
+msgstr "Vmesnik za naročila"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_line_id
@@ -2687,7 +2688,7 @@ msgstr "Prevzem"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__picking_count
 msgid "Picking Count"
-msgstr ""
+msgstr "Število prevzemov"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -2772,7 +2773,7 @@ msgstr "POS nalogi"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Point Of Sale"
-msgstr ""
+msgstr "Prodajna točka"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
@@ -2940,12 +2941,12 @@ msgstr "Knjiženo"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_precompute_cash
 msgid "Prefill Cash Payment"
-msgstr "Prednapolni z gotovinskim plačilom"
+msgstr "Predizpolni plačilo v gotovini"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Prefill amount paid with the exact due amount"
-msgstr "Prednapolnjen znesek je treba plačati z natančno zapadlim zneskom"
+msgstr "Predizpolni znesek plačila z dolgovanim zneskom"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3032,7 +3033,7 @@ msgstr "Natisnite račune na zahtevo stranke"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Print receipts automatically once the payment is registered"
-msgstr "Po registraciji plačila samodejno natisnite račune"
+msgstr "Samodejno tiskanje prejemkov ob registraciji plačila"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -3134,7 +3135,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Product prices on receipts"
-msgstr "Cena izdelka na računu"
+msgstr "Cena izdelka na prejemku"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tipproduct
@@ -3275,12 +3276,12 @@ msgstr "Odgovoren"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__restrict_price_control
 msgid "Restrict Price Modifications to Managers"
-msgstr "Omejite spreminjanje cen upravljavcem"
+msgstr "Omejite spreminjanje cen le na upravitelje"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Restrict price modification to managers"
-msgstr "Omejite spreminjanje cen upravljavcem"
+msgstr "Omejite spreminjanje cen le na upravitelje"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3656,12 +3657,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Start Date"
-msgstr "Začetni daum"
+msgstr "Datum začetka"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
-msgstr "Začnite prodajati iz privzete kategorije izdelkov"
+msgstr "Zagon prodaje iz privzete kategorije izdelkov"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -4100,6 +4101,10 @@ msgid ""
 " detail form. 2) Price computed from formulas (discounts, margins, rounding)"
 " : must be set in the pricelist form."
 msgstr ""
+"Cenike lahko upravljate na dva načina: 1) Več različnih cen za vsak proizvod"
+" (npr. količino, odvisno od trgovine): podrobnosti nastavite v Izdelek / "
+"zavihek Prodaja. 2) Cene izračunane iz formul (popusti, marže, "
+"zaokroževanje): nastavite v ceniku."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4270,7 +4275,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.product_product_tip
 #: model:product.template,name:point_of_sale.product_product_tip_product_template
 msgid "Tips"
-msgstr "Napetnina"
+msgstr "Napitnina"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -4449,7 +4454,7 @@ msgstr "Uporabite navidezno tipkovnico za zaslone na dotik"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__journal_user
 msgid "Use in Point of Sale"
-msgstr ""
+msgstr "Uporaba v POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -4892,7 +4897,7 @@ msgstr "Zavihek"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1217
 #, python-format
 msgid "unpaid orders"
-msgstr ""
+msgstr "neplačana naročila"
 
 #. module: point_of_sale
 #. openerp-web
