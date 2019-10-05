@@ -710,7 +710,7 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
         self.fields = fields
 
     def write_group(self, row, column, group_name, group, group_depth=0):
-        group_name = group_name if isinstance(group_name, str) else group_name and group_name[1] or _("Undefined")
+        group_name = group_name[1] if isinstance(group_name, tuple) and len(group_name) > 1 else group_name or _("Undefined")
         row, column = self._write_group_header(row, column, group_name, group, group_depth)
 
         # Recursively write sub-groups
