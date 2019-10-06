@@ -6,6 +6,7 @@
             <field name="arch" type="xml">
                 <form string="Record rules">
                   <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group string="General">
                             <field name="name"/>
