@@ -333,6 +333,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Căn cứ vào cấu hình sản phẩm, số lượng đã nhận có thể được tính tự động bằng các cơ chế:\n"
+"  - Thủ công: số lượng đã nhận được nhập thủ công vào các dòng\n"
+"  - Dịch chuyển kho: số lượng được điền tự động dựa trên các phiếu kho đã xác nhận\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -1663,12 +1666,12 @@ msgstr "SL Đã nhận"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr ""
+msgstr "Cách tính SL Đã nhận"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Received Quantity"
-msgstr ""
+msgstr "Số lượng Đã nhận"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -1678,7 +1681,7 @@ msgstr "SL đã nhận:"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_config_settings__default_purchase_method__receive
 msgid "Received quantities"
-msgstr ""
+msgstr "Số lượng đã nhận"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices

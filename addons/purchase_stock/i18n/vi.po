@@ -51,6 +51,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Căn cứ vào cấu hình sản phẩm, số lượng đã nhận có thể được tính tự động bằng các cơ chế:\n"
+"  - Thủ công: số lượng đã nhận được nhập thủ công vào các dòng\n"
+"  - Dịch chuyển kho: số lượng được điền tự động dựa trên các phiếu kho đã xác nhận\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -266,12 +269,12 @@ msgstr "Nhận hàng"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive Products"
-msgstr "Nhận Sản phẩm"
+msgstr "Nhận Hàng"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr ""
+msgstr "Cách tính SL Đã nhận"
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.purchase_open_picking
