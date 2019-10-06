@@ -106,6 +106,20 @@ msgid ""
 "        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Hinzufügen von strukturierter Kommunikation zu Kundenrechnungen.\n"
+"--------------------------------------------------\n"
+"\n"
+"Die Verwendung von BBA-strukturierter Kommunikation vereinfacht die Abstimmung zwischen Rechnungen und Zahlungen.\n"
+"Sie können die strukturierte Kommunikation als Zahlungskommunikation in den Einstellungen Rechnungsstellung / Buchhaltung auswählen.\n"
+"Es werden zwei Algorithmen vorgeschlagen:\n"
+"\n"
+"1) Rechnungsnummer +++RRRR/RRRR/RRRRRR/RRRDD++++\n"
+"**R..R =** Rechnungsnummer, **DD =** Prüfziffer\n"
+"2) Kundenreferenz +++RRRR/RRRRRR/SSSDD++++\n"
+"**R..R =** Kundenreferenz ohne nichtnumerische Zeichen, **SSS =** Sequenznummer, **DD =** Prüfziffer\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -7485,6 +7499,8 @@ msgid ""
 " another model requires the record being deleted. If possible, archive it "
 "instead."
 msgstr ""
+" ein anderes Modell erfordert, dass der Datensatz gelöscht wird. Wenn "
+"möglich, archivieren Sie es stattdessen."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__accesses_count
@@ -7631,7 +7647,7 @@ msgstr "'%s' ist keine ganzzahlige Eingabe für das Feld '%%(field)s'"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "), are you sure to create a new one?"
-msgstr ""
+msgstr "), Bist du sicher, dass du eine neue erstellen willst?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -7655,6 +7671,8 @@ msgid ""
 "- Create/update: a mandatory field is not set.\n"
 "- Delete: another model requires the record being deleted. If possible, archive it instead."
 msgstr ""
+"- Anlegen/Aktualisieren: Ein Pflichtfeld ist nicht gesetzt.\n"
+"- Löschen: Ein anderes Modell erfordert, dass der Datensatz gelöscht wird. Wenn möglich, archivieren Sie es stattdessen."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -9984,7 +10002,7 @@ msgstr "Es muss wenigstens eine Sprache aktiviert sein."
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_attachment
 msgid "Attach a new document"
-msgstr ""
+msgstr "Hängen Sie ein neues Dokument an"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -11686,7 +11704,7 @@ msgstr "Bedingungstyp"
 #: code:addons/model.py:153
 #, python-format
 msgid "Constraint:"
-msgstr ""
+msgstr "Einschränkung:"
 
 #. module: base
 #: sql_constraint:ir.model.constraint:0
@@ -12670,7 +12688,7 @@ msgstr "Doubletten aus anderen Kontakten bereinigen"
 #: model:ir.model.fields,field_description:base.field_res_users__company_id
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Default Company"
-msgstr ""
+msgstr "Standardfirma"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
@@ -12838,7 +12856,7 @@ msgstr "Abhängigkeit"
 #. module: base
 #: model:ir.module.module,description:base.module_test_pylint
 msgid "Deprecated empty module in favor of test-lint."
-msgstr ""
+msgstr "Veraltetes leeres Modul zugunsten von Testfusseln."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__description
@@ -13106,7 +13124,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:641
 #, python-format
 msgid "Display country image"
-msgstr ""
+msgstr "Länderbild anzeigen"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:397
@@ -13137,7 +13155,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:227
 #, python-format
 msgid "Display only the date"
-msgstr ""
+msgstr "Nur das Datum anzeigen"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:225
@@ -13149,7 +13167,7 @@ msgstr "Nur die Zeit anzeigen"
 #: code:addons/base/models/ir_qweb_fields.py:640
 #, python-format
 msgid "Display phone icons"
-msgstr ""
+msgstr "Telefonsymbole anzeigen"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:641
@@ -13214,7 +13232,7 @@ msgstr "Dokumenten-Management"
 #: code:addons/models.py:3116
 #, python-format
 msgid "Document type:"
-msgstr ""
+msgstr "Dokumenten typ:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_documentation_examples
@@ -25420,6 +25438,8 @@ msgid ""
 "The server is busy right now, module operations are not possible at this "
 "time, please try again later."
 msgstr ""
+"Der Server ist gerade beschäftigt, Moduloperationen sind zur Zeit nicht "
+"möglich, bitte versuchen Sie es später noch einmal."
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:179
@@ -25526,6 +25546,7 @@ msgstr "Design"
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "There are no more contacts to merge for this request"
 msgstr ""
+"Für diese Anfrage sind keine Kontakte mehr zum Zusammenführen vorhanden"
 
 #. module: base
 #: code:addons/base/models/ir_filters.py:108
@@ -27694,7 +27715,7 @@ msgstr ""
 #: code:addons/models.py:2777
 #, python-format
 msgid "allowed for groups %s"
-msgstr ""
+msgstr "Erlaubt für Gruppen %s"
 
 #. module: base
 #: code:addons/base/models/res_currency.py:124
@@ -27865,7 +27886,7 @@ msgstr ""
 #: code:addons/models.py:2782
 #, python-format
 msgid "forbidden for groups %s"
-msgstr ""
+msgstr "Vorboten für Gruppen %s"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:255

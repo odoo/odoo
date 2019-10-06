@@ -5813,6 +5813,8 @@ msgid ""
 "Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
 " '_draft' or ''}"
 msgstr ""
+"Rechnung_${(object.name or '').replace('/','_')}${object.state == 'draft' "
+"and '_draft' or ''}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -11870,7 +11872,7 @@ msgstr "Sie können Zahlungen lediglich für offene Rechnungen vornehmen."
 #: code:addons/account/wizard/account_invoice_send.py:32
 #, python-format
 msgid "You can only send invoices."
-msgstr ""
+msgstr "Sie können nur Rechnungen versenden."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
