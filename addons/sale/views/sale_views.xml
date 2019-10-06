@@ -1232,7 +1232,7 @@
         <record id="action_invoice_salesteams" model="ir.actions.act_window">
             <field name="name">Invoices</field>
             <field name="res_model">account.move</field>
-            <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="view_id" ref="account.view_move_tree"/>
             <field name="domain">[
                 ('state', '=', 'posted'),
