@@ -6,16 +6,16 @@
 # Aleksander, 2019
 # Andy Schønhaug <odoo@cypodgroup.com>, 2019
 # Marius Stedjan <marius@stedjan.com>, 2019
-# Jorunn D. Newth, 2019
 # Martin Trigaux, 2019
+# Jorunn D. Newth, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:10+0000\n"
+"POT-Creation-Date: 2019-10-01 12:08+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Jorunn D. Newth, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -170,6 +170,21 @@ msgid "3/5"
 msgstr "3/5"
 
 #. module: website
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__redirect_301
+msgid "301 Moved permanently"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__redirect_302
+msgid "302 Moved temporarily"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__rewrite
+msgid "308 Redirect / Rewrite"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "3s"
 msgstr "3s"
@@ -183,6 +198,11 @@ msgstr "4/5"
 #: model_terms:ir.ui.view,arch_db:website.403
 msgid "403: Forbidden"
 msgstr "403: Forbudt"
+
+#. module: website
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__not_found
+msgid "404 Not Found"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.404
@@ -947,8 +967,13 @@ msgid "Account &amp; Sales management"
 msgstr "Regnskap- og Salgsadministrasjon"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
+msgid "Action"
+msgstr "Handling"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__active
-#: model:ir.model.fields,field_description:website.field_website_redirect__active
+#: model:ir.model.fields,field_description:website.field_website_rewrite__active
 #: model:ir.model.fields,field_description:website.field_website_visitor__active
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Active"
@@ -1050,6 +1075,11 @@ msgstr ""
 "Hun er mentor for våre over 100 utviklere og er ansvarlig for et nettsamfunn av mer enn tusen utviklere verden over."
 
 #. module: website
+#: model:ir.model,name:website.model_website_route
+msgid "All Website Route"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "All these icons are completely free for commercial use."
 msgstr "Alle disse ikonene kan brukes gratis for kommersiell bruk."
@@ -1122,7 +1152,7 @@ msgid "Arch Filename"
 msgstr "Arch Filnavn"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.view_redirect_search
+#: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Archived"
 msgstr "Arkivert"
@@ -1195,6 +1225,16 @@ msgstr "Nybegynner"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Big"
 msgstr "Stor"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Black"
+msgstr "Svart"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Blue"
+msgstr "Blå"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -1273,6 +1313,16 @@ msgstr "Fengende Overskrift"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Center"
 msgstr "Midtstill"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Centered"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Change Cover"
+msgstr "Endre forsidebilde"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -1568,7 +1618,8 @@ msgstr "Opprett ny nettside"
 #: model:ir.model.fields,field_description:website.field_website__create_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__create_uid
 #: model:ir.model.fields,field_description:website.field_website_page__create_uid
-#: model:ir.model.fields,field_description:website.field_website_redirect__create_uid
+#: model:ir.model.fields,field_description:website.field_website_rewrite__create_uid
+#: model:ir.model.fields,field_description:website.field_website_route__create_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor__create_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__create_uid
 msgid "Created by"
@@ -1578,7 +1629,8 @@ msgstr "Opprettet av"
 #: model:ir.model.fields,field_description:website.field_website__create_date
 #: model:ir.model.fields,field_description:website.field_website_menu__create_date
 #: model:ir.model.fields,field_description:website.field_website_page__create_date
-#: model:ir.model.fields,field_description:website.field_website_redirect__create_date
+#: model:ir.model.fields,field_description:website.field_website_rewrite__create_date
+#: model:ir.model.fields,field_description:website.field_website_route__create_date
 #: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__create_date
 msgid "Created on"
 msgstr "Opprettet"
@@ -1780,7 +1832,8 @@ msgstr "Diskusjonsgruppe"
 #: model:ir.model.fields,field_description:website.field_website_page__display_name
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__display_name
-#: model:ir.model.fields,field_description:website.field_website_redirect__display_name
+#: model:ir.model.fields,field_description:website.field_website_rewrite__display_name
+#: model:ir.model.fields,field_description:website.field_website_route__display_name
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__display_name
 #: model:ir.model.fields,field_description:website.field_website_track__display_name
 #: model:ir.model.fields,field_description:website.field_website_visitor__display_name
@@ -2111,6 +2164,16 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Filter Color"
+msgstr "Filterfarge"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Filter Intensity"
+msgstr "Filterintensitet"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid "First Feature"
 msgstr "Første funksjon"
@@ -2135,6 +2198,11 @@ msgstr "Første liste over funksjonalitet"
 #: model:ir.model.fields,help:website.field_website_page__first_page_id
 msgid "First page linked to this view"
 msgstr "Første side linket til denne visningen"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Fit text"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2208,6 +2276,11 @@ msgstr "Åpen registrering"
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Full"
 msgstr "Full"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Full Screen"
+msgstr "Fullskjerm"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2378,12 +2451,17 @@ msgstr "Flotte produkter for flotte folk"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Green"
+msgstr "Grønn"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Grid"
 msgstr "Rutenett"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
-#: model_terms:ir.ui.view,arch_db:website.view_redirect_search
+#: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Group By"
@@ -2417,6 +2495,11 @@ msgstr ""
 #: model:ir.model,name:website.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP-ruting"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Half Screen"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
@@ -2466,6 +2549,11 @@ msgid "Here are the visuals used to help you translate efficiently:"
 msgstr "Her er visualiseringene som hjelper deg med effektiv oversettelse:"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Hero"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.facebook_page.xml:0
 #, python-format
@@ -2478,6 +2566,11 @@ msgstr "Skjul forsidebilde"
 #, python-format
 msgid "Hide this page from search results"
 msgstr "Gjem denne siden fra søkeresultater"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "High"
+msgstr "Høy"
 
 #. module: website
 #. openerp-web
@@ -2524,13 +2617,19 @@ msgid "How to get my Tracking ID"
 msgstr "Hvordan få min sporings-ID"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Huge"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website__id
 #: model:ir.model.fields,field_description:website.field_website_menu__id
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_page__id
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__id
-#: model:ir.model.fields,field_description:website.field_website_redirect__id
+#: model:ir.model.fields,field_description:website.field_website_rewrite__id
+#: model:ir.model.fields,field_description:website.field_website_route__id
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__id
 #: model:ir.model.fields,field_description:website.field_website_track__id
 #: model:ir.model.fields,field_description:website.field_website_visitor__id
@@ -2874,7 +2973,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page____last_update
 #: model:ir.model.fields,field_description:website.field_website_published_mixin____last_update
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin____last_update
-#: model:ir.model.fields,field_description:website.field_website_redirect____last_update
+#: model:ir.model.fields,field_description:website.field_website_rewrite____last_update
+#: model:ir.model.fields,field_description:website.field_website_route____last_update
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata____last_update
 #: model:ir.model.fields,field_description:website.field_website_track____last_update
 #: model:ir.model.fields,field_description:website.field_website_visitor____last_update
@@ -2898,7 +2998,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website__write_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__write_uid
 #: model:ir.model.fields,field_description:website.field_website_page__write_uid
-#: model:ir.model.fields,field_description:website.field_website_redirect__write_uid
+#: model:ir.model.fields,field_description:website.field_website_rewrite__write_uid
+#: model:ir.model.fields,field_description:website.field_website_route__write_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor__write_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__write_uid
 msgid "Last Updated by"
@@ -2908,7 +3009,8 @@ msgstr "Sist oppdatert av"
 #: model:ir.model.fields,field_description:website.field_website__write_date
 #: model:ir.model.fields,field_description:website.field_website_menu__write_date
 #: model:ir.model.fields,field_description:website.field_website_page__write_date
-#: model:ir.model.fields,field_description:website.field_website_redirect__write_date
+#: model:ir.model.fields,field_description:website.field_website_rewrite__write_date
+#: model:ir.model.fields,field_description:website.field_website_route__write_date
 #: model:ir.model.fields,field_description:website.field_website_visitor__write_date
 #: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__write_date
 msgid "Last Updated on"
@@ -3042,6 +3144,11 @@ msgstr "Logo"
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Logo Height"
 msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Low"
+msgstr "Lav"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -3237,16 +3344,6 @@ msgid "Move to previous"
 msgstr "Flytt til forrige"
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_redirect__redirect_type__301
-msgid "Moved permanently (301)"
-msgstr "Permanent flyttet (301)"
-
-#. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_redirect__redirect_type__302
-msgid "Moved temporarily (302)"
-msgstr "Midlertidig flyttet (302)"
-
-#. module: website
 #: model:ir.model,name:website.model_website_multi_mixin
 msgid "Multi Website Mixin"
 msgstr "Multi Nettsted Mixin"
@@ -3275,6 +3372,7 @@ msgstr "Nettstedet mitt"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
+#: model:ir.model.fields,field_description:website.field_website_rewrite__name
 #: model:ir.model.fields,field_description:website.field_website_visitor__name
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3780,6 +3878,7 @@ msgid "Previous View Architecture"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Primary"
 msgstr "Primær"
@@ -3858,6 +3957,11 @@ msgid "Publishing Date"
 msgstr "Publiseringsdato"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Purple"
+msgstr "Lilla"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.http_error_debug
 msgid "QWeb"
 msgstr "QWeb"
@@ -3888,9 +3992,9 @@ msgid "Record Rule"
 msgstr "Post Regel"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_redirect__url_from
-msgid "Redirect From"
-msgstr "Omdirigering fra"
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Red"
+msgstr "Rød"
 
 #. module: website
 #. openerp-web
@@ -3900,18 +4004,12 @@ msgid "Redirect Old URL"
 msgstr "Omdiriger gammel URL"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_redirect__url_to
-msgid "Redirect To"
-msgstr "Omdiriger til"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_redirect__redirect_type
-#: model_terms:ir.ui.view,arch_db:website.view_redirect_search
+#: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 msgid "Redirection Type"
 msgstr "Omdirigeringstype"
 
 #. module: website
-#: model:ir.ui.menu,name:website.menu_website_redirect_list
+#: model:ir.ui.menu,name:website.menu_website_rewrite
 msgid "Redirects"
 msgstr "Omdirigeringer"
 
@@ -3919,6 +4017,16 @@ msgstr "Omdirigeringer"
 #: model_terms:ir.ui.view,arch_db:website.s_references
 msgid "References"
 msgstr "Referanser"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
+msgid "Refresh route's list"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Regular"
+msgstr "Normal"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_form_view
@@ -3948,6 +4056,11 @@ msgstr "Relaterte nøkkelord"
 #, python-format
 msgid "Remove"
 msgstr "Fjern"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Remove Cover"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -3998,6 +4111,11 @@ msgid "Review"
 msgstr "Gjennomsyn"
 
 #. module: website
+#: model:ir.actions.act_window,name:website.action_website_rewrite_list
+msgid "Rewrite"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Right"
 msgstr "Høyre"
@@ -4016,6 +4134,12 @@ msgstr "Avrundet"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Rounded corners"
 msgstr "Runde hjørner"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_rewrite__route_id
+#: model:ir.model.fields,field_description:website.field_website_route__path
+msgid "Route"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_website_seo_metadata
@@ -4058,7 +4182,7 @@ msgid "Search Menus"
 msgstr "Søk i menyer"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.view_redirect_search
+#: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 msgid "Search Redirect"
 msgstr "Søke-omdirigering"
 
@@ -4089,6 +4213,7 @@ msgid "Second list of Features"
 msgstr "Andre liste over funksjonalitet"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Secondary"
 msgstr ""
@@ -4149,7 +4274,7 @@ msgstr "Send oss en epostmelding"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__sequence
 #: model:ir.model.fields,field_description:website.field_website_page__priority
-#: model:ir.model.fields,field_description:website.field_website_redirect__sequence
+#: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
 msgid "Sequence"
 msgstr "Sekvens"
 
@@ -4413,6 +4538,16 @@ msgid "Text"
 msgstr "Tekst"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Text Alignment"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Text Size"
+msgstr ""
+
+#. module: website
 #: code:addons/website/controllers/backend.py:0
 #, python-format
 msgid "The Google Analytics Client ID or Key you entered seems incorrect."
@@ -4671,6 +4806,11 @@ msgid "Timezone"
 msgstr "Tidssone"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Tiny"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -4838,6 +4978,18 @@ msgstr ""
 "Skriv '<i class=\"confirm_word\">ja</i>' i feltet nedenfor for å bekrefte."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_website_rewrite__redirect_type
+msgid ""
+"Type of redirect/Rewrite:\n"
+"\n"
+"        301 Moved permanently: The browser will keep in cache the new url.\n"
+"        302 Moved temporarily: The browser will not keep in cache the new url and ask again the next time the new url.\n"
+"        404 Not Found: If you want remove a specific page/controller (e.g. Ecommerce is installed, but you don't want /shop on a specific website)\n"
+"        308 Redirect / Rewrite: If you want rename a controller with a new url. (Eg: /shop -> /garden - Both url will be accessible but /shop will automatically be redirected to /garden)\n"
+"    "
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4846,11 +4998,22 @@ msgid "UA-XXXXXXXX-Y"
 msgstr "UA-XXXXXXXX-Y"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_rewrite__url_from
+#: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
+msgid "URL from"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__cdn_filters
 #: model:ir.model.fields,help:website.field_website__cdn_filters
 msgid "URL matching those filters will be rewritten using the CDN Base URL"
 msgstr ""
 "URL som passer med filtrene vil bli omskrevet ved hjelp av CDN base-URL"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
+msgid "URL to"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5209,7 +5372,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__website_id
 #: model:ir.model.fields,field_description:website.field_website_page__website_id
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_id
-#: model:ir.model.fields,field_description:website.field_website_redirect__website_id
+#: model:ir.model.fields,field_description:website.field_website_rewrite__website_id
 #: model:ir.model.fields,field_description:website.field_website_visitor__website_id
 #: model:ir.ui.menu,name:website.menu_website_configuration
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -5286,22 +5449,6 @@ msgstr "Nettsted-filbane"
 #: model:ir.model,name:website.model_website_published_mixin
 msgid "Website Published Mixin"
 msgstr "Nettsted Publisert Mixin"
-
-#. module: website
-#: model:ir.model,name:website.model_website_redirect
-msgid "Website Redirect"
-msgstr "Nettsted-omdirigering"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_redirect_form_view
-msgid "Website Redirect Settings"
-msgstr "Omdirigeringsinnstillinger for nettsted"
-
-#. module: website
-#: model:ir.actions.act_window,name:website.action_website_redirect_list
-#: model_terms:ir.ui.view,arch_db:website.website_redirect_tree_view
-msgid "Website Redirects"
-msgstr "Nettsted-omdirigeringer"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
@@ -5395,6 +5542,21 @@ msgid "Website opengraph image"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_website_rewrite
+msgid "Website rewrite"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
+msgid "Website rewrite Settings"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.action_website_rewrite_tree
+msgid "Website rewrites"
+msgstr ""
+
+#. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
 #: model:ir.actions.server,name:website.ir_actions_server_website_google_analytics
 msgid "Website: Dashboard"
@@ -5425,6 +5587,11 @@ msgstr "Velkommen til"
 #, python-format
 msgid "What do you want to do?"
 msgstr "Hva vil du gjøre?"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "White"
+msgstr "Hvit"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
@@ -5461,6 +5628,11 @@ msgstr ""
 msgid ""
 "Write what the customer would like to know, <br/>not what you want to show."
 msgstr "Skriv det kunden gjerne vil vite, <br/>ikke det du vil vise frem."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Yellow"
+msgstr "Gul"
 
 #. module: website
 #. openerp-web

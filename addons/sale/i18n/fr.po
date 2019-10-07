@@ -25,14 +25,13 @@
 # Fabri Yohann <psn@fabri.pw>, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # f5f0a0dac17dde787a1d812a6989680e, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
 # Laura Piraux <lap@odoo.com>, 2019
 # Nathan Noël <nathan070@me.com>, 2019
 # LEONARD Jean-Christophe <jean-christophe.leonard@myceliandre.fr>, 2019
 # Alain van de Werve <avw@openerp.com>, 2019
 # Nathan Grognet <ngr@odoo.com>, 2019
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2019
-# Jonathan Wynands <jwy@odoo.com>, 2019
+# jwy_odoo <jwy@odoo.com>, 2019
 # Celia Tydgat <cty@odoo.com>, 2019
 # gdp Odoo <gdp@odoo.com>, 2019
 # Lucas Deliege <lud@odoo.com>, 2019
@@ -41,31 +40,21 @@
 # Fabien Pinckaers <fp@openerp.com>, 2019
 # Fred Gilson <fgi@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
-msgid ""
-" Fiscal positions are used to adapt taxes and accounts for particular "
-"customers or sales orders/invoices. The default value comes from the "
-"customer."
-msgstr ""
-" Les positions fiscales sont utilisées pour adapter les taxes et les comptes"
-" à des clients particuliers ou à des commandes/factures. La valeur par "
-"défaut provient du client."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -405,6 +394,16 @@ msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Notre offre</b></small>"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Quotations:</small>"
+msgstr "<small>Devis:</small>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Revenues:</small>"
+msgstr "<small>Revenus:</small>"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
@@ -556,16 +555,6 @@ msgstr "<strong>Date de commande :</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Quotation Date:</strong>"
 msgstr "<strong>Date du devis :</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Quotations</strong>"
-msgstr "<strong>Devis</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Revenues</strong>"
-msgstr "<strong>Revenus</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1654,6 +1643,14 @@ msgstr "Connecteur FedEx"
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "Position fiscale"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+msgid ""
+"Fiscal positions are used to adapt taxes and accounts for particular "
+"customers or sales orders/invoices.The default value comes from the "
+"customer."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids

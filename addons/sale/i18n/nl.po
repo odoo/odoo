@@ -11,34 +11,23 @@
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
-msgid ""
-" Fiscal positions are used to adapt taxes and accounts for particular "
-"customers or sales orders/invoices. The default value comes from the "
-"customer."
-msgstr ""
-"Fiscale posities worden gebruikt om belastingen en rekeningen voor bepaalde "
-"klanten of verkooporders / facturen aan te passen. De standaardwaarde komt "
-"van de klant."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -356,6 +345,16 @@ msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Uw voordeel</b></small>"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Quotations:</small>"
+msgstr "<small>Offertes:</small>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Revenues:</small>"
+msgstr "<small>Omzet:</small>"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
@@ -511,16 +510,6 @@ msgstr "<strong>Order datum:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Quotation Date:</strong>"
 msgstr "<strong>Offertedatum:</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Quotations</strong>"
-msgstr "<strong>Offertes</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Revenues</strong>"
-msgstr "<strong>Omzet</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1595,6 +1584,14 @@ msgstr "FedEx connector"
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "Fiscale positie"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+msgid ""
+"Fiscal positions are used to adapt taxes and accounts for particular "
+"customers or sales orders/invoices.The default value comes from the "
+"customer."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids

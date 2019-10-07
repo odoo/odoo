@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:10+0000\n"
+"POT-Creation-Date: 2019-09-30 09:40+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -42,7 +42,7 @@ msgstr "Toplantı Sayısı"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "% (Estimated by Odoo)"
-msgstr ""
+msgstr "% (Odoo'nın tahmini)"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -89,13 +89,13 @@ msgstr ""
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
-"Eposta üzerinden <b>birlikte çalıştıklarınızı davet edin</b><br/><i>Her bir "
-"satır için bir eposta adresi girin.</i>"
+"E-posta üzerinden <b>birlikte çalıştıklarınızı davet edin</b><br/><i>Her bir"
+" satır için bir e-posta adresi girin.</i>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "<b>Predictive Lead Scoring</b>"
-msgstr ""
+msgstr "Tahmini aday puanlama"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -198,8 +198,18 @@ msgid ""
 msgstr ""
 "<p>Potansiyel müşerilerinize <b>mesajlar gönderin</b> ve cevaplarını "
 "otomatik şekilde fırsat ile ilişkilendirin.</p><p class=\"mb0\"><i>'@'</i> "
-"işareti ile bahsetmek istediğiniz kişileri ekleyin - aynen epostalardaki cc "
-"gibi.</p>"
+"işareti ile bahsetmek istediğiniz kişileri ekleyin - aynen e-postalardaki cc"
+" gibi.</p>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
+msgid "<small>Leads:</small>"
+msgstr "<small>Adaylar:</small>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
+msgid "<small>Opportunities:</small>"
+msgstr "<small>Fırsatlar:</small>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -216,19 +226,9 @@ msgid "<span class=\"oe_grey p-2\"> at </span>"
 msgstr ""
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<strong>Leads</strong>"
-msgstr "<strong>Adaylar</strong>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<strong>Opportunities</strong>"
-msgstr "<strong>Fırsatlar</strong>"
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Accept Emails From"
-msgstr "Eposta Kabul Etme"
+msgstr "E-posta Kabul Etme"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction
@@ -669,7 +669,7 @@ msgstr "Doğru"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr "Bu kişi için iletilmeyen eposta sayısı"
+msgstr "Bu kişi için iletilmeyen e-posta sayısı"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_country_id
@@ -899,12 +899,12 @@ msgstr "Düzenle"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_from
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Email"
-msgstr "Eposta"
+msgstr "E-posta"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Email Alias"
-msgstr "Eposta Rumuzu"
+msgstr "E-posta Rumuzu"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_email_state
@@ -915,7 +915,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_from
 msgid "Email address of the contact"
-msgstr "Kişinin eposta adresi"
+msgstr "Kişinin e-posta adresi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
@@ -1189,8 +1189,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Eğer email adresi kara listede ise, bağlantı, toplu eposta gönderiminde, "
-"herhangi bir listeden mail almayacaktır.  "
+"Eğer  e-posta adresi kara listede ise, bağlantı, toplu e-posta gönderiminde,"
+" herhangi bir listeden mail almayacaktır.  "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignation
@@ -1217,7 +1217,7 @@ msgstr "Arşivlenenleri dahil et"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Incoming Emails"
-msgstr "Gelen Epostalar"
+msgstr "Gelen E-postalar"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__incorrect
@@ -1994,7 +1994,7 @@ msgstr "Sahibi"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_email
 msgid "Partner Contact Email"
-msgstr "İş Ortağı Kontak Epostası"
+msgstr "İş Ortağı Kontak E-postası"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_name
@@ -2229,7 +2229,7 @@ msgstr "Aday/Fırsat Seç"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Send email"
-msgstr "Eposta Gönder"
+msgstr "E-posta Gönder"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__sequence
@@ -2445,8 +2445,8 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Kayıtların sahibi, bu rumuza epostalar alındıktan sonra oluşturulmuştur. Bu "
-"alan ayarlanmamışsa, sistem gönderenin (Kimden) adresinden doğru sahibini "
+"Kayıtların sahibi, bu rumuza e-postalar alındıktan sonra oluşturulmuştur. Bu"
+" alan ayarlanmamışsa, sistem gönderenin (Kimden) adresinden doğru sahibini "
 "bulmaya çalışacaktır ya da o adres için hiç sistem kullanıcısı bulunamazsa "
 "Administrator hesabını kullanacaktır."
 
@@ -2486,7 +2486,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "Bu teslimat yöntemidir. örn: Postakartı, Eposta yada Banner reklamı"
+msgstr "Bu teslimat yöntemidir. örn: Postakartı, E-posta yada Banner reklamı"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__source_id
@@ -2528,7 +2528,7 @@ msgstr "Bu hedef mevcut değil."
 #: model:ir.model.fields,field_description:crm.field_crm_lead__title
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
-msgstr "Başlık"
+msgstr "Sıfat"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2684,7 +2684,7 @@ msgstr "Aşamaları sıralamak için kullanılır. Düşük olması daha iyidir.
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_email
 msgid "User Email"
-msgstr "Kullanıcı Epostası"
+msgstr "Kullanıcı E-postası"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_login
@@ -2746,7 +2746,7 @@ msgstr "İlgili kişinin Web sitesi"
 msgid ""
 "When sending mails, the default email address is taken from the Sales Team."
 msgstr ""
-"Eposta gönderilirken, varsayılan eposta adresi satış ekibinden alınır."
+"E-posta gönderilirken, varsayılan e-posta adresi satış ekibinden alınır."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0 model:crm.stage,name:crm.stage_lead4
@@ -2826,7 +2826,7 @@ msgstr "PK"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. Product Pricing"
-msgstr "ör. Ürün fiyatı"
+msgstr "örn. Ürün Fiyatı"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form

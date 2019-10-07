@@ -4,17 +4,16 @@
 # 
 # Translators:
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Otgonbayar.A <gobi.mn@gmail.com>, 2019
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2019-09-30 09:42+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,18 +23,13 @@ msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Free</span>"
-msgstr "<span>Үнэгүй</span>"
+msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
+msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Unlimited</span>"
-msgstr "<span>Хязгааргүй</span>"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>left</span>"
-msgstr "<span>үлдсэн</span>"
+msgid "<i class=\"fa fa-check mr-2\"/>Registered"
+msgstr ""
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0
@@ -63,6 +57,11 @@ msgid "Event Tickets"
 msgstr "Арга хэмжээний тасалбарууд"
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Free"
+msgstr "үнэгүй"
+
+#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
 msgid "N/A"
 msgstr "Алга"
@@ -81,6 +80,11 @@ msgstr ""
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "Бараа"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Register"
+msgstr "Бүртгэх"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/controllers/main.py:0
@@ -102,6 +106,11 @@ msgstr "Борлуулалтын захиалга"
 #: model:ir.model,name:website_event_sale.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Борлуулалтын захиалгын мөр"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Sales end on"
+msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
@@ -136,6 +145,13 @@ msgstr "Тасалбар нь энэ бараатай тохирохгүй ба�
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
 msgid "Ticket"
 msgstr "Тасалбар"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid ""
+"Tickets\n"
+"                    <span class=\"close\">×</span>"
+msgstr ""
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/product_pricelist.py:0
