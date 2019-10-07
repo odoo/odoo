@@ -17,14 +17,17 @@
                     <t t-if="courses_completed" t-call="website_slides.display_course">
                         <t t-set="courses" t-value="courses_completed"></t>
                     </t>
-                    <p t-else="" class="text-muted">No completed course yet</p>
+                    <div t-else="" class="text-muted d-inline-block">No completed courses yet!</div>
+                    <div class="text-right d-inline-block pull-right">
+                        <a href="/slides/all" class="btn btn-link btn-sm"><i class="fa fa-arrow-right mr-1"/>All Courses</a>
+                    </div>
                 </div>
                 <div class="mb32">
                     <h5 class="border-bottom pb-1">Followed Courses</h5>
                     <t t-if="courses_ongoing" t-call="website_slides.display_course">
                         <t t-set="courses" t-value="courses_ongoing"></t>
                     </t>
-                    <p t-else="" class="text-muted">No followed course yet</p>
+                    <p t-else="" class="text-muted">No followed courses yet!</p>
                 </div>
             </t>
         </xpath>
