@@ -674,13 +674,19 @@ var RTEWidget = Widget.extend({
         if (this && this.$last && (!$editable.length || this.$last[0] !== $editable[0])) {
             var $destroy = this.$last;
             history.splitNext();
-
-            _.delay(function () {
+            // In some special cases, we need to clear the timeout.
+            var lastTimerId = _.delay(function () {
                 var id = $destroy.data('note-id');
                 $destroy.destroy().removeData('note-id').removeAttr('data-note-id');
                 $('#note-popover-'+id+', #note-handle-'+id+', #note-dialog-'+id+'').remove();
             }, 150); // setTimeout to remove flickering when change to editable zone (re-create an editor)
             this.$last = null;
+            // for modal dialogs (eg newsletter popup), when we close the dialog, the modal is
+            // destroyed immediately and so after the delayed execution due to timeout, dialog will
+            // not be available, leading to trace-back, so we need to clearTimeout for the dialogs.
+            if ($destroy.hasClass('modal-body')) {
+                clearTimeout(lastTimerId);
+            }
         }
         if ($editable.length && (!this.$last || this.$last[0] !== $editable[0])) {
             $editable.summernote(this._getConfig($editable));
