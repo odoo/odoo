@@ -122,11 +122,17 @@ class account_payment(models.Model):
                     raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
 
         amount = self._compute_payment_amount(invoices, invoices[0].currency_id)
+
+        if invoices[0].partner_id.type == 'invoice':
+            partner_id = invoices[0].partner_id
+        else:
+            partner_id = invoices[0].commercial_partner_id
+
         rec.update({
             'currency_id': invoices[0].currency_id.id,
             'amount': abs(amount),
             'payment_type': 'inbound' if amount > 0 else 'outbound',
-            'partner_id': invoices[0].commercial_partner_id.id,
+            'partner_id': partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'communication': invoices[0].reference or invoices[0].number,
             'invoice_ids': [(6, 0, invoices.ids)],
@@ -782,6 +788,11 @@ class payment_register(models.TransientModel):
             currency.
         :return: The payment values as a dictionary.
         '''
+        if invoices[0].partner_id.type == 'invoice':
+            partner_id = invoices[0].partner_id
+        else:
+            partner_id = invoices[0].commercial_partner_id
+
         amount = self.env['account.payment']._compute_payment_amount(invoices=invoices, currency=invoices[0].currency_id)
         values = {
             'journal_id': self.journal_id.id,
@@ -792,7 +803,7 @@ class payment_register(models.TransientModel):
             'payment_type': ('inbound' if amount > 0 else 'outbound'),
             'amount': abs(amount),
             'currency_id': invoices[0].currency_id.id,
-            'partner_id': invoices[0].commercial_partner_id.id,
+            'partner_id': partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'partner_bank_account_id': invoices[0].partner_bank_id.id,
         }
@@ -807,7 +818,12 @@ class payment_register(models.TransientModel):
         grouped = defaultdict(lambda: self.env['account.invoice'])
         for inv in self.invoice_ids:
             if self.group_payment:
-                grouped[(inv.commercial_partner_id, inv.currency_id, inv.partner_bank_id, MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type])] += inv
+                if inv.partner_id.type == 'invoice':
+                    partner_id = inv.partner_id
+                else:
+                    partner_id = inv.commercial_partner_id
+
+                grouped[(partner_id, inv.currency_id, inv.partner_bank_id, MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type])] += inv
             else:
                 grouped[inv.id] += inv
         return [self._prepare_payment_vals(invoices) for invoices in grouped.values()]
