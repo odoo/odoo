@@ -1844,7 +1844,7 @@ class AccountMove(models.Model):
                 else:
                     continue
 
-                for tax in self.env['account.tax'].browse(tax_ids):
+                for tax in self.env['account.tax'].browse(tax_ids).flatten_taxes_hierarchy():
                     for inv_rep_line, ref_rep_line in zip(tax.invoice_repartition_line_ids, tax.refund_repartition_line_ids):
                         mapping[inv_rep_line] = ref_rep_line
             return mapping
@@ -1872,7 +1872,8 @@ class AccountMove(models.Model):
             # ==== Map tax repartition lines ====
             if line_vals.get('tax_ids') and line_vals['tax_ids'][0][2]:
                 # Base line.
-                invoice_repartition_lines = self.env['account.tax'].browse(line_vals['tax_ids'][0][2])\
+                taxes = self.env['account.tax'].browse(line_vals['tax_ids'][0][2]).flatten_taxes_hierarchy()
+                invoice_repartition_lines = taxes\
                     .mapped('invoice_repartition_line_ids')\
                     .filtered(lambda line: line.repartition_type == 'base')
                 refund_repartition_lines = invoice_repartition_lines\
