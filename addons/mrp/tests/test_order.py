@@ -974,6 +974,174 @@ class TestMrpOrder(TestMrpCommon):
         produce_wizard = produce_form.save()
         produce_wizard.do_produce()
 
+    def test_product_produce_duplicate_1(self):
+        """ produce a finished product tracked by serial number 2 times with the
+        same SN. Check that an error is raised the second time"""
+        mo1, bom, p_final, p1, p2 = self.generate_mo(tracking_final='serial', qty_final=1, qty_base_1=1,)
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo1.id,
+            'active_ids': [mo1.id],
+        }))
+        product_produce = produce_form.save()
+        product_produce.action_generate_serial()
+        sn = product_produce.finished_lot_id
+        product_produce.do_produce()
+        mo1.button_mark_done()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = p_final
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1
+        mo2 = mo_form.save()
+        mo2.action_confirm()
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo2.id,
+            'active_ids': [mo2.id],
+        }))
+        produce_form.finished_lot_id = sn
+        product_produce = produce_form.save()
+        with self.assertRaises(UserError):
+            product_produce.do_produce()
+
+    def test_product_produce_duplicate_2(self):
+        """ produce a finished product with component tracked by serial number 2
+        times with the same SN. Check that an error is raised the second time"""
+        mo1, bom, p_final, p1, p2 = self.generate_mo(tracking_base_2='serial', qty_final=1, qty_base_1=1,)
+        sn = self.env['stock.production.lot'].create({
+            'name': 'sn used twice',
+            'product_id': p2.id,
+            'company_id': self.env.company.id,
+        })
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo1.id,
+            'active_ids': [mo1.id],
+        }))
+        with produce_form.raw_workorder_line_ids.edit(0) as line:
+            line.lot_id = sn
+        product_produce = produce_form.save()
+        product_produce.do_produce()
+        mo1.button_mark_done()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = p_final
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1
+        mo2 = mo_form.save()
+        mo2.action_confirm()
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo2.id,
+            'active_ids': [mo2.id],
+        }))
+        with produce_form.raw_workorder_line_ids.edit(0) as line:
+            line.lot_id = sn
+        product_produce = produce_form.save()
+        with self.assertRaises(UserError):
+            product_produce.do_produce()
+
+    def test_product_produce_duplicate_3(self):
+        """ produce a finished product with by-product tracked by serial number 2
+        times with the same SN. Check that an error is raised the second time"""
+        finished_product = self.env['product.product'].create({'name': 'finished product'})
+        byproduct = self.env['product.product'].create({'name': 'byproduct', 'tracking': 'serial'})
+        component = self.env['product.product'].create({'name': 'component'})
+        bom = self.env['mrp.bom'].create({
+            'product_id': finished_product.id,
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_uom_id': finished_product.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ],
+            'byproduct_ids': [
+                (0, 0, {'product_id': byproduct.id, 'product_qty': 1, 'product_uom_id': byproduct.uom_id.id})
+            ]})
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished_product
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        sn = self.env['stock.production.lot'].create({
+            'name': 'sn used twice',
+            'product_id': byproduct.id,
+            'company_id': self.env.company.id,
+        })
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+
+        with produce_form.finished_workorder_line_ids.edit(0) as line:
+            line.lot_id = sn
+        product_produce = produce_form.save()
+        product_produce.do_produce()
+        mo.button_mark_done()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished_product
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1
+        mo2 = mo_form.save()
+        mo2.action_confirm()
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo2.id,
+            'active_ids': [mo2.id],
+        }))
+        with produce_form.finished_workorder_line_ids.edit(0) as line:
+            line.lot_id = sn
+        product_produce = produce_form.save()
+        with self.assertRaises(UserError):
+            product_produce.do_produce()
+
+    def test_product_produce_duplicate_4(self):
+        """ Consuming the same serial number two times should not give an error if
+        a repair order of the first production has been made before the second one"""
+        mo1, bom, p_final, p1, p2 = self.generate_mo(tracking_base_2='serial', qty_final=1, qty_base_1=1,)
+        sn = self.env['stock.production.lot'].create({
+            'name': 'sn used twice',
+            'product_id': p2.id,
+            'company_id': self.env.company.id,
+        })
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo1.id,
+            'active_ids': [mo1.id],
+        }))
+        with produce_form.raw_workorder_line_ids.edit(0) as line:
+            line.lot_id = sn
+        product_produce = produce_form.save()
+        product_produce.do_produce()
+        mo1.button_mark_done()
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.product_id = p_final
+        unbuild_form.bom_id = bom
+        unbuild_form.product_qty = 1
+        unbuild_form.mo_id = mo1
+        unbuild_order = unbuild_form.save()
+        unbuild_order.action_unbuild()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = p_final
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1
+        mo2 = mo_form.save()
+        mo2.action_confirm()
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo2.id,
+            'active_ids': [mo2.id],
+        }))
+        with produce_form.raw_workorder_line_ids.edit(0) as line:
+            line.lot_id = sn
+        product_produce = produce_form.save()
+        product_produce.do_produce()
+        
     def test_product_produce_uom(self):
         """ Produce a finished product tracked by serial number. Set another
         UoM on the bom. The produce wizard should keep the UoM of the product (unit)
