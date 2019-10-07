@@ -200,7 +200,7 @@ class TestAdvMailPerformance(BaseMailPerformance):
     def test_message_assignation_email(self):
         self.user_test.write({'notification_type': 'email'})
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=39, emp=40):
+        with self.assertQueryCount(__system__=40, emp=41):
             record.write({
                 'user_id': self.user_test.id,
             })
