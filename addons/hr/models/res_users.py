@@ -66,7 +66,7 @@ class User(models.Model):
 
     @api.depends('employee_ids')
     def _compute_employee_count(self):
-        for user in self:
+        for user in self.with_context(active_test=False):
             user.employee_count = len(user.employee_ids)
 
     def __init__(self, pool, cr):
