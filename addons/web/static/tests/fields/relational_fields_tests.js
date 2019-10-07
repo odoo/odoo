@@ -2541,6 +2541,49 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('interact with reference field changed by onchange', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.onchanges = {
+            bar: function (obj) {
+                if (!obj.bar) {
+                    obj.reference = 'partner,1';
+                }
+            },
+        };
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form>
+                    <field name="bar"/>
+                    <field name="reference"/>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {
+                        bar: false,
+                        reference: 'partner,4',
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // trigger the onchange to set a value for the reference field
+        await testUtils.dom.click(form.$('.o_field_boolean input'));
+
+        assert.strictEqual(form.$('.o_field_widget[name=reference] select').val(), 'partner');
+
+        // manually update reference field
+        await testUtils.fields.many2one.searchAndClickItem('reference', {search: 'aaa'});
+
+        // save
+        await testUtils.form.clickSave(form);
+
+        form.destroy();
+    });
+
     QUnit.test('default_get and onchange with a reference field', async function (assert) {
         assert.expect(8);
 
