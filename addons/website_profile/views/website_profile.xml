@@ -376,12 +376,12 @@
                 </t>
             </t>
         </div>
-        <div class="mb-3" t-if="not user.badge_ids">
-            <p class="text-muted">No badge yet</p>
+        <div class="mb-3 d-inline-block" t-if="not user.badge_ids">
+            <p class="text-muted">No badges yet!</p>
         </div>
-        <div class="text-right">
-            <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}"><i class="fa fa-arrow-right"/> Check available badges</a>
-            <a t-else="" href="/profile/ranks_badges" class="btn btn-link btn-sm"><i class="fa fa-arrow-right mr-1"/>Check all available badges</a>
+        <div class="text-right d-inline-block pull-right">
+            <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}" class="btn btn-link btn-sm"><i class="fa fa-arrow-right"/> All Badges</a>
+            <a t-else="" href="/profile/ranks_badges" class="btn btn-link btn-sm"><i class="fa fa-arrow-right mr-1"/>All Badges</a>
         </div>
     </template>
 
