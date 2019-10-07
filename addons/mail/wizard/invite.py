@@ -71,13 +71,17 @@ class Invite(models.TransientModel):
                     'no_auto_thread': True,
                     'add_sign': True,
                 })
-                recipients_data = {'partners': [{
-                    'id': pid,
-                    'share': True,
-                    'notif': 'email',
-                    'type': 'customer',
-                    'groups': []
-                } for pid in new_partners.ids]}
-                document._notify_record_by_email(message, recipients_data, send_after_commit=False)
+                partners_data = []
+                recipient_data = self.env['mail.followers']._get_recipient_data(document, 'comment', False, pids=new_partners.ids)
+                for pid, cid, active, pshare, ctype, notif, groups in recipient_data:
+                    pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
+                    if not pshare and notif:  # has an user and is not shared, is therefore user
+                        partners_data.append(dict(pdata, type='user'))
+                    elif pshare and notif:  # has an user and is shared, is therefore portal
+                        partners_data.append(dict(pdata, type='portal'))
+                    else:  # has no user, is therefore customer
+                        partners_data.append(dict(pdata, type='customer'))
+
+                document._notify_record_by_email(message, {'partners': partners_data, 'channels': []}, send_after_commit=False)
                 message.unlink()
         return {'type': 'ir.actions.act_window_close'}
