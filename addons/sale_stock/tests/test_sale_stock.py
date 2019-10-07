@@ -328,6 +328,14 @@ class TestSaleStock(TestSale):
             elif backorder_move.product_id.id == item2.id:
                 self.assertEqual(backorder_move.product_qty, 2)
 
+        # add a new sale order lines
+        self.so.write({
+            'order_line': [
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+            ]
+        })
+        self.assertEqual(sum(backorder.move_lines.filtered(lambda m: m.product_id.id == item1.id).mapped('product_qty')), 2)
+
     def test_05_create_picking_update_saleorderline(self):
         """ Same test than test_04 but only with enough products in stock so that the reservation
         is successful.
