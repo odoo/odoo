@@ -194,7 +194,11 @@ class MrpProduction(models.Model):
         if len(pickings) > 1:
             action['domain'] = [('id', 'in', pickings.ids)]
         elif pickings:
-            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
             action['res_id'] = pickings.id
         return action
 
@@ -707,8 +711,7 @@ class MrpProduction(models.Model):
             'state': 'done',
             'product_uom_qty': 0.0,
         })
-        self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
-        return self.write({'state': 'done'})
+        return self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
 
     @api.multi
     def do_unreserve(self):

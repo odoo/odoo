@@ -13995,6 +13995,59 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('interact with reference field changed by onchange', function (assert) {
+        assert.expect(2);
+        var done = assert.async();
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        this.data.partner.onchanges = {
+            bar: function (obj) {
+                if (!obj.bar) {
+                    obj.reference = 'partner,1';
+                }
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                        '<field name="bar"/>' +
+                        '<field name="reference"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {
+                        bar: false,
+                        reference: 'partner,4',
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // trigger the onchange to set a value for the reference field
+        form.$('.o_field_boolean input').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name=reference] select').val(), 'partner');
+
+        // manually update reference field
+        var $dropdown = form.$('.o_field_widget[name=reference] input').autocomplete('widget');
+        form.$('.o_field_widget[name=reference] input').val('aaa').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            $dropdown.find('li:first()').click(); // select 'aaa'
+
+            // save
+            form.$buttons.find('.o_form_button_save').click();
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            done();
+            form.destroy();
+        });
+    });
+
     QUnit.test('default_get and onchange with a reference field', function (assert) {
         assert.expect(8);
 
