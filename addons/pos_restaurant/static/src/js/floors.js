@@ -217,7 +217,12 @@ var TableWidget = PosBaseWidget.extend({
                             self.table[field] = table[field];
                         }
                         self.pos.tables_by_id[table.id] = self.table;
-                        self.renderElement();
+                        // If selected, render with drag and resize event handlers.
+                        if (!self.selected) {
+                            self.renderElement();
+                        } else {
+                            self.select();
+                        }
                     });
             }, function(type,err) {
                     self.gui.show_sync_error_popup();
