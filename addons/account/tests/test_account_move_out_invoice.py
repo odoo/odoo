@@ -877,6 +877,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             },
         ], {
             **self.move_vals,
+            'invoice_payment_term_id': None,
             'name': '/',
             'date': move_reversal.date,
             'state': 'draft',
@@ -922,6 +923,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             },
         ], {
             **self.move_vals,
+            'invoice_payment_term_id': None,
             'date': move_reversal.date,
             'state': 'posted',
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
@@ -988,6 +990,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             },
         ], {
             **self.move_vals,
+            'invoice_payment_term_id': None,
             'currency_id': self.currency_data['currency'].id,
             'date': move_reversal.date,
             'state': 'draft',
@@ -1043,6 +1046,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             },
         ], {
             **self.move_vals,
+            'invoice_payment_term_id': None,
             'currency_id': self.currency_data['currency'].id,
             'date': move_reversal.date,
             'state': 'posted',
