@@ -3,6 +3,7 @@ odoo.define('web.DebugManager', function (require) {
 
 var core = require('web.core');
 var session = require('web.session');
+var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
