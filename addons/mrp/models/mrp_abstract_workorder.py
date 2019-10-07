@@ -299,6 +299,18 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 if float_compare(qty_done, qty_to_consume, precision_rounding=rounding) != 0:
                     raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % lines[0].product_id.name)
 
+    def _check_sn_uniqueness(self):
+        """ Alert the user if the serial number as already been produced """
+        if self.product_tracking == 'serial' and self.finished_lot_id:
+            sml = self.env['stock.move.line'].search_count([
+                ('lot_id', '=', self.finished_lot_id.id),
+                ('location_id.usage', '=', 'production'),
+                ('qty_done', '=', 1),
+                ('state', '=', 'done')
+            ])
+            if sml:
+                raise UserError(_('This serial number for product %s has already been produced') % self.product_id.name)
+
 
 class MrpAbstractWorkorderLine(models.AbstractModel):
     _name = "mrp.abstract.workorder.line"
@@ -360,9 +372,6 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
         # consumed move lines, raise.
         if self.product_id.tracking != 'none' and not self.lot_id:
             raise UserError(_('Please enter a lot or serial number for %s !' % self.product_id.display_name))
-
-        if self.lot_id and self.product_id.tracking == 'serial' and self.lot_id in self.move_id.move_line_ids.filtered(lambda ml: ml.qty_done).mapped('lot_id'):
-            raise UserError(_('You cannot consume the same serial number twice. Please correct the serial numbers encoded.'))
 
         # Update reservation and quantity done
         for ml in move_lines:
@@ -445,6 +454,51 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             vals_list.append(vals)
 
         return vals_list
+
+    def _check_line_sn_uniqueness(self):
+        """ Alert the user if the line serial number as already been consumed/produced """
+        self.ensure_one()
+        if self.product_tracking == 'serial' and self.lot_id:
+            domain = [
+                ('lot_id', '=', self.lot_id.id),
+                ('qty_done', '=', 1),
+                ('state', '=', 'done')
+            ]
+            # Adapt domain and error message in case of component or byproduct
+            if self[self._get_raw_workorder_inverse_name()]:
+                message = _('The serial number %s used for component %s has already been consumed') % (self.lot_id.name, self.product_id.name)
+                co_prod_move_lines = self._get_production().move_raw_ids.move_line_ids
+                co_prod_wo_lines = self[self._get_raw_workorder_inverse_name()].raw_workorder_line_ids
+                domain_unbuild = domain + [
+                    ('production_id', '=', False),
+                    ('location_id.usage', '=', 'production')
+                ]
+                domain.append(('location_dest_id.usage', '=', 'production'))
+            else:
+                message = _('The serial number %s used for byproduct %s has already been produced') % (self.lot_id.name, self.product_id.name)
+                co_prod_move_lines = self._get_production().move_finished_ids.move_line_ids.filtered(lambda ml: ml.product_id != self._get_production().product_id)
+                co_prod_wo_lines = self[self._get_finished_workoder_inverse_name()].finished_workorder_line_ids
+                domain_unbuild = domain + [
+                    ('production_id', '=', False),
+                    ('location_dest_id.usage', '=', 'production')
+                ]
+                domain.append(('location_id.usage', '=', 'production'))
+
+            # Check presence of same sn in previous productions
+            duplicates = self.env['stock.move.line'].search_count(domain)
+            if duplicates:
+                # Maybe some move lines have been compensated by unbuild
+                duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild)
+                if not (duplicates_unbuild and duplicates - duplicates_unbuild == 0):
+                    raise UserError(message)
+            # Check presence of same sn in current production
+            duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == self.lot_id)
+            if duplicates:
+                raise UserError(message)
+            # Check presence of same sn in current wizard/workorder
+            duplicates = co_prod_wo_lines.filtered(lambda wol: wol.lot_id == self.lot_id) - self
+            if duplicates:
+                raise UserError(message)
 
     def _unreserve_order(self):
         """ Unreserve line with lower reserved quantity first """
