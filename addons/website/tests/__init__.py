@@ -9,6 +9,7 @@ from . import test_lang_url
 from . import test_menu
 from . import test_page
 from . import test_qweb
+from . import test_res_users
 from . import test_ui
 from . import test_views
 from . import test_website_favicon
