@@ -6,6 +6,10 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
+<<<<<<< HEAD
+=======
+from odoo.tools import float_is_zero, plaintext2html
+>>>>>>> c89d72398aa... temp
 
 
 class SaleOrder(models.Model):
@@ -233,8 +237,12 @@ class SaleOrderLine(models.Model):
             'name': title if project.sale_line_id else '%s: %s' % (self.order_id.name or '', title),
             'planned_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
+<<<<<<< HEAD
             'email_from': self.order_id.partner_id.email,
             'description': description,
+=======
+            'description': plaintext2html(self.name) if self.name else False,
+>>>>>>> c89d72398aa... temp
             'project_id': project.id,
             'sale_line_id': self.id,
             'company_id': self.company_id.id,
