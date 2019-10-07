@@ -168,6 +168,9 @@ var ControlPanelView = Factory.extend({
                                 attrs.name ||
                                 attrs.domain ||
                                 'Ω';
+        if (attrs.invisible) {
+            filter.invisible = true;
+        }
         if (filter.type === 'filter') {
             if (filter.isDefault) {
                 filter.defaultRank = -5;
@@ -183,9 +186,6 @@ var ControlPanelView = Factory.extend({
                                             DEFAULT_PERIOD;
                 filter.currentOptionIds = new Set();
                 filter.basicDomains = this._getDateFilterBasicDomains(filter);
-            }
-            if (attrs.invisible) {
-                filter.invisible = true;
             }
         } else if (filter.type === 'groupBy') {
             if (filter.isDefault) {
