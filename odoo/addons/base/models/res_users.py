@@ -1037,6 +1037,7 @@ class GroupsView(models.Model):
             xml2.append(E.separator(string='Application Accesses', colspan="2"))
 
             user_type_field_name = ''
+            user_type_readonly = str({})
             sorted_triples = sorted(self.get_groups_by_application(),
                                     key=lambda t: t[0].xml_id != 'base.module_category_user_type')
             for app, kind, gs in sorted_triples:  # we process the user type first
