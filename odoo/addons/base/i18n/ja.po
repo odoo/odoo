@@ -9,16 +9,16 @@
 # Takuya Sawada <takuya@tuntunkun.com>, 2018
 # Manami Hashi <manami@roomsfor.hk>, 2018
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
 # Martin Trigaux, 2018
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -5592,6 +5592,9 @@ msgid ""
 "Use budgets to compare actual with expected revenues and costs\n"
 "--------------------------------------------------------------\n"
 msgstr ""
+"\n"
+"予算を使用して予定収益および費用と実績と比較\n"
+"--------------------------------------------------------------\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sales_team
@@ -5845,12 +5848,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%A - Full weekday name."
-msgstr "%A - 曜日のフルネーム"
+msgstr "%A - 曜日の名称"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%B - Full month name.\""
-msgstr "%B - 月名.\""
+msgstr "%B - 月の名称"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -5880,22 +5883,22 @@ msgstr "%Y - 世紀を含む年\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%a - Abbreviated weekday name."
-msgstr "%a - 省略形の曜日名"
+msgstr "%a - 曜日の略称"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%b - Abbreviated month name."
-msgstr "%b - 省略形の月の名称"
+msgstr "%b - 月の略称"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%d - Day of the month [01,31].\""
-msgstr "%d - 月の日 [01,31].\""
+msgstr "%d - 月の日 [01,31]"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%j - Day of the year [001,366].\""
-msgstr "%j - 年間の通算日 [001,366].\""
+msgstr "%j - 年の日 [001,366]"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -6939,7 +6942,7 @@ msgstr "口座保持者"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "口座名義"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -6986,7 +6989,7 @@ msgstr ""
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr ""
+msgstr "口座保持者と異なる場合の口座名義"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -7272,7 +7275,7 @@ msgstr "アドレスの種類"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
 msgid "Address format..."
-msgstr "アドレスのフォーマット..."
+msgstr "アドレスフォーマット..."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:630
@@ -7502,7 +7505,7 @@ msgstr "アドレスの後"
 #. module: base
 #: selection:res.currency,position:0
 msgid "After Amount"
-msgstr "総計後"
+msgstr "金額の後"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_helpdesk
@@ -7709,9 +7712,7 @@ msgid "Application"
 msgstr "アプリケーション"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "アプリケーションアクセス"
 
@@ -8217,6 +8218,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
 msgstr ""
 
 #. module: base
@@ -8752,6 +8759,12 @@ msgstr "更新のキャンセル"
 #: code:addons/models.py:2118
 #, python-format
 msgid "Cannot aggregate field %r."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
 msgstr ""
 
 #. module: base
@@ -9796,7 +9809,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
 msgid "Create a new vendor in your address book"
-msgstr ""
+msgstr "アドレス帳に仕入先を作成しましょう。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_studio
@@ -12120,7 +12133,7 @@ msgstr "フィンランド"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__week_start
 msgid "First Day of Week"
-msgstr ""
+msgstr "週始めの曜日"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
@@ -12334,7 +12347,7 @@ msgstr "金曜"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_from
 msgid "From"
-msgstr "差出人"
+msgstr "開始日"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
@@ -13631,7 +13644,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:855
 #, python-format
 msgid "Import Template for Customers"
-msgstr ""
+msgstr "顧客インポートテンプレート"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
@@ -15616,7 +15629,7 @@ msgstr "ドキュメントがありません"
 #: code:addons/models.py:5505
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
-msgstr "フィールドに必要な値がありません'%s' (%s)"
+msgstr "項目 '%s' に必要な値がありません (%s)"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:403
@@ -17452,12 +17465,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Odoo helps you easily track all activities related to a customer."
-msgstr ""
+msgstr "顧客に関係するあらゆる活動を追跡することができます。"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
 msgid "Odoo helps you easily track all activities related to a vendor."
-msgstr ""
+msgstr "仕入先に関係するあらゆる活動を追跡することができます。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -17902,8 +17915,7 @@ msgid "Original currency"
 msgstr "基準通貨"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -18288,12 +18300,12 @@ msgstr "決済サービス: PayuMoney 実装"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
 msgid "Payment Acquirer: Stripe Implementation"
-msgstr "決済サービス:Stripe実装"
+msgstr "決済サービス: Stripe実装"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
 msgid "Payment Acquirer: Transfer Implementation"
-msgstr "決済サービス:送金実装"
+msgstr "決済サービス: 送金実装"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_followup
@@ -21517,6 +21529,7 @@ msgstr "技術名称"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技術設定"
 
@@ -23140,9 +23153,7 @@ msgid "User Login"
 msgstr "ユーザログイン"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "ユーザタイプ"
 
@@ -24171,8 +24182,8 @@ msgstr "例: en_US"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "例: www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr "例. https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay

@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # * product_expiry
 # 
+# Translators:
+# Lux Sok <sok.lux@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,26 +26,28 @@ msgid ""
 "<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">ដាស់តឿនការផុតកំណត់</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span>ថ្ងៃ</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
 msgid "Alert Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទជូនដំណឹង"
 
 #. module: product_expiry
 #: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
 msgid "Alert Date Reached"
-msgstr ""
+msgstr "កាលបរិច្ឆេទជូនដំណឹងបានដល់"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
 msgid "Best before Date"
-msgstr ""
+msgstr "ល្អបំផុតមុនកាលបរិច្ឆេទ"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
@@ -49,35 +55,37 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
+"កាលបរិច្ឆេទដើម្បីកំណត់លេខដែលផុតកំណត់និងលេខស៊េរីដោយប្រើតម្រង "
+"\"ការដាស់តឿនផុតកំណត់\" ។"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
-msgstr ""
+msgstr "កាលបរិច្ឆេទ"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__life_date
 msgid "End of Life Date"
-msgstr ""
+msgstr "ថ្ងៃបញ្ចប់នៃជីវិត"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration Alerts"
-msgstr ""
+msgstr "ការដាស់តឿនផុតកំណត់"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "ច្រើន / ជាលំដាប់ "
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
 msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
-msgstr ""
+msgstr "ចំនួនថ្ងៃមុនពេលការដាស់តឿនគួរតែត្រូវបានលើកឡើងលើលេខ / លេខសម្គាល់។"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__life_time
@@ -86,6 +94,8 @@ msgid ""
 "Number of days before the goods may become dangerous and must not be "
 "consumed. It will be computed on the lot/serial number."
 msgstr ""
+"ចំនួនថ្ងៃមុនពេលទំនិញអាចមានគ្រោះថ្នាក់ហើយមិនត្រូវប្រើប្រាស់។ "
+"វានឹងត្រូវបានគណនាលើលេខ / លេខស៊េរី។"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -94,6 +104,8 @@ msgid ""
 "Number of days before the goods should be removed from the stock. It will be"
 " computed on the lot/serial number."
 msgstr ""
+"ចំនួនថ្ងៃមុនពេលទំនិញគួរតែត្រូវបានយកចេញពីស្តុក។ វានឹងត្រូវបានគណនាលើលេខ / "
+"លេខស៊េរី។"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -102,67 +114,69 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed using the lot/serial number."
 msgstr ""
+"ចំនួនថ្ងៃមុនពេលទំនិញចាប់ផ្តើមកាន់តែយ៉ាប់យ៉ឺនដោយមិនមានគ្រោះថ្នាក់អ្វីឡើយ។ "
+"វានឹងត្រូវបានគណនាដោយប្រើលេខ / សៀរៀល។"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
 msgid "Procurement Group"
-msgstr ""
+msgstr "ក្រុមលទ្ធកម្ម "
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "ការដាស់តឿនពេលវេលាផលិតផល"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "Product Expiry Alert"
-msgstr ""
+msgstr "ការដាស់តឿនផលិតផលដែលជិតផុតកំណត់"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__life_time
 msgid "Product Life Time"
-msgstr ""
+msgstr "វដ្តនៃពេលវេលាផលិតផល"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "ពេលវេលាដកផលិតផលចេញ"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "គំរូផលិតផល"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "ពេលវេលានៃការប្រើប្រាស់ផលិតផល"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quants"
-msgstr ""
+msgstr "ចំនួនប៉ុន្មាន"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__removal_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
 msgid "Removal Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទដកចេញ"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "The Alert Date has been reached."
-msgstr ""
+msgstr "កាលបរិច្ឆេទដាស់តឿនបានឈានដល់"
 
 #. module: product_expiry
 #: code:addons/product_expiry/models/production_lot.py:84
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
-msgstr ""
+msgstr "កាលបរិច្ឆេទនៃការដាស់តឿនបានឈានដល់លេខ / លេខសម្គាល់នេះ"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
@@ -170,6 +184,7 @@ msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
 msgstr ""
+"នេះគឺជាកាលបរិច្ឆេទដែលទំនិញដែលមានលេខស៊េរីនេះអាចនឹងមានគ្រោះថ្នាក់ហើយមិនត្រូវប្រើប្រាស់ឡើយ។"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__removal_date
@@ -177,7 +192,7 @@ msgstr ""
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
-msgstr ""
+msgstr "នេះគឺជាកាលបរិច្ឆេទដែលទំនិញដែលមានលេខស៊េរីនេះគួរតែត្រូវបានយកចេញពីស្តុក។"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
@@ -185,3 +200,4 @@ msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr ""
+"នេះគឺជាកាលបរិច្ឆេទដែលទំនិញដែលមានលេខស៊េរីចាប់ផ្តើមកាន់តែយ៉ាប់យ៉ឺនដោយមិនបង្កគ្រោះថ្នាក់អ្វីឡើយ។"

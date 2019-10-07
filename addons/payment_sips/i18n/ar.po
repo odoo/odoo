@@ -3,17 +3,16 @@
 # * payment_sips
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
-# AMAAL RU <Fabu1410@yahoo.com>, 2018
-# Shaima Safar <shaima.safar@open-inside.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,70 +24,70 @@ msgstr ""
 #: code:addons/payment_sips/models/payment.py:164
 #, python-format
 msgid "; multiple order found"
-msgstr "تم ايجاد طلبات متعدده"
+msgstr "؛ تم العثور على طلبات متعددة"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:162
 #, python-format
 msgid "; no order found"
-msgstr "لايوجد طلبات"
+msgstr "; لم يُعثر على طلبات"
 
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:75
 #, python-format
 msgid "Currency not supported by Wordline"
-msgstr "العمله غير معتمده في الخط الافقي"
+msgstr "Wordline لا يدعم هذه العملة"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:56
 #, python-format
 msgid "Incorrect payment acquirer provider"
-msgstr ""
+msgstr "خطأ بمزود معالج السداد"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
 msgid "Interface Version"
-msgstr ""
+msgstr "إصدار الواجهة"
 
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "الإعدادات اليدوية"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
-msgstr ""
+msgstr "معرف التاجر"
 
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "طريقة السداد الإلكتروني"
+msgstr "معالج السداد"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_transaction
@@ -98,12 +97,12 @@ msgstr "معاملة السداد"
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr "المستحق"
+msgstr "Paypal"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
 msgid "Production url"
-msgstr ""
+msgstr "رابط الإنتاج"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
@@ -113,35 +112,35 @@ msgstr "المزود"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
 msgid "Secret Key"
-msgstr ""
+msgstr "مفتاح سري"
 
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:160
 #, python-format
 msgid "Sips: received data for reference %s"
-msgstr ""
+msgstr "Sips: البيانات المستلمة لرقم الإشارة %s"
 
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
 msgid "Test url"
-msgstr ""
+msgstr "رابط الاختبار"
 
 #. module: payment_sips
 #: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Used for production only"
-msgstr ""
+msgstr "يستخدم للإنتاج فقط"
 
 #. module: payment_sips
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "تحويل بنكي"

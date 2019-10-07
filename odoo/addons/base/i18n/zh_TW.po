@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Bill Hsu <hcm86@icloud.com>, 2018
-# Jason Au Yeung <auyeung112002@gmail.com>, 2018
 # amos lin <seeing@edirect168.com>, 2018
 # Martin Trigaux, 2018
 # sejun huang <sejun.huang@gmail.com>, 2019
+# Jason Au Yeung <auyeung112002@gmail.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -9195,9 +9195,7 @@ msgid "Application"
 msgstr "應用"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "應用程序訪問"
 
@@ -9704,6 +9702,12 @@ msgstr "移動應用中的條碼"
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
 msgstr "移動應用中的條碼掃瞄"
+
+#. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:603
@@ -10239,6 +10243,12 @@ msgstr "取消升級"
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr "無法聚合字段 %r."
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_lang.py:228
@@ -20629,8 +20639,7 @@ msgid "Original currency"
 msgstr "原始貨幣"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -24247,6 +24256,7 @@ msgstr "技術名稱"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技術設定"
 
@@ -25880,9 +25890,7 @@ msgid "User Login"
 msgstr "使用者登錄"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "使用者類型"
 
@@ -26905,8 +26913,8 @@ msgstr "例如：en_US"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "例如：www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr "例如：https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay

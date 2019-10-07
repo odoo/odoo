@@ -76,6 +76,11 @@ msgstr "예금거래 명세서 라인"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_barcode_rule
 msgid "Barcode Rule"
+msgstr "바코드 규칙"
+
+#. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
+msgid "Barcode Scanner/Card Reader"
 msgstr ""
 
 #. module: pos_mercury
@@ -115,7 +120,7 @@ msgstr ""
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
 msgid "Cashier"
-msgstr ""
+msgstr "계산원"
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -170,7 +175,7 @@ msgstr "할인 상품"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__display_name
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "제목"
 
 #. module: pos_mercury
 #. openerp-web
@@ -260,7 +265,7 @@ msgstr "LOT"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "Merchant ID"
-msgstr ""
+msgstr "상인 ID"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_pwd
@@ -370,6 +375,13 @@ msgid ""
 msgstr ""
 
 #. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:512
+#, python-format
+msgid "Pay with: "
+msgstr ""
+
+#. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_record_no
 msgid "Payment record number from Mercury Pay"
 msgstr ""
@@ -404,7 +416,7 @@ msgstr "점포판매시스템 주문"
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
 msgid "Priced Product"
-msgstr ""
+msgstr "가격이 책정된 제품"
 
 #. module: pos_mercury
 #. openerp-web
@@ -490,7 +502,7 @@ msgstr "유형"
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
 msgid "Unit Product"
-msgstr ""
+msgstr "단위 상품"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form

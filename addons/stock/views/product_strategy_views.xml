@@ -15,14 +15,14 @@
                     <tree editable="bottom">
                         <field name="sequence" widget='handle'/>
                         <field name="product_id" required="1"/>
-                        <field name="fixed_location_id" domain="[('id', 'child_of', context.get('location_id'))]"/>
+                        <field name="fixed_location_id" domain="[('id', 'child_of', context.get('location_id', False))]"/>
                     </tree>
                 </field>
                 <field name="fixed_location_ids" colspan="4" nolabel="1">
                     <tree editable="bottom">
                         <field name="sequence" widget='handle'/>
                         <field name="category_id" required="1"/>
-                        <field name="fixed_location_id" domain="[('id', 'child_of', context.get('location_id'))]"/>
+                        <field name="fixed_location_id" domain="[('id', 'child_of', context.get('location_id', False))]"/>
                     </tree>
                 </field>
             </form>

@@ -148,7 +148,7 @@ msgstr "<span class=\"o_form_label\">Order referentie</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Payment Methods</span>"
-msgstr "<span class=\"o_form_label\">Betaalmethodes</span>"
+msgstr "<span class=\"o_form_label\">Betalinsgmethodes</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
@@ -454,7 +454,7 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
-"Alle beschikbare betaalmethodes moeten dezelfde valuta hebben als het "
+"Alle beschikbare betalingsmtehodes moeten dezelfde valuta hebben als het "
 "bedrijf of als het dagboek op dit moment van verkoop, indien u de "
 "boekhouding applicatie gebruikt."
 
@@ -465,7 +465,7 @@ msgid ""
 "All payment methods must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
-"Alle betaalmethodes moeten dezelfde valuta hebben als het dagboek of het "
+"Alle betalingsmtehodes moeten dezelfde valuta hebben als het dagboek of het "
 "bedrijfsvaluta wanneer dat niet ingesteld is."
 
 #. module: point_of_sale
@@ -559,7 +559,7 @@ msgstr "Automatisch kassalade openen"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__journal_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__journal_ids
 msgid "Available Payment Methods"
-msgstr "Beschikbare betaalmethoden"
+msgstr "Beschikbare betalingsmethodes"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -869,7 +869,7 @@ msgid ""
 "Check this box if this journal define a payment method that can be used in a"
 " point of sale."
 msgstr ""
-"Vink deze optie aan indien dit dagboek een betaalmethode is voor gebruik "
+"Vink deze optie aan indien dit dagboek een betalingsmethodeis voor gebruik "
 "binnen de kassa."
 
 #. module: point_of_sale
@@ -983,7 +983,7 @@ msgstr "Afsluit controle"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__stop_at
 msgid "Closing Date"
-msgstr "Afsluitdatum"
+msgstr "Sluitingsdatum"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__company_id
@@ -2287,8 +2287,8 @@ msgid ""
 "No payment method configured! \n"
 "Either no Chart of Account is installed or no payment method is configured for this POS."
 msgstr ""
-"Geen betalingsmethode geconfigureerd!\n"
-"Er is geen rekeningschema geïnstalleerd of er is geen betaalmethode geconfigureerd voor deze POS."
+"Geen betaaalmethode geconfigureerd!\n"
+"Er is geen rekeningschema geïnstalleerd of er is geen betalingsmethodegeconfigureerd voor deze POS."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:24
@@ -2702,14 +2702,14 @@ msgid ""
 "                on the <i>Point of Sale</i> configuration."
 msgstr ""
 "Betalingsmethodes zijn gedefinieerd door dagboeken die\n"
-"het veld <i>Kassa betalingsmethode</i> hebben aangevinkt. Om bruikbaar te zijn\n"
-"vanuit de touchscreen interface moet u de betalingsmethode\n"
+"het veld <i>Kassa betaaalmethode</i> hebben aangevinkt. Om bruikbaar te zijn\n"
+"vanuit de touchscreen interface moet u de betaaalmethode\n"
 "op de <i>kassa</i> configuratie instellen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Payment methods available"
-msgstr "Beschikbare betaalmethodes"
+msgstr "Beschikbare betalingsmtehodes"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__statement_ids
@@ -2791,7 +2791,7 @@ msgstr "Bevestig groot aantal aub"
 #: code:addons/point_of_sale/static/src/js/models.js:1892
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr "U dient een betaalmethode te configureren in uw kassa"
+msgstr "U dient een betalingsmethodes configureren in uw kassa"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:374
@@ -2817,7 +2817,7 @@ msgstr "Kies een relatie voor deze verkoop"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:533
 #, python-format
 msgid "Please select a payment method."
-msgstr "Selecteer een betalingsmethode aub."
+msgstr "Selecteer een betaaalmethode aub."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3844,7 +3844,7 @@ msgstr "Totaal van subtotalen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Summary by Payment Methods"
-msgstr "Samenvatting per betaalmethode"
+msgstr "Samenvatting per betalinsgmethode"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4034,7 +4034,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The method payments and the point of sale must belong to the same company."
-msgstr "De betaalmethode en kassa moeten behoren tot hetzelfde bedrijf."
+msgstr "De betalingsmethodeen kassa moeten behoren tot hetzelfde bedrijf."
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
@@ -4772,12 +4772,12 @@ msgid ""
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
 msgstr ""
-"U dien te bepalen welke betaalmethode beschikbaar moet zijn in de kassa. U "
-"kunt bestaande dagboeken gebruiken, via  "
+"U dien te bepalen welke betalingsmethodes beschikbaar moet zijn in de kassa."
+" U kunt bestaande dagboeken gebruiken, via  "
 "Boekhouding/Instellingen/Dagboeken/Dagboeken. Selecteer een dagboek en "
-"controleer het veld 'Kassa betaalmethode' op het kassa tabblad. U kunt ook "
-"direct nieuwe betaalmethodes aanmaken in het menu  uit het menu "
-"Kassa/Instellingen/Betaalmethodes."
+"controleer het veld 'Kassa betalingsmethode' op het kassa tabblad. U kunt "
+"ook direct nieuwe betalingsmethodes aanmaken in het menu  uit het menu "
+"Kassa/Instellingen/betalingsmethodes\"."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:879
@@ -5017,7 +5017,7 @@ msgstr "betaalde orders"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "payment method."
-msgstr "betaalmethode."
+msgstr "betalinsgmethode."
 
 #. module: point_of_sale
 #. openerp-web

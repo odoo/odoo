@@ -37,14 +37,15 @@ class ChooseDeliveryPackage(models.TransientModel):
         return res
 
     def _default_shipping_weight(self):
-        if self.env.context.get('default_stock_quant_package_id'):
-            stock_quant_package = self.env['stock.quant.package'].browse(self.env.context['default_stock_quant_package_id'])
-            return stock_quant_package.shipping_weight
-        else:
-            picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
-            move_line_ids = [po for po in picking_id.move_line_ids if po.qty_done > 0 and not po.result_package_id]
+        package_id = self.env.context.get('default_stock_quant_package_id')
+        picking_id = self.env.context.get('default_picking_id')
+        if package_id and picking_id:  # DO NOT FORWARD PORT
+            picking = self.env['stock.picking'].browse(picking_id)
+            move_line_ids = [po for po in picking.move_line_ids if po.qty_done > 0 and po.result_package_id.id == package_id]
             total_weight = sum([po.qty_done * po.product_id.weight for po in move_line_ids])
             return total_weight
+        else:
+            return 0
 
     @api.depends('stock_quant_package_id', 'delivery_packaging_id')
     def _compute_weight_uom_name(self):

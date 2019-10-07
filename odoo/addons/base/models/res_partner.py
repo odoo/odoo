@@ -249,7 +249,7 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
-        diff = dict(show_address=None, show_address_only=None, show_email=None)
+        diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=False)
         names = dict(self.with_context(**diff).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
@@ -443,6 +443,11 @@ class Partner(models.Model):
     def _address_fields(self):
         """Returns the list of address fields that are synced from the parent."""
         return list(ADDRESS_FIELDS)
+
+    @api.model
+    def _formatting_address_fields(self):
+        """Returns the list of address fields usable to format addresses."""
+        return self._address_fields()
 
     @api.multi
     def update_address(self, vals):
@@ -808,10 +813,14 @@ class Partner(models.Model):
                 e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
         assert email, 'an email is required for find_or_create to work'
         emails = tools.email_split(email)
+        name_emails = tools.email_split_and_format(email)
         if emails:
             email = emails[0]
+            name_email = name_emails[0]
+        else:
+            name_email = email
         partners = self.search([('email', '=ilike', email)], limit=1)
-        return partners.id or self.name_create(email)[0]
+        return partners.id or self.name_create(name_email)[0]
 
     def _get_gravatar_image(self, email):
         email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
@@ -915,7 +924,7 @@ class Partner(models.Model):
             'country_name': self._get_country_name(),
             'company_name': self.commercial_company_name or '',
         }
-        for field in self._address_fields():
+        for field in self._formatting_address_fields():
             args[field] = getattr(self, field) or ''
         if without_company:
             args['company_name'] = ''
@@ -925,7 +934,7 @@ class Partner(models.Model):
 
     def _display_address_depends(self):
         # field dependencies of method _display_address()
-        return self._address_fields() + [
+        return self._formatting_address_fields() + [
             'country_id.address_format', 'country_id.code', 'country_id.name',
             'company_name', 'state_id.code', 'state_id.name',
         ]

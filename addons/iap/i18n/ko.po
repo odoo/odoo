@@ -6,14 +6,15 @@
 # Martin Trigaux, 2018
 # Linkup <link-up@naver.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"POT-Creation-Date: 2019-08-08 13:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Account Information"
-msgstr "계정정보"
+msgstr "계정 정보"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_token
@@ -36,14 +37,14 @@ msgstr "계정 토큰"
 #: code:addons/iap/static/src/js/crash_manager.js:23
 #, python-format
 msgid "Buy credits at Odoo"
-msgstr ""
+msgstr "Odoo에서 크레딧 구매"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:41
 #, python-format
 msgid "Buy more credits"
-msgstr ""
+msgstr "추카 크레딧 구매"
 
 #. module: iap
 #. openerp-web
@@ -57,7 +58,7 @@ msgstr "취소"
 #: code:addons/iap/static/src/xml/iap_templates.xml:28
 #, python-format
 msgid "Checking remaining credit ..."
-msgstr ""
+msgstr "잔여 크레딧 확인 ..."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_id
@@ -77,7 +78,7 @@ msgstr "작성일"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "제목"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -107,7 +108,7 @@ msgstr "ID"
 #: code:addons/iap/static/src/xml/iap_templates.xml:21
 #, python-format
 msgid "In-App Purchases"
-msgstr "인앱구입"
+msgstr "인앱 구입"
 
 #. module: iap
 #. openerp-web
@@ -121,14 +122,14 @@ msgstr "잔액 부족"
 #: code:addons/iap/static/src/xml/iap_templates.xml:31
 #, python-format
 msgid "Insufficient credit"
-msgstr ""
+msgstr "크레딧 부족"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:14
 #, python-format
 msgid "Insufficient credit to perform this service."
-msgstr "이 서비스를 실행할 충분한 권한이 없습니다."
+msgstr "이 서비스를 실행하기에는 크레딧이 부족합니다."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account____last_update
@@ -150,7 +151,7 @@ msgstr "최근 갱신 날짜"
 #: code:addons/iap/static/src/xml/iap_templates.xml:34
 #, python-format
 msgid "Remaining :"
-msgstr ""
+msgstr "잔여 :"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
@@ -162,13 +163,21 @@ msgstr "서비스 이름"
 #: code:addons/iap/static/src/js/crash_manager.js:23
 #, python-format
 msgid "Start a Trial at Odoo"
-msgstr ""
+msgstr "Odoo에서 시험판 시작"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:37
 #, python-format
 msgid "Temporarily unavailable"
+msgstr "일시적으로 사용할 수 없음"
+
+#. module: iap
+#: code:addons/iap/models/iap.py:72
+#, python-format
+msgid ""
+"The url that this service requested returned an error. Please contact the "
+"author the app. The url it tried to contact was %s"
 msgstr ""
 
 #. module: iap
@@ -176,4 +185,4 @@ msgstr ""
 #: code:addons/iap/static/src/xml/iap_templates.xml:34
 #, python-format
 msgid "credits"
-msgstr ""
+msgstr "크레딧"

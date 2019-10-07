@@ -172,6 +172,8 @@ class MailMail(models.Model):
                     messages._notify_failure_update()  # notify user that we have a failure
                 (notifications - failed).sudo().write({
                     'email_status': 'sent',
+                    'failure_type': '',
+                    'failure_reason': '',
                 })
         if not failure_type or failure_type == 'RECIPIENT':  # if we have another error, we want to keep the mail.
             mail_to_delete_ids = [mail.id for mail in self if mail.auto_delete]

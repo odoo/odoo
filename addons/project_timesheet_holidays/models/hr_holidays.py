@@ -62,7 +62,7 @@ class Holidays(models.Model):
             )
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 self.env['account.analytic.line'].create({
-                    'name': "%s (%s/%s)" % (holiday.name or '', index + 1, len(work_hours_data)),
+                    'name': "%s (%s/%s)" % (holiday.holiday_status_id.name or '', index + 1, len(work_hours_data)),
                     'project_id': holiday_project.id,
                     'task_id': holiday_task.id,
                     'account_id': holiday_project.analytic_account_id.id,

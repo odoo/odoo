@@ -16,7 +16,7 @@ class Channel(models.Model):
         if self.env.user.odoobot_state == 'not_initialized':
             partner = self.env.user.partner_id
             odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
-            channel = self.with_context({"mail_create_nosubscribe": True}).create({
+            channel = self.with_context(mail_create_nosubscribe=True).create({
                 'channel_partner_ids': [(4, partner.id), (4, odoobot_id)],
                 'public': 'private',
                 'channel_type': 'chat',

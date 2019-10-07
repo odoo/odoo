@@ -271,6 +271,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'field_changed': '_onFieldChanged',
     }),
     _avoidFieldUpdate: {},
+    MV_LINE_DEBOUNCE: 200,
 
     /**
      * create partner_id field in editable mode
@@ -283,6 +284,11 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
         this.model = model;
         this._initialState = state;
+        if (this.MV_LINE_DEBOUNCE) {
+            this._onSelectMoveLine = _.debounce(this._onSelectMoveLine, this.MV_LINE_DEBOUNCE, true);
+        } else {
+            this._onSelectMoveLine = this._onSelectMoveLine;
+        }
     },
 
     /**
@@ -738,6 +744,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onSelectMoveLine: function (event) {
         var $el = $(event.target);
+        $el.prop('disabled', true);
         this._destroyPopover($el);
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('add_proposition', {'data': moveLineId});

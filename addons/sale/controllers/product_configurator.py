@@ -44,7 +44,18 @@ class ProductConfiguratorController(http.Controller):
         ProductTemplate = request.env['product.template']
         if 'context' in kw:
             ProductTemplate = ProductTemplate.with_context(**kw.get('context'))
-        return ProductTemplate.browse(int(product_template_id))._get_combination_info(combination, int(product_id or 0), int(add_qty or 1), pricelist)
+        product_template = ProductTemplate.browse(int(product_template_id))
+        res = product_template._get_combination_info(combination, int(product_id or 0), int(add_qty or 1), pricelist)
+        if 'parent_combination' in kw:
+            parent_combination = request.env['product.template.attribute.value'].browse(kw.get('parent_combination'))
+            if not combination.exists() and product_id:
+                product = request.env['product.product'].browse(int(product_id))
+                if product.exists():
+                    combination = product.product_template_attribute_value_ids
+            res.update({
+                'is_combination_possible': product_template._is_combination_possible(combination=combination, parent_combination=parent_combination),
+            })
+        return res
 
     @http.route(['/product_configurator/create_product_variant'], type='json', auth="user", methods=['POST'])
     def create_product_variant(self, product_template_id, product_template_attribute_value_ids, **kwargs):

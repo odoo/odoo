@@ -11,9 +11,14 @@
 # Cristopher Cravioto <ccr@odoo.com>, 2018
 # Ivan Coro <ivan@iventiva.com>, 2018
 # Martin Trigaux, 2018
-# Miguel Orueta <mo@landoo.es>, 2018
 # Nans Lefebvre <len@odoo.com>, 2018
 # Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
+# Miguel Orueta <mo@landoo.es>, 2019
+# Jon Perez <jop@odoo.com>, 2019
+# Jesse Garza <jga@odoo.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Mariana Santos Romo <msn@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Gabriel Umana <gabriel.umana@delfixcr.com>, 2019\n"
+"Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +80,7 @@ msgstr "1 año"
 #: model:product.product,description_sale:product.product_product_4d
 #: model:product.template,description_sale:product.product_product_4b_product_template
 msgid "160x80cm, with large legs."
-msgstr ""
+msgstr "160x80cm, with large legs."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_6
@@ -85,7 +90,7 @@ msgstr "2 años"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Moneda\" title=\"Moneda\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -107,7 +112,7 @@ msgstr "<span class=\"o_stat_text\"> Productos</span>"
 #: model_terms:ir.ui.view,arch_db:product.report_simple_barcode
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
 msgid "<span class=\"text-muted\">No barcode available</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">No hay código de barras disponible</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -179,6 +184,8 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "                This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"Un precio es un conjunto de precios de venta o reglas para calcular el precio de las líneas de pedido de cliente basado en productos, categorías de productos, fechas y cantidades pedidas.\n"
+"Esta es la herramienta perfecta para manejar varios precios, descuentos de temporada, etc."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__type
@@ -188,6 +195,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Un producto almacenable es un producto para el que gestiona stock. La aplicación de inventario debe estar instalada.\n"
+"Un producto consumible es un producto para el que no se gestionan las existencias.\n"
+"Un servicio es un producto no material."
 
 #. module: product
 #: model:product.product,name:product.product_product_25
@@ -435,7 +445,7 @@ msgstr "Categorías hijas"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Choose the unit to measure weight"
-msgstr ""
+msgstr "Elija la unidad para medir el peso"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -499,7 +509,7 @@ msgstr "Opciones de Configuración"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Configure Variants"
-msgstr ""
+msgstr "Configurar variantes"
 
 #. module: product
 #: model:product.category,name:product.product_category_consumable
@@ -515,12 +525,12 @@ msgstr "Contacto"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__qty
 msgid "Contained Quantity"
-msgstr ""
+msgstr "Cantidad contenida"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
-msgstr ""
+msgstr "Cantidad contenida"
 
 #. module: product
 #: model:product.product,name:product.product_product_13
@@ -546,7 +556,7 @@ msgstr "Coste"
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "Moneda de coste"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template__standard_price
@@ -585,7 +595,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr ""
+msgstr "Crear una nueva lista de precios"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
@@ -696,12 +706,14 @@ msgid ""
 "Default unit of measure used for purchase orders. It must be in the same "
 "category as the default unit of measure."
 msgstr ""
+"Unidad de medida por defecto utilizada para los pedidos de compra. Debe "
+"estar en la misma categoría que la unidad de medida por defecto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__seller_ids
 #: model:ir.model.fields,help:product.field_product_template__seller_ids
 msgid "Define vendor pricelists."
-msgstr ""
+msgstr "Definir listas de precios de proveedores."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -773,7 +785,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Drawer Black"
-msgstr ""
+msgstr "Cajón Negro"
 
 #. module: product
 #: model:product.product,description:product.product_product_27
@@ -825,7 +837,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
 msgid "Exclude for"
-msgstr ""
+msgstr "Excluir para"
 
 #. module: product
 #: model:product.category,name:product.cat_expense
@@ -986,6 +998,8 @@ msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
 msgstr ""
+"Si no se fija, el precio de proveedor se aplicará a todas las variantes de "
+"este producto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -1038,7 +1052,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist.py:348
 #, python-format
 msgid "Import Template for Pricelists"
-msgstr ""
+msgstr "Importar plantilla para listas de precios"
 
 #. module: product
 #: code:addons/product/models/product_template.py:573
@@ -1050,7 +1064,7 @@ msgstr "Importar plantillas de productos"
 #: code:addons/product/models/product.py:665
 #, python-format
 msgid "Import Template for Vendor Pricelists"
-msgstr ""
+msgstr "Importar plantilla para listas de precios de proveedores"
 
 #. module: product
 #: model:product.product,name:product.product_product_24
@@ -1095,7 +1109,7 @@ msgstr "Es un seguidor"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
 msgid "Is Product Variant"
-msgstr ""
+msgstr "Es una variante del producto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
@@ -1105,7 +1119,7 @@ msgstr "Es una variante de producto"
 #. module: product
 #: selection:res.config.settings,product_weight_in_lbs:0
 msgid "Kilogram"
-msgstr ""
+msgstr "Kilogramo"
 
 #. module: product
 #: model:product.product,name:product.product_product_6
@@ -1223,6 +1237,8 @@ msgid ""
 "Make this attribute value not compatible with\n"
 "        other values of the product or some attribute values of optional and accessory products."
 msgstr ""
+"Hacer que este valor de atributo no sea compatible con\n"
+"otros valores del producto o algunos valores de atributos de productos opcionales y accesorios."
 
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
@@ -1437,7 +1453,7 @@ msgstr "Categoría padre"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Ruta padre"
 
 #. module: product
 #: model:product.product,name:product.product_product_9
@@ -1464,7 +1480,7 @@ msgstr "Planificado"
 #. module: product
 #: selection:res.config.settings,product_weight_in_lbs:0
 msgid "Pound"
-msgstr ""
+msgstr "Libra"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -1494,6 +1510,8 @@ msgid ""
 "Price Extra: Extra price for the variant with\n"
 "        this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."
 msgstr ""
+"Precio Extra: Precio adicional para la variante con\n"
+"este valor de atributo en el precio de venta. Ej. 200 precio extra, 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -1518,7 +1536,7 @@ msgstr "Recargo precio"
 #: model:ir.model.fields,help:product.field_product_template__list_price
 #: model:ir.model.fields,help:product.field_product_template__lst_price
 msgid "Price at which the product is sold to customers."
-msgstr ""
+msgstr "Precio al que se vende el producto a los clientes."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
@@ -1634,7 +1652,7 @@ msgstr "Valor del atributo de producto"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
 msgid "Product Attribute Values"
-msgstr ""
+msgstr "Valores de los Atributos del Producto"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
@@ -1651,7 +1669,7 @@ msgstr "Atributos del producto"
 #: model:ir.actions.report,name:product.report_product_product_barcode
 #: model:ir.actions.report,name:product.report_product_template_barcode
 msgid "Product Barcode (PDF)"
-msgstr ""
+msgstr "Código de barras del producto (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -1674,7 +1692,7 @@ msgstr "Categoría de producto"
 #: model:ir.actions.report,name:product.report_product_label
 #: model:ir.actions.report,name:product.report_product_template_label
 msgid "Product Label (PDF)"
-msgstr ""
+msgstr "Etiqueta del producto (PDF)"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1697,7 +1715,7 @@ msgstr "Empaquetado del producto"
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Product Packaging (PDF)"
-msgstr ""
+msgstr "Embalaje del Producto (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
@@ -1714,12 +1732,13 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "Product Price List Report"
-msgstr ""
+msgstr "Informe de Lista de Precios de Productos"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_list
 msgid "Product Price per Unit Based on Pricelist Version"
 msgstr ""
+"Precio del Producto por Unidad Basado en la Versión de la Lista de Precios"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -1736,12 +1755,12 @@ msgstr "Plantilla de producto"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_exclusion
 msgid "Product Template Attribute Exclusion"
-msgstr ""
+msgstr "Exclusión de Atributos del Modelo de Producto"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "Linea de atributo de la plantilla de producto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__type
@@ -1760,7 +1779,7 @@ msgstr "Variantes de producto"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
 msgid "Product Variant Values"
-msgstr ""
+msgstr "Valores de Variantes del Producto"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -2123,7 +2142,7 @@ msgstr "Tarifa de proveedor"
 #: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_wnva_ids
 msgid "Technical compute"
-msgstr ""
+msgstr "Cálculo Técnico "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__pricelist_id
@@ -2155,6 +2174,8 @@ msgid ""
 "The default Unit of Measure and the purchase Unit of Measure must be in the "
 "same category."
 msgstr ""
+"La Unidad de Medida predeterminada y la Unidad de Medida de compra deben "
+"estar en la misma categoría."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
@@ -2176,7 +2197,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist.py:443
 #, python-format
 msgid "The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "El margen mínimo debe ser inferior al margen máximo."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -2196,6 +2217,10 @@ msgid ""
 "sales order. To do so, open the form view of attributes and change the mode "
 "of *Create Variants*."
 msgstr ""
+"El número de variantes a generar es demasiado alto. No debe crear variantes "
+"para cada combinación o crearlas a petición del pedido de cliente. Para "
+"ello, abra la vista formulario de atributos y modifique el modo de *Crear "
+"variantes*."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:85
@@ -2217,6 +2242,8 @@ msgstr "El precio al que se compra un producto"
 #, python-format
 msgid "The product template is archived so no combination is possible."
 msgstr ""
+"El modelo de producto esta archivado de modo que no es posible ninguna "
+"combinación."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2224,6 +2251,9 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
 " Variants' button to set the extra attribute prices."
 msgstr ""
+"El precio de venta se gestiona desde la plantilla de producto. Haga clic en "
+"el botón 'Configurar variantes' para establecer los precios de los atributos"
+" adicionales."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2245,19 +2275,19 @@ msgstr "El peso del contenido en Kg, sin incluir empaquetado, etc..."
 #: code:addons/product/models/product_template.py:1010
 #, python-format
 msgid "There are no possible combination."
-msgstr ""
+msgstr "No hay combinación posible."
 
 #. module: product
 #: code:addons/product/models/product_template.py:1005
 #, python-format
 msgid "There are no remaining closest combination."
-msgstr ""
+msgstr "No queda ninguna combinación más cercana."
 
 #. module: product
 #: code:addons/product/models/product_template.py:963
 #, python-format
 msgid "There are no remaining possible combination."
-msgstr ""
+msgstr "No hay ninguna combinación restante posible."
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
@@ -2295,12 +2325,12 @@ msgstr "Ésta es la suma de los precios extra de todos los atributos"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "Esta nota es solo para fines internos."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will show up on sales orders & invoices."
-msgstr ""
+msgstr "Esta nota aparecerá en pedidos de ventas y facturas."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
@@ -2359,7 +2389,7 @@ msgstr "Unidad de medida"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit of Measure Name"
-msgstr ""
+msgstr "Nombre de Unidad de Medida"
 
 #. module: product
 #: model:product.product,uom_name:product.consu_delivery_01
@@ -2460,7 +2490,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr ""
+msgstr "Líneas de Atributo de Producto Válidas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_wnva_ids
@@ -2551,7 +2581,7 @@ msgstr "Variantes"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
 msgid "Variants and Options"
-msgstr ""
+msgstr "Variantes y Opciones"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__name
@@ -2637,7 +2667,7 @@ msgstr "Peso"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Weight Measurement"
-msgstr ""
+msgstr "Medición de Peso"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_id
@@ -2655,13 +2685,13 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
 msgid "Weight unit of measure"
-msgstr ""
+msgstr "Peso de Unidad de Medida"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Etiqueta de Unidad de Medida de peso"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2687,6 +2717,8 @@ msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
 msgstr ""
+"Puede asignar listas de precios a sus clientes o seleccionar una al crear "
+"una nueva orden de ventas."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:442
@@ -2694,6 +2726,8 @@ msgstr ""
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
 msgstr ""
+"No se puede asignar la lista de precios principal como Otra lista de precios"
+" en el artículo de lista de precios."
 
 #. module: product
 #: code:addons/product/models/product.py:57
@@ -2856,7 +2890,7 @@ msgstr "kg"
 #: code:addons/product/models/product_template.py:566
 #, python-format
 msgid "product"
-msgstr ""
+msgstr "producto"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02

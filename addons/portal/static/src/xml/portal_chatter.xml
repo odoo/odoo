@@ -64,7 +64,7 @@
 
                         <div class="o_portal_chatter_attachments">
                             <div class="col-lg-2 col-md-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
-                                <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
+                                <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank">
                                     <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
                                     <div class='oe_attachment_name'><t t-raw='attachment.name'/></div>
                                 </a>

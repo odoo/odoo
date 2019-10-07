@@ -112,7 +112,7 @@ class PortalChatter(http.Controller):
                 raise Forbidden()
             # Non-employee see only messages with not internal subtype (aka, no internal logs)
             if not request.env['res.users'].has_group('base.group_user'):
-                domain = expression.AND([['&', ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)], domain])
+                domain = expression.AND([Message._non_employee_message_domain(), domain])
             Message = request.env['mail.message'].sudo()
         return {
             'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),

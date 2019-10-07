@@ -1,11 +1,13 @@
 odoo.define('web.calendar_tests', function (require) {
 "use strict";
 
+var AbstractStorageService = require('web.AbstractStorageService');
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
 var Dialog = require('web.Dialog');
 var fieldUtils = require('web.field_utils');
 var mixins = require('web.mixins');
+var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var time = require('web.time');
 var session = require('web.session');
@@ -44,6 +46,7 @@ QUnit.module('Views', {
                     stop_date: {string: "stop date", type: "date"},
                     start: {string: "start datetime", type: "datetime"},
                     stop: {string: "stop datetime", type: "datetime"},
+                    delay: {string: "delay", type: "float"},
                     allday: {string: "allday", type: "boolean"},
                     partner_ids: {string: "attendees", type: "one2many", relation: 'partner', default: [[6, 0, [1]]]},
                     type: {string: "type", type: "integer"},
@@ -2332,6 +2335,110 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('timzeone does not affect calendar with date field', function (assert) {
+        assert.expect(8);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar date_start="start_date" mode="month">'+
+                '<field name="name"/>'+
+                '<field name="start_date"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    assert.strictEqual(args.args[0].start_date, "2016-12-20 00:00:00");
+                }
+                if (args.method === "write") {
+                    assert.step(args.args[1].start_date);
+                }
+                return this._super(route, args);
+            },
+            session: {
+                getTZOffset: function () {
+                    return 120; // 2 hours timezone
+                },
+            },
+        });
+
+        // Create event (on 20 december)
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+        var $input = $('.modal-body input:first');
+        $input.val("An event").trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click');
+
+        assert.strictEqual(calendar.$('.o_field_start_date').text().trim(), "12/20/2016")
+
+        // Move event to another day (on 27 november)
+        testUtils.dragAndDrop(
+            calendar.$('.fc-event').first(),
+            calendar.$('.fc-day-top').first()
+        );
+        assert.verifySteps(["2016-11-27 00:00:00"]);
+        assert.strictEqual(calendar.$('.o_field_start_date').text().trim(), "11/27/2016")
+
+        // Move event to last day (on 7 january)
+        testUtils.dragAndDrop(
+            calendar.$('.fc-event').first(),
+            calendar.$('.fc-day-top').last()
+        );
+        assert.verifySteps(["2016-11-27 00:00:00", "2017-01-07 00:00:00"]);
+        assert.strictEqual(calendar.$('.o_field_start_date').text().trim(), "01/07/2017")
+
+        calendar.destroy();
+    });
+
+    QUnit.test('drag and drop on month mode with date_start and date_delay', function (assert) {
+        assert.expect(1);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar date_start="start" date_delay="delay" mode="month">'+
+                '<field name="name"/>'+
+                '<field name="start"/>'+
+                '<field name="delay"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "write") {
+                    // delay should not be written at drag and drop
+                    assert.equal(args.args[1].delay, undefined)
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // Create event (on 20 december)
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+        var $input = $('.modal-body input:first');
+        $input.val("An event").trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click');
+
+        // Move event to another day (on 27 november)
+        testUtils.dragAndDrop(
+            calendar.$('.fc-event').first(),
+            calendar.$('.fc-day-top').first()
+        );
+
+        calendar.destroy();
+    });
+
     QUnit.test('form_view_id attribute works (for creating events)', function (assert) {
         assert.expect(1);
 
@@ -2495,6 +2602,44 @@ QUnit.module('Views', {
             'The day should be in the given locale specific format');
 
         moment.locale(initialLocale);
+
+        calendar.destroy();
+    });
+
+    QUnit.test('calendar sidebar toggle', function (assert) {
+        assert.expect(5);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar date_start="start_date">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            services: {
+                local_storage: AbstractStorageService.extend({storage: new RamStorage()}),
+            },
+        });
+
+        var fullWidth = calendar.call('local_storage', 'getItem', 'calendar_fullWidth');
+        assert.strictEqual(fullWidth, undefined,
+            "calendar_fullWidth should be undefined in local storage");
+        assert.containsNone(calendar, '.o_calendar_sidebar_container.o_sidebar_hidden',
+            "sidebar should be opened");
+
+        // click on close
+        testUtils.dom.click(calendar.$('.o_calendar_sidebar_toggler'));
+        fullWidth = calendar.call('local_storage', 'getItem', 'calendar_fullWidth');
+        assert.strictEqual(fullWidth, true,
+            "calendar_fullWidth should be true in local storage");
+        assert.containsOnce(calendar, '.o_calendar_sidebar_container.o_sidebar_hidden',
+            "sidebar should be hidden");
+
+        // reload calendar view and check calendar view has still full width
+        calendar.reload();
+        assert.containsOnce(calendar, '.o_calendar_sidebar_container.o_sidebar_hidden',
+            "sidebar should be hidden");
 
         calendar.destroy();
     });

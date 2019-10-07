@@ -253,9 +253,10 @@ var ImageWidget = MediaWidget.extend({
         } else if (this.$media.is('a.o_image')) {
             o.url = this.$media.attr('href').replace(/[?].*/, '');
             o.id = +o.url.match(/\/web\/content\/(\d+)/, '')[1];
+            o.isDocument = true;
         }
         if (o.url) {
-            self._toggleImage(_.find(self.records, function (record) { return record.url === o.url;}) || o, true);
+            self._toggleImage(_.find(self.records, function (record) { return record.src === o.url;}) || o, true);
         }
 
         return def;
@@ -937,7 +938,7 @@ var VideoWidget = MediaWidget.extend({
             return {errorCode: 0};
         }
 
-        var autoplay = options.autoplay ? '?autoplay=1' : '?autoplay=0';
+        var autoplay = options.autoplay ? '?autoplay=1&mute=1' : '?autoplay=0';
 
         if (ytMatch && ytMatch[2].length === 11) {
             $video.attr('src', '//www.youtube' + (ytMatch[1] || '') + '.com/embed/' + ytMatch[2] + autoplay);
@@ -948,7 +949,7 @@ var VideoWidget = MediaWidget.extend({
             $video.attr('src', vinMatch[0] + '/embed/simple');
             videoType = 'vin';
         } else if (vimMatch && vimMatch[3].length) {
-            $video.attr('src', '//player.vimeo.com/video/' + vimMatch[3] + autoplay);
+            $video.attr('src', '//player.vimeo.com/video/' + vimMatch[3] + autoplay.replace('mute', 'muted'));
             videoType = 'vim';
         } else if (dmMatch && dmMatch[2].length) {
             var just_id = dmMatch[2].replace('video/','');
@@ -966,7 +967,8 @@ var VideoWidget = MediaWidget.extend({
             $video.attr('src', $video.attr('src') + '&rel=0');
         }
         if (options.loop && (ytMatch || vimMatch)) {
-            $video.attr('src', $video.attr('src') + '&loop=1');
+            var videoSrc = _.str.sprintf('%s&loop=1', $video.attr('src'));
+            $video.attr('src', ytMatch ? _.str.sprintf('%s&playlist=%s', videoSrc, ytMatch[2]) : videoSrc);
         }
         if (options.hide_controls && (ytMatch || dmMatch)) {
             $video.attr('src', $video.attr('src') + '&controls=0');
@@ -1160,9 +1162,9 @@ var MediaDialog = Dialog.extend({
                 tabToShow = 'image';
             } else if (self.$media.is('a.o_image')) {
                 tabToShow = 'document';
-            } else if (self.$media.attr('class').match(/(^|\s)media_iframe_video($|\s)/)) {
+            } else if (self.$media.hasClass('media_iframe_video')) {
                 tabToShow = 'video';
-            } else if (self.$media.parent().attr('class').match(/(^|\s)media_iframe_video($|\s)/)) {
+            } else if (self.$media.parent().hasClass('media_iframe_video')) {
                 self.$media = self.$media.parent();
                 self.media = self.$media[0];
                 tabToShow = 'video';
@@ -1405,6 +1407,7 @@ var LinkDialog = Dialog.extend({
                 }
 
                 this.data.range = range.create(sc, so, ec, eo);
+                $(editable).data("range", this.data.range);
                 this.data.range.select();
             } else {
                 nodes = dom.ancestor(sc, dom.isAnchor).childNodes;

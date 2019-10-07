@@ -53,6 +53,16 @@ class TestBasic(TransactionCase):
             ('1', 0, 0, 0)
         )
 
+    def test_required_bool(self):
+        f = Form(self.env['test_testing_utilities.req_bool'])
+        f.f_bool = False
+        r = f.save()
+        self.assertEqual(r.f_bool, 0)
+
+        f2 = Form(self.env['test_testing_utilities.req_bool'])
+        r2 = f2.save()
+        self.assertEqual(r2.f_bool, 0)
+
     def test_readonly(self):
         """
         Checks that fields with readonly modifiers (marked as readonly or
@@ -486,6 +496,17 @@ class TestO2M(TransactionCase):
 
     def test_o2m_self_recursive(self):
         Form(self.env['test_testing_utilities.recursive'], view='test_testing_utilities.o2m_recursive_relation_view')
+
+    def test_o2m_attrs(self):
+        Model = self.env['test_testing_utilities.parent'].with_context(
+            default_subs=[{
+                'value': 5,
+            }, {
+                'value': 7,
+            }]
+        )
+        f = Form(Model, view='test_testing_utilities.o2m_modifier')
+        f.save()
 
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record

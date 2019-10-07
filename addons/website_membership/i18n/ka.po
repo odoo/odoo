@@ -1,21 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_membership
-#
+# 
 # Translators:
+# Temur, 2019
+# Giorgi Melitauri <gmelitauri@live.com>, 2019
+# Gizo Kobakhidze <040168@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-12-07 09:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
-"Language: ka\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:35+0000\n"
+"Last-Translator: Gizo Kobakhidze <040168@gmail.com>, 2019\n"
+"Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: ka\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+msgstr ""
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
@@ -23,7 +34,7 @@ msgid "All"
 msgstr "ყველა"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:88
+#: code:addons/website_membership/controllers/main.py:83
 #, python-format
 msgid "All Countries"
 msgstr ""
@@ -34,12 +45,17 @@ msgid "Associations"
 msgstr ""
 
 #. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid "Close"
+msgstr "დახურვა"
+
+#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Find a business partner"
 msgstr ""
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:130
+#: code:addons/website_membership/controllers/main.py:126
 #, python-format
 msgid "Free Members"
 msgstr ""
@@ -50,9 +66,14 @@ msgid "Location"
 msgstr ""
 
 #. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.footer_custom
 #: model_terms:ir.ui.view,arch_db:website_membership.index
+#: model:website.menu,name:website_membership.menu_members
 msgid "Members"
+msgstr ""
+
+#. module: website_membership
+#: model:ir.model,name:website_membership.model_membership_membership_line
+msgid "Membership Line"
 msgstr ""
 
 #. module: website_membership
@@ -71,11 +92,6 @@ msgid "World Map"
 msgstr "მსოფლიო რუკა"
 
 #. module: website_membership
-#: model:ir.model,name:website_membership.model_membership_membership_line
-msgid "membership.membership_line"
-msgstr ""
-
-#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
-msgid "pull-left"
+msgid "float-left"
 msgstr ""

@@ -14,25 +14,28 @@
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
 # Jussi Lehto <jussi@gulfeo.com>, 2018
 # Melina Mäntylä <melina.mantyla@web-veistamo.fi>, 2018
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
 # Teemu Ahonen <teemu.ahonen@web-veistamo.fi>, 2018
 # Mikko Salmela <salmemik@gmail.com>, 2018
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
 # Timo Koukkari <ti.ko@netikka.fi>, 2018
 # Martin Trigaux, 2018
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
 # Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2019
 # Simo Suurla <simo@suurla.fi>, 2019
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2019
+# Jiri Grönroos <jiri.gronroos@iki.fi>, 2019
+# artol <arto.leskinen@tek.fi>, 2019
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Simo Suurla <simo@suurla.fi>, 2019\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -272,20 +275,10 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Overview:\n"
+"Kuvaus:\n"
 "---------\n"
 "\n"
-"* Chart of Accounts and Taxes template for companies in Japan.\n"
-"* This probably does not cover all the necessary accounts for a company. You are expected to add/delete/modify accounts based on this template.\n"
-"\n"
-"Note:\n"
-"-----\n"
-"\n"
-"* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  You may not need to use these at all under normal circumstances.\n"
-"\n"
-"[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
-"\n"
-"    "
+"* Japanin tilikartta ja verotilit."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_deferred_revenue
@@ -1848,33 +1841,7 @@ msgid ""
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
 "\n"
-"Chart of Account for Venezuela.\n"
-"===============================\n"
-"\n"
-"Venezuela doesn't have any chart of account by law, but the default\n"
-"proposed in Odoo should comply with some Accepted best practices in Venezuela, \n"
-"this plan comply with this practices.\n"
-"\n"
-"This module has been tested as base for more of 1000 companies, because \n"
-"it is based in a mixtures of most common software in the Venezuelan \n"
-"market what will allow for sure to accountants feel them first steps with \n"
-"Odoo more confortable.\n"
-"\n"
-"This module doesn't pretend be the total localization for Venezuela, \n"
-"but it will help you to start really quickly with Odoo in this country.\n"
-"\n"
-"This module give you.\n"
-"---------------------\n"
-"\n"
-"- Basic taxes for Venezuela.\n"
-"- Have basic data to run tests with community localization.\n"
-"- Start a company from 0 if your needs are basic from an accounting PoV.\n"
-"\n"
-"We recomend use of account_anglo_saxon if you want valued your \n"
-"stocks as Venezuela does with out invoices.\n"
-"\n"
-"If you install this module, and select Custom chart a basic chart will be proposed, \n"
-"but you will need set manually account defaults for taxes.\n"
+"Venezuelan tilikartta.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -6351,7 +6318,7 @@ msgstr "Pääsytunniste"
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
 msgid "Access to Private Addresses"
-msgstr ""
+msgstr "Pääsy yksityisiin osoitteisiin"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -6376,7 +6343,7 @@ msgstr "Tilinomistaja"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "Tilinhaltijan nimi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -6401,7 +6368,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "Tili TaxCloud"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
@@ -6423,7 +6390,7 @@ msgstr ""
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr ""
+msgstr "Tilinhaltijan nimi, jos se on eri kuin tilinhaltijan nimi"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -7093,11 +7060,9 @@ msgid "Application"
 msgstr "Hakemus"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
-msgstr ""
+msgstr "Sovellusoikeudet"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -7563,6 +7528,7 @@ msgstr ""
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
 msgstr ""
+"Pankkitilin tyyppi: Normaali tai IBAN. Pääteltiin pankkitilin numerosta."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__bank_ids
@@ -7606,10 +7572,16 @@ msgid "Barcode scan in Mobile"
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:603
 #, python-format
 msgid "Barcode type"
-msgstr ""
+msgstr "Viivakoodin tyyppi"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:603
@@ -7946,7 +7918,7 @@ msgstr "Buckaroo maksun vastaanottaja"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
 msgid "Budget Management"
-msgstr ""
+msgstr "Talousarvion hallinta"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
@@ -8141,6 +8113,12 @@ msgstr "Peruuta päivitys"
 #: code:addons/models.py:2118
 #, python-format
 msgid "Cannot aggregate field %r."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
 msgstr ""
 
 #. module: base
@@ -9137,7 +9115,7 @@ msgstr "Luo valikko"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_partner_bank_account_form
 msgid "Create a bank account"
-msgstr ""
+msgstr "Luo pankkitili"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view_custom
@@ -9168,7 +9146,7 @@ msgstr "Luo uusi tunniste yhteystiedolle"
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a new customer in your address book"
-msgstr ""
+msgstr "Luo uusi asiakas osoitekirjaasi"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_attachment
@@ -9720,7 +9698,7 @@ msgstr "Päiväyksen muotoilu"
 #: code:addons/base/models/ir_qweb_fields.py:206
 #, python-format
 msgid "Date format"
-msgstr ""
+msgstr "Päiväyksen muotoilu"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:567
@@ -11506,7 +11484,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_web_unsplash
 msgid "Find free high-resolution images from Unsplash"
-msgstr ""
+msgstr "Hae ilmaisia korkearesoluutiokuvia Unsplashistä."
 
 #. module: base
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -11546,7 +11524,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
 msgid "Food"
-msgstr ""
+msgstr "Ruoka"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_document_template_form
@@ -11661,7 +11639,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__email_formatted
 #: model:ir.model.fields,field_description:base.field_res_users__email_formatted
 msgid "Formatted Email"
-msgstr ""
+msgstr "Muotoiltu sähköposti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum
@@ -11885,12 +11863,12 @@ msgstr "Yleisasetukset"
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Generate Missing Terms"
-msgstr ""
+msgstr "Luo puuttuvat termit"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
 msgid "Generate leads from a contact form"
-msgstr ""
+msgstr "Luo liidejä yhteydenottolomakkeelta"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription
@@ -12091,7 +12069,7 @@ msgstr "Google Drive™-integraatio"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_google_map
 msgid "Google Maps"
-msgstr ""
+msgstr "Google Maps"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_spreadsheet
@@ -12289,7 +12267,7 @@ msgstr "HTML"
 #. module: base
 #: model:ir.model,name:base.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP-reititys"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -12335,7 +12313,7 @@ msgstr "Laitteisto-proxy"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__qr_code_valid
 msgid "Has all required arguments"
-msgstr ""
+msgstr "On kaikki tarvittavat argumentit"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_spacing
@@ -12424,7 +12402,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_timesheet
 msgid "Helps you manage the timesheets."
-msgstr ""
+msgstr "Auttaa tuntilistojen hallinnassa"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_user_type
@@ -13350,7 +13328,7 @@ msgstr "Sisäinen lähde"
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Internal User"
-msgstr ""
+msgstr "Sisäinen käyttäjä"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
@@ -13689,7 +13667,7 @@ msgstr "JOT-ajoitus (JIT)"
 #. module: base
 #: selection:res.company,base_onboarding_company_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Juuri tehty"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_K
@@ -14219,7 +14197,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Let's start!"
-msgstr ""
+msgstr "Aloita!"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -14367,7 +14345,7 @@ msgstr "Lataa käännös"
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
 msgid "Load demo data"
-msgstr ""
+msgstr "Lataa Demodata"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__code
@@ -15037,7 +15015,7 @@ msgstr "SMTP palvelin puuttuu"
 #: code:addons/models.py:3028
 #, python-format
 msgid "Missing document(s)"
-msgstr ""
+msgstr "Puuttuvat dokumentit"
 
 #. module: base
 #: code:addons/models.py:5505
@@ -15693,7 +15671,7 @@ msgstr "Ei asennettu"
 #. module: base
 #: selection:res.company,base_onboarding_company_state:0
 msgid "Not done"
-msgstr ""
+msgstr "Ei valmis"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:1407
@@ -16886,11 +16864,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Odoo helps you easily track all activities related to a customer."
 msgstr ""
+"Odoo auttaa sinua helposti seuraamaan kaikkia asiakkaaseen liittyviä toimia."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
 msgid "Odoo helps you easily track all activities related to a vendor."
 msgstr ""
+"Odoo auttaa sinua helposti seuraamaan kaikkia toimittajaan liittyviä toimia."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -17332,11 +17312,10 @@ msgstr "Alkuperäinen näkymä"
 #: code:addons/base/models/ir_qweb_fields.py:393
 #, python-format
 msgid "Original currency"
-msgstr ""
+msgstr "Alkuperäinen valuutta"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -17568,7 +17547,7 @@ msgstr "Ylätason valikko"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Parent Path"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_name
@@ -18275,7 +18254,7 @@ msgstr "Hankinnat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
 msgid "Purchase Agreements"
-msgstr ""
+msgstr "Ostosopimukset"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_stock
@@ -18386,7 +18365,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Tarjousrakentaja"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
@@ -18628,7 +18607,7 @@ msgstr "Viite"
 #: code:addons/base/models/ir_qweb_fields.py:567
 #, python-format
 msgid "Reference date"
-msgstr ""
+msgstr "Viitepäiväys"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_id
@@ -19002,7 +18981,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sms
 msgid "SMS gateway"
-msgstr ""
+msgstr "SMS gateway"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_port
@@ -19179,7 +19158,7 @@ msgstr "San Marino"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "Sanitoitu tilinumero"
 
 #. module: base
 #: selection:res.lang,week_start:0
@@ -19666,7 +19645,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 msgid "Show active currencies"
-msgstr ""
+msgstr "Näytä aktiiviset valuutat"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -19876,7 +19855,7 @@ msgstr "Alkuperäinen termi"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation__source
 msgid "Source term"
-msgstr ""
+msgstr "Alkuperäinen termi"
 
 #. module: base
 #: model:res.country,name:base.za
@@ -20965,6 +20944,7 @@ msgstr "Tekninen nimi"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Tekniset asetukset"
 
@@ -22573,11 +22553,9 @@ msgid "User Login"
 msgstr "Käyttäjätunnus"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
-msgstr ""
+msgstr "Käyttäjäprofiili"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__log_ids
@@ -22587,7 +22565,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
 msgid "User types"
-msgstr ""
+msgstr "Käyttäjätyypit"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
@@ -22635,7 +22613,7 @@ msgstr "Käyttäjät"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_users
 msgid "Users & Companies"
-msgstr ""
+msgstr "Käyttäjät ja yritykset"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_log
@@ -22911,7 +22889,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "Tästä näkymästä periytyvät näkymät"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -23606,8 +23584,8 @@ msgstr "esim. fi_FI"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "esim. www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr "esim. https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
@@ -23809,7 +23787,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_zebra
 msgid "stock_zebra"
-msgstr ""
+msgstr "stock_zebra"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes

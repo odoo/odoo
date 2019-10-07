@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2019\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
@@ -5625,7 +5625,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
-msgstr ""
+msgstr "<span class=\"text-white text-uppercase\">Zonă periculoasă</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -6120,12 +6120,12 @@ msgid ""
 "to see. Whether they can have a read, write, create and delete access right "
 "can be managed from here."
 msgstr ""
-"Un grup este un set de zone functionale care vor fi atribuite utilizatorilor"
-" pentru a le permite accesul si a le acorda drepturi la aplicatii si sarcini"
-" specifice din sistem. Puteti crea grupuri personalizate sau sa le editati "
-"pe cele existente prin default pentru a personaliza vizualizarea meniului pe"
-" care utilizatorii il vor putea vedea. Indiferent daca au drepturi de acces "
-"pentru a citi, scrie, crea sau sterge, acestea pot fi gestionate de aici."
+"Un grup este un set de zone funcționale care vor fi atribuite utilizatorilor"
+" pentru a le permite accesul și a le acorda drepturi la aplicații și sarcini"
+" specifice din sistem. Puteți crea grupuri personalizate sau sa le editați "
+"pe cele existente pentru a personaliza meniului pe care utilizatorii îl vor "
+"putea vedea. Indiferent dacă au drepturi de acces pentru a citi, scrie, crea"
+" sau șterge, acestea pot fi gestionate de aici."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
@@ -7031,9 +7031,7 @@ msgid "Application"
 msgstr "Aplicație"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr ""
 
@@ -7543,6 +7541,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
 msgstr ""
 
 #. module: base
@@ -8081,6 +8085,12 @@ msgstr "Anulează actualizarea"
 #: code:addons/models.py:2118
 #, python-format
 msgid "Cannot aggregate field %r."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
 msgstr ""
 
 #. module: base
@@ -9847,6 +9857,8 @@ msgid ""
 "Demo data should only be used on test databases!\n"
 "                             Once they are loaded, they cannot be removed!"
 msgstr ""
+"Datele demo trebuie folosite numai în bazele de date de testare! Odată ce "
+"sunt încărcate, nu pot fi îndepărtate!"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure
@@ -11105,6 +11117,7 @@ msgstr ""
 #: model:ir.actions.server,name:base.demo_failure_action
 msgid "Failed to install demo data for some modules, demo disabled"
 msgstr ""
+"Eroare la instalarea datelor demo pentru unele module, demo dezactivat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failures_count
@@ -16871,6 +16884,8 @@ msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
 msgstr ""
+"Una dintre înregistrările pe care încercați să le modificați a fost deja "
+"ștearsă (Tip document: %s)."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:407
@@ -16968,7 +16983,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Oops, no!"
-msgstr ""
+msgstr "Hopa, nu!"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -17243,8 +17258,7 @@ msgid "Original currency"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -17730,6 +17744,8 @@ msgid ""
 "Please confirm that you want to <b>irreversibly</b> make this database a "
 "demo database."
 msgstr ""
+"Confirmați că doriți să transformați ireversibil această bază de date într-o"
+" bază de date demo."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:1231
@@ -18969,7 +18985,7 @@ msgstr "Sfantul Martin (partea franceza)"
 #. module: base
 #: model:res.country,name:base.pm
 msgid "Saint Pierre and Miquelon"
-msgstr "Saint Pierre si Miquelon"
+msgstr "Saint Pierre și Miquelon"
 
 #. module: base
 #: model:res.country,name:base.vc
@@ -19884,17 +19900,17 @@ msgstr "Începe configurare"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Stare"
+msgstr "Judeţ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
 msgid "State Code"
-msgstr "Cod judet"
+msgstr "Cod județ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__name
 msgid "State Name"
-msgstr "Nume judet"
+msgstr "Nume județ"
 
 #. module: base
 #: model:res.country,name:base.ps
@@ -19909,7 +19925,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
 msgid "States"
-msgstr "Stări"
+msgstr "Judeţe"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_install__state
@@ -20832,7 +20848,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "ID Taxă"
+msgstr "CIF"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -20868,6 +20884,7 @@ msgstr "Nume tehnic:"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Setări Tehnice"
 
@@ -21109,7 +21126,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "The demonstration data of"
-msgstr ""
+msgstr "Datele demonstrative din "
 
 #. module: base
 #: code:addons/base/models/ir_model.py:598
@@ -22182,7 +22199,7 @@ msgstr "Dezinstalează"
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 #, python-format
 msgid "Uninstall module"
-msgstr ""
+msgstr "Dezinstalare modul"
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -22513,9 +22530,7 @@ msgid "User Login"
 msgstr "Autentificare utilizator"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "Tip de utilizator"
 
@@ -23200,7 +23215,7 @@ msgstr "Yemen"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Yes, I understand the risks"
-msgstr ""
+msgstr "Da, înțeleg riscurile"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee
@@ -23554,8 +23569,8 @@ msgstr "ex. ro_RO"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "e.g. www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
@@ -23684,7 +23699,7 @@ msgstr "many2one"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "module(s) failed to install and were disabled"
-msgstr ""
+msgstr "modulele nu au reușit să se instaleze și au fost dezactivate"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0

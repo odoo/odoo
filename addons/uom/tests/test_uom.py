@@ -68,6 +68,16 @@ class TestUom(TransactionCase):
             'name': 'Custom UoM category',
         })
 
+        # at first we can not create a non reference in custom category
+        with self.assertRaises(ValidationError):
+            self.env['uom.uom'].create({
+                'name': 'Bigger UoM of my category',
+                'factor_inv': 42,
+                'uom_type': 'bigger',
+                'rounding': 0.5,
+                'category_id': category.id
+            })
+
         # create the reference
         self.env['uom.uom'].create({
             'name': 'Reference UoM of my category',

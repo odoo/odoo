@@ -89,6 +89,21 @@ class SaleOrder(models.Model):
         if self.warehouse_id.company_id:
             self.company_id = self.warehouse_id.company_id.id
 
+    @api.onchange('partner_shipping_id')
+    def _onchange_partner_shipping_id(self):
+        res = {}
+        pickings = self.picking_ids.filtered(
+            lambda p: p.state not in ['done', 'cancel'] and p.partner_id != self.partner_shipping_id
+        )
+        if pickings:
+            res['warning'] = {
+                'title': _('Warning!'),
+                'message': _(
+                    'Do not forget to change the partner on the following delivery orders: %s'
+                ) % (','.join(pickings.mapped('name')))
+            }
+        return res
+
     @api.multi
     def action_view_delivery(self):
         '''
@@ -446,7 +461,8 @@ class SaleOrderLine(models.Model):
 
     def _update_line_quantity(self, values):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        if self.mapped('qty_delivered') and float_compare(values['product_uom_qty'], max(self.mapped('qty_delivered')), precision_digits=precision) == -1:
+        line_products = self.filtered(lambda l: l.product_id.type in ['product', 'consu'])
+        if line_products.mapped('qty_delivered') and float_compare(values['product_uom_qty'], max(line_products.mapped('qty_delivered')), precision_digits=precision) == -1:
             raise UserError(_('You cannot decrease the ordered quantity below the delivered quantity.\n'
                               'Create a return first.'))
         super(SaleOrderLine, self)._update_line_quantity(values)

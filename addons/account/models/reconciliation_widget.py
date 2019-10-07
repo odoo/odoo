@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import pycompat
 from odoo.tools.misc import formatLang
+from odoo.tools import misc
 
 
 class AccountReconciliation(models.AbstractModel):
@@ -79,28 +80,44 @@ class AccountReconciliation(models.AbstractModel):
 
     @api.model
     def _get_bank_statement_line_partners(self, st_lines):
+        params = []
+
+        # Add the res.partner.ban's IR rules. In case partners are not shared between companies,
+        # identical bank accounts may exist in a company we don't have access to.
+        ir_rules_query = self.env['res.partner.bank']._where_calc([])
+        self.env['res.partner.bank']._apply_ir_rules(ir_rules_query, 'read')
+        from_clause, where_clause, where_clause_params = ir_rules_query.get_sql()
+        if where_clause:
+            where_bank = ('AND %s' % where_clause).replace('res_partner_bank', 'bank')
+            params += where_clause_params
+        else:
+            where_bank = ''
+
+        # Add the res.partner's IR rules. In case partners are not shared between companies,
+        # identical partners may exist in a company we don't have access to.
+        ir_rules_query = self.env['res.partner']._where_calc([])
+        self.env['res.partner']._apply_ir_rules(ir_rules_query, 'read')
+        from_clause, where_clause, where_clause_params = ir_rules_query.get_sql()
+        if where_clause:
+            where_partner = ('AND %s' % where_clause).replace('res_partner', 'p3')
+            params += where_clause_params
+        else:
+            where_partner = ''
+
         query = '''
             SELECT
                 st_line.id                          AS id,
                 COALESCE(p1.id,p2.id,p3.id)         AS partner_id
             FROM account_bank_statement_line st_line
-            LEFT JOIN res_partner_bank bank         ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number
-            LEFT JOIN res_partner p1 ON st_line.partner_id=p1.id
-            LEFT JOIN res_partner p2 ON bank.partner_id=p2.id
-            LEFT JOIN res_partner p3 ON p3.name ILIKE st_line.partner_name
-            WHERE st_line.id IN %s
         '''
-        params = [tuple(st_lines.ids)]
+        query += 'LEFT JOIN res_partner_bank bank ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number %s\n' % (where_bank)
+        query += 'LEFT JOIN res_partner p1 ON st_line.partner_id=p1.id \n'
+        query += 'LEFT JOIN res_partner p2 ON bank.partner_id=p2.id \n'
+        # By definition the commercial partner_id doesn't have a parent_id set
+        query += 'LEFT JOIN res_partner p3 ON p3.name ILIKE st_line.partner_name %s AND p3.parent_id is NULL \n' % (where_partner)
+        query += 'WHERE st_line.id IN %s'
 
-        # Add the res.partner's IR rules to the WHERE clause. In case partners are not shared
-        # between companies, identical partners may exist in a company we don't have access to.
-        ir_rules_query = self.env['res.partner']._where_calc([])
-        self.env['res.partner']._apply_ir_rules(ir_rules_query, 'read')
-        from_clause, where_clause, where_clause_params = ir_rules_query.get_sql()
-        where_p3 = (" AND %s" % where_clause).replace('res_partner', 'p3') if where_clause else ''
-        if where_p3:
-            query += where_p3
-            params += where_clause_params
+        params += [tuple(st_lines.ids)]
 
         self._cr.execute(query, params)
 
@@ -479,11 +496,10 @@ class AccountReconciliation(models.AbstractModel):
         # Domain factorized for all reconciliation use cases
         if search_str:
             str_domain = self._domain_move_lines(search_str=search_str)
-            if not partner_id:
-                str_domain = expression.OR([
-                    str_domain,
-                    [('partner_id.name', 'ilike', search_str)]
-                ])
+            str_domain = expression.OR([
+                str_domain,
+                [('partner_id.name', 'ilike', search_str)]
+            ])
             domain = expression.AND([
                 domain,
                 str_domain
@@ -499,7 +515,6 @@ class AccountReconciliation(models.AbstractModel):
 
         if st_line.company_id.account_bank_reconciliation_start:
             domain = expression.AND([domain, [('date', '>=', st_line.company_id.account_bank_reconciliation_start)]])
-
         return domain
 
     @api.model
@@ -532,6 +547,8 @@ class AccountReconciliation(models.AbstractModel):
         for line in move_lines:
             company_currency = line.company_id.currency_id
             line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
+            date_maturity = misc.format_date(self.env, line.date_maturity, lang_code=self.env.user.lang)
+
             ret_line = {
                 'id': line.id,
                 'name': line.name and line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
@@ -543,7 +560,7 @@ class AccountReconciliation(models.AbstractModel):
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.internal_type,
-                'date_maturity': line.date_maturity,
+                'date_maturity': date_maturity,
                 'date': line.date,
                 'journal_id': [line.journal_id.id, line.journal_id.display_name],
                 'partner_id': line.partner_id.id,
@@ -633,13 +650,14 @@ class AccountReconciliation(models.AbstractModel):
             amount_currency = amount
             amount_currency_str = ""
         amount_str = formatLang(self.env, abs(amount), currency_obj=st_line.currency_id or statement_currency)
+        date = misc.format_date(self.env, st_line.date, lang_code=self.env.user.lang)
 
         data = {
             'id': st_line.id,
             'ref': st_line.ref,
             'note': st_line.note or "",
             'name': st_line.name,
-            'date': st_line.date,
+            'date': date,
             'amount': amount,
             'amount_str': amount_str,  # Amount in the statement line currency
             'currency_id': st_line.currency_id.id or statement_currency.id,

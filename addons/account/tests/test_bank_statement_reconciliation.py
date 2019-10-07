@@ -13,6 +13,8 @@ class TestBankStatementReconciliation(AccountingTestCase):
         self.bsl_model = self.env['account.bank.statement.line']
         self.reconciliation_widget = self.env['account.reconciliation.widget']
         self.partner = self.env['res.partner'].create({'name': 'test'})
+        self.currency_usd_id = self.env.ref("base.USD").id
+        self.currency_euro_id = self.env.ref("base.EUR").id
 
     def test_reconciliation_proposition(self):
         rcv_mv_line = self.create_invoice(100)
@@ -108,3 +110,31 @@ class TestBankStatementReconciliation(AccountingTestCase):
             })
 
         return bank_stmt_line
+
+    def test_confirm_statement_usd(self):
+        company = self.env.ref('base.main_company')
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.currency_euro_id, company.id])
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'rate': 2.0,
+            'name': '2001-01-01',
+        })
+        bank_journal_usd = self.env['account.journal'].create({
+            'name': 'Bank US',
+            'type': 'bank',
+            'code': 'BNK68',
+            'currency_id': self.currency_usd_id,
+        })
+        statement = self.bs_model.create({
+            'journal_id': bank_journal_usd.id,
+            'balance_end_real': 100,
+            'line_ids': [(0, 0, {
+                'name': '_',
+                'partner_id': self.partner.id,
+                'amount': 100,
+                'account_id': bank_journal_usd.default_debit_account_id.id,
+            })],
+        })
+        statement.button_open()
+        statement.button_confirm_bank()

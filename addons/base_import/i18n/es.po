@@ -7,6 +7,7 @@
 # Martin Trigaux, 2018
 # Emilio Silva <efsilvay@gmail.com>, 2018
 # Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:05+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Gabriel Umana <gabriel.umana@delfixcr.com>, 2019\n"
+"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "%d records were successfully imported"
-msgstr ""
+msgstr "%d registros fueron importados con éxito"
 
 #. module: base_import
 #. openerp-web
@@ -57,6 +58,11 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"Se produjo un problema desconocido durante la importación (posiblemente "
+"pérdida de conexión, límite de datos excedido o límites de memoria "
+"excedidos). Vuelva a intentarlo en caso de que el problema sea transitorio. "
+"Si el problema persiste, intente dividir el archivo en lugar de importarlo "
+"de una vez."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -95,7 +101,7 @@ msgstr "Columna %s contiene valores incorrectos. Error en la linea %d: %s"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "Nombre de columna"
 
 #. module: base_import
 #. openerp-web
@@ -111,14 +117,14 @@ msgstr "Coma"
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
-msgstr ""
+msgstr "No se pudo recuperar el URL:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:108
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "Crear si no existe"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -171,6 +177,9 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
+"Crea nuevos registros si no se pueden encontrar (en lugar de no importar). "
+"Tenga en cuenta que el valor en la columna se usará como el 'nombre' del "
+"nuevo registro, y se supone que esto es suficiente para crear el registro."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -258,7 +267,7 @@ msgstr "Descargar"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
-msgstr ""
+msgstr "Dt"
 
 #. module: base_import
 #. openerp-web
@@ -292,6 +301,8 @@ msgstr "Todo parece correcto."
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
 msgstr ""
+"Se recomiendan los archivos de Excel ya que el formato de los campos es "
+"automático."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:169
@@ -325,7 +336,7 @@ msgstr "Tipo de archivo"
 #: code:addons/base_import/models/base_import.py:814
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "El tamaño del archivo excede el máximo configurado (%s bytes)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -338,13 +349,15 @@ msgstr "Archivo a comprobar y/o importar, binario en bruto (no base64)"
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
 msgstr ""
+"Para los archivos CSV, es posible que deba seleccionar el separador "
+"correcto."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:13
 #, python-format
 msgid "Formatting Options…"
-msgstr ""
+msgstr "Opciones de formato ..."
 
 #. module: base_import
 #. openerp-web
@@ -438,7 +451,7 @@ msgstr "Importar"
 #: code:addons/base_import/static/src/xml/base_import.xml:91
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "Preguntas frecuentes sobre importación"
 
 #. module: base_import
 #. openerp-web
@@ -452,7 +465,7 @@ msgstr "Importar un Archivo"
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "Import completed"
-msgstr ""
+msgstr "Importación completada"
 
 #. module: base_import
 #. openerp-web
@@ -470,6 +483,9 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"La importación expiró. Por favor, intente de nuevo. Si aún ocurre este "
+"problema, el archivo puede ser demasiado grande para la configuración del "
+"sistema, intente dividirlo (importe menos registros por archivo)."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -570,7 +586,7 @@ msgstr "Nombre"
 #: code:addons/base_import/static/src/xml/base_import.xml:85
 #, python-format
 msgid "Need Help?"
-msgstr ""
+msgstr "¿Necesitas ayuda?"
 
 #. module: base_import
 #. openerp-web
@@ -814,7 +830,7 @@ msgstr "Valor"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
 msgid "Value2"
-msgstr ""
+msgstr "Valor2"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:760
@@ -823,6 +839,8 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"No puede importar imágenes a través de URL, consulte con su administrador o "
+"soporte por el motivo."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:631

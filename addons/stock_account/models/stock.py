@@ -89,7 +89,10 @@ class StockMoveLine(models.Model):
         if 'qty_done' in vals:
             moves_to_update = {}
             for move_line in self.filtered(lambda ml: ml.state == 'done' and (ml.move_id._is_in() or ml.move_id._is_out())):
-                moves_to_update[move_line.move_id] = vals['qty_done'] - move_line.qty_done
+                rounding = move_line.product_uom_id.rounding
+                qty_difference = float_round(vals['qty_done'] - move_line.qty_done, precision_rounding=rounding)
+                if not float_is_zero(qty_difference, precision_rounding=rounding):
+                    moves_to_update[move_line.move_id] = qty_difference
 
             for move_id, qty_difference in moves_to_update.items():
                 move_vals = {}
@@ -198,7 +201,7 @@ class StockMove(models.Model):
                     '|',
                         ('location_dest_id.company_id', '=', False),
                         '&',
-                            ('location_dest_id.usage', '=', 'inventory'),
+                            ('location_dest_id.usage', 'in', ['inventory', 'production']),
                             ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
         ]
         return domain
@@ -269,6 +272,7 @@ class StockMove(models.Model):
         qty_to_take_on_candidates = quantity or valued_quantity
         candidates = move.product_id._get_fifo_candidates_in_move_with_company(move.company_id.id)
         new_standard_price = 0
+        tmp_qty = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
             new_standard_price = candidate.price_unit
@@ -289,6 +293,7 @@ class StockMove(models.Model):
             candidate.write(candidate_vals)
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
+            tmp_qty += qty_taken_on_candidate
             tmp_value += value_taken_on_candidate
             if qty_to_take_on_candidates == 0:
                 break
@@ -302,9 +307,18 @@ class StockMove(models.Model):
         # negative stock use case. We chose to value the out move at the price of the
         # last out and a correction entry will be made once `_fifo_vacuum` is called.
         if qty_to_take_on_candidates == 0:
+            # If the move is not valued yet we compute the price_unit based on the value taken on
+            # the candidates.
+            # If the move has already been valued, it means that we editing the qty_done on the
+            # move. In this case, the price_unit computation should take into account the quantity
+            # already valued and the new quantity taken.
+            if not move.value:
+                price_unit = -tmp_value / (move.product_qty or quantity)
+            else:
+                price_unit = (-(tmp_value) + move.value) / (tmp_qty + move.product_qty)
             move.write({
                 'value': -tmp_value if not quantity else move.value or -tmp_value,  # outgoing move are valued negatively
-                'price_unit': -tmp_value / (move.product_qty or quantity),
+                'price_unit': price_unit,
             })
         elif qty_to_take_on_candidates > 0:
             last_fifo_price = new_standard_price or move.product_id.standard_price
@@ -677,8 +691,8 @@ class StockMove(models.Model):
 
         location_from = self.location_id
         location_to = self.location_dest_id
-        company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
-        company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
+        company_from = self.mapped('move_line_ids.location_id.company_id') if self._is_out() else False
+        company_to = self.mapped('move_line_ids.location_dest_id.company_id') if self._is_in() else False
 
         # Create Journal Entry for products arriving in the company; in case of routes making the link between several
         # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries

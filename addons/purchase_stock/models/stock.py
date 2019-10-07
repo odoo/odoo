@@ -46,8 +46,12 @@ class StockMove(models.Model):
             if line.product_uom.id != line.product_id.uom_id.id:
                 price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
             if order.currency_id != order.company_id.currency_id:
+                # The date must be today, and not the date of the move since the move move is still
+                # in assigned state. However, the move date is the scheduled date until move is
+                # done, then date of actual move processing. See:
+                # https://github.com/odoo/odoo/blob/2f789b6863407e63f90b3a2d4cc3be09815f7002/addons/stock/models/stock_move.py#L36
                 price_unit = order.currency_id._convert(
-                    price_unit, order.company_id.currency_id, order.company_id, self.date, round=False)
+                    price_unit, order.company_id.currency_id, order.company_id, fields.Date.context_today(self), round=False)
             return price_unit
         return super(StockMove, self)._get_price_unit()
 
@@ -145,7 +149,7 @@ class StockWarehouse(models.Model):
 
     @api.multi
     def _get_all_routes(self):
-        routes = super(StockWarehouse, self).get_all_routes_for_wh()
+        routes = super(StockWarehouse, self)._get_all_routes()
         routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).mapped('buy_pull_id').mapped('route_id')
         return routes
 
@@ -206,7 +210,8 @@ class ProductionLot(models.Model):
             stock_moves = self.env['stock.move.line'].search([
                 ('lot_id', '=', lot.id),
                 ('state', '=', 'done')
-            ]).mapped('move_id').filtered(
+            ]).mapped('move_id')
+            stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
                 lambda move: move.picking_id.location_id.usage == 'supplier' and move.state == 'done')
             lot.purchase_order_ids = stock_moves.mapped('purchase_line_id.order_id')
             lot.purchase_order_count = len(lot.purchase_order_ids)

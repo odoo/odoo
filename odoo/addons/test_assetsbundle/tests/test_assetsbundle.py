@@ -4,8 +4,9 @@
 from collections import Counter
 import datetime
 import errno
-from os import utime
+import os
 import time
+from unittest.mock import patch
 
 from odoo import api
 from odoo.addons.base.models.assetsbundle import AssetsBundle
@@ -13,28 +14,26 @@ from odoo.modules.module import get_resource_path
 from odoo.tests import HttpCase
 from odoo.tests.common import TransactionCase
 
-
-def _touch(filepath, asset, t=None):
-    try:
-        utime(filepath, (t, t) if t else None)
-    except OSError as e:
-        if e.errno in [errno.EPERM, errno.EACCES, errno.EROFS]:
-            # Permission denied when touching the asset file, possibly read-only filesystem.
-            # We alter the asset last modified time to simulate a change in the file
-            now = datetime.datetime.now()
-            asset.last_modified = now
-            for sheet in asset.stylesheets:
-                sheet.last_modified = now
-        else:
-            raise
+GETMTINE = os.path.getmtime
 
 
-class TestJavascriptAssetsBundle(TransactionCase):
+class FileTouchable(TransactionCase):
+    def setUp(self):
+        super(FileTouchable, self).setUp()
+        self.touches = {}
+
+    def _touch(self, filepath, touch_time=None):
+        self.touches[filepath] = touch_time or time.time()
+        return patch('os.path.getmtime', lambda filename: self.touches.get(filename) or GETMTINE(filename))
+
+
+class TestJavascriptAssetsBundle(FileTouchable):
     def setUp(self):
         super(TestJavascriptAssetsBundle, self).setUp()
         self.jsbundle_xmlid = 'test_assetsbundle.bundle1'
         self.cssbundle_xmlid = 'test_assetsbundle.bundle2'
         self.env['res.lang'].load_lang('ar_SY')
+
 
     def _get_asset(self, xmlid, env=None):
         env = (env or self.env)
@@ -102,16 +101,16 @@ class TestJavascriptAssetsBundle(TransactionCase):
 
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'js', 'test_jsfile1.js')
         bundle1 = self._get_asset(self.jsbundle_xmlid)
-        _touch(path, bundle1)
 
-        bundle1.js()
-        last_modified1 = bundle1.last_modified
-        version1 = bundle1.version
-        self.assertNotEquals(last_modified0, last_modified1)
-        self.assertNotEquals(version0, version1)
+        with self._touch(path):
+            bundle1.js()
+            last_modified1 = bundle1.last_modified
+            version1 = bundle1.version
+            self.assertNotEquals(last_modified0, last_modified1)
+            self.assertNotEquals(version0, version1)
 
-        # check if the previous attachment is correctly cleaned
-        self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
+            # check if the previous attachment is correctly cleaned
+            self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
 
     def test_04_content_invalidation(self):
         """ Checks that a bundle is invalidated when its content is modified by adding a file to
@@ -227,17 +226,17 @@ class TestJavascriptAssetsBundle(TransactionCase):
 
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'css', 'test_cssfile1.css')
         bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
-        _touch(path, bundle1)
 
-        bundle1.css()
-        last_modified1 = bundle1.last_modified
-        version1 = bundle1.version
+        with self._touch(path):
+            bundle1.css()
+            last_modified1 = bundle1.last_modified
+            version1 = bundle1.version
 
-        self.assertNotEquals(last_modified0, last_modified1)
-        self.assertNotEquals(version0, version1)
+            self.assertNotEquals(last_modified0, last_modified1)
+            self.assertNotEquals(version0, version1)
 
-        # check if the previous attachment is correctly cleaned
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
+            # check if the previous attachment is correctly cleaned
+            self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
 
     def test_11_paginated_css_content_invalidation(self):
         """ Checks that a bundle is invalidated when its content is modified by adding a file to
@@ -410,32 +409,32 @@ class TestJavascriptAssetsBundle(TransactionCase):
         # Note: No lang specific context given while calling _get_asset so it will load assets for en_US
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'css', 'test_cssfile1.css')
         ltr_bundle1 = self._get_asset(self.cssbundle_xmlid)
-        _touch(path, ltr_bundle1)
 
-        ltr_bundle1.css()
-        ltr_last_modified1 = ltr_bundle1.last_modified
-        ltr_version1 = ltr_bundle1.version
-        ltr_ira1 = self._any_ira_for_bundle('css')
-        self.assertNotEquals(ltr_last_modified0, ltr_last_modified1)
-        self.assertNotEquals(ltr_version0, ltr_version1)
+        with self._touch(path):
+            ltr_bundle1.css()
+            ltr_last_modified1 = ltr_bundle1.last_modified
+            ltr_version1 = ltr_bundle1.version
+            ltr_ira1 = self._any_ira_for_bundle('css')
+            self.assertNotEquals(ltr_last_modified0, ltr_last_modified1)
+            self.assertNotEquals(ltr_version0, ltr_version1)
 
-        rtl_bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'lang': 'ar_SY'}))
+            rtl_bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'lang': 'ar_SY'}))
 
-        rtl_bundle1.css()
-        rtl_last_modified1 = rtl_bundle1.last_modified
-        rtl_version1 = rtl_bundle1.version
-        rtl_ira1 = self._any_ira_for_bundle('css', lang='ar_SY')
-        self.assertNotEquals(rtl_last_modified0, rtl_last_modified1)
-        self.assertNotEquals(rtl_version0, rtl_version1)
+            rtl_bundle1.css()
+            rtl_last_modified1 = rtl_bundle1.last_modified
+            rtl_version1 = rtl_bundle1.version
+            rtl_ira1 = self._any_ira_for_bundle('css', lang='ar_SY')
+            self.assertNotEquals(rtl_last_modified0, rtl_last_modified1)
+            self.assertNotEquals(rtl_version0, rtl_version1)
 
-        # Checks rtl and ltr bundles are different
-        self.assertNotEquals(ltr_ira1.id, rtl_ira1.id)
+            # Checks rtl and ltr bundles are different
+            self.assertNotEquals(ltr_ira1.id, rtl_ira1.id)
 
-        # check if the previous attachment is correctly cleaned
-        css_bundles = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.cssbundle_xmlid, 'css'))
-        ])
-        self.assertEquals(len(css_bundles), 2)
+            # check if the previous attachment is correctly cleaned
+            css_bundles = self.env['ir.attachment'].search([
+                ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.cssbundle_xmlid, 'css'))
+            ])
+            self.assertEquals(len(css_bundles), 2)
 
     def test_18_css_bundle_content_invalidation(self):
         """ Checks that a bundle is invalidated when its content is modified by adding a file to
@@ -592,7 +591,7 @@ class TestAssetsBundleInBrowser(HttpCase):
         )
 
 
-class TestAssetsBundleWithIRAMock(TransactionCase):
+class TestAssetsBundleWithIRAMock(FileTouchable):
     def setUp(self):
         super(TestAssetsBundleWithIRAMock, self).setUp()
         self.stylebundle_xmlid = 'test_assetsbundle.bundle3'
@@ -639,15 +638,15 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'scss', 'test_file1.scss')
         t = time.time() + 5
         asset = self._get_asset()
-        _touch(path, asset, t=t)
-        self._bundle(asset, True, True)
+        with self._touch(path, t):
+            self._bundle(asset, True, True)
 
-        # Because we are in the same transaction since the beginning of the test, the first asset
-        # created and the second one have the same write_date, but the file's last modified date
-        # has really been modified. If we do not update the write_date to a posterior date, we are
-        # not able to reproduce the case where we compile this bundle again without changing
-        # anything.
-        self.cr.execute("update ir_attachment set write_date=clock_timestamp() + interval '10 seconds' where id = (select max(id) from ir_attachment)")
+            # Because we are in the same transaction since the beginning of the test, the first asset
+            # created and the second one have the same write_date, but the file's last modified date
+            # has really been modified. If we do not update the write_date to a posterior date, we are
+            # not able to reproduce the case where we compile this bundle again without changing
+            # anything.
+            self.cr.execute("update ir_attachment set write_date=clock_timestamp() + interval '10 seconds' where id = (select max(id) from ir_attachment)")
 
-        # Compile a fourth time, without changes
-        self._bundle(self._get_asset(), False, False)
+            # Compile a fourth time, without changes
+            self._bundle(self._get_asset(), False, False)

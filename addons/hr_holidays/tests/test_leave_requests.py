@@ -32,11 +32,13 @@ class TestLeaveRequests(TestHrHolidaysBase):
             'name': 'NotLimitedHR',
             'allocation_type': 'no',
             'validation_type': 'hr',
+            'validity_start': False,
         })
         self.holidays_type_2 = LeaveType.create({
             'name': 'Limited',
             'allocation_type': 'fixed',
             'validation_type': 'hr',
+            'validity_start': False,
         })
         self.holidays_type_3 = LeaveType.create({
             'name': 'TimeNotLimited',
@@ -158,9 +160,9 @@ class TestLeaveRequests(TestHrHolidaysBase):
         self.employee_hrmanager.write({'department_id': self.hr_dept.id})
         self.assertFalse(self.env['hr.leave'].search([('employee_id', 'in', self.hr_dept.member_ids.ids)]))
         leave_form = Form(self.env['hr.leave'].sudo(self.user_hrmanager))
-        leave_form.holiday_status_id = self.holidays_type_1
         leave_form.holiday_type = 'department'
         leave_form.department_id = self.hr_dept
+        leave_form.holiday_status_id = self.holidays_type_1
         leave = leave_form.save()
         leave.action_approve()
         member_ids = self.hr_dept.member_ids.ids

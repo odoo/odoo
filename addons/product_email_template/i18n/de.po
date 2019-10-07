@@ -3,15 +3,17 @@
 # * product_email_template
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
+# Martin Trigaux, 2019
+# Chris Egal <sodaswed@web.de>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Johannes Croe <jcr@odoo.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,12 +55,18 @@ msgstr "Produktvorlage"
 
 #. module: product_email_template
 #: model_terms:ir.ui.view,arch_db:product_email_template.product_template_form_view
-msgid "Send a product-specific email once the invoice is paid"
+msgid "Send a product-specific email once the invoice is validated"
 msgstr ""
-"Senden Sie eine produktspezifische E-Mail, sobald die Rechnung bezahlt ist"
+"Senden Sie eine produktspezifische E-Mail, sobald die Rechnung gültig ist"
 
 #. module: product_email_template
 #: model:ir.model.fields,help:product_email_template.field_product_product__email_template_id
 #: model:ir.model.fields,help:product_email_template.field_product_template__email_template_id
-msgid "Send a product-specific email once the invoice is paid."
+msgid ""
+"When validating an invoice, an email will be sent to the customer based on "
+"this template. The customer will receive an email for each product linked to"
+" an email template."
 msgstr ""
+"Bei Freigabe einer Rechnung, wird an Hand dieser Vorlage eine Email an den "
+"Kunden versandt. Der Kunde erhält eine Email für jedes an eine Email-Vorlage"
+" verknüpfte Produkt."

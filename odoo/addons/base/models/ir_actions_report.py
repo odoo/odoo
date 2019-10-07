@@ -7,6 +7,7 @@ from odoo.tools.misc import find_in_path
 from odoo.tools import config
 from odoo.sql_db import TestCursor
 from odoo.http import request
+from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
 import time
 import base64
@@ -24,6 +25,7 @@ from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
+from collections.abc import Iterable
 
 
 _logger = logging.getLogger(__name__)
@@ -85,7 +87,8 @@ class IrActionsReport(models.Model):
     name = fields.Char(translate=True)
     type = fields.Char(default='ir.actions.report')
     binding_type = fields.Selection(default='report')
-    model = fields.Char(required=True)
+    model = fields.Char(required=True, string='Model Name')
+    model_id = fields.Many2one('ir.model', string='Model', compute='_compute_model_id', search='_search_model_id')
 
     report_type = fields.Selection([
         ('qweb-html', 'HTML'),
@@ -110,6 +113,32 @@ class IrActionsReport(models.Model):
                                     help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Save as Attachment Prefix',
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
+
+    @api.depends('model')
+    def _compute_model_id(self):
+        for action in self:
+            action.model_id = self.env['ir.model']._get(action.model).id
+
+    def _search_model_id(self, operator, value):
+        ir_model_ids = None
+        if isinstance(value, str):
+            names = self.env['ir.model'].name_search(value, operator=operator)
+            ir_model_ids = [n[0] for n in names]
+
+        elif isinstance(value, Iterable):
+            ir_model_ids = value
+
+        elif isinstance(value, int) and not isinstance(value, bool):
+            ir_model_ids = [value]
+
+        if ir_model_ids:
+            operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+            ir_model = self.env['ir.model'].browse(ir_model_ids)
+            return [('model', operator, ir_model.mapped('model'))]
+        elif isinstance(value, bool) or value is None:
+            return [('model', operator, value)]
+        else:
+            return FALSE_DOMAIN
 
     @api.multi
     def associated_view(self):
@@ -150,7 +179,7 @@ class IrActionsReport(models.Model):
         :param attachment_name: The optional name of the attachment.
         :return: A recordset of length <=1 or None
         '''
-        attachment_name = safe_eval(self.attachment, {'object': record, 'time': time})
+        attachment_name = safe_eval(self.attachment, {'object': record, 'time': time}) if self.attachment else ''
         if not attachment_name:
             return None
         return self.env['ir.attachment'].search([

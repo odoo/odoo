@@ -447,6 +447,7 @@ var BasicComposer = Widget.extend({
         });
         attachments = attachments.concat(uploadAttachments);
         this.set('attachment_ids', attachments);
+        ev.target.value = "";
     },
     /**
      * @private

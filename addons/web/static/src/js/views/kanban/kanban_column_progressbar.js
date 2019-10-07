@@ -158,7 +158,7 @@ var KanbanColumnProgressBar = Widget.extend({
             });
 
             // Adapt active state
-            $bar.toggleClass('active progress-bar-striped', key === self.activeFilter);
+            $bar.toggleClass('progress-bar-animated progress-bar-striped', key === self.activeFilter);
 
             // Adapt width
             $bar.removeClass('o_bar_has_records transition-off');

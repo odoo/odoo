@@ -158,13 +158,13 @@ class AccountAccount(models.Model):
             if opening_move_line:
                 if amount:
                     # modify the line
-                    setattr(opening_move_line.with_context({'check_move_validity': False}), field, amount)
+                    opening_move_line.with_context(check_move_validity=False)[field] = amount
                 elif counter_part_map[field]:
                     # delete the line (no need to keep a line with value = 0)
-                    opening_move_line.with_context({'check_move_validity': False}).unlink()
+                    opening_move_line.with_context(check_move_validity=False).unlink()
             elif amount:
                 # create a new line, as none existed before
-                self.env['account.move.line'].with_context({'check_move_validity': False}).create({
+                self.env['account.move.line'].with_context(check_move_validity=False).create({
                         'name': _('Opening balance'),
                         field: amount,
                         'move_id': opening_move.id,
@@ -541,7 +541,7 @@ class AccountJournal(models.Model):
         for journal in self:
             if journal.refund_sequence_id and journal.refund_sequence and journal.refund_sequence_number_next:
                 sequence = journal.refund_sequence_id._get_current_sequence()
-                sequence.number_next = journal.refund_sequence_number_next
+                sequence.sudo().number_next = journal.refund_sequence_number_next
 
     @api.one
     @api.constrains('currency_id', 'default_credit_account_id', 'default_debit_account_id')
@@ -824,7 +824,7 @@ class AccountJournal(models.Model):
     @api.depends('company_id')
     def _belong_to_company(self):
         for journal in self:
-            journal.belong_to_company = (journal.company_id.id == self.env.user.company_id.id)
+            journal.belongs_to_company = (journal.company_id.id == self.env.user.company_id.id)
 
     @api.multi
     def _search_company_journals(self, operator, value):

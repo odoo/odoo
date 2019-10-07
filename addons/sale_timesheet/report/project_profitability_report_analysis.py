@@ -68,7 +68,7 @@ class ProfitabilityAnalysis(models.Model):
                        ELSE 0.0
                     END AS amount_untaxed_to_invoice,
                     CASE
-                       WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') THEN (SOL.untaxed_amount_invoiced / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
+                       WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') THEN (COALESCE(SOL.untaxed_amount_invoiced, COST_SUMMARY.downpayment_invoiced) / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                        ELSE 0.0
                     END AS amount_untaxed_invoiced,
                     COST_SUMMARY.timesheet_unit_amount AS timesheet_unit_amount,
@@ -83,7 +83,8 @@ class ProfitabilityAnalysis(models.Model):
                             sale_line_id,
                             SUM(timesheet_unit_amount) AS timesheet_unit_amount,
                             SUM(timesheet_cost) AS timesheet_cost,
-                            SUM(expense_cost) AS expense_cost
+                            SUM(expense_cost) AS expense_cost,
+                            SUM(downpayment_invoiced) AS downpayment_invoiced
                         FROM (
                             SELECT
                                 P.id AS project_id,
@@ -91,7 +92,8 @@ class ProfitabilityAnalysis(models.Model):
                                 TS.so_line AS sale_line_id,
                                 SUM(TS.unit_amount) AS timesheet_unit_amount,
                                 SUM(TS.amount) AS timesheet_cost,
-                                0.0 AS expense_cost
+                                0.0 AS expense_cost,
+                                0.0 AS downpayment_invoiced
                             FROM account_analytic_line TS, project_project P
                             WHERE TS.project_id IS NOT NULL AND P.id = TS.project_id AND P.active = 't' AND P.allow_timesheets = 't'
                             GROUP BY P.id, TS.so_line
@@ -104,7 +106,8 @@ class ProfitabilityAnalysis(models.Model):
                                 AAL.so_line AS sale_line_id,
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
-                                SUM(AAL.amount) AS expense_cost
+                                SUM(AAL.amount) AS expense_cost,
+                                0.0 AS downpayment_invoiced
                             FROM project_project P
                                 LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
                                 LEFT JOIN account_analytic_line AAL ON AAL.account_id = AA.id
@@ -116,10 +119,47 @@ class ProfitabilityAnalysis(models.Model):
                             SELECT
                                 P.id AS project_id,
                                 P.analytic_account_id AS analytic_account_id,
+                                MY_SOLS.id AS sale_line_id,
+                                0.0 AS timesheet_unit_amount,
+                                0.0 AS timesheet_cost,
+                                0.0 AS expense_cost,
+                                CASE WHEN MY_SOLS.invoice_status = 'invoiced' THEN MY_SOLS.price_reduce ELSE 0.0 END AS downpayment_invoiced
+                            FROM project_project P
+                                LEFT JOIN sale_order_line MY_SOL ON P.sale_line_id = MY_SOL.id
+                                LEFT JOIN sale_order MY_S ON MY_SOL.order_id = MY_S.id
+                                LEFT JOIN sale_order_line MY_SOLS ON MY_SOLS.order_id = MY_S.id
+                            WHERE MY_SOLS.is_downpayment = 't'
+                            GROUP BY P.id, MY_SOLS.id
+
+                            UNION
+
+                            SELECT
+                                P.id AS project_id,
+                                P.analytic_account_id AS analytic_account_id,
+                                OLIS.id AS sale_line_id,
+                                0.0 AS timesheet_unit_amount,
+                                0.0 AS timesheet_cost,
+                                OLIS.price_reduce AS expense_cost,
+                                0.0 AS downpayment_invoiced
+                            FROM project_project P
+                                LEFT JOIN account_analytic_account ANAC ON P.analytic_account_id = ANAC.id
+                                LEFT JOIN account_analytic_line ANLI ON ANAC.id = ANLI.account_id
+                                LEFT JOIN sale_order_line OLI ON P.sale_line_id = OLI.id
+                                LEFT JOIN sale_order ORD ON OLI.order_id = ORD.id
+                                LEFT JOIN sale_order_line OLIS ON ORD.id = OLIS.order_id
+                            WHERE OLIS.product_id = ANLI.product_id AND OLIS.is_downpayment = 't' AND ANLI.amount < 0.0 AND ANLI.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
+                            GROUP BY P.id, OLIS.id
+
+                            UNION
+
+                            SELECT
+                                P.id AS project_id,
+                                P.analytic_account_id AS analytic_account_id,
                                 SOL.id AS sale_line_id,
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
-                                0.0 AS expense_cost
+                                0.0 AS expense_cost,
+                                0.0 AS downpayment_invoiced
                             FROM sale_order_line SOL
                                 INNER JOIN project_project P ON SOL.project_id = P.id
                             WHERE P.active = 't' AND P.allow_timesheets = 't'
@@ -132,7 +172,8 @@ class ProfitabilityAnalysis(models.Model):
                                 SOL.id AS sale_line_id,
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
-                                0.0 AS expense_cost
+                                0.0 AS expense_cost,
+                                0.0 AS downpayment_invoiced
                             FROM sale_order_line SOL
                                 INNER JOIN project_task T ON SOL.task_id = T.id
                                 INNER JOIN project_project P ON P.id = T.project_id

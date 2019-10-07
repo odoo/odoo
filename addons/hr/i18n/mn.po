@@ -39,7 +39,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -136,6 +136,33 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Сайн уу,<br/>\n"
+"                        Таны имэйл хаяг танигдахгүй байгаа тул таны баримт үүссэнгүй. Таны ажилтны бүртгэл дээр тохируулсан имэйл хаягаас имэйл илгээнэ үү. Эсвэл өөрийн HR менежертээ хандана уу.\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"    </td></tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=hr\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -172,7 +199,7 @@ msgstr "Залуу, хөдөлгөөнтэй багт сайхан ажил"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
 msgid "Action Needed"
-msgstr "Үйлдэл Шаардлагатай"
+msgstr "Үйлдэл шаардлагатай"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -188,18 +215,18 @@ msgstr "Ажилбар"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
 msgid "Activity State"
-msgstr "Ажилбарын Төлөв"
+msgstr "Ажилбарын төлөв"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
-msgstr ""
+msgstr "Шинэ ажилтан нэмэх"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
 msgid "Additional Note"
-msgstr ""
+msgstr "Нэмэлт тэмдэглэл"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
@@ -207,13 +234,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
-msgstr "Хуурмаг холбогчийн нууцлал"
+msgstr "Алиас хандалтын нууцлалт"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
-"Шаардлагыг шинжил, дэлгэрэнгүй тодорхойлолтын баримт болон үнийн саналыг бич"
+"Шинжилгээ шаардлагатай. Шаардлагын тодорхойлолт баримт бичиг бичиж үнийн "
+"санал үүсгэ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
@@ -231,32 +259,34 @@ msgstr "Хавсралтын тоо"
 #. module: hr
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Employees"
-msgstr "Баталгаажсан Ажилчид"
+msgstr "Баталгаажсан ажилчид"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Partners"
-msgstr "Баталгаажсан Харилцагчид"
+msgstr "Баталгаажсан харилцагчид"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr ""
+msgstr "Алба нэгжийг автоматаар дагах"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
 msgstr ""
+"Энэ алба нэгжийн ажилчдыг тус хөөрөлдөөний сувагт автоматаар дагагчаар "
+"нэмнэ."
 
 #. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Bachelor"
-msgstr ""
+msgstr "Баклавр"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
-msgstr "Банкны Дансны Дугаар"
+msgstr "Банкны дансны дугаар"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -266,9 +296,10 @@ msgid ""
 "source project in a friendly and cooperative atmosphere sounds like fun to "
 "you, read on..."
 msgstr ""
-"Тогтмол өсч хөгжиж буй тул бид одоо манай багийг дахин хүчирхэгжүүлэх урам "
-"зоригтой CTO-г хайж байна. Иймээс нээлттэй эхийн төсөл дээр найрсаг, хамт "
-"олонч орчинд ажиллах нь танд таатай санагдаж байвал үргэлжлүүлэн уншаарай..."
+"Тогтмол өсч хөгжиж байдаг нь бид урам зоригтой CTO-р өөрсдийн багийг хүч "
+"нэмэгдүүлэхийг үргэлж эрэлхийлж байдаг явдал юм. Иймээс нээлттэй эхийн төсөл"
+" дээр найрсаг, хамт олонч орчинд ажиллах нь танд таатай санагдаж байвал "
+"үргэлжлүүлэн уншаарай..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -306,27 +337,27 @@ msgstr "Төрсөн"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 msgid "Certificate Level"
-msgstr ""
+msgstr "Сертификатын түвшин"
 
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
 msgid "Chief Executive Officer"
-msgstr "Гүйцэтгэх Захирал"
+msgstr "Гүйцэтгэх захирал"
 
 #. module: hr
 #: model:hr.job,name:hr.job_cto
 msgid "Chief Technical Officer"
-msgstr "Технологи Хариуцсан Захирал"
+msgstr "Технологи хариуцсан захирал"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
 msgid "Child Departments"
-msgstr "Хүү Хэлтэсүүд"
+msgstr "Дэд алба нэгжүүд"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
-msgstr "Иргэний харьяалал & Бусад Мэдээлэл"
+msgstr "Иргэний харьяалал & бусад мэдээлэл"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -337,7 +368,7 @@ msgstr "Иргэний харьяалал & Бусад Мэдээлэл"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Close to the perfection ..."
-msgstr "Төгсөрхөд ойрхон ..."
+msgstr "Төгс төгөлдөрт ойр ..."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
@@ -369,12 +400,12 @@ msgstr "Компани"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
 msgid "Company Working Hours"
-msgstr "Ажлын Цаг"
+msgstr "Ажлын цаг"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
 msgid "Complete Name"
-msgstr "Бүтэн Нэр"
+msgstr "Бүтэн нэр"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
@@ -394,12 +425,12 @@ msgstr "Зөвлөх"
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
 msgid "Contact"
-msgstr "Холбох хаяг"
+msgstr "Харилцах хаяг"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contact Information"
-msgstr "Холбоо Барих Мэдээлэл"
+msgstr "Холбоо барих хаяг"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -411,12 +442,12 @@ msgstr "Нээлттэй эхийн төсөлд хувь нэмэр оруул�
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
 msgid "Country of Birth"
-msgstr ""
+msgstr "Төрсөн улс"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
-msgstr ""
+msgstr "Алба нэгж шинээр үүсгэх"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
@@ -424,7 +455,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_uid
 msgid "Created by"
-msgstr "Үүсгэгч"
+msgstr "Үүсгэсэн этгээд"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_date
@@ -432,17 +463,17 @@ msgstr "Үүсгэгч"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_date
 msgid "Created on"
-msgstr "Үүсгэсэн"
+msgstr "Үүсгэсэн огноо"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
 msgid "Current Number of Employees"
-msgstr "Ажилчдын Одоогийн Тоо"
+msgstr "Ажилчдын одоогийн тоо"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
 msgid "Date of Birth"
-msgstr "Төрсөн Огноо"
+msgstr "Төрсөн огноо"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -454,7 +485,7 @@ msgstr "Тодорхой харилцааны стратегийг тодорх�
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
 msgid "Define the schedule of resource"
-msgstr "Нөөцийн товыг тодорхойлох"
+msgstr "Нөөц төлөвлөлтийг тодорхойл"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -468,19 +499,19 @@ msgstr "Odoo-н функционалийн ерөнхий сургалтыг х�
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
-msgstr "Хэлтэс"
+msgstr "Алба нэгж"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
 msgid "Department Name"
-msgstr "Хэлтэсийн Нэр"
+msgstr "Алба нэгжийн нэр"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
-msgstr "Хэлтэсүүд"
+msgstr "Алба нэгж"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
@@ -493,7 +524,7 @@ msgstr "Хөөрөлдөөний суваг"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
 msgid "Display Name"
-msgstr "Дэлгэцийн Нэр"
+msgstr "Дэлгэрэнгүй нэр"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -508,22 +539,22 @@ msgstr "Боловсрол"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Aliases"
-msgstr "Имэйл Давхар Хаяг"
+msgstr "Имэйл алиас"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
-msgstr ""
+msgstr "Имэйл алиас загвар"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
 msgid "Emergency Contact"
-msgstr ""
+msgstr "Яаралтай үед холбогдох"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
 msgid "Emergency Phone"
-msgstr ""
+msgstr "Яаралтай үед холбогдох дугаар"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -534,34 +565,34 @@ msgstr "Ажилтан"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr "Ажилтны Зэрэглэл"
+msgstr "Ажилтны ангилал"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__google_drive_link
 msgid "Employee Documents"
-msgstr ""
+msgstr "Ажилтны баримт бичиг"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
 msgid "Employee Tag"
-msgstr "Ажилчны Пайз"
+msgstr "Ажилчны пайз"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
-msgstr "Ажилтны Пайзууд"
+msgstr "Ажилтны пайзууд"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
 msgid "Employee bank salary account"
-msgstr "Банк дах ажилтны цалингийн данс"
+msgstr "Ажилтны цалингийн харилцах данс"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
-msgstr "Ажилтны Нэр"
+msgstr "Ажилтны нэр"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.act_employee_from_department
@@ -582,19 +613,21 @@ msgstr "Ажилчид"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr "Ажилчдын Бүтэц"
+msgstr "Ажилчдын бүтэц"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
-msgstr "Ажилтны Пайзууд"
+msgstr "Ажилтны пайз"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
 msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
-msgstr "Таны компанитай холбоотой биш тул ажилтны хувийн хаягийг оруулна уу."
+msgstr ""
+"Энд ажилтны хувийн холбоо барих хаягын бүртгэлийг оруулна, энэ хаяг нь "
+"компаны үндсэн хаягтай холбогдохгүй."
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -604,20 +637,20 @@ msgstr "Бүгд"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
 msgid "Expected New Employees"
-msgstr "Шинэ Ажилтан Хүлээгдсэн"
+msgstr "Шинэ ажилтан хэрэгцээ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr ""
-"Шинэ ажилтан авах ажил явагдсан дараах энэ ажлын байр дахь таамаглаж байгаа "
-"ажилтны тоо."
+"Энэхүү албан тушаал дээр одоогоор явагдаж буй ажилтан авах ажиллагааг нэмж "
+"тооцсон байдлаарх хэрэгцээ."
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
 msgid "Experienced Developer"
-msgstr "Туршлагтай Хөгжүүлэгч"
+msgstr "Туршлагтай хөгжүүлэгч"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -627,7 +660,7 @@ msgstr "Эмэгтэй"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
 msgid "Field of Study"
-msgstr ""
+msgstr "Сурсан чиглэл"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -719,12 +752,12 @@ msgstr "Бүлэглэх"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "HR Department"
-msgstr "Хэлтэс"
+msgstr "HR Алба нэгж"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "HR Алба нэгж"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -754,17 +787,17 @@ msgstr "Маркетингийн гайхамшигтай хүмүүсийг а�
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
 msgid "Hired Employees"
-msgstr "Цалинтай Ажилчид"
+msgstr "Үндсэн ажилчид"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
-msgstr "Хүний Нөөц"
+msgstr "Хүний нөөц"
 
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr "Хүний Нөөцийн Менежер"
+msgstr "Хүний нөөцийн менежер"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
@@ -777,7 +810,7 @@ msgstr "ID"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
 msgid "Identification No"
-msgstr "Ялгах Дугаар"
+msgstr "Ялгах дугаар"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_unread
@@ -815,24 +848,24 @@ msgstr ""
 #: code:addons/hr/models/hr.py:296
 #, python-format
 msgid "Import Template for Employees"
-msgstr ""
+msgstr "Ажилтан импортлох загвар"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Improve our communication to customers"
-msgstr "Захиалагтай хийх харилцааг сайжруулах"
+msgstr "Үйлчлүүлэгчтэй харилцах харилцааг сайжруулах"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Position"
-msgstr "Нээлттэй"
+msgstr "Нээлттэй ажлын байр зарлалт"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Recruitment"
-msgstr "Хүний Нөөцийн Бүрдүүлэлтэд"
+msgstr "Сонгон шалгаруулалтын үе"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -861,24 +894,24 @@ msgstr "Дагагч эсэх"
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job"
-msgstr "Ажлын Байр"
+msgstr "Ажлын байр"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__description
 msgid "Job Description"
-msgstr "Ажлын Байрны Тодорхойлолт"
+msgstr "Ажлын байрны тодорхойлолт"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__name
 msgid "Job Position"
-msgstr "Албан Тушаал"
+msgstr "Албан тушаал"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 msgid "Job Positions"
-msgstr "Албан Тушаалууд"
+msgstr "Албан тушаалууд"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -889,12 +922,12 @@ msgstr "Ажлын нэр"
 #: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
-msgstr "Ажлын Байрууд"
+msgstr "Ажлын байрууд"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 msgid "Km home-work"
-msgstr ""
+msgstr "Гэр ажил хоорондын км"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
@@ -902,7 +935,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job____last_update
 msgid "Last Modified on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
@@ -910,7 +943,7 @@ msgstr "Сүүлийн засвар хийсэн огноо"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_uid
 msgid "Last Updated by"
-msgstr "Сүүлийн засвар хийсэн"
+msgstr "Сүүлд зассан этгээд"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_date
@@ -918,7 +951,7 @@ msgstr "Сүүлийн засвар хийсэн"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
 msgid "Last Updated on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -943,12 +976,12 @@ msgstr "Шинэ бүтээгдэхүүн, маркетингийн аян, са
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Legal Cohabitant"
-msgstr ""
+msgstr "Хамтын эрх зүй"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
-msgstr ""
+msgstr "Ажлын байр шинээр үүсгэцгээе."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
@@ -978,7 +1011,7 @@ msgstr "Гэрлэлтийн Байдал"
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr "Маркетинг болон Коммюнити Менежер"
+msgstr "Маркетинг болон Харилцааны менежер"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -988,14 +1021,14 @@ msgstr "Гэрлэсэн"
 #. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Master"
-msgstr "Мастер"
+msgstr "Магистр"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Master or engineer in computer science"
-msgstr "Компьютерийн ухааны магист эсвэл инженеер"
+msgstr "Компьютерийн ухааны магистр эсвэл инженер"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_medium
@@ -1061,7 +1094,7 @@ msgstr "Дараагийн ажилбарын эцсийн огноо"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
 msgid "Next Activity Summary"
-msgstr "Дараагийн Ажилбарын Хураангуй"
+msgstr "Дараагийн ажилбарын хураангуй"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
@@ -1082,7 +1115,7 @@ msgstr "Байвал давуутай"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Not Recruiting"
-msgstr "Ажилтан Сонгон шалгаруулаагүй"
+msgstr "Сонгон шалгаруулалт явагдаагүй"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -1174,7 +1207,7 @@ msgstr "Бусад"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Other Information ..."
-msgstr "Бусад Мэдээлэл ..."
+msgstr "Бусад мэдээлэл ..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1195,17 +1228,17 @@ msgstr "Хугацаа хэтэрсэн"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
 msgid "Parent Department"
-msgstr "Толгой Хэлтэс"
+msgstr "Толгой алба нэгж"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Passion for the Internet and its culture"
-msgstr "Интернет болон үүний соёлын талаар чин эрмэлзэлтэй"
+msgstr "Интернет болон түүний соёлын талаар чин эрмэлзэлтэй"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
 msgid "Passport No"
-msgstr "Пасспортын Дугаар"
+msgstr "Пасспортын дугаар"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image
@@ -1252,7 +1285,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Position"
-msgstr "Албан Тушаал"
+msgstr "Албан тушаал"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1264,12 +1297,12 @@ msgstr "1 жилийн туршлагатай бол сайн"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
 msgid "Private Address"
-msgstr "Хувийн Хаяг"
+msgstr "Хувийн хаяг"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
-msgstr "Хувийн Мэдээлэл"
+msgstr "Хувийн мэдээлэл"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1279,37 +1312,37 @@ msgstr "Шаардлагатай нөөцийн тоог гаргаж тохир
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Quick and autonomous learner"
-msgstr "Хурдан бие даасан сурагч"
+msgstr "Бие дааж хурдан суралцагч"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
-msgstr ""
+msgstr "Илүү үр дүнтэйгээр сонгон шалгаруулалт хийхэд бэлэн үү?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Recruitment"
-msgstr "Бүрдүүлэлт"
+msgstr "Сонгон шалгаруулалт"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
-msgstr "Хүнийн Нөөцийн Бүрдүүлэлт Явагдаж байгаа"
+msgstr "Сонгон шалгаруулалт явагдаж буй"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
-msgstr "Холбоотой Хэрэглэгч"
+msgstr "Холбоотой хэрэглэгч"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
 msgid "Related employees"
-msgstr "Холбоотой Ажилчид"
+msgstr "Холбоотой ажилтан"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Хандалтыг удирдахад хэрэглэгдэх нөөцийн холбогдох хэрэглэгчийн нэр"
+msgstr "Нөөцөд хандах эрх бүхий холбогдох хэрэглэгчийн нэр"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
@@ -1345,12 +1378,12 @@ msgstr "Хариуцагч хэрэглэгч"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
 msgid "SIN No"
-msgstr "Даатгалын Дугаар"
+msgstr "Даатгалын дугаар"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 msgid "SSN No"
-msgstr "Регистр"
+msgstr "Регистрын дугаар"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1362,7 +1395,7 @@ msgstr "Дэлхий даяарх манай арга хэмжээний зох�
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
 msgid "School"
-msgstr ""
+msgstr "Сургууль"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1377,8 +1410,8 @@ msgstr ""
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
 msgstr ""
-"Энэ ажлын байран сонгон шалгаруулалт явагдаж байгаа эсвэл хаагдсан алин "
-"болохыг тохируулах"
+"Энэ ажлын байранд сонгон шалгаруулалт явагдаж буй эсвэл хаагдсан алин "
+"болохыг илэрхийлэх"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -1390,7 +1423,7 @@ msgstr "Тохиргоо"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_org_chart
 msgid "Show Organizational Chart"
-msgstr "Байгууллагын Бүтцийг Харуулах"
+msgstr "Байгууллагын бүтцийг харуулах"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1405,7 +1438,7 @@ msgstr "Байгууллагын бүтцийг ажилтны форм дээр
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Single"
-msgstr "Ганц Бие"
+msgstr "Ганц бие"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1437,27 +1470,27 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sinid
 msgid "Social Insurance Number"
-msgstr "Нийгмийн Даатгалын Дугаар"
+msgstr "Нийгмийн даатгалын дугаар"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__ssnid
 msgid "Social Security Number"
-msgstr "Регистрийн Дугаар"
+msgstr "Регистрийн дугаар"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
 msgid "Spouse Birthdate"
-msgstr ""
+msgstr "Эхнэр/нөхрийн төрсөн огноо"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 msgid "Spouse Complete Name"
-msgstr ""
+msgstr "Эхнэр/нөхрийн бүтэн нэр"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Start Recruitment"
-msgstr "ХН бүрдүүлэлтийг эхлүүлэх"
+msgstr "Сонгон шалгаруулалт эхлэх"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__state
@@ -1482,12 +1515,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
-msgstr "Ажилтан авах ажлыг зогсоох"
+msgstr "Сонгон шалгаруулалтыг зогсоох"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_employee_action_subordinate_hierachy
 msgid "Subordinate Hierarchy"
-msgstr "Харьяалагдах Мод"
+msgstr "Харьяалагдах мод"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
@@ -1523,12 +1556,12 @@ msgstr "Ажилтны хаягийг компанитай холбосон ба
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
 msgstr ""
-"Ажлын байрны нэр нь компанийн хэлтэс тус бүрт үл давтагдах байх ёстой!"
+"Ажлын байрны нэр нь компаны алба нэгж тус бүрт үл давтагдах байх ёстой!"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "The user will be able to approve document created by employees."
-msgstr ""
+msgstr "Ажилтны үүсгэсэн баримт бүртгэлийг батлах боломжтой хэрэглэгч."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
@@ -1536,6 +1569,8 @@ msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
+"Статистик тайлан мэдээтэй холбоотойгоор Хүнийн нөөцийн тохиргоо хэсэгт "
+"хандах боломжтой хэрэглэгч."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__image
@@ -1551,7 +1586,7 @@ msgstr ""
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
-msgstr ""
+msgstr "Энэ талбар нь тухайн нөөц ямар цагийн бүст холбогдож ажиллахыг заана."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -1571,7 +1606,7 @@ msgstr "Өнөөдрийн ажилбар"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
-msgstr "Таамаглагдсан Нийт Ажилтан"
+msgstr "Нийт ажилтны төлөвлөсөн тоо"
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -1592,7 +1627,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
-msgstr "Уншаагүй Зурвасууд"
+msgstr "Уншаагүй зурвасууд"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread_counter
@@ -1625,17 +1660,17 @@ msgstr "Хэрэглэгчид"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
-msgstr "Сул Орон тоо :"
+msgstr "Сул орон тоо :"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 msgid "Visa Expire Date"
-msgstr "Виз Дуусах Хугацаа"
+msgstr "Виз дуусах хугацаа"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
 msgid "Visa No"
-msgstr "Визний Дугаар"
+msgstr "Визний дугаар"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1736,7 +1771,7 @@ msgstr "Бэлэвсэн"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Will report to the Head of Professional Services"
-msgstr "Мэргэжлийн Үйлчилгээний Даргад тайлагнах болно"
+msgstr "Хөдөлмөрийн товчооны даргад тайлагнах болно"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -1770,47 +1805,47 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
 msgid "Work Address"
-msgstr "Ажлын Хаяг"
+msgstr "Ажлын хаяг"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
 msgid "Work Email"
-msgstr "Ажлын Имэйл"
+msgstr "Ажлын имэйл"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
-msgstr "Ажлын Мэдээлэл"
+msgstr "Ажлын мэдээлэл"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location
 msgid "Work Location"
-msgstr "Ажлын Байршил"
+msgstr "Ажлын байршил"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
 msgid "Work Mobile"
-msgstr "Ажлын Гар утас"
+msgstr "Ажлын гар утас"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr "Ажлын Бүтэц"
+msgstr "Ажлын бүтэц"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Permit"
-msgstr "Ажлын Зөвшөөрөл"
+msgstr "Ажлын зөвшөөрөл"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
 msgid "Work Permit No"
-msgstr "Ажлын Үнэмлэхний Дугаар"
+msgstr "Ажлын үнэмлэхний дугаар"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
 msgid "Work Phone"
-msgstr "Ажлын Утас"
+msgstr "Ажлын утас"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
@@ -1877,13 +1912,13 @@ msgstr "Та идэвхитэй компанид ажиллахад бэлэн �
 #: code:addons/hr/models/hr.py:206
 #, python-format
 msgid "You cannot create a recursive hierarchy."
-msgstr ""
+msgstr "Та рекурсив мод үүсгэх боломжгүй."
 
 #. module: hr
 #: code:addons/hr/models/hr.py:331
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr ""
+msgstr "Та рекурсив хамааралтай алба нэгж үүсгэх боломжгүй."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2014,14 +2049,14 @@ msgstr "Таны баримт үүсгэгдсэнгүй"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
-msgstr "Хэлтэс"
+msgstr "алба нэгж"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
-msgstr "ж. Хагас Цаг"
+msgstr "ж. Хагас цаг"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
-msgstr "ж. Борлуулалтын Менежер"
+msgstr "ж. Борлуулалтын менежер"

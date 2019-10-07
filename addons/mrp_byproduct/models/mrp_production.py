@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, models, _
 
 from odoo.tools import float_round
+from odoo.exceptions import UserError
 
 
 class MrpProduction(models.Model):
@@ -42,6 +43,9 @@ class MrpProduction(models.Model):
         """ Generates moves and work orders
         @return: Newly generated picking Id.
         """
+        for production in self:
+            if production.product_id in production.bom_id.sub_products.mapped('product_id'):
+                raise UserError(_("You cannot have %s  as the finished product and in the Byproducts") % production.product_id.name)
         res = super(MrpProduction, self)._generate_moves()
         for production in self.filtered(lambda production: production.bom_id):
             for sub_product in production.bom_id.sub_products:
@@ -61,13 +65,14 @@ class MrpProductProduce(models.TransientModel):
         for by_product_move in by_product_moves:
             rounding = by_product_move.product_uom.rounding
             quantity = float_round(self.product_qty * by_product_move.unit_factor, precision_rounding=rounding)
+            location_dest_id = by_product_move.location_dest_id.get_putaway_strategy(by_product_move.product_id).id or by_product_move.location_dest_id.id
             values = {
                 'move_id': by_product_move.id,
                 'product_id': by_product_move.product_id.id,
                 'production_id': self.production_id.id,
                 'product_uom_id': by_product_move.product_uom.id,
                 'location_id': by_product_move.location_id.id,
-                'location_dest_id': by_product_move.location_dest_id.id,
+                'location_dest_id': location_dest_id,
             }
             if by_product_move.product_id.tracking == 'lot':
                 values.update({

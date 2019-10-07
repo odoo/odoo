@@ -3,7 +3,6 @@
 # * sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
 # 苏州远鼎 <tiexinliu@126.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
 # xiaobin wu <bd5dml@gmail.com>, 2018
@@ -17,9 +16,11 @@
 # v2exerer <9010446@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# Jeffery CHEN <jeffery9@gmail.com>, 2018
 # 卓忆科技 <zhanghao@jointd.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# Martin Trigaux, 2019
+# Jeanphy <hzh0292@qq.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 
 msgid ""
@@ -131,7 +132,7 @@ msgstr "<strong>客户参考:</strong>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Delivery Orders</strong>"
-msgstr "<strong>交货单</strong>"
+msgstr "<strong>出库单</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -212,7 +213,7 @@ msgstr "交货"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr "交货单"
+msgstr "出库单"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
@@ -223,6 +224,13 @@ msgstr "在销售订单和相关发票中显示国际贸易术语"
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
 msgstr "国际贸易术语解释通则显示订单和发票"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:101
+#, python-format
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
+msgstr "别忘了变更以下交货订单的客户信息：%s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -570,6 +578,12 @@ msgstr "仓库"
 #, python-format
 msgid "Warning"
 msgstr "警告"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:100
+#, python-format
+msgid "Warning!"
+msgstr "警告！"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

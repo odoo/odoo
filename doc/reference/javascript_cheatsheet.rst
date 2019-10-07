@@ -1,5 +1,7 @@
 :banner: banners/javascript.jpg
 
+.. _reference/jscs:
+
 =====================
 Javascript Cheatsheet
 =====================

@@ -4,7 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:04+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +46,7 @@ msgstr ""
 "de kaarttransactie verwerkt wordt in de kassa. Een Mercury configuratie\n"
 "opzetten staat u toe betalingen te ontvangen met verschillende kaarten\n"
 "(bv. Visa, MasterCard, Discovery, American Express, ...) Nadat u deze configuratie\n"
-"heeft opgezet moet u deze associëren met de kassa betalingsmethode."
+"heeft opgezet moet u deze associëren met de kassa betaaalmethode."
 
 #. module: pos_mercury
 #. openerp-web
@@ -80,6 +81,11 @@ msgstr "Bankafschriftregel"
 #: model:ir.model,name:pos_mercury.model_barcode_rule
 msgid "Barcode Rule"
 msgstr "Barcode regel"
+
+#. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
+msgid "Barcode Scanner/Card Reader"
+msgstr "Barcode scanner/kaartlezer"
 
 #. module: pos_mercury
 #. openerp-web
@@ -164,8 +170,8 @@ msgid ""
 "through the Vantiv backend."
 msgstr ""
 "Terugbetalingen van creditcards worden niet ondersteund. Selecteer in plaats"
-" daarvan uw creditcardbetaalmethode, klik op 'Bevestigen' en restitueer het "
-"oorspronkelijke bedrag handmatig via de Vantiv-backend."
+" daarvan uw creditcard betalingsmethode, klik op 'Bevestigen' en restitueer "
+"het oorspronkelijke bedrag handmatig via de Vantiv-backend."
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -384,6 +390,13 @@ msgstr ""
 "betaalprovider platform"
 
 #. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:512
+#, python-format
+msgid "Pay with: "
+msgstr "Betaal met:"
+
+#. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_record_no
 msgid "Payment record number from Mercury Pay"
 msgstr "Betalingsnummer voor Mercury Pay"
@@ -517,7 +530,7 @@ msgid ""
 "                                can be swiped through the card reader device."
 msgstr ""
 "De Mercury integratie gebruiken in de kassa is gemakkelijk: druk gewoon op de\n"
-"geassocieerde betalingsmethode. Hierna kan het bedrag gewijzigd worden (bv. voor geld terug)\n"
+"geassocieerde betaaalmethode. Hierna kan het bedrag gewijzigd worden (bv. voor geld terug)\n"
 "net zoals een andere betalingsregel. Wanneer de betalingsregel is opzet kan een kaart\n"
 "geswiped worden door de kaartlezer."
 

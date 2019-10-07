@@ -15,12 +15,12 @@
 -->
 <t t-name="AppsMenu">
     <li class="dropdown">
-        <a class="full" data-toggle="dropdown" href="#">
+        <a class="full" data-toggle="dropdown" data-display="static" href="#">
             <i class="fa fa-th-large"/>
         </a>
         <div class="dropdown-menu" role="menu">
             <t t-foreach="widget.getApps()" t-as="app">
-            <a role="menuitem"
+            <a role="menuitem" t-attf-href="#menu_id=#{app.menuID}"
                 class="dropdown-item o_app"
                 t-att-data-menu-id="app.menuID"
                 t-att-data-menu-xmlid="app.xmlID"
@@ -77,7 +77,7 @@
                 </t>
                 <t t-else="">
                     <li>
-                        <a href="#" class="dropdown-toggle o-no-caret o_menu_header_lvl_1" t-att-data-menu-xmlid="second_level_menu.xmlid" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <a href="#" class="dropdown-toggle o-no-caret o_menu_header_lvl_1" t-att-data-menu-xmlid="second_level_menu.xmlid" data-toggle="dropdown" data-display="static" role="button" aria-expanded="false">
                             <t t-esc="second_level_menu.name"/>
                         </a>
                         <div class="dropdown-menu" role="menu">

@@ -15,6 +15,12 @@
 # Martin Trigaux, 2018
 # Guilhaume Bordiau <github@guilhaume.fr>, 2018
 # Ludvig Auvens <lau@odoo.com>, 2019
+# Sébastien BÜHL <buhlsebastien@gmail.com>, 2019
+# Rémi CAZENAVE <remi@le-filament.com>, 2019
+# JEK Odoo <jek@odoo.com>, 2019
+# Moka Tourisme <hello@mokatourisme.fr>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
+# thomas quertinmont <tqu@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Ludvig Auvens <lau@odoo.com>, 2019\n"
+"Last-Translator: thomas quertinmont <tqu@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +92,7 @@ msgstr "2 ans"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Monnaie\" title=\"Monnaie\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -186,6 +192,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Un produit stockable est un produit dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
+"Un produit consommable, d'un autre côté, est un produit pour lequel le stock n'est pas géré.\n"
+"Un service est un produit immatériel que vous fournissez."
 
 #. module: product
 #: model:product.product,name:product.product_product_25
@@ -291,7 +300,7 @@ msgstr "Nombre de pièces jointes"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
 msgid "Attribute"
-msgstr "Attribut"
+msgstr "Caractéristique"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -309,7 +318,7 @@ msgstr "Supplément pour cette caractéristique  "
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_template_attribute_value_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
 msgid "Attribute Value"
-msgstr ""
+msgstr "Valeur de la caractéristique"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
@@ -497,7 +506,7 @@ msgstr "Paramètres de config"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Configure Variants"
-msgstr ""
+msgstr "Configurer les variantes"
 
 #. module: product
 #: model:product.category,name:product.product_category_consumable
@@ -576,7 +585,7 @@ msgstr "Groupes de pays"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Create Variants"
-msgstr ""
+msgstr "Créer les variantes"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -1041,7 +1050,7 @@ msgstr ""
 #: code:addons/product/models/product_template.py:573
 #, python-format
 msgid "Import Template for Products"
-msgstr ""
+msgstr "Import du template pour les articles"
 
 #. module: product
 #: code:addons/product/models/product.py:665
@@ -1706,7 +1715,7 @@ msgstr "Conditionnements de produits"
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
 msgid "Product Price List History"
-msgstr ""
+msgstr "Historique de la liste de prix produit"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist

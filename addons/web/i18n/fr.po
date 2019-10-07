@@ -18,9 +18,12 @@
 # Xavier Belmere <Info@cartmeleon.com>, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
 # Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2018
-# Moka Tourisme <hello@mokatourisme.fr>, 2019
 # William Olhasque <william.olhasque@scopea.fr>, 2019
 # nle_odoo, 2019
+# fah_odoo <fah@odoo.com>, 2019
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
+# Moka Tourisme <hello@mokatourisme.fr>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # Martin Trigaux, 2019
 # 
 msgid ""
@@ -49,7 +52,7 @@ msgstr " [Moi]"
 #: code:addons/web/static/src/js/views/search/search_filters.js:231
 #, python-format
 msgid " and "
-msgstr "et"
+msgstr " et "
 
 #. module: web
 #. openerp-web
@@ -57,7 +60,7 @@ msgstr "et"
 #: code:addons/web/static/src/js/views/search/search_view.js:226
 #, python-format
 msgid " or "
-msgstr "ou"
+msgstr " ou "
 
 #. module: web
 #. openerp-web
@@ -230,22 +233,22 @@ msgstr "1 enregistrement"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Numéro fiscal\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Site Web\" title=\"Site Web\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Téléphone\" title=\"Téléphone\"/>"
 
 #. module: web
 #. openerp-web
@@ -283,7 +286,7 @@ msgstr "TOUT"
 #: code:addons/web/static/src/xml/base.xml:633
 #, python-format
 msgid "ANY"
-msgstr "TOUS"
+msgstr "AU MOINS UN"
 
 #. module: web
 #. openerp-web
@@ -988,7 +991,7 @@ msgstr "Créer"
 #: code:addons/web/static/src/js/views/form/form_controller.js:616
 #, python-format
 msgid "Create "
-msgstr "Créer"
+msgstr "Créer "
 
 #. module: web
 #. openerp-web
@@ -2414,6 +2417,12 @@ msgid "Only Integer Value should be valid."
 msgstr "Un entier est attendu."
 
 #. module: web
+#: code:addons/web/static/src/js/fields/basic_fields.js:1982
+#, python-format
+msgid "Only Integer or Float Value should be valid."
+msgstr "Un nombre est attendu."
+
+#. module: web
 #: code:addons/web/controllers/main.py:502
 #, python-format
 msgid ""
@@ -2711,7 +2720,7 @@ msgstr "Ajout rapide"
 #. module: web
 #: model:ir.model,name:web.model_ir_qweb_field_image
 msgid "Qweb Field Image"
-msgstr ""
+msgstr "Champ Qweb image"
 
 #. module: web
 #. openerp-web
@@ -2805,7 +2814,7 @@ msgstr "Rapport"
 #. module: web
 #: model:ir.model,name:web.model_report_layout
 msgid "Report Layout"
-msgstr ""
+msgstr "Mise en page des rapports"
 
 #. module: web
 #. openerp-web
@@ -3008,6 +3017,8 @@ msgid ""
 "Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
 "title=\"Database\"/>"
 msgstr ""
+"Sélectionner <i class=\"fa fa-database\" role=\"img\" aria-label=\"Base de "
+"données\" title=\"Base de données\"/>"
 
 #. module: web
 #. openerp-web
@@ -3104,7 +3115,7 @@ msgstr "Spécial :"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:215
 #, python-format
 msgid "Stacked"
-msgstr ""
+msgstr "Empilé"
 
 #. module: web
 #. openerp-web
@@ -3817,6 +3828,8 @@ msgid ""
 "You need to start Odoo with at least two workers to print a pdf version of "
 "the reports."
 msgstr ""
+"Vous devez démarrer Odoo avec au moins deux workers pour imprimer une "
+"version pdf des reports."
 
 #. module: web
 #. openerp-web

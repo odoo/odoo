@@ -1501,6 +1501,7 @@ var AbstractFieldBinary = AbstractField.extend({
      * @private
      */
     _clearFile: function (){
+        this.$('.o_input_file').val('');
         this.set_filename('');
         this._setValue(false);
         this._render();
@@ -1651,7 +1652,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                     'id': this.res_id,
                     'field': this.name,
                     'filename_field': filename_fieldname,
-                    'filename': this.recordData[filename_fieldname] || null,
+                    'filename': this.recordData[filename_fieldname] || "",
                     'download': true,
                     'data': utils.is_bin_size(this.value) ? null : this.value,
                 },
@@ -2290,11 +2291,28 @@ var FieldProgressBar = AbstractField.extend({
         if (this.recordData[this.nodeOptions.current_value]) {
             this.value = this.recordData[this.nodeOptions.current_value];
         }
-        this.max_value = this.recordData[this.nodeOptions.max_value] || 100;
+
+        // The few next lines determine if the widget can write on the record or not
+        this.editable_readonly = !!this.nodeOptions.editable_readonly;
+        // "hard" readonly
         this.readonly = this.nodeOptions.readonly || !this.nodeOptions.editable;
-        this.edit_max_value = this.nodeOptions.edit_max_value || false;
+
+        this.canWrite = !this.readonly && (
+            this.mode === 'edit' ||
+            (this.editable_readonly && this.mode === 'readonly') ||
+            (this.viewType === 'kanban') // Keep behavior before commit
+        );
+
+        // Boolean to toggle if we edit the numerator (value) or the denominator (max_value)
+        this.edit_max_value = !!this.nodeOptions.edit_max_value;
+        this.max_value = this.recordData[this.nodeOptions.max_value] || 100;
+
         this.title = _t(this.attrs.title || this.nodeOptions.title) || '';
-        this.edit_on_click = !this.nodeOptions.edit_max_value || false;
+
+        // Ability to edit the field through the bar
+        // /!\ this feature is disabled
+        this.enableBarAsInput = false;
+        this.edit_on_click = this.enableBarAsInput && this.mode === 'readonly' && !this.edit_max_value;
 
         this.write_mode = false;
     },
@@ -2302,19 +2320,19 @@ var FieldProgressBar = AbstractField.extend({
         var self = this;
         this._render_value();
 
-        if (!this.readonly) {
+        if (this.canWrite) {
             if (this.edit_on_click) {
                 this.$el.on('click', '.o_progress', function (e) {
                     var $target = $(e.currentTarget);
-                    self.value = Math.floor((e.pageX - $target.offset().left) / $target.outerWidth() * self.max_value);
+                    var numValue = Math.floor((e.pageX - $target.offset().left) / $target.outerWidth() * self.max_value);
+                    self.on_update(numValue);
                     self._render_value();
-                    self.on_update(self.value);
                 });
             } else {
                 this.$el.on('click', function () {
                     if (!self.write_mode) {
                         var $input = $('<input>', {type: 'text', class: 'o_progressbar_value o_input'});
-                        $input.on('blur', _.bind(self.on_change_input, self));
+                        $input.on('blur', self.on_change_input.bind(self));
                         self.$('.o_progressbar_value').replaceWith($input);
                         self.write_mode = true;
                         self._render_value();
@@ -2324,24 +2342,25 @@ var FieldProgressBar = AbstractField.extend({
         }
         return this._super();
     },
+    /**
+     * Updates the widget with value
+     *
+     * @param {Number} value
+     */
     on_update: function (value) {
-        if (!isNaN(value)) {
-            if (this.edit_max_value) {
-                try {
-                    this.max_value = this._parseValue(value);
-                    this._isValid = true;
-                } catch (e) {
-                    this._isValid = false;
-                }
-                var changes = {};
-                changes[this.nodeOptions.max_value] = this.max_value;
-                this.trigger_up('field_changed', {
-                    dataPointID: this.dataPointID,
-                    changes: changes,
-                });
-            } else {
-                this._setValue(value);
-            }
+        if (this.edit_max_value) {
+            this.max_value = value;
+            this._isValid = true;
+            var changes = {};
+            changes[this.nodeOptions.max_value] = this.max_value;
+            this.trigger_up('field_changed', {
+                dataPointID: this.dataPointID,
+                changes: changes,
+            });
+        } else {
+            // _setValues accepts string and will parse it
+            var formattedValue = this._formatValue(value);
+            this._setValue(formattedValue);
         }
     },
     on_change_input: function (e) {
@@ -2349,29 +2368,42 @@ var FieldProgressBar = AbstractField.extend({
         if (e.type === 'change' && !$input.is(':focus')) {
             return;
         }
-        if (isNaN($input.val())) {
-            this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
-        } else {
-            if (e.type === 'input') {
-                this._render_value($input.val());
-                if (parseFloat($input.val()) === 0) {
+
+        var parsedValue;
+        try {
+            // Cover all numbers with parseFloat
+            parsedValue = field_utils.parse.float($input.val());
+        } catch (error) {
+            this.do_warn(_t("Wrong value entered!"), _t("Only Integer or Float Value should be valid."));
+        }
+
+        if (parsedValue !== undefined) {
+            if (e.type === 'input') { // ensure what has just been typed in the input is a number
+                // returns NaN if not a number
+                this._render_value(parsedValue);
+                if (parsedValue === 0) {
                     $input.select();
                 }
-            } else {
+            } else { // Implicit type === 'blur': we commit the value
                 if (this.edit_max_value) {
-                    this.max_value = $(e.target).val();
-                } else {
-                    this.value = $(e.target).val() || 0;
+                    parsedValue = parsedValue || 100;
                 }
+
                 var $div = $('<div>', {class: 'o_progressbar_value'});
                 this.$('.o_progressbar_value').replaceWith($div);
                 this.write_mode = false;
 
+                this.on_update(parsedValue);
                 this._render_value();
-                this.on_update(this.edit_max_value ? this.max_value : this.value);
             }
         }
     },
+    /**
+     * Renders the value
+     *
+     * @private
+     * @param {Number} v
+     */
     _render_value: function (v) {
         var value = this.value;
         var max_value = this.max_value;
@@ -2529,6 +2561,7 @@ var JournalDashboardGraph = AbstractField.extend({
      * Called when the field is detached from the DOM.
      */
     on_detach_callback: function () {
+        this.chart.tooltip.hidden(true);
         this._isInDOM = false;
     },
 

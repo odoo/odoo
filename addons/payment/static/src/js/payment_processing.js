@@ -54,6 +54,8 @@ odoo.define('payment.processing', function (require) {
                 }
                 else {
                     switch(data.error) {
+                    case "tx_process_retry":
+                        break;
                     case "no_tx_found":
                         self.displayContent("payment.no_tx_found", {});
                         break;
@@ -63,11 +65,7 @@ odoo.define('payment.processing', function (require) {
                     }
                 }
                 self.startPolling();
-            }).always(function(){
-                if ($.blockUI) {
-                    $.unblockUI();
-                }
-            }).fail(function(e) {
+             }).fail(function(e) {
                 self.displayContent("payment.rpc_error", {});
                 self.startPolling();
             });
@@ -105,7 +103,7 @@ odoo.define('payment.processing', function (require) {
                 return nbTx;
             }
             // if there's only one tx to manage
-            if(countTxInState(['tx_done', 'tx_error']) === 1) {
+            if(countTxInState(['tx_done', 'tx_error', 'tx_pending']) === 1) {
                 var tx = render_values['tx_done'][0] || render_values['tx_error'][0];
                 if (tx) {
                     window.location = tx.return_url;
@@ -117,6 +115,7 @@ odoo.define('payment.processing', function (require) {
         },
         displayContent: function (xmlid, render_values) {
             var html = Qweb.render(xmlid, render_values);
+            $.unblockUI();
             this.$el.find('.o_payment_processing_content').html(html);
         },
         displayLoading: function () {

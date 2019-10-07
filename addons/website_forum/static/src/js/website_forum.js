@@ -394,7 +394,7 @@ odoo.define('website_forum.website_forum', function (require) {
 
     $('textarea.load_editor').each(function () {
         var $textarea = $(this);
-        var editor_karma = $textarea.data('karma') || 30;  // default value for backward compatibility
+        var editor_karma = $textarea.data('karma') || 0;  // default value for backward compatibility
         if (!$textarea.val().match(/\S/)) {
             $textarea.val("<p><br/></p>");
         }

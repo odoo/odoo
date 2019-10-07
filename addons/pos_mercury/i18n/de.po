@@ -5,13 +5,15 @@
 # Translators:
 # Martin Trigaux, 2018
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2018
+# Chris Egal <sodaswed@web.de>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:04+0000\n"
-"PO-Revision-Date: 2018-10-02 10:04+0000\n"
-"Last-Translator: Marco Tarsia <marco.y.tarsia@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,6 +83,11 @@ msgid "Barcode Rule"
 msgstr "Strichcoderegel"
 
 #. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
+msgid "Barcode Scanner/Card Reader"
+msgstr "Barcode Scanner/Kartenleser"
+
+#. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:45
 #, python-format
@@ -101,7 +108,7 @@ msgstr "Kartennummer"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_prefixed_card_number
 msgid "Card Number Prefix"
-msgstr ""
+msgstr "Kartennummer Präfix"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_owner_name
@@ -127,7 +134,7 @@ msgstr "Kunde"
 #. module: pos_mercury
 #: model_terms:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Configure your card reader"
-msgstr ""
+msgstr "Konfigurieren Sie Ihren Kartenleser"
 
 #. module: pos_mercury
 #. openerp-web
@@ -162,6 +169,9 @@ msgid ""
 "payment method, click 'Validate' and refund the original charge manually "
 "through the Vantiv backend."
 msgstr ""
+"Kreditkartenerstattungen werden nicht unterstützt. Wählen Sie stattdessen "
+"Ihre Kreditkartenzahlungsmethode aus, klicken Sie auf \"Bestätigen\" und "
+"erstatten Sie die ursprüngliche Gebühr manuell über das Vantiv-Backend."
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -321,6 +331,7 @@ msgstr "Keine Mercury-Konfiguration, die mit dem Journal verknüpft ist."
 #, python-format
 msgid "No opened point of sale session for user %s found."
 msgstr ""
+"Es wurde keine offenen Kassensystem-Sitzungen für den Benutzer%s gefunden."
 
 #. module: pos_mercury
 #. openerp-web
@@ -378,6 +389,13 @@ msgstr ""
 "Händlerpasswort, um ihn auf dem Zahlungsanbieter-Server zu authentifizieren"
 
 #. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:512
+#, python-format
+msgid "Pay with: "
+msgstr "Bezahlen mit:"
+
+#. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_record_no
 msgid "Payment record number from Mercury Pay"
 msgstr "Zahlungsdatensatznummer von Mercury-Pay"
@@ -419,7 +437,7 @@ msgstr "Bewertetes Produkt"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:345
 #, python-format
 msgid "Refunds not supported"
-msgstr ""
+msgstr "Rückerstattungen werden nicht unterstützt"
 
 #. module: pos_mercury
 #. openerp-web
@@ -541,6 +559,8 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
+"Wir unterstützen derzeit das Kartenlesegerät MagTek Dynamag. Es kann angeschlossen werden\n"
+"                                direkt an das Kassensystem-Gerät oder es kann an die IoTBox angeschlossen werden."
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0

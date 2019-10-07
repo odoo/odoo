@@ -509,7 +509,7 @@ PaymentScreenWidget.include({
             self.credit_code_transaction(parsed_result);
         } else { // this is for supporting another payment system like mercury
             this.gui.show_popup('selection',{
-                title:   'Pay ' + this.pos.get_order().get_due().toFixed(2) + ' with : ',
+                title:   _t('Pay with: '),
                 list:    online_payment_journals,
                 confirm: function (item) {
                     parsed_result.journal_id = item;

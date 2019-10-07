@@ -14,13 +14,13 @@ class ProductTemplate(models.Model):
         ('custom', 'Show product-specific notifications'),
     ], string='Inventory Availability', help='Adds an inventory availability status on the web product page.', default='never')
     available_threshold = fields.Float(string='Availability Threshold', default=5.0)
-    custom_message = fields.Text(string='Custom Message', default='')
+    custom_message = fields.Text(string='Custom Message', default='', translate=True)
 
     @api.multi
-    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, reference_product=False, only_template=False):
+    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         combination_info = super(ProductTemplate, self)._get_combination_info(
             combination=combination, product_id=product_id, add_qty=add_qty, pricelist=pricelist,
-            parent_combination=reference_product, only_template=only_template)
+            parent_combination=parent_combination, only_template=only_template)
 
         if not self.env.context.get('website_sale_stock_get_quantity'):
             return combination_info

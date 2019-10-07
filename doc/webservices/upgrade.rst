@@ -135,7 +135,7 @@ Sample script
 Here are 2 examples of database upgrade request creation using:
 
 * one in the python programming language using the requests library
-* one in the bash programming language using `curl <http://curl.haxx.se>`_ (tool
+* one in the bash programming language using `curl <https://curl.haxx.se>`_ (tool
   for transfering data using http) and `jq <https://stedolan.github.io/jq>`_ (JSON processor):
 
 .. rst-class:: setup doc-aside
@@ -423,7 +423,7 @@ should be empty if everything went fine.
         URL_PARAMS="key=${KEY}&request=${REQUEST_ID}"
         curl -sS "${PROCESS_URL}?${URL_PARAMS}"
 
-.. _upgrade-api-status-method:
+.. _upgrade-api-skip-tests:
 
 
 Asking to skip the tests 
@@ -433,7 +433,7 @@ This action asks the Upgrade Platform to skip the tests for your request.
 If you don't want Odoo to test and validate the migration, you can bypass the testing stage and directly get the migrated dump.
 
 The ``skip_test`` method
-----------------------
+------------------------
 
 .. py:function:: https://upgrade.odoo.com/database/v1/skip_test
 

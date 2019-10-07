@@ -7,7 +7,6 @@
 
     @include media-breakpoint-down(sm) {
         padding: 0px!important;
-        overflow-x: auto;
     }
 
     .o_kanban_record, .o_kanban_quick_create {
@@ -237,6 +236,7 @@
                 font-weight: 500;
                 background-color: transparent;
                 color: inherit;
+                box-shadow: none;
                 @include o-kanban-tag-color;
 
                 span {
@@ -324,6 +324,8 @@
 
         .oe_kanban_details {
             width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
             ul {
                 margin-bottom: $o-kanban-inner-hmargin*0.5;;
                 padding-left: 0;

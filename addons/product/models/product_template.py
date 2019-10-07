@@ -132,8 +132,10 @@ class ProductTemplate(models.Model):
         compute="_compute_valid_attributes", string='Valid Product Attribute Values Without No Variant Attributes', help="Technical compute")
     valid_product_attribute_wnva_ids = fields.Many2many('product.attribute',
         compute="_compute_valid_attributes", string='Valid Product Attributes Without No Variant Attributes', help="Technical compute")
+    # valid_archived_variant_ids deprecated
     valid_archived_variant_ids = fields.Many2many('product.product',
-        compute="_compute_valid_attributes", string='Valid Archived Variants', help="Technical compute")
+        compute="_compute_valid_archived_variant_ids", string='Valid Archived Variants', help="Technical compute")
+    # valid_existing_variant_ids deprecated
     valid_existing_variant_ids = fields.Many2many('product.product',
         compute="_compute_valid_existing_variant_ids", string='Valid Existing Variants', help="Technical compute")
 
@@ -360,6 +362,9 @@ class ProductTemplate(models.Model):
                 related_vals['volume'] = vals['volume']
             if vals.get('weight'):
                 related_vals['weight'] = vals['weight']
+            # Please do forward port
+            if vals.get('packaging_ids'):
+                related_vals['packaging_ids'] = vals['packaging_ids']
             if related_vals:
                 template.write(related_vals)
 
@@ -389,7 +394,7 @@ class ProductTemplate(models.Model):
     @api.multi
     def name_get(self):
         # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
-        self.read(['name', 'default_code'])
+        self.browse(self.ids).read(['name', 'default_code'])
         return [(template.id, '%s%s' % (template.default_code and '[%s] ' % template.default_code or '', template.name))
                 for template in self]
 
@@ -402,13 +407,20 @@ class ProductTemplate(models.Model):
 
         Product = self.env['product.product']
         templates = self.browse([])
+        domain_no_variant = [('product_variant_ids', '=', False)]
         while True:
             domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
             products_ns = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid)
             products = Product.browse([x[0] for x in products_ns])
             templates |= products.mapped('product_tmpl_id')
-            if (not products) or (limit and (len(templates) > limit)):
+            current_round_templates = self.browse([])
+            if not products:
+                domain_template = args + domain_no_variant + (templates and [('id', 'not in', templates.ids)] or [])
+                template_ns = super(ProductTemplate, self)._name_search(name=name, args=domain_template, operator=operator, limit=limit, name_get_uid=name_get_uid)
+                current_round_templates |= self.browse([ns[0] for ns in template_ns])
+                templates |= current_round_templates
+            if (not products and not current_round_templates) or (limit and (len(templates) > limit)):
                 break
 
         # re-apply product.template order + name_get
@@ -518,10 +530,12 @@ class ProductTemplate(models.Model):
             #   deleted
             valid_value_ids = tmpl_id.valid_product_attribute_value_wnva_ids
             valid_attribute_ids = tmpl_id.valid_product_attribute_wnva_ids
+            seen_attributes = set(p.attribute_value_ids for p in tmpl_id.product_variant_ids if p.active)
             for product_id in tmpl_id.product_variant_ids:
                 if product_id._has_valid_attributes(valid_attribute_ids, valid_value_ids):
-                    if not product_id.active:
+                    if not product_id.active and product_id.attribute_value_ids not in seen_attributes:
                         variants_to_activate += product_id
+                        seen_attributes.add(product_id.attribute_value_ids)
                 else:
                     variants_to_unlink += product_id
 
@@ -532,6 +546,16 @@ class ProductTemplate(models.Model):
             if variants_to_create:
                 Product.create(variants_to_create)
 
+            # Avoid access errors in case the products is shared amongst companies but the underlying
+            # objects are not. If unlink fails because of an AccessError (e.g. while recomputing
+            # fields), the 'write' call will fail as well for the same reason since the field has
+            # been set to recompute.
+            if variants_to_unlink:
+                variants_to_unlink.check_access_rights('unlink')
+                variants_to_unlink.check_access_rule('unlink')
+                variants_to_unlink.check_access_rights('write')
+                variants_to_unlink.check_access_rule('write')
+                variants_to_unlink = variants_to_unlink.sudo()
             # unlink or inactive product
             # try in batch first because it is much faster
             try:
@@ -583,8 +607,6 @@ class ProductTemplate(models.Model):
 
         For what is considered an archived variant, see `_has_valid_attributes`.
         """
-        archived_variants = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids), ('active', '=', False)])
-
         # prefetch
         self.mapped('attribute_line_ids.value_ids.id')
         self.mapped('attribute_line_ids.attribute_id.create_variant')
@@ -599,6 +621,12 @@ class ProductTemplate(models.Model):
             record.valid_product_attribute_ids = record.valid_product_template_attribute_line_ids.mapped('attribute_id')
             record.valid_product_attribute_wnva_ids = record.valid_product_template_attribute_line_wnva_ids.mapped('attribute_id')
 
+    @api.multi
+    def _compute_valid_archived_variant_ids(self):
+        """This compute is done outside of `_compute_valid_attributes` because
+        it is often not needed, and it can be very bad on performance."""
+        archived_variants = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids), ('active', '=', False)])
+        for record in self:
             valid_value_ids = record.valid_product_attribute_value_wnva_ids
             valid_attribute_ids = record.valid_product_attribute_wnva_ids
 
@@ -690,23 +718,23 @@ class ProductTemplate(models.Model):
 
         :return: dict of exclusions
             - exclusions: from this product itself
+            - parent_combination: ids of the given parent_combination
             - parent_exclusions: from the parent_combination
-            - archived_combinations: variants that are archived
-            - existing_combinations: variants that are existing (as opposed to
-                deleted, because deleted need to be considered impossible if
-                there are no dynamic attributes).
-            - has_dynamic_attributes: whether there is a dynamic attribute
-            - no_variant_product_template_attribute_value_ids: values that are
-                no_variant
+            - archived_combinations: deprecated
+            - existing_combinations: deprecated
+            - has_dynamic_attributes: deprecated
+            - no_variant_product_template_attribute_value_ids: deprecated
         """
         self.ensure_one()
+        parent_combination = parent_combination or self.env['product.template.attribute.value']
         return {
             'exclusions': self._get_own_attribute_exclusions(),
             'parent_exclusions': self._get_parent_attribute_exclusions(parent_combination),
-            'archived_combinations': self._get_archived_combinations(),
+            'parent_combination': parent_combination.ids,
+            'archived_combinations': [],
             'has_dynamic_attributes': self.has_dynamic_attributes(),
-            'existing_combinations': self._get_existing_combinations(),
-            'no_variant_product_template_attribute_value_ids': self._get_no_variant_product_template_attribute_values(),
+            'existing_combinations': [],
+            'no_variant_product_template_attribute_value_ids': [],
         }
 
     @api.multi
@@ -759,29 +787,21 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def _get_archived_combinations(self):
+        """Deprecated"""
         self.ensure_one()
-        """Get archived combinations.
-
-        Array, each element is an array with ids of an archived combination.
-        """
         return [archived_variant.product_template_attribute_value_ids.ids
             for archived_variant in self.valid_archived_variant_ids]
 
     @api.multi
     def _get_existing_combinations(self):
+        """Deprecated"""
         self.ensure_one()
-        """Get existing combinations.
-
-        Needed because when not using dynamic attributes, the combination is
-        not ok if it doesn't exist (= if the variant has been deleted).
-
-        Array, each element is an array with ids of an existing combination.
-        """
         return [variant.product_template_attribute_value_ids.ids
             for variant in self.valid_existing_variant_ids]
 
     @api.multi
     def _get_no_variant_product_template_attribute_values(self):
+        """Deprecated"""
         self.ensure_one()
         product_template_attribute_values = self._get_valid_product_template_attribute_lines().mapped('product_template_value_ids')
         return product_template_attribute_values.filtered(
@@ -827,9 +847,16 @@ class ProductTemplate(models.Model):
             # combination has different values than the ones configured on the template
             return False
 
-        if not self.has_dynamic_attributes() and not self._get_variant_for_combination(combination):
-            # the variant has been deleted
-            return False
+        variant = self._get_variant_for_combination(combination)
+
+        if self.has_dynamic_attributes():
+            if variant and not variant.active:
+                # dynamic and the variant has been archived
+                return False
+        else:
+            if not variant or not variant.active:
+                # not dynamic, the variant has been archived or deleted
+                return False
 
         exclusions = self._get_own_attribute_exclusions()
         if exclusions:
@@ -845,11 +872,6 @@ class ProductTemplate(models.Model):
             for exclusion in parent_exclusions:
                 if exclusion in combination.ids:
                     return False
-
-        filtered_combination = combination._without_no_variant_attributes()
-        archived_combinations = self._get_archived_combinations()
-        if archived_combinations and filtered_combination.ids in archived_combinations:
-            return False
 
         return True
 
@@ -884,7 +906,7 @@ class ProductTemplate(models.Model):
         for pav in attribute_values:
             domain = expression.AND([[('attribute_value_ids', 'in', pav.id)], domain])
 
-        res = self.env['product.product'].with_context(active_test=False).search(domain)
+        res = self.env['product.product'].with_context(active_test=False).search(domain, order='active DESC')
 
         # The domain above is checking for the `product.attribute.value`, but we
         # need to make sure it's the same `product.template.attribute.value`.

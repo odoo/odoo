@@ -23,6 +23,7 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <!-- TODO: remove in master -->
     <record id="payment_transaction_salesman_rule" model="ir.rule">
         <field name="name">Access every payment transaction</field>
         <field name="model_id" ref="payment.model_payment_transaction"/>
@@ -30,6 +31,7 @@
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
+    <!-- TODO: remove in master -->
     <record id="payment_token_salesman_rule" model="ir.rule">
         <field name="name">Access every payment token</field>
         <field name="model_id" ref="payment.model_payment_token"/>

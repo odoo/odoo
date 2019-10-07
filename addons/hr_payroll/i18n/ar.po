@@ -3,22 +3,20 @@
 # * hr_payroll
 # 
 # Translators:
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2018
-# وليد تاج الدين <cethewal@gmail.com>, 2018
-# Zuhair Hammadi <zuhair12@gmail.com>, 2018
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
-# Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2018
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2018
+# Zuhair Hammadi <zuhair12@gmail.com>, 2018
+# Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # Martin Trigaux, 2018
 # hoxhe Aits <hoxhe0@gmail.com>, 2018
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2018
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2018
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
 # Abdulmajeed Alomar <majeeed87@gmail.com>, 2018
 # Ali Alrehawi <alrehawi@hotmail.com>, 2018
 # Osoul <baruni@osoul.ly>, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -26,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Osoul <baruni@osoul.ly>, 2019\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,18 +49,18 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
-"* عندما يتم انشاء قسيمة دفع فان الحالة تكون 'مسودة'\n"
+"* عند إنشاء إيصال مرتب يكون في الحالة 'مسودة'\n"
 "                \n"
-"* إذا كانت قسيمة الدفع قيد التحقق فإن الحالة تكون 'إنتظار'.\n"
+"* إذا كان الإيصال قيد التحقق ينتقل للحالة 'انتظار'.\n"
 "                \n"
-"* اذا تم تأكيد قسيمة الدفع فان الحالة تكون 'مكتملة'.\n"
+"* اذا تم تأكيد الإيصال ينتقل للحالة 'مكتمل'.\n"
 "                \n"
-"* عنمما يلغي المستخدم قسيمة الدفع فان الحالة تكون 'مرفوضة'."
+"* عنمما يقوم المستخدم بإلغاء إيصال المرتب تكون حالته 'مرفوض'."
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Payroll Rules</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">قواعد الأجور</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
@@ -71,12 +69,14 @@ msgid ""
 " selected employee(s) based on the dates and credit note specified on "
 "Payslips Run.</span>"
 msgstr ""
+"<span colspan=\"4\" nolabel=\"1\">سينشئ هذا المعالج إيصالات بمرتبات كافة "
+"الموظفين المختارين حسب التواريخ وإشعارات الخصم المحددة بفترة الإيصال.</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Address</strong>"
-msgstr "<strong>عنوان</strong>"
+msgstr "<strong>العنوان</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -88,7 +88,7 @@ msgstr "<strong>توقيع معتمد</strong>"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Bank Account</strong>"
-msgstr "</strong>حساب البنك<strong>"
+msgstr "</strong>حساب بنكي<strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -140,12 +140,12 @@ msgstr "<strong>الاسم</strong>"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Reference</strong>"
-msgstr "<strong>المرجع</strong>"
+msgstr "<strong>رقم الإشارة</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Register Name:</strong>"
-msgstr "<strong>المساهم:</strong>"
+msgstr "<strong>اسم السجل:</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -159,11 +159,14 @@ msgid ""
 "            payment of the employees. It can be the social security, the\n"
 "            state or anyone that collect or inject money on payslips."
 msgstr ""
+"سجل المساهمة هو طرف ثالث يشارك في دفع\n"
+"            رواتب الموظفين. يمكن أن يكون الضمان الاجتماعي أو\n"
+"            الدولة أو أي شخص يقوم بجمع أو ضخ الأموال في إيصالات المرتبات."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_account_accountant
 msgid "Account Accountant"
-msgstr "المحاسب"
+msgstr "المحاسب المسئول عن الحساب"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -185,7 +188,7 @@ msgstr "نشط"
 #. module: hr_payroll
 #: model_terms:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid "Add a new contribution register"
-msgstr ""
+msgstr "إضافة سجل مساهمة جديد"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -195,23 +198,23 @@ msgstr "إضافة ملاحظة داخلية..."
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
 msgid "Advantage Name"
-msgstr "المزايا"
+msgstr "اسم الميزة"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
 msgid "All Children Rules"
-msgstr "القواعد الفرعية"
+msgstr "كافة القواعد التابعة"
 
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.ALW
 msgid "Allowance"
-msgstr "علاوة"
+msgstr "بدل"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Always True"
-msgstr "صحيح دائما"
+msgstr "صحيح دائمًا"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__amount
@@ -220,25 +223,25 @@ msgstr "صحيح دائما"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Amount"
-msgstr "القيمة"
+msgstr "المبلغ"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_select
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_select
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Amount Type"
-msgstr "نوع القيمة"
+msgstr "نوع المبلغ"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Annually"
-msgstr "سنوي"
+msgstr "سنويًا"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__appears_on_payslip
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__appears_on_payslip
 msgid "Appears on Payslip"
-msgstr "يظهر في قسيمة الدفع"
+msgstr "يظهر في إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_python
@@ -247,7 +250,8 @@ msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
 msgstr ""
-"طبق هذه القاعدة للحساب في حالة كانت صحيحة. يمكنك تحديد شرط مثل الأساس >1000"
+"تُطبق هذه القاعدة للحساب في حال تم تطبيق الشرط. يمكنك تحديد شرط مثل أن يكون "
+"المرتب الأساسي >1000."
 
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.BASIC
@@ -262,7 +266,7 @@ msgstr "المرتب الأساسي"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_be_hr_payroll
 msgid "Belgium Payroll"
-msgstr ""
+msgstr "أجور بلجيكا"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -287,13 +291,13 @@ msgstr "إلغاء"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Cancel Payslip"
-msgstr "إلغاء قسيمة المرتب"
+msgstr "إلغاء إيصال المرتب"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:96
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr "لا يمكن إلغاء قسيمة مرتب منتهية."
+msgstr "لا يمكن إلغاء إيصال مرتب مكتمل."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__category_id
@@ -305,29 +309,29 @@ msgstr "الفئة"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Child Rules"
-msgstr "القواعد الفرعيه "
+msgstr "القواعد التابعة"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__child_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__child_ids
 msgid "Child Salary Rule"
-msgstr "قواعد المرتب الفرعيه "
+msgstr "قاعدة المرتب التابعة"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__children_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__children_ids
 msgid "Children"
-msgstr "بنود فرعية"
+msgstr "الفروع"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Children Definition"
-msgstr "التعريف الفرعى "
+msgstr "التعريفات التابعة"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Choose a Payroll Localization"
-msgstr ""
+msgstr "اختيار توطين الأجور"
 
 #. module: hr_payroll
 #: selection:hr.payslip.run,state:0
@@ -347,13 +351,13 @@ msgstr "إقفال"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Code"
-msgstr "الرمز"
+msgstr "الكود"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payroll_structure_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_view_kanban
 msgid "Code:"
-msgstr "الرمز:"
+msgstr "الكود:"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -374,7 +378,7 @@ msgstr "المؤسسة"
 #: model:hr.salary.rule.category,name:hr_payroll.COMP
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Company Contribution"
-msgstr "مساهمة الشركة"
+msgstr "مساهمة المؤسسة"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -384,7 +388,7 @@ msgstr "احتساب"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Compute Sheet"
-msgstr "احسب الورقة"
+msgstr "ورقة الحساب"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_select
@@ -418,13 +422,13 @@ msgstr "تأكيد"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__contract_id
 msgid "Contract"
-msgstr "العقد "
+msgstr "العقد"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.hr_contract_advantage_template_action
 #: model:ir.ui.menu,name:hr_payroll.hr_contract_advantage_template_menu_action
 msgid "Contract Advantage Templates"
-msgstr ""
+msgstr "قوالب مزايا العقود"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
@@ -437,12 +441,12 @@ msgstr "المساهمة"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__register_id
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Contribution Register"
-msgstr "سجل المساهمين"
+msgstr "سجل المساهمة"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Contribution Register's Payslip Lines"
-msgstr "مساهمة التسجيل في خطوط قسيمة الدفع "
+msgstr "بنود إيصال سجل المساهمة"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
@@ -450,7 +454,7 @@ msgstr "مساهمة التسجيل في خطوط قسيمة الدفع "
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
 msgid "Contribution Registers"
-msgstr "سجلات المساهمين"
+msgstr "سجلات المساهمة"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
@@ -460,7 +464,7 @@ msgstr "بدل النقل"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
 msgid "Conveyance Allowance For Gravie"
-msgstr ""
+msgstr "بدل النقل لجرافي"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_uid
@@ -524,12 +528,12 @@ msgstr "الاستقطاعات"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__default_value
 msgid "Default value for this advantage"
-msgstr ""
+msgstr "القيمة الافتراضية لهذه الميزة"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract__schedule_pay
 msgid "Defines the frequency of the wage payment."
-msgstr ""
+msgstr "يحدد وتيرة دفع الأجور."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip__struct_id
@@ -539,10 +543,9 @@ msgid ""
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
 msgstr ""
-"يحدد القواعد التي يجب تطبيقها لهذه القسيمة، وفقا للعقد الذي تم اختياره. إذا "
-"ما تركت حقل العقد فارغا ، هذا الحقل ليس إلزاميا بعد الآن، وبالتالي القواعد "
-"المطبقة سوف تكون جميع القواعد المنصوص على هيكل الراتب فى عقود الموظف صالحة "
-"للفترة المختارة "
+"يحدد القواعد التي يجب تطبيقها على إيصال المرتب هذا، حسب العقد المختار. إذا "
+"تركت حقل العقد فارغًا، لن يكون هذا الحقل إلزاميًا، وبالتالي ستُطبق كافة "
+"القواعد المنصوص عليها في هيكل المرتب فى عقود الموظف الصالحة للفترة المختارة"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__note
@@ -561,13 +564,13 @@ msgstr "الوصف"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Details By Salary Rule Category"
-msgstr "تفاصيل حسب فئات قواعد المرتب"
+msgstr "التفاصيل حسب فئة قواعد المرتب"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__details_by_salary_rule_category
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Details by Salary Rule Category"
-msgstr "تفاصيل حسب فئات قواعد المرتب"
+msgstr "التفاصيل حسب فئة قواعد المرتب"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__display_name
@@ -586,24 +589,24 @@ msgstr "تفاصيل حسب فئات قواعد المرتب"
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister__display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails__display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done"
-msgstr "تم"
+msgstr "المنتهية"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Done Payslip Batches"
-msgstr "دفعات المرتب المكتملة "
+msgstr "دفعات المرتب المكتملة"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done Slip"
-msgstr "قسيمة مرتب منتهية"
+msgstr "إيصال المرتب المنتهي"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
@@ -620,7 +623,7 @@ msgstr "دفعات المرتب المسودة"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Draft Slip"
-msgstr "قسيمة مرتب مسودة"
+msgstr "إيصال مرتب مسودة"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_employee
@@ -645,12 +648,12 @@ msgstr "مهمات الموظف"
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
 #: model:ir.ui.menu,name:hr_payroll.menu_department_tree
 msgid "Employee Payslips"
-msgstr "قسيمات المرتب"
+msgstr "إيصالات مرتبات الموظف"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract_advantage_template
 msgid "Employee's Advantage on Contract"
-msgstr ""
+msgstr "مزايا الموظف المسجلة بالعقد"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract__resource_calendar_id
@@ -669,19 +672,19 @@ msgstr "الموظفون"
 #: code:addons/hr_payroll/models/hr_salary_rule.py:92
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
-msgstr ""
+msgstr "خطأ! لا يمكنك إنشاء تدرج هرمي متكرر لفئة قواعد المرتب."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:179
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rules."
-msgstr ""
+msgstr "خطأ! لا يمكنك إنشاء تدرج هرمي متكرر لقواعد المرتب."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__register_id
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__register_id
 msgid "Eventual third party involved in the salary payment of the employees."
-msgstr "طرف ثالث في نهاية المطاف تشارك في دفع رواتب الموظفين . "
+msgstr "طرف ثالث نهائي يشارك في دفع أجور الموظفين ."
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -701,7 +704,7 @@ msgstr "على سبيل المثال، ادخل 50.0 لتطبيق نسبة 50%"
 #: code:addons/hr_payroll/report/report_contribution_register.py:35
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr "بعض بيانات النموذج فارغة، لا يمكن طباعة هذا التقارير."
+msgstr "بعض بيانات النموذج فارغة، لا يمكن طباعة هذا التقرير."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_fr_hr_payroll
@@ -716,29 +719,29 @@ msgstr "عام"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid "Generate"
-msgstr "توليد"
+msgstr "إنشاء"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 msgid "Generate Payslips"
-msgstr "توليد قسيمات المرتب"
+msgstr "إنشاء إيصالات مرتبات"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
-msgstr "إنشاء قسائم دفع الرواتب لجميع الموظفين الذين تم تحديدهم"
+msgstr "إنشاء إيصالات مرتبات لكافة الموظفين المحددين"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
 msgid "Get 1% of sales"
-msgstr ""
+msgstr "احصل على 1% من المبيعات"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:182
 #, python-format
 msgid "Global Leaves"
-msgstr ""
+msgstr "الإجازات العامة"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
@@ -783,8 +786,8 @@ msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr ""
-"إذا تم تحديدها ، هذا يشير إلى أن جميع قسائم الدفع المتولدة من هنا  هى كشوف "
-"مردوده  "
+"إذا كان محددًا، فهذا يشير إلى أن جميع إيصالات المرتبات المنشأة من هنا هي "
+"إيصالات مرتجعات."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__active
@@ -793,8 +796,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
 msgstr ""
-"إذا تم تعيين الحقل النشط إلى \"خطأ \"، سوف تسمح لك لإخفاء قاعده المرتب دون "
-"إزالته . "
+"إذا تم تحويل قيمة الحقل نشط إلى خطأ، يمكنك إخفاء قاعدة المرتب دون إزالتها."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_in_hr_payroll
@@ -804,7 +806,7 @@ msgstr "الرواتب الهندية"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip__credit_note
 msgid "Indicates this payslip has a refund of another"
-msgstr "يشير هذه القسيمة أن لها استرداد آخر "
+msgstr "تشير إلى أن لهذا الإيصال قيمة مسترجعة من إيصال آخر"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -836,9 +838,9 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
-"تستخدم في احتساب الكمية الثابتة وذات النسبة المئوية. فمثلاً. قاعدة وصل وجبة "
-"الطعام ذو مبلغ ثابت بواحد يورو لكل عامل في اليوم يمكن ان تاخذ كميتها بصيغة "
-"مشابهة الى worked_days.WORK100.number_of_days."
+"تستخدم في احتساب الكميات الثابتة وذات النسبة المئوية. فمثلًا: يمكن تعريف "
+"قاعدة قسيمة وجبة الطعام ذات المبلغ الثابت بواحد يورو لكل يوم عمل بصيغة مثل: "
+"worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__amount
@@ -847,9 +849,9 @@ msgid ""
 " basic salary for per product can defined in expression like result = "
 "inputs.SALEURO.amount * contract.wage*0.01."
 msgstr ""
-"يتم استخدامه في حساب. على سبيل المثال؛ هناك قاعدة للمبيعات وجود قاعده  1٪ من"
-" الراتب الأساسي للكل منتج يمكن تعريفها في التعبير مثل نتيجة = "
-"inputs.SALEURO.amount * contract.wage * 0.01. "
+"تستخدم في الاحتساب. مثلًا: يمكن تعريف قاعدة مبيعات تنص على عمولة بقدر 1٪ من "
+"المرتب الأساسي لكل منتج بالتعبير: result = inputs.SALEURO.amount * "
+"contract.wage*0.01."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template____last_update
@@ -909,7 +911,7 @@ msgstr "آخر تحديث في"
 msgid ""
 "Linking a salary category to its parent is used only for the reporting "
 "purpose."
-msgstr "ربط فئة المرتب إلى الأصل وذالك يستخدم فقط لغرض تقديم التقارير"
+msgstr "يستخدم ربط فئة المرتب بفئته الأصل بغرض تقديم التقارير فقط."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__lower_bound
@@ -919,12 +921,12 @@ msgstr "الحد الأدنى"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template__lower_bound
 msgid "Lower bound authorized by the employer for this advantage"
-msgstr ""
+msgstr "الحد الأدنى المعتمد من الموظف لهذه الميزة"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__paid
 msgid "Made Payment Order ? "
-msgstr "تم الدفع؟"
+msgstr "أصدر أمر سداد؟ "
 
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_manager
@@ -986,7 +988,7 @@ msgstr "صافي المرتب"
 #: code:addons/hr_payroll/models/hr_payslip.py:201
 #, python-format
 msgid "Normal Working Days paid at 100%"
-msgstr "أيام العمل العادية المدفوعة بنسبة 100٪"
+msgstr "أيام العمل العادية المدفوعة بنسبة 100%"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
@@ -1006,7 +1008,7 @@ msgstr "عدد الساعات"
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_user
 msgid "Officer"
-msgstr "مستخدم"
+msgstr "موظف"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -1023,7 +1025,7 @@ msgstr "الأصل"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__parent_rule_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__parent_rule_id
 msgid "Parent Salary Rule"
-msgstr "قاعدة المرتب الأصل"
+msgstr "قاعدة المرتب الأصلية"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__partner_id
@@ -1038,117 +1040,117 @@ msgstr "الشريك"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Pay Slip"
-msgstr "قسيمة المرتب"
+msgstr "إيصال المرتب"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "PaySlip Batch"
-msgstr "دفعات المرتب"
+msgstr "دفعات إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.payslip_details_report
 msgid "PaySlip Details"
-msgstr "تفاصيل المرتب"
+msgstr "تفاصيل إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
 msgid "PaySlip Lines"
-msgstr "بنود المرتب"
+msgstr "بنود إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.action_contribution_register
 msgid "PaySlip Lines By Conribution Register"
-msgstr "بنود المرتب حسب المساهمين"
+msgstr "بنود إيصال المرتب حسب سجل المساهمة"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Lines by Contribution Register"
-msgstr "بنود المرتب حسب المساهمين"
+msgstr "بنود إيصال المرتب حسب سجل المساهمة"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Name"
-msgstr "اسم قسيمة المرتب"
+msgstr "اسم إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.open_payroll_modules
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
-msgstr "المرتبات"
+msgstr "الأجور"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
 msgid "Payroll Contribution Register Report"
-msgstr ""
+msgstr "تقرير سجل المساهمة في الأجور"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll Entries"
-msgstr "مدخلات المرتب"
+msgstr "قيود الأجور"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
 msgid "Payroll Structures"
-msgstr "هياكل الرواتب"
+msgstr "هياكل الأجور"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll rules that apply to your country"
-msgstr ""
+msgstr "قواعد الأجور المطبقة في بلدك"
 
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.action_report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Payslip"
-msgstr "قسيمة المرتب"
+msgstr "إيصال المرتب"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:82
 #, python-format
 msgid "Payslip 'Date From' must be earlier 'Date To'."
-msgstr "قسيمة المرتب \"بداية التاريخ\" يجب ان تكون قبل \"نهاية التاريخ\""
+msgstr "يجب أن يسبق 'تاريخ البداية' في إيصال المرتب 'تاريخ النهاية'."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__payslip_run_id
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
-msgstr "دفعات المرتب"
+msgstr "دفعات إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__payslip_count
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Payslip Computation Details"
-msgstr "تفاصيل الراتب"
+msgstr "تفاصيل احتساب إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__payslip_count
 msgid "Payslip Count"
-msgstr "عدد قسيمات المرتب"
+msgstr "عدد إيصالات المرتبات"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
 msgid "Payslip Details Report"
-msgstr "تفاصيل المرتب"
+msgstr "تقرير تفاصيل إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
 msgid "Payslip Input"
-msgstr "مدخلات المرتب"
+msgstr "مدخلات إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__input_line_ids
 msgid "Payslip Inputs"
-msgstr "مدخلات المرتب"
+msgstr "مدخلات إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
 msgid "Payslip Line"
-msgstr "بنود المرتب"
+msgstr "بند إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
@@ -1156,28 +1158,28 @@ msgstr "بنود المرتب"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Payslip Lines"
-msgstr "بنود المرتب"
+msgstr "بنود إيصال المرتب"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
-msgstr "بنود المرتب حسب المساهمين"
+msgstr "بنود إيصال المرتب حسب سجل المساهمة"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
 msgid "Payslip Lines by Contribution Registers"
-msgstr "بنود المرتب حسب المساهمين"
+msgstr "بنود إيصال المرتب حسب سجل المساهمة"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__name
 msgid "Payslip Name"
-msgstr "اسم قسيمة المرتب"
+msgstr "اسم إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__worked_days_line_ids
 msgid "Payslip Worked Days"
-msgstr "أيام العمل في القسيمة"
+msgstr "أيام العمل في إيصال المرتب"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
@@ -1188,7 +1190,7 @@ msgstr "أيام العمل في القسيمة"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_tree
 msgid "Payslips"
-msgstr "قسيمات المرتب"
+msgstr "إيصالات المرتبات"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
@@ -1196,12 +1198,12 @@ msgstr "قسيمات المرتب"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_tree
 msgid "Payslips Batches"
-msgstr "دفعات المرتب"
+msgstr "دفعات إيصالات المرتبات"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid "Payslips by Employees"
-msgstr "كشوف من قبل الموظفين"
+msgstr "إيصالات المرتبات حسب الموظفين"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -1215,7 +1217,7 @@ msgstr "النسبة المئوية (%)"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_percentage_base
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_percentage_base
 msgid "Percentage based on"
-msgstr "نسبة مئوية مبنية على"
+msgstr "النسبة المئوية بناء على"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
@@ -1226,7 +1228,7 @@ msgstr "الفترة"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Post payroll slips in accounting"
-msgstr "إنشاء قيود محاسبية"
+msgstr "ترحيل إيصالات المرتبات في المحاسبة"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
@@ -1236,12 +1238,12 @@ msgstr "طباعة"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
 msgid "Professional Tax"
-msgstr ""
+msgstr "الضريبة المهنية"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
 msgid "Provident Fund"
-msgstr "صندوق الادخار"
+msgstr "صندوق الإدخار"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -1255,13 +1257,13 @@ msgstr "كود بايثون"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_python
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_python
 msgid "Python Condition"
-msgstr "شرط بايثون "
+msgstr "شرط بايثون"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Python Expression"
-msgstr "كود بايثون"
+msgstr "تعبير لغة بايثون"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__quantity
@@ -1306,23 +1308,23 @@ msgstr "المعدل (%)"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__number
 msgid "Reference"
-msgstr "المرجع"
+msgstr "رقم الإشارة"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Refund"
-msgstr "استرداد"
+msgstr "المرتجع"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:102
 #, python-format
 msgid "Refund: "
-msgstr "استرداد: "
+msgstr "المرتجع: "
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__register_line_ids
 msgid "Register Line"
-msgstr "خط السجل"
+msgstr "بند السجل"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -1337,17 +1339,17 @@ msgstr "قاعدة"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
 msgid "Salary Categories"
-msgstr "فئات مرتبات"
+msgstr "فئات المرتب"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Salary Computation"
-msgstr "حساب المرتب"
+msgstr "احتساب المرتب"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule
 msgid "Salary Rule"
-msgstr "قاعدة مرتبات"
+msgstr "قاعدة المرتب"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
@@ -1355,20 +1357,20 @@ msgstr "قاعدة مرتبات"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
-msgstr "فئات قواعد المرتبات"
+msgstr "فئات قواعد المرتب"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Salary Rule Category"
-msgstr "فئة قاعدة مرتبات"
+msgstr "فئة قواعد المرتب"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__input_id
 msgid "Salary Rule Input"
-msgstr "مدخلات قاعدة مرتبات"
+msgstr "مدخلات قاعدة المرتب"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
@@ -1407,22 +1409,22 @@ msgstr "هياكل المرتبات"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__schedule_pay
 msgid "Scheduled Pay"
-msgstr "الدفع المجدول "
+msgstr "الدفع المجدول"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Search Payslip Batches"
-msgstr "البحث في دفعات المرتب"
+msgstr "البحث في دفعات إيصال المرتب"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Search Payslip Lines"
-msgstr "البحث في بنود المرتب"
+msgstr "البحث في بنود إيصال المرتب"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Search Payslips"
-msgstr "البحث في قسيمات المرتب"
+msgstr "البحث في إيصالات المرتبات"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
@@ -1477,15 +1479,15 @@ msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
 msgstr ""
-"يمكن استخدام رمز من قواعد الراتب كمرجع في حساب قواعد أخرى. في هذه الحالة، هو"
-" قضية حساسة"
+"يمكن استخدام كود قواعد المرتب كمرجع في حساب قواعد أخرى. في هذه الحالة، يكون "
+"الكود مميزًا حسب حالة الحرف."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__code
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days__code
 #: model:ir.model.fields,help:hr_payroll.field_hr_rule_input__code
 msgid "The code that can be used in the salary rules"
-msgstr "الرمز الذي يمكن استخدامه في قواعد الراتب"
+msgstr "الرمز الذي يمكن استخدامه في قواعد المرتب"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_select
@@ -1497,19 +1499,19 @@ msgstr "طريقة حساب لكمية القاعدة."
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__contract_id
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days__contract_id
 msgid "The contract for which applied this input"
-msgstr "العقد الذى يطبق هذه المدخلات "
+msgstr "العقد الذى تطبق عليه هذه المدخلات"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range_max
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_range_max
 msgid "The maximum amount, applied for this rule."
-msgstr "أعلى قيمة، تطبق لهذه القاعدة"
+msgstr "الحد الأقصى للكمية الذي تُطبق عليها هذه القاعدة."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range_min
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "The minimum amount, applied for this rule."
-msgstr "الحد الأدنى للكميه ، لتطبيق لهذه القاعدة. "
+msgstr "الحد الأدنى المطلوب للكمية لتطبيق لهذه القاعدة."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range
@@ -1519,9 +1521,9 @@ msgid ""
 " but you can also use categories code fields in lowercase as a variable "
 "names (hra, ma, lta, etc.) and the variable basic."
 msgstr ""
-"سوف يُستخدم هذا لحساب الحقل الخاص بالنسبة المئوية، بشكل عام سوف تكون على "
-"الوضع الأساسى، و لكن يمكنك أيضاً استخدام حقل كود الفئات بالحروف الصغيرة "
-"كاسماء للمتغيرات (hra, ma, lta, etc.) و أساس المتغيرات."
+"سيستخدم هذا في احتساب قيم حقول %s؛ وبشكل عام فهي تنطبق على أساس الأجر لكن "
+"بإمكانك أن تستخدم كود الفئة مكتوباً بحروف صغيرة كأسماء للمتغيرات (مثل: hra, "
+"ma, lta وغيرها) بالإضافة لمتغير الأجر الأساسي."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__total
@@ -1534,17 +1536,17 @@ msgstr "الإجمالي"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Total Working Days"
-msgstr "مجموع أيام العمل"
+msgstr "إجمالي أيام العمل"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__upper_bound
 msgid "Upper Bound"
-msgstr "الحد الأعلى"
+msgstr "الحد الأقصى"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template__upper_bound
 msgid "Upper bound authorized by the employer for this advantage"
-msgstr ""
+msgstr "الحد الأقصى المعتمد من الموظف لهذه الميزة"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__sequence
@@ -1556,32 +1558,32 @@ msgstr "تستخدم لترتيب متتابعة الحساب"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__appears_on_payslip
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__appears_on_payslip
 msgid "Used to display the salary rule on payslip."
-msgstr "تستخدم لعرض قاعده المرتب على قسيمة الدفع . "
+msgstr "تستخدم لعرض قاعدة المرتب على إيصال المرتب."
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Waiting"
-msgstr "جاري الانتظار"
+msgstr "في الانتظار"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Weekly"
-msgstr "أسبوعي"
+msgstr "أسبوعيًا"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Worked Day"
-msgstr "الأيام التي تم العمل بها"
+msgstr "يوم العمل"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Worked Days"
-msgstr "الأيام التي تم العمل بها"
+msgstr "أيام العمل"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Worked Days & Inputs"
-msgstr "أيام العمل و المدخلات"
+msgstr "أيام العمل والمدخلات"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__resource_calendar_id
@@ -1592,58 +1594,58 @@ msgstr "جدول العمل"
 #: code:addons/hr_payroll/models/hr_salary_rule.py:211
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
-msgstr "نسبة أو قيمة خطأ محددة في قاعدة المرتب %s (%s). "
+msgstr "كمية أو قيمة النسبة المئوية المحددة لقاعدة المرتب %s (%s) خطأ."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:217
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr "كود بايثون خطأ محدد في قاعدة المرتب %s (%s)."
+msgstr "كود بايثون المحدد لقاعدة المرتب %s (%s) خطأ."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:240
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
-msgstr "كود بايثون Condition خطأ محدد في قاعدة المرتب %s (%s)."
+msgstr "شرط بايثون المحدد لقاعدة المرتب %s (%s) خطأ."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:204
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr "كمية خطأ محددة في قاعدة المرتب %s (%s)."
+msgstr "الكمية المحددة لقاعدة المرتب %s (%s) خطأ."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:234
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
-msgstr "المدى خطأ محدد في قاعدة المرتب %s (%s)."
+msgstr "مدى تطبيق الشرط المحدد لقاعدة المرتب %s (%s) خطأ."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:36
 #, python-format
 msgid "You cannot create a recursive salary structure."
-msgstr ""
+msgstr "لا يمكنك إنشاء بنية متكررة للمرتب."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:127
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
-msgstr "لا يمكنك حذف قسيمة مرتب وهي ليست مسودة أو ملغاة!"
+msgstr "لا يمكنك حذف إيصال مرتب ما لم يكن في حالة المسودة أو ملغيًا!"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
-msgstr "يجب تحديد موظفين لتوليد قسيمات المرتب"
+msgstr "يجب تحديد موظف لإنشاء إيصالات المرتبات."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:525
 #, python-format
 msgid "You must set a contract to create a payslip line."
-msgstr "يجب تحديد عقد لإنشاء بند مرتب"
+msgstr "يجب تحديد عقد لإنشاء بند إيصال المرتب."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_percentage_base
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__amount_percentage_base
 msgid "result will be affected to a variable"
-msgstr "النتيجة سوف تتأثر بالمتغير"
+msgstr "النتيجة سوف تتأثر بمتغير"

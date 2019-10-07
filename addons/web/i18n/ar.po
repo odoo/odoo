@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Buggi, 2018
-# hamza tayseer atieh <hamza.atieh@minervadata.com>, 2018
 # Fahad Alqahtani <fahad@cloudland.sa>, 2018
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
@@ -162,7 +161,7 @@ msgstr "'%s' ليس تاريخًا أو وقتًا صحيحًا"
 #: code:addons/web/static/src/js/fields/field_utils.js:478
 #, python-format
 msgid "'%s' is not a correct datetime"
-msgstr "'%s' ليس قيمة تاريخ ووقت صحيحة"
+msgstr "'%s' ليس متغيرًا من النوع datetime"
 
 #. module: web
 #. openerp-web
@@ -190,7 +189,7 @@ msgstr "'%s' ليس حقلًا نقديًا صحيحًا"
 #: code:addons/web/static/src/js/core/time.js:205
 #, python-format
 msgid "'%s' is not convertible to date, datetime nor time"
-msgstr "'%s' غير قابل للتحويل إلى تاريخ، تاريخ ووقت أو وقت."
+msgstr "لا يمكن تحويل '%s' إلى تاريخ ولا وقت"
 
 #. module: web
 #. openerp-web
@@ -219,7 +218,7 @@ msgstr "(بلا تعبير)"
 #: code:addons/web/static/src/xml/base.xml:10
 #, python-format
 msgid "(nolabel)"
-msgstr "(بلا تسمية)"
+msgstr "(بلا صندوق عنوان)"
 
 #. module: web
 #. openerp-web
@@ -231,22 +230,24 @@ msgstr "سجل واحد"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr ""
+"<i class=\"fa fa-at\" role=\"img\" aria-label=\"البريد الإلكتروني\" "
+"title=\"البريد الإلكتروني\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
-msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"الرقم المالي\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
+msgstr "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"الموقع\" title=\"الموقع\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"الهاتف\" title=\"الهاتف\"/>"
 
 #. module: web
 #. openerp-web
@@ -726,7 +727,8 @@ msgstr "نوع الزر:"
 #, python-format
 msgid "Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
 msgstr ""
-"بايت،,كيلوبايت،,ميجابايت،,جيجابايت،,تيرابايت،,بيتابايت،,إكسابايت،,زيتابايت،,يوتابايت"
+"بايت, كيلوبايت, ميجابايت, جيجابايت, تيرابايت, بيتابايت, إكسابايت, زيتابايت, "
+"يوتابايت"
 
 #. module: web
 #. openerp-web
@@ -880,7 +882,7 @@ msgstr "تأكيد"
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:337
 #, python-format
 msgid "Connection lost"
-msgstr "فُقد الاتصال"
+msgstr "انقطع الاتصال"
 
 #. module: web
 #. openerp-web
@@ -2407,6 +2409,12 @@ msgid "Only Integer Value should be valid."
 msgstr "يمكنك استخدام الأعداد الطبيعية فقط."
 
 #. module: web
+#: code:addons/web/static/src/js/fields/basic_fields.js:1982
+#, python-format
+msgid "Only Integer or Float Value should be valid."
+msgstr ""
+
+#. module: web
 #: code:addons/web/controllers/main.py:502
 #, python-format
 msgid ""
@@ -2998,8 +3006,8 @@ msgid ""
 "Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
 "title=\"Database\"/>"
 msgstr ""
-"اختيار <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"اختيار <i class=\"fa fa-database\" role=\"img\" aria-label=\"قاعدة "
+"البيانات\" title=\"قاعدة البيانات\"/>"
 
 #. module: web
 #. openerp-web
@@ -3519,7 +3527,7 @@ msgstr "غير مسمى"
 #: code:addons/web/static/src/xml/base.xml:1393
 #, python-format
 msgid "Update data (import-compatible export)"
-msgstr "تحديث البيانات (تصدير بيانات قابلة لإعادة الاستيراد)"
+msgstr "تحديث البيانات (تصدير صالح للاستيراد)"
 
 #. module: web
 #. openerp-web
@@ -4161,4 +4169,4 @@ msgstr "ضبط"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:674
 #, python-format
 msgid "set (true)"
-msgstr "سضبط (صحيح)"
+msgstr "ضبط (صحيح)"

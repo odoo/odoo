@@ -23,12 +23,12 @@
 # snow wang <147156565@qq.com>, 2018
 # 湘子 南 <1360857908@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # Martin Trigaux, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
 # Jerry Pan <panjianyu@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-02-13 07:03+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: 张宏奎 <zhanghongkui@inspur.com>, 2019\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,7 +122,7 @@ msgstr "%d 分钟前"
 #: code:addons/web/static/src/js/core/translation.js:116
 #, python-format
 msgid "%d months ago"
-msgstr "%d 月前"
+msgstr "%d 个月前"
 
 #. module: web
 #. openerp-web
@@ -277,14 +277,14 @@ msgstr "您的报告的弹出窗口被封锁。您可能需要更改浏览器设
 #: code:addons/web/static/src/xml/base.xml:632
 #, python-format
 msgid "ALL"
-msgstr "所有"
+msgstr "ALL"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:633
 #, python-format
 msgid "ANY"
-msgstr "任何"
+msgstr "ANY"
 
 #. module: web
 #. openerp-web
@@ -523,7 +523,7 @@ msgstr "Alt"
 #: code:addons/web/static/src/xml/base.xml:149
 #, python-format
 msgid "An error occurred"
-msgstr "发生了错误"
+msgstr "发生错误"
 
 #. module: web
 #. openerp-web
@@ -540,7 +540,7 @@ msgstr "出现未知的CORS错误。这个错误可能来自一个来自不同�
 #: code:addons/web/static/src/xml/base.xml:1573
 #, python-format
 msgid "And more"
-msgstr "更多"
+msgstr "以及更多"
 
 #. module: web
 #. openerp-web
@@ -1108,7 +1108,7 @@ msgstr "数据库"
 #: code:addons/web/static/src/xml/web_calendar.xml:80
 #, python-format
 msgid "Day"
-msgstr "天数"
+msgstr "天"
 
 #. module: web
 #. openerp-web
@@ -1183,14 +1183,14 @@ msgstr "说明"
 #: code:addons/web/static/src/xml/report.xml:18
 #, python-format
 msgid "Discard"
-msgstr "取消"
+msgstr "丢弃"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:150
 #, python-format
 msgid "Discard a record modification"
-msgstr "取消记录修改"
+msgstr "丢弃记录修改"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_report_layout__display_name
@@ -1305,7 +1305,7 @@ msgstr "编辑列"
 #: code:addons/web/static/src/xml/base.xml:608
 #, python-format
 msgid "Edit Domain"
-msgstr "编辑域名"
+msgstr "编辑域"
 
 #. module: web
 #. openerp-web
@@ -1365,7 +1365,7 @@ msgstr "错误，密码未更改！"
 #: code:addons/web/static/src/xml/kanban.xml:62
 #, python-format
 msgid "Esc to discard"
-msgstr "按Esc取消"
+msgstr "按退出键 丢弃"
 
 #. module: web
 #. openerp-web
@@ -1680,7 +1680,7 @@ msgstr "在看板中隐藏"
 #: code:addons/web/static/src/xml/base.xml:432
 #, python-format
 msgid "Hit DOWN to navigate to the list below"
-msgstr "点击下键导航到下面的列表"
+msgstr "点击方向键下，导航到列表的下面"
 
 #. module: web
 #. openerp-web
@@ -1708,7 +1708,7 @@ msgstr "点击 ENTER 來保存"
 #: code:addons/web/static/src/xml/base.xml:424
 #, python-format
 msgid "Hit ESCAPE to DISCARD"
-msgstr "点击 ESCAPE 取消"
+msgstr "按退出键 丢弃"
 
 #. module: web
 #. openerp-web
@@ -2130,7 +2130,7 @@ msgstr "修改者："
 #: code:addons/web/static/src/xml/base.xml:94
 #, python-format
 msgid "Modifiers:"
-msgstr "修饰器："
+msgstr "装饰器："
 
 #. module: web
 #. openerp-web
@@ -2139,7 +2139,7 @@ msgstr "修饰器："
 #: code:addons/web/static/src/xml/web_calendar.xml:82
 #, python-format
 msgid "Month"
-msgstr "月份"
+msgstr "月"
 
 #. module: web
 #. openerp-web
@@ -2400,6 +2400,12 @@ msgstr "变更时："
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "仅整型数值是有效的。"
+
+#. module: web
+#: code:addons/web/static/src/js/fields/basic_fields.js:1982
+#, python-format
+msgid "Only Integer or Float Value should be valid."
+msgstr "只有正数和浮点数值是有效的."
 
 #. module: web
 #: code:addons/web/controllers/main.py:502
@@ -2766,7 +2772,7 @@ msgstr "从收藏移除"
 #: code:addons/web/static/src/xml/base.xml:696
 #, python-format
 msgid "Remove tag"
-msgstr "删除标签"
+msgstr "移除标签"
 
 #. module: web
 #. openerp-web
@@ -3086,7 +3092,7 @@ msgstr "特殊："
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:215
 #, python-format
 msgid "Stacked"
-msgstr ""
+msgstr "堆叠"
 
 #. module: web
 #. openerp-web
@@ -3225,7 +3231,7 @@ msgstr "操作被中断了。这通常意味着当前的操作花费了太多时
 msgid ""
 "The record has been modified, your changes will be discarded. Do you want to"
 " proceed?"
-msgstr "你的修改尚未保存，点击确定将丢失数据，建议点击取消按钮返回编辑页面并保存。"
+msgstr "记录已被修改，您的更改将被丢弃。 你想继续吗？"
 
 #. module: web
 #. openerp-web
@@ -3920,7 +3926,7 @@ msgstr "在之后"
 #: code:addons/web/static/src/js/views/search/search_filters.js:190
 #, python-format
 msgid "is after or equal to"
-msgstr ""
+msgstr "迟于或等于"
 
 #. module: web
 #. openerp-web
@@ -3934,7 +3940,7 @@ msgstr "在之前"
 #: code:addons/web/static/src/js/views/search/search_filters.js:191
 #, python-format
 msgid "is before or equal to"
-msgstr ""
+msgstr "早于或等于"
 
 #. module: web
 #. openerp-web

@@ -61,7 +61,7 @@ class AccountInvoiceLine(models.Model):
             sale_line_delivery = invoice_line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
             if sale_line_delivery:
                 domain = self._timesheet_domain_get_invoiced_lines(sale_line_delivery)
-                timesheets = self.env['account.analytic.line'].search(domain)
+                timesheets = self.env['account.analytic.line'].search(domain).sudo()
                 timesheets.write({
                     'timesheet_invoice_id': invoice_line.invoice_id.id,
                 })

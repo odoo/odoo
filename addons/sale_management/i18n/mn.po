@@ -5,13 +5,14 @@
 # Translators:
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Martin Trigaux, 2018
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-08-08 13:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
 "Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
@@ -30,7 +31,7 @@ msgstr "% хөнгөлөлт"
 #. module: sale_management
 #: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
 msgid "4 Person Desk"
-msgstr ""
+msgstr "4 хүний ширээ"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -40,7 +41,7 @@ msgstr "<span>Хөнгөлөлт</span>"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Optional Products</span>"
-msgstr ""
+msgstr "<span>Нэмэлт бүтээгдэхүүн</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -71,7 +72,7 @@ msgstr "Нэгийг нэмэх"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Add to cart"
-msgstr ""
+msgstr "Сагсанд нэмэх"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
@@ -81,7 +82,7 @@ msgstr "Захиалгын мөр дээр нэмэх"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
 msgid "All Sales"
-msgstr ""
+msgstr "Бүх борлуулалт"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -91,12 +92,22 @@ msgstr "Архивласан"
 #. module: sale_management
 #: model:ir.ui.menu,name:sale_management.menu_catalog_variants_action
 msgid "Attribute Values"
-msgstr "Онцлогийн утгууд"
+msgstr "Шинж чанарын утга"
 
 #. module: sale_management
 #: model:ir.ui.menu,name:sale_management.menu_product_attribute_action
 msgid "Attributes"
-msgstr "Хувилбарууд"
+msgstr "Шинж чанар"
+
+#. module: sale_management
+#: code:addons/sale_management/models/sale_order_template.py:39
+#, python-format
+msgid ""
+"Before archiving \"%s\" please select another default template in the "
+"settings."
+msgstr ""
+"\"%s\"-г архивлахаас өмнө тохиргооны хэсэгт өөр ямар нэг үндсэн загвар "
+"сонгож өгнө үү."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
@@ -111,7 +122,7 @@ msgstr "Баталгаа"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
-msgstr "Баталгаажуулах Мэйл"
+msgstr "Баталгаажуулах шуудан"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_view_form
@@ -121,12 +132,12 @@ msgstr "Нэхэмжлэл үүсгэх"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Create standardized offers with default products"
-msgstr ""
+msgstr "Үндсэн бараа бүтээгдэхүүнүүдээ ашиглан стандарт үнийн санал бэлтгэх"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr ""
+msgstr "Үнийн саналын загвараа үүсгэнэ үү"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -134,7 +145,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__create_uid
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__create_uid
 msgid "Created by"
-msgstr "Үүсгэгч"
+msgstr "Үүсгэсэн этгээд"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_date
@@ -142,12 +153,12 @@ msgstr "Үүсгэгч"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__create_date
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__create_date
 msgid "Created on"
-msgstr "Үүсгэсэн"
+msgstr "Үүсгэсэн огноо"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__default_sale_order_template_id
 msgid "Default Template"
-msgstr ""
+msgstr "Үндсэн загвар"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
@@ -164,6 +175,8 @@ msgid ""
 "Design your quotation templates using building blocks<br/>\n"
 "                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
+"Блок байгуулах боломжыг ашиглан үнийн саналын загвараа дизайнжуулаарай<br/>\n"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Анхаар: Энэ сонголт нь Website app-г суулгах болно.</em>"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -183,7 +196,7 @@ msgstr "Хөнгөлөлт (%)"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__display_name
 msgid "Display Name"
-msgstr "Дэлгэцийн Нэр"
+msgstr "Дэлгэрэнгүй нэр"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
@@ -203,11 +216,13 @@ msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
 msgstr ""
+"Хүчин төгөлдөр бус борлуулалтын үнийн саналын мөр дээр бараа, нэгж үнэ, тоо "
+"хэмжээ болон хэмжих нэгж сонгох хориотой."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
-msgstr ""
+msgstr "Нэмэлт барааг жагсаалтанд харуулахдаа эрэмбэ дараалал тодорхойлно уу."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
@@ -230,11 +245,13 @@ msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
 msgstr ""
+"Хэрэв сонгоогүй бол, энэ нь танд үнийн саналыг устгалгүйгээр ашиглалтаас "
+"хасах боломжыг олгоно."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr ""
+msgstr "Бүх борлуулалтын нийт дүнгийн KPI"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option____last_update
@@ -242,7 +259,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line____last_update
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option____last_update
 msgid "Last Modified on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_uid
@@ -250,7 +267,7 @@ msgstr "Сүүлийн засвар хийсэн огноо"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_uid
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__write_uid
 msgid "Last Updated by"
-msgstr "Сүүлийн засвар хийсэн"
+msgstr "Сүүлд зассан этгээд"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_date
@@ -258,7 +275,7 @@ msgstr "Сүүлийн засвар хийсэн"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_date
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__write_date
 msgid "Last Updated on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__line_id
@@ -275,6 +292,8 @@ msgstr "Мөрүүд"
 #: sql_constraint:sale.order.template.line:0
 msgid "Missing required product and UoM on accountable sale quote line."
 msgstr ""
+"Хүчин төгөлдөр борлуулалтын үнийн саналын мөр дээр бараа болон хэмжих нэгж "
+"заавал сонгогдох ёстой."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -285,12 +304,12 @@ msgstr "Тэмдэглэл"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr "Үнийн саналын хүчинтэй хугацаа тооцооллын өдрийн тоо"
+msgstr "Үнийн саналын хүчинтэй хугацааг тооцох өдрийн тоо"
 
 #. module: sale_management
 #: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
 msgid "Office Chair"
-msgstr ""
+msgstr "Оффисын сандал"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
@@ -308,7 +327,7 @@ msgstr "Онлайн гарын үсэг"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Optional Products"
-msgstr "Нэмэлт Бүтээгдэхүүнүүд"
+msgstr "Нэмж санал болгох бараа"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_option_ids
@@ -344,12 +363,12 @@ msgstr "Тоо"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Үнийн санал зохиомжлогч"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
 msgid "Quotation Duration"
-msgstr "Үнийн саналын Үргэлжлэх хугацаа"
+msgstr "Үнийн саналын хүчинтэй хугацаа"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template
@@ -358,28 +377,28 @@ msgstr "Үнийн саналын Үргэлжлэх хугацаа"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_tree
 msgid "Quotation Template"
-msgstr "Үнийн саналын Үлгэр"
+msgstr "Үнийн саналын загвар"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "Үнийн саналын загварын мөр"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Template Lines"
-msgstr "Үнийн саналын Үлгэрийн Мөрүүд"
+msgstr "Үнийн саналын загварын мөр"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "Үнийн саналын загварын сонголт"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__sale_order_template_id
 msgid "Quotation Template Reference"
-msgstr "Үнийн саналын Үлгэрийн Код"
+msgstr "Үнийн саналын загварын холбоос"
 
 #. module: sale_management
 #: model:ir.actions.act_window,name:sale_management.sale_order_template_action
@@ -388,12 +407,12 @@ msgstr "Үнийн саналын Үлгэрийн Код"
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 #: model:res.groups,name:sale_management.group_sale_order_template
 msgid "Quotation Templates"
-msgstr "Үнийн саналын Үлгэрүүд"
+msgstr "Үнийн саналын загвар"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation expires after"
-msgstr ""
+msgstr "Үнийн саналын хугацаа дуусах"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -411,7 +430,7 @@ msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
 msgstr ""
-"Захиалагч руу захиалгыг онлайн гарын үсгээр батлагаажуулах хүсэлт илгээх."
+"Захиалагч руу захиалгыг онлайн гарын үсгээр баталгаажуулах хүсэлт илгээх."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
@@ -419,12 +438,12 @@ msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr ""
-"Захиалагч руу захиалгыг онлайн төлбөрөөр батлагаажуулах хүсэлт илгээх."
+"Захиалагч руу захиалгыг онлайн төлбөрөөр баталгаажуулах хүсэлт илгээх."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
 msgid "Sale Options"
-msgstr "Борлуулалтын Сонголтууд"
+msgstr "Борлуулалтын сонголтууд"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order
@@ -439,28 +458,28 @@ msgstr "Борлуулалт"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Борлуулалтын Захиалгын Мөр"
+msgstr "Борлуулалтын захиалгын мөр"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
 msgid "Sales Order Reference"
-msgstr ""
+msgstr "Борлуулалтын захиалгын холбоос"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Sales Quotation Template Lines"
-msgstr "Борлуулалтын Үнийн саналын Үлгэрийн Мөрүүд"
+msgstr "Борлуулалтын үнийн саналын загварын мөр"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Search Quotation Template"
-msgstr ""
+msgstr "Үнийн саналын загвар хайлт"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: selection:sale.order.template.line,display_type:0
 msgid "Section"
-msgstr "Хэсэг"
+msgstr "Бүлэг"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -476,7 +495,7 @@ msgstr "UX зорилготой техникийн талбар"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
 msgid "Terms and conditions"
-msgstr "Заалтууд болон нөхцөлүүд"
+msgstr "Худалдааны нөхцөл, болзол"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -484,6 +503,9 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
+"Админ хэрэглэгч борлуулалтын ерөнхий тохиргоонд худалдааны үндсэн нөхцөл, "
+"болзлыг тохируулах боломжтой. Энэхүү үнийн саналыг сонгож ашиглах үед энд "
+"тохируулсан худалдааны нөхцөл ашиглагдах болно."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -491,7 +513,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
-"Батлах үед энэ имэйл үлгэрийг илгээнэ. Юу ч илгээхгүй бол хоосон үлдээнэ үү."
+"Борлуулалтыг батлах үед энэхүү загвар бүхий имэйл илгээгдэнэ. Юу ч илгээхгүй"
+" байх бол хоосон үлдээнэ үү."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -519,12 +542,26 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"Загвар ашиглан мэргэжлийн төвшинд чанартай үнийн саналыг хормын дотор бүтээнэ үү.\n"
+"                 Энэ үнийн саналыг имэйлээр илгээж захиалагчаараа онлайн гарын үсэг зуруулах боломжтой.\n"
+"                 Нэмэлт бараа болон хөнгөлөлт санал болгож борлуулалтаа өсгөн нэмэгдүүлнэ үү."
 
 #. module: sale_management
-#: code:addons/sale_management/models/sale_order.py:178
+#: code:addons/sale_management/models/sale_order.py:198
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "Батлагдсан захиалга дээр сонголт нэмэх боломжгүй."
+
+#. module: sale_management
+#: code:addons/sale_management/models/sale_order_template.py:90
+#, python-format
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
+"Та борлуулалтын үнийн саналын мөрийн төрлийг сольж өөрчлөх боломжгүй. Харин "
+"үүний оронд тухайн мөрийг устгаад дахин шинээр зохих төрөл бүхий мөрүүдийг "
+"нэмнэ үү."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

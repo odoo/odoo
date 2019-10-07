@@ -8,9 +8,9 @@
 # keecome <7017511@qq.com>, 2018
 # Jonathon Li <jonathonli@gmail.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2019\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,13 +29,13 @@ msgstr ""
 #. module: delivery
 #: model:mail.template,report_name:delivery.mail_template_data_delivery_confirmation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr "${(object.name or ‘’).replace(‘/‘,’_’)}"
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_confirmation
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name} 交货单 (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} 出库单 (Ref ${object.name or 'n/a' })"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
@@ -79,7 +79,7 @@ msgstr ""
 "            </strong>\n"
 "        %endif\n"
 "        <br/><br/>\n"
-"        查找附带的交货单以了解更多信息.<br/><br/>\n"
+"        查找附带的出库单以了解更多信息.<br/><br/>\n"
 "        非常感谢,<br/>\n"
 "        % if user and user.signature:\n"
 "          ${user.signature | safe}\n"
@@ -343,7 +343,7 @@ msgstr "决定显示顺序"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
-msgstr "取消"
+msgstr "丢弃"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__display_name
@@ -478,7 +478,7 @@ msgstr "基础等级"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr "基于交货单填写账单"
+msgstr "基于出库单填写账单"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery

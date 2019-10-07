@@ -221,6 +221,7 @@ class ir_cron(models.Model):
                     try:
                         registry = odoo.registry(db_name)
                         registry[cls._name]._process_job(job_cr, job, lock_cr)
+                        _logger.info('Job `%s` done.', job['cron_name'])
                     except Exception:
                         _logger.exception('Unexpected exception while processing cron job %r', job)
                     finally:

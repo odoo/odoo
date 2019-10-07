@@ -7,6 +7,7 @@
 # Sengtha Chay <sengtha@gmail.com>, 2018
 # Samkhann Seang <seangsamkhann@gmail.com>, 2018
 # Chan Nath <channath@gmail.com>, 2019
+# Lux Sok <sok.lux@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Chan Nath <channath@gmail.com>, 2019\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
 #: code:addons/event/models/event.py:303
@@ -37,12 +38,12 @@ msgstr "%s (ចម្លង)"
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "5 Intensive Days"
-msgstr ""
+msgstr "5 ថ្ងៃដែលពឹងផ្អែកខ្លាំង"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -50,6 +51,8 @@ msgid ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        To</b>"
 msgstr ""
+"<b><i class=\"fa fa-clock-o\"/>\n"
+"                                        ទៅ</b>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -66,6 +69,17 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    សូមជំរាបមកដល់ ${គោលបំណង.ឈ្មោះ},<br/>\n"
+"    សូមអរគុណចំពោះសំណួររបស់អ្នក។<br/>\n"
+"   នេះគឺជាផ្លាកសញ្ញារបស់អ្នកសម្រាប់ព្រឹត្តិការណ៍នេះ${object.event_id.name}.<br/>\n"
+"   ប្រសិនបើអ្នកមានសំណួរសូមប្រាប់ឱ្យយើងដឹង។\n"
+"    <br/><br/>\n"
+"   សូមអរគុណអ្នក,<br/>\n"
+"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -73,6 +87,8 @@ msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
 " event or change the dates on which it is held.)</em>"
 msgstr ""
+"<em>(អង្គជំនុំជម្រះ "
+"ធ្វើការរក្សាសិទ្ធិក្នុងការលុបចោលឈ្មោះឬដាក់ទីតាំងឡើងវិញ<br>ព្រឹត្តិការណ៍ឬការផ្លាស់ប្តូរកាលបរិច្ឆេទដែលវាត្រូវបានប្រារព្ធឡើង។)</em>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -80,12 +96,14 @@ msgid ""
 "<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
 " Programming</i></font>"
 msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">ដើម្បីរៀន "
+"<i>ធ្វើកម្មវិធី Odoo</i></font>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
-msgstr ""
+msgstr "<i>អ្នកនឹងអាចបង្កើតទំព័រថាមវន្តទាក់ទងជាមួយអូអរអេម។</i>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -93,23 +111,24 @@ msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
 msgstr ""
+"<i>អ្នកនឹងអាចអភិវឌ្ឍកម្មវិធីពេញលេញជាមួយកម្មវិធីខាងក្រោយនិងចំណុចប្រទាក់អ្នកប្រើ។</i>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
-msgstr ""
+msgstr "<i>អ្នកនឹងអាចអភិវឌ្ឍសមាសធាតុថាមវន្តសាមញ្ញនៅក្នុងទំព័រ HTML ។</i>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
-msgstr ""
+msgstr "<i>ទៅ</i>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<small>John Doe, CEO</small>"
-msgstr ""
+msgstr "<small>John Doe, CEO</small>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -118,6 +137,9 @@ msgid ""
 "                                        to\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                        ទៅ\n"
+"                                    </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
@@ -125,6 +147,9 @@ msgid ""
 "<span class=\"o_form_label\">Warning: This Event has not reached its Minimum"
 " Registration Limit. Are you sure you want to confirm it?</span>"
 msgstr ""
+"<span class=\"o_form_label\">ការព្រមាន​: "
+"ព្រឹត្តការណ៍នេះមិនទាន់ទទួលបានការចុះឈ្មោះដល់កម្រិតអប្បបរមាទេ។ "
+"តើអ្នកពិតជាចង់បញ្ជាក់ពីវាមែនទេ?</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -134,44 +159,48 @@ msgid ""
 "development </strong>process. This course is for new developers or for IT "
 "professionals eager to learn more about technical aspects.</span>"
 msgstr ""
+"<span style=\"text-align: -webkit-center; "
+"\">Tវគ្គសិក្សារបស់គាត់ត្រូវបានឧទ្ទិសដល់អ្នកអភិវឌ្ឍន៍ដែលត្រូវការចាប់យកចំណេះដឹងអំពី។"
+" <strong>ការអភិវឌ្ឍន៍កម្មវិធីអាជីវកម្ </strong>ដំណើរការ "
+"វគ្គសិក្សានេះគឺសម្រាប់អ្នកអភិវឌ្ឍន៍ថ្មីឬសម្រាប់អ្នកជំនាញព័ត៌មានវិទ្យាដែលចង់រៀនបន្ថែមទៀតអំពីទិដ្ឋភាពបច្ចេកទេស។</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "<strong>Conference for Architects</strong>"
-msgstr ""
+msgstr "<strong>សិក្ខាសាលាសម្រាប់ស្ថាបតយ្យកម្ម</strong>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "<strong>Having attended this course, participants should be able "
 "to:</strong>"
-msgstr ""
+msgstr "<strong>ដើម្បីបានចូលរួមមុខវិជ្ជានេះ, អ្នកចូលរួមគួរតែអាច:</strong>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_2
 msgid "<strong>Objectives:</strong>"
-msgstr ""
+msgstr "<strong>គោលបំណង៖</strong>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<strong>Our prices include:</strong>"
-msgstr ""
+msgstr "<strong>តម្លៃរបស់ពួកយើងរួមបញ្ចូលទាំង:</strong>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "<strong>Program:</strong>"
-msgstr ""
+msgstr "<strong>កម្មវិធី:</strong>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<strong>Requirements:</strong>"
-msgstr ""
+msgstr "<strong>តម្រូវការ:</strong>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
-msgstr ""
+msgstr "<strong>កន្លែងដែលស្វែងរកពួកយើង:</strong>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -362,6 +391,191 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your registration</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"${'/logo.png?company=%s' % object.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${'%s' % object.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        Hello ${object.name or ''},<br/>\n"
+"                        We are happy to confirm your registration to the event\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % else:\n"
+"                            <strong>${object.event_id.name}</strong>\n"
+"                        % endif\n"
+"                        for attendee ${object.name}.\n"
+"                    </div>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a><br/>\n"
+"                    </div>\n"
+"                    % endif\n"
+"                    <div>\n"
+"                        See you soon,<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        % if object.event_id.organizer_id:\n"
+"                            ${object.event_id.organizer_id.name}\n"
+"                        % else:\n"
+"                            The organizers.\n"
+"                        % endif\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            </td>\n"
+"                            % if object.event_id.address_id.country_id.name:\n"
+"                                <td style=\"vertical-align:top;\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                </td>\n"
+"                                <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                    % set location = ''\n"
+"                                    % if object.event_id.address_id.name:\n"
+"                                        <div>${object.event_id.address_id.name}</div>\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street:\n"
+"                                        <div>${object.event_id.address_id.street}</div>\n"
+"                                        % set location = object.event_id.address_id.street\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street2:\n"
+"                                        <div>${object.event_id.address_id.street2}</div>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
+"                                    % endif\n"
+"                                    <div>\n"
+"                                    % if object.event_id.address_id.city:\n"
+"                                        ${object.event_id.address_id.city},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.state_id.name:\n"
+"                                        ${object.event_id.address_id.state_id.name},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.zip:\n"
+"                                        ${object.event_id.address_id.zip}\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
+"                                    % endif\n"
+"                                    </div>\n"
+"                                    % if object.event_id.address_id.country_id.name:\n"
+"                                        <div>${object.event_id.address_id.country_id.name}</div>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
+"                                    % endif\n"
+"                                </td>\n"
+"                            % endif\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"                % if object.event_id.organizer_id:\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        <span style=\"font-weight:300;margin:10px 0px\">Questions about this event?</span>\n"
+"                        <div>Please contact the organizer:</div>\n"
+"                        <ul>\n"
+"                            <li>${object.event_id.organizer_id.name}</li>\n"
+"                            % if object.event_id.organizer_id.email\n"
+"                                <li>Mail: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
+"                            % endif\n"
+"                            % if object.event_id.organizer_id.phone\n"
+"                                <li>Phone: ${object.event_id.organizer_id.phone}</li>\n"
+"                            % endif\n"
+"                        </ul>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                % endif\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;\">\n"
+"                                <strong>Add this event to your calendar</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&amp;summary=${object.event_id.name}&amp;dtstart=${date_begin}&amp;dtend=${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&amp;et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo</a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"                % if object.event_id.address_id:\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\"><tr><td>\n"
+"                        <div>\n"
+"                            <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"                                <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </td></tr></table>\n"
+"                </td></tr>\n"
+"                % endif\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"% if object.company_id\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        Sent by <a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
+"        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"        <br/>\n"
+"        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
+"        % endif\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"% endif\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -551,12 +765,196 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your registration</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"${'/logo.png?company=%s' % object.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${'%s' % object.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        Hello ${object.name},<br/>\n"
+"                        We are excited to remind you that the event\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % else:\n"
+"                            <strong>${object.event_id.name}</strong>\n"
+"                        % endif\n"
+"                        is starting <strong>${object.get_date_range_str()}</strong>.\n"
+"                    </div>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a><br/>\n"
+"                    </div>\n"
+"                    % endif\n"
+"                    <div>\n"
+"                        We confirm your registration and hope to meet you there,<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        % if object.event_id.organizer_id:\n"
+"                            ${object.event_id.organizer_id.name}\n"
+"                        % else:\n"
+"                            The organizers.\n"
+"                        % endif\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            </td>\n"
+"                            % if object.event_id.address_id.country_id.name:\n"
+"                                <td style=\"vertical-align:top;\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                </td>\n"
+"                                <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                    % set location = ''\n"
+"                                    % if object.event_id.address_id.name:\n"
+"                                        <div>${object.event_id.address_id.name}</div>\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street:\n"
+"                                        <div>${object.event_id.address_id.street}</div>\n"
+"                                        % set location = object.event_id.address_id.street\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street2:\n"
+"                                        <div>${object.event_id.address_id.street2}</div>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
+"                                    % endif\n"
+"                                    <div>\n"
+"                                    % if object.event_id.address_id.city:\n"
+"                                        ${object.event_id.address_id.city},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.state_id.name:\n"
+"                                        ${object.event_id.address_id.state_id.name},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.zip:\n"
+"                                        ${object.event_id.address_id.zip}\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
+"                                    % endif\n"
+"                                    </div>\n"
+"                                    % if object.event_id.address_id.country_id.name:\n"
+"                                        <div>${object.event_id.address_id.country_id.name}</div>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
+"                                    % endif\n"
+"                                </td>\n"
+"                            % endif\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"                % if object.event_id.organizer_id:\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        <span style=\"font-weight:300;margin:10px 0px\">Questions about this event?</span>\n"
+"                        <div>Please contact the organizer:</div>\n"
+"                        <ul>\n"
+"                            <li>${object.event_id.organizer_id.name}</li>\n"
+"                            % if object.event_id.organizer_id.email\n"
+"                                <li>Mail: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
+"                            % endif\n"
+"                            % if object.event_id.organizer_id.phone\n"
+"                                <li>Phone: ${object.event_id.organizer_id.phone}</li>\n"
+"                            % endif\n"
+"                        </ul>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                % endif\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;\">\n"
+"                                <strong>Add this event to your calendar</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&amp;et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo</a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"                % if object.event_id.address_id:\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\"><tr><td>\n"
+"                        <div>\n"
+"                            <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"                                <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </td></tr></table>\n"
+"                </td></tr>\n"
+"                % endif\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"% if object.company_id\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        Sent by <a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
+"        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"        <br/>\n"
+"        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
+"        % endif\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"% endif\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "តម្រូវការសកម្មភាព"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__active
@@ -569,33 +967,35 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
 msgstr ""
+"បន្ថែមម៉ឺនុយរុករកទៅទំព័រគេហទំព័រព្រឹត្តិការណ៍របស់អ្នកដោយមានកាលវិភាគ, បទ, "
+"សំណុំបែបបទស្នើសុំបទ។ ល។"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Add a new attendee"
-msgstr ""
+msgstr "បន្ថែមអ្នកចូលរួមថ្មី"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Add a new event"
-msgstr ""
+msgstr "បន្ថែមព្រឹត្តិការណ៍ថ្មី"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Advanced JQuery"
-msgstr ""
+msgstr "ជេកឃឺរីកម្រិតខ្ពស់"
 
 #. module: event
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "After each registration"
-msgstr ""
+msgstr "បន្ទាប់ពីរាល់ការចុះឈ្មោះ"
 
 #. module: event
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "After the event"
-msgstr ""
+msgstr "បន្ទាប់ពីព្រឹត្តិការណ៍"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -608,52 +1008,54 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
+"តើអ្នកពិតជាចង់លុបចោលព្រឹត្តការណ៍នេះឬ? "
+"តំណភ្ជាប់អ្នកចូលរួមក៏ត្រូវបានលុបចោលដូចគ្នា។"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Arrays"
-msgstr ""
+msgstr "ការរៀបតាមលំដាប់"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
 #: model:ir.model.fields,field_description:event.field_event_registration__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "ចំនួនឯកសារភ្ជាប់"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Attendance"
-msgstr ""
+msgstr "វត្តមាន"
 
 #. module: event
 #: selection:event.registration,state:0
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended"
-msgstr ""
+msgstr "បានចូលរួម"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_closed
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទបានចូលរួម"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Attended the Event"
-msgstr ""
+msgstr "ព្រឹត្តិការណ៍បានចូលរួម"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
-msgstr ""
+msgstr "ចូលរួម"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 msgid "Attendee Name"
-msgstr ""
+msgstr "ឈ្មោះអ្នកចូលរួម"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -663,47 +1065,47 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Attendees"
-msgstr ""
+msgstr "ចូលរួម"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 msgid "Autoconfirm Registrations"
-msgstr ""
+msgstr "ការចុះឈ្មោះ Autoconfirm "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
 msgid "Automatically Confirm Registrations"
-msgstr ""
+msgstr "ការបញ្ជាក់ការចុះឈ្មោះដោយស្វ័យប្រវត្តិ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_mail_schedule
 msgid "Automatically Send Emails"
-msgstr ""
+msgstr "សារអេឡិចត្រូនិចផ្ញើរដោយស្វ័យប្រវត្តិ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
 msgid "Available Seats"
-msgstr ""
+msgstr "កៅអីនៅសល់"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_back
 msgid "Badge Back"
-msgstr ""
+msgstr "ផ្លាកសញ្ញាត្រឡប់មកវិញ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_front
 msgid "Badge Front"
-msgstr ""
+msgstr "រណសិរ្សផ្លាកសញ្ញា"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_innerleft
 msgid "Badge Inner Left"
-msgstr ""
+msgstr "ផ្លាកសញ្ញាខាងឆ្វេង"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_innerright
 msgid "Badge Inner Right"
-msgstr ""
+msgstr "ផ្លាកសញ្ញាខាងស្តាំ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_barcode
@@ -714,32 +1116,32 @@ msgstr "Barcode"
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "Before the event"
-msgstr ""
+msgstr "មុនព្រឹត្តិការណ៍"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Best regards,"
-msgstr ""
+msgstr "ទាក់ទងដ៏ល្អបំផុត"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Bootstrap CSS"
-msgstr ""
+msgstr "Bootstrap CSS"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Bring your own laptop."
-msgstr ""
+msgstr "យកកុំព្យូទ័រផ្ទាល់ខ្លួនរបស់អ្នក"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Building a Full Application"
-msgstr ""
+msgstr "ការបង្កើតពាក្យសុំពេញលេញ។"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Calling the ORM"
-msgstr ""
+msgstr "Calling the ORM"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
@@ -749,13 +1151,13 @@ msgstr "លុបចោល"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Cancel Event"
-msgstr ""
+msgstr "លុបចោលព្រឹត្តិការណ៍"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Cancel Registration"
-msgstr ""
+msgstr "លុបចោលការចុះឈ្មោះ"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -770,7 +1172,7 @@ msgstr "ប្រភេទ"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
-msgstr ""
+msgstr "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -792,17 +1194,17 @@ msgstr "សរសេរអុីម៉ែល"
 #. module: event
 #: model:event.type,name:event.event_type_2
 msgid "Conference"
-msgstr ""
+msgstr "សិក្ខាសាលា"
 
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference for Architects"
-msgstr ""
+msgstr "សិក្ខាសាលាសម្រាប់ស្ថាបត្យកម្ម"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "កំណត់រចនាសម្ព័ន្ធ"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
@@ -817,17 +1219,17 @@ msgstr "បញ្ជាក់"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Confirm Anyway"
-msgstr ""
+msgstr "យ៉ាងណាក៏ដោយបញ្ជាក់យល់ព្រម"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Confirm Event"
-msgstr ""
+msgstr "បញ្ជាក់ព្រឹត្តិការណ៍"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Confirm Registration"
-msgstr ""
+msgstr "បញ្ជាក់ការចុះឈ្មោះ"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -839,12 +1241,12 @@ msgstr "បញ្ជាក់"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Confirmed attendees"
-msgstr ""
+msgstr "បានបញ្ជាក់អ្នកចូលរួម"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed events"
-msgstr ""
+msgstr "បានបញ្ជាក់ព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -855,7 +1257,7 @@ msgstr "ទំនាក់ទំនង"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Controllers and Views"
-msgstr ""
+msgstr "ឧបករណ៍បញ្ជានិងមើល។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -865,7 +1267,7 @@ msgstr "ប្រទេស"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Course Summary"
-msgstr ""
+msgstr "សង្ខេបមេរៀន"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__create_uid
@@ -899,33 +1301,33 @@ msgstr "អតិថិជន"
 #: code:addons/event/models/event.py:457
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "សារអេឡិចត្រូនិចរបស់អតិថិជន"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Day 1"
-msgstr ""
+msgstr "ថ្ងៃទី1"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Day 2"
-msgstr ""
+msgstr "ថ្ងៃទី2"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Day 3"
-msgstr ""
+msgstr "ថ្ងៃទី3"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Day(s)"
-msgstr ""
+msgstr "ថ្ងៃ (s)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Delete"
-msgstr ""
+msgstr "លុប"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -935,12 +1337,12 @@ msgstr "ការពិពណ៌​នា​"
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Design Fair Los Angeles"
-msgstr ""
+msgstr "ការរចនាពិព័រណ៍ឡូសអេនជឺលេស"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Develop a new module for a particular application."
-msgstr ""
+msgstr "បង្កើតម៉ូឌុលថ្មីសម្រាប់កម្មវិធីជាក់លាក់មួយ។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__display_name
@@ -961,17 +1363,17 @@ msgstr "បង្ហាញការបញ្ជាទិញ"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Dive into Strings"
-msgstr ""
+msgstr "Dive into Strings"
 
 #. module: event
 #: selection:event.event,state:0
 msgid "Done"
-msgstr ""
+msgstr "រួចរាល"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "ម៉ឺនុយទម្លាក់ចុះ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -979,6 +1381,7 @@ msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
 msgstr ""
+"កំឡុងពេលនៃសិក្ខាសាលានេះ,ក្រុមរបស់យើងនឹងផ្តល់ការបង្ហាញពិស្តារនូវកម្មវិធីជំនួញរបស់ពួកយើង។អ្នកនឹងដឹងពីគុណសម្បត្តិនៃការប្រើប្រាស់។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
@@ -989,23 +1392,23 @@ msgstr "អុីម៉ែល"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Email Schedule"
-msgstr ""
+msgstr "កាលវិភាគសារអេឡិចត្រូនិច"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__template_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail__template_id
 msgid "Email Template"
-msgstr ""
+msgstr "គំរូអ៊ីម៉ែល"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
 msgid "End Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទបញ្ចប់"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end_located
 msgid "End Date Located"
-msgstr ""
+msgstr "កាលបរិច្ឆេទបញ្ចប់មានទីតាំង"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -1020,19 +1423,19 @@ msgstr "ព្រិត្តិការណ៍"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "ព្រឹត្តិការណ៍ផ្ញើសារដោយស្វ័យប្រវត្តិ"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
 msgid "Event Badge"
-msgstr ""
+msgstr "ផ្លាកសញ្ញាព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Categories"
-msgstr ""
+msgstr "ប្រភេទព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1041,39 +1444,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Category"
-msgstr ""
+msgstr "ប្រភេទព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.model,name:event.model_event_confirm
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
-msgstr ""
+msgstr "ការបញ្ជាក់ព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
 msgid "Event End Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទបញ្ចប់ព្រឹត្តិការណ៍"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
-msgstr ""
+msgstr "ពត៌មានព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_logo
 msgid "Event Logo"
-msgstr ""
+msgstr "រូបសញ្ញាព្រឹត្តិការណ៍"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr ""
+msgstr "កាលវិភាគកម្មវិធីអ៊ីមែល"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr ""
+msgstr "អ្នកកំណត់ពេលវេលាព្រឹត្តិការណ៍សំបុត្រ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1083,7 +1486,7 @@ msgstr "ឈ្មោះព្រឹត្តការណ៍"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_calendar
 msgid "Event Organization"
-msgstr ""
+msgstr "ការរៀបចំព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -1091,7 +1494,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
-msgstr ""
+msgstr "ការចុះឈ្មោះព្រឹត្តិការណ៍"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:143
@@ -1110,24 +1513,36 @@ msgid ""
 "                              - or the responsible of the event,\n"
 "                              - or the last writer of the template."
 msgstr ""
+"អ្នករៀបចំព្រឹត្តិការណ៍សម្រាប់:\n"
+"                              - ព្រឹត្តិការណ៍: %s (%s)\n"
+"                              - ការវិភាគ: %s\n"
+"                              - តារាង: %s (%s)\n"
+"\n"
+"                            បានបរាជ័យដោយមានកំហុស:\n"
+"                              - %s\n"
+"\n"
+"                            អ្នកទទួលអ៊ីមែលនេះពីព្រោះអ្នកជា:\n"
+"                              - អ្នករៀបចំព្រឹត្តិការណ៍នេះ,\n"
+"                              - ឬការទទួលខុសត្រូវនៃព្រឹត្តិការណ៍នេះ,\n"
+"                              - ឬអ្នកនិពន្ធចុងក្រោយនៃគំរូ។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Start Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទចាប់ផ្តើមព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
 msgid "Event Type"
-msgstr ""
+msgstr "ប្រភេទព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
-msgstr ""
+msgstr "ព្រឹត្តិការណ៍៖ អ្នករៀបចំសំបុត្រ"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1142,17 +1557,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
-msgstr ""
+msgstr "ព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_event_action_pivot
 msgid "Events Analysis"
-msgstr ""
+msgstr "ការវិភាគព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr ""
+msgstr "កាលវិភាគកម្មវិធីអ៊ីមែល"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -1160,6 +1575,8 @@ msgid ""
 "Events and registrations will automatically be confirmed\n"
 "                                            upon creation, easing the flow for simple events."
 msgstr ""
+"ព្រឹត្តិការណ៍និងការចុះឈ្មោះនឹងត្រូវបានបញ្ជាក់ដោយស្វ័យប្រវត្តិ\n"
+"                                            លើការបង្កើតការកាត់បន្ថយលំហូរសម្រាប់ព្រឹត្តិការណ៍សាមញ្ញ។"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__auto_confirm
@@ -1167,54 +1584,56 @@ msgid ""
 "Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
+"ព្រឹត្តិការណ៍និងការចុះឈ្មោះនឹងត្រូវបានបញ្ជាក់ដោយស្វ័យប្រវត្តិនៅពេលបង្កើតហើយនឹងជួយកាត់បន្ថយលំហូរសម្រាប់ព្រឹត្តិការណ៍សាមញ្ញ"
+" ៗ ។"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Events in New state"
-msgstr ""
+msgstr "ព្រឹត្តិការណ៍នៅរដ្ឋថ្មី។"
 
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Exhibition"
-msgstr ""
+msgstr "ពិព័រណ៍"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Expected"
-msgstr ""
+msgstr "បានរំពឹងទុក"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr ""
+msgstr "បានរំពឹងទុកអ្នកចូលរួម"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
-msgstr ""
+msgstr "បញ្ចប់ព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "អ្នកតាម"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_channel_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "អ្នកតាម (ឆានែល)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_partner_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "អ្នកដើរតាម (ដៃគូរ)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
-msgstr ""
+msgstr "សម្រាប់ពត៌មានបន្ថែមផ្សេងទៀត,សូមទាក់ទងពួកយើងនៅ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -1222,6 +1641,9 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
+"សម្រាប់រាល់ព្រឹត្តិការណ៍ "
+"អ្នកអាចកំណត់ចំនួនអតិបរមានៃការចុះឈ្មោះកន្លែងអង្គុយ(ចំនួនអ្នកចូលរួម) "
+"លើសពីចំនួននេះការចុះឈ្មោះមិនត្រូវបានទទួលទេ។"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_min
@@ -1230,16 +1652,20 @@ msgid ""
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
+"សម្រាប់ព្រឹត្តិការណ៍នីមួយៗអ្នកអាចកំណត់កន្លែងបម្រុងអប្បបរមា (ចំនួនអ្នកចូលរួម)"
+" "
+"ប្រសិនបើវាមិនបានឈានដល់ការចុះឈ្មោះដែលបានរៀបរាប់ព្រឹត្តិការណ៍មិនអាចត្រូវបានបញ្ជាក់ទេ"
+" (ទុកឱ្យ 0 មិនអើពើនឹងច្បាប់នេះ)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr ""
+msgstr "លំហូរមុខងារនៃកម្មវិធីសំខាន់;"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Functions"
-msgstr ""
+msgstr "មុខងារ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1250,23 +1676,23 @@ msgstr "ជា​ក្រុម​តាម"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Having attended this conference, participants should be able to:"
-msgstr ""
+msgstr "ដោយបានចូលរួមសន្និសីទនេះអ្នកចូលរួមគួរតែអាច៖"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Hello World"
-msgstr ""
+msgstr "សួស្តីពិភពលោក"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Hour(s)"
-msgstr ""
+msgstr "ម៉ោង(s)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "How to Debug"
-msgstr ""
+msgstr "វិធីបំបាត់កំហុស"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1274,6 +1700,8 @@ msgid ""
 "I did not expect such a great learning experience. I feel like I can develop"
 " anything now."
 msgstr ""
+"ខ្ញុំមិនរំពឹងថានឹងទទួលបានបទពិសោធន៍រៀនសូត្រដ៏អស្ចារ្យបែបនេះទេ។ "
+"ខ្ញុំមានអារម្មណ៍ថាខ្ញុំអាចអភិវឌ្ឍអ្វីៗបានឥឡូវនេះ។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__id
@@ -1290,19 +1718,19 @@ msgstr "ID"
 #: model:ir.model.fields,help:event.field_event_event__message_unread
 #: model:ir.model.fields,help:event.field_event_registration__message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "ប្រសិនបើបានពិនិត្យសារថ្មីតម្រូវឱ្យអ្នកយកចិត្តទុកដាក់។"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "ប្រសិនបើបានគូសធីកសារថ្មីទាមទារការយកចិត្តទុកដាក់របស់អ្នក។"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "ប្រសិនបើបានគូសធីកសារខ្លះមានកំហុសបញ្ជូន។"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__state
@@ -1312,69 +1740,74 @@ msgid ""
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"ប្រសិនបើព្រឹត្តិការណ៍ត្រូវបានបង្កើតស្ថានភាពគឺ 'ព្រាង' ។ "
+"ប្រសិនបើព្រឹត្តិការណ៍ត្រូវបានបញ្ជាក់សម្រាប់កាលបរិច្ឆេទជាក់លាក់នោះស្ថានភាពត្រូវបានកំណត់ទៅ"
+" 'បានបញ្ជាក់' ។ ប្រសិនបើព្រឹត្តិការណ៍ត្រូវបានបញ្ចប់ស្ថានភាពត្រូវបានកំណត់ទៅជា"
+" 'ធ្វើរួច' ។ ប្រសិនបើព្រឹត្តិការណ៍ត្រូវបានលុបចោលស្ថានភាពត្រូវបានកំណត់ទៅ "
+"'បានបោះបង់' ។"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
+msgstr "ភ្លាមៗ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Install and administer your own server;"
-msgstr ""
+msgstr "តំឡើងនិងគ្រប់គ្រងម៉ាស៊ីនមេផ្ទាល់ខ្លួន។"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Integrated Help"
-msgstr ""
+msgstr "ជំនួយរួម"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
-msgstr ""
+msgstr "ចន្លោះពេល"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Introduction to JQuery"
-msgstr ""
+msgstr "សេចក្តីផ្តើមអំពី JQuery"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Introduction to Javascript"
-msgstr ""
+msgstr "សេចក្តីណែនាំអំពីចាវ៉ាស្គ្រីស"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Introduction to QWeb"
-msgstr ""
+msgstr "សេចក្តីណែនាំអំពី QWeb "
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Introduction, CRM, Sales Management"
-msgstr ""
+msgstr "សេចក្តីផ្តើម, CRM, ការគ្រប់គ្រងការលក់"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
 #: model:ir.model.fields,field_description:event.field_event_registration__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "ត្រូវតាមអ្នក"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr ""
+msgstr "វានឹងជ្រើសរើសតម្លៃអតិបរមាលំនាំដើមនៅពេលអ្នកជ្រើសរើសព្រឹត្តិការណ៍នេះ។"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_min
 msgid "It will select this default minimum value when you choose this event"
-msgstr ""
+msgstr "វានឹងជ្រើសរើសតម្លៃអប្បបរមាលំនាំដើមនៅពេលអ្នកជ្រើសរើសព្រឹត្តិការណ៍នេះ។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__color
 msgid "Kanban Color Index"
-msgstr ""
+msgstr "សន្ទស្សន៍ពណ៌ខានៀន"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm____last_update
@@ -1412,114 +1845,114 @@ msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "មានកំណត់"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
 msgid "Limited Seats"
-msgstr ""
+msgstr "កន្លែងអង្គុយមានកំណត់"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Location"
-msgstr ""
+msgstr "តំបន់"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "Logo"
-msgstr ""
+msgstr "រូបសញ្ញា"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Loops"
-msgstr ""
+msgstr "រង្វិលជុំ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Luigi Roni, Senior Event Manager"
-msgstr ""
+msgstr "Luigi Roni ប្រធានគ្រប់គ្រងព្រឹត្តិការណ៍ជាន់ខ្ពស់។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
 msgid "Mail Registration"
-msgstr ""
+msgstr "ការចុះឈ្មោះតាមអ៊ីមែល។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_mail_ids
 #: model:ir.model.fields,field_description:event.field_event_type__event_type_mail_ids
 msgid "Mail Schedule"
-msgstr ""
+msgstr "តារាងសំបុត្រ។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduler_id
 msgid "Mail Scheduler"
-msgstr ""
+msgstr "ការវិភាគអ៊ីម៉ែល"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
-msgstr ""
+msgstr "អ្នកកំណត់ពេលវេលាសំបុត្"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "កំណត់ពេលអ៊ីមែលតាមប្រភេទព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "ការផ្ញើរអ៊ីម៉ែល"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_sent
 msgid "Mail Sent on Event"
-msgstr ""
+msgstr "សំបុត្របានផ្ញើលើព្រឹត្តិការណ៍"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_main_attachment_id
 #: model:ir.model.fields,field_description:event.field_event_registration__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "ឯកសារភ្ជាប់សំខាន់"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
-msgstr ""
+msgstr "គ្រប់គ្រង & amp; ផ្សព្វផ្សាយកាលវិភាគជាមួយបទ។"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Manager"
-msgstr ""
+msgstr "អ្នកគ្រប់គ្រង"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_availability
 msgid "Maximum Attendees"
-msgstr ""
+msgstr "អ្នកចូលរួមអតិបរមា"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_max
 msgid "Maximum Attendees Number"
-msgstr ""
+msgstr "ចំនួនអ្នកចូលរួមអតិបរមា"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_registration_max
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "ការចុះឈ្មោះអតិបរមា"
 
 #. module: event
 #: code:addons/event/models/event.py:258
 #, python-format
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
-msgstr ""
+msgstr "ចំនួនអ្នកចូលរួមអតិបរមាគួរតែធំជាងចំនួនអ្នកចូលរួមអប្បបរមា។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "កំហុសក្នុងការផ្ញើសារ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_ids
@@ -1530,119 +1963,119 @@ msgstr "សារ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_min
 msgid "Minimum Attendees"
-msgstr ""
+msgstr "អ្នកចូលរួមអប្បបរមា"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_registration_min
 msgid "Minimum Registrations"
-msgstr ""
+msgstr "ការចុះឈ្មោះអប្បបរមា"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Modules"
-msgstr ""
+msgstr "ម៉ូឌុល"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Month(s)"
-msgstr ""
+msgstr "ខែ(s)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "My Events"
-msgstr ""
+msgstr "ព្រឹត្តិការណ៍របស់ខ្ញុំ"
 
 #. module: event
 #: code:addons/event/models/event.py:263
 #, python-format
 msgid "No more available seats."
-msgstr ""
+msgstr "មិនមានកន្លែងអង្គុយទៀតទេ។"
 
 #. module: event
 #: code:addons/event/models/event.py:369
 #, python-format
 msgid "No more seats available for this event."
-msgstr ""
+msgstr "មិនមានកន្លែងទំនេរទៀតទេសម្រាប់ព្រឹត្តិការណ៍នេះ។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "ចំនួនសកម្មភាព"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
 msgid "Number of Expected Attendees"
-msgstr ""
+msgstr "ចំនួនអ្នកចូលរួមរំពឹងទុក"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
 msgid "Number of Participants"
-msgstr ""
+msgstr "ចំនួនអ្នកចូលរួម"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "ចំនួនកំហុស"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner__event_count
 #: model:ir.model.fields,help:event.field_res_users__event_count
 msgid "Number of events the partner has participated."
-msgstr ""
+msgstr "ចំនួនព្រឹត្តិការណ៍ដែលដៃគូបានចូលរួម"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "ចំនួនសារដែលទាមទារសកម្មភាព"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "ចំនួនសារដែលមានកំហុសឆ្គងនៃការដឹកជញ្ជូន"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_unread_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "ចំនួនសារមិនទាន់អាន"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Odoo Official Website"
-msgstr ""
+msgstr "គេហទំព័រផ្លូវការរបស់អូដូ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Odoo Web Client"
-msgstr ""
+msgstr "បើកគេហទំព័រអតិថិជន"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_online
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Online"
-msgstr ""
+msgstr "បើកប្រពន្ឋ័ទាក់ទង"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_online
 #: model:ir.model.fields,field_description:event.field_event_type__is_online
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Online Event"
-msgstr ""
+msgstr "បើកគេហទំព័រអតិថិជន"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Online Events"
-msgstr ""
+msgstr "ព្រឹត្តិការណ៍តាមអ៊ីនធឺណិត"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
 msgid "Online Ticketing"
-msgstr ""
+msgstr "ការលក់សំបុត្រតាមអ៊ីនធឺណិត"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -1650,6 +2083,8 @@ msgid ""
 "Online events like webinars do not require a specific location\n"
 "                                            and are hosted online."
 msgstr ""
+"ព្រឹត្តិការណ៍តាមអ៊ិនធរណេតដូចជាគេហទំព័រមិនតម្រូវឱ្យមានទីតាំងជាក់លាក់ទេ\n"
+"                                            និងត្រូវបានបង្ហោះតាមអ៊ីនធឺណិត។"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__is_online
@@ -1657,11 +2092,12 @@ msgid ""
 "Online events like webinars do not require a specific location and are "
 "hosted online."
 msgstr ""
+"ព្រឹត្តិការណ៍តាមអ៊ិនធរណេតដូចជាគេហទំព័រមិនតម្រូវឱ្យមានទីតាំងជាក់លាក់ទេហើយត្រូវបានរៀបចំនៅលើអ៊ីនធឺណិត។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
 msgid "Organizer"
-msgstr ""
+msgstr "អ្នករៀបចំ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -1674,6 +2110,8 @@ msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
 msgstr ""
+"អ្នកចូលរួមត្រូវបានគេរំពឹងថានឹងមានចំនេះដឹងខ្លះនៅក្នុងការសរសេរកម្មវិធី។ "
+"ចំណេះដឹងមូលដ្ឋាននៃការបង្កើតកម្មវិធី Python ត្រូវបានណែនាំ។"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1681,6 +2119,8 @@ msgid ""
 "Participants preferably have a functional knowledge of our software (see "
 "Functional Training)."
 msgstr ""
+"អ្នកចូលរួមមានចំនេះដឹងអំពីមុខងាររបស់សូហ្វវែររបស់យើង "
+"(សូមមើលការបណ្តុះបណ្តាលមុខងារ)។"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -1695,44 +2135,45 @@ msgstr "ទូរស័ព្ទ"
 #. module: event
 #: model:event.type,name:event.event_type_data_physical
 msgid "Physical Event"
-msgstr ""
+msgstr "ព្រឹត្តិការណ៍រាងកាយ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
 msgstr ""
+"ចំណុចនៃការលក់ (ម៉ាស៊ីនឆូតកាត) សេចក្តីណែនាំដើម្បីរាយការណ៍អំពីការប្តូរតាមបំណង។"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Project management, Human resources, Contract management."
-msgstr ""
+msgstr "ការគ្រប់គ្រងគម្រោងធនធានមនុស្សការគ្រប់គ្រងកិច្ចសន្យា។"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr ""
+msgstr "ការទិញការលក់ & amp; ការគ្រប់គ្រងការទិញគណនេយ្យហិរញ្ញវត្ថុ។"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Python Objects"
-msgstr ""
+msgstr "Python Objects"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Read Great Contents"
-msgstr ""
+msgstr "អានមាតិកាដ៏អស្ចារ្យ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration__origin
 msgid ""
 "Reference of the document that created the registration, for example a sales"
 " order"
-msgstr ""
+msgstr "ឯកសារយោងនៃឯកសារដែលបានបង្កើតការចុះឈ្មោះឧទាហរណ៍បញ្ជាលក់។"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Register with this event"
-msgstr ""
+msgstr "ចុះឈ្មោះជាមួយព្រឹត្តិការណ៍នេះ។"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1741,53 +2182,53 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_pivot
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Registration"
-msgstr ""
+msgstr "ការចុះឈ្មោះ"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_registration_badge
 msgid "Registration Badge"
-msgstr ""
+msgstr "ផ្លាកសញ្ញាចុះឈ្មោះ។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_open
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទ​ចុះបញ្ជី"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
-msgstr ""
+msgstr "លេខសម្គាល់ការចុះឈ្មោះ"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr ""
+msgstr "កម្មវិធីកំណត់អ៊ីមែលចុះឈ្មោះ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr ""
+msgstr "សំបុត្រចុះឈ្មោះ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_questions
 msgid "Registration Survey"
-msgstr ""
+msgstr "ការស្ទង់មតិការចុះឈ្មោះ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr ""
+msgstr "សំបុត្រចុះឈ្មោះ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Report Engine"
-msgstr ""
+msgstr "ម៉ាស៊ីនរបាយការណ៍"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reporting"
-msgstr ""
+msgstr "របាយការណ៌"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1797,23 +2238,23 @@ msgstr "តម្រូវការ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 msgid "Reserved Seats"
-msgstr ""
+msgstr "កន្លែងអង្គុយបម្រុងទុក"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__user_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Responsible"
-msgstr ""
+msgstr "ការទទួលខុសត្រូវ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Scan badges to confirm attendances"
-msgstr ""
+msgstr "ស្កេនផ្លាកសញ្ញាដើម្បីបញ្ជាក់ពីការចូលរួម"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr ""
+msgstr "កាលវិភាគនិងបទ"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -1821,78 +2262,80 @@ msgid ""
 "Schedule and organize your events efficiently:\n"
 "                track registrations and participations, automate the confirmation emails, sell tickets, etc."
 msgstr ""
+"រៀបចំកាលវិភាគនិងរៀបចំព្រឹត្តិការណ៍របស់អ្នកប្រកបដោយប្រសិទ្ធភាព៖\n"
+"                តាមដានការចុះឈ្មោះនិងការចូលរួមស្វ័យប្រវត្តិកម្មអ៊ីម៉ែលបញ្ជាក់ការលក់សំបុត្រ។ ល។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
 msgid "Scheduled Sent Mail"
-msgstr ""
+msgstr "បានផ្ញើសំបុត្រដែលបានគ្រោងទុក"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduled_date
 msgid "Scheduled Time"
-msgstr ""
+msgstr "កំណត់ពេលវេលា"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr ""
+msgstr "លក់សំបុត្រនៅលើគេហទំព័ររបស់អ្នក"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr ""
+msgstr "លក់សំបុត្រជាមួយការបញ្ជាទិញការលក់"
 
 #. module: event
 #: model:event.type,name:event.event_type_0
 msgid "Seminar"
-msgstr ""
+msgstr "សិក្ខាសាលា"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
-msgstr ""
+msgstr "ផ្ញើ​តាមរយៈ​អ៊ី​ម៉ែ​ល"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__done
 msgid "Sent"
-msgstr ""
+msgstr "បានផ្ងើរ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Set To Draft"
-msgstr ""
+msgstr "កំណត់ជាសេចក្ដីព្រាង"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Set To Unconfirmed"
-msgstr ""
+msgstr "កំណត់ទៅមិនបានបញ្ជាក់។"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
-msgstr ""
+msgstr "ការកំណត់"
 
 #. module: event
 #: model:event.type,name:event.event_type_3
 msgid "Show"
-msgstr ""
+msgstr "បង្ហាញ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__origin
 msgid "Source Document"
-msgstr ""
+msgstr "ធនធានឯកសារ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Start Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទ​ចាប់ផ្តើម"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin_located
 msgid "Start Date Located"
-msgstr ""
+msgstr "ការចាប់ផ្តើមពេលវេលានៃទីតាំង"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__state
@@ -1900,13 +2343,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Status"
-msgstr ""
+msgstr "ស្ថានភាព"
 
 #. module: event
 #: code:addons/event/models/event.py:269
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
-msgstr ""
+msgstr "កាលបរិច្ឆេទបិទមិនអាចលឿនជាងកាលបរិច្ឆេទចាប់ផ្តើម។"
 
 #. module: event
 #: code:addons/event/models/event.py:313
@@ -1915,6 +2358,8 @@ msgid ""
 "There are already attendees who attended this event. Please reset it to "
 "draft if you want to cancel this event."
 msgstr ""
+"មានអ្នកចូលរួមដែលបានចូលរួមព្រឹត្តិការណ៍នេះរួចហើយ។ "
+"សូមកំណត់វាឡើងវិញដើម្បីព្រាងប្រសិនបើអ្នកចង់បោះបង់ព្រឹត្តិការណ៍នេះ។"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1922,98 +2367,100 @@ msgid ""
 "This course help me build my first application within a month. Definetly "
 "worth its price."
 msgstr ""
+"គ្គសិក្សានេះជួយខ្ញុំក្នុងការបង្កើតកម្មវិធីដំបូងរបស់ខ្ញុំក្នុងរយៈពេលមួយខែ។ "
+"ពិតជាមានតម្លៃណាស់។"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__template_id
 #: model:ir.model.fields,help:event.field_event_type_mail__template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
-msgstr ""
+msgstr "វាលនេះមានគំរូនៃសំបុត្រដែលនឹងត្រូវបានផ្ញើដោយស្វ័យប្រវត្តិ។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets"
-msgstr ""
+msgstr "សំបុត្រ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
-msgstr ""
+msgstr "ល្វែងម៉ោង"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "To get more information, visit the"
-msgstr ""
+msgstr "ដើម្បីទទួលបានព័ត៌មានបន្ថែមសូមទស្សនាគេហទំព័រ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
 msgid "Tracks and Agenda"
-msgstr ""
+msgstr "បែបបទនិងរបៀបវារៈ"
 
 #. module: event
 #: model:event.type,name:event.event_type_4
 msgid "Training"
-msgstr ""
+msgstr "ការបណ្តុះបណ្តាល"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Training Center Module"
-msgstr ""
+msgstr "ម៉ូឌុលមជ្ឈមណ្ឌលបណ្តុះបណ្តាល"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
 msgid "Trigger"
-msgstr ""
+msgstr "កេះ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_type
 msgid "Trigger "
-msgstr ""
+msgstr "កេះ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__twitter_hashtag
 #: model:ir.model.fields,field_description:event.field_event_type__default_hashtag
 msgid "Twitter Hashtag"
-msgstr ""
+msgstr "Twitter Hashtag"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unconfirmed"
-msgstr ""
+msgstr "មិនបញ្ជាក់"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "ការកក់កន្លែងអង្គុយដែលមិនបានបញ្ជាក់។"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Underscore"
-msgstr ""
+msgstr "គូសក្រោម"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Understand the development concepts and architecture;"
-msgstr ""
+msgstr "ស្វែងយល់ពីគំនិតអភិវឌ្ឍន៍និងស្ថាបត្យកម្ម;"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr ""
+msgstr "ស្វែងយល់អំពីម៉ូឌុលផ្សេងៗ។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_unit
 msgid "Unit"
-msgstr ""
+msgstr "ឯកតា"
 
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Unlimited"
-msgstr ""
+msgstr "គ្មានដែនកំណត់"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_unread
@@ -2027,37 +2474,37 @@ msgstr "សារមិនទាន់អាន"
 #: model:ir.model.fields,field_description:event.field_event_event__message_unread_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "រាប់សារមិនទាន់អាន"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming events from today"
-msgstr ""
+msgstr "ព្រឹត្តិការណ៍ជិតមកដល់ចាប់ពីថ្ងៃនេះ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming/Running"
-msgstr ""
+msgstr "ជិតមកដល់ / កំពុងដំណើរការ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_hashtag
 msgid "Use Default Hashtag"
-msgstr ""
+msgstr "ប្រើហាសតាកាក់លំនាំដើម"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_timezone
 msgid "Use Default Timezone"
-msgstr ""
+msgstr "ប្រើតំបន់ពេលវេលាលំនាំដើម"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
 msgid "User"
-msgstr ""
+msgstr "អ្នកប្រើប្រាស់"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Variables &amp; Operators"
-msgstr ""
+msgstr "អថេរ & amp; ប្រតិបត្តិករ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -2068,12 +2515,13 @@ msgstr "ភាពមើលឃើញ"
 #: code:addons/event/models/event_mail.py:130
 #, python-format
 msgid "WARNING: Event Scheduler Error for event: %s"
-msgstr ""
+msgstr "ការព្រមាន៖ កំហុសកម្មវិធីកំណត់ព្រឹត្តិការណ៍សម្រាប់ព្រឹត្តិការណ៍៖: %s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
 msgstr ""
+"ការគ្រប់គ្រងឃ្លាំងផលិតកម្ម (អេ។ ភី។ អេ។ ភី) និង amp; ការលក់នាំចូល / នាំចេញ។"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
@@ -2091,97 +2539,97 @@ msgstr "ប្រវត្តិទំនាក់ទំនងវែបសាយ
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Week(s)"
-msgstr ""
+msgstr "សប្តាហ៌"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "What do people say about this course?"
-msgstr ""
+msgstr "តើប្រជាជនធ្វើអ្វីខ្លះអំពីវគ្គសិក្សានេះ?"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "What you will learn?"
-msgstr ""
+msgstr "តើអ្នកនឹងរៀនអ្វីខ្លះ?"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Workflows"
-msgstr ""
+msgstr "លំហូរការងារ។"
 
 #. module: event
 #: code:addons/event/models/event.py:426
 #, python-format
 msgid "You must wait the event confirmation before doing this action."
-msgstr ""
+msgstr "អ្នកត្រូវរង់ចាំការបញ្ជាក់ពីព្រឹត្តិការណ៍មុនពេលធ្វើសកម្មភាពនេះ។"
 
 #. module: event
 #: code:addons/event/models/event.py:428
 #, python-format
 msgid "You must wait the event starting day before doing this action."
-msgstr ""
+msgstr "អ្នកត្រូវរង់ចាំព្រឹត្តិការណ៍ចាប់ផ្តើមនៅមុនពេលធ្វើសកម្មភាពនេះ។"
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for ${object.event_id.name}"
-msgstr ""
+msgstr "ផ្លាកសញ្ញារបស់អ្នកសម្រាប់ $ {object.event_id.name}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at ${object.event_id.name}"
-msgstr ""
+msgstr "ការចុះឈ្មោះរបស់អ្នកនៅ $ {object.event_id.name}"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
-msgstr ""
+msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "drinks and lunch;"
-msgstr ""
+msgstr "ភេសជ្ជៈនិងអាហារថ្ងៃត្រង់;"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "events@odoo.com"
-msgstr ""
+msgstr "events@odoo.com"
 
 #. module: event
 #: code:addons/event/models/event.py:526
 #, python-format
 msgid "in %d days"
-msgstr ""
+msgstr "ខាងក្នុង %d ថ្ងៃ"
 
 #. module: event
 #: code:addons/event/models/event.py:530
 #, python-format
 msgid "next month"
-msgstr ""
+msgstr "ខែក្រោយ"
 
 #. module: event
 #: code:addons/event/models/event.py:528
 #, python-format
 msgid "next week"
-msgstr ""
+msgstr "អាទិត្យក្រោយ"
 
 #. module: event
 #: code:addons/event/models/event.py:532
 #, python-format
 msgid "on "
-msgstr ""
+msgstr "ខាងលើ"
 
 #. module: event
 #: code:addons/event/models/event.py:522
 #, python-format
 msgid "today"
-msgstr ""
+msgstr "ថ្ងៃនេះ"
 
 #. module: event
 #: code:addons/event/models/event.py:524
 #, python-format
 msgid "tomorrow"
-msgstr ""
+msgstr "ថ្ងៃស្អែក"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "training material."
-msgstr ""
+msgstr "ការបណ្តុះបណ្តាលដោយផ្ទាល់"

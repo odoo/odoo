@@ -8,16 +8,15 @@
 # Pietro Della Notte <pdellanotte@gmail.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
+# Simone Bernini <simone@aperturelabs.it>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
+# Martin Trigaux, 2018
 # Giovanni Perteghella <giovanni@perteghella.org>, 2018
 # David Minneci <david@numeko.it>, 2018
 # Paolo Valier, 2018
-# mymage <stefano.consolaro@mymage.it>, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
-# Martin Trigaux, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
@@ -166,14 +165,14 @@ msgstr "'%s' non è una data-ora corretta"
 #: code:addons/web/static/src/js/fields/field_utils.js:512
 #, python-format
 msgid "'%s' is not a correct float"
-msgstr "'%s' non è un float corretto"
+msgstr "\"%s\" non è un virgola mobile corretto"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/field_utils.js:602
 #, python-format
 msgid "'%s' is not a correct integer"
-msgstr "'%s' non è un intero corretto"
+msgstr "\"%s\" non è un intero corretto"
 
 #. module: web
 #. openerp-web
@@ -209,7 +208,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:77
 #, python-format
 msgid "(no string)"
-msgstr "(no string)"
+msgstr "(nessuna stringa)"
 
 #. module: web
 #. openerp-web
@@ -228,22 +227,22 @@ msgstr "1 record"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"E-mail\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Codice fiscale\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Sito web\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Telefono\"/>"
 
 #. module: web
 #. openerp-web
@@ -423,7 +422,7 @@ msgstr "Aggiungi nuovo valore"
 #: code:addons/web/static/src/xml/base.xml:615
 #, python-format
 msgid "Add node"
-msgstr ""
+msgstr "Aggiungi nodo"
 
 #. module: web
 #. openerp-web
@@ -573,7 +572,7 @@ msgstr "Archivia tutto"
 #: code:addons/web/static/src/js/fields/basic_fields.js:2047
 #, python-format
 msgid "Archived"
-msgstr "Archiviati"
+msgstr "Archiviato"
 
 #. module: web
 #. openerp-web
@@ -780,7 +779,7 @@ msgstr "Colore scheda: %s"
 #: code:addons/web/static/src/xml/base.xml:178
 #, python-format
 msgid "Change Password"
-msgstr "Cambia Password"
+msgstr "Modifica password"
 
 #. module: web
 #. openerp-web
@@ -803,7 +802,7 @@ msgstr "scegli"
 #: code:addons/web/static/src/xml/base.xml:1007
 #, python-format
 msgid "Clear"
-msgstr "Pulisci"
+msgstr "Rimuovi"
 
 #. module: web
 #. openerp-web
@@ -902,7 +901,7 @@ msgstr "Contesto:"
 #: code:addons/web/static/src/xml/menu.xml:200
 #, python-format
 msgid "Control"
-msgstr "Controllo"
+msgstr "Control"
 
 #. module: web
 #. openerp-web
@@ -910,7 +909,7 @@ msgstr "Controllo"
 #: code:addons/web/static/src/js/services/crash_manager.js:129
 #, python-format
 msgid "Copied !"
-msgstr "Copiato"
+msgstr "Copiato!"
 
 #. module: web
 #. openerp-web
@@ -958,7 +957,7 @@ msgstr "Non è possibile serializzare l'XML"
 #: code:addons/web/static/src/xml/base.xml:540
 #, python-format
 msgid "Count"
-msgstr "Numero"
+msgstr "Numero totale"
 
 #. module: web
 #. openerp-web
@@ -978,7 +977,7 @@ msgstr "Crea"
 #: code:addons/web/static/src/js/views/form/form_controller.js:616
 #, python-format
 msgid "Create "
-msgstr ""
+msgstr "Crea"
 
 #. module: web
 #. openerp-web
@@ -999,7 +998,7 @@ msgstr "Crea un %s"
 #: code:addons/web/static/src/xml/menu.xml:159
 #, python-format
 msgid "Create a new record"
-msgstr "Creazione di un nuovo record"
+msgstr "Crea un nuovo record"
 
 #. module: web
 #. openerp-web
@@ -1027,7 +1026,7 @@ msgstr "Creazione: "
 #: code:addons/web/static/src/js/views/calendar/calendar_controller.js:245
 #, python-format
 msgid "Create: %s"
-msgstr ""
+msgstr "Crea: %s"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_report_layout__create_uid
@@ -1246,14 +1245,14 @@ msgstr "Dominio:"
 #: code:addons/web/static/src/js/core/misc.js:16
 #, python-format
 msgid "Don't leave yet,<br />it's still loading..."
-msgstr "Caricamento ancora in corso...<br />non abbandonare"
+msgstr "Caricamento ancora in corso,<br />non abbandonare..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:546
 #, python-format
 msgid "Download xls"
-msgstr "Scarica xls"
+msgstr "Scarica XLS"
 
 #. module: web
 #. openerp-web
@@ -1334,12 +1333,12 @@ msgstr "Modifica un record"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Email:"
-msgstr "Email:"
+msgstr "E-mail:"
 
 #. module: web
 #. openerp-web
@@ -1554,7 +1553,7 @@ msgstr "Inverti assi"
 #: code:addons/web/static/src/xml/kanban.xml:21
 #, python-format
 msgid "Fold"
-msgstr "Ripiega"
+msgstr "Minimizza"
 
 #. module: web
 #. openerp-web
@@ -1581,7 +1580,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form/form_view.js:18
 #, python-format
 msgid "Form"
-msgstr "Modulo"
+msgstr "modulo"
 
 #. module: web
 #. openerp-web
@@ -1718,7 +1717,7 @@ msgstr "Tonalità"
 #: code:addons/web/static/src/js/core/dialog.js:357
 #, python-format
 msgid "I am sure about this."
-msgstr "Son sicuro di questa operazione."
+msgstr "Conferma l'operazione."
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_report_layout__id
@@ -1745,7 +1744,7 @@ msgstr "Immagine"
 #: code:addons/web/static/src/js/fields/basic_fields.js:2043
 #, python-format
 msgid "Inactive"
-msgstr "Inattivo"
+msgstr "Non attivo"
 
 #. module: web
 #. openerp-web
@@ -2287,14 +2286,14 @@ msgstr "Nessuna"
 #: code:addons/web/static/src/xml/base.xml:923
 #, python-format
 msgid "Not active state"
-msgstr ""
+msgstr "Stato non attivo"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:927
 #, python-format
 msgid "Not active state, click to change it"
-msgstr ""
+msgstr "Stato non attivo, un clic per cambiarlo"
 
 #. module: web
 #. openerp-web
@@ -2361,7 +2360,7 @@ msgstr "Avviso Odoo"
 #: code:addons/web/static/src/js/fields/basic_fields.js:2060
 #, python-format
 msgid "Off"
-msgstr "Off"
+msgstr "Spento"
 
 #. module: web
 #. openerp-web
@@ -2387,7 +2386,7 @@ msgstr "Vecchia password"
 #: code:addons/web/static/src/js/fields/basic_fields.js:2059
 #, python-format
 msgid "On"
-msgstr "On"
+msgstr "Acceso"
 
 #. module: web
 #. openerp-web
@@ -2402,6 +2401,12 @@ msgstr "On change:"
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Sono validi solo i numeri interi."
+
+#. module: web
+#: code:addons/web/static/src/js/fields/basic_fields.js:1982
+#, python-format
+msgid "Only Integer or Float Value should be valid."
+msgstr ""
 
 #. module: web
 #: code:addons/web/controllers/main.py:502
@@ -2431,7 +2436,7 @@ msgstr "Opacità %"
 #: code:addons/web/static/src/js/fields/basic_fields.js:2052
 #, python-format
 msgid "Open"
-msgstr "Aperto"
+msgstr "Apri"
 
 #. module: web
 #. openerp-web
@@ -2452,21 +2457,21 @@ msgstr "Apri vista"
 #: code:addons/web/static/src/xml/menu.xml:195
 #, python-format
 msgid "Open the next record"
-msgstr ""
+msgstr "Apri il record successivo"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:186
 #, python-format
 msgid "Open the previous record"
-msgstr ""
+msgstr "Apri il record precedente"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:177
 #, python-format
 msgid "Open to kanban view"
-msgstr ""
+msgstr "Apri in vista kanban"
 
 #. module: web
 #. openerp-web
@@ -2608,8 +2613,7 @@ msgstr "Aggiornare le traduzioni di:"
 msgid ""
 "Please use the copy button to report the error to your support service."
 msgstr ""
-"Usare il pulsante copia per riportare l'errore al proprio servizio di "
-"supporto."
+"Usare il pulsante copia per segnalare l'errore al servizio di supporto."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -2696,7 +2700,7 @@ msgstr "Trimestre"
 #: code:addons/web/static/src/xml/kanban.xml:32
 #, python-format
 msgid "Quick add"
-msgstr ""
+msgstr "Aggiunta rapida"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_qweb_field_image
@@ -2776,7 +2780,7 @@ msgstr "Rimuovi dai preferiti"
 #: code:addons/web/static/src/xml/base.xml:696
 #, python-format
 msgid "Remove tag"
-msgstr ""
+msgstr "Rimuovi etichetta"
 
 #. module: web
 #. openerp-web
@@ -3094,7 +3098,7 @@ msgstr "Speciale:"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:215
 #, python-format
 msgid "Stacked"
-msgstr ""
+msgstr "In pila"
 
 #. module: web
 #. openerp-web
@@ -3243,7 +3247,7 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/basic_fields.js:1395
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
-msgstr "Il file selezionato eccede la massima dimensione possibile di %s."
+msgstr "Il file selezionato supera la massima dimensione possibile pari a %s."
 
 #. module: web
 #. openerp-web
@@ -3263,8 +3267,8 @@ msgid ""
 "There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 "
 "(.xls) format. Consider splitting the export."
 msgstr ""
-"Impossibile esportare nel formato Excel 97-2003 (.xls) (%s righe, limite: "
-"65535). Valutare di suddividere l'esportazione."
+"Troppe righe, impossibile esportare nel formato Excel 97-2003 (.xls) (%s "
+"righe, limite: 65535). Suddividere l'esportazione."
 
 #. module: web
 #. openerp-web
@@ -3278,28 +3282,28 @@ msgstr "Rilevato un problema durante il caricamento del file"
 #: code:addons/web/static/src/js/views/search/time_range_menu_options.js:13
 #, python-format
 msgid "This Month"
-msgstr "Mese corrente"
+msgstr "Questo mese"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search/time_range_menu_options.js:14
 #, python-format
 msgid "This Quarter"
-msgstr "Trimestre corrente"
+msgstr "Questo trimestre"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search/time_range_menu_options.js:12
 #, python-format
 msgid "This Week"
-msgstr "Settimana corrente"
+msgstr "Questa settimana"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search/time_range_menu_options.js:15
 #, python-format
 msgid "This Year"
-msgstr "Anno corrente"
+msgstr "Quest'anno"
 
 #. module: web
 #. openerp-web
@@ -3441,7 +3445,7 @@ msgid ""
 "Unable to find Wkhtmltopdf on this system. The report will be shown in html."
 msgstr ""
 "Impossibile trovare wkhtmltopdf nel sistema, il resoconto verrà mostrato in "
-"html."
+"HTML."
 
 #. module: web
 #. openerp-web
@@ -3476,7 +3480,7 @@ msgstr "Non definito"
 #: code:addons/web/static/src/xml/kanban.xml:17
 #, python-format
 msgid "Unfold"
-msgstr "Aprire tutto"
+msgstr "Deminimizza"
 
 #. module: web
 #. openerp-web
@@ -3679,7 +3683,7 @@ msgstr "Ben fatto!"
 #: code:addons/web/static/src/xml/base.xml:1383
 #, python-format
 msgid "What do you want to do?"
-msgstr "Cosa si intende fare?"
+msgstr "Cosa vuoi fare?"
 
 #. module: web
 #. openerp-web
@@ -3713,7 +3717,7 @@ msgstr "Inserito valore errato!"
 #: code:addons/web/static/src/xml/base.xml:290
 #, python-format
 msgid "XML ID:"
-msgstr "XML ID:"
+msgstr "ID XML:"
 
 #. module: web
 #. openerp-web
@@ -3810,7 +3814,7 @@ msgstr ""
 #: code:addons/web/static/src/js/services/crash_manager.js:212
 #, python-format
 msgid "Your Odoo session expired. Please refresh the current web page."
-msgstr "La tua sessione Odoo è scaduta. Aggiorna la pagina corrente."
+msgstr "La sessione Odoo è scaduta. Aggiornare la pagina web corrente."
 
 #. module: web
 #. openerp-web
@@ -3820,6 +3824,8 @@ msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The report will be "
 "shown in html."
 msgstr ""
+"Sembra che wkhtmltopdf non sia stato installato correttamente, il resoconto "
+"verrà mostrato in HTML."
 
 #. module: web
 #. openerp-web

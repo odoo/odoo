@@ -109,7 +109,7 @@
                                             </group>
                                             <group string="Advanced Properties" groups="base.group_no_one">
                                                 <field name="related"/>
-                                                <field name="depends"/>
+                                                <field name="depends" attrs="{'required': [('compute', 'not in', [False, ''])]}"/>
                                                 <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                             </group>
                                             <div groups="base.group_no_one">
@@ -295,7 +295,7 @@
                                 </group>
                                 <group string="Advanced Properties" groups="base.group_no_one">
                                     <field name="related"/>
-                                    <field name="depends" attrs="{'required': [('compute', '!=', False)] }"/>
+                                    <field name="depends" attrs="{'required': [('compute', 'not in', [False, ''])]}"/>
                                     <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                 </group>
                                 <div groups="base.group_no_one">

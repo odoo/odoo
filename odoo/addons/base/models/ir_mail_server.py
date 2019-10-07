@@ -119,10 +119,18 @@ def encode_rfc2822_address_header(header_text):
         # Header as a string, using an unlimited line length.", the old one
         # was "A synonym for Header.encode()." so call encode() directly?
         name = Header(pycompat.to_text(name)).encode()
-        return formataddr((name, email))
+        # if the from does not follow the (name <addr>),* convention, we might
+        # try to encode meaningless strings as address, as getaddresses is naive
+        # note it would also fail on real addresses with non-ascii characters
+        try:
+            return formataddr((name, email))
+        except UnicodeEncodeError:
+            _logger.warning(_('Failed to encode the address %s\n'
+                              'from mail header:\n%s') % (addr, header_text))
+            return ""
 
     addresses = getaddresses([pycompat.to_native(ustr(header_text))])
-    return COMMASPACE.join(encode_addr(a) for a in addresses)
+    return COMMASPACE.join(a for a in (encode_addr(addr) for addr in addresses) if a)
 
 
 class IrMailServer(models.Model):
@@ -270,6 +278,11 @@ class IrMailServer(models.Model):
             smtp_user = pycompat.to_native(ustr(smtp_user))
             smtp_password = pycompat.to_native(ustr(smtp_password))
             connection.login(smtp_user, smtp_password)
+
+        # Some methods of SMTP don't check whether EHLO/HELO was sent.
+        # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
+        connection.ehlo_or_helo_if_needed()
+
         return connection
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,

@@ -296,7 +296,7 @@ Use the following pattern :
   lowercase string briefly explaining the action. This is used only if
   multiple actions are declared for the model.
 * For window actions: suffix the action name by the specific view information
-  like :samp:`{<model_name>}_action_view_{<view_type}`.
+  like :samp:`{<model_name>}_action_view_{<view_type>}`.
 * For a group: :samp:`{<model_name>}_group_{<group_name>}` where *group_name*
   is the name of the group, generally 'user', 'manager', ...
 * For a rule: :samp:`{<model_name>}_rule_{<concerned_group>}` where
@@ -1102,10 +1102,10 @@ description. Try to follow the preferred structure for your commit messages
 
   End the message with references, such as task or bug numbers, PR numbers, and
   OPW tickets, following the suggested format:
-  Related to task #taskId
-  Fixes #12345  (link and close issue on Github)
-  Closes #7865  (link and close PR on Github)
-  OPW-112233
+  task-123 (related to task)
+  Fixes #123  (close related issue on Github)
+  Closes #123  (close related PR on Github)
+  opw-123 (related to ticket)
 
 Tag and module name
 -------------------

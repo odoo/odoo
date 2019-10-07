@@ -10,8 +10,8 @@
 # Thomas Pot <thomas@open2bizz.nl>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
-# Cas Vissers <casvissers@brahoo.nl>, 2018
 # Martin Trigaux, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -3641,7 +3641,7 @@ msgstr ""
 "====================\n"
 "Het specifieke en gemakkelijk te gebruiken factureringssysteem in Odoo staat u toe om uw boekhouding op te volgen, zelfs als u geen boekhouder bent. Het bied een gemakkelijke manier aan om uw leveranciers en klanten op te volgen.\n"
 "\n"
-"U kan de vergemakkelijkte boekhouding gebruiken indien u werkt met een (externe) boekhouding voor uw boeken en als u toch nog uw betalingen wilt opvolgen. Deze module biedt u ook een gemakkelijk manier aan om betaalmethoden te registreren, zonder complete abstracties van rekeningen te coderen."
+"U kan de vergemakkelijkte boekhouding gebruiken indien u werkt met een (externe) boekhouding voor uw boeken en als u toch nog uw betalingen wilt opvolgen. Deze module biedt u ook een gemakkelijk manier aan om betalingsmethodes te registreren, zonder complete abstracties van rekeningen te coderen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_homepage
@@ -3977,13 +3977,13 @@ msgstr ""
 "Beheer vakantieaanvragen en toewijzingen\n"
 "=====================================\n"
 "\n"
-"Deze applicatie beheerd de vakantieschema's van uw bedrijf. Het staat werknemers toe om verlofaanvragen te doen. Vervolgens kunnen managers vakantieaanvragen controleren en ze vervolgens goedkeuren of afwijzen. Op deze manier kan u de algemene vakanties plannen voor uw bedrijf of afdeling.\n"
+"Deze applicatie beheerd de verlofschema's van uw bedrijf. Het staat werknemers toe om verlofaanvragen te doen. Vervolgens kunnen managers vakantieaanvragen controleren en ze vervolgens goedkeuren of afwijzen. Op deze manier kan u de algemene verlof plannen voor uw bedrijf of afdeling.\n"
 "\n"
 "U kan verschillende soorten aanvragen configureren (ziekte, betaalde dagen, ...) en u kan vakantie snel toewijzen aan een werknemer of afdeling door vakantie toewijzingen. Een werknemer kan ook een aanvraag doen voor meer vakantie toewijzingen. Het verhoogt het aantal beschikbare dagen voor dat type vakantie (als het verzoek is goedgekeurd).\n"
 "\n"
-"U kan vakanties opvolgen op verschillende manieren volgen:\n"
+"U kan verlof opvolgen op verschillende manieren volgen:\n"
 "\n"
-"* Vakantiesamenvattingen\n"
+"* Verlofsamenvattingen\n"
 "* Vakantie op afdeling\n"
 "* Vakantie analyse\n"
 "\n"
@@ -9595,9 +9595,7 @@ msgid "Application"
 msgstr "Applicatie"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "Applicatie toegangen"
 
@@ -10111,6 +10109,12 @@ msgstr "Barcode in mobiel"
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
 msgstr "Barcode scan in mobiel"
+
+#. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
+msgstr "Barcode symboliek"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:603
@@ -10653,6 +10657,12 @@ msgstr "Bijwerken onderbreken"
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr "Kan veld %r niet agregeren."
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
+msgstr "Kan niet worden vertaald; record is niet benaderbaar."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:228
@@ -15236,7 +15246,7 @@ msgid ""
 "more."
 msgstr ""
 "Helpt u het meeste te halen uit uw kassa's met snelle codering, eenvoudige "
-"betaalmethode codering, automatische picklijst generatie en meer."
+"betalingsmethodecodering, automatische picklijst generatie en meer."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_accounting_and_finance
@@ -21462,8 +21472,7 @@ msgid "Original currency"
 msgstr "Originele valuta"
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -25749,6 +25758,7 @@ msgstr "Technische naam"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Technische instellingen"
 
@@ -26283,14 +26293,14 @@ msgstr "De afrondingsfactor moet groter zijn dan 0!"
 msgid ""
 "The server refused the sender address (%(email_from)s) with error %(repl)s"
 msgstr ""
-"De server heeft het afzenderadres (%(email_from)s) met een fout geweigerd "
+"De server heeft het afzenderadres (%(email_from)s) met een fout afgewezen "
 "%(repl)s"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:182
 #, python-format
 msgid "The server refused the test connection with error %(repl)s"
-msgstr "De server heeft de testverbinding met een fout geweigerd %(repl)s"
+msgstr "De server heeft de testverbinding met een fout afgewezen%(repl)s"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:175
@@ -27489,9 +27499,7 @@ msgid "User Login"
 msgstr "Gebruikersnaam"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr "Gebruikerssoort"
 
@@ -28561,8 +28569,8 @@ msgstr "bijv. en_US"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "bijv. www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr "bijvoorbeeld https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay

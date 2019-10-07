@@ -24,13 +24,14 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2018
 # Martin Trigaux, 2018
 # Umur Akın <umura@projetgrup.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # Ediz Duman <neps1192@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:38+0000\n"
+"POT-Creation-Date: 2019-05-22 11:56+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -7406,7 +7407,7 @@ msgstr "Hesap ve Ödeme Linki ve Portal"
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr ""
+msgstr "Hesap sahibinin adı, hesap sahibininden farklı olması durumunda"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -8074,9 +8075,7 @@ msgid "Application"
 msgstr "İş Başvurusu"
 
 #. module: base
-#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "Application Accesses"
 msgstr "Uygulama Erişimi"
 
@@ -8549,6 +8548,7 @@ msgstr "Meksika'ya banka hesabı ödemesi"
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
 msgstr ""
+"Banka hesap türü: Normal yada IBAN. Banka hesap numarasından çıkarılmıştır."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__bank_ids
@@ -8590,6 +8590,12 @@ msgstr "Mobilde Barkod"
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
 msgstr "Mobilde Barkod taraması"
+
+#. module: base
+#: code:addons/base/models/ir_qweb_fields.py:607
+#, python-format
+msgid "Barcode symbology"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:603
@@ -8695,7 +8701,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_payment
 msgid "Batch Payment"
-msgstr ""
+msgstr "Toplu Ödeme"
 
 #. module: base
 #: selection:res.country,name_position:0
@@ -8938,7 +8944,7 @@ msgstr "Bütçe Yönetimi"
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Build automated mailing campaigns"
-msgstr ""
+msgstr "Otomatik mail kampanyası oluştur"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_form_editor
@@ -9132,6 +9138,12 @@ msgid "Cannot aggregate field %r."
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_translation.py:256
+#, python-format
+msgid "Cannot be translated; record not accessible."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:228
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
@@ -9256,7 +9268,7 @@ msgstr "Char"
 #: model:ir.module.module,summary:base.module_im_livechat
 #: model:ir.module.module,summary:base.module_website_livechat
 msgid "Chat with your website visitors"
-msgstr ""
+msgstr "Website ziyaretçilerinizle konuşun"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail
@@ -9292,6 +9304,8 @@ msgid ""
 "Check this box if this contact is a customer. It can be selected in sales "
 "orders."
 msgstr ""
+"Eğer kontak bir müşteri ise bu kutuyu işaretleyin. Böylece satış "
+"siparişlerinde seçilebilir olacaktır."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__supplier
@@ -10005,7 +10019,7 @@ msgstr "Kopyalanan"
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_corporate
 msgid "Corporate"
-msgstr ""
+msgstr "Şirket"
 
 #. module: base
 #: model:res.country,name:base.cr
@@ -10113,7 +10127,7 @@ msgstr "Oluşturma Tarihi"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr ""
+msgstr "Website trafiğinden Adaylar/Fırsatlar oluşturun"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -10745,7 +10759,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:511
 #, python-format
 msgid "Date unit used for comparison and formatting"
-msgstr ""
+msgstr "Karşılaştırma ve biçimlendirme için kullanılan tarih birimi"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:512
@@ -12498,7 +12512,7 @@ msgstr "Finans/Sigorta"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_unsplash
 msgid "Find free high-resolution images from Unsplash"
-msgstr ""
+msgstr "Unsplash üzerinden ücretsiz, yüksek çözünürlüklü görseller bulun"
 
 #. module: base
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -12888,7 +12902,7 @@ msgstr "Eksik Şartları Oluşturun"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
 msgid "Generate leads from a contact form"
-msgstr ""
+msgstr "Bir iletişim formundan adaylar oluştur"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription
@@ -12964,7 +12978,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr04
 msgid "Germany SKR04 - Accounting"
-msgstr ""
+msgstr "Almanya SKR04 - Muhasebe"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_dashboard
@@ -13288,7 +13302,7 @@ msgstr "HTML"
 #. module: base
 #: model:ir.model,name:base.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Yönlendirme"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -13298,7 +13312,7 @@ msgstr "Haiti"
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
 msgid "Handle lunch orders of your employees"
-msgstr ""
+msgstr "Çalışanlarınızın öğle yemeği siparişleri ile ilgilenin"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_scanner
@@ -14082,7 +14096,7 @@ msgstr "QIF Formatında Banka Hesap Özeti İçe Aktarımı"
 #: code:addons/base/models/res_partner.py:855
 #, python-format
 msgid "Import Template for Customers"
-msgstr ""
+msgstr "Müşteriler için İçe Aktarım Şablonu"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
@@ -15173,7 +15187,7 @@ msgstr "Aday Otomasyonu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_reveal
 msgid "Lead Generation"
-msgstr ""
+msgstr "Aday Üretme"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_score
@@ -15500,7 +15514,7 @@ msgstr "MRP Yan Ürünleri"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder
 msgid "MRP II"
-msgstr ""
+msgstr "MRP II"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
@@ -18436,8 +18450,7 @@ msgid "Original currency"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:995
-#: code:addons/base/models/res_users.py:1178
+#: code:addons/base/models/res_users.py:1222
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -19344,7 +19357,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish events, sell tickets"
-msgstr ""
+msgstr "Etkinlikleri yayınla, biletleri sat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
@@ -19742,7 +19755,7 @@ msgstr "Referans"
 #: code:addons/base/models/ir_qweb_fields.py:567
 #, python-format
 msgid "Reference date"
-msgstr ""
+msgstr "Referans Tarihi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_id
@@ -22082,6 +22095,7 @@ msgstr "Teknik Adı"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Teknik Ayarları"
 
@@ -23025,7 +23039,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
 msgid "Track leads and close opportunities"
-msgstr ""
+msgstr "Adayı izle ve fırsatları kapat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
@@ -23214,7 +23228,7 @@ msgstr "Twitter Akışı"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter_wall
 msgid "Twitter Wall"
-msgstr ""
+msgstr "Mur Twitter"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter
@@ -23509,7 +23523,7 @@ msgstr "Tanınmayan uzantısı: .csv, .po veya .tgz biri olmalıdır (aldı. %s)
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_unsplash
 msgid "Unsplash Image Library"
-msgstr ""
+msgstr "Unsplash Görsel Kütüphanesi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
@@ -23755,9 +23769,7 @@ msgid "User Login"
 msgstr "Kullanıcı Girişi"
 
 #. module: base
-#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
-#, python-format
 msgid "User Type"
 msgstr ""
 
@@ -23769,7 +23781,7 @@ msgstr "Kullanıcı log girişleri"
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
 msgid "User types"
-msgstr ""
+msgstr "Kullanıcı türleri"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
@@ -24442,6 +24454,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
+"Python kod yazmak eylemi çalıştırır. Bazı değişkenler kullanılabilir; python"
+" ifade ile ilgili yardım yardım sekmesinde verilir."
 
 #. module: base
 #: model:res.country,name:base.ye
@@ -24788,7 +24802,7 @@ msgstr "örn. Bay"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_document_template_form
 msgid "e.g. Opening hours, bank accounts (one per line)"
-msgstr ""
+msgstr "örn. Çalışma saatleri, banka hesapları (Her satıra bir tane)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -24811,8 +24825,8 @@ msgstr "örn. tr_TR"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid "e.g. www.odoo.com"
-msgstr "örn. www.odoo.com"
+msgid "e.g. https://www.odoo.com"
+msgstr "Örn. https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay

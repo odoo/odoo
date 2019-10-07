@@ -24,6 +24,23 @@ class FinancialYearOpeningWizard(models.TransientModel):
             record.opening_move_posted = record.company_id.opening_move_posted()
 
     @api.multi
+    def write(self, vals):
+        # Amazing workaround: non-stored related fields on company are a BAD idea since the 3 fields
+        # must follow the constraint '_check_fiscalyear_last_day'. The thing is, in case of related
+        # fields, the inverse write is done one value at a time, and thus the constraint is verified
+        # one value at a time... so it is likely to fail.
+        for wiz in self:
+            wiz.company_id.write({
+                'account_opening_date': vals.get('opening_date') or wiz.company_id.account_opening_date,
+                'fiscalyear_last_day': vals.get('fiscalyear_last_day') or wiz.company_id.fiscalyear_last_day,
+                'fiscalyear_last_month': vals.get('fiscalyear_last_month') or wiz.company_id.fiscalyear_last_month,
+            })
+        vals.pop('opening_date', None)
+        vals.pop('fiscalyear_last_day', None)
+        vals.pop('fiscalyear_last_month', None)
+        return super().write(vals)
+
+    @api.multi
     def action_save_onboarding_fiscal_year(self):
         self.env.user.company_id.set_onboarding_step_done('account_setup_fy_data_state')
 

@@ -42,29 +42,29 @@ msgstr "К-сть Специфифікацій"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
 msgid "# BoM Where Used"
-msgstr "# специфікації було використано"
+msgstr "К-сть специфікації, де було використано"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_done_count
 msgid "# Done Work Orders"
-msgstr "# Готові робочі замовлення"
+msgstr "К-сть готових робочих замовлень"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# Read Work Orders"
-msgstr "# Читати робочі замовлення"
+msgstr "К-сть прочитаних робочих замовлень"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_count
 msgid "# Work Orders"
-msgstr "# Робочі замовлення"
+msgstr "К-сть робочих замовлень"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr "# специфікації, де було використано"
+msgstr "К-сть специфікації, де було використано"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -1477,7 +1477,7 @@ msgid ""
 "record without removing it."
 msgstr ""
 "Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис"
-" кадрів, не видаливши її."
+" ресурсу, не видаливши її."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing__active
@@ -2159,7 +2159,7 @@ msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
 "Жодного робочого замовлення наразі не обробляється. Натисніть, щоб "
-"відзначити роботу центру як заблоковано."
+"відзначити робочий центр як заблоковано."
 
 #. module: mrp
 #: selection:mrp.production,availability:0
@@ -2550,13 +2550,13 @@ msgstr "Складська публікація"
 #: code:addons/mrp/models/stock_warehouse.py:174
 #, python-format
 msgid "Post-Production"
-msgstr "До виробництва"
+msgstr "Після виробництва"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:173
 #, python-format
 msgid "Pre-Production"
-msgstr "Після виробництва"
+msgstr "До виробництва"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__priority
@@ -2709,7 +2709,7 @@ msgstr "Розташування виробництва"
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "Production Order"
-msgstr "Заявка на виробництво"
+msgstr "Замовлення на виробництво"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
@@ -4446,6 +4446,14 @@ msgstr ""
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
 msgstr "Ви не можете видалити замовлення на розбирання, якщо стан - \"Готово\"."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:533
+#, python-format
+msgid "You cannot produce a MO with a bom kit product."
+msgstr ""
+"Ви не можете виготовити замовлення на виробництво з комплектом товару "
+"специфікації."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:82

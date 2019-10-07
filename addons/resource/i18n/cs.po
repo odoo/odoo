@@ -7,7 +7,7 @@
 # Martin Trigaux, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,18 +37,18 @@ msgstr "Aktivní"
 #. module: resource
 #: selection:resource.calendar.attendance,day_period:0
 msgid "Afternoon"
-msgstr ""
+msgstr "Odpoledne"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average hour per day"
-msgstr ""
+msgstr "Průměrná hodina denně"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
-msgstr ""
+msgstr "Průměrný počet hodin denně by měl zdroj pracovat s tímto kalendářem."
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -103,7 +103,7 @@ msgstr "Den v týdnu"
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_users__resource_calendar_id
 msgid "Default Working Hours"
-msgstr ""
+msgstr "Výchozí pracovní doba"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_res_users__resource_calendar_id
@@ -151,13 +151,13 @@ msgstr "Pátek"
 #: code:addons/resource/models/resource.py:166
 #, python-format
 msgid "Friday Evening"
-msgstr ""
+msgstr "Páteční večer"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:165
 #, python-format
 msgid "Friday Morning"
-msgstr ""
+msgstr "Páteční ráno"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -278,18 +278,18 @@ msgstr "Pondělí"
 #: code:addons/resource/models/resource.py:158
 #, python-format
 msgid "Monday Evening"
-msgstr ""
+msgstr "Pondělí večer"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:157
 #, python-format
 msgid "Monday Morning"
-msgstr ""
+msgstr "Pondělní ráno"
 
 #. module: resource
 #: selection:resource.calendar.attendance,day_period:0
 msgid "Morning"
-msgstr ""
+msgstr "Ráno"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__name
@@ -411,7 +411,7 @@ msgstr "Hledat pracovní dobu"
 #: code:addons/resource/models/res_company.py:22
 #, python-format
 msgid "Standard 40 hours/week"
-msgstr ""
+msgstr "Standardní 40 hodin týdně"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
@@ -424,6 +424,8 @@ msgid ""
 "Start and End time of working.\n"
 "A specific value of 24:00 is interpreted as 23:59:59.999999."
 msgstr ""
+"Čas začátku a konce práce. \n"
+"Specifická hodnota 24:00 je interpretována jako 23: 59: 59.999999."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_from
@@ -449,7 +451,7 @@ msgstr ""
 #: code:addons/resource/models/resource.py:464
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
+msgstr "Faktor účinnosti nemůže být roven 0."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:519
@@ -466,6 +468,8 @@ msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
 msgstr ""
+"This field is used in order to define in which timezone the resources will "
+"work."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
@@ -476,6 +480,10 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Toto pole slouží k výpočtu očekávané doby trvání zakázky v tomto pracovišti."
+" Pokud například pracovní příkaz trvá jednu hodinu a faktor účinnosti je "
+"100%, předpokládaná doba trvání bude jedna hodina. Pokud je faktor účinnosti"
+" 200%, předpokládaná doba trvání je 30 minut."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -486,13 +494,13 @@ msgstr "Čtvrtek"
 #: code:addons/resource/models/resource.py:164
 #, python-format
 msgid "Thursday Evening"
-msgstr ""
+msgstr "Čtvrteční večer"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:163
 #, python-format
 msgid "Thursday Morning"
-msgstr ""
+msgstr "Čtvrteční ráno"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -502,7 +510,7 @@ msgstr ""
 #. module: resource
 #: sql_constraint:resource.resource:0
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "Časová efektivita musí být přísně pozitivní"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
@@ -521,13 +529,13 @@ msgstr "Úterý"
 #: code:addons/resource/models/resource.py:160
 #, python-format
 msgid "Tuesday Evening"
-msgstr ""
+msgstr "Úterý večer"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:159
 #, python-format
 msgid "Tuesday Morning"
-msgstr ""
+msgstr "Úterní ráno"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -554,19 +562,20 @@ msgstr "Středa"
 #: code:addons/resource/models/resource.py:162
 #, python-format
 msgid "Wednesday Evening"
-msgstr ""
+msgstr "Večer ve středu"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:161
 #, python-format
 msgid "Wednesday Morning"
-msgstr ""
+msgstr "Středeční ráno"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
 "Whether this should be computed as a holiday or as work time (eg: formation)"
 msgstr ""
+"Zda to má být počítáno jako svátek nebo jako pracovní den (např.: Formace)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance

@@ -80,7 +80,16 @@ var SnippetEditor = Widget.extend({
                     return $clone;
                 },
                 start: _.bind(self._onDragAndDropStart, self),
-                stop: _.bind(self._onDragAndDropStop, self)
+                stop: function () {
+                    // Delay our stop handler so that some summernote handlers
+                    // which occur on mouseup (and are themself delayed) are
+                    // executed first (this prevents the library to crash
+                    // because our stop handler may change the DOM).
+                    var args = arguments;
+                    setTimeout(function () {
+                        self._onDragAndDropStop.apply(self, args);
+                    }, 0);
+                },
             });
         }
 
@@ -340,6 +349,9 @@ var SnippetEditor = Widget.extend({
      */
     _onCloneClick: function (ev) {
         ev.preventDefault();
+
+        this.trigger_up('snippet_will_be_cloned', {$target: this.$target});
+
         var $clone = this.$target.clone(false);
 
         this.trigger_up('request_history_undo_record', {$target: this.$target});
@@ -355,7 +367,7 @@ var SnippetEditor = Widget.extend({
                 }
             },
         });
-        this.trigger_up('snippet_cloned', {$target: $clone});
+        this.trigger_up('snippet_cloned', {$target: $clone, $origin: this.$target});
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.
@@ -811,7 +823,7 @@ var SnippetsMenu = Widget.extend({
              && (float_next === 'left' || float_next === 'right')) {
                 zone.remove();
             } else if (disp_prev !== null && disp_next !== null
-             && disp_prev !== 'block' && disp_next !== 'block') {
+             && disp_prev.indexOf('inline') >= 0 && disp_next.indexOf('inline') >= 0) {
                 zone.remove();
             }
         });

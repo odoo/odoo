@@ -107,7 +107,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
         # Reconcile the payment and the expense, i.e. lookup on the payable account move lines
         account_move_lines_to_reconcile = self.env['account.move.line']
         for line in payment.move_line_ids + expense_sheet.account_move_id.line_ids:
-            if line.account_id.internal_type == 'payable':
+            if line.account_id.internal_type == 'payable' and not line.reconciled:
                 account_move_lines_to_reconcile |= line
         account_move_lines_to_reconcile.reconcile()
 

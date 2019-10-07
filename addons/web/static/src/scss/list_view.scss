@@ -10,9 +10,11 @@
     border-collapse: initial;
     border-spacing: 0;
 
-    // Checkbox in editable list
+    // Boolean Widgets in editable list
     // should be clickable and activate the row
     &.o_editable_list .o_data_row:not(.o_selected_row) .o_data_cell {
+        &.o_toggle_button_cell:not(.o_readonly_modifier) button, // registry: toggle_button
+        &.o_boolean_favorite_cell:not(.o_readonly_modifier) .o_favorite, // registry: boolean_favorite
         .custom-checkbox:not(.o_readonly_modifier) {
             pointer-events: none;
         }
@@ -28,6 +30,9 @@
             }
             &:not(.o_column_sortable):hover {
                 cursor: default;
+            }
+            &.o_list_number_th {
+                text-align: right;
             }
         }
     }

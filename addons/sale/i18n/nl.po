@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-08-08 13:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -66,6 +66,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
 msgstr "&amp;nbsp;<span>op</span>&amp;nbsp;"
 
@@ -173,7 +174,7 @@ msgstr "<i class=\"fa fa-comment\"/> Feedback"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Send message"
-msgstr "<i class=\"fa fa-comment\"/> Vertuur bericht"
+msgstr "<i class=\"fa fa-comment\"/> Verstuur bericht"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -294,6 +295,15 @@ msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr "<span class=\"o_stat_text\">Verkocht</span>"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Bedrag</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Totale prijs</span>"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
 msgstr "<span>Geacccepteerd in opdracht van:</span>"
@@ -408,6 +418,7 @@ msgstr "<strong>Handtekening</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "<strong>Subtotal</strong>"
 msgstr "<strong>Subtotaal</strong>"
 
@@ -439,6 +450,7 @@ msgstr "<strong>Totaal:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "<strong>Total</strong>"
 msgstr "<strong>Totaal</strong>"
 
@@ -883,7 +895,7 @@ msgstr "Bedrijven"
 #: model:ir.model.fields,field_description:sale.field_sale_report__company_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
-msgstr "Bedijf"
+msgstr "Bedrijf"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1765,12 +1777,12 @@ msgstr "Facturen"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr "Factuur analyse"
+msgstr "Factuuranalyse"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "Factuur analyses"
+msgstr "Factuuranalyses"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -2527,7 +2539,7 @@ msgstr "Betalingsinstructies"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__payment_method
 msgid "Payment Method"
-msgstr "Betaalmethode"
+msgstr "Betalingsmethode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
@@ -3027,7 +3039,7 @@ msgstr "Verkoop waarschuwingen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr "Verkoop onboarding geselecteerde betaalmethode"
+msgstr "Verkoop onboarding geselecteerde betalinsgmethode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
@@ -3299,8 +3311,9 @@ msgstr "Stuur PRO-FORMA factuur"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Send a product-specific email once the invoice is paid"
-msgstr "Verzend een product specifieke e-mail eenmaal de factuur betaald is"
+msgid "Send a product-specific email once the invoice is validated"
+msgstr ""
+"Verzend een product specifieke e-mail wanneer de factuur is bevestigd."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3838,10 +3851,10 @@ msgid ""
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
 "Dit overzicht voert een analyse uit op uw offertes en verkooporders. "
-"Analyseer uw omzet en sorteer het op verschillende gropeer criteria "
+"Analyseer uw omzet en sorteer het op verschillende groepeer criteria "
 "(verkoper, relatie, product, etc.) Gebruik dit overzicht op nog niet "
-"gefactureerde verkopen. Als u uw omzet wilt analyseren, moet u de factuur "
-"analyse gebruiken in de financiële applicatie."
+"gefactureerde verkopen. Als u uw omzet wilt analyseren, moet u de "
+"factuuranalyse gebruiken in de financiële applicatie."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -3855,7 +3868,7 @@ msgstr ""
 "Dit overzicht voert een analyse uit op uw offertes. Analyseer uw omzet en "
 "sorteer het op verschillende groepeer criteria (verkoper, relatie, product, "
 "etc.) Gebruik dit overzicht op nog niet gefactureerde verkopen. Als u uw "
-"omzet wilt analyseren, moet u de factuur analyse gebruiken in de financiële "
+"omzet wilt analyseren, moet u de factuuranalyse gebruiken in de financiële "
 "applicatie."
 
 #. module: sale
@@ -3868,9 +3881,9 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Dit overzicht voert een analyse uit op uw verkooporders. Analyseer uw omzet "
-"en sorteer het op verschillende gropeer criteria (verkoper, relatie, "
+"en sorteer het op verschillende groepeer criteria (verkoper, relatie, "
 "product, etc.) Gebruik dit overzicht op nog niet gefactureerde verkopen. Als"
-" u uw omzet wilt analyseren, moet u de factuur analyse gebruiken in de "
+" u uw omzet wilt analyseren, moet u de factuuranalyse gebruiken in de "
 "financiële applicatie."
 
 #. module: sale
@@ -4249,7 +4262,17 @@ msgid ""
 msgstr ""
 "U kunt hier het communicatietype instellen welke zichtbaar is op de "
 "verkooporder. Deze communicatie wordt gegeven aan de klant als deze "
-"betaalmethode wordt gekozen."
+"betalingsmethodewordt gekozen."
+
+#. module: sale
+#: code:addons/sale/models/sale.py:1115
+#, python-format
+msgid ""
+"You cannot change the type of a sale order line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
+"U kunt het type verkooporderregel niet wijzigen. In plaats daarvan moet u de"
+" huidige regel verwijderen en een nieuwe regel van het juiste type maken."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action

@@ -2,17 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import unittest
 
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval
 
 
-@tagged('standard', 'at_install')
-class TestSafeEval(unittest.TestCase):
+class TestSafeEval(BaseCase):
     def test_const(self):
         # NB: True and False are names in Python 2 not consts
         expected = (1, {"a": {2.5}}, [None, u"foo"])
@@ -71,17 +69,25 @@ class TestBase(TransactionCase):
 
     def test_10_res_partner_find_or_create(self):
         res_partner = self.env['res.partner']
+
         email = SAMPLES[0][0]
         partner_id, dummy = res_partner.name_create(email)
         found_id = res_partner.find_or_create(email)
         self.assertEqual(partner_id, found_id, 'find_or_create failed')
+        self.assertEqual(SAMPLES[0][1], res_partner.browse([found_id]).name, 'Partner name is incorrect')
+
         partner_id2, dummy2 = res_partner.name_create('sarah.john@connor.com')
         found_id2 = res_partner.find_or_create('john@connor.com')
         self.assertNotEqual(partner_id2, found_id2, 'john@connor.com match sarah.john@connor.com')
+        self.assertEqual('john@connor.com', res_partner.browse([found_id2]).name, 'Partner name is incorrect')
+
         new_id = res_partner.find_or_create(SAMPLES[1][0])
         self.assertTrue(new_id > partner_id, 'find_or_create failed - should have created new one')
+        self.assertEqual(SAMPLES[1][2], res_partner.browse([new_id]).name, 'Partner name is incorrect')
+
         new_id2 = res_partner.find_or_create(SAMPLES[2][0])
         self.assertTrue(new_id2 > new_id, 'find_or_create failed - should have created new one again')
+        self.assertEqual(SAMPLES[2][1], res_partner.browse([new_id2]).name, 'Partner name is incorrect')
 
     def test_15_res_partner_name_search(self):
         res_partner = self.env['res.partner']
