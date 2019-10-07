@@ -219,7 +219,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'click .accounting_view tfoot': '_onChangeTab',
         'click': '_onTogglePanel',
         'click .o_field_widget': '_onStopPropagation',
-        'keydown .o_input': '_onStopPropagation',
+        'keydown .o_input, .edit_amount_input': '_onStopPropagation',
         'click .o_notebook li a': '_onChangeTab',
         'click .cell': '_onEditAmount',
         'change input.filter': '_onFilterChange',
