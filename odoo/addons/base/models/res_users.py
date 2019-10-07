@@ -1074,6 +1074,7 @@ class GroupsView(models.Model):
             xml1.append(E.separator(string='User Type', colspan="2", groups='base.group_no_one'))
 
             user_type_field_name = ''
+            user_type_readonly = str({})
             sorted_tuples = sorted(self.get_groups_by_application(),
                                    key=lambda t: t[0].xml_id != 'base.module_category_user_type')
             for app, kind, gs, category_name in sorted_tuples:  # we process the user type first
