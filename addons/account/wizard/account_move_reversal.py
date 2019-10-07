@@ -49,6 +49,7 @@ class AccountMoveReversal(models.TransientModel):
                 'date': self.date or move.date,
                 'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
                 'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
+                'invoice_payment_term_id': None,
             })
 
         # Handle reverse method.
