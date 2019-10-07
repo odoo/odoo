@@ -861,8 +861,7 @@ class MrpProduction(models.Model):
             'state': 'done',
             'product_uom_qty': 0.0,
         })
-        self.write({'date_finished': fields.Datetime.now()})
-        return True
+        return self.write({'date_finished': fields.Datetime.now()})
 
     @api.multi
     def do_unreserve(self):
