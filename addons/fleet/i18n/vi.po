@@ -679,6 +679,8 @@ msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "            (reparation, insurances, periodic maintenance)."
 msgstr ""
+"Mỗi hợp đồng (ví dụ: cho thuê) có thể bao gồm một số dịch vụ \n"
+"(bồi thường, bảo hiểm, bảo trì định kỳ)."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
@@ -905,7 +907,7 @@ msgstr "Thuế theo Sức ngựa"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__hybrid
 msgid "Hybrid"
-msgstr ""
+msgstr "Hybrid"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__id
@@ -1140,6 +1142,9 @@ msgid ""
 "            their related services, costs. Odoo will automatically warn\n"
 "            you when some contracts have to be renewed."
 msgstr ""
+"Quản lý tất cả các hợp đồng của bạn (cho thuê, bảo hiểm, v.v.) với \n"
+"các dịch vụ liên quan, chi phí của họ. Odoo sẽ tự động cảnh báo \n"
+"bạn khi một số hợp đồng phải được gia hạn."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
@@ -1147,6 +1152,8 @@ msgid ""
 "Manage the costs for your different vehicles.\n"
 "                Costs are created automatically from services, contracts and fuel logs."
 msgstr ""
+"Quản lý chi phí cho các phương tiện khác nhau của bạn. \n"
+"Chi phí được tạo tự động từ các dịch vụ, hợp đồng và nhật ký nhiên liệu."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
@@ -1154,6 +1161,8 @@ msgid ""
 "Manage your fleet by keeping track of the contracts, services, odometers and"
 " fuel logs associated to each vehicle."
 msgstr ""
+"Quản lý đội xe của bạn bằng cách theo dõi các hợp đồng, dịch vụ, đo đường "
+"vànhật ký nhiên liệu liên quan đến mỗi chiếc xe."
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__manual
@@ -1200,7 +1209,7 @@ msgstr "Đối tượng"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_tree
 msgid "Model Make"
-msgstr ""
+msgstr "Nhãn hiệu"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_year
@@ -1292,13 +1301,13 @@ msgstr "Không"
 #: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "No Plate"
-msgstr ""
+msgstr "Không biển số"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_non_effective_action
 msgid "No data for analysis"
-msgstr ""
+msgstr "Không có dữ liệu để phân tích"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__notes
@@ -1416,6 +1425,8 @@ msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
 "          Costs are generally created from services and contract and appears here."
 msgstr ""
+"Odoo giúp bạn quản lý chi phí cho các phương tiện khác nhau của bạn \n"
+"Chi phí thường được tạo ra từ các dịch vụ và hợp đồng."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
@@ -1685,6 +1696,8 @@ msgid ""
 "Thanks to the different filters, Odoo can only print the effective\n"
 "          costs, sort them by type and by vehicle."
 msgstr ""
+"Nhờ các bộ lọc khác nhau, Odoo chỉ có thể in chi phí hiệu quả,\n"
+"sắp xếp chúng theo loại và theo phương tiện."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__next_assignation_date
@@ -1723,6 +1736,8 @@ msgid ""
 "Track all the services done on your vehicle.\n"
 "            Services can be of many types: occasional repair, fixed maintenance, etc."
 msgstr ""
+"Theo dõi tất cả các dịch vụ được thực hiện trên xe của bạn. \n"
+"Dịch vụ có thể có nhiều loại: sửa chữa thường xuyên, bảo trì cố định, v.v."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__transmission
@@ -1955,7 +1970,7 @@ msgstr "Ngày cảnh báo"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Warning: renewal due soon"
-msgstr ""
+msgstr "Cảnh báo: gia hạn sớm"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__weekly
@@ -1985,7 +2000,7 @@ msgstr "Viết các thông tin khác liên quan đến dịch vụ đã hoàn th
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__model_year
 msgid "Year of the model"
-msgstr ""
+msgstr "Năm sản xuất mẫu"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__yearly
@@ -1996,6 +2011,7 @@ msgstr "Hàng năm"
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
 msgid "You can add various odometer entries for all vehicles."
 msgstr ""
+"Bạn có thể thêm các mục đo đường khác nhau cho tất cả các phương tiện."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
@@ -2003,11 +2019,15 @@ msgid ""
 "You can customize available status to track the evolution of\n"
 "            each vehicle. Example: active, being repaired, sold."
 msgstr ""
+"Bạn có thể tùy chỉnh trạng thái khả dụng để theo dõi quá trình phát triển của \n"
+"mỗi chiếc xe. Ví dụ: đang hoạt động, đang được sửa chữa, bán."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
 msgstr ""
+"Bạn có thể xác định một số kiểu máy (ví dụ: A3, A4) cho mỗi nhãn hiệu "
+"(Audi)."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form

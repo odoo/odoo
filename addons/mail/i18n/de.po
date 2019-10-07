@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -6404,6 +6404,15 @@ msgid "Your message was rejected by moderator."
 msgstr "Ihre Nachricht wurde vom Moderator abgelehnt."
 
 #. module: mail
+#: code:addons/mail/controllers/home.py:0
+#, python-format
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/ir_actions.py:0
 #, python-format
 msgid "Your template should define email_from"
@@ -6684,6 +6693,14 @@ msgstr "unbekannter Fehler"
 #, python-format
 msgid "unknown target model %s"
 msgstr "unbekanntes Zielmodel %s"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:0
+#: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
+#, python-format
+msgid "unnamed"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
