@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from psycopg2 import IntegrityError
+
 from odoo.tests.common import TransactionCase
+from odoo.tools import mute_logger
 
 
 class TestXMLID(TransactionCase):
@@ -155,3 +158,13 @@ class TestXMLID(TransactionCase):
 
         self.assertEqual(self.get_data('test_convert.foo').noupdate, True)
         self.assertEqual(self.get_data('test_convert.bar').noupdate, True)
+
+    @mute_logger('odoo.sql_db', 'odoo.addons.base.models.ir_model')
+    def test_create_external_id_with_space(self):
+        model = self.env['res.partner.category']
+        data_list = [{
+            'xml_id': 'test_convert.category_with space',
+            'values': {'name': 'Bar'},
+        }]
+        with self.assertRaisesRegex(IntegrityError, 'ir_model_data_name_nospaces'):
+            model._load_records(data_list)
