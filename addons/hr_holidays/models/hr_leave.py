@@ -766,17 +766,16 @@ class HolidaysRequest(models.Model):
         return values
 
     def action_draft(self):
-        for holiday in self:
-            if holiday.state not in ['confirm', 'refuse']:
-                raise UserError(_('Time off request state must be "Refused" or "To Approve" in order to be reset to draft.'))
-            holiday.write({
-                'state': 'draft',
-                'first_approver_id': False,
-                'second_approver_id': False,
-            })
-            linked_requests = holiday.mapped('linked_request_ids')
-            for linked_request in linked_requests:
-                linked_request.action_draft()
+        if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
+            raise UserError(_('Time off request state must be "Refused" or "To Approve" in order to be reset to draft.'))
+        self.write({
+            'state': 'draft',
+            'first_approver_id': False,
+            'second_approver_id': False,
+        })
+        linked_requests = self.mapped('linked_request_ids')
+        if linked_requests:
+            linked_requests.action_draft()
             linked_requests.unlink()
         self.activity_update()
         return True
@@ -849,21 +848,21 @@ class HolidaysRequest(models.Model):
 
     def action_refuse(self):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        if any(holiday.state not in ['confirm', 'validate', 'validate1'] for holiday in self):
+            raise UserError(_('Time off request must be confirmed or validated in order to refuse it.'))
+
+        validated_holidays = self.filtered(lambda hol: hol.state == 'validate1')
+        validated_holidays.write({'state': 'refuse', 'first_approver_id': current_employee.id})
+        (self - validated_holidays).write({'state': 'refuse', 'second_approver_id': current_employee.id})
+        # Delete the meeting
+        self.mapped('meeting_id').unlink()
+        # If a category that created several holidays, cancel all related
+        linked_requests = self.mapped('linked_request_ids')
+        if linked_requests:
+            linked_requests.action_refuse()
+
+        # Post a second message, more verbose than the tracking message
         for holiday in self:
-            if holiday.state not in ['confirm', 'validate', 'validate1']:
-                raise UserError(_('Time off request must be confirmed or validated in order to refuse it.'))
-
-            if holiday.state == 'validate1':
-                holiday.write({'state': 'refuse', 'first_approver_id': current_employee.id})
-            else:
-                holiday.write({'state': 'refuse', 'second_approver_id': current_employee.id})
-            # Delete the meeting
-            if holiday.meeting_id:
-                holiday.meeting_id.unlink()
-            # If a category that created several holidays, cancel all related
-            holiday.linked_request_ids.action_refuse()
-
-            # Post a second message, more verbose than the tracking message
             if holiday.employee_id.user_id:
                 holiday.message_post(
                     body=_('Your %s planned on %s has been refused') % (holiday.holiday_status_id.display_name, holiday.date_from),
