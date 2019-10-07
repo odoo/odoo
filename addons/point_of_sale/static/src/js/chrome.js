@@ -92,6 +92,10 @@ var UsernameWidget = PosBaseWidget.extend({
     get_name: function(){
         var user = this.pos.get_cashier();
         if(user){
+            $('div.oe_status:not(.js_synch)').css({
+                "min-width": user.name.length*10,
+                "text-align": "center",
+            });
             return user.name;
         }else{
             return "";
