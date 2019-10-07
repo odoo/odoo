@@ -257,12 +257,12 @@ body .modal {
                         box-shadow: 0px 0px 2px 2px $card-border-color;
                     }
                 }
+            }
 
-                &.o_we_attachment_selected {
-                    &.o_we_attachment_highlight, .o_we_attachment_highlight {
-                        border-color: $o-brand-primary;
-                        box-shadow: 0px 0px 2px 2px $o-brand-primary;
-                    }
+            .o_we_attachment_selected {
+                &.o_we_attachment_highlight, .o_we_attachment_highlight, &.font-icons-icon {
+                    border-color: $o-brand-primary;
+                    box-shadow: 0px 0px 2px 2px $o-brand-primary;
                 }
             }
 
@@ -275,12 +275,6 @@ body .modal {
                     height: 50px;
                     padding: 15px;
                     cursor: pointer;
-
-                    &.o_selected {
-                        cursor: auto;
-                        background-color: $o-we-bg-color-dark;
-                        box-shadow: 0px 0px 0px 1px $o-we-color-success;
-                    }
                 }
             }
 
