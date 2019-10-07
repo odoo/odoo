@@ -452,7 +452,7 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
     $editable.data('range').select();
     $editable.data('NoteHistory').recordUndo();
 
-    var link = linkInfo.range.commonAncestor().closest('a');
+    var link = linkInfo.range.commonAncestor();
     linkInfo.className = link && link.className;
 
     var def = new $.Deferred();
