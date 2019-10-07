@@ -370,7 +370,7 @@ class ResPartner(models.Model):
 
     def mark_as_reconciled(self):
         self.env['account.partial.reconcile'].check_access_rights('write')
-        return self.sudo().with_context(company_id=self.env.company.id).write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        return self.sudo().write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     def _get_company_currency(self):
         for partner in self:
