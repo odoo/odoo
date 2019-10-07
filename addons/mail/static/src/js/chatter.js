@@ -92,15 +92,7 @@ var Chatter = Widget.extend({
     start: function () {
         this._$topbar = this.$('.o_chatter_topbar');
         // render and append the buttons
-        this._$topbar.prepend(QWeb.render('mail.chatter.Buttons', {
-            newMessageButton: !!this.fields.thread,
-            logNoteButton: this.hasLogButton,
-            scheduleActivityButton: !!this.fields.activity,
-            isMobile: config.device.isMobile,
-            disableAttachmentBox: this._disableAttachmentBox,
-            displayCounter: !!this.fields.thread,
-            count: this.record.data.message_attachment_count || 0,
-        }));
+        this._$topbar.prepend(this._renderButtons());
         // start and append the widgets
         var fieldDefs = _.invoke(this.fields, 'appendTo', $('<div>'));
         var def = this._dp.add(Promise.all(fieldDefs));
@@ -416,6 +408,17 @@ var Chatter = Widget.extend({
      */
     _resetSuggestedPartners() {
         this._suggestedPartnersProm = undefined;
+    },
+    _renderButtons: function () {
+        return QWeb.render('mail.chatter.Buttons', {
+            newMessageButton: !!this.fields.thread,
+            logNoteButton: this.hasLogButton,
+            scheduleActivityButton: !!this.fields.activity,
+            isMobile: config.device.isMobile,
+            disableAttachmentBox: this._disableAttachmentBox,
+            displayCounter: !!this.fields.thread,
+            count: this.record.data.message_attachment_count || 0,
+        });
     },
     /**
      * @private
