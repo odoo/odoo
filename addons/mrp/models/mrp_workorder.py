@@ -400,10 +400,13 @@ class MrpWorkorder(models.Model):
             return True
 
         self.ensure_one()
+        self._check_sn_uniqueness()
         self._check_company()
         if float_compare(self.qty_producing, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
-
+        if 'check_ids' not in self:
+            for line in self.raw_workorder_line_ids | self.finished_workorder_line_ids:
+                line._check_line_sn_uniqueness()
         # If last work order, then post lots used
         if not self.next_work_order_id:
             self._update_finished_move()
