@@ -55,9 +55,32 @@ class Partner(models.Model):
             partner.membership_stop = self.env['membership.membership_line'].search([
                 ('partner', '=', partner.associate_member.id or partner.id),('date_cancel','=',False)
             ], limit=1, order='date_to desc').date_to
+<<<<<<< HEAD
             partner.membership_cancel = self.env['membership.membership_line'].search([
                 ('partner', '=', partner.id)
             ], limit=1, order='date_cancel').date_cancel
+=======
+
+    @api.depends('member_lines.account_invoice_line.invoice_id.state',
+                 'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
+                 'member_lines.account_invoice_line.invoice_id.payment_ids',
+                 'free_member',
+                 'member_lines.date_to', 'member_lines.date_from', 'member_lines.date_cancel',
+                 'membership_state',
+                 'associate_member.membership_state')
+    def _compute_membership_cancel(self):
+        for partner in self:
+            partner.membership_cancel = self.env['membership.membership_line'].search([
+                ('partner', '=', partner.id)
+            ], limit=1, order='date_cancel desc').date_cancel
+
+    def _membership_state(self):
+        """This Function return Membership State For Given Partner. """
+        res = {}
+        today = fields.Date.today()
+        for partner in self:
+            res[partner.id] = 'none'
+>>>>>>> 28a4613d7c5... temp
 
             if partner.membership_cancel and today > partner.membership_cancel:
                 partner.membership_state = 'free' if partner.free_member else 'canceled'
