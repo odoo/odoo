@@ -279,8 +279,8 @@
                             <div class="row no-gutters" t-if="['validate', 'refuse'].includes(record.state.raw_value)">
                                 <div class="col-2"/>
                                 <div class="col-10">
-                                    <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted"/>
-                                    <span t-else="" class="fa fa-ban text-muted"/>
+                                    <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted" aria-label="validated"/>
+                                    <span t-else="" class="fa fa-ban text-muted" aria-label="refused"/>
                                     <span class="text-muted"><t t-esc="record.state.value"/></span>
                                 </div>
                             </div>
