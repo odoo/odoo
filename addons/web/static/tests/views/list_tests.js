@@ -8258,6 +8258,36 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+    QUnit.test("quickcreate in a many2one in a list", async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch: '<tree editable="top"><field name="m2o"/></tree>',
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:first'));
+
+        const $input = list.$('.o_data_row:first .o_data_cell:first input');
+        await testUtils.fields.editInput($input, "aaa");
+        $input.trigger('keyup');
+        $input.trigger('blur');
+        document.body.click();
+
+        await testUtils.nextTick();
+
+        assert.containsOnce(document.body, '.modal', "the quick_create modal should appear");
+
+        await testUtils.dom.click($('.modal .btn-primary:first'));
+        await testUtils.dom.click(document.body);
+
+        assert.strictEqual(list.el.getElementsByClassName('o_data_cell')[0].innerHTML, "aaa",
+            "value should have been updated");
+
+        list.destroy();
+    });
 
     QUnit.test('float field render with digits attribute on listview', async function (assert) {
         assert.expect(1);
