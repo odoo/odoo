@@ -305,19 +305,14 @@ class IrModuleModule(models.Model):
         return websites
 
     def _theme_upgrade_upstream(self):
-        """
-            Upgrade the upstream dependencies of a theme.
-            We only need to upgrade the upper dependency and the rest will chain.
+        """ Upgrade the upstream dependencies of a theme, and install it if necessary. """
+        def install_or_upgrade(theme):
+            if theme.state != 'installed':
+                theme.button_install()
+            themes = theme + theme._theme_get_upstream()
+            themes.filtered(lambda m: m.state == 'installed').button_upgrade()
 
-            This upper dependency will usually be theme_common but it can also be different
-            for example for theme_default and theme_bootswatch which are standalone themes.
-
-            :return: recordset of websites ``website``
-        """
-        for theme in self:
-            upper_theme = (theme + theme._theme_get_upstream())[-1]
-            if upper_theme.state == 'installed':
-                upper_theme.button_immediate_upgrade()
+        self._button_immediate_function(install_or_upgrade)
 
     @api.model
     def _theme_remove(self, website):
@@ -355,10 +350,8 @@ class IrModuleModule(models.Model):
         # website.theme_id must be set before upgrade/install to trigger the load in ``write``
         website.theme_id = self
 
+        # this will install 'self' if it is not installed yet
         self._theme_upgrade_upstream()
-
-        if self.state != 'installed':
-            self.button_immediate_install()
 
         return website.button_go_website()
 
