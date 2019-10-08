@@ -247,14 +247,7 @@ class AccountMove(models.Model):
                 move._create_invoice_from_xml(attachment)
 
     def _create_invoice_from_pdf(self, attachment):
-        def _get_attachment_filename(attachment):
-            # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
-            return hasattr(attachment, 'fname') and getattr(attachment, 'fname') or attachment.name
-
-        def _get_attachment_content(attachment):
-            # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
-            return hasattr(attachment, 'content') and getattr(attachment, 'content') or base64.b64decode(attachment.datas)
-        content = _get_attachment_content(attachment)
+        content = base64.b64decode(attachment.datas)
 
         with io.BytesIO(content) as buffer:
             try:
