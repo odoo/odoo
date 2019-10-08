@@ -124,7 +124,7 @@
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                                 <field name="has_tracking" invisible="1"/>
                                 <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
-                                <field name="company_id" group="base.group_multi_company"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
                     </sheet>
