@@ -11,5 +11,7 @@ class AccountChartTemplate(models.Model):
         if company.country_id == self.env.ref('base.pe'):
             for journal in journals:
                 if journal['type'] == 'sale':
-                    journal.update({'l10n_latam_use_documents': True})
+                    journal.update({'l10n_latam_use_documents': True,
+                                    'default_debit_account_id': self.env.ref('l10n_pe.chart1213').id,
+                                    'default_credit_account_id': self.env.ref('l10n_pe.chart1213').id})
         return journals
