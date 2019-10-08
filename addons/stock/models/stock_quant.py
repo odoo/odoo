@@ -87,8 +87,17 @@ class StockQuant(models.Model):
         default=0.0,
         help='Quantity of reserved products in this quant, in the default unit of measure of the product',
         readonly=True, required=True)
+    available_quantity = fields.Float(
+        'Available Quantity',
+        help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
+        compute='_compute_available_quantity')
     in_date = fields.Datetime('Incoming Date', readonly=True)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
+
+    @api.depends('quantity', 'reserved_quantity')
+    def _compute_available_quantity(self):
+        for quant in self:
+            quant.available_quantity = quant.quantity - quant.reserved_quantity
 
     @api.depends('quantity')
     def _compute_inventory_quantity(self):
@@ -151,13 +160,20 @@ class StockQuant(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """ Override to handle the "inventory mode" and set the `inventory_quantity`
-        in view list grouped.
+        """ Override to set the `inventory_quantity` field if we're in "inventory mode" as well
+        as to compute the sum of the `available_quantity` field.
         """
+        if 'available_quantity' in fields:
+            if 'quantity' not in fields:
+                fields.append('quantity')
+            if 'reserved_quantity' not in fields:
+                fields.append('reserved_quantity')
         result = super(StockQuant, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-        if self._is_inventory_mode():
-            for record in result:
-                record['inventory_quantity'] = record.get('quantity', 0)
+        for group in result:
+            if self._is_inventory_mode():
+                group['inventory_quantity'] = group.get('quantity', 0)
+            if 'available_quantity' in fields:
+                group['available_quantity'] = group['quantity'] - group['reserved_quantity']
         return result
 
     def write(self, vals):
