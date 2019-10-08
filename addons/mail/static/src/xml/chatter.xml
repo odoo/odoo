@@ -12,12 +12,16 @@
             </div>
             <div t-if="widget.imageList.length > 0" class="o_attachments_previews">
                 <t t-foreach="widget.imageList" t-as="attachment">
-                    <t t-call="mail.AttachmentPreview"/>
+                    <t t-call="mail.AttachmentPreview">
+                        <t t-set="isDeletable" t-value="true"/>
+                    </t>
                 </t>
             </div>
             <div t-if="widget.otherList.length > 0" class="o_attachments_list">
                 <t t-foreach="widget.otherList" t-as="attachment">
-                    <t t-call="mail.Attachment"/>
+                    <t t-call="mail.Attachment">
+                        <t t-set="isDeletable" t-value="true"/>
+                    </t>
                 </t>
             </div>
             <div class="o_chatter_attachment_form">
