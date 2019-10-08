@@ -177,9 +177,14 @@ class PaymentAcquirerOgone(models.Model):
             tx._set_transaction_done()  # or  _set_transaction_authorized if status = 5 ?
         elif status in tx._ogone_cancel_tx_status:
             tx._set_transaction_cancel()
+            # Only draft sale order prevent the cart to be lost
+            tx.sale_order_ids.write({'state': 'draft'})
+
         elif status in tx._ogone_authorisation_refused_status:
-            # Error message not defined in PaymentAcquirer
-            tx._set_transaction_error(_("The authorization could not be performed"))
+            tx._set_transaction_error(_("The authorization could not be performed."))
+            # Only draft sale order prevent the cart to be lost
+            tx.sale_order_ids.write({'state': 'draft'})
+
         else:
             # _set_transaction_error
             _logger.error("Unknown STATUS : {}".format(status))
