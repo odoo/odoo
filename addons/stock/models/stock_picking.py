@@ -715,21 +715,31 @@ class Picking(models.Model):
     @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id', 'move_lines.move_line_ids.package_level_id')
     def _compute_move_without_package(self):
         for picking in self:
-            move_ids_without_package = self.env['stock.move']
-            if picking.picking_type_entire_packs == False:
-                move_ids_without_package = picking.move_lines
-            else:
-                for move in picking.move_lines:
-                    if not move.package_level_id:
-                        if move.state in ('assigned', 'done'):
-                            if any(not ml.package_level_id for ml in move.move_line_ids):
-                                move_ids_without_package |= move
-                        else:
-                            move_ids_without_package |= move
-            picking.move_ids_without_package = move_ids_without_package.filtered(lambda move: not move.scrap_ids)
+            picking.move_ids_without_package = picking._get_move_ids_without_package()
 
     def _set_move_without_package(self):
-        self.move_lines |= self.move_ids_without_package
+        new_mwp = self[0].move_ids_without_package
+        for picking in self:
+            old_mwp = picking._get_move_ids_without_package()
+            picking.move_lines = (picking.move_lines - old_mwp) | new_mwp
+            moves_to_unlink = old_mwp - new_mwp
+            if moves_to_unlink:
+                moves_to_unlink.unlink()
+
+    def _get_move_ids_without_package(self):
+        self.ensure_one()
+        move_ids_without_package = self.env['stock.move']
+        if not self.picking_type_entire_packs:
+            move_ids_without_package = self.move_lines
+        else:
+            for move in self.move_lines:
+                if not move.package_level_id:
+                    if move.state in ('assigned', 'done'):
+                        if any(not ml.package_level_id for ml in move.move_line_ids):
+                            move_ids_without_package |= move
+                    else:
+                        move_ids_without_package |= move
+        return move_ids_without_package.filtered(lambda move: not move.scrap_ids)
 
     def _check_move_lines_map_quant_package(self, package):
         """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """
