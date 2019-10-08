@@ -329,4 +329,5 @@ class AccountMove(models.Model):
             raise UserError(_('No decoder was found for the xml file: {}. The file is badly formatted, not supported or the decoder is not installed').format(attachment.name))
 
     def _remove_ocr_option(self):
-        self.write({'extract_state': 'done'})
+        if 'extract_state' in self:
+            self.write({'extract_state': 'done'})
