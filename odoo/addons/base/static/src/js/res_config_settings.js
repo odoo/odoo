@@ -4,6 +4,7 @@ odoo.define('base.settings', function (require) {
 var BasicModel = require('web.BasicModel');
 var core = require('web.core');
 var config = require('web.config');
+var Dialog = require('web.Dialog');
 var FormView = require('web.FormView');
 var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
@@ -380,12 +381,15 @@ var BaseSettingController = FormController.extend({
      */
     _onButtonClicked: function (ev) {
         var self = this;
-        if (ev.data.attrs.name !== 'execute' && ev.data.attrs.name !== 'cancel') {
-            var recordID = ev.data.recordID;
+        if (ev.data.attrs.name !== 'execute' && ev.data.attrs.name !== 'cancel' && self.$(".o_dirty_warning").length !== 0) {
             var _super = this._super;
             var args = arguments;
-            this._discardChanges(recordID).then(function () {
-                _super.apply(self, args);
+            var message = _t("The settings have been modified. If you do this action, they will be saved.");
+            Dialog.confirm(self, message, {
+                title: _t("Warning"),
+                confirm_callback: function () {
+                    _super.apply(self, args);
+                },
             });
         } else {
             this._super.apply(this, arguments);
