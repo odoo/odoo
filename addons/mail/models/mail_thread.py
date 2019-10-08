@@ -679,7 +679,7 @@ class MailThread(models.AbstractModel):
         }
         bounce_from = self.env['ir.mail_server']._get_default_bounce_address()
         if bounce_from:
-            bounce_mail_values['email_from'] = 'MAILER-DAEMON <%s>' % bounce_from
+            bounce_mail_values['email_from'] = tools.formataddr(('MAILER-DAEMON', bounce_from))
         bounce_mail_values.update(mail_values)
         self.env['mail.mail'].create(bounce_mail_values).send()
 
@@ -1483,7 +1483,7 @@ class MailThread(models.AbstractModel):
         if partner and partner.id in [val[0] for val in result[self.ids[0]]]:  # already existing partner ID -> skip
             return result
         if partner and partner.email:  # complete profile: id, name <email>
-            result[self.ids[0]].append((partner.id, '%s<%s>' % (partner.name, partner.email), reason))
+            result[self.ids[0]].append((partner.id, tools.formataddr((partner.name, partner.email)), reason))
         elif partner:  # incomplete profile: id, name
             result[self.ids[0]].append((partner.id, '%s' % (partner.name), reason))
         else:  # unknown partner, we are probably managing an email address
