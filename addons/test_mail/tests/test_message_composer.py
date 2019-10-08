@@ -5,27 +5,18 @@ import base64
 
 from unittest.mock import patch
 
-from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
-from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.tools import mute_logger
 
 
-class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
+class TestComposer(TestMailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
         super(TestComposer, cls).setUpClass()
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
-
-        # configure mailing
-        cls.alias_domain = 'schlouby.fr'
-        cls.alias_catchall = 'test+catchall'
-        cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
-        cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
-
-        # admin should not receive emails
-        cls.user_admin.write({'notification_type': 'email'})
+        cls._reset_mail_context(cls.test_record)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_comment(self):
@@ -134,7 +125,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_compose_portal_ok(self):
-        portal_user = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
+        portal_user = self._create_portal_user()
 
         with patch.object(MailTestSimple, 'check_access_rights', return_value=True):
             ComposerPortal = self.env['mail.compose.message'].with_user(portal_user)
@@ -162,7 +153,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
             self.assertEqual(self.test_record.message_ids[0].author_id, portal_user.partner_id)
 
 
-class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
+class TestComposerWTpl(TestMailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -212,12 +203,15 @@ class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
         # perform onchange and send emails
         values = composer.onchange_template_id(self.email_template.id, 'comment', self.test_record._name, self.test_record.id)['value']
         composer.write(values)
-        composer.send_mail()
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            composer.send_mail()
 
         new_partners = self.env['res.partner'].search([('email', 'in', [self.email_1, self.email_2])])
-        self.assertEmails(
+        self.assertMailSent(
             self.user_employee.partner_id,
-            [[self.partner_1], [self.partner_2], [new_partners[0]], [new_partners[1]], [self.partner_admin]],
+            [self.partner_1, self.partner_2, new_partners[0], new_partners[1], self.partner_admin],
+            False,
+            check_mail_mail=False,
             subject='About %s' % self.test_record.name,
             body_content=self.test_record.name,
             attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
@@ -275,7 +269,8 @@ class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
         }).create({})
         values = composer.onchange_template_id(self.email_template.id, 'mass_mail', 'mail.test.simple', self.test_record.id)['value']
         composer.write(values)
-        composer.send_mail()
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            composer.send_mail()
 
         new_partners = self.env['res.partner'].search([('email', 'in', [self.email_1, self.email_2])])
         # hack to use assertEmails
@@ -283,17 +278,21 @@ class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
         self._mails_record2 = [dict(mail) for mail in self._mails if '%s-%s' % (test_record_2.id, test_record_2._name) in mail['message_id']]
 
         self._mails = self._mails_record1
-        self.assertEmails(
+        self.assertMailSent(
             self.user_employee.partner_id,
-            [[self.partner_1], [self.partner_2], [new_partners[0]], [new_partners[1]], [self.partner_admin]],
+            [self.partner_1, self.partner_2, new_partners[0], new_partners[1], self.partner_admin],
+            False,
+            check_mail_mail=False,
             subject='About %s' % self.test_record.name,
             body_content=self.test_record.name,
             attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
 
         self._mails = self._mails_record2
-        self.assertEmails(
+        self.assertMailSent(
             self.user_employee.partner_id,
-            [[self.partner_1], [self.partner_2], [new_partners[0]], [new_partners[1]], [self.partner_admin]],
+            [self.partner_1, self.partner_2, new_partners[0], new_partners[1], self.partner_admin],
+            False,
+            check_mail_mail=False,
             subject='About %s' % test_record_2.name,
             body_content=test_record_2.name,
             attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
