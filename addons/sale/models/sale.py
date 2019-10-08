@@ -552,6 +552,7 @@ class SaleOrder(models.Model):
         invoice_vals_list = []
         for order in self:
             pending_section = None
+            has_invoicable_line = False
 
             # Invoice values.
             invoice_vals = order._prepare_invoice()
@@ -563,13 +564,15 @@ class SaleOrder(models.Model):
                     continue
                 if float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     continue
+                elif not line.is_downpayment:
+                    has_invoicable_line = True
                 if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final):
                     if pending_section:
                         invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_invoice_line()))
                         pending_section = None
                 invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_invoice_line()))
 
-            if not invoice_vals['invoice_line_ids']:
+            if not has_invoicable_line:
                 raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
 
             invoice_vals_list.append(invoice_vals)
