@@ -303,7 +303,7 @@ class IrHttp(models.AbstractModel):
         }
 
         session_info.update({
-            'translationURL': '/website/translations/',
+            'translationURL': '/website/translations',
             'cache_hashes': {
                 'translations': hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest(),
             },
