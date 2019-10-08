@@ -4,6 +4,8 @@ from odoo.tests import tagged, new_test_user
 from odoo import fields
 from odoo.exceptions import ValidationError, UserError
 
+from dateutil.relativedelta import relativedelta
+
 
 @tagged('post_install', '-at_install')
 class TestAccountMove(InvoiceTestCommon):
@@ -113,19 +115,10 @@ class TestAccountMove(InvoiceTestCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.button_draft()
 
-        copy_move = self.test_move.copy()
-
         # Try to add a new journal entry prior to the lock date.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            copy_move.post()
-
-        # You can change the date as the journal entry is not posted.
-        copy_move.date = fields.Date.from_string('2018-01-01')
-        copy_move.post()
-
-        # You can't change the date to one being in a locked period.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            copy_move.date = fields.Date.from_string('2017-01-01')
+        copy_move = self.test_move.copy({'date': '2017-01-01'})
+        # The date has been changed to the first valid date.
+        self.assertEqual(copy_move.date, copy_move.company_id.fiscalyear_lock_date + relativedelta(days=1))
 
     def test_misc_tax_lock_date_1(self):
         self.test_move.post()
