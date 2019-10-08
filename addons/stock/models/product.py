@@ -318,6 +318,21 @@ class Product(models.Model):
             stock_loc_domain = expression.AND([domain + loc_domain, [('location_id.usage', 'in', usage)]])
         else:
             stock_loc_domain = domain + loc_domain
+
+        # Complete stock_loc_domain to include locations which no dot belong to any warehouses but
+        # are child of physical locations.
+        no_wh_domain = [('location_id', 'child_of', self.env.ref('stock.stock_location_locations').id)]
+        warehouses = self.env['stock.warehouse'].search([])
+        for warehouse in warehouses:
+            no_wh_domain = expression.AND([no_wh_domain, ['!', ('location_id', 'child_of', warehouse.view_location_id.id)]])
+        usage = self._context.get('quantity_available_locations_domain')
+        if usage:
+            no_wh_domain = expression.AND([no_wh_domain, [('location_id.usage', 'in', usage)]])
+        else:
+            no_wh_domain = expression.AND([no_wh_domain, [('location_id.usage', '=', 'internal')]])
+
+        stock_loc_domain = expression.OR([stock_loc_domain, no_wh_domain])
+
         return (
             stock_loc_domain,
             domain + dest_loc_domain + ['!'] + loc_domain if loc_domain else domain + dest_loc_domain,

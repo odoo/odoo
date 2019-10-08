@@ -14,12 +14,16 @@ class StockMove(SavepointCase):
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         cls.pack_location = cls.env.ref('stock.location_pack_zone')
         cls.pack_location.active = True
-        cls.transit_location = cls.env['stock.location'].search([
+        cls.inter_wh_transit_location = cls.env['stock.location'].search([
             ('company_id', '=', cls.env.company.id),
             ('usage', '=', 'transit'),
             ('active', '=', False)
         ], limit=1)
-        cls.transit_location.active = True
+        cls.inter_wh_transit_location.active = True
+        cls.inter_company_transit_location = cls.env['stock.location'].search([
+            ('company_id', '=', False),
+            ('usage', '=', 'transit'),
+        ], limit=1)
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
         cls.product = cls.env['product.product'].create({
@@ -4046,10 +4050,8 @@ class StockMove(SavepointCase):
             elif quant.lot_id == lot2:
                 self.assertAlmostEqual(quant.in_date, initial_in_date_lot2, delta=timedelta(seconds=1))
 
-    def test_transit_1(self):
-        """ Receive some products, send some to transit, check the product's `available_qty`
-        computed field with or without the "company_owned" key in the context.
-        """
+    def test_qty_available_1(self):
+        """Check the product's `available_qty` computed field with products in the inter-wh location."""
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
             'location_id': self.supplier_location.id,
@@ -4069,7 +4071,7 @@ class StockMove(SavepointCase):
         move2 = self.env['stock.move'].create({
             'name': 'test_transit_1',
             'location_id': self.stock_location.id,
-            'location_dest_id': self.transit_location.id,
+            'location_dest_id': self.inter_wh_transit_location.id,
             'product_id': self.product.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 5.0,
@@ -4080,7 +4082,47 @@ class StockMove(SavepointCase):
         move2._action_done()
 
         self.assertEqual(self.product.qty_available, 5.0)
-        self.assertEqual(self.product.with_context(company_owned=True).qty_available, 10.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 10.0)
+
+        # move something to intercompany transit and see it is not seen by qty_available
+        move3 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.inter_company_transit_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+        })
+        move3._action_confirm()
+        move3._action_assign()
+        move3.move_line_ids.qty_done = 2
+        move3._action_done()
+
+        self.assertEqual(self.product.qty_available, 3.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 8.0)
+
+        # move something to a location below physical but not below a warehouse's view location and check it is seen by qty_available
+        below_physical = self.env['stock.location'].create({
+            'name': 'below physical',
+            'usage': 'internal',
+            'location_id': self.env.ref('stock.stock_location_locations').id,
+        })
+        move4 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': below_physical.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+        })
+        move4._action_confirm()
+        move4._action_assign()
+        move4.move_line_ids.qty_done = 2
+        move4._action_done()
+
+        self.assertEqual(self.product.qty_available, 3.0)
+        self.assertEqual(self.product.with_context(quantity_available_locations_domain=('internal', 'transit',)).qty_available, 8.0)
+        self.assertEqual(len(self.gather_relevant(self.product, below_physical)), 1.0)
 
     def test_edit_initial_demand_1(self):
         """ Increase initial demand once everything is reserved and check if
