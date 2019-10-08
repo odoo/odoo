@@ -520,6 +520,39 @@ QUnit.test('attachmentBox basic rendering', async function (assert) {
     form.destroy();
 });
 
+QUnit.test('attachmentBox: deletable attachments', async function (assert) {
+    assert.expect(1);
+    this.data.partner.records.push({
+        id: 7,
+        display_name: "attachment_test",
+    });
+
+    const form = await createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    '<field name="foo"/>
+                </sheet>
+                <div class="oe_chatter">
+                    '<field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>`,
+        res_id: 7,
+    });
+    await testUtils.dom.click(form.$('.o_chatter_button_attachment'));
+    assert.containsN(
+        form,
+        '.o_attachment_delete_cross',
+        2,
+        "Attachments should be deletable inside attachment box");
+
+    form.destroy();
+});
+
 QUnit.test('chatter in create mode', async function (assert) {
     assert.expect(9);
 
