@@ -9,6 +9,9 @@
             <xpath expr="//field[@name='module_stock_sms']" position="replace">
                 <field name="stock_move_sms_validation"/>
             </xpath>
+            <xpath expr="//label[@for='module_stock_sms']" position="replace">
+                <label for="stock_move_sms_validation"/>
+            </xpath>
             <xpath expr="//div[@id='stock_confirmation_sms']" position="replace">
                 <div class="row mt16" attrs="{'invisible': [('stock_move_sms_validation', '=', False)]}">
                     <label for="stock_sms_confirmation_template_id" string="SMS Template" class="col-lg-4 o_light_label"/>

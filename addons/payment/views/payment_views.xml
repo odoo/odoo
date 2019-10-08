@@ -36,7 +36,7 @@
                             </group>
                         </group>
                         <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
-                            <page string="Credentials" name="acquirer_credentials" attrs="{'invisible': ['provider', '=', 'manual']}">
+                            <page string="Credentials" name="acquirer_credentials" attrs="{'invisible': [('provider', '=', 'manual')]}">
                                 <group name="acquirer">
                                 </group>
                             </page>

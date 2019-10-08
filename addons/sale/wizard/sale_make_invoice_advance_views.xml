@@ -10,7 +10,7 @@
                         them before validation.
                     </p>
                     <group>
-                        <field name="count" invisible="[('count','=',1)]" readonly="True"/>
+                        <field name="count" attrs="{'invisible': [('count','=', 1)]}" readonly="True"/>
                         <field name="advance_payment_method" class="oe_inline" widget="radio"
                             attrs="{'invisible': [('count','&gt;',1)]}"/>
                         <field name="has_down_payments" invisible="1" />

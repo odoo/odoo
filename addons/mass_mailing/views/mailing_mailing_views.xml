@@ -340,7 +340,7 @@
                                 </div>
                                 <div name="div_responsible_avatar">
                                     <span attrs="{'invisible': [('sent_date', '=', False)]}">
-                                        <span class="fa fa-clock-o text-muted mr-2"/>
+                                        <span class="fa fa-clock-o text-muted mr-2" aria-label="Sent date"/>
                                         <field name="sent_date" widget="date"/>
                                     </span>
                                     <span attrs="{'invisible': [('sent_date', '!=', False)]}" class="oe_clear text-muted">

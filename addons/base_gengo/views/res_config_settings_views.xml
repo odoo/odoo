@@ -7,13 +7,13 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='base_gengo_right_pane']" position="inside">
                 <div name="base_gengo_right_pane" position="replace">
-                    <label for="id" string="Public Key" attrs="{'invisible': [('module_base_gengo','=',False)]}"/>
+                    <label for="gengo_public_key" string="Public Key" attrs="{'invisible': [('module_base_gengo','=',False)]}"/>
                     <div name="gengo_public_key" attrs="{'invisible': [('module_base_gengo','=',False)]}">
                         <div name="gengo_public_key">
                             <field name="gengo_public_key" nolabel="1" placeholder="Add Gengo login Public Key..."/>
                         </div>
                     </div>
-                    <label for="id" string="Private Key" attrs="{'invisible': [('module_base_gengo','=',False)]}"/>
+                    <label for="gengo_private_key" string="Private Key" attrs="{'invisible': [('module_base_gengo','=',False)]}"/>
                     <div name="gengo_private_key" attrs="{'invisible': [('module_base_gengo','=',False)]}">
                         <div name="gengo_private_key">
                             <field name="gengo_private_key" password="True" nolabel="1" placeholder="Add Gengo login Private Key..."/>
@@ -22,16 +22,16 @@
                     <div name="gengo_auto_approve" attrs="{'invisible': [('module_base_gengo','=',False)]}">
                         <div name="gengo_auto_approve">
                             <field name="gengo_auto_approve" class="oe_inline"/>
-                            <label for="id" string="Auto Approve Translation"/>
+                            <label for="gengo_auto_approve" string="Auto Approve Translation"/>
                         </div>
                     </div>
                     <div name="gengo_sandbox" attrs="{'invisible': [('module_base_gengo','=',False)]}">
                         <div name="gengo_sandbox">
                             <field name="gengo_sandbox" class="oe_inline"/>
-                            <label for="id" string="Sandbox Mode"/>
+                            <label for="gengo_sandbox" string="Sandbox Mode"/>
                         </div>
                     </div>
-                    <label for="id" string="Comment" attrs="{'invisible': [('module_base_gengo','=',False)]}"/>
+                    <label for="gengo_comment" string="Comment" attrs="{'invisible': [('module_base_gengo','=',False)]}"/>
                     <div name="gengo_comment" attrs="{'invisible': [('module_base_gengo','=',False)]}">
                         <div name="gengo_comment">
                             <field name="gengo_comment" nolabel="1" placeholder="Add your comments here for translator...."/>
