@@ -7,7 +7,6 @@ import re
 from binascii import Error as binascii_error
 from collections import defaultdict
 from operator import itemgetter
-from email.utils import formataddr
 from odoo.http import request
 
 from odoo import _, api, fields, models, modules, tools

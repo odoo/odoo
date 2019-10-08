@@ -99,7 +99,7 @@ class PortalWizardUser(models.TransientModel):
                                 '\n- '.join(partners_error_emails.mapped('email'))))
         if partners_error_user:
             error_msg.append("%s\n- %s" % (_("Some contacts have the same email as an existing portal user:"),
-                                '\n- '.join(['%s <%s>' % (p.display_name, p.email) for p in partners_error_user])))
+                                '\n- '.join([p.email_formatted for p in partners_error_user])))
         if error_msg:
             error_msg.append(_("To resolve this error, you can: \n"
                 "- Correct the emails of the relevant contacts\n"

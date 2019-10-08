@@ -271,7 +271,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         # Test bounce email
         self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
         self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
-        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
+        self.assertEqual(self._mails[0].get('email_from'), '"MAILER-DAEMON" <bounce.test@test.com>')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_message_process_alias_followers_bounce(self):
@@ -289,7 +289,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
                          'message_process: incoming email on Followers alias should send a bounce email')
         self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
         self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
-        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
+        self.assertEqual(self._mails[0].get('email_from'), '"MAILER-DAEMON" <bounce.test@test.com>')
 
         # Test: partner on followers alias -> bounce
         self._init_mock_build_email()
@@ -299,7 +299,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
                          'message_process: incoming email on Followers alias should send a bounce email')
         self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
         self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
-        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
+        self.assertEqual(self._mails[0].get('email_from'), '"MAILER-DAEMON" <bounce.test@test.com>')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_partner(self):
@@ -423,7 +423,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         # Test bounce email
         self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
         self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
-        self.assertEqual(self._mails[0].get('email_from'), 'MAILER-DAEMON <bounce.test@test.com>')
+        self.assertEqual(self._mails[0].get('email_from'), '"MAILER-DAEMON" <bounce.test@test.com>')
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_bounce_alias(self):

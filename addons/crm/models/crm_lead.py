@@ -1287,7 +1287,7 @@ class Lead(models.Model):
                 emails = email_re.findall(partner_info['full_name'] or '')
                 email = emails and emails[0] or ''
                 if email and self.email_from and email.lower() == self.email_from.lower():
-                    partner_info['full_name'] = '%s <%s>' % (self.contact_name or self.partner_name, email)
+                    partner_info['full_name'] = tools.formataddr((self.contact_name or self.partner_name, email))
                     break
         return result
 
