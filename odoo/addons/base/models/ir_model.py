@@ -119,6 +119,8 @@ class IrModel(models.Model):
             parent_names = list(self.env[model.model]._inherits)
             if parent_names:
                 model.inherited_model_ids = self.search([('model', 'in', parent_names)])
+            else:
+                model.inherited_model_ids = False
 
     @api.depends()
     def _in_modules(self):
