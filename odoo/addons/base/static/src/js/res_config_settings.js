@@ -7,12 +7,13 @@ var config = require('web.config');
 var FormView = require('web.FormView');
 var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
+var KanbanTabsMobileMixin = require('web.KanbanTabsMobileMixin');
 var view_registry = require('web.view_registry');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
-var BaseSettingRenderer = FormRenderer.extend({
+var BaseSettingRenderer = FormRenderer.extend(KanbanTabsMobileMixin, {
     events: _.extend({}, FormRenderer.prototype.events, {
         'click .tab': '_onSettingTabClick',
         'keyup .searchInput': '_onKeyUpSearch',
@@ -52,6 +53,7 @@ var BaseSettingRenderer = FormRenderer.extend({
      */
     on_attach_callback: function () {
         this._super.apply(this, arguments);
+        this._computeTabPosition(this.modules, this.currentIndex, this.$('.settings_tab'));
         // set default focus on searchInput
         this.searchInput.focus();
     },
@@ -123,27 +125,22 @@ var BaseSettingRenderer = FormRenderer.extend({
 
             if (index === previous) {
                 tab.addClass("previous");
-                tab.css("margin-left", "0px");
                 view.addClass("previous");
             } else if (index === next) {
                 tab.addClass("next");
-                tab.css("margin-left", "-" + tab.outerWidth() + "px");
                 view.addClass("next");
             } else if (index < moveTo) {
                 tab.addClass("before");
-                tab.css("margin-left", "-" + tab.outerWidth() + "px");
                 view.addClass("before");
             } else if (index === moveTo) {
-                var marginLeft = tab.outerWidth() / 2;
-                tab.css("margin-left", "-" + marginLeft + "px");
                 tab.addClass("current");
                 view.addClass("current");
             } else if (index > moveTo) {
                 tab.addClass("after");
-                tab.css("margin-left", "0");
                 view.addClass("after");
             }
         });
+        this._computeTabPosition(this.modules, moveTo, this.$('.settings_tab'));
     },
     /**
      * find current app index in modules
@@ -193,6 +190,12 @@ var BaseSettingRenderer = FormRenderer.extend({
             imgurl: imgurl,
             string: string
         }));
+    },
+    /**
+     * @override
+     */
+    _getTabWidth: function (column) {
+        return this.$(".tab[data-key='" + column.key + "']").outerWidth();
     },
     /**
      * move to selected setting

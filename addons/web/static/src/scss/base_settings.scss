@@ -91,9 +91,12 @@
 
             @include media-breakpoint-down(sm) {
                 flex: 0 0 $o-base-settings-mobile-tabs-height;
-                display: inline-flex;
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
                 position: relative;
                 overflow: hidden;
+                overflow-x: auto;
                 padding: 0;
             }
 
@@ -125,7 +128,6 @@
                 // Mobile Tabs
                 @include media-breakpoint-down(sm) {
                     display: block;
-                    @include o-position-absolute($left:100%);
                     @include size(auto, $o-base-settings-mobile-tabs-height);
                     padding: $o-base-settings-mobile-tabs-height*0.25 $o-base-settings-mobile-tabs-height*0.4;
                     text-align: center;
@@ -149,12 +151,7 @@
                         transition: 0.2s all ease 0s;
                     }
 
-                    &.previous, &.before {
-                        left: 0% - $o-base-settings-mobile-tabs-overflow-gap;
-                    }
-
                     &.current {
-                        left: 50%;
                         color: white;
 
                         // Reset default style for 'selected' tabs
@@ -164,10 +161,6 @@
                         &:after {
                             opacity: 1;
                         }
-                    }
-
-                    &.next, &.after {
-                        left: 100% + $o-base-settings-mobile-tabs-overflow-gap;
                     }
                 }
             }
