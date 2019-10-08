@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, SUPERUSER_ID
+from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
@@ -397,7 +397,7 @@ class Applicant(models.Model):
             elif applicant.email_from:
                 email_from = applicant.email_from
                 if applicant.partner_name:
-                    email_from = '%s<%s>' % (applicant.partner_name, email_from)
+                    email_from = tools.formataddr((applicant.partner_name, email_from))
                 applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
         return recipients
 
