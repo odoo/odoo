@@ -428,6 +428,7 @@ class account_payment(models.Model):
             'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (self.env.ref('account.view_move_form').id, 'form')],
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', [x.id for x in self.reconciled_invoice_ids])],
+            'context': {'create': False},
         }
 
     def unreconcile(self):
