@@ -710,7 +710,15 @@ registry.backgroundVideo = publicWidget.Widget.extend({
             }
         }
 
-        $(window).on('resize.' + this.iframeID, _.throttle(() => this._adjustIframe(), 50));
+        var throttledUpdate = _.throttle(() => this._adjustIframe(), 50);
+
+        var $dropdownMenu = this.$el.closest('.dropdown-menu');
+        if ($dropdownMenu.length) {
+            this.$dropdownParent = $dropdownMenu.parent();
+            this.$dropdownParent.on('shown.bs.dropdown.backgroundVideo', throttledUpdate);
+        }
+
+        $(window).on('resize.' + this.iframeID, throttledUpdate);
 
         return Promise.all(proms).then(() => this._appendBgVideo());
     },
@@ -719,6 +727,10 @@ registry.backgroundVideo = publicWidget.Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
+
+        if (this.$dropdownParent) {
+            this.$dropdownParent.off('.backgroundVideo');
+        }
 
         $(window).off('resize.' + this.iframeID);
 
@@ -738,6 +750,8 @@ registry.backgroundVideo = publicWidget.Widget.extend({
      * @private
      */
     _adjustIframe: function () {
+        this.$iframe.removeClass('show');
+
         // Adjust the iframe
         var wrapperWidth = this.$target.innerWidth();
         var wrapperHeight = this.$target.innerHeight();
@@ -755,6 +769,9 @@ registry.backgroundVideo = publicWidget.Widget.extend({
             style['top'] = '0';
         }
         this.$iframe.css(style);
+
+        void this.$iframe[0].offsetWidth; // Force style addition
+        this.$iframe.addClass('show');
     },
     /**
      * Append background video related elements to the target.
