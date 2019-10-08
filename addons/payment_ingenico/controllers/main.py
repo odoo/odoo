@@ -23,7 +23,7 @@ class OgoneController(http.Controller):
         '/payment/ogone/exception', '/payment/ogone/test/exception',
         '/payment/ogone/cancel', '/payment/ogone/test/cancel',
     ], type='http', auth='public')
-    def ogone_form_feedback(self, **post):# used when redirected on ogone website
+    def ogone_form_feedback(self, **post):
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
         request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
@@ -36,7 +36,7 @@ class OgoneController(http.Controller):
         new_id = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
         return new_id.id
 
-    @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False) # verify if used when redirected on ogone website
+    @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False)
     def ogone_s2s_create(self, **post):
         error = ''
         acq = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))

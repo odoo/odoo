@@ -7,7 +7,7 @@ from hashlib import sha1
 from pprint import pformat
 import json
 import pprint
-
+import re
 import requests
 from lxml import etree, objectify
 from werkzeug import urls, url_encode
@@ -57,8 +57,8 @@ class PaymentAcquirerOgone(models.Model):
         """ Ogone URLS:
          - standard order: POST address for form-based """
         if environment == 'test':
-            alias_gateway_url = "https://ogone.test.v-psp.com/ncol/test/alias_gateway_utf8.asp" # defined in the documentation
-            # alias_gateway_url = "https://secure.ogone.com/ncol/test/alias_gateway_utf8.asp" # works but support depreciate it
+            alias_gateway_url = "https://ogone.test.v-psp.com/ncol/test/alias_gateway_utf8.asp"  # defined in the documentation
+            # alias_gateway_url = "https://secure.ogone.com/ncol/test/alias_gateway_utf8.asp" # works but Ingenico support do not recommend it
         else:
             alias_gateway_url = "https://secure.ogone.com/ncol/prod/alias_gateway_utf8.asp"
         return {
@@ -75,7 +75,7 @@ class PaymentAcquirerOgone(models.Model):
         try:
             if shasign_check.upper() != shasign.upper():
                 error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (
-                shasign, shasign_check, data)
+                    shasign, shasign_check, data)
                 _logger.info(error_msg)
                 raise ValidationError(error_msg)
         except ValidationError:
@@ -103,8 +103,7 @@ class PaymentAcquirerOgone(models.Model):
         data_odoo = post['FORM_VALUES'].split(',')
         form_data = {}
         for val in data_odoo:
-            # Fixme, use a regex ?
-            val = val.replace('\\', '').replace('+', '').replace('{', '').replace('}', '').replace("\'", '')
+            val = re.sub("\+|{|}|'|", "", val)
             key, value = val.split(':')
             form_data[key] = value
 
@@ -127,11 +126,9 @@ class PaymentAcquirerOgone(models.Model):
                         'error_ed': ogone.OGONE_ERROR_MAP.get(post.get('NCERRORED', ''), '')
                     }
             return False, {'error': error}
-        # TODO: verify what happends with anonymous client
         if post.get('PARTNER_ID'):
             cvc_masked = 'XXX'
             card_number_masked = post['CARDNO']
-            # Could be done in _ogone_form_get_tx_from_data ?
             token_parameters = {
                 'cc_number': card_number_masked,
                 'cc_cvc': cvc_masked,
@@ -162,9 +159,8 @@ class PaymentAcquirerOgone(models.Model):
             return {'success': False, 'error': error_message}
 
     def _ogone_transaction_feedback(self, post):
+        # 3DS validation feedback.
         _logger.info('Ingnico: feeback 3DS with post data %s', pprint.pformat(post))
-        # 3DS validation feedback. The payment has been made.
-        # Next step: modify the transaction status and redirect to /payment/process
         amount = post.get('AMOUNT', 0)
         reference = post.get('ORDERID', '')
         partner_name = post.get('CN', '')
@@ -192,7 +188,8 @@ class PaymentAcquirerOgone(models.Model):
         _logger.info('Ingnico: feeback 3DS with post data %s', pprint.pformat(post))
 
         """"
-        Notes: status U: (Authentication/ Account Verification Could Not Be Performed;Technical or other problem, as indicated inRReq)
+        Certaines cartes sensées produire des erreurs n'en font pas:
+        status U: (Authentication/ Account Verification Could Not Be Performed;Technical or other problem, as indicated inRReq)
         Il renvoie status 9 alors pendant un temps le système demande de cliquer pour s'authentifier puis ça passe en done...
 
         status A: Not Authenticated/Verified, but a proof of attempted authentication/verification is provided)
@@ -298,13 +295,12 @@ class PaymentAcquirerOgone(models.Model):
         return shasign
 
     def ogone_alias_values(self, paramplus):
-        # base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        custom_base_url = "http://arj-odoo.agayon.be" # testing purpose
+        base_url =self.get_base_url()
         path_url = "payment/ogone/feedback/"
         ogone_alias_values = {'PSPID': self.with_user(SUPERUSER_ID).ogone_pspid,
-                              'ACCEPTURL': urls.url_join(custom_base_url, path_url),
-                              'EXCEPTIONURL': urls.url_join(custom_base_url, path_url),
-                              'ALIASPERSISTEDAFTERUSE': 'N', 'ALIAS': 'ARJ-ODOO-NEW-ALIAS-%s' % time.time(),
+                              'ACCEPTURL': urls.url_join(base_url, path_url),
+                              'EXCEPTIONURL': urls.url_join(base_url, path_url),
+                              'ALIASPERSISTEDAFTERUSE': 'N', 'ALIAS': 'ODOO-NEW-ALIAS-%s' % time.time(),
                               'PARAMPLUS': url_encode(paramplus),
                               }
 
@@ -314,7 +310,7 @@ class PaymentAcquirerOgone(models.Model):
         return ogone_alias_values, shasign
 
     def ogone_form_generate_values(self, values):
-        base_url = self.get_base_url()
+        base_url =self.get_base_url()
         ogone_tx_values = dict(values)
         param_plus = {
             'return_url': ogone_tx_values.pop('return_url', False)
@@ -357,6 +353,7 @@ class PaymentAcquirerOgone(models.Model):
         # ARJ QUESTION: token created in _ogone_alias_gateway_feedback
         # but this function is needed to provide the pm_id (crash if not defined)
         # only one payment token is created thought (in _ogone_alias_gateway_feedback)
+        # What is happening ?
         values = {
             'cc_number': data.get('cc_number'),
             'cc_cvc': int(data.get('cc_cvc')),
@@ -384,7 +381,7 @@ class PaymentTxOgone(models.Model):
     # --------------------------------------------------
 
     @api.model
-    def _ogone_form_get_tx_from_data(self, data):#ok on ogone
+    def _ogone_form_get_tx_from_data(self, data):
         """ Given a data dict coming from ogone, verify it and find the related
         transaction record. Create a payment token if an alias is returned."""
         reference, pay_id, shasign, alias = data.get('orderID'), data.get('PAYID'), data.get('SHASIGN'), data.get('ALIAS')
@@ -495,7 +492,7 @@ class PaymentTxOgone(models.Model):
     # S2S RELATED METHODS
     # --------------------------------------------------
     def ogone_s2s_do_transaction(self, **kwargs):
-        base_url = base_url = self.get_base_url()
+        base_url = self.get_base_url()
         path_url = "/payment/ogone/feedback"
         account = self.acquirer_id
         reference = self.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
@@ -527,27 +524,20 @@ class PaymentTxOgone(models.Model):
             'BROWSERTIMEZONE': ogone_params['BROWSERTIMEZONE'],
             'BROWSERUSERAGENT': ogone_params['BROWSERUSERAGENT'],
             'ACCEPTURL': urls.url_join(base_url, path_url),
-            'DECLINEURL': urls.url_join(base_url,path_url),
+            'DECLINEURL': urls.url_join(base_url, path_url),
             'EXCEPTIONURL': urls.url_join(base_url, path_url),
+            'FLAG3D': ogone_params['FLAG3D'],
+            'WIN3DS': ogone_params['WIN3DS'],
+            'LANGUAGE': self.partner_id.lang or 'en_US',
+            'REMOTE_ADDR': request.httprequest.remote_addr,
         }
 
-        if request:
-            data['REMOTE_ADDR'] = request.httprequest.remote_addr
-
-        # FIXME kwargs is empty
-        kwargs['3d_secure'] = True
-        if kwargs.get('3d_secure'):
-            data.update({
-                'FLAG3D': 'Y',
-                'LANGUAGE': self.partner_id.lang or 'en_US',
-            })
-
-            for url in 'accept decline exception'.split():
-                key = '{0}_url'.format(url)
-                val = kwargs.pop(key, None)
-                if val:
-                    key = '{0}URL'.format(url).upper()
-                    data[key] = val
+        for url in 'accept decline exception'.split():
+            key = '{0}_url'.format(url)
+            val = kwargs.pop(key, None)
+            if val:
+                key = '{0}URL'.format(url).upper()
+                data[key] = val
 
         data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
         environnement = 'prod' if self.acquirer_id.state == 'enabled' else 'test'
@@ -700,7 +690,7 @@ class PaymentTxOgone(models.Model):
 class PaymentToken(models.Model):
     _inherit = 'payment.token'
 
-    ogone_params = fields.Char('Alias gateway return values',)
+    ogone_params = fields.Char('Alias gateway return values', )
 
     def ogone_create(self, values):
         return {

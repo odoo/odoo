@@ -993,11 +993,8 @@ class WebsiteSale(http.Controller):
             order.with_context(send_email=True).action_confirm()
             return request.redirect(order.get_portal_url())
 
-        # clean context and session, then redirect to the confirmation page.
-        # As it clears the cart, we only do it when something went wrong. FIXME NO THE CART IS EMPTY
-        probleme cart is never saved if error
-        if tx.state not in ['error', 'cancel']:
-            request.website.sale_reset()
+        # clean context and session, then redirect to the confirmation page
+        request.website.sale_reset()
         if tx and tx.state == 'draft':
             return request.redirect('/shop')
 

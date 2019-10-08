@@ -43,7 +43,7 @@ odoo.define('payment_ogone.payment_form', function (require) {
             paramPlus['browserTimeZone'] = new Date().getTimezoneOffset();
             paramPlus['browserUserAgent'] = navigator.userAgent;
             paramPlus['FLAG3D'] = 'Y',
-            paramPlus['WIN3DS'] = 'MAINW'; // 'POPUP';
+            paramPlus['WIN3DS'] = 'MAINW';
             paramPlus['return_url'] = formData['return_url'];
             paramPlus['form_values'] = processData;
             paramPlus['form_action_url'] = this.el["action"];

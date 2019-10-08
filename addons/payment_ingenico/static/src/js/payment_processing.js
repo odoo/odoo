@@ -20,9 +20,7 @@ odoo.define('payment_ingenico.processing', function (require) {
                 var tx = transactions[itx];
                 if (tx.acquirer_provider === 'ogone' && tx.state === 'pending' && tx.html_3ds && !this._authInProgress) {
                     this._authInProgress = true;
-                window.document.body.innerHTML = document.body.innerHTML + tx.html_3ds; 
-                var ingenico = $('script').last().html();
-                $.globalEval(ingenico);
+                    $("body").html(tx.html_3ds);
                 }
             }
         },
