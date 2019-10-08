@@ -608,7 +608,7 @@ Model Reference
 
 .. currentmodule:: odoo.models
 
-.. autoclass:: odoo.models.Model
+.. autoclass:: Model
 
     .. rubric:: Structural attributes
 
@@ -707,29 +707,28 @@ Model Reference
 
      .. attribute:: _parent_name
 
-         Alternative field to use as parent, used by indexed storage of the tree structure of records
-        (default: ``'parent_id'``)
+        Alternative field to use as parent, used by indexed storage of the tree structure of records
+          (default: ``'parent_id'``)
 
          :type: str
 
      .. attribute:: _date_name
 
-         Alternative field to use for default calendar view
-        (default: ``'date'``)
+         Alternative field to use for default calendar view (default: ``'date'``)
 
-         :type: str     
+         :type: str
 
      .. attribute:: _fold_name
 
-         Alternative field to determine folded groups in kanban views
-        (default: ``'fold'``)
+        Alternative field to determine folded groups in kanban views
+          (default: ``'fold'``)
 
-         :type: str 
+         :type: str
 
      .. attribute:: _translate
 
-         False disables translations export for this model
-        (default: ``True``)
+        False disables translations export for this model
+          (default: ``True``)
 
          :type: bool
 
@@ -869,7 +868,7 @@ Method decorators
 =================
 
 .. automodule:: odoo.api
-    :members: model, depends, constrains, onchange, returns,
+    :members: model, depends, constrains, onchange, returns
 
 .. _reference/orm/fields:
 
