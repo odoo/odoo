@@ -186,6 +186,7 @@
                     <field name="date_maturity" optional="hide"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
+                    <field name="balance" sum="Total Balance" readonly="1" optional="hide"/>
                     <field name="amount_currency" readonly="1" groups="base.group_multi_currency"/>
                     <field name="currency_id" readonly="1" invisible="1" />
                     <field name="company_currency_id" invisible="1"/>
@@ -254,6 +255,10 @@
                     <attribute name="optional">hide</attribute>
                     <attribute name="readonly">1</attribute>
                 </field>
+                <field name="balance" position="attributes"><attribute name="optional">show</attribute></field>
+                <field name="balance" position="after">
+                    <field name="cumulated_balance" optional="show"/>
+                </field>
             </field>
         </record>
 
@@ -266,6 +271,10 @@
             <field name="arch" type="xml">
                 <field name="partner_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="date_maturity" position="attributes"><attribute name="optional">show</attribute></field>
+                <field name="balance" position="attributes"><attribute name="optional">show</attribute></field>
+                <field name="balance" position="after">
+                    <field name="cumulated_balance" optional="show"/>
+                </field>
             </field>
         </record>
 
