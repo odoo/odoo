@@ -30,7 +30,7 @@ var DateWidget = Widget.extend({
             locale: moment.locale(),
             format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
             minDate: moment({ y: 1900 }),
-            maxDate: moment().add(200, "y"),
+            maxDate: moment({ y: 9999, M: 11, d: 31 }),
             useCurrent: false,
             icons: {
                 time: 'fa fa-clock-o',
