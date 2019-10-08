@@ -49,7 +49,7 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="display_type"/>
-                <field name="html_color" attrs="{'column_invisible': [('display_type', '!=', 'color')]}" widget="color"/>
+                <field name="html_color" attrs="{'invisible': [('display_type', '!=', 'color')]}" widget="color"/>
             </field>
         </field>
     </record>
