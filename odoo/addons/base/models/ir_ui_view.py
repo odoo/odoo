@@ -259,6 +259,7 @@ actual arch.
          """)
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
+    @api.depends_context('read_arch_from_file')
     def _compute_arch(self):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
@@ -298,6 +299,7 @@ actual arch.
             view.write(data)
 
     @api.depends('arch')
+    @api.depends_context('read_arch_from_file')
     def _compute_arch_base(self):
         # 'arch_base' is the same as 'arch' without translation
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
