@@ -141,7 +141,7 @@ return AbstractWebClient.extend({
             var stringstate = $.bbq.getState(false);
             if (!_.isEqual(self._current_state, stringstate)) {
                 var state = $.bbq.getState(true);
-                if (state.action || (state.model && (state.view_type || state.id))) {
+                if (state.sa || state.action || (state.model && (state.view_type || state.id))) {
                     return self.action_manager.loadState(state, !!self._current_state).then(function () {
                         if (state.menu_id) {
                             if (state.menu_id !== self.menu.current_primary_menu) {
