@@ -2622,7 +2622,7 @@ exports.Order = Backbone.Model.extend({
         return round_pr(due, this.pos.currency.rounding);
     },
     is_paid: function(){
-        return this.get_due() <= 0;
+        return this.get_due() === 0;
     },
     is_paid_with_cash: function(){
         return !!this.paymentlines.find( function(pl){
