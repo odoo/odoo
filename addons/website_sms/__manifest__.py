@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Send SMS to Visitor',
-    'category': 'Website',
+    'category': 'Website/Website',
     'sequence': 54,
     'summary': 'Allows to send sms to website visitor',
     'version': '1.0',
