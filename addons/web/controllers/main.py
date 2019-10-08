@@ -1839,28 +1839,6 @@ class ExcelExport(ExportFormat, http.Controller):
 
         return xlsx_writer.value
 
-class Apps(http.Controller):
-    @http.route('/apps/<app>', auth='user')
-    def get_app_url(self, req, app):
-        try:
-            record = request.env.ref('base.open_module_tree')
-            action = record.read(['name', 'type', 'res_model', 'view_mode', 'view_type', 'context', 'views', 'domain'])[0]
-            action['target'] = 'current'
-        except ValueError:
-            action = False
-        try:
-            app_id = request.env.ref('base.module_%s' % app).id
-        except ValueError:
-            app_id = False
-
-        if action and app_id:
-            action['res_id'] = app_id
-            action['view_mode'] = 'form'
-            action['views'] = [(False, u'form')]
-
-        sakey = Session().save_session_action(action)
-        return werkzeug.utils.redirect('/web#sa={0}'.format(sakey))
-
 
 class ReportController(http.Controller):
 

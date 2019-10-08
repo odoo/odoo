@@ -58,11 +58,8 @@ ActionManager.include({
      * @param {string} [state.view_type]
      */
     loadState: function (state) {
-        var callersArguments = arguments;
         var _super = this._super.bind(this);
-        var self = this;
         var action;
-        var def;
         var options = {
             clear_breadcrumbs: true,
             pushState: false,
@@ -117,20 +114,12 @@ ActionManager.include({
                 action = lastAction;
                 options.viewType = state.view_type;
             }
-        } else if (state.sa) {
-            def = this._rpc({
-                route: '/web/session/get_session_action',
-                params: {key: state.sa},
-            }).then(function (sessionAction) {
-                action = sessionAction;
-            });
         }
-        return Promise.all([def]).then(function () {
-            if (action) {
-                return self.doAction(action, options);
-            }
-            return _super.apply(self, callersArguments);
-        });
+        if (action) {
+            return this.doAction(action, options);
+        }
+        return _super.apply(this, arguments);
+
     },
 
     //--------------------------------------------------------------------------
