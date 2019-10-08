@@ -74,7 +74,7 @@ class account_payment(models.Model):
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
-                                         help="Technical field used to hide the payment method if the"
+                                         help="Technical field used to hide the payment method if the "
                                          "selected journal has only one available which is 'manual'")
 
     payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)

@@ -2376,7 +2376,7 @@ class AccountMoveLine(models.Model):
     name = fields.Char(string='Label')
     quantity = fields.Float(string='Quantity',
         default=1.0, digits='Product Unit of Measure',
-        help="The optional quantity expressed by this line, eg: number of product sold."
+        help="The optional quantity expressed by this line, eg: number of product sold. "
              "The quantity is not a legal requirement but is very useful for some reports.")
     price_unit = fields.Float(string='Unit Price', digits='Product Price')
     discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
