@@ -511,7 +511,7 @@ class MassMailing(models.Model):
             if not res_ids:
                 res_ids = mailing._get_remaining_recipients()
             if not res_ids:
-                raise UserError(_('There is no recipients selected.'))
+                raise UserError(_('There are no recipients selected.'))
 
             composer_values = {
                 'author_id': author_id,

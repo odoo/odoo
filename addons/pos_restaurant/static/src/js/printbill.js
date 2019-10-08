@@ -37,7 +37,7 @@ var PrintBillButton = screens.ActionButtonWidget.extend({
         } else {
           this.gui.show_popup('error', {
               'title': _t('Nothing to Print'),
-              'body':  _t('There is no order lines'),
+              'body':  _t('There are no order lines'),
           });
         }
     },
