@@ -135,7 +135,7 @@
                                     groups="account.group_account_user"
                                     attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
                             <field name="move_line_ids" invisible="1"/>
-                            <button class="oe_stat_button" name="button_invoices" type="object" icon="fa-bars">
+                            <button class="oe_stat_button" name="button_invoices" type="object" icon="fa-bars" attrs="{'invisible':[('reconciled_invoices_count','=', 0)]}" >
                                 <field name="reconciled_invoices_count"/>
                                 <span attrs="{'invisible':[('reconciled_invoices_count','&gt;',1)]}">Invoice</span>
                                 <span attrs="{'invisible':[('reconciled_invoices_count','&lt;=',1)]}">Invoices</span>
