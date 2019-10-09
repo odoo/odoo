@@ -546,10 +546,12 @@ class WebsiteSlides(WebsiteProfile):
         self._set_viewed_slide(slide)
 
         values = self._get_slide_detail(slide)
-        if kwargs.get('answerIds'):
-            answers = [int(s) for s in kwargs.get('answerIds').split(',')]
-            values['answer_ids'] = json.dumps(answers)
         # quiz-specific: update with karma and quiz information
+        if 'slide_answer_quiz' in request.session:
+            slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])
+            if str(slide.id) in slide_answer_quiz:
+                values['answer_ids'] = json.dumps(slide_answer_quiz[str(slide.id)])
+
         if slide.question_ids:
             values.update(self._get_slide_quiz_data(slide))
         # sidebar: update with user channel progress
@@ -756,6 +758,18 @@ class WebsiteSlides(WebsiteProfile):
             'quizAttemptsCount': quiz_info['quiz_attempts_count'],
             'rankProgress': rank_progress,
         }
+    
+    @http.route(['/slides/slide/quiz/save_slide_answsers'], type='json', auth='public', website=True)
+    def slide_save_slide_answsers(self, slide_values):
+        if 'slide_answer_quiz' not in request.session:
+            request.session['slide_answer_quiz'] = json.dumps({})
+        session_slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])
+        values={}
+        values[str(slide_values['slide_id'])]= slide_values['slide_answers']
+        session_slide_answer_quiz.update(values)
+        request.session['slide_answer_quiz']=json.dumps(session_slide_answer_quiz)
+        return True
+
 
     # --------------------------------------------------
     # CATEGORY MANAGEMENT

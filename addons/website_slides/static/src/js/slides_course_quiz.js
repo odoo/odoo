@@ -81,13 +81,21 @@ odoo.define('website_slides.quiz', function (require) {
                 var courseJoinWidget = new CourseJoinWidget(self, self.channel.channelId,true);
                 return courseJoinWidget;
             }).then(function(courseJoinWidget){
-                courseJoinWidget.appendTo(self.$('.o_wslides_course_join_widget'))
-                if(self.readonly && !self.publicUser && self.slide.answerIds){
-                    courseJoinWidget.joinCours(self.channel.channelId)
+                if ($(".o_wslides_course_join_widget")[0]){
+                    courseJoinWidget.appendTo(self.$('.o_wslides_course_join_widget'))
+                    if(self.readonly && !self.publicUser && self.slide.answerIds){
+                        if(courseJoinWidget){
+                            courseJoinWidget.joinCours(self.channel.channelId)
+                        }
+                    }
+                    if(!self.readonly && !self.publicUser && self.slide.answerIds){
+                        self._onSubmitQuiz();
+                    }
+                } else {
+                    console.log("TODO: Case payable course")
+                    console.log(self.slide.answerIds)
                 }
-                if(!self.readonly && !self.publicUser && self.slide.answerIds){
-                    self._onSubmitQuiz();
-                }
+                self.slide.answerIds = false;
             });
         },
 
@@ -149,16 +157,20 @@ odoo.define('website_slides.quiz', function (require) {
                     $answer.find('label input').prop('checked', false);
                     $answer.find('input[type=radio]').prop('checked', true);
                 }
-                else if (_.contains(self.slide.answerIds, answerId)) {
-                    $answer.find('i.fa').addClass('d-none');
-                    $answer.find('i.fa-check-circle').removeClass('d-none');
-                    $answer.find('input[type=radio]').prop('checked', true);
-                }
                 else if (!self.slide.completed) {
-                    $answer.removeClass('list-group-item-danger list-group-item-success');
-                    $answer.find('i.fa').addClass('d-none');
-                    $answer.find('i.fa-circle').removeClass('d-none');
+                    if (_.contains(self.slide.answerIds, answerId)) {
+                        $answer.find('i.fa').addClass('d-none');
+                        $answer.find('input[type=radio]').prop('checked', true);
+                        $answer.find('i.fa-circle').removeClass('d-none');
+                    }
+                    else{
+                        $answer.removeClass('list-group-item-danger list-group-item-success');
+                        $answer.find('input[type=radio]').prop('checked', false);
+                        $answer.find('i.fa').addClass('d-none');
+                        $answer.find('i.fa-circle').removeClass('d-none');
+                    }
                 }
+
             });
         },
 
@@ -229,8 +241,19 @@ odoo.define('website_slides.quiz', function (require) {
             if (values.length === self.quiz.questions.length){
                 self._alertHide();
                 if (this.publicUser){
-                    var url = this._createLoginRedirectUrl(values)
-                    window.location.href = url;
+                    console.log("hhre")
+                    values = {'slide_id': this.slide.id, 'slide_answers':values}
+                    console.log(values)
+                    return this._rpc({
+                        route:'/slides/slide/quiz/save_slide_answsers',
+                        params: {
+                            'slide_values': values,
+                        }
+                    }).then(function (){
+                        var url = self._createLoginRedirectUrl()
+                        console.log(url)
+                        window.location.href = url;
+                    });
                 }
             } else {
                 self._alertShow();
@@ -240,18 +263,15 @@ odoo.define('website_slides.quiz', function (require) {
         },
         /**
          * @private
-         * @param Array[Integer] values
+         * @param
          */
-        _createLoginRedirectUrl: function( values){
+        _createLoginRedirectUrl: function(){
             var urlParts = window.location.pathname.split('/');
-            console.log(urlParts)
             var url =  urlParts.join('/');
-            console.log(url)
             var params = {};
             if (window.location.href.indexOf("fullscreen") > -1) {
                 params.fullscreen=1;
             }
-            params.answerIds= values.toString();
             this.redirectURL= _.str.sprintf('%s?%s', url, $.param(params));
             return _.str.sprintf('/web/login?redirect=%s', encodeURIComponent(this.redirectURL));
         },
