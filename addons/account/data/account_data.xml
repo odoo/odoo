@@ -2,6 +2,11 @@
 <odoo>
     <data noupdate="1">
 
+        <record forcecreate="True" id="decimal_payment" model="decimal.precision">
+            <field name="name">Payment Terms</field>
+            <field name="digits">6</field>
+        </record>
+
         <!-- Open Settings from Purchase Journal to configure mail servers -->
         <record id="action_open_settings" model="ir.actions.act_window">
             <field name="name">Settings</field>
@@ -111,17 +116,6 @@
             <field name="name">15 Days</field>
             <field name="note">Payment terms: 15 Days</field>
             <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
-        </record>
-
-        <record id="account_payment_term_21days" model="account.payment.term">
-            <field name="name">21 Days</field>
-            <field name="note">Payment terms: 21 Days</field>
-            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 21, 'option': 'day_after_invoice_date'})]"/>
-        </record>
-
-        <record forcecreate="True" id="decimal_payment" model="decimal.precision">
-            <field name="name">Payment Terms</field>
-            <field name="digits">6</field>
         </record>
 
         <record id="account_payment_term_21days" model="account.payment.term">
