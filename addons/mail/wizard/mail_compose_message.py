@@ -500,9 +500,9 @@ class MailComposer(models.TransientModel):
         for res_id in res_ids:
             if template_values.get(res_id):
                 # recipients are managed by the template
-                results[res_id].pop('partner_ids')
-                results[res_id].pop('email_to')
-                results[res_id].pop('email_cc')
+                results[res_id].pop('partner_ids', None)
+                results[res_id].pop('email_to', None)
+                results[res_id].pop('email_cc', None)
                 # remove attachments from template values as they should not be rendered
                 template_values[res_id].pop('attachment_ids', None)
             else:
