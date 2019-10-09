@@ -477,14 +477,14 @@ class FloatTimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        sign = math.copysign(1.0, value)
         hours, minutes = divmod(abs(value) * 60, 60)
         minutes = round(minutes)
         if minutes == 60:
             minutes = 0
             hours += 1
-        return '%02d:%02d' % (sign * hours, minutes)
-
+        if value < 0:
+            return '-%02d:%02d' % (hours, minutes)
+        return '%02d:%02d' % (hours, minutes)
 
 class DurationConverter(models.AbstractModel):
     """ ``duration`` converter, to display integral or fractional values as
