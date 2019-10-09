@@ -143,22 +143,17 @@ class TestSaleOrder(TestSale):
         self.assertEquals((sol.price_unit, sol.qty_delivered, sol.product_uom_qty, sol.qty_invoiced), (160, 2, 0, 0), 'Sale: line is wrong after confirming vendor invoice')
 
     def test_so_create_multicompany(self):
-        # Preparing test Data
+        """In case we use new() outside of an onchange,
+           it might cause the value of related fields to be incorrect.
+           If so, then the company being a related might not be set,
+           which would mean that taxes from all child companies
+           would end up on the order lines.
+        """
         user_demo = self.env.ref('base.user_demo')
         company_1 = self.env.ref('base.main_company')
         company_2 = self.env['res.company'].create({
             'name': 'company 2',
             'parent_id': company_1.id,
-        })
-        user_demo.write({
-            'groups_id': [(4, self.env.ref('sales_team.group_sale_manager').id, False)],
-            'company_ids': [(6, False, [company_1.id])],
-            'company_id': company_1.id,
-        })
-
-        so_partner = self.env.ref('base.res_partner_2')
-        so_partner.write({
-            'property_account_position_id': False,
         })
 
         tax_company_1 = self.env['account.tax'].create({
@@ -178,16 +173,10 @@ class TestSaleOrder(TestSale):
             'taxes_id': [(6, False, [tax_company_1.id, tax_company_2.id])],
         })
 
-        # Use case
         so_1 = self.env['sale.order'].sudo(user_demo.id).create({
-            'partner_id': so_partner.id,
+            'partner_id': self.env.ref('base.res_partner_2').id,
             'company_id': company_1.id,
         })
-        so_1.invalidate_cache()
-
-        # This is what is done when importing the csv lines (on sale.order):
-        # id,order_line/product_id
-        # __export__.sale_order_37_1bb960ba,Product name
         so_1.write({
             'order_line': [(0, False, {'product_id': product_shared.product_variant_id.id, 'order_id': so_1.id})],
         })
