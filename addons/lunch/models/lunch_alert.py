@@ -37,13 +37,13 @@ class LunchAlert(models.Model):
     tz = fields.Selection(_tz_get, string='Timezone', required=True, default=lambda self: self.env.user.tz or 'UTC')
 
     until = fields.Date('Show Until')
-    recurrency_monday = fields.Boolean('Monday')
-    recurrency_tuesday = fields.Boolean('Tuesday')
-    recurrency_wednesday = fields.Boolean('Wednesday')
-    recurrency_thursday = fields.Boolean('Thursday')
-    recurrency_friday = fields.Boolean('Friday')
-    recurrency_saturday = fields.Boolean('Saturday')
-    recurrency_sunday = fields.Boolean('Sunday')
+    recurrency_monday = fields.Boolean('Monday', default=True)
+    recurrency_tuesday = fields.Boolean('Tuesday', default=True)
+    recurrency_wednesday = fields.Boolean('Wednesday', default=True)
+    recurrency_thursday = fields.Boolean('Thursday', default=True)
+    recurrency_friday = fields.Boolean('Friday', default=True)
+    recurrency_saturday = fields.Boolean('Saturday', default=True)
+    recurrency_sunday = fields.Boolean('Sunday', default=True)
 
     available_today = fields.Boolean('Is Displayed Today',
                                      compute='_compute_available_today', search='_search_available_today')

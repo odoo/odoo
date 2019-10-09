@@ -44,7 +44,7 @@
                         <group>
                             <field name="mode" widget="radio"/>
                             <field name="recipients" attrs="{'invisible': [['mode', '!=', 'chat']]}" widget="radio"/>
-                            <field name="location_ids" widget="many2many_tags"/>
+                            <field name="location_ids" widget="many2many_tags" required="1"/>
                             <field name="until"/>
                             <field name="active"/>
                         </group>
