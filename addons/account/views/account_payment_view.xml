@@ -140,10 +140,6 @@
                                 <span attrs="{'invisible':[('reconciled_invoices_count','&gt;',1)]}">Invoice</span>
                                 <span attrs="{'invisible':[('reconciled_invoices_count','&lt;=',1)]}">Invoices</span>
                             </button>
-                            <button class="oe_stat_button" name="open_payment_matching_screen"
-                                    string="Payment Matching" type="object"
-                                    groups="account.group_account_user"
-                                    attrs="{'invisible':[('move_reconciled','=',True)]}" icon="fa-dollar"/>
                             <field name="has_invoices" invisible="1"/>
                             <field name="move_reconciled" invisible="1"/>
                         </div>

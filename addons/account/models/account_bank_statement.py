@@ -336,15 +336,6 @@ class AccountBankStatement(models.Model):
     def button_reopen(self):
         self.state = 'open'
 
-    def action_bank_reconcile_bank_statements(self):
-        self.ensure_one()
-        bank_stmt_lines = self.mapped('line_ids')
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'bank_statement_reconciliation_view',
-            'context': {'statement_line_ids': bank_stmt_lines.ids, 'company_ids': self.mapped('company_id').ids},
-        }
-
 
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"

@@ -67,7 +67,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'demo/account_demo.xml',
     ],
     'qweb': [
-        "static/src/xml/account_reconciliation.xml",
         "static/src/xml/account_payment.xml",
         "static/src/xml/account_report_backend.xml",
         "static/src/xml/bills_tree_upload_views.xml",

@@ -41,9 +41,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/sale_demo.xml',
         'data/product_product_demo.xml',
     ],
-    'qweb': [
-        "static/src/xml/account_reconciliation.xml",
-    ],
     'installable': True,
     'auto_install': False
 }
