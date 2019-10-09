@@ -618,9 +618,9 @@ class IrHttp(models.AbstractModel):
                 _logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                 values = cls._get_values_500_error(env, values, exception)
             elif code == 403:
-                _logger.warn("403 Forbidden:\n\n%s", values['traceback'])
+                _logger.warning("403 Forbidden:\n\n%s", values['traceback'])
             elif code == 400:
-                _logger.warn("400 Bad Request:\n\n%s", values['traceback'])
+                _logger.warning("400 Bad Request:\n\n%s", values['traceback'])
             try:
                 html = cls._get_error_html(env, code, values)
             except Exception:
