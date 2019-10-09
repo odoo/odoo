@@ -204,9 +204,15 @@ class IrMailServer(models.Model):
 
         title = _("Connection Test Succeeded!")
         message = _("Everything seems properly set up!")
-        self.env['bus.bus'].sendone(
-            (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-            {'type': 'simple_notification', 'title': title, 'message': message, 'sticky': False, 'warning': False})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': title,
+                'message': message,
+                'sticky': False,
+            }
+        }
 
     def connect(self, host=None, port=None, user=None, password=None, encryption=None,
                 smtp_debug=False, mail_server_id=None):
