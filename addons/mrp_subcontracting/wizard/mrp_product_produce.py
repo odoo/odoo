@@ -43,6 +43,7 @@ class MrpProductProduce(models.TransientModel):
                 'product_uom_id': self.product_uom_id.id,
                 'qty_done': self.qty_producing,
                 'lot_id': self.finished_lot_id and self.finished_lot_id.id,
+                'lot_name': self.finished_lot_id and self.finished_lot_id.name,
             })
             if not self._get_todo(self.production_id):
                 ml_reserved = self.subcontract_move_id.move_line_ids.filtered(lambda ml:
