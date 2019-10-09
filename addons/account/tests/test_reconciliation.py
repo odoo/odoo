@@ -915,48 +915,6 @@ class TestReconciliationExec(TestReconciliation):
         self.assertEqual(reversed_customer_line.full_reconcile_id.id, customer_line.full_reconcile_id.id)
 
 
-    def test_aged_report(self):
-        AgedReport = self.env['report.account.report_agedpartnerbalance'].with_context(include_nullified_amount=True)
-        account_type = ['receivable']
-        report_date_to = time.strftime('%Y') + '-07-17'
-        partner = self.env['res.partner'].create({'name': 'AgedPartner'})
-        currency = self.env.company.currency_id
-
-        invoice = self.create_invoice_partner(currency_id=currency.id, partner_id=partner.id)
-        journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE'})
-
-        statement = self.make_payment(invoice, journal, 50)
-
-        # The report searches on the create_date to dispatch reconciled lines to report periods
-        # Also, in this case, there can be only 1 partial_reconcile
-        statement_partial_id = statement.move_line_ids.mapped(lambda l: l.matched_credit_ids + l.matched_debit_ids)
-        self.env.cr.execute('UPDATE account_partial_reconcile SET create_date = %(date)s WHERE id = %(partial_id)s',
-            {'date': report_date_to + ' 00:00:00',
-             'partial_id': statement_partial_id.id})
-
-        # Case 1: The invoice and payment are reconciled: Nothing should appear
-        report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
-
-        partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
-        self.assertEqual(partner_lines, [], 'The aged receivable shouldn\'t have lines at this point')
-        self.assertFalse(amls.get(partner.id, False), 'The aged receivable should not have amls either')
-
-        # Case 2: The invoice and payment are not reconciled: we should have one line on the report
-        # and 2 amls
-        invoice.line_ids.with_context(invoice_id=invoice.id).remove_move_reconcile()
-        report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
-
-        partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
-        self.assertEqual(partner_lines, [{'trust': 'normal', '1': 0.0, '0': 0.0, 'direction': 0.0, 'partner_id': partner.id, '3': 0.0, 'total': 0.0, 'name': 'AgedPartner', '4': 0.0, '2': 0.0}],
-            'We should have a line in the report for the partner')
-        self.assertEqual(len(amls[partner.id]), 2, 'We should have 2 account move lines for the partner')
-
-        positive_line = [line for line in amls[partner.id] if line['line'].balance > 0]
-        negative_line = [line for line in amls[partner.id] if line['line'].balance < 0]
-
-        self.assertEqual(positive_line[0]['amount'], 50.0, 'The amount of the amls should be 50')
-        self.assertEqual(negative_line[0]['amount'], -50.0, 'The amount of the amls should be -50')
-
     def test_revert_payment_and_reconcile_exchange(self):
 
         # A reversal of a reconciled payment which created a currency exchange entry, should create reversal moves
@@ -1024,84 +982,6 @@ class TestReconciliationExec(TestReconciliation):
         reverted_exchange_move = self.env['account.move'].search([('journal_id', '=', exchange_move.journal_id.id), ('ref', 'ilike', exchange_move.name)], limit=1)
         _move_revert_test_pair(payment_move, reverted_payment_move)
         _move_revert_test_pair(exchange_move, reverted_exchange_move)
-
-    def test_aged_report_future_payment(self):
-        AgedReport = self.env['report.account.report_agedpartnerbalance'].with_context(include_nullified_amount=True)
-        account_type = ['receivable']
-        partner = self.env['res.partner'].create({'name': 'AgedPartner'})
-        currency = self.env.company.currency_id
-
-        invoice = self.create_invoice_partner(currency_id=currency.id, partner_id=partner.id)
-        journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE'})
-
-        statement = self.make_payment(invoice, journal, 50)
-
-        # Force the payment recording to take place on the invoice date
-        # Although the payment due_date is in the future relative to the invoice
-        # Also, in this case, there can be only 1 partial_reconcile
-        statement_partial_id = statement.move_line_ids.mapped(lambda l: l.matched_credit_ids + l.matched_debit_ids)
-        self.env.cr.execute('UPDATE account_partial_reconcile SET create_date = %(date)s WHERE id = %(partial_id)s',
-            {'date': invoice.invoice_date,
-             'partial_id': statement_partial_id.id})
-        statement.flush()
-
-        # Case 1: report date is invoice date
-        # There should be an entry for the partner
-        report_date_to = invoice.invoice_date
-        report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
-
-        partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
-        self.assertEqual(partner_lines, [{
-            'name': 'AgedPartner',
-            'trust': 'normal',
-            'partner_id': partner.id,
-            '0': 0.0,
-            '1': 0.0,
-            '2': 0.0,
-            '3': 0.0,
-            '4': 0.0,
-            'total': 50.0,
-            'direction': 50.0,
-        }], 'We should have a line in the report for the partner')
-        self.assertEqual(len(amls[partner.id]), 1, 'We should have 1 account move lines for the partner')
-
-        positive_line = [line for line in amls[partner.id] if line['line'].balance > 0]
-
-        self.assertEqual(positive_line[0]['amount'], 50.0, 'The amount of the amls should be 50')
-
-        # Case 2: report date between invoice date and payment date
-        # There should be an entry for the partner
-        # And the amount has shifted to '1-30 due'
-        report_date_to = time.strftime('%Y') + '-07-08'
-        report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
-
-        partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
-        self.assertEqual(partner_lines, [{
-            'name': 'AgedPartner',
-            'trust': 'normal',
-            'partner_id': partner.id,
-            '0': 0.0,
-            '1': 0.0,
-            '2': 0.0,
-            '3': 0.0,
-            '4': 50.0,
-            'total': 50.0,
-            'direction': 0.0,
-        }], 'We should have a line in the report for the partner')
-        self.assertEqual(len(amls[partner.id]), 1, 'We should have 1 account move lines for the partner')
-
-        positive_line = [line for line in amls[partner.id] if line['line'].balance > 0]
-
-        self.assertEqual(positive_line[0]['amount'], 50.0, 'The amount of the amls should be 50')
-
-        # Case 2: report date on payment date
-        # There should not be an entry for the partner
-        report_date_to = time.strftime('%Y') + '-07-15'
-        report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
-
-        partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
-        self.assertEqual(partner_lines, [], 'The aged receivable shouldn\'t have lines at this point')
-        self.assertFalse(amls.get(partner.id, False), 'The aged receivable should not have amls either')
 
     def test_partial_reconcile_currencies_02(self):
         ####
