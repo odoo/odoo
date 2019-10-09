@@ -2,6 +2,7 @@ odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
 var ReportClientAction = require('report.client_action');
+var Notification = require('web.Notification');
 var NotificationService = require('web.NotificationService');
 var AbstractAction = require('web.AbstractAction');
 var AbstractStorageService = require('web.AbstractStorageService');
@@ -1896,6 +1897,64 @@ QUnit.module('ActionManager', {
 
         actionManager.destroy();
         delete core.action_registry.map.HelloWorldTest;
+    });
+
+    QUnit.test('test display_notification client action', async function (assert) {
+        assert.expect(6);
+
+        testUtils.mock.patch(Notification, {
+            _animation: false,
+        });
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: {
+                notification: NotificationService,
+            },
+        });
+
+        await actionManager.doAction(1);
+        assert.containsOnce(actionManager, '.o_kanban_view');
+
+        await actionManager.doAction({
+            type: 'ir.actions.client',
+            tag: 'display_notification',
+            params: {
+                title: 'title',
+                message: 'message',
+                sticky: true,
+            }
+        });
+        const notificationSelector = '.o_notification_manager .o_notification';
+
+        assert.containsOnce(document.body, notificationSelector,
+            'a notification should be present');
+
+        const notificationElement = document.body.querySelector(notificationSelector);
+        assert.strictEqual(
+            notificationElement.querySelector('.o_notification_title').textContent,
+            'title',
+            "the notification should have the correct title"
+        );
+        assert.strictEqual(
+            notificationElement.querySelector('.o_notification_content').textContent,
+            'message',
+            "the notification should have the correct message"
+        );
+
+        assert.containsOnce(actionManager, '.o_kanban_view');
+
+        await testUtils.dom.click(
+            notificationElement.querySelector('.o_notification_close')
+        );
+
+        assert.containsNone(document.body, notificationSelector,
+            "the notification should be destroy ");
+
+        actionManager.destroy();
+        testUtils.mock.unpatch(Notification);
     });
 
     QUnit.module('Server actions');
