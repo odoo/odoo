@@ -604,7 +604,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls = type(self)
         methods = []
         for attr, func in getmembers(cls, is_constraint):
-            for name in func._constrains:
+            if callable(func._constrains):
+                func_constrains = list(func._constrains(self))
+            else:
+                func_constrains = func._constrains
+            for name in func_constrains:
                 field = cls._fields.get(name)
                 if not field:
                     _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
@@ -626,9 +630,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls = type(self)
         methods = defaultdict(list)
         for attr, func in getmembers(cls, is_onchange):
-            for name in func._onchange:
+            if callable(func._onchange):
+                func_onchange = list(func._onchange(self))
+            else:
+                func_onchange = func._onchange
+            for name in func_onchange:
                 if name not in cls._fields:
-                    _logger.warning("@onchange%r parameters must be field names", func._onchange)
+                    _logger.warning("method %s.%s: @onchange parameter %r must be a field name", cls._name, attr, name)
                 methods[name].append(func)
 
         # add onchange methods to implement "change_default" on fields
@@ -1111,7 +1119,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _validate_fields(self, field_names):
         field_names = set(field_names)
         for check in self._constraint_methods:
-            if not field_names.isdisjoint(check._constrains):
+            if callable(check._constrains):
+                check_constrains = list(check._constrains(self))
+            else:
+                check_constrains = check._constrains
+            if not field_names.isdisjoint(check_constrains):
                 check(self)
 
     @api.model
