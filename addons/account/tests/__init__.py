@@ -10,6 +10,7 @@ from . import test_account_move_rounding
 from . import test_account_invoice_report
 from . import test_account_journal_dashboard
 from . import test_bank_statement_reconciliation
+from . import test_control_journal_account
 from . import test_fiscal_position
 from . import test_payment
 from . import test_reconciliation
