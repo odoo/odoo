@@ -44,6 +44,8 @@ class AccountMove(models.Model):
             return isr_subscription[:2] + isr_subscription[2:-1].rjust(6, '0') + isr_subscription[-1:]
 
         for record in self:
+            record.l10n_ch_isr_subscription = False
+            record.l10n_ch_isr_subscription_formatted = False
             if record.invoice_partner_bank_id:
                 if record.currency_id.name == 'EUR':
                     isr_subscription = record.invoice_partner_bank_id.l10n_ch_isr_subscription_eur
