@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.tests.common import SavepointCase
-
+from odoo.exceptions import UserError
 
 class TestProjectBase(SavepointCase):
 
@@ -89,3 +89,15 @@ class TestProjectBase(SavepointCase):
         mail = template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
         self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
+
+    def test_delete_project_with_tasks(self):
+        """User should never be able to delete a project with tasks"""
+
+        with self.assertRaises(UserError):
+            self.project_pigs.unlink()
+
+        # click on the archive button
+        self.project_pigs.write({'active': False})
+
+        with self.assertRaises(UserError):
+            self.project_pigs.unlink()
