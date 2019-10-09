@@ -177,6 +177,17 @@ function logout() {
 core.action_registry.add("logout", logout);
 
 /**
+ * @param {ActionManager} parent
+ * @param {Object} action
+ * @param {Object} action.params notification params
+ * @see ServiceMixin.displayNotification
+ */
+function displayNotification(parent, action) {
+    parent.displayNotification(action.params);
+}
+core.action_registry.add("display_notification", displayNotification);
+
+/**
  * Client action to refresh the session context (making sure
  * HTTP requests will have the right one) then reload the
  * whole interface.
