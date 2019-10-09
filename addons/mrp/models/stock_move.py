@@ -256,7 +256,7 @@ class StockMove(models.Model):
                 ), self.product_uom
             )
             location_id = False
-            if float_compare(qty_to_add, available_quantity, precision_rounding=self.product_uom.rounding) < 0:
+            if float_compare(qty_to_add, available_quantity, precision_rounding=self.product_uom.rounding) < 1:
                 location_id = quants.filtered(lambda r: r.quantity > 0)[-1:].location_id
 
             vals = {
