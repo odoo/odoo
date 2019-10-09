@@ -420,9 +420,6 @@ var ActionManager = Widget.extend({
             console.error("Could not find client action " + action.tag, action);
             return Promise.reject();
         }
-        if (!(ClientAction.prototype instanceof AbstractAction)) {
-            console.warn('The client action ' + action.tag + ' should be an instance of AbstractAction!');
-        }
         if (!(ClientAction.prototype instanceof Widget)) {
             // the client action might be a function, which is executed and
             // whose returned value might be another action to execute
@@ -431,6 +428,9 @@ var ActionManager = Widget.extend({
                 return this.doAction(next, options);
             }
             return Promise.resolve();
+        }
+        if (!(ClientAction.prototype instanceof AbstractAction)) {
+            console.warn('The client action ' + action.tag + ' should be an instance of AbstractAction!');
         }
 
         var controllerID = _.uniqueId('controller_');
