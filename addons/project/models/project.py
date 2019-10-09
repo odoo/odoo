@@ -318,7 +318,7 @@ class Project(models.Model):
 
     def unlink(self):
         # Check project is empty
-        for project in self:
+        for project in self.with_context(active_test=False):
             if project.tasks:
                 raise UserError(_('You cannot delete a project containing tasks. You can either archive it or first delete all of its tasks.'))
         # Delete the empty related analytic account
