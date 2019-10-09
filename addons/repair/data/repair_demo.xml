@@ -27,12 +27,14 @@
             'price_unit': 50.0,
             'state': 'draft',
             'type': 'add',
+            'company_id': obj().env.ref('base.main_company').id,
         })]"/>
         <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
             'name': obj().env.ref('repair.product_service_order_repair').get_product_multiline_description_sale(),
             'product_id': obj().env.ref('repair.product_service_order_repair').id,
             'product_uom_qty': 1.0,
             'product_uom': obj().env.ref('uom.product_uom_unit').id,
+            'company_id': obj().env.ref('base.main_company').id,
             'price_unit': 50.0,
         })]"/>
         <field name="partner_id" ref="base.res_partner_12"/>
@@ -57,6 +59,7 @@
             'product_uom_qty': 1.0,
             'state': 'draft',
             'type': 'add',
+            'company_id': obj().env.ref('base.main_company').id,
         })]"/>
         <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
             'name': obj().env.ref('repair.product_service_order_repair').get_product_multiline_description_sale(),
@@ -64,6 +67,7 @@
             'product_uom_qty': 1.0,
             'product_uom': obj().env.ref('uom.product_uom_unit').id,
             'price_unit': 50.0,
+            'company_id': obj().env.ref('base.main_company').id,
         })]"/>
         <field name="partner_id" ref="base.res_partner_12"/>
     </record>
@@ -87,6 +91,7 @@
             'product_uom_qty': 1.0,
             'state': 'draft',
             'type': 'add',
+            'company_id': obj().env.ref('base.main_company').id,
         })]"/>
         <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
             'name': obj().env.ref('repair.product_service_order_repair').get_product_multiline_description_sale(),
@@ -94,6 +99,7 @@
             'product_uom_qty': 1.0,
             'product_uom': obj().env.ref('uom.product_uom_unit').id,
             'price_unit': 50.0,
+            'company_id': obj().env.ref('base.main_company').id,
         })]"/>
         <field name="partner_id" ref="base.res_partner_12"/>
     </record>

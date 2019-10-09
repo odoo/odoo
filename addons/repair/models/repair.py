@@ -1,5 +1,6 @@
-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -9,7 +10,7 @@ from odoo.tools import float_compare
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    repair_id = fields.Many2one('repair.order')
+    repair_id = fields.Many2one('repair.order', check_company=True)
 
 
 class Repair(models.Model):
@@ -18,13 +19,6 @@ class Repair(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 
-    @api.model
-    def _default_stock_location(self):
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
-        if warehouse:
-            return warehouse.lot_stock_id.id
-        return False
-
     name = fields.Char(
         'Repair Reference',
         default=lambda self: self.env['ir.sequence'].next_by_code('repair.order'),
@@ -32,7 +26,8 @@ class Repair(models.Model):
         states={'confirmed': [('readonly', True)]})
     product_id = fields.Many2one(
         'product.product', string='Product to Repair',
-        readonly=True, required=True, states={'draft': [('readonly', False)]})
+        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+        readonly=True, required=True, states={'draft': [('readonly', False)]}, check_company=True)
     product_qty = fields.Float(
         'Product Quantity',
         default=1.0, digits='Product Unit of Measure',
@@ -43,11 +38,11 @@ class Repair(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
-        index=True, states={'confirmed': [('readonly', True)]},
+        index=True, states={'confirmed': [('readonly', True)]}, check_company=True,
         help='Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.')
     address_id = fields.Many2one(
         'res.partner', 'Delivery Address',
-        domain="[('parent_id','=',partner_id)]",
+        domain="[('parent_id','=',partner_id)]", check_company=True,
         states={'confirmed': [('readonly', True)]})
     default_address_id = fields.Many2one('res.partner', compute='_compute_default_address_id')
     state = fields.Selection([
@@ -68,13 +63,12 @@ class Repair(models.Model):
              "* The \'Cancelled\' status is used when user cancel repair order.")
     location_id = fields.Many2one(
         'stock.location', 'Location',
-        default=_default_stock_location,
-        index=True, readonly=True, required=True,
+        index=True, readonly=True, required=True, check_company=True,
         help="This is the location where the product to repair is located.",
         states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]})
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial',
-        domain="[('product_id','=', product_id)]",
+        domain="[('product_id','=', product_id), ('company_id', '=', company_id)]", check_company=True,
         help="Products repaired are all belonging to this lot")
     guarantee_limit = fields.Date('Warranty Expiration', states={'confirmed': [('readonly', True)]})
     operations = fields.One2many(
@@ -83,8 +77,8 @@ class Repair(models.Model):
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist',
         default=lambda self: self.env['product.pricelist'].search([], limit=1).id,
-        help='Pricelist of the selected partner.')
-    partner_invoice_id = fields.Many2one('res.partner', 'Invoicing Address')
+        help='Pricelist of the selected partner.', check_company=True)
+    partner_invoice_id = fields.Many2one('res.partner', 'Invoicing Address', check_company=True)
     invoice_method = fields.Selection([
         ("none", "No Invoice"),
         ("b4repair", "Before Repair"),
@@ -98,16 +92,17 @@ class Repair(models.Model):
         domain=[('type', '=', 'out_invoice')])
     move_id = fields.Many2one(
         'stock.move', 'Move',
-        copy=False, readonly=True, tracking=True,
+        copy=False, readonly=True, tracking=True, check_company=True,
         help="Move created by the repair order")
     fees_lines = fields.One2many(
         'repair.fee', 'repair_id', 'Operations',
         copy=True, readonly=True, states={'draft': [('readonly', False)]})
     internal_notes = fields.Text('Internal Notes')
     quotation_notes = fields.Text('Quotation Notes')
-    user_id = fields.Many2one('res.users', string="Responsible", default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string="Responsible", default=lambda self: self.env.user, check_company=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
+        readonly=True, required=True, index=True,
         default=lambda self: self.env.company)
     tag_ids = fields.Many2many('repair.tags', string="Tags")
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
@@ -187,6 +182,14 @@ class Repair(models.Model):
             self.partner_invoice_id = addresses['invoice']
             self.pricelist_id = self.partner_id.property_product_pricelist.id
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id:
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
+            self.location_id = warehouse.lot_stock_id
+        else:
+            self.location_id = False
+
     def button_dummy(self):
         # TDE FIXME: this button is very interesting
         return True
@@ -232,6 +235,9 @@ class Repair(models.Model):
         """
         if self.filtered(lambda repair: repair.state != 'draft'):
             raise UserError(_("Only draft repairs can be confirmed."))
+        self._check_company()
+        self.operations._check_company()
+        self.fees_lines._check_company()
         before_repair = self.filtered(lambda repair: repair.invoice_method == 'b4repair')
         before_repair.write({'state': '2binvoiced'})
         to_confirm = self - before_repair
@@ -298,13 +304,13 @@ class Repair(models.Model):
             # Fallback on the user company as the 'company_id' is not required.
             company = repair.company_id or self.env.user.company_id
 
-            journal = self.env['account.move'].with_context(force_company=company.id, type='out_invoice')._get_default_journal()
+            journal = self.env['account.move'].with_context(default_company_id=company.id, type='out_invoice')._get_default_journal()
             if not journal:
                 raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
             if (partner_invoice.id, currency.id) not in grouped_invoices_vals:
-                grouped_invoices_vals[(partner_invoice.id, currency.id)] = []
-            current_invoices_list = grouped_invoices_vals[(partner_invoice.id, currency.id)]
+                grouped_invoices_vals[(partner_invoice.id, currency.id, company.id)] = []
+            current_invoices_list = grouped_invoices_vals[(partner_invoice.id, currency.id, company.id)]
 
             if not group or len(current_invoices_list) == 0:
                 invoice_vals = {
@@ -335,7 +341,7 @@ class Repair(models.Model):
                 else:
                     name = operation.name
 
-                account = operation.product_id.product_tmpl_id._get_product_accounts()['income']
+                account = operation.product_id.with_context(force_company=company.id).product_tmpl_id._get_product_accounts()['income']
                 if not account:
                     raise UserError(_('No account defined for product "%s".') % operation.product_id.name)
 
@@ -377,7 +383,7 @@ class Repair(models.Model):
                 if not fee.product_id:
                     raise UserError(_('No product defined on fees.'))
 
-                account = fee.product_id.product_tmpl_id._get_product_accounts()['income']
+                account = fee.product_id.product_tmpl_id.with_context(force_company=company.id)._get_product_accounts()['income']
                 if not account:
                     raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
 
@@ -411,11 +417,13 @@ class Repair(models.Model):
                 invoice_vals['invoice_line_ids'].append((0, 0, invoice_line_vals))
 
         # Create invoices.
-        invoices_vals_list = []
-        for invoices in grouped_invoices_vals.values():
+        invoices_vals_list_per_company = defaultdict(list)
+        for (partner_invoice_id, currency_id, company_id), invoices in grouped_invoices_vals.items():
             for invoice in invoices:
-                invoices_vals_list.append(invoice)
-        self.env['account.move'].with_context(default_type='out_invoice').create(invoices_vals_list)
+                invoices_vals_list_per_company[company_id].append(invoice)
+
+        for company_id, invoices_vals_list in invoices_vals_list_per_company.items():
+            self.env['account.move'].with_context(force_company=company_id, default_company_id=company_id, default_type='out_invoice').create(invoices_vals_list)
 
         repairs.write({'invoiced': True})
         repairs.mapped('operations').filtered(lambda op: op.type == 'add').write({'invoiced': True})
@@ -471,6 +479,9 @@ class Repair(models.Model):
         """
         if self.filtered(lambda repair: not repair.repaired):
             raise UserError(_("Repair must be repaired in order to make the product moves."))
+        self._check_company()
+        self.operations._check_company()
+        self.fees_lines._check_company()
         res = {}
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         Move = self.env['stock.move']
@@ -500,9 +511,11 @@ class Repair(models.Model):
                                            'result_package_id': False,
                                            'owner_id': owner_id,
                                            'location_id': operation.location_id.id, #TODO: owner stuff
+                                           'company_id': repair.company_id.id,
                                            'location_dest_id': operation.location_dest_id.id,})],
                     'repair_id': repair.id,
                     'origin': repair.name,
+                    'company_id': repair.company_id.id,
                 })
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
@@ -523,9 +536,11 @@ class Repair(models.Model):
                                            'result_package_id': False,
                                            'owner_id': owner_id,
                                            'location_id': repair.location_id.id, #TODO: owner stuff
+                                           'company_id': repair.company_id.id,
                                            'location_dest_id': repair.location_id.id,})],
                 'repair_id': repair.id,
                 'origin': repair.name,
+                'company_id': repair.company_id.id,
             })
             consumed_lines = moves.mapped('move_line_ids')
             produced_lines = move.move_line_ids
@@ -543,16 +558,22 @@ class RepairLine(models.Model):
     name = fields.Text('Description', required=True)
     repair_id = fields.Many2one(
         'repair.order', 'Repair Order Reference',
-        index=True, ondelete='cascade')
+        index=True, ondelete='cascade', check_company=True)
+    company_id = fields.Many2one(
+        'res.company', 'Company',
+        readonly=True, required=True, index=True)
     type = fields.Selection([
         ('add', 'Add'),
         ('remove', 'Remove')], 'Type', required=True)
-    product_id = fields.Many2one('product.product', 'Product', required=True)
+    product_id = fields.Many2one(
+        'product.product', 'Product', required=True, check_company=True,
+        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)
     tax_id = fields.Many2many(
-        'account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes')
+        'account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes',
+        domain="[('type_tax_use','=','sale'), ('company_id', '=', company_id)]", check_company=True)
     product_uom_qty = fields.Float(
         'Quantity', default=1.0,
         digits='Product Unit of Measure', required=True)
@@ -562,17 +583,19 @@ class RepairLine(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     invoice_line_id = fields.Many2one(
         'account.move.line', 'Invoice Line',
-        copy=False, readonly=True)
+        copy=False, readonly=True, check_company=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
-        index=True, required=True)
+        index=True, required=True, check_company=True)
     location_dest_id = fields.Many2one(
         'stock.location', 'Dest. Location',
-        index=True, required=True)
+        index=True, required=True, check_company=True)
     move_id = fields.Many2one(
         'stock.move', 'Inventory Move',
         copy=False, readonly=True)
-    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial')
+    lot_id = fields.Many2one(
+        'stock.production.lot', 'Lot/Serial',
+        domain="[('product_id','=', product_id), ('company_id', '=', company_id)]", check_company=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -608,12 +631,12 @@ class RepairLine(models.Model):
             args = self.repair_id.company_id and [('company_id', '=', self.repair_id.company_id.id)] or []
             warehouse = self.env['stock.warehouse'].search(args, limit=1)
             self.location_id = warehouse.lot_stock_id
-            self.location_dest_id = self.env['stock.location'].search([('usage', '=', 'production')], limit=1).id
+            self.location_dest_id = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.repair_id.company_id.id)], limit=1)
         else:
             self.price_unit = 0.0
             self.tax_id = False
             self.location_id = self.env['stock.location'].search([('usage', '=', 'production')], limit=1).id
-            self.location_dest_id = self.env['stock.location'].search([('scrap_location', '=', True)], limit=1).id
+            self.location_dest_id = self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.repair_id.company_id.id, False])], limit=1).id
 
     @api.onchange('repair_id', 'product_id', 'product_uom_qty')
     def onchange_product_id(self):
@@ -667,15 +690,22 @@ class RepairFee(models.Model):
     repair_id = fields.Many2one(
         'repair.order', 'Repair Order Reference',
         index=True, ondelete='cascade', required=True)
+    company_id = fields.Many2one(
+        'res.company', 'Company',
+        readonly=True, required=True, index=True)
     name = fields.Text('Description', index=True, required=True)
-    product_id = fields.Many2one('product.product', 'Product')
+    product_id = fields.Many2one(
+        'product.product', 'Product', check_company=True,
+        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
     product_uom_qty = fields.Float('Quantity', digits='Product Unit of Measure', required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True)
     product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)
-    tax_id = fields.Many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes')
-    invoice_line_id = fields.Many2one('account.move.line', 'Invoice Line', copy=False, readonly=True)
+    tax_id = fields.Many2many(
+        'account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes',
+        domain="[('type_tax_use','=','sale'), ('company_id', '=', company_id)]", check_company=True)
+    invoice_line_id = fields.Many2one('account.move.line', 'Invoice Line', copy=False, readonly=True, check_company=True)
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
 
     @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id')
