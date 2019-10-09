@@ -697,15 +697,15 @@ class Meeting(models.Model):
         lang = self._context.get("lang")
         lang_params = {}
         if lang:
-            record_lang = self.env['res.lang'].search([("code", "=", lang)], limit=1)
+            record_lang = self.env['res.lang'].with_context(active_test=False).search([("code", "=", lang)], limit=1)
             lang_params = {
                 'date_format': record_lang.date_format,
                 'time_format': record_lang.time_format
             }
 
         # formats will be used for str{f,p}time() which do not support unicode in Python 2, coerce to str
-        format_date = pycompat.to_native(lang_params.get("date_format", '%B-%d-%Y'))
-        format_time = pycompat.to_native(lang_params.get("time_format", '%I-%M %p'))
+        format_date = pycompat.to_native(lang_params.get("date_format") or '%B-%d-%Y')
+        format_time = pycompat.to_native(lang_params.get("time_format") or '%I-%M %p')
         return (format_date, format_time)
 
     @api.model

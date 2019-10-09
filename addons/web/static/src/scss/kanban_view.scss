@@ -324,8 +324,10 @@
 
         .oe_kanban_details {
             width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
+
+            // Useful for the class 'o_text_overflow'
+            min-width: 0;
+
             ul {
                 margin-bottom: $o-kanban-inner-hmargin*0.5;;
                 padding-left: 0;

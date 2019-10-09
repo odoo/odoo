@@ -81,7 +81,7 @@ class Project(models.Model):
 
     @api.multi
     def unlink(self):
-        for project in self:
+        for project in self.with_context(active_test=False):
             if project.tasks:
                 raise UserError(_('You cannot delete a project containing tasks. You can either archive it or first delete all of its tasks.'))
         return super(Project, self).unlink()
