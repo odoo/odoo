@@ -10,9 +10,8 @@
 #----------------------------------------------------------
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
-# As of version 12.0, python 2 is no longer supported, ensure py version is >= 3.5
 import sys
-assert sys.version_info > (3, 5), "Python 2 detected, Odoo requires Python >= 3.5 to run."
+assert sys.version_info > (3, 6), "Outdated python version detected, Odoo requires Python >= 3.6 to run."
 
 #----------------------------------------------------------
 # Running mode flags (gevent, prefork)
