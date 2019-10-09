@@ -6,7 +6,6 @@
 # Felix Yuen <fyu@odoo.com>, 2019
 # bower Guo <124358678@qq.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
-# Martin Trigaux, 2019
 # Maie <m@maie.name>, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
@@ -19,14 +18,15 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-23 13:48+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: ChinaMaker <liuct@chinamaker.net>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -506,6 +506,11 @@ msgid "All Tasks"
 msgstr "所有任务"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
+msgid "All employees"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -965,9 +970,9 @@ msgstr "定义在项目里的步骤有创建任务，更新已结束的任务或
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 msgid ""
 "Defines the visibility of the tasks of the project:\n"
-"- Visible by invited employees: employees may only see the followed project and tasks.\n"
-"- Visible by employees: employees may see all project and tasks.\n"
-"- Visible by portal users and employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"- Invited employees: employees may only see the followed project and tasks.\n"
+"- All employees: employees may see all project and tasks.\n"
+"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
 
@@ -1238,6 +1243,11 @@ msgid "GTD"
 msgstr "GTD"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Get customer feedback"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -1451,6 +1461,11 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr "和这个项目相关的内部邮件。收件会自动同步为任务（或者是议题，如果问题模块已经安装过）"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
+msgid "Invited employees"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -2014,6 +2029,11 @@ msgid "Portal Access URL"
 msgstr "门户访问网址"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "Portal users and all employees"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -2028,11 +2048,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
 msgid "Priority"
 msgstr "优先级"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
-msgid "Privacy"
-msgstr "隐私"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2954,19 +2969,9 @@ msgid "User Email"
 msgstr "用户EMail"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
-msgid "Visible by employees"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-msgid "Visible by invited employees"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid "Visible by portal users and employees"
-msgstr ""
+#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
+msgid "Visibility"
+msgstr "可见性"
 
 #. module: project
 #. openerp-web
@@ -3089,7 +3094,7 @@ msgstr "您无法删除包含任务的项目。 您可将其归档或首先删�
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "Your task must beo in the same company as its project."
+msgid "Your task must be in the same company as its project."
 msgstr ""
 
 #. module: project
@@ -3123,20 +3128,10 @@ msgid "happy"
 msgstr "快乐"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "oe_kanban_text_red"
-msgstr "oe_kanban_text_red"
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "task"
 msgstr "任务"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "text-warning font-weight-bold"
-msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

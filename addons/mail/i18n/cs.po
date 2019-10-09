@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -452,7 +452,7 @@ msgstr "Zobrazení okna akcí"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__category
 msgid "Action to Perform"
-msgstr ""
+msgstr "Akce k provedení"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -461,6 +461,8 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Akce mohou vyvolat určité chování, jako je otevření zobrazení kalendáře, "
+"nebo se automaticky označí jako provedené při nahrávání dokumentu"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -2063,7 +2065,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Kopie e-mailu"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -2178,7 +2180,7 @@ msgstr "Výjimka"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Exception Activities"
-msgstr ""
+msgstr "Výjimečné činnosti"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2591,7 +2593,7 @@ msgstr "Ikona"
 #: model:ir.model.fields,help:mail.field_res_partner__activity_exception_icon
 #: model:ir.model.fields,help:mail.field_res_users__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona označuje vyjímečnou aktivitu."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__res_id
@@ -4033,7 +4035,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Počet chyb"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction_counter
@@ -4478,6 +4480,14 @@ msgstr "Prosím čekejte"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/discuss.xml:0
+#: code:addons/mail/static/src/xml/discuss.xml:0
+#, python-format
+msgid "Please wait..."
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/js/composers/basic_composer.js:0
 #, python-format
 msgid "Please, wait while the file is uploading."
@@ -4703,7 +4713,7 @@ msgstr "ID vlákna záznamu"
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Records:"
-msgstr ""
+msgstr "Záznamy:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -5688,19 +5698,13 @@ msgstr "Typ prodlevy"
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"Typ akce serveru. K dispozici jsou následující hodnoty: \n"
-"- 'Execute Python Code': blok pythonového kódu, který bude proveden \n"
-"- 'Create or Copy a new Record': vytvořit nový záznam s novými hodnotami nebo zkopírovat existující záznam do databáze\n"
-"- 'Write on a Record': aktualizovat hodnoty záznamu\n"
-"- 'Execute several actions': definovat akci, která spouští několik dalších akcí na serveru\n"
-"- 'Add Followers': přidání folloverů do záznamu (k dispozici v diskusním fóru) \n"
-"- \"Send Email\": automaticky odeslat e-mail (dostupný v email_template)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -6299,6 +6303,15 @@ msgid "Your message was rejected by moderator."
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/controllers/home.py:0
+#, python-format
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/ir_actions.py:0
 #, python-format
 msgid "Your template should define email_from"
@@ -6580,6 +6593,14 @@ msgstr "Neznámá chyba"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "unknown target model %s"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:0
+#: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
+#, python-format
+msgid "unnamed"
 msgstr ""
 
 #. module: mail

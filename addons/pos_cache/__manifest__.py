@@ -10,7 +10,7 @@ This creates a product cache per POS config. It drastically lowers the
 time it takes to load a POS session with a lot of products.
     """,
 
-    'category': 'Point Of Sale',
+    'category': 'Sales/Point Of Sale',
     'version': '1.0',
     'depends': ['point_of_sale'],
     'data': [

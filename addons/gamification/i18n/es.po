@@ -8,18 +8,18 @@
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Antonio Trueba, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
-# Efrem Jimenez <efj@odoo.com>, 2019
 # John Guardado <jgu@odoo.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-09-23 13:50+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -382,7 +382,7 @@ msgid ""
 "                                                                <div style=\"height:${heightA}px;\">\n"
 "                                                                    ${extra_div | safe}   \n"
 "                                                                    <div style=\"height:55px;\">\n"
-"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" t-att-src=\"image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_64)\" alt=\"${goal['name']}\"/>\n"
+"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;object-fit:cover;\" t-att-src=\"image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_128)\" alt=\"${goal['name']}\"/>\n"
 "                                                                    </div>\n"
 "                                                                    <div align=\"center\" style=\"color:${bgColor};height:20px\">\n"
 "                                                                        ${goal['name']}\n"
@@ -1122,7 +1122,7 @@ msgstr "Herramientas de gamificación"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr ""
+msgstr "Insignia de usuario de gamificación"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
@@ -1270,11 +1270,6 @@ msgid "HR Challenges"
 msgstr "Desafíos de RRHH"
 
 #. module: gamification
-#: model:ir.model,name:gamification.model_ir_http
-msgid "HTTP Routing"
-msgstr "Ruta HTTP "
-
-#. module: gamification
 #: model:gamification.badge,name:gamification.badge_hidden
 msgid "Hidden"
 msgstr "Oculto"
@@ -1362,12 +1357,6 @@ msgid "Image 512"
 msgstr "Imagen 512"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_64
-#: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_64
-msgid "Image 64"
-msgstr "Imagen 64"
-
-#. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__inprogress
 msgid "In Progress"
 msgstr "En progreso"
@@ -1428,13 +1417,6 @@ msgstr "Es un seguidor"
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma
 msgid "Karma"
 msgstr "Karma"
-
-#. module: gamification
-#. openerp-web
-#: code:addons/gamification/static/src/js/crash_manager.js:0
-#, python-format
-msgid "Karma Error"
-msgstr "Error de karma"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge____last_update

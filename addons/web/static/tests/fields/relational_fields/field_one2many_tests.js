@@ -8705,6 +8705,42 @@ QUnit.module('fields', {}, function () {
 
             form.destroy();
         });
+
+        QUnit.test('editable one2many list with oe_read_only button', async function (assert) {
+            assert.expect(9);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form>
+                        <field name="turtles">
+                            <tree editable="bottom">
+                                <field name="turtle_foo"/>
+                                <button name="do_it" type="object" class="oe_read_only"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+            });
+
+            assert.containsN(form, '.o_list_view thead th:visible', 2);
+            assert.containsN(form, '.o_list_view tbody .o_data_row td:visible', 2);
+            assert.containsN(form, '.o_list_view tfoot td:visible', 2);
+            assert.containsNone(form, '.o_list_record_remove_header');
+
+            await testUtils.form.clickEdit(form);
+
+            // should have two visible columns in edit: foo + trash
+            assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+            assert.containsN(form, '.o_list_view thead th:visible', 2);
+            assert.containsN(form, '.o_list_view tbody .o_data_row td:visible', 2);
+            assert.containsN(form, '.o_list_view tfoot td:visible', 2);
+            assert.containsOnce(form, '.o_list_record_remove_header');
+
+            form.destroy();
+        });
+
     });
 });
 });

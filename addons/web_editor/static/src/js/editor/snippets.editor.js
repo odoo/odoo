@@ -77,14 +77,13 @@ var SnippetEditor = Widget.extend({
                     return $clone;
                 },
                 start: this._onDragAndDropStart.bind(this),
-                stop: function () {
+                stop: (...args) => {
                     // Delay our stop handler so that some summernote handlers
                     // which occur on mouseup (and are themself delayed) are
                     // executed first (this prevents the library to crash
                     // because our stop handler may change the DOM).
-                    var args = arguments;
-                    setTimeout(function () {
-                        self._onDragAndDropStop.apply(self, args);
+                    setTimeout(() => {
+                        this._onDragAndDropStop(...args);
                     }, 0);
                 },
             });
@@ -355,7 +354,7 @@ var SnippetEditor = Widget.extend({
         })).data('editor', this);
         $optionsSection.on('mouseover', this._onOptionsSectionMouseOver.bind(this));
         $optionsSection.on('mouseleave', this._onOptionsSectionMouseLeave.bind(this));
-        $optionsSection.on('click', this._onOptionsSectionClick.bind(this));
+        $optionsSection.on('click', 'we-title > span', this._onOptionsSectionClick.bind(this));
         $optionsSection.on('click', '.oe_snippet_clone', this._onCloneClick.bind(this));
         $optionsSection.on('click', '.oe_snippet_remove', this._onRemoveClick.bind(this));
         this._customize$Elements.push($optionsSection);

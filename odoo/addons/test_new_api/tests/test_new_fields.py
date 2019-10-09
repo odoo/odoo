@@ -1539,6 +1539,56 @@ class TestX2many(common.TransactionCase):
         record_a.unlink()
         self.assertFalse(record_a.exists())
 
+    def test_12_active_test_one2many(self):
+        Model = self.env['test_new_api.model_active_field']
+
+        parent = Model.create({})
+        self.assertFalse(parent.children_ids)
+
+        # create with implicit active_test=True in context
+        child1, child2 = Model.create([
+            {'parent_id': parent.id, 'active': True},
+            {'parent_id': parent.id, 'active': False},
+        ])
+        act_children = child1
+        all_children = child1 + child2
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        # create with active_test=False in context
+        child3, child4 = Model.with_context(active_test=False).create([
+            {'parent_id': parent.id, 'active': True},
+            {'parent_id': parent.id, 'active': False},
+        ])
+        act_children = child1 + child3
+        all_children = child1 + child2 + child3 + child4
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        # replace active children
+        parent.write({'children_ids': [(6, 0, [child1.id])]})
+        act_children = child1
+        all_children = child1 + child2 + child4
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        # replace all children
+        parent.with_context(active_test=False).write({'children_ids': [(6, 0, [child1.id])]})
+        act_children = child1
+        all_children = child1
+        self.assertEqual(parent.children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=True).children_ids, act_children)
+        self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
+
+        # check recomputation of inactive records
+        parent.write({'children_ids': [(6, 0, child4.ids)]})
+        self.assertTrue(child4.parent_active)
+        parent.active = False
+        self.assertFalse(child4.parent_active)
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_new_api.multi.tag']
@@ -1921,6 +1971,28 @@ class TestRequiredMany2one(common.TransactionCase):
 
     def test_explicit_set_null(self):
         Model = self.env['test_new_api.req_m2o']
+        field = Model._fields['foo']
+
+        # invalidate registry to redo the setup afterwards
+        self.registry.registry_invalidated = True
+        self.patch(field, 'ondelete', 'set null')
+
+        with self.assertRaises(ValueError):
+            field._setup_regular_base(Model)
+
+
+class TestRequiredMany2oneTransient(common.TransactionCase):
+
+    def test_explicit_ondelete(self):
+        field = self.env['test_new_api.req_m2o_transient']._fields['foo']
+        self.assertEqual(field.ondelete, 'restrict')
+
+    def test_implicit_ondelete(self):
+        field = self.env['test_new_api.req_m2o_transient']._fields['bar']
+        self.assertEqual(field.ondelete, 'cascade')
+
+    def test_explicit_set_null(self):
+        Model = self.env['test_new_api.req_m2o_transient']
         field = Model._fields['foo']
 
         # invalidate registry to redo the setup afterwards

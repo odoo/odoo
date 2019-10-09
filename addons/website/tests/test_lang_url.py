@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.addons.http_routing.models.ir_http import url_lang
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import HttpCase, tagged
 
@@ -18,9 +18,9 @@ class TestLangUrl(HttpCase):
         self.website.language_ids = self.env.ref('base.lang_en') + lang_fr
         self.website.default_lang_id = self.env.ref('base.lang_en')
 
-    def test_01_url_for(self):
+    def test_01_url_lang(self):
         with MockRequest(self.env, website=self.website):
-            self.assertEqual(url_for('', '[lang]'), '/[lang]/hello/', "`[lang]` is used to be replaced in the url_return after installing a language, it should not be replaced or removed.")
+            self.assertEqual(url_lang('', '[lang]'), '/[lang]/hello/', "`[lang]` is used to be replaced in the url_return after installing a language, it should not be replaced or removed.")
 
     def test_02_url_redirect(self):
         url = '/fr_WHATEVER/contactus'

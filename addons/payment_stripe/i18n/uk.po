@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -35,7 +35,7 @@ msgid ""
 "https://stripe.com/docs/checkout"
 msgstr ""
 "Відносна або абсолютна URL-адреса, що вказує на квадратне зображення вашого "
-"бренду або товару. Як визначено у вашому профілі Stripe. Переглянути: "
+"бренду або товару. Як визначено у вашому профілі Stripe. Перегляньте: "
 "https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
@@ -62,7 +62,7 @@ msgstr "Помилка"
 #: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
 msgid "Just one more second, We are redirecting you to Stripe..."
-msgstr ""
+msgstr "Ще одну секунду, ми перенаправляємо вас на Stripe..."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -72,7 +72,7 @@ msgstr "Платіжний еквайєр"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Payment Method ID"
-msgstr ""
+msgstr "ID способу оплати"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
@@ -114,7 +114,7 @@ msgstr "Stripe"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
 msgid "Stripe Payment Intent ID"
-msgstr ""
+msgstr "ID призначення платежу Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
@@ -145,18 +145,28 @@ msgid "Stripe: no order found for reference %s"
 msgstr "Stripe: замовлення не знайдено для довідки %s"
 
 #. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid ""
+"Unable to convert Stripe customer for SCA compatibility. Is there at least "
+"one card for this customer in the Stripe backend?"
+msgstr ""
+"Неможливо конвертувати клієнта Stripe для сумісності з SCA. Чи є принаймні "
+"одна картка для цього клієнта на бекенді Stripe?"
+
+#. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "Unable to save card"
-msgstr ""
+msgstr "Не вдається зберегти картку"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment. "
-msgstr ""
+msgstr "Ми не можемо додати ваш спосіб оплати на даний момент."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0

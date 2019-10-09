@@ -15,7 +15,7 @@
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <h1><field name="name" class="oe_inline" readonly="1"/></h1>
+                        <h1><field name="name" class="oe_inline"/></h1>
                     </div>
                     <group>
                         <group>
@@ -49,7 +49,7 @@
         <field name="name">stock.picking.batch.tree</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <tree string="Stock Batch Transfer" decoration-muted="state=='cancel'">
+            <tree string="Stock Batch Transfer" decoration-muted="state=='cancel'" multi_edit="1">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="state"/>
@@ -105,8 +105,6 @@
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Exception Activities" name="activities_exception"
-                    domain="[('activity_exception_decoration', '!=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="user" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>

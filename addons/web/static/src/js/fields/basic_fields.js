@@ -588,7 +588,7 @@ var FieldDateRange = InputField.extend({
                 timePicker: !this.isDateField,
                 timePicker24Hour: _t.database.parameters.time_format.search('%H') !== -1,
                 autoUpdateInput: false,
-                timePickerIncrement: 10,
+                timePickerIncrement: 5,
                 locale: {
                     format: this.isDateField ? time.getLangDateFormat() : time.getLangDatetimeFormat(),
                 },
@@ -1166,7 +1166,6 @@ var FieldFloatTime = FieldFloat.extend({
 });
 
 var FieldFloatFactor = FieldFloat.extend({
-    description: "",
     supportedFieldTypes: ['float'],
     className: 'o_field_float_factor',
     formatType: 'float_factor',
@@ -1371,6 +1370,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
      */
     _onKeydown: function (ev) {
         if (ev.which === $.ui.keyCode.ENTER) {
+            ev.stopPropagation();
             return;
         }
         this._super.apply(this, arguments);
@@ -3271,11 +3271,22 @@ var AceEditor = DebouncedField.extend({
  */
 var FieldColor = AbstractField.extend({
     template: 'FieldColor',
-    events: {
+    events: _.extend({}, AbstractField.prototype.events, {
         'click .o_field_color': '_onColorClick',
-    },
-    custom_events: {
+    }),
+    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         'colorpicker:saved': '_onColorpickerSaved',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.$('.o_field_color');
     },
 
     //--------------------------------------------------------------------------
@@ -3287,10 +3298,10 @@ var FieldColor = AbstractField.extend({
     * @private
     */
     _render: function () {
-        this._super.apply(this, arguments);
         this.$('.o_field_color').data('value', this.value)
             .css('background-color', this.value)
             .attr('title', this.value);
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -3299,13 +3310,20 @@ var FieldColor = AbstractField.extend({
 
     /**
     * @private
-    * @param {MouseEvent} ev
     */
-    _onColorClick: function (ev) {
-        new ColorpickerDialog(this, {
-            defaultColor: this.value,
-            noTransparency: true,
-        }).open();
+    _onColorClick: function () {
+        if (this.mode === 'edit') {
+            const dialog = new ColorpickerDialog(this, {
+                defaultColor: this.value,
+                noTransparency: true,
+            }).open();
+            dialog.on('closed', this, () => {
+                // we need to wait for the modal to execute its whole close function.
+                Promise.resolve().then(() => {
+                    this.getFocusableElement().focus();
+                });
+            });
+        }
     },
 
     /**
@@ -3314,6 +3332,20 @@ var FieldColor = AbstractField.extend({
     */
     _onColorpickerSaved: function (ev) {
         this._setValue(ev.data.hex);
+    },
+
+    /**
+     * @override
+     * @private
+     */
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ENTER) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            this._onColorClick(ev);
+        } else {
+            this._super.apply(this, arguments);
+        }
     },
 });
 

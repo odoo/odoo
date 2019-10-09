@@ -615,7 +615,7 @@ class PosOrder(models.Model):
         }
 
     @api.model
-    def action_receipt_to_customer(self, name, client, ticket, invoice_id=False):
+    def action_receipt_to_customer(self, name, client, ticket, order_ids=False):
         template_obj = self.env['mail.mail']
         message = "<p>Dear %s,<br/>Here is your electronic ticket from the %s. </p>" % (client['name'], name)
         template_data = {
@@ -625,16 +625,17 @@ class PosOrder(models.Model):
             'email_to': client['email']
         }
 
-        if invoice_id:
-            report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(invoice_id)
+        if order_ids and self.env['pos.order'].browse(order_ids[0]).account_move:
+            report = self.env.ref('point_of_sale.pos_invoice_report').render_qweb_pdf(order_ids[0])
+            filename = name + '.pdf'
             attachment = self.env['ir.attachment'].create({
-                'name': name,
+                'name': filename,
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
-                'datas_fname': name + '.pdf',
-                'store_fname': name,
+                'datas_fname': filename,
+                'store_fname': filename,
                 'res_model': 'account.move',
-                'res_id': invoice_id,
+                'res_id': order_ids[0],
                 'mimetype': 'application/x-pdf'
             })
             template_data['attachment_ids'] = attachment

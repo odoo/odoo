@@ -49,7 +49,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Save",
-            trigger:  ".modal-footer #modal-save"
+            trigger:  ".modal-footer button:first"
         },
         // Add the date field
         {
@@ -67,7 +67,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Save",
-            trigger:  ".modal-footer #modal-save"
+            trigger:  ".modal-footer button:first"
         },
 
         // Customize date field
@@ -104,7 +104,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Save",
-            trigger:  ".modal-footer #modal-save"
+            trigger:  ".modal-footer button:first"
         },
 
         // Customize record_name field
@@ -142,7 +142,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Save",
-            trigger:  ".modal-footer #modal-save"
+            trigger:  ".modal-footer button:first"
         },
 
         // Customize subject field
@@ -179,7 +179,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Save",
-            trigger:  ".modal-footer #modal-save"
+            trigger:  ".modal-footer button:first"
         },
         {
             content:  "Check the resulting field",
@@ -409,7 +409,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Save",
-            trigger:  ".modal-footer #modal-save"
+            trigger:  ".modal-footer button:first"
         },
 
         // Customize attachment_ids field

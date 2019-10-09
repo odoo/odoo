@@ -6,14 +6,15 @@
 # Martin Trigaux, 2019
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Michael Yeung, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-27 09:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: Michael Yeung, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,11 +107,6 @@ msgid "Alias domain"
 msgstr "別名網域"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
-msgid "Allow Cancelling Entries"
-msgstr "允許取消分錄"
-
-#. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "Already imported items"
@@ -185,13 +181,6 @@ msgid ""
 msgstr "勾選此框，則此日記帳下的會計憑單或折讓單不使用同一個序列。"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
-msgid ""
-"Check this box if you want to allow the cancellation the entries related to "
-"this journal or of the invoice related to this journal"
-msgstr "則此日記帳下的日記帳分錄或憑單可以被作廢，勾選此項。"
-
-#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__color
 msgid "Color Index"
 msgstr "顏色索引"
@@ -246,7 +235,7 @@ msgstr "折讓單分錄序列"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "Credit Notes Next Number"
-msgstr ""
+msgstr "退款單下一號碼"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -353,6 +342,13 @@ msgstr "勾選代表有新訊息需要您留意。"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "勾選代表有訊息發生傳送錯誤。"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
+msgid ""
+"If ticked, the accounting entry or invoice receives a hash as soon as it is "
+"posted and cannot be modified anymore."
+msgstr ""
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_journal.py:0
@@ -468,6 +464,11 @@ msgstr "最後更新者"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__write_date
 msgid "Last Updated on"
 msgstr "最後更新於"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
+msgid "Lock Posted Entries with Hash"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
@@ -588,6 +589,11 @@ msgid "SMS Delivery error"
 msgstr ""
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
+msgid "Secure Sequence"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
 msgid ""
 "Select 'Sale' for customer invoices journals.\n"
@@ -609,6 +615,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
 msgid "Sequence"
 msgstr "序號"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
+msgid "Sequence to use to ensure the securisation of data"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active

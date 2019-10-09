@@ -2,7 +2,7 @@
     'name': 'Website Theme Install',
     'summary': 'Select a theme for your website',
     'description': "",
-    'category': 'Technical Settings',
+    'category': 'Hidden',
     'version': '1.0',
     'data': [
         'views/assets.xml',

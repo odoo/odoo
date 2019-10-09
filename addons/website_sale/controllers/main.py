@@ -1214,38 +1214,40 @@ class WebsiteSale(http.Controller):
     # --------------------------------------------------------------------------
     @http.route('/shop/products/recently_viewed', type='json', auth='public', website=True)
     def products_recently_viewed(self, **kwargs):
+        return self._get_products_recently_viewed()
+
+    def _get_products_recently_viewed(self):
         """
-        Returns list of recently viewed products according to current user and product options
+        Returns list of recently viewed products according to current user
         """
         max_number_of_product_for_carousel = 12
-        visitors = request.env['website.visitor']._get_visitor_from_request(with_previous_visitors=True)
-        if visitors:
+        visitor = request.env['website.visitor']._get_visitor_from_request()
+        if visitor:
             excluded_products = request.website.sale_get_order().mapped('order_line.product_id.id')
             products = request.env['website.track'].sudo().read_group(
-                [('visitor_id', 'in', visitors.ids), ('product_id', '!=', False), ('product_id', 'not in', excluded_products)],
+                [('visitor_id', '=', visitor.id), ('product_id', '!=', False), ('product_id', 'not in', excluded_products)],
                 ['product_id', 'visit_datetime:max'], ['product_id'], limit=max_number_of_product_for_carousel, orderby='visit_datetime DESC')
             products_ids = [product['product_id'][0] for product in products]
             if products_ids:
                 viewed_products = request.env['product.product'].browse(products_ids)
-                res = {
-                    'products': viewed_products.read(['id', 'name', 'website_url']),
-                }
 
                 FieldMonetary = request.env['ir.qweb.field.monetary']
                 monetary_options = {
                     'display_currency': request.website.get_current_pricelist().currency_id,
                 }
                 rating = request.website.viewref('website_sale.product_comment').active
-                for res_product, product in zip(res['products'], viewed_products):
+                res = {'products': []}
+                for product in viewed_products:
                     combination_info = product._get_combination_info_variant()
+                    res_product = product.read(['id', 'name', 'website_url'])[0]
                     res_product.update(combination_info)
-                    res_product['list_price'] = FieldMonetary.value_to_html(res_product['list_price'], monetary_options)
                     res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
                     if rating:
                         res_product['rating'] = request.env["ir.ui.view"].render_template('website_rating.rating_widget_stars_static', values={
                             'rating_avg': product.rating_avg,
                             'rating_count': product.rating_count,
                         })
+                    res['products'].append(res_product)
 
                 return res
         return {}
@@ -1253,14 +1255,15 @@ class WebsiteSale(http.Controller):
     @http.route('/shop/products/recently_viewed_update', type='json', auth='public', website=True)
     def products_recently_viewed_update(self, product_id, **kwargs):
         res = {}
-        Visitor = request.env['website.visitor']
-        visitor = Visitor._get_visitor_from_request()
-        if not visitor:
-            visitor_sudo = Visitor._create_visitor({
-                'product_id': product_id,
-                'visit_datetime': datetime.now(),
-            })
-            res['visitor_id'] = visitor_sudo.access_token
-        else:
-            visitor._add_viewed_product(product_id)
+        visitor_sudo = request.env['website.visitor']._get_visitor_from_request_or_create()
+        if request.httprequest.cookies.get('visitor_uuid', '') != visitor_sudo.access_token:
+            res['visitor_uuid'] = visitor_sudo.access_token
+        visitor_sudo._add_viewed_product(product_id)
         return res
+
+    @http.route('/shop/products/recently_viewed_delete', type='json', auth='public', website=True)
+    def products_recently_viewed_delete(self, product_id, **kwargs):
+        visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+        if visitor_sudo:
+            request.env['website.track'].sudo().search([('visitor_id', '=', visitor_sudo.id), ('product_id', '=', product_id)]).unlink()
+        return self._get_products_recently_viewed()

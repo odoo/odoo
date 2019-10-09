@@ -8,13 +8,14 @@
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # amos lin <seeing@edirect168.com>, 2019
+# Michael Yeung, 2019
 # Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
+"POT-Creation-Date: 2019-09-27 09:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -55,6 +56,12 @@ msgstr "$ 4.50"
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "$ 8.50"
 msgstr "$ 8.50"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_payment.py:0
+#, python-format
+msgid "%s %s"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -235,6 +242,15 @@ msgstr ""
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? 點選 \"確認\"  將驗證付款。"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"A Chart of Accounts is not yet installed in your current company. Please "
+"install a Chart of Accounts through the Invoicing/Accounting settings before"
+" launching a PoS session."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -506,11 +522,6 @@ msgstr "您確定客戶想要付款嗎"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
 msgid "Attachment Count"
 msgstr "附件數"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.pos_menu_products_variants_action
-msgid "Attribute Values"
-msgstr "屬性值"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_menu_products_attribute_action
@@ -1006,6 +1017,11 @@ msgstr "確認"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Connect Devices"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS"
 msgstr ""
 
@@ -1393,7 +1409,7 @@ msgstr "折扣"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Disc.%"
-msgstr ""
+msgstr "折扣率%"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -1411,6 +1427,12 @@ msgstr "取消"
 #, python-format
 msgid "Disconnected"
 msgstr "已斷開連接"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.product_product_consumable
+#: model:product.template,name:point_of_sale.product_product_consumable_product_template
+msgid "Discount"
+msgstr "折扣"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__discount
@@ -1597,11 +1619,6 @@ msgstr "使用遠程連接的條碼掃瞄器進行條碼掃瞄。"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
 msgid "Enables Electronic Scale integration."
 msgstr "啟用電子秤集成。"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_payment_terminal
-msgid "Enables Payment Terminal integration."
-msgstr "啟用支付終端集成。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_account
@@ -2268,12 +2285,6 @@ msgid "Method"
 msgstr "方法"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.product_product_consumable
-#: model:product.template,name:point_of_sale.product_product_consumable_product_template
-msgid "Miscellaneous"
-msgstr "雜項"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
 msgstr ""
@@ -2662,7 +2673,6 @@ msgstr "訂單分析"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__other_devices
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Other Devices"
 msgstr ""
 
@@ -2799,11 +2809,6 @@ msgstr "付款參考"
 #, python-format
 msgid "Payment Successful"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_payment_terminal
-msgid "Payment Terminal"
-msgstr "付款終端"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2979,11 +2984,6 @@ msgstr "請選擇付款方式"
 #, python-format
 msgid "Please select the Customer"
 msgstr "請選擇客戶"
-
-#. module: point_of_sale
-#: model:product.category,name:point_of_sale.product_category_pos
-msgid "PoS"
-msgstr "Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
@@ -3885,13 +3885,6 @@ msgstr "設定每個產品的多個價格，自動折扣等。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set shop-specific prices, seasonal discounts, etc."
 msgstr "設定商店特定價格、季節性折扣等"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/pos.web_editor.js:0
-#, python-format
-msgid "Set your customized advertisement here"
-msgstr "在此處設定自定義廣告"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration

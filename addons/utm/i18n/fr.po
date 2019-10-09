@@ -6,19 +6,19 @@
 # Martin Trigaux, 2019
 # Fabien Pinckaers <fp@openerp.com>, 2019
 # missjuliette333 <missjuliette333@hotmail.fr>, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
 # William Olhasque <william.olhasque@scopea.fr>, 2019
-# Nathan Grognet <ngr@odoo.com>, 2019
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Nathan Grognet <ngr@odoo.com>, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-09-23 11:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +64,7 @@ msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_tag
-#: model_terms:ir.ui.view,arch_db:utm.utm_tag_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_tag_view_tree
 msgid "Campaign Tags"
 msgstr "Etiquettes de campagne"
 
@@ -113,11 +113,6 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:utm.field_utm_tag__create_date
 msgid "Created on"
 msgstr "Créé le"
-
-#. module: utm
-#: model:utm.stage,name:utm.default_utm_stage
-msgid "Default"
-msgstr "Par défaut"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
@@ -251,7 +246,7 @@ msgstr "Moyen"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
 msgid "Medium Name"
-msgstr ""
+msgstr "Nom du Média"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
@@ -265,6 +260,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:utm.field_utm_tag__name
 msgid "Name"
 msgstr "Nom"
+
+#. module: utm
+#: model:utm.stage,name:utm.default_utm_stage
+msgid "New"
+msgstr "Nouveau"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_newsletter
@@ -400,12 +400,12 @@ msgstr "Campagne UTM"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "UTM Campaigns"
-msgstr ""
+msgstr "Campagnes UTM"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_medium
 msgid "UTM Medium"
-msgstr ""
+msgstr "Medium UTM"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
@@ -415,7 +415,7 @@ msgstr ""
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
 msgid "UTM Source"
-msgstr ""
+msgstr "Source UTM"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_stage

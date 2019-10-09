@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -32,6 +32,13 @@ msgid ""
 "can use the edit + unlock buttons in order to adapt the initial demand on the\n"
 "operations."
 msgstr ""
+"\n"
+"Вам потрібно використовувати кнопку 'Компоненти записів' для реєстрації кількості для\n"
+"підрядних товарів з відстежуваними компонентами:\n"
+" %s.\n"
+"Якщо ви хочете обробити більше, ніж запланували, ви\n"
+"можете використати редагування + кнопки розблокування, щоб адаптувати початковий попит в\n"
+"операціях."
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/res_company.py:0
@@ -86,7 +93,7 @@ msgstr "Переміщення товару (Рядок складського �
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "Raw Materials for %s"
-msgstr ""
+msgstr "Сировина для%s"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_product_produce
@@ -101,7 +108,7 @@ msgstr "Запис компонентів"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Register components for subcontracted product"
-msgstr ""
+msgstr "Зареєструйте компоненти для субпідрядних товарів"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -141,7 +148,7 @@ msgstr "Послідовність субпідряду"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
 msgid "Show Subcontracting Details Visible"
-msgstr ""
+msgstr "Показати видимі дані субпідряду"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
@@ -184,7 +191,7 @@ msgstr "Тип операції субпідряду"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
 msgid "Subcontractor Location"
-msgstr ""
+msgstr "Місцезнаходження підрядника"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
@@ -199,7 +206,7 @@ msgstr "Прайс-лист постачальника"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
 msgid "The move is a subcontract receipt"
-msgstr ""
+msgstr "Переміщення - це отримання підряду"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
@@ -208,6 +215,14 @@ msgid ""
 "The stock location used as source and destination when sending        goods "
 "to this contact during a subcontracting process."
 msgstr ""
+"Місцезнадження на складі використовується, як джерело та призначення під час"
+" відправлення товарів цьому контакту під час підряду."
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, python-format
+msgid "To subcontract, use a planned transfer."
+msgstr "Для підряду використовуйте запланований трансфер."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
@@ -222,4 +237,4 @@ msgstr "Склад"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_product_produce__subcontract_move_id
 msgid "stock move from the subcontract picking"
-msgstr ""
+msgstr "складське переміщення з комплектування підряду"

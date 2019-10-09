@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-23 13:48+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -506,6 +506,11 @@ msgid "All Tasks"
 msgstr "Усі завдання"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
+msgid "All employees"
+msgstr "Усі співробітники"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -991,16 +996,16 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 msgid ""
 "Defines the visibility of the tasks of the project:\n"
-"- Visible by invited employees: employees may only see the followed project and tasks.\n"
-"- Visible by employees: employees may see all project and tasks.\n"
-"- Visible by portal users and employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"- Invited employees: employees may only see the followed project and tasks.\n"
+"- All employees: employees may see all project and tasks.\n"
+"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
 "Визначає видимість завдань проекту:\n"
-"- Видимий запрошеним працівникам: співробітники можуть переглядати лише додані проекти та завдання.\n"
-"- Видимий співробітникам: співробітники можуть бачити усі проекти та завдання.\n"
-"- Видимий користувачам порталу та співробітникам: Співробітники можуть бачити усе. Користувачі порталу можуть бачити проекти та завдання, додані\n"
-"   ними або кимось іншим з їхньої компанії."
+"- Залучені співробітники: співробітники можуть бачити лише додані товари та завдання.\n"
+"- Усі співробітники: співробітники можуть бачити усі проекти та завдання.\n"
+"- Користувачі порталу та всі співробітники: співробітники можуть бачити усе. Користувачі порталу можуть бачити проекти та завдання, додані ними\n"
+"   або кимось іншим з їхньої компанії."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1247,7 +1252,7 @@ msgstr "Додано"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Followed Tasks"
-msgstr ""
+msgstr "Додані завдання"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
@@ -1283,11 +1288,16 @@ msgid "GTD"
 msgstr "GTD"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Get customer feedback"
+msgstr "Отримайте відгук клієнта"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Getting Things Done (GTD)"
-msgstr "Налагодьте процеси"
+msgstr "Налагодьте процеси (GTD)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
@@ -1336,6 +1346,9 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea"
 msgstr ""
+"Збирайте ваші ідеї всередині завдань вашого нового проекту та обговорюйте їх"
+" у чаті під завданнями. Використовуйте %s та %s, щоби сповістити, який "
+"поточний статус вашої ідеї"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -1513,6 +1526,11 @@ msgstr ""
 "Внутрішня електронна пошта, пов'язана з цим проектом. Вхідні електронні "
 "листи автоматично синхронізуються із завданнями (або, якщо можливо, "
 "проблеми, якщо модуль Відстеження проблем встановлено)."
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
+msgid "Invited employees"
+msgstr "Залучені співробітники"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -2105,6 +2123,11 @@ msgid "Portal Access URL"
 msgstr "URL доступу до порталу"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "Portal users and all employees"
+msgstr "Користувачі порталу та всі співробітники"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -2123,11 +2146,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
 msgid "Priority"
 msgstr "Пріоритет"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
-msgid "Privacy"
-msgstr "Приватний"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2832,7 +2850,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Ім'я псевдоніма електронної пошти, наприклад, 'jobs', якщо ви хочете "
-"отримувати повідомлення електронної пошти на <jobs@example.odoo.com>"
+"отримувати електронні листи для <jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -3051,7 +3069,7 @@ msgstr "Використовуйте підзавдання"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
 msgid "Use Tasks as"
-msgstr "Використовувати завдання як"
+msgstr "Використовуйте завдання як"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3078,26 +3096,16 @@ msgid "User Email"
 msgstr "Ел. пошта користувача"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
-msgid "Visible by employees"
-msgstr "Видимий співробітникам"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-msgid "Visible by invited employees"
-msgstr "Видимий доданим співробітникам"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid "Visible by portal users and employees"
-msgstr "Видимий користувачам порталу та співробітникам"
+#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
+msgid "Visibility"
+msgstr "Доступність"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Waiting for the next stage: use %s and %s bullets."
-msgstr "Очікує наступного етапу: використовуйте %s та %s позначки"
+msgstr "Очікує наступного етапу: використовуйте %s та %s позначки."
 
 #. module: project
 #. openerp-web
@@ -3107,7 +3115,7 @@ msgstr "Очікує наступного етапу: використовуйт
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
-"Хочете кращий шлях <b>керування вашими проектами</b>? <i>Це починається "
+"Хочете у кращий шлях <b>керувати вашими проектами</b>? <i>Це починається "
 "тут.</i>"
 
 #. module: project
@@ -3204,7 +3212,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot create recursive tasks."
-msgstr ""
+msgstr "Ви не можете створити рекурсивні завдання."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3219,8 +3227,8 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "Your task must beo in the same company as its project."
-msgstr ""
+msgid "Your task must be in the same company as its project."
+msgstr "Ваше завдання повинно бути у тій же компанії, що і проект."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3253,20 +3261,10 @@ msgid "happy"
 msgstr "щасливий"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "oe_kanban_text_red"
-msgstr "oe_kanban_text_red"
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "task"
 msgstr "завдання"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "text-warning font-weight-bold"
-msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

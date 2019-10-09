@@ -20,7 +20,7 @@ import werkzeug.utils
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError
-from odoo.http import request, STATIC_CACHE, content_disposition
+from odoo.http import request, content_disposition
 from odoo.tools import consteq, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
@@ -87,8 +87,8 @@ class IrHttp(models.AbstractModel):
         return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
 
     @classmethod
-    def _find_handler(cls, return_rule=False):
-        return cls.routing_map().bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
+    def _match(cls, path_info, key=None):
+        return cls.routing_map().bind_to_environ(request.httprequest.environ).match(path_info=path_info, return_rule=True)
 
     @classmethod
     def _auth_method_user(cls):
@@ -208,7 +208,7 @@ class IrHttp(models.AbstractModel):
 
         # locate the controller method
         try:
-            rule, arguments = cls._find_handler(return_rule=True)
+            rule, arguments = cls._match(request.httprequest.path)
             func = rule.endpoint
         except werkzeug.exceptions.NotFound as e:
             return cls._handle_exception(e)
@@ -245,24 +245,37 @@ class IrHttp(models.AbstractModel):
                     return cls._handle_exception(werkzeug.exceptions.NotFound())
 
     @classmethod
-    def routing_map(cls):
+    def _generate_routing_rules(cls, modules, converters):
+        return http._generate_routing_rules(modules, False, converters)
+
+    @classmethod
+    def routing_map(cls, key=None):
         if not hasattr(cls, '_routing_map'):
-            _logger.info("Generating routing map")
-            installed = request.registry._init_modules - {'web'}
+            cls._routing_map = {}
+            cls._rewrite_len = {}
+        if key not in cls._routing_map:
+            _logger.info("Generating routing map for key %s" % str(key))
+            installed = request.registry._init_modules | set(odoo.conf.server_wide_modules)
             if tools.config['test_enable'] and odoo.modules.module.current_test:
                 installed.add(odoo.modules.module.current_test)
-            mods = [''] + odoo.conf.server_wide_modules + sorted(installed)
+            mods = sorted(installed)
             # Note : when routing map is generated, we put it on the class `cls`
             # to make it available for all instance. Since `env` create an new instance
             # of the model, each instance will regenared its own routing map and thus
             # regenerate its EndPoint. The routing map should be static.
-            cls._routing_map = http.routing_map(mods, False, converters=cls._get_converters())
-        return cls._routing_map
+            routing_map = werkzeug.routing.Map(strict_slashes=False, converters=cls._get_converters())
+            for url, endpoint, routing in cls._generate_routing_rules(mods, converters=cls._get_converters()):
+                xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
+                kw = {k: routing[k] for k in xtra_keys if k in routing}
+                routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw))
+            cls._routing_map[key] = routing_map
+        return cls._routing_map[key]
 
     @classmethod
     def _clear_routing_map(cls):
         if hasattr(cls, '_routing_map'):
-            del cls._routing_map
+            cls._routing_map = {}
+            _logger.debug("Clear routing map")
 
     #------------------------------------------------------
     # Binary server
@@ -337,8 +350,6 @@ class IrHttp(models.AbstractModel):
                 status = 301
                 content = record.url
 
-
-
         return status, content, filename, mimetype, filehash
 
     def _binary_record_content(
@@ -393,7 +404,7 @@ class IrHttp(models.AbstractModel):
             headers.append(('ETag', filehash))
             if etag == filehash and status == 200:
                 status = 304
-        headers.append(('Cache-Control', 'max-age=%s' % (STATIC_CACHE if unique else 0)))
+        headers.append(('Cache-Control', 'max-age=%s' % (http.STATIC_CACHE_LONG if unique else 0)))
         # content-disposition default name
         if download:
             headers.append(('Content-Disposition', content_disposition(filename)))

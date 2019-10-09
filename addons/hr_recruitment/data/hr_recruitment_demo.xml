@@ -2,6 +2,10 @@
 <odoo>
   <data noupdate="1">
 
+    <record id="base.user_demo" model="res.users">
+        <field name="groups_id" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+    </record>
+
     <!--Manage the job_id to get in hr.applicant-->
     <record id="hr.job_developer" model="hr.job">
         <field name="state">recruit</field>

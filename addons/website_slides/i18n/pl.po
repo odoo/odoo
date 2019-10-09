@@ -19,14 +19,15 @@
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
 # Paweł Wodyński <pw@myodoo.pl>, 2019
+# Natalia Gros <nag@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:29+0000\n"
+"POT-Creation-Date: 2019-09-27 09:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2019\n"
+"Last-Translator: Natalia Gros <nag@odoo.com>, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -291,6 +292,13 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-home d-md-none\"/><span class=\"d-none d-md-inline-block "
 "ml-1\">Back to course</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid ""
+"<i class=\"fa fa-home\"/>\n"
+"                                            Course"
 msgstr ""
 
 #. module: website_slides
@@ -830,7 +838,7 @@ msgstr "Kategoria"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_survey
 msgid "Certifications"
-msgstr ""
+msgstr "Certyfikacji"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_certification
@@ -1183,6 +1191,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses_courses
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_report_courses
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_graph
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree
@@ -1732,31 +1741,25 @@ msgstr "Obraz"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_1024
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Obraz 1024"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_128
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Obraz 128"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_256
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Obraz 256"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_512
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_512
 msgid "Image 512"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_64
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_64
-msgid "Image 64"
-msgstr ""
+msgstr "Obraz 512"
 
 #. module: website_slides
 #. openerp-web
@@ -1945,7 +1948,7 @@ msgid "Latest Published"
 msgstr "Ostatnio opublikowany"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_achievements_small
+#: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
 msgid "Latest achievements"
 msgstr ""
 
@@ -2193,7 +2196,7 @@ msgid "No Course created yet."
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_achievements_small
+#: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
 msgid "No achievements currently :("
 msgstr ""
 
@@ -2290,7 +2293,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Liczba błędów"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
@@ -2691,7 +2694,7 @@ msgstr "Zoptymalizowane SEO"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_sms_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Błąd dostarczenia wiadomości SMS"
 
 #. module: website_slides
 #. openerp-web
@@ -2916,12 +2919,12 @@ msgstr "Slajd"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_partner
 msgid "Slide / Partner decorated m2m"
-msgstr ""
+msgstr "Slajd / Partner udekorował m2m"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
 msgid "Slide Channel"
-msgstr ""
+msgstr "Slajd Kanału"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
@@ -3022,7 +3025,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_membership_id
 msgid "Subscriber information"
-msgstr ""
+msgstr "Informacje subskrybenta"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__user_membership_id

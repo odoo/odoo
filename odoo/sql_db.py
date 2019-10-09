@@ -22,6 +22,8 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ
 from psycopg2.pool import PoolError
 from werkzeug import urls
 
+from odoo.api import Environment
+
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 _logger = logging.getLogger(__name__)
@@ -58,23 +60,19 @@ import threading
 from inspect import currentframe
 
 
-SENTINEL = object()
+def flush_env(cr):
+    """ Retrieve and flush an environment corresponding to the given cursor """
+    for env in list(Environment.envs):
+        if env.cr is cr:
+            env['base'].flush()
+            break
 
-
-def get_env(frame, back=0):
-    """ Retrieve an environment from the given stack frame. """
-    for i in range(back):
-        frame = frame.f_back
-    while frame:
-        env = frame.f_locals.get('env', SENTINEL)
-        if env is not SENTINEL:
-            return env
-        env = getattr(frame.f_locals.get('self'), 'env', SENTINEL)
-        if env is not SENTINEL:
-            return env
-        frame = frame.f_back
-    return None
-
+def clear_env(cr):
+    """ Retrieve and clear an environment corresponding to the given cursor """
+    for env in list(Environment.envs):
+        if env.cr is cr:
+            env.clear()
+            break
 
 import re
 re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
@@ -242,7 +240,7 @@ class Cursor(object):
             res = self._obj.execute(query, params)
         except Exception as e:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.error("bad query: %s\nERROR: %s", self._obj.query or query, e)
+                _logger.error("bad query: %s\nERROR: %s", tools.ustr(self._obj.query or query), e)
             raise
 
         # simple query count is always computed
@@ -256,12 +254,13 @@ class Cursor(object):
         if self.sql_log:
             delay *= 1E6
 
-            res_from = re_from.match(query.lower())
+            query_lower = self._obj.query.decode().lower()
+            res_from = re_from.match(query_lower)
             if res_from:
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
                 self.sql_from_log[res_from.group(1)][0] += 1
                 self.sql_from_log[res_from.group(1)][1] += delay
-            res_into = re_into.match(query.lower())
+            res_into = re_into.match(query_lower)
             if res_into:
                 self.sql_into_log.setdefault(res_into.group(1), [0, 0])
                 self.sql_into_log[res_into.group(1)][0] += 1
@@ -386,9 +385,7 @@ class Cursor(object):
     def commit(self):
         """ Perform an SQL `COMMIT`
         """
-        env = get_env(currentframe(), 2)
-        if env is not None:
-            env['base'].flush()
+        flush_env(self)
         result = self._cnx.commit()
         for func in self._pop_event_handlers()['commit']:
             func()
@@ -398,9 +395,7 @@ class Cursor(object):
     def rollback(self):
         """ Perform an SQL `ROLLBACK`
         """
-        env = get_env(currentframe(), 2)
-        if env is not None:
-            env.clear()
+        clear_env(self)
         result = self._cnx.rollback()
         for func in self._pop_event_handlers()['rollback']:
             func()
@@ -428,17 +423,16 @@ class Cursor(object):
     def savepoint(self, flush=True):
         """context manager entering in a new savepoint"""
         name = uuid.uuid1().hex
-        env = get_env(currentframe(), 2) if flush else None
-        if env is not None:
-            env['base'].flush()
+        if flush:
+            flush_env(self)
         self.execute('SAVEPOINT "%s"' % name)
         try:
             yield
-            if env is not None:
-                env['base'].flush()
+            if flush:
+                flush_env(self)
         except Exception:
-            if env is not None:
-                env.clear()
+            if flush:
+                clear_env(self)
             self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
             raise
         else:
@@ -495,15 +489,11 @@ class TestCursor(object):
         _logger.debug("TestCursor.autocommit(%r) does nothing", on)
 
     def commit(self):
-        env = get_env(currentframe(), 1)
-        if env is not None:
-            env['base'].flush()
+        flush_env(self)
         self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
 
     def rollback(self):
-        env = get_env(currentframe(), 1)
-        if env is not None:
-            env.clear()
+        clear_env(self)
         self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
 
     def __enter__(self):

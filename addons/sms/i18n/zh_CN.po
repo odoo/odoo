@@ -7,21 +7,22 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
 # keecome <7017511@qq.com>, 2019
-# Emily JIA <eji@odoo.com>, 2019
+# Emily Jia <eji@odoo.com>, 2019
 # gary chk <garychk@163.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
 # Martin Trigaux, 2019
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:28+0000\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,12 +33,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
 msgid "# Invalid recipients"
-msgstr ""
+msgstr "# 无效的收件人"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_count
 msgid "# Valid recipients"
-msgstr ""
+msgstr "#有效的收件人"
 
 #. module: sms
 #: code:addons/sms/models/sms_template.py:0
@@ -51,20 +52,20 @@ msgstr "%s (副本)"
 #: code:addons/sms/static/src/js/fields_sms_widget.js:0
 #, python-format
 msgid "%s characters, fits in %s SMS (%s) "
-msgstr ""
+msgstr "%s 字符， 适合 %s 短信 (%s) "
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "%s invalid recipients"
-msgstr ""
+msgstr "%s无效的收件人"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid ""
 "<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
 "this SMS again to the recipients you did not select."
-msgstr ""
+msgstr "<span class=\"fa fa-info-circle\"/> 提示:这不会将邮件发送给未选中的收件者。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -72,6 +73,8 @@ msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
+"<span class=\"o_stat_text\">添加</span>\n"
+"                                <span class=\"o_stat_text\">上下文动作</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -79,6 +82,8 @@ msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
+"<span class=\"o_stat_text\">移除</span>\n"
+"                                <span class=\"o_stat_text\">上下文动作</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -86,6 +91,8 @@ msgid ""
 "<span class=\"text-warning\" attrs=\"{'invisible':[('resource_ref','!=', "
 "False)]}\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" attrs=\"{'invisible':[('resource_ref','!=', "
+"False)]}\">没有记录</span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
@@ -100,21 +107,21 @@ msgstr "有效域名"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__active_domain_count
 msgid "Active records count"
-msgstr ""
+msgstr "启用记录计数"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "Add a contextual action on the related model to open a sms composer with "
 "this template"
-msgstr ""
+msgstr "在相关的模型上添加上下文操作以使用此模板打开短信作者"
 
 #. module: sms
 #. openerp-web
 #: code:addons/sms/static/src/js/mail_failure.js:0
 #, python-format
 msgid "An error occurred when sending an SMS"
-msgstr ""
+msgstr "发送短信时发生错误"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -128,19 +135,19 @@ msgstr "应用于"
 msgid ""
 "Are you sure you want to discard %s SMS delivery failures. You won't be able"
 " to re-send these SMS later!"
-msgstr ""
+msgstr "你确定要丢弃%s 短信发送失败吗？你以后将无法重新发送这些短信！"
 
 #. module: sms
 #. openerp-web
 #: code:addons/sms/static/src/xml/thread.xml:0
 #, python-format
 msgid "Awaiting Dispatch"
-msgstr ""
+msgstr "等待发货"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_blacklist
 msgid "Blacklisted"
-msgstr ""
+msgstr "列入黑名单"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -182,7 +189,7 @@ msgstr "检查"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Choose a language:"
-msgstr ""
+msgstr "选择一种语言："
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -197,7 +204,7 @@ msgstr "关闭"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
 msgid "Composition Mode"
-msgstr ""
+msgstr "合成模式"
 
 #. module: sms
 #: model:ir.model,name:sms.model_res_partner
@@ -250,7 +257,7 @@ msgstr "丢弃"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_cancel_action
 msgid "Discard SMS delivery failures"
-msgstr ""
+msgstr "丢弃短信发送失败"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -287,7 +294,7 @@ msgstr "文档ID"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids
 msgid "Document IDs"
-msgstr ""
+msgstr "文档 IDs"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model
@@ -325,7 +332,7 @@ msgstr "错误"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__error_code
 msgid "Error Code"
-msgstr ""
+msgstr "错误代码"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
@@ -342,7 +349,7 @@ msgstr "字段"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
 msgid "Field holding number"
-msgstr ""
+msgstr "现场持有号码"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__copyvalue
@@ -356,7 +363,7 @@ msgstr "最终的占位符表达式，可以复制粘贴到目标模版字段"
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Following numbers are not correctly encoded: %s"
-msgstr ""
+msgstr "以下数字未正确编码：%s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_cancel
@@ -366,13 +373,13 @@ msgstr "已取消"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_insufficient_credit
 msgid "Has Insufficient Credit"
-msgstr ""
+msgstr "信用不足"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_message__has_sms_error
 msgid "Has SMS error"
-msgstr ""
+msgstr "有短信错误"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__has_sms_error
@@ -401,8 +408,6 @@ msgstr "ID"
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_crm_team__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_event_event__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_event_registration__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_fleet_vehicle__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_fleet_vehicle_log_contract__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_gamification_badge__message_has_sms_error
@@ -437,12 +442,12 @@ msgid ""
 "If you want to re-send them, click Cancel now, then click on the "
 "notification and review them one by one by clicking on the red icon next to "
 "each message."
-msgstr ""
+msgstr "如果你想重新发送，请点击取消，然后点击每条消息旁边的红色信封提示逐一审查。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Ignore all"
-msgstr ""
+msgstr "忽略所有"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
@@ -453,12 +458,18 @@ msgstr "排队"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_credit
 msgid "Insufficient Credit"
+msgstr "信用不足"
+
+#. module: sms
+#: code:addons/sms/wizard/sms_composer.py:0
+#, python-format
+msgid "Invalid number"
 msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
 msgid "Keep a note on document"
-msgstr ""
+msgstr "记下文件"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__lang
@@ -502,17 +513,17 @@ msgstr "更新时间"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_mass_keep_log
 msgid "Log a note"
-msgstr ""
+msgstr "记录一个备注"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
 msgid "Mail Message"
-msgstr ""
+msgstr "邮件消息"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_model__is_mail_thread_sms
 msgid "Mail Thread SMS"
-msgstr ""
+msgstr "邮件线程短信"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
@@ -538,13 +549,13 @@ msgstr "消息类型：EMail用于 邮件消息， 通知用户系统消息，�
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_missing
 msgid "Missing Number"
-msgstr ""
+msgstr "遗失号码"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Missing number"
-msgstr ""
+msgstr "遗失号码"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__model
@@ -570,7 +581,7 @@ msgstr "通知"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr ""
+msgstr "通知类型"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
@@ -587,7 +598,7 @@ msgstr "如果目标字段为空则使用此可选值"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
 msgid "Outgoing SMS"
-msgstr ""
+msgstr "外发短信"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__partner_ids
@@ -598,7 +609,7 @@ msgstr "业务伙伴"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr ""
+msgstr "手机黑名单Mixin"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
@@ -609,7 +620,7 @@ msgstr "占位符表达式"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
-msgstr ""
+msgstr "提交在文件上"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -620,6 +631,11 @@ msgstr "预览"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Preview of"
 msgstr "预览"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "Put in queue"
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -641,12 +657,12 @@ msgstr "收件人"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__numbers
 msgid "Recipients (Numbers)"
-msgstr ""
+msgstr "收件人（数字）"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_description
 msgid "Recipients (Partners)"
-msgstr ""
+msgstr "收件人（合作伙伴）"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__res_id
@@ -656,7 +672,7 @@ msgstr "记录 ID"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__resource_ref
 msgid "Record reference"
-msgstr ""
+msgstr "参照记录"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
@@ -667,7 +683,7 @@ msgstr "相关的文档模型"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Remove the contextual action of the related model"
-msgstr ""
+msgstr "删除相关模型的上下文操作"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -678,17 +694,20 @@ msgstr "重发"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend_recipient
 msgid "Resend Notification"
-msgstr ""
+msgstr "重新发送通知"
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/xml/thread.xml:0
 #: model:ir.actions.act_window,name:sms.sms_sms_action
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id
 #: model:ir.model.fields.selection,name:sms.selection__mail_message__message_type__sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__notification_type__sms
 #: model:ir.ui.menu,name:sms.sms_sms_menu
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
+#, python-format
 msgid "SMS"
-msgstr ""
+msgstr "短信"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
@@ -699,8 +718,6 @@ msgstr "短信API"
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_crm_team__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_event_event__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_event_registration__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_fleet_vehicle__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_fleet_vehicle_log_contract__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_gamification_badge__message_has_sms_error
@@ -734,17 +751,17 @@ msgstr "短信发送错误"
 #: code:addons/sms/static/src/js/systray_messaging_menu.js:0
 #, python-format
 msgid "SMS Failures"
-msgstr ""
+msgstr "短信失败"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
 msgid "SMS Number"
-msgstr ""
+msgstr "短信号码"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS Preview"
-msgstr ""
+msgstr "短信预览"
 
 #. module: sms
 #. openerp-web
@@ -757,23 +774,23 @@ msgstr "短信价格"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend
 msgid "SMS Resend"
-msgstr ""
+msgstr "短信重新发送"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__state
 msgid "SMS Status"
-msgstr ""
+msgstr "短信状态"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_template_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "SMS Template"
-msgstr ""
+msgstr "短信模板"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_preview
 msgid "SMS Template Preview"
-msgstr ""
+msgstr "短信模板预览"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template
@@ -782,30 +799,30 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_tree
 msgid "SMS Templates"
-msgstr ""
+msgstr "短信模板"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS content"
-msgstr ""
+msgstr "短信内容"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:sms.ir_cron_sms_scheduler_action
 #: model:ir.cron,name:sms.ir_cron_sms_scheduler_action
 msgid "SMS: SMS Queue Manager"
-msgstr ""
+msgstr "内容: SMS队列管理员"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr ""
+msgstr "消毒数量"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_search
 msgid "Search SMS Templates"
-msgstr ""
+msgstr "搜索短信模板"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_object_field
@@ -818,6 +835,7 @@ msgstr ""
 "如果这是个关系型字段，您可以选择关系型字段的目标字段。"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Send Now"
 msgstr "立即发送"
@@ -831,7 +849,7 @@ msgstr "发送短信"
 #: code:addons/sms/models/sms_template.py:0
 #, python-format
 msgid "Send SMS (%s)"
-msgstr ""
+msgstr "发送短信 (%s)"
 
 #. module: sms
 #. openerp-web
@@ -848,12 +866,12 @@ msgstr "发送文本短信"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
 msgid "Send SMS Wizard"
-msgstr ""
+msgstr "发送短信向导"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
 msgid "Send SMS in batch"
-msgstr ""
+msgstr "批处理发送短信"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -863,23 +881,23 @@ msgstr "发送一条短信"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
 msgid "Send directly"
-msgstr ""
+msgstr "直接发送"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__numbers
 msgid "Send to numbers"
-msgstr ""
+msgstr "发送到数字"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
 msgid "Sending Failures"
-msgstr ""
+msgstr "发送失败"
 
 #. module: sms
 #: code:addons/sms/models/ir_actions.py:0
 #, python-format
 msgid "Sending SMS can only be done on a mail.thread model"
-msgstr ""
+msgstr "发送短信只能在mail.thread模型上完成"
 
 #. module: sms
 #. openerp-web
@@ -917,12 +935,12 @@ msgstr "用于在相关文档上调用此模版的边栏按钮"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
 msgid "Sms Resend"
-msgstr ""
+msgstr "短信重新发送"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sms_template_id
 msgid "Sms Template"
-msgstr ""
+msgstr "短信模板"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_model_object_field
@@ -944,7 +962,7 @@ msgstr "模板预览"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
 msgid "Template Preview Language"
-msgstr ""
+msgstr "模板预览语言"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_action
@@ -968,38 +986,32 @@ msgstr "类型"
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"服务器操作的类型。 以下值可用：\n"
-"- “执行Python代码”：将被执行的一段python代码\n"
-"- “创建或复制新记录”：用新值创建新记录，或复制你的数据库中的现有记录\n"
-"- '在记录上写'：更新记录的值\n"
-"- “执行几个动作”：定义触发其他几个服务器动作的动作\n"
-"- “添加追随者”：将追随者添加到记录中（在讨论中可用）\n"
-"- “发送EMail”：自动发送EMail（在email_template中提供）"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
 msgid ""
 "UX field computing the number of recipients in mass mode based on given "
 "active domain"
-msgstr ""
+msgstr "UX字段基于给定的活动域计算质量模式中的接收者数量"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
 "UX field computing the number of recipients in mass mode without active "
 "domain"
-msgstr ""
+msgstr "UX字段计算没有活动域的领域发模式下的收件人数"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
 msgid "Use Template"
-msgstr ""
+msgstr "使用模版"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__use_active_domain
@@ -1009,7 +1021,7 @@ msgstr "使用有效域名"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_use_blacklist
 msgid "Use blacklist"
-msgstr ""
+msgstr "使用黑名单"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
@@ -1018,11 +1030,12 @@ msgid ""
 " detect the language of your recipient by a placeholder expression (e.g. "
 "${object.partner_id.lang})"
 msgstr ""
+"使用此字段强制使用特定语言（ISO代码）或通过占位符表达式动态检测收件人的语言 (e.g. ${object.partner_id.lang})"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
 msgid "Visible records count"
-msgstr ""
+msgstr "可见记录数"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sub_model_object_field
@@ -1043,29 +1056,29 @@ msgstr "如果关系型字段被选为第一个字段，这个字段显示这个
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
 msgid "Whether this model supports messages and notifications through SMS"
-msgstr ""
+msgstr "该模型是否支持通过短信发送消息和通知。"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_format
 msgid "Wrong Number Format"
-msgstr ""
+msgstr "错误的数字格式"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_resend.py:0
 #, python-format
 msgid "You do not have access to the message and/or related document."
-msgstr ""
+msgstr "你无权访问消息和/或相关的文档。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "are invalid."
-msgstr ""
+msgstr "无效"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. en_US or ${object.partner_id.lang}"
-msgstr ""
+msgstr "例如 en_US 或 ${object.partner_id.lang}"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1073,6 +1086,8 @@ msgid ""
 "recipients are valid\n"
 "                                and"
 msgstr ""
+"收件人有效\n"
+"                                和"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -1082,14 +1097,14 @@ msgstr "记录："
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "records instead. <br/>"
-msgstr ""
+msgstr "而是记录。<br/>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "records selected."
-msgstr ""
+msgstr "所选记录。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "to send to all"
-msgstr ""
+msgstr "发送给所有人"

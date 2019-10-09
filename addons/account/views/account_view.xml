@@ -149,7 +149,7 @@
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
                     <field name="type"/>
-                    <field name="journal_group_ids" widget="many2many_tags"/>
+                    <field name="journal_group_ids" widget="many2many_tags" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -319,6 +319,7 @@
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
                                         <field name="type_control_ids" widget="many2many_tags"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
+                                        <field name="restrict_mode_hash_table" groups="account.group_account_user"/>
                                     </group>
                                     <group string="Payment Method Types" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
@@ -640,6 +641,7 @@ action = model.setting_init_bank_account_action()
                     <field name="all_lines_reconciled" invisible="1" />
                     <button name="action_bank_reconcile_bank_statements" string="Reconcile" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',True),('line_ids','=',[]),('state', '!=', 'open')]}"/>
                     <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                    <button name="button_reopen" states="confirm" string="Reset to New" type="object"/>
                     <button name="%(action_cash_box_out)d" string="Take Money In/Out" type="action" class="oe_highlight" attrs="{'invisible': [('journal_type','!=','cash')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                 </header>
@@ -694,10 +696,12 @@ action = model.setting_init_bank_account_action()
                                     <field name="note" optional="hidden"/>
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="journal_currency_id" invisible="1"/>
-                                    <field name="amount_currency" invisible="1"/>
-                                    <field name="currency_id" invisible="1" />
                                     <field name="bank_account_id" invisible="1" />
                                     <field name="account_number" optional="hidden"/>
+                                    <field name="amount_currency" optional="hidden"/>
+                                    <field name="currency_id" optional="hidden"/>
+                                    <field name="state" invisible="1"/>
+                                    <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Revert reconciliation" type="object" icon="fa-undo"/>
                                 </tree>
                             </field>
                         </page>
@@ -952,7 +956,7 @@ action = model.setting_init_bank_account_action()
                                 <field name="show_force_tax_included" invisible="1"/>
                                 <field name="force_tax_included"
                                        attrs="{'invisible': [('show_force_tax_included', '=', False)]}" force_save="1"/>
-                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
@@ -987,7 +991,7 @@ action = model.setting_init_bank_account_action()
                                 <field name="show_second_force_tax_included" invisible="1"/>
                                 <field name="force_second_tax_included"
                                        attrs="{'invisible': [('show_second_force_tax_included', '=', False)]}" force_save="1"/>
-                                <field name="second_analytic_account_id" string="Analytic Account" groups="analytic.group_analytic_accounting"/>
+                                <field name="second_analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" string="Analytic Account" groups="analytic.group_analytic_accounting"/>
                                 <field name="second_analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                             </group>
                             <group>
@@ -1136,7 +1140,7 @@ action = model.setting_init_bank_account_action()
                     <field name="sequence" widget="handle"/>
                     <field name="factor_percent" attrs="{'invisible': [('repartition_type', '=', 'base')]}"/>
                     <field name="repartition_type"/>
-                    <field name="account_id" attrs="{'invisible': [('repartition_type', '=', 'base')]}" options="{'no_create': True}"/>
+                    <field name="account_id" attrs="{'invisible': [('repartition_type', '=', 'base')]}" options="{'no_create': True}" domain="[('internal_type', 'not in', ('receivable', 'payable'))]"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('applicability', '=', 'taxes'), ('country_id', '=', country_id)]"/>
                     <field name="country_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
@@ -1265,7 +1269,7 @@ action = model.setting_init_bank_account_action()
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="hide_tax_exigibility" invisible="1"/>
                                     <field name="tax_exigibility" widget="radio" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_tax_exigibility', '=', False)]}" groups="account.group_account_user"/>
-                                    <field name="cash_basis_base_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_user"/>
+                                    <field name="cash_basis_base_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')]}" groups="account.group_account_user"/>
                                     <field name="cash_basis_transition_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_user"/>
                                 </group>
                             </group>
@@ -1803,14 +1807,13 @@ action = model.setting_init_bank_account_action()
             parent="account.menu_finance_receivables"
             action="res_partner_action_customer" sequence="110"/>
 
-        <record id="product_product_view_tree" model="ir.ui.view">
-            <field name="name">product.product.tree</field>
-            <field name="model">product.product</field>
+        <record id="product_template_view_tree" model="ir.ui.view">
+            <field name="name">product.template.tree</field>
+            <field name="model">product.template</field>
             <field name="arch" type="xml">
                 <tree string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
-                    <field name="product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                     <field name="lst_price"/>
                     <field name="taxes_id" widget="many2many_tags"/>
                     <field name="supplier_taxes_id" widget="many2many_tags"/>
@@ -1819,21 +1822,13 @@ action = model.setting_init_bank_account_action()
             </field>
         </record>
 
-        <record id="product_product_action" model="ir.actions.act_window">
-            <field name="name">Products</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" ref="product_product_view_tree"/>
-        </record>
-
         <record id="product_product_action_sellable" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
+            <field name="res_model">product.template</field>
             <field name="view_mode">kanban,tree,form,activity</field>
             <field name="context">{'search_default_filter_to_sell': 1}</field>
-            <field name="view_id" ref="product_product_view_tree"/>
+            <field name="view_id" ref="product_template_view_tree"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                   Create a new sellable product
@@ -1844,10 +1839,10 @@ action = model.setting_init_bank_account_action()
         <record id="product_product_action_purchasable" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
+            <field name="res_model">product.template</field>
             <field name="view_mode">kanban,tree,form,activity</field>
             <field name="context">{'search_default_filter_to_purchase': 1}</field>
-            <field name="view_id" ref="product_product_view_tree"/>
+            <field name="view_id" ref="product_template_view_tree"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                   Create a new purchasable product

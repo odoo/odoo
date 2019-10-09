@@ -15,8 +15,8 @@ class L10nLatamDocumentType(models.Model):
             ('credit_note', 'Credit Notes'),
             ('receipt_invoice', 'Receipt Invoice')])
 
-    def get_document_sequence_vals(self, journal):
-        values = super(L10nLatamDocumentType, self).get_document_sequence_vals(journal)
+    def _get_document_sequence_vals(self, journal):
+        values = super(L10nLatamDocumentType, self)._get_document_sequence_vals(journal)
         if self.country_id != self.env.ref('base.cl'):
             return values
         values.update({

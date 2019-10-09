@@ -15,7 +15,6 @@
 # David Minneci <david@numeko.it>, 2019
 # maiolif <maiolif@mgftools.com>, 2019
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
-# Martin Trigaux, 2019
 # Giovanni Perteghella <giovanni@perteghella.org>, 2019
 # Luigi Di Naro <gigidn@gmail.com>, 2019
 # Paolo Valier, 2019
@@ -23,17 +22,18 @@
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # mymage <stefano.consolaro@mymage.it>, 2019
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Federico Zanuttini <fza@odoo.com>, 2019
 # Davide Speranza <dsp@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-23 13:48+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Davide Speranza <dsp@odoo.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -258,7 +258,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right \"/> Leggi le opinioni"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-calendar\"/> End date :"
-msgstr "<i class=\"fa fa-calendar\"/> Data di fine :"
+msgstr "<i class=\"fa fa-calendar\"/> Data fine :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -518,6 +518,11 @@ msgstr "Tutti"
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
 msgstr "Tutti i lavori"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
+msgid "All employees"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1002,9 +1007,9 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 msgid ""
 "Defines the visibility of the tasks of the project:\n"
-"- Visible by invited employees: employees may only see the followed project and tasks.\n"
-"- Visible by employees: employees may see all project and tasks.\n"
-"- Visible by portal users and employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"- Invited employees: employees may only see the followed project and tasks.\n"
+"- All employees: employees may see all project and tasks.\n"
+"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
 
@@ -1282,6 +1287,11 @@ msgid "GTD"
 msgstr "GTD"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Get customer feedback"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -1512,6 +1522,11 @@ msgstr ""
 " il modulo di monitoraggio problemi)."
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
+msgid "Invited employees"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_task__message_is_follower
 msgid "Is Follower"
@@ -1671,7 +1686,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Elenco dei CC dalle e-mail in ingresso."
 
 #. module: project
 #. openerp-web
@@ -1890,7 +1905,7 @@ msgstr "Numero di documenti allegati"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Numero di errori"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
@@ -2097,6 +2112,11 @@ msgid "Portal Access URL"
 msgstr "URL di accesso al portale"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "Portal users and all employees"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -2111,11 +2131,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
 msgid "Priority"
 msgstr "Priorità"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
-msgid "Privacy"
-msgstr "Privacy"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2594,7 +2609,7 @@ msgstr ""
 "Stato basato sulle attività\n"
 "In ritardo: data di scadenza già superata\n"
 "Oggi: attività in data odierna\n"
-"Pianificata: attività future."
+"Pianificato: attività future."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
@@ -3061,19 +3076,9 @@ msgid "User Email"
 msgstr "E-mail utente"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
-msgid "Visible by employees"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-msgid "Visible by invited employees"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid "Visible by portal users and employees"
-msgstr ""
+#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
+msgid "Visibility"
+msgstr "Visibilità"
 
 #. module: project
 #. openerp-web
@@ -3202,7 +3207,7 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "Your task must beo in the same company as its project."
+msgid "Your task must be in the same company as its project."
 msgstr ""
 
 #. module: project
@@ -3236,20 +3241,10 @@ msgid "happy"
 msgstr "contento"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "oe_kanban_text_red"
-msgstr "oe_kanban_text_red"
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "task"
 msgstr "lavoro"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "text-warning font-weight-bold"
-msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

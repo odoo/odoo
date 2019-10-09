@@ -68,6 +68,28 @@ class AccountAnalyticDefault(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        if {'account_analytic_id', 'analytic_tag_ids'} & set(fields_list):
+            rec = self.env['account.analytic.default'].account_get(
+                product_id=self.product_id.id,
+                partner_id=self.move_id.commercial_partner_id.id,
+                user_id=self.move_id.user_id.id or self.env.uid,
+                date=fields.Date.today(),
+                company_id=self.company_id.id,
+            )
+            if rec:
+                if 'account_analytic_id' in fields_list:
+                    defaults.update({
+                        'account_analytic_id': rec.analytic_id.id,
+                    })
+                if 'analytic_tag_ids' in fields_list:
+                    defaults.update({
+                        'analytic_tag_ids': rec.analytic_tag_ids.ids,
+                    })
+        return defaults
+
     @api.onchange('product_id', 'account_id')
     def _onchange_product_id_account_id(self):
         rec = self.env['account.analytic.default'].account_get(

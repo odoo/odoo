@@ -21,12 +21,13 @@
             <field name="name">account.analytic.line.tree.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <tree editable="top" string="Timesheet Activities" import="false">
+                <tree editable="top" string="Timesheet Activities">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                     <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                     <field name="unit_amount" widget="timesheet_uom" sum="Total"/>
+                    <field name="company_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -41,6 +42,7 @@
                 <xpath expr="//field[@name='date']" position="after">
                     <field name="employee_id" required="1" options='{"no_open": True}'/>
                     <field name="user_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
                 </xpath>
             </field>
         </record>

@@ -41,7 +41,6 @@ var ListView = BasicView.extend({
         this._super.apply(this, arguments);
         var selectedRecords = []; // there is no selected records by default
 
-        var mode = this.arch.attrs.editable && !params.readonly ? "edit" : "readonly";
         var pyevalContext = py.dict.fromJSON(_.pick(params.context, function(value, key, object) {return !_.isUndefined(value)}) || {});
         var expandGroups = !!JSON.parse(pyUtils.py_eval(this.arch.attrs.expand || "0", {'context': pyevalContext}));
 
@@ -52,23 +51,27 @@ var ListView = BasicView.extend({
             }
         });
 
-        this.controllerParams.editable = (!this.arch.attrs.edit || !!JSON.parse(this.arch.attrs.edit)) ?
-            this.arch.attrs.editable : false;
+        let editable = false;
+        if ((!this.arch.attrs.edit || !!JSON.parse(this.arch.attrs.edit)) && !params.readonly) {
+            editable = this.arch.attrs.editable;
+        }
+
+        this.controllerParams.activeActions.export_xlsx = this.arch.attrs.export_xlsx ? !!JSON.parse(this.arch.attrs.export_xlsx): true;
+        this.controllerParams.editable = editable;
         this.controllerParams.hasSidebar = params.hasSidebar;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
-        this.controllerParams.mode = mode;
+        this.controllerParams.mode = editable ? 'edit' : 'readonly';
         this.controllerParams.selectedRecords = selectedRecords;
 
         this.rendererParams.arch = this.arch;
         this.rendererParams.groupbys = this.groupbys;
         this.rendererParams.hasSelectors =
                 'hasSelectors' in params ? params.hasSelectors : true;
-        this.rendererParams.editable =
-            (!this.arch.attrs.edit || !!JSON.parse(this.arch.attrs.edit)) && !params.readonly ?
-            this.arch.attrs.editable : false;
+        this.rendererParams.editable = editable;
         this.rendererParams.selectedRecords = selectedRecords;
         this.rendererParams.addCreateLine = false;
-        this.rendererParams.addCreateLineInGroups = this.rendererParams.editable && this.controllerParams.activeActions.create;
+        this.rendererParams.addCreateLineInGroups = editable && this.controllerParams.activeActions.create;
+        this.rendererParams.isMultiEditable = this.arch.attrs.multi_edit && !!JSON.parse(this.arch.attrs.multi_edit);
 
         this.modelParams.groupbys = this.groupbys;
 

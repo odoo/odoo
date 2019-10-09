@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="True">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
+        </record>
+
         <record id="hr.employee_al" model="hr.employee">
             <field name="pin">0000</field>
             <field name="barcode">123</field>

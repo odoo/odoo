@@ -233,6 +233,11 @@ class Field(MetaField('DummyField', (object,), {})):
         on the company. In other words, users that belong to different companies
         may see different values for the field on a given record.
 
+        .. warning::
+
+            Company-dependent fields aren't stored in the table of the model they're defined on,
+            instead, they are stored in the ``ir.property`` model's table.
+
         :param company_dependent: whether the field is company-dependent (boolean)
 
         .. _field-incremental-definition:
@@ -549,7 +554,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.depends is None:
             self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
-        if not (self.readonly or field.readonly):
+        if self.inherited or not (self.readonly or field.readonly):
             self.inverse = self._inverse_related
         if field._description_searchable:
             # allow searching on self only if the related field is searchable
@@ -628,7 +633,11 @@ class Field(MetaField('DummyField', (object,), {})):
                 )
         # assign final values to records
         for record, value in zip(records, values):
-            record[self.name] = value[self.related_field.name]
+            record[self.name] = self._process_related(value[self.related_field.name])
+
+    def _process_related(self, value):
+        """No transformation by default, but allows override."""
+        return value
 
     def _inverse_related(self, records):
         """ Inverse the related field ``self`` on ``records``. """
@@ -1944,15 +1953,21 @@ class Binary(Field):
         records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
+        if self.store:
+            # determine records that are known to be not null
+            not_null = cache.get_records_different_from(records, self, None)
+
         cache.update(records, self, [cache_value] * len(records))
 
         # retrieve the attachments that store the values, and adapt them
         if self.store:
-            atts = records.env['ir.attachment'].sudo().search([
-                ('res_model', '=', self.model_name),
-                ('res_field', '=', self.name),
-                ('res_id', 'in', records.ids),
-            ])
+            atts = records.env['ir.attachment'].sudo()
+            if not_null:
+                atts = atts.search([
+                    ('res_model', '=', self.model_name),
+                    ('res_field', '=', self.name),
+                    ('res_id', 'in', records.ids),
+                ])
             if value:
                 # update the existing attachments
                 atts.write({'datas': value})
@@ -2002,10 +2017,9 @@ class Image(Binary):
             value = image_process(value, size=(self.max_width, self.max_height))
         return value
 
-    def _compute_related(self, records):
-        super(Image, self)._compute_related(records)
-        for record in records:
-            record[self.name] = self._image_process(record[self.name])
+    def _process_related(self, value):
+        """Override to resize the related value before saving it on self."""
+        return self._image_process(super()._process_related(value))
 
 
 class Selection(Field):
@@ -2306,7 +2320,14 @@ class Many2one(_Relational):
         # 3) The ondelete attribute is explicitly defined as 'set null' for a required m2o,
         #    this is considered a programming error.
         if not self.ondelete:
-            self.ondelete = 'restrict' if self.required else 'set null'
+            comodel = model.env[self.comodel_name]
+            if model.is_transient() and not comodel.is_transient():
+                # Many2one relations from TransientModel Model are annoying because
+                # they can block deletion due to foreign keys. So unless stated
+                # otherwise, we default them to ondelete='cascade'.
+                self.ondelete = 'cascade' if self.required else 'set null'
+            else:
+                self.ondelete = 'restrict' if self.required else 'set null'
         if self.ondelete == 'set null' and self.required:
             raise ValueError(
                 "The m2o field %s of model %s is required but declares its ondelete policy "
@@ -2318,11 +2339,6 @@ class Many2one(_Relational):
         comodel = model.env[self.comodel_name]
         if not model.is_transient() and comodel.is_transient():
             raise ValueError('Many2one %s from Model to TransientModel is forbidden' % self)
-        if model.is_transient() and not comodel.is_transient():
-            # Many2one relations from TransientModel Model are annoying because
-            # they can block deletion due to foreign keys. So unless stated
-            # otherwise, we default them to ondelete='cascade'.
-            self.ondelete = self.ondelete or 'cascade'
         return super(Many2one, self).update_db(model, columns)
 
     def update_db_column(self, model, column):
@@ -2481,10 +2497,11 @@ class Many2one(_Relational):
 
 class Many2oneReference(Integer):
     type = 'many2one_reference'
-
     _slots = {
         'model_field': None,
     }
+
+    _related_model_field = property(attrgetter('model_field'))
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: id or None
@@ -2550,6 +2567,10 @@ class Many2oneReference(Integer):
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
+    # Important: the cache contains the ids of all the records in the relation,
+    # including inactive records.  Inactive records are filtered out by
+    # convert_to_record(), depending on the context.
+
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``,
             and return whether everything is in cache.
@@ -2563,26 +2584,17 @@ class _RelationalMulti(_Relational):
                 return
             records = model.browse(records)
 
-        cache = records.env.cache
         result = True
-        if 'active_test' in (self.depends_context or ()):
-            updates = [
-                (value.sudo().filtered('active'), records.with_context(active_test=True)),
-                (value, records.with_context(active_test=False)),
-            ]
-        else:
-            updates = [(value, records)]
 
-        for value, recs in updates:
-            if not value:
-                continue
-            for record in recs:
+        if value:
+            cache = records.env.cache
+            for record in records:
                 if cache.contains(record, self):
                     val = self.convert_to_cache(record[self.name] | value, record, validate=False)
                     cache.set(record, self, val)
                 else:
                     result = False
-            recs.modified([self.name])
+            records.modified([self.name])
 
         return result
 
@@ -2642,7 +2654,10 @@ class _RelationalMulti(_Relational):
     def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
         prefetch_ids = IterableGenerator(prefetch_x2many_ids, record, self)
-        return record.pool[self.comodel_name]._browse(record.env, value, prefetch_ids)
+        corecords = record.pool[self.comodel_name]._browse(record.env, value, prefetch_ids)
+        if 'active' in corecords and record.env.context.get('active_test', True):
+            corecords = corecords.filtered('active').with_prefetch(prefetch_ids)
+        return corecords
 
     def convert_to_read(self, value, record, use_name_get=True):
         return value.ids
@@ -2699,9 +2714,6 @@ class _RelationalMulti(_Relational):
                 for arg in self.domain
                 if isinstance(arg, (tuple, list)) and isinstance(arg[0], str)
             )
-        # make self depend on 'active_test' if there is a field 'active' in the comodel
-        if 'active' in model.env[self.comodel_name] and 'active_test' not in (self.depends_context or ()):
-            self.depends_context = (self.depends_context or ()) + ('active_test',)
 
     def create(self, record_values):
         """ Write the value of ``self`` on the given records, which have just
@@ -2812,7 +2824,9 @@ class One2many(_RelationalMulti):
 
     def read(self, records):
         # retrieve the lines in the comodel
-        comodel = records.env[self.comodel_name].with_context(**self.context)
+        context = {'active_test': False}
+        context.update(self.context)
+        comodel = records.env[self.comodel_name].with_context(**context)
         inverse = self.inverse_name
         inverse_field = comodel._fields[inverse]
         get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
@@ -3171,7 +3185,9 @@ class Many2many(_RelationalMulti):
             reflect(model, '%s_%s_fkey' % (self.relation, self.column2), 'f', None, self._module)
 
     def read(self, records):
-        comodel = records.env[self.comodel_name].with_context(**self.context)
+        context = {'active_test': False}
+        context.update(self.context)
+        comodel = records.env[self.comodel_name].with_context(**context)
         domain = self.get_domain_list(records)
         wquery = comodel._where_calc(domain)
         comodel._apply_ir_rules(wquery, 'read')

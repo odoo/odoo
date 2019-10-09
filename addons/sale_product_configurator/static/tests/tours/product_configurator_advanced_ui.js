@@ -103,14 +103,14 @@ tour.register('sale_product_configurator_advanced_tour', {
     extra_trigger: '.oe_optional_products_modal',
     run: function () {} //check
 }, {
-    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (Steel)")',
+    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (CONFIG) (Steel)")',
     run: function () {
         optionVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
     }
 }, {
     trigger: '.oe_optional_products_modal .js_product:eq(1) input[data-value_name="Aluminium"]',
 }, {
-    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (Aluminium)")',
+    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (CONFIG) (Aluminium)")',
     run: function () {
         var newVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
         if (newVariantImage !== optionVariantImage) {
@@ -126,7 +126,7 @@ tour.register('sale_product_configurator_advanced_tour', {
     extra_trigger: '.oe_optional_products_modal',
     run: 'click'
 }, {
-    trigger: 'td.o_data_cell:contains("Customizable Desk (Custom, White, PAV9, PAV5, PAV1)")',
+    trigger: 'td.o_data_cell:contains("Customizable Desk (CONFIG) (Custom, White, PAV9, PAV5, PAV1)")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){} //check

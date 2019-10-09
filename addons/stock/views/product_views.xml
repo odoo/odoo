@@ -73,8 +73,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='pricelist_id']" position="after">
                     <separator/>
-                    <field name="location_id" context="{'location': self}"/>
-                    <field name="warehouse_id" context="{'warehouse': self}"/>
+                    <field name="location_id" context="{'location': self}" filter_domain="[]"/>
+                    <field name="warehouse_id" context="{'warehouse': self}" filter_domain="[]"/>
                     <separator/>
                     <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
                     <filter name="real_stock_negative" string="Negative Forecasted Quantity" domain="[('virtual_available','&lt;',0)]"/>
@@ -122,13 +122,13 @@
                 </xpath>
                 <page name="inventory" position="inside">
                     <group string="Description for Delivery Orders">
-                        <field name="description_pickingout" nolabel="1" placeholder="This note will show up on delivery orders."/>
+                        <field name="description_pickingout" nolabel="1" placeholder="This note is added to delivery orders."/>
                     </group>
                     <group string="Description for Receipts">
-                        <field name="description_pickingin" nolabel="1" placeholder="This note will show up on receipt orders (e.g. where to store the product in the warehouse)."/>
+                        <field name="description_pickingin" nolabel="1" placeholder="This note is added to receipt orders (e.g. where to store the product in the warehouse)."/>
                     </group>
                     <group string="Description for Internal Transfers" groups="stock.group_stock_multi_locations">
-                        <field name="description_picking" placeholder="This note will show up on internal transfer orders (e.g. where to pick the product in the warehouse)." nolabel="1"/>
+                        <field name="description_picking" placeholder="This note is added to internal transfer orders (e.g. where to pick the product in the warehouse)." nolabel="1"/>
                     </group>
                 </page>
                 <page name="inventory" position="attributes">
@@ -142,9 +142,9 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_kanban_view"/>
             <field name="arch" type="xml">
-                <field name="lst_price" position="after">
+                <xpath expr="//kanban" position="inside">
                     <field name="type"/>
-                </field>
+                </xpath>
                 <ul position="inside">
                     <li t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
                 </ul>

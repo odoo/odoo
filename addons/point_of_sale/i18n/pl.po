@@ -21,18 +21,18 @@
 # Paweł Wodyński <pw@myodoo.pl>, 2019
 # Maja Stawicka <mjstwck@wp.pl>, 2019
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2019
-# Natalia Gros <nag@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
+# Natalia Gros <nag@odoo.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
+"POT-Creation-Date: 2019-09-27 09:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,6 +71,12 @@ msgstr "$ 4.50"
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "$ 8.50"
 msgstr "$ 8.50"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_payment.py:0
+#, python-format
+msgid "%s %s"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -256,6 +262,15 @@ msgstr ""
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Kliknięcie \"Potwierdź\" sprawdzi płatność."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"A Chart of Accounts is not yet installed in your current company. Please "
+"install a Chart of Accounts through the Invoicing/Accounting settings before"
+" launching a PoS session."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -540,11 +555,6 @@ msgstr "Jesteś pewny, że klient chce zapłacić"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
 msgid "Attachment Count"
 msgstr "Ilość Załączników"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.pos_menu_products_variants_action
-msgid "Attribute Values"
-msgstr "Wartość atrybutu"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_menu_products_attribute_action
@@ -1049,6 +1059,11 @@ msgstr "Potwierdź"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Connect Devices"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS"
 msgstr ""
 
@@ -1460,6 +1475,12 @@ msgid "Disconnected"
 msgstr "Odłączony"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.product_product_consumable
+#: model:product.template,name:point_of_sale.product_product_consumable_product_template
+msgid "Discount"
+msgstr "Upust"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__discount
 msgid "Discount (%)"
 msgstr "Upust (%)"
@@ -1648,11 +1669,6 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
 msgid "Enables Electronic Scale integration."
 msgstr "Umożliwia integrację z wagą elektroniczną."
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_payment_terminal
-msgid "Enables Payment Terminal integration."
-msgstr "Umożliwia integrację terminala płatniczego."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_account
@@ -1898,7 +1914,7 @@ msgstr "Ikona"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona wskazująca na wyjątkową aktywność"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction
@@ -2327,12 +2343,6 @@ msgid "Method"
 msgstr "Metoda"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.product_product_consumable
-#: model:product.template,name:point_of_sale.product_product_consumable_product_template
-msgid "Miscellaneous"
-msgstr "Różne"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
 msgstr ""
@@ -2492,7 +2502,7 @@ msgstr "Numer wydruku"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Liczba błędów"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
@@ -2726,7 +2736,6 @@ msgstr "Analiza zamówień"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__other_devices
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Other Devices"
 msgstr ""
 
@@ -2863,11 +2872,6 @@ msgstr "Odnośnik płatności"
 #, python-format
 msgid "Payment Successful"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_payment_terminal
-msgid "Payment Terminal"
-msgstr "Terminal płatniczy"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3045,11 +3049,6 @@ msgstr "Proszę wybrać metodę płatności"
 #, python-format
 msgid "Please select the Customer"
 msgstr "Wybierz klienta"
-
-#. module: point_of_sale
-#: model:product.category,name:point_of_sale.product_category_pos
-msgid "PoS"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
@@ -3684,7 +3683,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Błąd dostarczenia wiadomości SMS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
@@ -3951,13 +3950,6 @@ msgstr "Ustaw wiele cen za produkt, automatyczne rabaty itp."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set shop-specific prices, seasonal discounts, etc."
 msgstr "Ustaw ceny detaliczne dla sklepu, sezonowe rabaty itp."
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/pos.web_editor.js:0
-#, python-format
-msgid "Set your customized advertisement here"
-msgstr "Ustaw tutaj spersonalizowaną reklamę"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration
@@ -4810,7 +4802,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Wyjątkowa aktywność w historii."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

@@ -6,7 +6,7 @@
     'description': """
         Bridge module to make the website e-commerce compatible with the product configurator
     """,
-    'category': 'Technical Settings',
+    'category': 'Hidden',
     'version': '0.1',
     'depends': ['website_sale', 'sale_product_configurator'],
     'auto_install': True,

@@ -10,7 +10,7 @@
                 <nav aria-label="breadcrumb" class="col-md-8 d-none d-md-flex">
                     <ol class="breadcrumb bg-transparent mb-0 pl-0 py-0">
                         <li class="breadcrumb-item">
-                            <a href="/slides">Home</a>
+                            <a href="/slides">Courses</a>
                         </li>
                         <t t-set="breadcrumb_class" t-value="'breadcrumb-item %s' % ('active' if not slide else '')" />
                         <li t-att-class="'breadcrumb-item %s' % ('active' if not search_category and not search_tag and not search_slide_type and not slide else '')">
@@ -110,8 +110,6 @@
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div id="wrap" t-attf-class="wrap mt-0">
-            <t t-set="main_object" t-value="channel"/>
-
             <div t-attf-class="o_wslides_course_header o_wslides_gradient position-relative text-white pb-md-0 pt-2 pt-md-5 #{'pb-3' if channel.channel_type == 'training' else 'o_wslides_course_doc_header pb-5'}">
                 <t t-call="website_slides.course_nav"/>
 
@@ -172,13 +170,19 @@
                         <!-- Training Content -->
                         <div class="col-12 col-md-8 col-lg-9">
                             <ul class="nav nav-tabs o_wslides_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
-                                <li class="nav-item o_wslides_course_header_nav_home">
-                                    <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')" id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home" t-att-aria-selected="'true' if active_tab == 'home' else 'false'">
+                                <li class="nav-item o_wslides_course_header_nav_home_training">
+                                    <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')" 
+                                        id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home" 
+                                        t-att-aria-selected="'true' if active_tab == 'home' else 'false'">
                                         <i class="fa fa-home"/> Course
                                     </a>
                                 </li>
                                 <li t-if="channel.allow_comment" class="nav-item">
-                                    <a t-att-class="'nav-link %s' % ('active' if active_tab == 'review' else '')" id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review" t-att-aria-selected="'true' if active_tab == 'review' else 'false'">Review</a>
+                                    <a t-att-class="'nav-link %s' % ('active' if active_tab == 'review' else '')" 
+                                        id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review" 
+                                        t-att-aria-selected="'true' if active_tab == 'review' else 'false'">
+                                        Review
+                                    </a>
                                 </li>
                             </ul>
 
@@ -206,13 +210,20 @@
                         <div class="row">
                             <div class="col-12 col-md-8 offset-md-4 col-lg-9 offset-lg-3">
                                 <ul class="nav nav-tabs o_wslides_nav_tabs o_wslides_doc_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
-                                    <li class="nav-item o_wslides_course_header_nav_home">
-                                        <a class="nav-link active" id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home" aria-selected="true">
-                                            <i class="fa fa-home"/> Course
+                                    <li class="nav-item o_wslides_course_header_nav_home_documentation">
+                                        <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')"
+                                            id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home"
+                                            t-att-aria-selected="'true' if active_tab == 'home' else 'false'">
+                                            <i class="fa fa-home"/>
+                                            Course
                                         </a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review" aria-selected="false">Review</a>
+                                    <li t-if="channel.allow_comment" class="nav-item">
+                                        <a t-att-class="'nav-link %s' % ('active' if active_tab == 'review' else '')"
+                                            id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review"
+                                            t-att-aria-selected="'true' if active_tab == 'review' else 'false'">
+                                            Review
+                                        </a>
                                     </li>
                                 </ul>
                             </div>
@@ -220,10 +231,10 @@
                     </div>
 
                     <div class="tab-content pb-5" id="courseMainTabContent">
-                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" id="home" role="tabpanel" aria-labelledby="home-tab">
                             <t t-if="channel.channel_type == 'documentation'" t-call="website_slides.course_slides_cards"/>
                         </div>
-                        <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                        <div t-if="channel.allow_comment" t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'review' else '')" id="review" role="tabpanel" aria-labelledby="review-tab">
                             <div class="container pt-4">
                                 <t t-call="portal.message_thread">
                                     <t t-set="object" t-value="channel"/>

@@ -13,6 +13,7 @@ from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -59,7 +60,7 @@ class PaymentAcquirer(models.Model):
     """
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
-    _order = 'state desc, sequence, name'
+    _order = 'module_state, state, sequence, name'
 
     def _get_default_view_template_id(self):
         return self.env.ref('payment.default_acquirer_button', raise_if_not_found=False)
@@ -220,6 +221,19 @@ class PaymentAcquirer(models.Model):
                 field_names.append(ir_field.field_description)
         if field_names:
             raise ValidationError(_("Required fields not filled: %s") % ", ".join(field_names))
+
+    def get_base_url(self):
+        self.ensure_one()
+        # priority is always given to url_root
+        # from the request
+        url = ''
+        if request:
+            url = request.httprequest.url_root
+
+        if not url and 'website_id' in self and self.website_id:
+            url = self.website_id._get_http_domain()
+
+        return url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -853,7 +867,11 @@ class PaymentTransaction(models.Model):
             invoice = invoice_ids[0]
             action['res_id'] = invoice
             action['view_mode'] = 'form'
-            action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
+            form_view = [(self.env.ref('account.view_move_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
         else:
             action['view_mode'] = 'tree,form'
             action['domain'] = [('id', 'in', invoice_ids)]
@@ -1024,6 +1042,7 @@ class PaymentToken(models.Model):
     short_name = fields.Char('Short name', compute='_compute_short_name')
     partner_id = fields.Many2one('res.partner', 'Partner', required=True)
     acquirer_id = fields.Many2one('payment.acquirer', 'Acquirer Account', required=True)
+    company_id = fields.Many2one(related='acquirer_id.company_id', store=True, index=True)
     acquirer_ref = fields.Char('Acquirer Ref.', required=True)
     active = fields.Boolean('Active', default=True)
     payment_ids = fields.One2many('payment.transaction', 'payment_token_id', 'Payment Transactions')

@@ -15,7 +15,7 @@ class WebsiteVisitor(models.Model):
         for visitor in self:
             visitor.lead_count = len(visitor.lead_ids)
 
-    @api.depends('user_partner_id.email_normalized', 'user_partner_id.mobile', 'lead_ids.email_normalized', 'lead_ids.mobile')
+    @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'lead_ids.email_normalized', 'lead_ids.mobile')
     def _compute_email_phone(self):
         super(WebsiteVisitor, self)._compute_email_phone()
         self.flush()
@@ -25,7 +25,7 @@ class WebsiteVisitor(models.Model):
                   FROM website_visitor v
                   JOIN crm_lead_website_visitor_rel lv on lv.website_visitor_id = v.id
                   JOIN crm_lead l ON lv.crm_lead_id = l.id
-                  LEFT JOIN res_partner p on p.id = v.user_partner_id
+                  LEFT JOIN res_partner p on p.id = v.partner_id
                   WHERE v.id in %s
                   ORDER BY l.create_date ASC"""
         self.env.cr.execute(sql, (tuple(self.ids),))
@@ -33,8 +33,10 @@ class WebsiteVisitor(models.Model):
         mapped_data = {}
         for result in results:
             visitor_info = mapped_data.get(result['visitor_id'], {'email': '', 'mobile': ''})
-            visitor_info['email'] += result['email'] + ','
-            visitor_info['mobile'] = result['mobile']
+            if result['email']:
+                visitor_info['email'] = result['email']
+            if result['mobile']:
+                visitor_info['mobile'] = result['mobile']
             mapped_data[result['visitor_id']] = visitor_info
 
         for visitor in self:
@@ -46,12 +48,12 @@ class WebsiteVisitor(models.Model):
         visitor_mail_values = super(WebsiteVisitor, self)._prepare_visitor_send_mail_values()
         if self.lead_ids:
             lead = self.lead_ids._sort_by_confidence_level(reverse=True)[0]
-            partner_id = self.user_partner_id.id
-            if not self.user_partner_id:
+            partner_id = self.partner_id.id
+            if not self.partner_id:
                 partner_id = lead.handle_partner_assignation()[lead.id]
                 if not lead.partner_id:
                     lead.partner_id = partner_id
-                self.user_partner_id = partner_id
+                self.partner_id = partner_id
             return {
                 'res_model': 'crm.lead',
                 'res_id': lead.id,

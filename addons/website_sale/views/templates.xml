@@ -93,7 +93,10 @@
             <attribute name="data-display-price">true</attribute>
             <attribute name="data-display-image">true</attribute>
         </xpath>
-        <xpath expr="//div[hasclass('input-group')]" position="replace">
+        <xpath expr="//div[@role='search']" position="attributes">
+            <attribute name="t-attf-class" remove="#{_classes}" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@role='search']" position="replace">
             <form t-attf-class="o_wsale_products_searchbar_form o_wait_lazy_js #{_classes}" t-att-action="action if action else '/shop'" method="get">
                 <t>$0</t>
                 <input name="order" type="hidden" class="o_wsale_search_order_by" value=""/>
@@ -312,7 +315,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" role="menu">
                     <t t-foreach="website_sale_sortable" t-as="sortby">
-                        <a role="menuitem" t-att-href="keep('/shop', order=sortby[1])" class="dropdown-item">
+                        <a role="menuitem" rel="noindex,nofollow" t-att-href="keep('/shop', order=sortby[1])" class="dropdown-item">
                             <span t-raw="sortby[0]"/>
                         </a>
                     </t>
@@ -415,7 +418,7 @@
                                 <div>
                                     <strong t-field="a.name" />
                                 </div>
-                                <t t-if="a.type == 'select'">
+                                <t t-if="a.display_type == 'select'">
                                     <select class="form-control" name="attrib">
                                         <option value="" />
                                         <t t-foreach="a.value_ids" t-as="v">
@@ -423,7 +426,7 @@
                                         </t>
                                     </select>
                                 </t>
-                                <t t-if="a.type == 'radio'">
+                                <t t-if="a.display_type == 'radio'">
                                     <ul class="nav nav-pills flex-column">
                                         <t t-foreach="a.value_ids" t-as="v">
                                             <li class="nav-item">
@@ -435,7 +438,7 @@
                                         </t>
                                     </ul>
                                 </t>
-                                <t t-if="a.type == 'color'">
+                                <t t-if="a.display_type == 'color'">
                                     <t t-foreach="a.value_ids" t-as="v">
                                         <label t-attf-style="background-color:#{v.html_color or v.name}" t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
                                             <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name" />
@@ -1384,7 +1387,7 @@
                             <div t-if="not acquirers" class="mt-2">
                                 <a role="button" class="btn-link"
                                     groups="base.group_system"
-                                    t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
+                                    t-attf-href="/web#action=#{payment_action_id}">
                                         <i class="fa fa-arrow-right"></i> Add payment acquirers
                                 </a>
                             </div>
@@ -1728,7 +1731,7 @@
                             <div t-if="product_image._name == 'product.image' and product_image.embed_code" class="d-flex align-items-center justify-content-center h-100 embed-responsive embed-responsive-16by9">
                                 <t t-raw="product_image.embed_code"/>
                             </div>
-                            <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'/>
+                            <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920", "itemprop": "image"}'/>
                         </div>
                     </t>
                 </div>

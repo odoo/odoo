@@ -4,8 +4,8 @@ import base64
 import datetime
 import json
 import os
-import re
 import logging
+import pytz
 import requests
 import werkzeug.utils
 import werkzeug.wrappers
@@ -77,7 +77,7 @@ class Website(Home):
         else:
             top_menu = request.website.menu_id
             first_menu = top_menu and top_menu.child_id and top_menu.child_id.filtered(lambda menu: menu.is_visible)
-            if first_menu and first_menu[0].url not in ('/', '') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))):
+            if first_menu and first_menu[0].url not in ('/', '', '#') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))):
                 return request.redirect(first_menu[0].url)
 
         raise request.not_found()
@@ -396,6 +396,15 @@ class Website(Home):
         for id_or_xml_id in ids_or_xml_ids:
             res[id_or_xml_id] = View.render_template(id_or_xml_id, values)
         return res
+
+    @http.route(['/website/update_visitor_timezone'], type='json', auth="public", website=True)
+    def update_visitor_timezone(self, timezone):
+        visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+        if visitor_sudo:
+            if timezone in pytz.all_timezones:
+                visitor_sudo.write({'timezone': timezone})
+                return True
+        return False
 
     # ------------------------------------------------------
     # Server actions

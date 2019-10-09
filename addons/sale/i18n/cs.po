@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -24,14 +24,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
-msgid ""
-" Fiscal positions are used to adapt taxes and accounts for particular "
-"customers or sales orders/invoices. The default value comes from the "
-"customer."
-msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -132,7 +124,7 @@ msgid ""
 "                                <td colspan=\"4\"><i>${line.name}</i></td>\n"
 "                            % else:\n"
 "                                <td style=\"width: 150px;\">\n"
-"                                    <img src=\"/web/image/product.product/${line.product_id.id}/image_64\" width=\"64\" alt=\"Product image\"/>\n"
+"                                    <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                                </td>\n"
 "                                <td align=\"left\">${line.product_id.name}</td>\n"
 "                                <td>${line.product_uom_qty}</td>\n"
@@ -342,6 +334,16 @@ msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Vaše výhoda</b></small>"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Quotations:</small>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Revenues:</small>"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
@@ -368,7 +370,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Potvrzující E-mail</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -487,16 +489,6 @@ msgstr "<strong>Datum objednávky:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Quotation Date:</strong>"
 msgstr "<strong>Datum nabídky:</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Quotations</strong>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Revenues</strong>"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -947,14 +939,10 @@ msgid "Closed"
 msgstr "Uzavřeno"
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_attribute__type__color
+#: model:ir.model.fields,field_description:sale.field_product_attribute_value__html_color
+#: model:ir.model.fields.selection,name:sale.selection__product_attribute__display_type__color
 msgid "Color"
 msgstr "Barva"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
-msgid "Commitment Date"
-msgstr "Datum závazku"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_acquirer__so_reference_type
@@ -1317,7 +1305,8 @@ msgid "Delivery Address"
 msgstr "Doručovací adresa"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_order_dates
+#: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
 msgstr "Datum doručení"
 
@@ -1390,6 +1379,9 @@ msgid "Display Name"
 msgstr "Zobrazované jméno"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_attribute__display_type
+#: model:ir.model.fields,field_description:sale.field_product_attribute_value__display_type
+#: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__display_type
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
 msgid "Display Type"
 msgstr "Typ zobrazení"
@@ -1495,12 +1487,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Exception Activities"
-msgstr ""
+msgstr "Výjimečné činnosti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
 msgid "Expected Date"
 msgstr "Očekávaný datum"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Expected:"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
@@ -1552,6 +1549,14 @@ msgstr "FedEx konektor"
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "Daňová pozice"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+msgid ""
+"Fiscal positions are used to adapt taxes and accounts for particular "
+"customers or sales orders/invoices.The default value comes from the "
+"customer."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -1639,7 +1644,6 @@ msgid "Group By"
 msgstr "Seskupit podle"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_attribute_value__html_color
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
 msgstr "HTML Color Index"
@@ -1653,13 +1657,9 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_product_attribute_value__html_color
 #: model:ir.model.fields,help:sale.field_product_template_attribute_value__html_color
 msgid ""
-"Here you can set a\n"
-"        specific HTML color index (e.g. #ff0000) to display the color if the\n"
-"        attribute type is 'Color'."
+"Here you can set a specific HTML color index (e.g. #ff0000) to display the "
+"color if the attribute type is 'Color'."
 msgstr ""
-"Zde můžete nastavit a\n"
-"specifický HTML barevný index (např. #ff0000) pro zobrazení barvy, pokud\n"
-"typ atributu je  'Color'."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1686,7 +1686,7 @@ msgstr "Ikona"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona označuje vyjímečnou aktivitu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
@@ -1722,7 +1722,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "Importujte objednávky Amazonu a synchronizujte dodávky"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -2063,16 +2063,6 @@ msgstr "Hlavní příloha"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Manage delivery dates from sales orders"
-msgstr "Správa dodacích termínů z prodejních objednávek"
-
-#. module: sale
-#: model:res.groups,name:sale.group_sale_order_dates
-msgid "Manage delivery dates from sales orders."
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
 msgstr "Správa propagace &amp; kupónové programy"
 
@@ -2289,7 +2279,7 @@ msgstr "Počet dnů mezi potvrzením objednávky a odesláním zboží zákazní
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Počet chyb"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
@@ -2617,7 +2607,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_user_type
 msgid "Paypal User Type"
-msgstr ""
+msgstr "Typ uživatele Paypal"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2916,7 +2906,7 @@ msgid "Quotations and Sales"
 msgstr "Nabídky a prodej"
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_attribute__type__radio
+#: model:ir.model.fields.selection,name:sale.selection__product_attribute__display_type__radio
 msgid "Radio"
 msgstr ""
 
@@ -3022,7 +3012,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Chyba doručení SMS"
 
 #. module: sale
 #. openerp-web
@@ -3269,7 +3259,7 @@ msgid "Security Token"
 msgstr "Bezpečnostní token"
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_attribute__type__select
+#: model:ir.model.fields.selection,name:sale.selection__product_attribute__display_type__select
 msgid "Select"
 msgstr "Vybrat"
 
@@ -3317,7 +3307,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "Prodávejte varianty produktu pomocí atributů (velikost, barva atd.)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3642,11 +3632,16 @@ msgstr "Analytický účet vztažený k zakázce"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid ""
-"The commitment date is sooner than the expected date.You may be unable to "
-"honor the commitment date."
+"The delivery date is sooner than the expected date.You may be unable to "
+"honor the delivery date."
 msgstr ""
-"Datum závazku je dříve, než je očekávané datum. Může se stát, že datum "
-"závazku nebude splněno."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_attribute__display_type
+#: model:ir.model.fields,help:sale.field_product_attribute_value__display_type
+#: model:ir.model.fields,help:sale.field_product_template_attribute_value__display_type
+msgid "The display type used in the Product Configurator."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -3783,18 +3778,6 @@ msgstr ""
 "e-mailů"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#: model:res.groups,comment:sale.group_sale_order_dates
-msgid ""
-"This option introduces extra fields in the sales order to easily schedule "
-"product deliveries on your own: expected date, commitment date, effective "
-"date."
-msgstr ""
-"Tato možnost zavádí do prodejní objednávky další pole, která snadno "
-"naplánují dodávky produktů podle vašich potřeb: očekávané datum, datum "
-"závazku, datum účinnosti."
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
@@ -3916,11 +3899,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
 msgid "Transactions"
 msgstr "Transakce"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_attribute__type
-msgid "Type"
-msgstr "Typ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name

@@ -328,6 +328,14 @@ class TestSaleStock(TestSale):
             elif backorder_move.product_id.id == item2.id:
                 self.assertEqual(backorder_move.product_qty, 2)
 
+        # add a new sale order lines
+        self.so.write({
+            'order_line': [
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+            ]
+        })
+        self.assertEqual(sum(backorder.move_lines.filtered(lambda m: m.product_id.id == item1.id).mapped('product_qty')), 2)
+
     def test_05_create_picking_update_saleorderline(self):
         """ Same test than test_04 but only with enough products in stock so that the reservation
         is successful.
@@ -618,7 +626,10 @@ class TestSaleStock(TestSale):
         warehouse1 = self.env.ref('stock.warehouse0')
         self.env['stock.quant']._update_available_quantity(item1, warehouse1.lot_stock_id, 10)
         self.env['stock.quant']._update_reserved_quantity(item1, warehouse1.lot_stock_id, 3)
-        warehouse2 = self.env['stock.warehouse'].search([('id', '!=', warehouse1.id)], limit=1)
+        warehouse2 = self.env['stock.warehouse'].create({
+            'partner_id': self.env.ref('base.main_partner').id,
+            'code': 'Test',
+        })
         self.env['stock.quant']._update_available_quantity(item1, warehouse2.lot_stock_id, 5)
         so = self.env['sale.order'].create({
             'partner_id': self.partner.id,

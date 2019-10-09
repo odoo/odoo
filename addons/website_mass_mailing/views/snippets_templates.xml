@@ -70,12 +70,12 @@
         <div data-js="mailing_list_subscribe"
             t-att-data-selector="selector"
             t-attf-data-exclude=".o_newsletter_modal #{selector}">
-            <a tabindex="-1" href="#" class="dropdown-item" data-select_mailing_list="" data-no-preview="true">Change Newsletter</a>
+            <we-button data-select_mailing_list="" data-no-preview="true">Change Newsletter</we-button>
         </div>
         <div t-att-data-selector="selector" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
         <div data-js="newsletter_popup"
             data-selector=".o_newsletter_popup">
-            <a tabindex="-1" href="#" class="dropdown-item" data-select_mailing_list="" data-no-preview="true">Change Newsletter</a>
+            <we-button data-select_mailing_list="" data-no-preview="true">Change Newsletter</we-button>
         </div>
     </xpath>
 </template>
@@ -88,11 +88,6 @@
     <t t-if="website.social_facebook">
         <a t-att-href="website.social_facebook" aria-label="Facebook" title="Facebook">
           <span class="fa fa-facebook"></span>
-        </a>
-    </t>
-    <t t-if="website.social_googleplus">
-        <a t-att-href="website.social_googleplus" style="margin-left:10px" aria-label="Google Plus" title="Google Plus">
-            <span class="fa fa-google-plus"></span>
         </a>
     </t>
     <t t-if="website.social_linkedin">

@@ -9,7 +9,6 @@ import functools
 import glob
 import hashlib
 import io
-import ipaddress
 import itertools
 import jinja2
 import json
@@ -26,7 +25,7 @@ import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
-from collections import OrderedDict, defaultdict
+from collections import OrderedDict, defaultdict, Counter
 from werkzeug.urls import url_decode, iri_to_uri
 from lxml import etree
 import unicodedata
@@ -59,11 +58,7 @@ else:
 env = jinja2.Environment(loader=loader, autoescape=True)
 env.filters["json"] = json.dumps
 
-# 1 week cache for asset bundles as advised by Google Page Speed
-BUNDLE_MAXAGE = 60 * 60 * 24 * 7
-
-# 1 year cache for content (menus, translations, static qweb)
-CONTENT_MAXAGE = 60 * 60 * 24 * 356
+CONTENT_MAXAGE = http.STATIC_CACHE_LONG  # menus, translations, static qweb
 
 DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
 
@@ -398,31 +393,6 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     res["children"] = kids
     return res
 
-def _admin_password_warn(uid):
-    """ Admin still has `admin` password, flash a message via chatter.
-
-    Uses a private mail.channel from the system (/ odoobot) to the user, as
-    using a more generic mail.thread could send an email which is undesirable
-
-    Uses mail.channel directly because using mail.thread might send an email instead.
-    """
-    if request.params['password'] != 'admin':
-        return
-    if ipaddress.ip_address(request.httprequest.remote_addr).is_private:
-        return
-    admin = request.env.ref('base.partner_admin')
-    if uid not in admin.user_ids.ids:
-        return
-
-    MailChannel = request.env['mail.channel'].sudo()
-    MailChannel.browse(MailChannel.channel_get([admin.id])['id'])\
-        .message_post(
-            body=_("Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"),
-            message_type='comment',
-            subtype='mail.mt_comment'
-        )
-
-
 class HomeStaticTemplateHelpers(object):
     """
     Helper Class that wraps the reading of static qweb templates files
@@ -607,6 +577,167 @@ class HomeStaticTemplateHelpers(object):
         return cls(addons, db, debug=debug)._get_qweb_templates()[0]
 
 
+class GroupsTreeNode:
+    """
+    This class builds an ordered tree of groups from the result of a `read_group(lazy=False)`.
+    The `read_group` returns a list of dictionnaries and each dictionnary is used to
+    build a leaf. The entire tree is built by inserting all leaves.
+    """
+
+    def __init__(self, model, fields, groupby, root=None):
+        self._model = model
+        self._fields = fields
+        self._groupby = groupby
+
+        self.count = 0  # Total number of records in the subtree
+        self.aggregated_values = Counter()  # Fields aggregated values {field_name: aggregated value}
+        self.children = OrderedDict()
+        self.data = []  # Only leaf nodes have data
+        if root:
+            self.insert_leaf(root)
+
+    def child(self, key):
+        """
+        Return the child identified by `key`.
+        If it doesn't exists inserts a default node and returns it.
+        :param key: child key identifier (groupby value as returned by read_group,
+                    usually (id, display_name))
+        :return: the child node
+        """
+        if key not in self.children:
+            self.children[key] = GroupsTreeNode(self._model, self._fields, self._groupby)
+        return self.children[key]
+
+    def insert_leaf(self, group):
+        """
+        Build a leaf from `group` and insert it in the tree.
+        :param group: dict as returned by `read_group(lazy=False)`
+        """
+        # Pop every known key in the group dict (__domain, __count and grouped values)
+        # Remaining keys are aggregated fields.
+        leaf_path = [group.pop(groupby_field) for groupby_field in self._groupby]
+        domain = group.pop('__domain')
+        count = group.pop('__count')
+        aggregated_values = group
+
+        keys = list(aggregated_values)
+        for key in keys:
+            if not isinstance(aggregated_values[key], (int, float)):
+                del aggregated_values[key]
+
+        records = self._model.search(domain, offset=0, limit=False, order=False)
+
+        # Follow the path from the top level group to the deepest
+        # group which actually contains the records' data.
+        node = self # root
+        node.count += count
+        for node_key in leaf_path:
+            # Go down to the next node or create one if it does not exist yet.
+            node = node.child(node_key)
+            # Update count value and aggregated value.
+            node.count += count
+            node.aggregated_values += Counter(aggregated_values)
+
+        node.data = records.export_data(self._fields).get('datas',[])
+
+
+class ExportXlsxWriter:
+
+    def __init__(self, field_names, row_count=0):
+        self.field_names = field_names
+        self.output = io.BytesIO()
+        self.workbook = xlsxwriter.Workbook(self.output, {'in_memory': True})
+        self.base_style = self.workbook.add_format({'text_wrap': True})
+        self.header_style = self.workbook.add_format({'bold': True})
+        self.header_bold_style = self.workbook.add_format({'text_wrap': True, 'bold': True, 'bg_color': '#e9ecef'})
+        self.date_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd'})
+        self.datetime_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd hh:mm:ss'})
+        self.worksheet = self.workbook.add_worksheet()
+        self.value = False
+
+        if row_count > self.worksheet.xls_rowmax:
+            raise UserError(_('There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.') % (row_count, self.worksheet.xls_rowmax))
+
+    def __enter__(self):
+        self.write_header()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self.close()
+
+    def write_header(self):
+        # Write main header
+        for i, fieldname in enumerate(self.field_names):
+            self.write(0, i, fieldname, self.header_style)
+        self.worksheet.set_column(0, i, 30) # around 220 pixels
+
+    def close(self):
+        self.workbook.close()
+        with self.output:
+            self.value = self.output.getvalue()
+
+    def write(self, row, column, cell_value, style=None):
+        self.worksheet.write(row, column, cell_value, style)
+
+    def write_cell(self, row, column, cell_value):
+        cell_style = self.base_style
+
+        if isinstance(cell_value, bytes):
+            try:
+                # because xlsx uses raw export, we can get a bytes object
+                # here. xlsxwriter does not support bytes values in Python 3 ->
+                # assume this is base64 and decode to a string, if this
+                # fails note that you can't export
+                cell_value = pycompat.to_text(cell_value)
+            except UnicodeDecodeError:
+                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.") % self.field_names[column])
+
+        if isinstance(cell_value, str):
+            if len(cell_value) > self.worksheet.xls_strmax:
+                cell_value = _("The content of this cell is too long for an XLSX file (more than %s characters). Please use the CSV format for this export.") % self.worksheet.xls_strmax
+            else:
+                cell_value = cell_value.replace("\r", " ")
+        elif isinstance(cell_value, datetime.datetime):
+            cell_style = self.datetime_style
+        elif isinstance(cell_value, datetime.date):
+            cell_style = self.date_style
+        self.write(row, column, cell_value, cell_style)
+
+class GroupExportXlsxWriter(ExportXlsxWriter):
+
+    def __init__(self, fields, row_count=0):
+        super().__init__([f['label'].strip() for f in fields], row_count)
+        self.fields = fields
+
+    def write_group(self, row, column, group_name, group, group_depth=0):
+        group_name = group_name[1] if isinstance(group_name, tuple) and len(group_name) > 1 else group_name or _("Undefined")
+        row, column = self._write_group_header(row, column, group_name, group, group_depth)
+
+        # Recursively write sub-groups
+        for child_group_name, child_group in group.children.items():
+            row, column = self.write_group(row, column, child_group_name, child_group, group_depth + 1)
+
+        for record in group.data:
+            row, column = self._write_row(row, column, record)
+        return row, column
+
+    def _write_row(self, row, column, data):
+        for value in data:
+            self.write_cell(row, column, value)
+            column += 1
+        return row + 1, 0
+
+    def _write_group_header(self, row, column, label, group, group_depth=0):
+        aggregates = group.aggregated_values
+
+        label = '%s%s (%s)' % ('    ' * group_depth, label, group.count)
+        self.write(row, column, label, self.header_bold_style)
+        for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
+            column += 1
+            self.write(row, column, aggregates.get(field['name'], ''), self.header_bold_style)
+        return row + 1, 0
+
+
 #----------------------------------------------------------
 # Odoo Web web Controllers
 #----------------------------------------------------------
@@ -679,7 +810,6 @@ class Home(http.Controller):
             old_uid = request.uid
             try:
                 uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
-                _admin_password_warn(uid)
                 request.params['login_success'] = True
                 return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
@@ -733,7 +863,7 @@ class WebClient(http.Controller):
                         file_open('web/static/lib/moment/locale/%s.js' % code, 'rb')
                     ),
                     content_type='application/javascript; charset=utf-8',
-                    headers=[('Cache-Control', 'max-age=36000')],
+                    headers=[('Cache-Control', 'max-age=%s' % http.STATIC_CACHE)],
                     direct_passthrough=True,
                 )
             except IOError:
@@ -741,7 +871,7 @@ class WebClient(http.Controller):
 
         return request.make_response("", headers=[
             ('Content-Type', 'application/javascript'),
-            ('Cache-Control', 'max-age=36000'),
+            ('Cache-Control', 'max-age=%s' % http.STATIC_CACHE),
         ])
 
     @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
@@ -1602,26 +1732,43 @@ class ExportFormat(object):
         """
         raise NotImplementedError()
 
+    def from_group_data(self, fields, groups):
+        raise NotImplementedError()
+
     def base(self, data, token):
         params = json.loads(data)
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
 
-        Model = request.env[model].with_context(import_compat=import_compat, **params.get('context', {}))
-        records = Model.browse(ids) or Model.search(domain, offset=0, limit=False, order=False)
-
-        if not Model._is_an_ordinary_table():
-            fields = [field for field in fields if field['name'] != 'id']
-
         field_names = [f['name'] for f in fields]
-        import_data = records.export_data(field_names).get('datas',[])
-
         if import_compat:
             columns_headers = field_names
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
-        return request.make_response(self.from_data(columns_headers, import_data),
+        Model = request.env[model].with_context(**params.get('context', {}))
+        groupby = params.get('groupby')
+        if not import_compat and groupby:
+            domain = [('id', 'in', ids)] if ids else domain
+            groups_data = Model.read_group(domain, field_names, groupby, lazy=False)
+
+            # read_group(lazy=False) returns a dict only for final groups (with actual data),
+            # not for intermediary groups. The full group tree must be re-constructed.
+            tree = GroupsTreeNode(Model, field_names, groupby)
+            for leaf in groups_data:
+                tree.insert_leaf(leaf)
+
+            response_data = self.from_group_data(fields, tree)
+        else:
+            Model = Model.with_context(import_compat=import_compat)
+            records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
+
+            if not Model._is_an_ordinary_table():
+                fields = [field for field in fields if field['name'] != 'id']
+
+            export_data = records.export_data(field_names).get('datas',[])
+            response_data = self.from_data(columns_headers, export_data)
+        return request.make_response(response_data,
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model))),
                      ('Content-Type', self.content_type)],
@@ -1640,6 +1787,9 @@ class CSVExport(ExportFormat, http.Controller):
 
     def filename(self, base):
         return base + '.csv'
+
+    def from_group_data(self, fields, groups):
+        raise UserError(_("Exporting grouped data to csv is not supported."))
 
     def from_data(self, fields, rows):
         fp = io.BytesIO()
@@ -1673,49 +1823,21 @@ class ExcelExport(ExportFormat, http.Controller):
     def filename(self, base):
         return base + '.xlsx'
 
+    def from_group_data(self, fields, groups):
+        with GroupExportXlsxWriter(fields, groups.count) as xlsx_writer:
+            x, y = 1, 0
+            for group_name, group in groups.children.items():
+                x, y = xlsx_writer.write_group(x, y, group_name, group)
+
+        return xlsx_writer.value
+
     def from_data(self, fields, rows):
-        output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
-        worksheet = workbook.add_worksheet()
-        if len(rows) > worksheet.xls_rowmax:
-            raise UserError(_('There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.') % (len(rows), worksheet.xls_rowmax))
+        with ExportXlsxWriter(fields, len(rows)) as xlsx_writer:
+            for row_index, row in enumerate(rows):
+                for cell_index, cell_value in enumerate(row):
+                    xlsx_writer.write_cell(row_index + 1, cell_index, cell_value)
 
-        for i, fieldname in enumerate(fields):
-            worksheet.write(0, i, fieldname)
-        worksheet.set_column(0, len(fields)-1, 30) # around 220 pixels
-
-        base_style = workbook.add_format({'text_wrap': True})
-        date_style = workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd'})
-        datetime_style = workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd hh:mm:ss'})
-
-        for row_index, row in enumerate(rows):
-            for cell_index, cell_value in enumerate(row):
-                cell_style = base_style
-
-                if isinstance(cell_value, bytes):
-                    try:
-                        # because xlsx uses raw export, we can get a bytes object
-                        # here. xlsxwriter does not support bytes values in Python 3 ->
-                        # assume this is base64 and decode to a string, if this
-                        # fails note that you can't export
-                        cell_value = pycompat.to_text(cell_value)
-                    except UnicodeDecodeError:
-                        raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.") % fields[cell_index])
-
-                if isinstance(cell_value, str):
-                    if len(cell_value) > worksheet.xls_strmax:
-                        cell_value = _("The content of this cell is too long for an XLSX file (more than %s characters). Please use the CSV format for this export.") % worksheet.xls_strmax
-                    else:
-                        cell_value = cell_value.replace("\r", " ")
-                elif isinstance(cell_value, datetime.datetime):
-                    cell_style = datetime_style
-                elif isinstance(cell_value, datetime.date):
-                    cell_style = date_style
-                worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
-
-        workbook.close()
-        with output:
-            return output.getvalue()
+        return xlsx_writer.value
 
 class Apps(http.Controller):
     @http.route('/apps/<app>', auth='user')

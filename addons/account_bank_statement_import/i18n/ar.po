@@ -16,16 +16,16 @@
 # Zuhair Hammadi <zuhair12@gmail.com>, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019
-# Yazeed Dandashi <lay@odoo.com>, 2019
 # Nisrine Tagri <nta@odoo.com>, 2019
+# Yazeed Dandashi <lay@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-27 09:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Nisrine Tagri <nta@odoo.com>, 2019\n"
+"Last-Translator: Yazeed Dandashi <lay@odoo.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,11 +118,6 @@ msgid "Alias domain"
 msgstr "نطاق اللقب"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
-msgid "Allow Cancelling Entries"
-msgstr "السماح بإلغاء القيود"
-
-#. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "Already imported items"
@@ -199,15 +194,6 @@ msgid ""
 msgstr ""
 "حدد هذا المربع إذا كنت لا تريد أن تتشارك الفواتير وإشعارات الخصم المستخرجة "
 "من دفتر اليومية هذا نفس التسلسل"
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
-msgid ""
-"Check this box if you want to allow the cancellation the entries related to "
-"this journal or of the invoice related to this journal"
-msgstr ""
-"حدد هذا المربع إذا كنت تريد السماح بإلغاء البنود المتعلقة بدفتر اليومية هذا "
-"أو الفواتير المرتبطة به"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__color
@@ -373,6 +359,13 @@ msgid "If checked, some messages have a delivery error."
 msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض الرسائل."
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
+msgid ""
+"If ticked, the accounting entry or invoice receives a hash as soon as it is "
+"posted and cannot be modified anymore."
+msgstr ""
+
+#. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_journal.py:0
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 #, python-format
@@ -486,6 +479,11 @@ msgstr "آخر تحديث بواسطة"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__write_date
 msgid "Last Updated on"
 msgstr "آخر تحديث في"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
+msgid "Lock Posted Entries with Hash"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
@@ -603,6 +601,11 @@ msgstr "المستخدم المسؤول"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_sms_error
 msgid "SMS Delivery error"
+msgstr "خطأ في تسليم الرسائل القصيرة"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
+msgid "Secure Sequence"
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -627,6 +630,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
 msgid "Sequence"
 msgstr "المسلسل"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
+msgid "Sequence to use to ensure the securisation of data"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
@@ -810,7 +818,7 @@ msgstr "لقد قمت باستيراد هذا الملف بالفعل."
 msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
-msgstr ""
+msgstr "تستطيع اختيار نماذج مختلفة لكل مرجع. المرجع الإفتراضي هو مرجع أودو."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type

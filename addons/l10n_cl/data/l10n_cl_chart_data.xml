@@ -131,7 +131,7 @@
         <field name="code">117000</field>
         <field name="name">Cuenta de Transferencia</field>
         <field ref="account.data_account_type_current_assets" name="user_type_id"/>
-        <field name="reconcile" eval="False"/>
+        <field name="reconcile" eval="True"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
@@ -1502,7 +1502,7 @@
     <record id="account_410210" model="account.account.template">
         <field name="code">410210</field>
         <field name="name">Impuesto a la Renta 1ra Categoría</field>
-        <field ref="account.data_account_off_sheet" name="user_type_id"/>
+        <field ref="account.data_account_type_expenses" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
@@ -1612,7 +1612,7 @@
     <record id="account_420110" model="account.account.template">
         <field name="code">420110</field>
         <field name="name">Mercaderias Recibidas en Consignación</field>
-        <field ref="account.data_account_off_sheet" name="user_type_id"/>
+        <field ref="account.data_account_type_expenses" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
@@ -1620,7 +1620,7 @@
     <record id="account_440210" model="account.account.template">
         <field name="code">440210</field>
         <field name="name">Comitente por Mercaderias Recibidas en Consignación</field>
-        <field ref="account.data_account_off_sheet" name="user_type_id"/>
+        <field ref="account.data_account_type_expenses" name="user_type_id"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
@@ -1648,14 +1648,6 @@
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
-    <record id="account_420160" model="account.account.template">
-        <field name="code">420160</field>
-        <field name="name">Depósito de Valores Recibos en Garantía</field>
-        <field ref="account.data_account_off_sheet" name="user_type_id"/>
-        <field name="reconcile" eval="False"/>
-        <field name="chart_template_id" ref="cl_chart_template"/>
-    </record>
-
     <record id="account_420170" model="account.account.template">
         <field name="code">420170</field>
         <field name="name">Garantias Otorgadas</field>
@@ -1664,42 +1656,10 @@
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
-    <record id="account_420180" model="account.account.template">
-        <field name="code">420180</field>
-        <field name="name">Documentos Descontados</field>
-        <field ref="account.data_account_off_sheet"  name="user_type_id"/>
-        <field name="reconcile" eval="False"/>
-        <field name="chart_template_id" ref="cl_chart_template"/>
-    </record>
-
-    <record id="account_420190" model="account.account.template">
-        <field name="code">420190</field>
-        <field name="name">Documentos Endosados</field>
-        <field ref="account.data_account_off_sheet" name="user_type_id"/>
-        <field name="reconcile" eval="False"/>
-        <field name="chart_template_id" ref="cl_chart_template"/>
-    </record>
-
-    <record id="account_420200" model="account.account.template">
-        <field name="code">420200</field>
-        <field name="name">Acreedor por Garantías Otorgadas</field>
-        <field ref="account.data_account_off_sheet" name="user_type_id"/>
-        <field name="reconcile" eval="False"/>
-        <field name="chart_template_id" ref="cl_chart_template"/>
-    </record>
-
-    <record id="account_420210" model="account.account.template">
-        <field name="code">420210</field>
-        <field name="name">Acreedor por Documentos Descontados</field>
-        <field name="user_type_id" ref="account.data_account_off_sheet" />
-        <field name="reconcile" eval="False"/>
-        <field name="chart_template_id" ref="cl_chart_template"/>
-    </record>
-
     <record id="account_420220" model="account.account.template">
         <field name="code">420220</field>
         <field name="name">Gastos Otros Impuestos</field>
-        <field name="user_type_id" ref="account.data_account_off_sheet" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>

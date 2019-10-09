@@ -12,16 +12,16 @@
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:26+0000\n"
+"POT-Creation-Date: 2019-09-30 09:40+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -850,11 +850,6 @@ msgstr "Toegewezen mutaties"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_attachment_count
 msgid "Attachment Count"
 msgstr "Aantal bijlagen"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_variants_action
-msgid "Attribute Values"
-msgstr "Kenmerkwaardes"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_attribute_action
@@ -1828,6 +1823,11 @@ msgstr ""
 "de bevestiging van de verkooporder en de levering."
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Demand"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 msgid ""
@@ -2162,7 +2162,7 @@ msgstr "Uitzondering activiteiten"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
-msgstr "Uitzondering(e) opgetreden in de picking:"
+msgstr "Uitzondering(en) opgetreden in de picking:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -3256,7 +3256,7 @@ msgstr "Locatie waar de eindproducten opgeslagen worden"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 msgid "Location: Store to"
-msgstr "Locatie: Opslaan in"
+msgstr "Locatie: opslaan in"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -3488,7 +3488,7 @@ msgstr "Bericht afleverfout"
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr "Bericht voor Picking"
+msgstr "Bericht voor picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_ids
@@ -3595,7 +3595,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
 msgid "Multi-Step Routes"
-msgstr "Multi-Stap routes"
+msgstr "Multi-stap routes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_warehouses
@@ -4408,7 +4408,7 @@ msgstr "Productcategorieën"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Product Category"
-msgstr "Product categorie"
+msgstr "Productcategorie"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_product
@@ -6855,11 +6855,6 @@ msgid "Variant Count"
 msgstr "Aantal varianten"
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_variant_in_config_stock
-msgid "Variants"
-msgstr "Varianten"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor"
 msgstr "Leverancier"
@@ -6954,6 +6949,11 @@ msgstr "Magazijninstellingen"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__warehouse_count
 msgid "Warehouse Count"
 msgstr "Aantal magazijnen"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_route__warehouse_domain_ids
+msgid "Warehouse Domain"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -7145,8 +7145,8 @@ msgid ""
 "When ticked, if the move created by this rule is cancelled, the next move "
 "will be cancelled too."
 msgstr ""
-"Indien aangevinkt, en de beweging die door deze regel is geannuleerd, zal de"
-" volgende beweging ook worden geannuleerd."
+"Indien aangevinkt wordt bij het splitsen of annuleren van deze mutate ook de"
+" opvolgende mutatie geannuleerd of gesplitst."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
@@ -7524,6 +7524,14 @@ msgstr "U kunt alleen leveringen die gereed zijn retourneren."
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr "U kunt maar één picking tegelijk retourneren."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You need to activate storage locations to be able to do internal operation "
+"types."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, format_date
 from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.tools import date_utils
 from odoo.tests.common import Form
@@ -99,8 +99,12 @@ class ResCompany(models.Model):
     account_default_pos_receivable_account_id = fields.Many2one('account.account', string="Default PoS Receivable Account")
 
     # Accrual Accounting
-    expense_accrual_account_id = fields.Many2one('account.account', help="Account used to move the period of an expense", domain=[('internal_group', '=', 'liability'), ('reconcile', '=', True)])
-    revenue_accrual_account_id = fields.Many2one('account.account', help="Account used to move the period of a revenue", domain=[('internal_group', '=', 'asset'), ('reconcile', '=', True)])
+    expense_accrual_account_id = fields.Many2one('account.account',
+        help="Account used to move the period of an expense",
+        domain="[('internal_group', '=', 'liability'), ('internal_type', 'not in', ('receivable', 'payable')), ('reconcile', '=', True), ('company_id', '=', id)]")
+    revenue_accrual_account_id = fields.Many2one('account.account',
+        help="Account used to move the period of a revenue",
+        domain="[('internal_group', '=', 'asset'), ('internal_type', 'not in', ('receivable', 'payable')), ('reconcile', '=', True), ('company_id', '=', id)]")
     accrual_default_journal_id = fields.Many2one('account.journal', help="Journal used by default for moving the period of an entry", domain="[('type', '=', 'general')]")
 
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
@@ -152,59 +156,6 @@ class ResCompany(models.Model):
             'account_setup_fy_data_state',
             'account_setup_coa_state',
         ]
-
-    def _check_lock_dates(self, vals):
-        '''Check the lock dates for the current companies. This can't be done in a api.constrains because we need
-        to perform some comparison between new/old values. This method forces the lock dates to be irreversible.
-
-        * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set
-        after the lock date for users.
-        * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set after the
-        last day of the previous month.
-        * The new lock date for advisors must be set after the previous lock date.
-
-        :param vals: The values passed to the write method.
-        '''
-        period_lock_date = vals.get('period_lock_date') and\
-            fields.Date.from_string(vals['period_lock_date'])
-        fiscalyear_lock_date = vals.get('fiscalyear_lock_date') and\
-            fields.Date.from_string(vals['fiscalyear_lock_date'])
-
-        previous_month = fields.Date.today() + relativedelta(months=-1)
-        days_previous_month = calendar.monthrange(previous_month.year, previous_month.month)
-        previous_month = previous_month.replace(day=days_previous_month[1])
-        for company in self:
-            old_fiscalyear_lock_date = company.fiscalyear_lock_date
-
-            # The user attempts to remove the lock date for advisors
-            if old_fiscalyear_lock_date and not fiscalyear_lock_date and 'fiscalyear_lock_date' in vals:
-                raise ValidationError(_('The lock date for advisors is irreversible and can\'t be removed.'))
-
-            # The user attempts to set a lock date for advisors prior to the previous one
-            if old_fiscalyear_lock_date and fiscalyear_lock_date and fiscalyear_lock_date < old_fiscalyear_lock_date:
-                raise ValidationError(_('The new lock date for advisors must be set after the previous lock date.'))
-
-            # In case of no new fiscal year in vals, fallback to the oldest
-            if not fiscalyear_lock_date:
-                if old_fiscalyear_lock_date:
-                    fiscalyear_lock_date = old_fiscalyear_lock_date
-                else:
-                    continue
-
-            # The user attempts to set a lock date for advisors prior to the last day of previous month
-            if fiscalyear_lock_date > previous_month:
-                raise ValidationError(_('You cannot lock a period that is not finished yet. Please make sure that the lock date for advisors is not set after the last day of the previous month.'))
-
-            # In case of no new period lock date in vals, fallback to the one defined in the company
-            if not period_lock_date:
-                if company.period_lock_date:
-                    period_lock_date = company.period_lock_date
-                else:
-                    continue
-
-            # The user attempts to set a lock date for advisors prior to the lock date for users
-            if period_lock_date < fiscalyear_lock_date:
-                raise ValidationError(_('You cannot define stricter conditions on advisors than on users. Please make sure that the lock date on advisor is set before the lock date for users.'))
 
     def compute_fiscalyear_dates(self, current_date):
         '''Computes the start and end dates of the fiscal year where the given 'date' belongs to.
@@ -537,7 +488,7 @@ class ResCompany(models.Model):
 
     def action_save_onboarding_invoice_layout(self):
         """ Set the onboarding step as done """
-        if bool(self.logo) and self.logo != self._get_logo():
+        if bool(self.external_report_layout_id):
             self.set_onboarding_step_done('account_onboarding_invoice_layout_state')
 
     def action_save_onboarding_sale_tax(self):
@@ -553,3 +504,82 @@ class ResCompany(models.Model):
                 "Please go to Account Configuration and select or install a fiscal localization.")
             raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
         return account
+
+    @api.model
+    def _action_check_hash_integrity(self):
+        return self.env.ref('account.action_report_account_hash_integrity').report_action(self.id)
+
+    def _check_hash_integrity(self):
+        """Checks that all posted moves have still the same data as when they were posted
+        and raises an error with the result.
+        """
+        def build_move_info(move):
+            return(move.name, move.inalterable_hash, fields.Date.to_string(move.date))
+
+        journals = self.env['account.journal'].search([('company_id', '=', self.id)])
+        results_by_journal = {
+            'results': [],
+            'printing_date': format_date(self.env, fields.Date.to_string(fields.Date.today()))
+        }
+
+        for journal in journals:
+            rslt = {
+                'journal_name': journal.name,
+                'journal_code': journal.code,
+                'restricted_by_hash_table': journal.restrict_mode_hash_table and 'V' or 'X',
+                'msg_cover': '',
+                'first_hash': 'None',
+                'first_move_name': 'None',
+                'first_move_date': 'None',
+                'last_hash': 'None',
+                'last_move_name': 'None',
+                'last_move_date': 'None',
+            }
+            if not journal.restrict_mode_hash_table:
+                rslt.update({'msg_cover': _('This journal is not in strict mode.')})
+                results_by_journal['results'].append(rslt)
+                continue
+
+            all_moves_count = self.env['account.move'].search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
+            moves = self.env['account.move'].search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
+                                            ('secure_sequence_number', '!=', 0)], order="secure_sequence_number ASC")
+            if not moves:
+                rslt.update({
+                    'msg_cover': _('There isn\'t any journal entry flagged for data inalterability yet for this journal.'),
+                })
+                results_by_journal['results'].append(rslt)
+                continue
+
+            previous_hash = u''
+            start_move_info = []
+            hash_corrupted = False
+            for move in moves:
+                if move.inalterable_hash != move._compute_hash(previous_hash=previous_hash):
+                    rslt.update({'msg_cover': _('Corrupted data on journal entry with id %s.') % move.id})
+                    results_by_journal['results'].append(rslt)
+                    hash_corrupted = True
+                    break
+                if not previous_hash:
+                    #save the date and sequence number of the first move hashed
+                    start_move_info = build_move_info(move)
+                previous_hash = move.inalterable_hash
+            end_move_info = build_move_info(move)
+
+            if hash_corrupted:
+                continue
+
+            rslt.update({
+                        'first_move_name': start_move_info[0],
+                        'first_hash': start_move_info[1],
+                        'first_move_date': format_date(self.env, start_move_info[2]),
+                        'last_move_name': end_move_info[0],
+                        'last_hash': end_move_info[1],
+                        'last_move_date': format_date(self.env, end_move_info[2]),
+                    })
+            if len(moves) == all_moves_count:
+                rslt.update({'msg_cover': _('All entries are hashed.')})
+            else:
+                rslt.update({'msg_cover': _('Entries are hashed from %s (%s)') % (start_move_info[0], format_date(self.env, start_move_info[2]))})
+            results_by_journal['results'].append(rslt)
+
+        return results_by_journal

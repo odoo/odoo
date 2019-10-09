@@ -86,9 +86,11 @@ class AccountMove(models.Model):
                 #We only keep the last digits of the sequence number if it is too long
                 invoice_ref = invoice_ref[-l10n_ch_ISR_NUMBER_ISSUER_LENGTH:]
                 internal_ref = invoice_ref.zfill(l10n_ch_ISR_NUMBER_LENGTH - l10n_ch_ISR_NUMBER_ISSUER_LENGTH - 1) # -1 for mod10r check character
-
                 record.l10n_ch_isr_number = mod10r(invoice_issuer_ref + internal_ref)
                 record.l10n_ch_isr_number_spaced = _space_isr_number(record.l10n_ch_isr_number)
+            else:
+                record.l10n_ch_isr_number = False
+                record.l10n_ch_isr_number_spaced = False
 
     @api.depends(
         'currency_id.name', 'amount_total', 'name',
@@ -190,14 +192,14 @@ class AccountMove(models.Model):
             self.filtered(lambda inv: not inv.l10n_ch_isr_sent).write({'l10n_ch_isr_sent': True})
         return super(AccountMove, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
-    def _get_reference_ch_invoice(self):
+    def _get_invoice_reference_ch_invoice(self):
         """ This sets ISR reference number which is generated based on customer's `Bank Account` and set it as
         `Payment Reference` of the invoice when invoice's journal is using Switzerland's communication standard
         """
         self.ensure_one()
         return self.l10n_ch_isr_number_spaced
 
-    def _get_reference_ch_partner(self):
+    def _get_invoice_reference_ch_partner(self):
         """ This sets ISR reference number which is generated based on customer's `Bank Account` and set it as
         `Payment Reference` of the invoice when invoice's journal is using Switzerland's communication standard
         """

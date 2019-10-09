@@ -3,25 +3,11 @@
 from datetime import datetime, timedelta
 from hashlib import sha256
 from json import dumps
-import pytz
 
 from odoo import models, api, fields
 from odoo.fields import Datetime
 from odoo.tools.translate import _, _lt
 from odoo.exceptions import UserError
-
-
-def ctx_tz(record, field):
-    res_lang = None
-    ctx = record._context
-    tz_name = pytz.timezone(ctx.get('tz') or record.env.user.tz)
-    timestamp = Datetime.from_string(record[field])
-    if ctx.get('lang'):
-        res_lang = record.env['res.lang']._lang_get(ctx['lang'])
-    if res_lang:
-        timestamp = pytz.utc.localize(timestamp, is_dst=False)
-        return datetime.strftime(timestamp.astimezone(tz_name), res_lang.date_format + ' ' + res_lang.time_format)
-    return Datetime.context_timestamp(record, timestamp)
 
 
 class pos_config(models.Model):
@@ -91,7 +77,7 @@ class pos_order(models.Model):
             if obj._fields[field_str].type == 'many2one':
                 field_value = field_value.id
             if obj._fields[field_str].type in ['many2many', 'one2many']:
-                field_value = field_value.ids
+                field_value = field_value.sorted().ids
             return str(field_value)
 
         for order in self:
@@ -134,50 +120,11 @@ class pos_order(models.Model):
                 res |= super(pos_order, order).write(vals_hashing)
         return res
 
-    @api.model
-    def _check_hash_integrity(self, company_id):
-        """Checks that all posted or invoiced pos orders have still the same data as when they were posted
-        and raises an error with the result.
-        """
-        def build_order_info(order):
-            entry_reference = _('(Receipt ref.: %s)')
-            order_reference_string = order.pos_reference and entry_reference % order.pos_reference or ''
-            return [ctx_tz(order, 'date_order'), order.l10n_fr_secure_sequence_number, order.name, order_reference_string, ctx_tz(order, 'write_date')]
-
-        orders = self.search([('state', 'in', ['paid', 'done', 'invoiced']),
-                             ('company_id', '=', company_id),
-                             ('l10n_fr_secure_sequence_number', '!=', 0)],
-                            order="l10n_fr_secure_sequence_number ASC")
-
-        if not orders:
-            raise UserError(_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS') % self.env.company.name)
-        previous_hash = u''
-        start_order_info = []
-        for order in orders:
-            if order.l10n_fr_hash != order._compute_hash(previous_hash=previous_hash):
-                raise UserError(_('Corrupted data on point of sale order with id %s.') % order.id)
-            previous_hash = order.l10n_fr_hash
-
-        orders_sorted_date = orders.sorted(lambda o: o.date_order)
-        start_order_info = build_order_info(orders_sorted_date[0])
-        end_order_info = build_order_info(orders_sorted_date[-1])
-
-        report_dict = {'start_order_name': start_order_info[2],
-                       'start_order_ref': start_order_info[3],
-                       'start_order_date': start_order_info[0],
-                       'end_order_name': end_order_info[2],
-                       'end_order_ref': end_order_info[3],
-                       'end_order_date': end_order_info[0]}
-
-        # Raise on success
-        raise UserError(_('''Successful test !
-
-                         The point of sale orders are guaranteed to be in their original and inalterable state
-                         From: %(start_order_name)s %(start_order_ref)s recorded on %(start_order_date)s
-                         To: %(end_order_name)s %(end_order_ref)s recorded on %(end_order_date)s
-
-                         For this report to be legally meaningful, please download your certification from your customer account on Odoo.com (Only for Odoo Enterprise users).'''
-                         ) % report_dict)
+    def unlink(self):
+        for order in self:
+            if order.company_id._is_accounting_unalterable():
+                raise UserError(_("According to French law, you cannot delet a point of sale order."))
+        return super(pos_order, self).unlink()
 
 
 class PosOrderLine(models.Model):

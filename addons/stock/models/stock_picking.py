@@ -242,8 +242,7 @@ class Picking(models.Model):
 
     name = fields.Char(
         'Reference', default='/',
-        copy=False,  index=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        copy=False, index=True, readonly=True)
     origin = fields.Char(
         'Source Document', index=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -251,8 +250,7 @@ class Picking(models.Model):
     note = fields.Text('Notes')
     backorder_id = fields.Many2one(
         'stock.picking', 'Back Order of',
-        copy=False, index=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        copy=False, index=True, readonly=True,
         check_company=True,
         help="If this shipment was split, then this field links to the shipment which contains the already processed part.")
     backorder_ids = fields.One2many('stock.picking', 'backorder_id', 'Back Orders')
@@ -288,6 +286,7 @@ class Picking(models.Model):
     scheduled_date = fields.Datetime(
         'Scheduled Date', compute='_compute_scheduled_date', inverse='_set_scheduled_date', store=True,
         index=True, default=fields.Datetime.now, tracking=True,
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
     date = fields.Datetime(
         'Creation Date',
@@ -330,6 +329,7 @@ class Picking(models.Model):
     user_id = fields.Many2one(
         'res.users', 'Responsible', tracking=True,
         domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)],
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         default=lambda self: self.env.user)
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
@@ -528,7 +528,6 @@ class Picking(models.Model):
             if self.state == 'draft':
                 self.location_id = location_id
                 self.location_dest_id = location_dest_id
-                self.company_id = self.picking_type_id.company_id
 
         # TDE CLEANME move into onchange_partner_id
         if self.partner_id and self.partner_id.picking_warn:
@@ -561,6 +560,14 @@ class Picking(models.Model):
                 if len(move) == 3 and move[0] == 0:
                     move[2]['location_id'] = vals['location_id']
                     move[2]['location_dest_id'] = vals['location_dest_id']
+                    # When creating a new picking, a move can have no `company_id` (create before
+                    # picking type was defined) or a different `company_id` (the picking type was
+                    # changed for an another company picking type after the move was created).
+                    # So, we define the `company_id` in one of these cases.
+                    picking_type = self.env['stock.picking.type'].browse(vals['picking_type_id'])
+                    if 'picking_type_id' not in move[2] or move[2]['picking_type_id'] != picking_type.id:
+                        move[2]['picking_type_id'] = picking_type.id
+                        move[2]['company_id'] = picking_type.company_id.id
         res = super(Picking, self).create(vals)
         res._autoconfirm_picking()
         return res
@@ -708,21 +715,31 @@ class Picking(models.Model):
     @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id', 'move_lines.move_line_ids.package_level_id')
     def _compute_move_without_package(self):
         for picking in self:
-            move_ids_without_package = self.env['stock.move']
-            if picking.picking_type_entire_packs == False:
-                move_ids_without_package = picking.move_lines
-            else:
-                for move in picking.move_lines:
-                    if not move.package_level_id:
-                        if move.state in ('assigned', 'done'):
-                            if any(not ml.package_level_id for ml in move.move_line_ids):
-                                move_ids_without_package |= move
-                        else:
-                            move_ids_without_package |= move
-            picking.move_ids_without_package = move_ids_without_package.filtered(lambda move: not move.scrap_ids)
+            picking.move_ids_without_package = picking._get_move_ids_without_package()
 
     def _set_move_without_package(self):
-        self.move_lines |= self.move_ids_without_package
+        new_mwp = self[0].move_ids_without_package
+        for picking in self:
+            old_mwp = picking._get_move_ids_without_package()
+            picking.move_lines = (picking.move_lines - old_mwp) | new_mwp
+            moves_to_unlink = old_mwp - new_mwp
+            if moves_to_unlink:
+                moves_to_unlink.unlink()
+
+    def _get_move_ids_without_package(self):
+        self.ensure_one()
+        move_ids_without_package = self.env['stock.move']
+        if not self.picking_type_entire_packs:
+            move_ids_without_package = self.move_lines
+        else:
+            for move in self.move_lines:
+                if not move.package_level_id:
+                    if move.state in ('assigned', 'done'):
+                        if any(not ml.package_level_id for ml in move.move_line_ids):
+                            move_ids_without_package |= move
+                    else:
+                        move_ids_without_package |= move
+        return move_ids_without_package.filtered(lambda move: not move.scrap_ids)
 
     def _check_move_lines_map_quant_package(self, package):
         """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """
@@ -1126,6 +1143,12 @@ class Picking(models.Model):
         for pick in self:
             move_lines_to_pack = self.env['stock.move.line']
             package = self.env['stock.quant.package'].create({})
+
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if float_is_zero(move_line_ids[0].qty_done, precision_digits=precision_digits):
+                for line in move_line_ids:
+                    line.qty_done = line.product_uom_qty
+
             for ml in move_line_ids:
                 if float_compare(ml.qty_done, ml.product_uom_qty,
                                  precision_rounding=ml.product_uom_id.rounding) >= 0:
@@ -1169,8 +1192,6 @@ class Picking(models.Model):
                 move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) == 0)
-                for line in move_line_ids:
-                    line.qty_done = line.product_uom_qty
             if move_line_ids:
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:

@@ -49,7 +49,7 @@ tour.register('sale_product_configurator_edition_tour', {
     extra_trigger: '.oe_optional_products_modal',
     run: 'click'
 }, {
-    trigger: 'td.o_data_cell:contains("Customizable Desk (Aluminium, White)")',
+    trigger: 'td.o_data_cell:contains("Customizable Desk (CONFIG) (Aluminium, White)")',
     extra_trigger: 'div[name="order_line"]',
     run: function (){} // check added product
 }, {
@@ -94,7 +94,7 @@ tour.register('sale_product_configurator_edition_tour', {
 }, {
     trigger: '.o_sale_product_configurator_edit',
 }, {
-    trigger: 'td.o_data_cell:contains("Customizable Desk (Custom, Black)")',
+    trigger: 'td.o_data_cell:contains("Customizable Desk (CONFIG) (Custom, Black)")',
     extra_trigger: 'div[name="order_line"]',
     run: function (){} // check updated product
 }, {
@@ -148,7 +148,7 @@ tour.register('sale_product_configurator_edition_tour', {
     run: function () {
         // used to check that the description does not contain a custom value anymore
         if ($('td.o_data_cell:contains("Custom: another nice custom value")').length === 0){
-            $('td.o_data_cell:contains("Customizable Desk (Steel, Black)")').html('tour success');
+            $('td.o_data_cell:contains("Customizable Desk (CONFIG) (Steel, Black)")').html('tour success');
         }
     }
 }, {

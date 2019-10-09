@@ -170,7 +170,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
                         + '<br/>'
                         + _.str.sprintf(
                             _t('It might be possible to edit the relevant items or fix the issue in <a href="%s">the classic Odoo interface</a>'),
-                            '/web#return_label=Website&model=' + $data.data('object') + '&id=' + $data.data('id')
+                            '/web#model=' + $data.data('object') + '&id=' + $data.data('id')
                         ),
                 }),
             }).open();
@@ -181,21 +181,14 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
      * @param {Event} ev
      */
     _onWebsiteSwitch: function (ev) {
-        var websiteID = ev.currentTarget.getAttribute('website-id');
-
-        // need to force in each case, even if domain is set
-        // Website 1: localhost; Website 2: 0.0.0.0; website 3: -
-        // when you switch 3 <--> 1, you need to force the website
-
+        var websiteId = ev.currentTarget.getAttribute('website-id');
         var websiteDomain = ev.currentTarget.getAttribute('domain');
-        var url = $.param.querystring(window.location.href, {fw: websiteID});
+        var url = window.location.href;
         if (websiteDomain && window.location.hostname !== websiteDomain) {
-            // if domain unchanged, this line will do a nop while we need to refresh
-            // the page to load the new forced website.
-            url = new URL(url);
-            url.hostname = websiteDomain;
+            var path = window.location.pathname + window.location.search + window.location.hash;
+            url = websiteDomain + path;
         }
-        window.location.href = url;
+        window.location.href = $.param.querystring(url, {'fw': websiteId});
     },
     /**
      * @private

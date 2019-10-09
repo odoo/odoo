@@ -6,16 +6,16 @@
 # Konstantin Korovin <korovin74@gmail.com>, 2019
 # Андрей Гусев <gaussgss@gmail.com>, 2019
 # Oleg Kuryan <oleg@ventor.tech>, 2019
-# Martin Trigaux, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-23 13:48+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -426,6 +426,11 @@ msgstr "Все"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
+msgid "All employees"
 msgstr ""
 
 #. module: project
@@ -891,9 +896,9 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 msgid ""
 "Defines the visibility of the tasks of the project:\n"
-"- Visible by invited employees: employees may only see the followed project and tasks.\n"
-"- Visible by employees: employees may see all project and tasks.\n"
-"- Visible by portal users and employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"- Invited employees: employees may only see the followed project and tasks.\n"
+"- All employees: employees may see all project and tasks.\n"
+"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
 
@@ -1164,6 +1169,11 @@ msgid "GTD"
 msgstr "GTD"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Get customer feedback"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -1386,6 +1396,11 @@ msgstr ""
 "Внутренний email, принадлежащий проекту. Входящая почта автоматически "
 "синхронизируется с задачами (или, как вариант, с запросами, если установлен "
 "модуль трекер запросов)."
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
+msgid "Invited employees"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -1965,6 +1980,11 @@ msgid "Portal Access URL"
 msgstr "Ссылка для доступа в портал"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "Portal users and all employees"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -1979,11 +1999,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
 msgid "Priority"
 msgstr "Приоритет"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
-msgid "Privacy"
-msgstr "Конфиденциальность"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2911,19 +2926,9 @@ msgid "User Email"
 msgstr "Email пользователя"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
-msgid "Visible by employees"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-msgid "Visible by invited employees"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid "Visible by portal users and employees"
-msgstr ""
+#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
+msgid "Visibility"
+msgstr "Видимость"
 
 #. module: project
 #. openerp-web
@@ -3049,7 +3054,7 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "Your task must beo in the same company as its project."
+msgid "Your task must be in the same company as its project."
 msgstr ""
 
 #. module: project
@@ -3083,19 +3088,9 @@ msgid "happy"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "oe_kanban_text_red"
-msgstr "oe_kanban_text_red"
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "task"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "text-warning font-weight-bold"
 msgstr ""
 
 #. module: project

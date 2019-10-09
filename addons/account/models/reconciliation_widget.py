@@ -314,11 +314,16 @@ class AccountReconciliation(models.AbstractModel):
                 'customers': [],
                 'suppliers': [],
             }
-
+        # If we have specified partner_ids, don't return the list of reconciliation for specific accounts as it will
+        # show entries that are not reconciled with other partner. Asking for a specific partner on a specific account 
+        # is never done.
+        accounts_data = []
+        if not partner_ids:
+            accounts_data = self.get_data_for_manual_reconciliation('account', account_ids)
         return {
             'customers': self.get_data_for_manual_reconciliation('partner', partner_ids, 'receivable'),
             'suppliers': self.get_data_for_manual_reconciliation('partner', partner_ids, 'payable'),
-            'accounts': self.get_data_for_manual_reconciliation('account', account_ids),
+            'accounts': accounts_data,
         }
 
     @api.model
@@ -347,7 +352,32 @@ class AccountReconciliation(models.AbstractModel):
         is_partner = res_type == 'partner'
         res_alias = is_partner and 'p' or 'a'
         aml_ids = self._context.get('active_ids') and self._context.get('active_model') == 'account.move.line' and tuple(self._context.get('active_ids'))
-
+        all_entries = self._context.get('all_entries', False)
+        all_entries_query = """
+            AND EXISTS (
+                SELECT NULL
+                FROM account_move_line l
+                WHERE l.account_id = a.id
+                {inner_where}
+                AND l.amount_residual != 0
+            )
+        """.format(inner_where=is_partner and 'AND l.partner_id = p.id' or ' ')
+        only_dual_entries_query = """
+            AND EXISTS (
+                SELECT NULL
+                FROM account_move_line l
+                WHERE l.account_id = a.id
+                {inner_where}
+                AND l.amount_residual > 0
+            )
+            AND EXISTS (
+                SELECT NULL
+                FROM account_move_line l
+                WHERE l.account_id = a.id
+                {inner_where}
+                AND l.amount_residual < 0
+            )
+        """.format(inner_where=is_partner and 'AND l.partner_id = p.id' or ' ')
         query = ("""
             SELECT {select} account_id, account_name, account_code, max_date
             FROM (
@@ -368,21 +398,8 @@ class AccountReconciliation(models.AbstractModel):
                         {where2}
                         {where3}
                         AND l.company_id = {company_id}
-                        AND EXISTS (
-                            SELECT NULL
-                            FROM account_move_line l
-                            WHERE l.account_id = a.id
-                            {inner_where}
-                            AND l.amount_residual > 0
-                        )
-                        AND EXISTS (
-                            SELECT NULL
-                            FROM account_move_line l
-                            WHERE l.account_id = a.id
-                            {inner_where}
-                            AND l.amount_residual < 0
-                        )
                         {where4}
+                        {where5}
                     GROUP BY {group_by1} a.id, a.name, a.code {group_by2}
                     {order_by}
                 ) as s
@@ -395,8 +412,8 @@ class AccountReconciliation(models.AbstractModel):
                 where2=account_type and "AND at.type = %(account_type)s" or '',
                 where3=res_ids and 'AND ' + res_alias + '.id in %(res_ids)s' or '',
                 company_id=self.env.company.id,
-                inner_where=is_partner and 'AND l.partner_id = p.id' or ' ',
-                where4=aml_ids and 'AND l.id IN %(aml_ids)s' or '',
+                where4=aml_ids and 'AND l.id IN %(aml_ids)s' or ' ',
+                where5=all_entries and all_entries_query or only_dual_entries_query,
                 group_by1=is_partner and 'l.partner_id, p.id,' or ' ',
                 group_by2=is_partner and ', p.last_time_entries_checked' or ' ',
                 order_by=is_partner and 'ORDER BY p.last_time_entries_checked' or 'ORDER BY a.code',
@@ -539,10 +556,8 @@ class AccountReconciliation(models.AbstractModel):
         ])
 
         domain = expression.OR([domain_reconciliation, domain_matching])
-        partner_domain = []
         if partner_id:
-            partner_domain = [('partner_id', '=', partner_id)]
-            domain = expression.AND([domain, partner_domain])
+            domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
         if mode == 'rp':
             domain = expression.AND([domain,
             [('account_id.internal_type', 'in', ['receivable', 'payable', 'liquidity'])]
@@ -555,14 +570,10 @@ class AccountReconciliation(models.AbstractModel):
         # Domain factorized for all reconciliation use cases
         if search_str:
             str_domain = self._domain_move_lines(search_str=search_str)
-            if not partner_id:
-                partner_domain = [('partner_id.name', 'ilike', search_str)]
-
             str_domain = expression.OR([
                 str_domain,
-                partner_domain,
+                [('partner_id.name', 'ilike', search_str)]
             ])
-
             domain = expression.AND([
                 domain,
                 str_domain
@@ -579,7 +590,6 @@ class AccountReconciliation(models.AbstractModel):
 
         if st_line.company_id.account_bank_reconciliation_start:
             domain = expression.AND([domain, [('date', '>=', st_line.company_id.account_bank_reconciliation_start)]])
-
         return domain
 
     @api.model

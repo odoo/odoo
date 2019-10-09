@@ -206,7 +206,7 @@
                                 <field name="email_cc" groups="base.group_no_one"/>
                                 <field name="function"/>
                                 <field name="phone" widget="phone" options="{'enable_sms': True}"/>
-                                <field name="mobile"/>
+                                <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
                             </group>
                             <group attrs="{'invisible': [('type', '=', 'lead')]}">
                                 <field name="date_deadline"/>
@@ -278,7 +278,7 @@
                                             <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                         </div>
                                         <field name="function"/>
-                                        <field name="mobile"/>
+                                        <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
                                     </group>
                                     <group string="Marketing">
                                         <field name="campaign_id" />
@@ -552,8 +552,6 @@
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                             domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Exception Activities" name="activities_exception"
-                            domain="[('activity_exception_decoration', '!=', False)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
@@ -592,11 +590,11 @@
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
                     <field name="activity_date_deadline" optional="show"/>
-                    <field name="activity_summary" optional="show"/>
+                    <field name="activity_summary" optional="show" readonly="1"/>
                     <field name="medium_id" invisible="1"/>
                     <field name="campaign_id" invisible="1"/>
                     <field name="source_id" invisible="1"/>
-                    <field name="stage_id" optional="show"/>
+                    <field name="stage_id" required="1" optional="show"/>
                     <field name="planned_revenue" sum="Expected Revenues" optional="show"/>
                     <field name="probability" avg="Avg. of Probability" optional="show"/>
                     <field name="user_id" optional="hide"/>
@@ -646,7 +644,7 @@
                     <field name="activity_date_deadline"/>
                     <field name="activity_type_id"/>
                     <field name="activity_summary"/>
-                    <field name="stage_id"/>
+                    <field name="stage_id" required="1"/>
                     <field name="planned_revenue"/>
                     <field name="date_deadline"/>
                 </tree>
@@ -703,8 +701,6 @@
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By" colspan="16">
@@ -950,7 +946,7 @@ if record:
             <field name="code">action = model.action_your_pipeline()</field>
         </record>
 
-        <record model="ir.actions.act_window" id="crm_lead_opportunities_tree_view">
+        <record model="ir.actions.act_window" id="crm_lead_action_pipeline">
             <field name="name">Pipeline</field>
             <field name="res_model">crm.lead</field>
             <field name="view_mode">kanban,tree,graph,pivot,form,calendar,activity</field>
@@ -962,39 +958,39 @@ if record:
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
         </record>
 
-        <record id="crm_lead_opportunities_tree_view_view_kanban" model="ir.actions.act_window.view">
+        <record id="crm_lead_action_pipeline_view_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="crm_case_kanban_view_leads"/>
-            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+            <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
-        <record id="crm_lead_opportunities_tree_view_view_tree" model="ir.actions.act_window.view">
+        <record id="crm_lead_action_pipeline_view_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
-            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+            <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
-        <record id="crm_lead_opportunities_tree_view_view_calendar" model="ir.actions.act_window.view">
+        <record id="crm_lead_action_pipeline_view_calendar" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">calendar</field>
             <field name="view_id" ref="crm_case_calendar_view_leads"/>
-            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+            <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
-        <record id="crm_lead_opportunities_tree_view_view_pivot" model="ir.actions.act_window.view">
+        <record id="crm_lead_action_pipeline_view_pivot" model="ir.actions.act_window.view">
             <field name="sequence" eval="3"/>
             <field name="view_mode">pivot</field>
             <field name="view_id" ref="crm_lead_view_pivot"/>
-            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+            <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
-        <record id="crm_lead_opportunities_tree_view_view_graph" model="ir.actions.act_window.view">
+        <record id="crm_lead_action_pipeline_view_graph" model="ir.actions.act_window.view">
             <field name="sequence" eval="5"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="crm_lead_view_graph"/>
-            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+            <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
         <menuitem

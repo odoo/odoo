@@ -88,9 +88,9 @@
                                         <h3>Statistics</h3>
                                         <div class="row">
                                             <div class="col-lg-5">
-                                                <div class="card bg-success text-white" t-attf-style="height: #{150 + int(percentage['great'])}px;">
+                                                <div class="card bg-success text-white" t-attf-style="height: #{160 + int(percentage['great'])}px;">
                                                     <div class="card-body text-center">
-                                                        <img src="/rating/static/src/img/rating_10_white.png" style="height:40px" alt="Happy face"/>
+                                                        <img src="/rating/static/src/img/rating_10.png" style="height:40px" alt="Happy face"/>
                                                     </div>
                                                     <div class="card-body text-center">
                                                         <h2 style="margin: 0">
@@ -103,9 +103,9 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-4">
-                                                <div class="card bg-warning text-white" t-attf-style="height: #{150 + int(percentage['okay'])}px;">
+                                                <div class="card bg-warning text-white" t-attf-style="height: #{160 + int(percentage['okay'])}px;">
                                                     <div class="card-body text-center">
-                                                        <img src="/rating/static/src/img/rating_5_white.png" style="height:40px" alt="Neutral face"/>
+                                                        <img src="/rating/static/src/img/rating_5.png" style="height:40px" alt="Neutral face"/>
                                                     </div>
                                                     <div class="card-body text-center">
                                                         <h2 style="margin: 0">
@@ -118,9 +118,9 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-3">
-                                                <div class="card bg-danger text-white" t-attf-style="height: #{150 + int(percentage['bad'])}px;">
+                                                <div class="card bg-danger text-white" t-attf-style="height: #{160 + int(percentage['bad'])}px;">
                                                     <div class="card-body text-center">
-                                                        <img src="/rating/static/src/img/rating_1_white.png" style="height:40px" alt="Sad face"/>
+                                                        <img src="/rating/static/src/img/rating_1.png" style="height:40px" alt="Sad face"/>
                                                     </div>
                                                     <div class="card-body text-center">
                                                         <h2 style="margin: 0">
@@ -150,7 +150,7 @@
                                 </div>
                             </t>
                             <t t-if="len(ratings) == 0">
-                                <h4 style="text-align:center">There is no rating for this channel for now.</h4>
+                                <h4 style="text-align:center">There are no ratings for this channel for now.</h4>
                             </t>
                         </div>
                         <div class="col-lg-4 mb32">
@@ -208,7 +208,7 @@
                         <div class="row mt32 mb32">
                             <t t-if="not len(channels)">
                                 <div class="col-lg-6 offset-lg-3">
-                                    There is no public livechat channel to show.
+                                    There are no public livechat channels to show.
                                 </div>
                             </t>
                             <t t-if="len(channels)">

@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
+"POT-Creation-Date: 2019-09-23 13:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Nisrine Tagri <nta@odoo.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
@@ -96,6 +96,24 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s : %.2f hours"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s are only valid between %s and %s"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s are only valid starting from %s"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s are only valid until %s"
 msgstr ""
 
 #. module: hr_holidays
@@ -1453,8 +1471,12 @@ msgid "Hour to"
 msgstr "إلى الساعة"
 
 #. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
+#: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__unit_per_interval__hours
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__request_unit__hour
+#, python-format
 msgid "Hours"
 msgstr "الساعات"
 
@@ -1981,6 +2003,14 @@ msgstr "لا يمكن لأحد إعادة تعيين إجازات الموظفي
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
+msgid ""
+"Only a Time off Manager can apply the second approval on allocation "
+"requests."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
 msgid "Only a time off Manager can approve its own requests."
 msgstr ""
 
@@ -1996,14 +2026,6 @@ msgstr ""
 msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, python-format
-msgid ""
-"Only an time off Manager can apply the second approval on allocation "
-"requests."
 msgstr ""
 
 #. module: hr_holidays
@@ -2204,7 +2226,7 @@ msgstr "جاري حتى"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_sms_error
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "خطأ في تسليم الرسائل القصيرة"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2381,23 +2403,23 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
+msgid ""
+"This area is automatically filled by the user who validate the allocation "
+"with second level (If allocation type need second validation)"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
 msgid ""
 "This area is automatically filled by the user who validate the time off"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
-msgid ""
-"This area is automaticly filled by the user who validate the allocation with"
-" second level (If allocation type need second validation)"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
 msgid ""
-"This area is automaticly filled by the user who validate the time off with "
-"second level (If time off type need second validation)"
+"This area is automatically filled by the user who validate the time off with"
+" second level (If time off type need second validation)"
 msgstr ""
 
 #. module: hr_holidays
@@ -2456,8 +2478,10 @@ msgid "Time Off Allocation"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/hr_leave_report.py:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_department
+#, python-format
 msgid "Time Off Analysis"
 msgstr ""
 
@@ -2576,7 +2600,7 @@ msgid "Time off Already Taken"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+#: model:ir.actions.server,name:hr_holidays.act_hr_employee_holiday_request
 msgid "Time off Analysis"
 msgstr ""
 
@@ -2898,24 +2922,6 @@ msgstr "لا يمكنك أخذ إجازتين في نفس اليوم."
 msgid ""
 "You can not set 2 times off that overlaps on the same day for the same "
 "employee."
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "You can take %s from %s"
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "You can take %s only between %s and %s"
-msgstr "يمكنك أخذ %s بين %s و%s فقط"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "You can take %s until %s"
 msgstr ""
 
 #. module: hr_holidays

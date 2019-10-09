@@ -6,16 +6,16 @@
 # Naglis Jonaitis, 2019
 # Martin Trigaux, 2019
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2019
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -24,6 +24,20 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "%d records successfully imported..."
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "%d records tested..."
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -81,6 +95,13 @@ msgstr "Bazės importavimo susiejimas"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Batch limit"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Between rows %d and %d"
@@ -92,6 +113,13 @@ msgstr ""
 #, python-format
 msgid "Cancel"
 msgstr "Atšaukti"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Click 'Resume' to proceed with the import, resuming at line"
+msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -224,13 +252,6 @@ msgid "Decimal Separator:"
 msgstr "Dešimtainis skyriklis:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Defer parent/child computation"
-msgstr "Atidėti tėvinius/dukterinius skaičiavimus"
-
-#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__display_name
@@ -276,6 +297,13 @@ msgstr "Atsisiųsti"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
 msgstr "Dt"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Due to its large size, the file will be imported by batches."
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -361,6 +389,14 @@ msgid "Formatting Options…"
 msgstr "Formatavimo nustatymai..."
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
+msgstr ""
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
@@ -408,28 +444,9 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid ""
-"If the model uses openchatter, history tracking                             "
-"will set up subscriptions and send notifications"
-"                             during the import, but lead to a slower import."
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
 msgstr ""
-"Jei modelis naudoja pokalbių skydelį, istorijos sekimui"
-"                             bus sukurtos prenumeratos ir išsiųsti "
-"pranešimai                             importavimo metu, o tai šiek tiek "
-"sulėtins importavimo procesą."
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid ""
-"If the model uses parent/child relations, computing the                     "
-"parent / child relation occurs on every line, and lead to a slower import."
-"                     Defering it can speed up import."
-msgstr ""
-"Jei modelyje naudojamos tėvinės/dukterinės sąsajos, skaičiavimai"
-"                      tėvinėms/dukterinėms sąsajoms atliekami kiekvienai "
-"eilutei, o tai sulėtina importavimą.                     Atidėjimas gali "
-"pagreitinti importavimo procesą."
 
 #. module: base_import
 #. openerp-web
@@ -576,6 +593,7 @@ msgid "Model"
 msgstr "Modelis"
 
 #. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
 msgid "Name"
 msgstr "Vardas"
@@ -629,6 +647,13 @@ msgstr "Iš naujo įkelti failą"
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
 msgstr "Res modelis"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Resume"
+msgstr "Pratęsti"
 
 #. module: base_import
 #. openerp-web
@@ -687,6 +712,13 @@ msgstr "Tarpas"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Start at line"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Tab"
@@ -696,8 +728,8 @@ msgstr "Kortelė"
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Test Import"
-msgstr "Testuoti importavimą"
+msgid "Test"
+msgstr "Testas"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
@@ -787,10 +819,15 @@ msgstr "Teksto apribojimo ženklas:"
 #, python-format
 msgid ""
 "The first row\n"
-"                 contains the label of the column"
+"                         contains the label of the column"
 msgstr ""
-"Pirma eilutė\n"
-"                 yra stulpelio etiketė"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "This file has been successfully imported up to line %d."
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -851,6 +888,15 @@ msgid "Value2"
 msgstr ""
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and"
+"                             lines composed only of empty cells"
+msgstr ""
+
+#. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
@@ -859,6 +905,13 @@ msgid ""
 msgstr ""
 "Negalite importuoti paveikslėlių per URL, susisiekite su administratoriumi "
 "dėl to priežasties."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "You can test or reload your file before resuming the import."
+msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

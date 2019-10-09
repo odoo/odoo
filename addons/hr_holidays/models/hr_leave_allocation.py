@@ -158,7 +158,7 @@ class HolidaysAllocation(models.Model):
         """
         today = fields.Date.from_string(fields.Date.today())
 
-        holidays = self.search([('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('holiday_type', '=', 'employee'),
+        holidays = self.search([('allocation_type', '=', 'accrual'), ('employee_id.active', '=', True), ('state', '=', 'validate'), ('holiday_type', '=', 'employee'),
                                 '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
                                 '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
 
@@ -296,7 +296,7 @@ class HolidaysAllocation(models.Model):
     @api.onchange('employee_id')
     def _onchange_employee(self):
         self.manager_id = self.employee_id and self.employee_id.parent_id
-        if self.employee_id.user_id != self.env.user:
+        if self.employee_id.user_id != self.env.user and self._origin.employee_id != self.employee_id:
             self.holiday_status_id = False
         if self.holiday_type == 'employee':
             self.department_id = self.employee_id.department_id
@@ -423,17 +423,16 @@ class HolidaysAllocation(models.Model):
         return values
 
     def action_draft(self):
-        for holiday in self:
-            if holiday.state not in ['confirm', 'refuse']:
-                raise UserError(_('Allocation request state must be "Refused" or "To Approve" in order to reset to Draft.'))
-            holiday.write({
-                'state': 'draft',
-                'first_approver_id': False,
-                'second_approver_id': False,
-            })
-            linked_requests = holiday.mapped('linked_request_ids')
-            for linked_request in linked_requests:
-                linked_request.action_draft()
+        if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
+            raise UserError(_('Allocation request state must be "Refused" or "To Approve" in order to reset to Draft.'))
+        self.write({
+            'state': 'draft',
+            'first_approver_id': False,
+            'second_approver_id': False,
+        })
+        linked_requests = self.mapped('linked_request_ids')
+        if linked_requests:
+            linked_requests.action_draft()
             linked_requests.unlink()
         self.activity_update()
         return True
@@ -496,19 +495,16 @@ class HolidaysAllocation(models.Model):
 
     def action_refuse(self):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        for holiday in self:
-            if holiday.state not in ['confirm', 'validate', 'validate1']:
-                raise UserError(_('Allocation request must be confirmed or validated in order to refuse it.'))
+        if any(holiday.state not in ['confirm', 'validate', 'validate1'] for holiday in self):
+            raise UserError(_('Allocation request must be confirmed or validated in order to refuse it.'))
 
-            if self.env.user == holiday.employee_id.leave_manager_id and self.env.user != holiday.employee_id.user_id:
-                holiday = holiday.sudo()
-
-            if holiday.state == 'validate1':
-                holiday.write({'state': 'refuse', 'first_approver_id': current_employee.id})
-            else:
-                holiday.write({'state': 'refuse', 'second_approver_id': current_employee.id})
-            # If a category that created several holidays, cancel all related
-            holiday.linked_request_ids.action_refuse()
+        validated_holidays = self.filtered(lambda hol: hol.state == 'validate1')
+        validated_holidays.write({'state': 'refuse', 'first_approver_id': current_employee.id})
+        (self - validated_holidays).write({'state': 'refuse', 'second_approver_id': current_employee.id})
+        # If a category that created several holidays, cancel all related
+        linked_requests = self.mapped('linked_request_ids')
+        if linked_requests:
+            linked_requests.linked_request_ids.action_refuse()
         self.activity_update()
         return True
 

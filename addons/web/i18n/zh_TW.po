@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:28+0000\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -520,6 +520,13 @@ msgstr "Alt"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Among the"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/crash_manager.xml:0
 #, python-format
 msgid "An error occurred"
@@ -617,6 +624,13 @@ msgstr "您確定要移除此篩選嗎？"
 #, python-format
 msgid "Are you sure you want to delete this record ?"
 msgstr "您確定要刪除此記錄嗎？"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Are you sure you want to perform the following update on those"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -793,6 +807,7 @@ msgstr "日曆視圖未定義 'date_start'的屬性。"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
+#: code:addons/web/static/src/js/views/list/list_confirm_dialog.js:0
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -930,6 +945,7 @@ msgstr "確認新密碼"
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
+#: code:addons/web/static/src/js/views/list/list_confirm_dialog.js:0
 #, python-format
 msgid "Confirmation"
 msgstr "確認"
@@ -1286,21 +1302,6 @@ msgstr "您真的要從您的喜好中刪除這個過濾器嗎？"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/list/list_controller.js:0
-#, python-format
-msgid "Do you want to set the value on the %d selected records?"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/list/list_controller.js:0
-#, python-format
-msgid ""
-"Do you want to set the value on the %d valid selected records? (%d invalid)"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Documentation"
@@ -1491,6 +1492,13 @@ msgstr "導出"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Export All"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Export Data"
@@ -1502,6 +1510,12 @@ msgstr "導出數據"
 #, python-format
 msgid "Export Format:"
 msgstr "導出格式："
+
+#. module: web
+#: code:addons/web/controllers/main.py:0
+#, python-format
+msgid "Exporting grouped data to csv is not supported."
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1548,6 +1562,7 @@ msgstr "收藏"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Field:"
@@ -2402,6 +2417,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
+#: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "No valid record to save"
 msgstr ""
@@ -2502,6 +2518,7 @@ msgstr "Odoo警告"
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
+#: code:addons/web/static/src/js/views/list/list_confirm_dialog.js:0
 #, python-format
 msgid "Ok"
 msgstr "確定"
@@ -2531,8 +2548,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "Only Integer Value should be valid."
-msgstr "僅整數值是有效的。"
+msgid "Only Integer or Float Value should be valid."
+msgstr ""
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -3804,6 +3821,7 @@ msgstr "取消歸檔所有"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/controllers/main.py:0
 #: code:addons/web/static/src/js/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/js/views/graph/graph_model.js:0
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
@@ -3858,6 +3876,13 @@ msgstr "未命名的"
 #, python-format
 msgid "Untitled"
 msgstr "未命名的"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Update to:"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -4253,6 +4278,13 @@ msgstr "所有記錄"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "are valid for this update."
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "child of"
@@ -4316,12 +4348,14 @@ msgstr "是"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is after"
 msgstr "在之後"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is after or equal to"
@@ -4330,12 +4364,14 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is before"
 msgstr "在之前"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is before or equal to"
@@ -4344,12 +4380,14 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is between"
 msgstr "介於"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
@@ -4386,12 +4424,14 @@ msgstr "不等於"
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is not equal to"
 msgstr "不等於"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
@@ -4404,6 +4444,7 @@ msgstr "未設定"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
@@ -4531,10 +4572,24 @@ msgstr "記錄"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "records ?"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "remaining)"
 msgstr "剩餘)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "selected records,"
+msgstr ""
 
 #. module: web
 #. openerp-web

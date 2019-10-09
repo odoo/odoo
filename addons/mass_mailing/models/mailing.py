@@ -10,6 +10,7 @@ import re
 import threading
 from ast import literal_eval
 from base64 import b64encode
+from datetime import datetime
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError
@@ -44,7 +45,7 @@ class MassMailing(models.Model):
     _period_number = 6
     _order = 'sent_date DESC'
     _inherits = {'utm.source': 'source_id'}
-    _rec_name = "source_id"
+    _rec_name = "subject"
 
     @api.model
     def _get_default_mail_server_id(self):
@@ -202,21 +203,18 @@ class MassMailing(models.Model):
         if self.mailing_model_name:
             if mailing_domain:
                 try:
-                    self.env[self.mailing_model_real].search(mailing_domain, limit=1)
+                    self.env[self.mailing_model_name].search(mailing_domain, limit=1)
                 except:
                     mailing_domain = []
             if not mailing_domain:
-                if self.mailing_model_name == 'mailing.list':
-                    if self.contact_list_ids:
-                        mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
-                    else:
-                        mailing_domain = [(0, '=', 1)]
-                elif self.mailing_model_name == 'res.partner':
-                    mailing_domain = [('customer_rank', '>', 0)]
+                if self.mailing_model_name == 'mailing.list' and self.contact_list_ids:
+                    mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
+                elif 'is_blacklisted' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
+                    mailing_domain = [('is_blacklisted', '=', False)]
                 elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
                     mailing_domain = [('opt_out', '=', False)]
         else:
-            mailing_domain = [(0, '=', 1)]
+            mailing_domain = []
         self.mailing_domain = repr(mailing_domain)
 
     @api.onchange('mailing_type')
@@ -224,24 +222,14 @@ class MassMailing(models.Model):
         if self.mailing_type == 'mail' and not self.medium_id:
             self.medium_id = self.env.ref('utm.utm_medium_email').id
 
-    @api.onchange('subject')
-    def _onchange_subject(self):
-        if self.subject and not self.name:
-            self.name = self.subject
-
-    @api.onchange('name')
-    def _onchange_name(self):
-        if self.name and not self.subject:
-            self.subject = self.name
-
     # ------------------------------------------------------
     # ORM
     # ------------------------------------------------------
 
     @api.model
     def create(self, values):
-        if values.get('name') and not values.get('subject'):
-            values['subject'] = values['name']
+        if values.get('subject') and not values.get('name'):
+            values['name'] = "%s %s" % (values['subject'], datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
         if 'medium_id' not in values and values.get('mailing_type', 'mail') == 'mail':
@@ -523,7 +511,7 @@ class MassMailing(models.Model):
             if not res_ids:
                 res_ids = mailing._get_remaining_recipients()
             if not res_ids:
-                raise UserError(_('There is no recipients selected.'))
+                raise UserError(_('There are no recipients selected.'))
 
             composer_values = {
                 'author_id': author_id,

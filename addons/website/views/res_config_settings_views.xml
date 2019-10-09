@@ -158,7 +158,7 @@
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                                        <a href="https://www.odoo.com/documentation/user/12.0/website/optimize/google_analytics.html"
+                                        <a href="https://www.odoo.com/documentation/user/13.0/website/optimize/google_analytics.html"
                                                 class="oe_link" target="_blank">
                                             <i class="fa fa-arrow-right"/>
                                             How to get my Tracking ID
@@ -264,10 +264,6 @@
                                         <div class="row">
                                             <label for="social_youtube" string="YouTube" class="col-md-3 o_light_label"/>
                                             <field name="social_youtube"/>
-                                        </div>
-                                        <div class="row">
-                                            <label for="social_googleplus" string="Google Plus" class="col-md-3 o_light_label"/>
-                                            <field name="social_googleplus"/>
                                         </div>
                                         <div class="row">
                                             <label for="social_instagram" string="Instagram" class="col-md-3 o_light_label"/>
@@ -378,13 +374,6 @@
             action="action_website_pages_list"
             parent="menu_website_global_configuration"
             sequence="30"
-            />
-
-        <menuitem name="Redirects"
-            id="menu_website_redirect_list"
-            action="action_website_redirect_list"
-            parent="menu_website_global_configuration"
-            sequence="40"
             />
 
         <menuitem name="Menus"

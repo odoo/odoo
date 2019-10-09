@@ -428,9 +428,7 @@ class TestPayment(AccountingTestCase):
         # The invoice should now be paid
         self.assertEqual(invoice.invoice_payment_state, 'paid', "Invoice should be in 'paid' state after having reconciled the two payments with a bank statement")
 
-    def test_payment_cancel_keep_name(self):
-        self.bank_journal_euro.update_posted = True
-
+    def test_payment_draft_keep_name(self):
         payment = self.payment_model.create({
             'payment_type': 'inbound',
             'payment_method_id': self.payment_method_manual_in.id,
@@ -447,18 +445,14 @@ class TestPayment(AccountingTestCase):
         name = payment.move_line_ids.mapped('move_id').name
         self.assertTrue(name)
 
-        payment.cancel()
-        self.assertFalse(payment.move_line_ids.mapped('move_id'))
         payment.action_draft()
+        self.assertFalse(payment.move_line_ids.mapped('move_id'))
 
         payment.post()
         self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 1)
         self.assertEqual(name, payment.move_line_ids.mapped('move_id').name)
 
-    def test_payment_transfer_cancel_keep_names(self):
-        self.bank_journal_euro.update_posted = True
-        self.cash_journal_euro.update_posted = True
-
+    def test_payment_transfer_draft_keep_names(self):
         payment = self.payment_model.create({
             'payment_type': 'transfer',
             'payment_method_id': self.payment_method_manual_out.id,
@@ -487,9 +481,8 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(reconciled_lines.mapped('move_id'), all_moves)
 
         reconciled_lines.remove_move_reconcile()
-        payment.cancel()
-        self.assertFalse(payment.move_line_ids.mapped('move_id'))
         payment.action_draft()
+        self.assertFalse(payment.move_line_ids.mapped('move_id'))
 
         payment.post()
         self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 2)
@@ -502,9 +495,7 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(name, move.name)
         self.assertEqual(transfer_name, transfer_move.name)
 
-    def test_payment_cancel_to_transfer(self):
-        self.bank_journal_euro.update_posted = True
-
+    def test_payment_draft_to_transfer(self):
         payment = self.payment_model.create({
             'payment_type': 'inbound',
             'payment_method_id': self.payment_method_manual_in.id,
@@ -521,9 +512,8 @@ class TestPayment(AccountingTestCase):
         name = payment.move_line_ids.mapped('move_id').name
         self.assertTrue(name)
 
-        payment.cancel()
-        self.assertFalse(payment.move_line_ids.mapped('move_id'))
         payment.action_draft()
+        self.assertFalse(payment.move_line_ids.mapped('move_id'))
 
         payment.write({
             'payment_type': 'transfer',

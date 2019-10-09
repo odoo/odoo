@@ -1,6 +1,7 @@
 odoo.define('mail.discuss_test', function (require) {
 "use strict";
 
+const Discuss = require('mail.Discuss');
 var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
@@ -138,6 +139,109 @@ QUnit.test('basic rendering', async function (assert) {
     var $history = $sidebar.find('.o_mail_discuss_item[data-thread-id=mailbox_history]');
     assert.strictEqual($history.length, 1,
         "should have the mailbox item 'mailbox_history' in the sidebar");
+    discuss.destroy();
+});
+
+QUnit.test('messaging not ready', async function (assert) {
+    assert.expect(9);
+
+    const messagingReadyProm = testUtils.makeTestPromise();
+    const discuss = await createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        async mockRPC(route, args) {
+            if (route === '/mail/init_messaging') {
+                const _super = this._super.bind(this, ...arguments); // limitation of class.js
+                assert.step('/mail/init_messaging:pending');
+                await messagingReadyProm;
+                assert.step('/mail/init_messaging:resolved');
+                return _super();
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    assert.verifySteps(['/mail/init_messaging:pending']);
+    assert.ok(
+        discuss.el,
+        "discuss should be rendered");
+    assert.strictEqual(
+        $('.o_action')[0],
+        discuss.el,
+        "should display discuss even when messaging is not ready");
+    assert.containsOnce(
+        discuss,
+        '.o_mail_discuss_sidebar .o_mail_discuss_loading',
+        "should display sidebar is loading (messaging not yet ready)");
+    assert.containsOnce(
+        discuss,
+        '.o_mail_discuss_content .o_mail_discuss_loading',
+        "should display content is loading (messaging not yet ready)");
+
+    messagingReadyProm.resolve();
+    await testUtils.nextTick();
+    assert.verifySteps(['/mail/init_messaging:resolved']);
+    assert.containsNone(
+        discuss,
+        '.o_mail_discuss_loading',
+        "should no longer display sidebar or content is loading (messaging is ready)");
+
+    discuss.destroy();
+});
+
+QUnit.test('messaging initially ready', async function (assert) {
+    assert.expect(7);
+
+    const startDiscussProm = testUtils.makeTestPromise();
+
+    testUtils.mock.patch(Discuss, {
+        /**
+         * @override
+         */
+        async start() {
+            const _super = this._super.bind(this, ...arguments); // due to limitation of class.js
+            assert.step('discuss:starting');
+            await startDiscussProm;
+            assert.step('discuss:started');
+            return _super();
+        },
+    });
+
+    const discussProm = createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC(route) {
+            if (route === '/mail/init_messaging') {
+                assert.step(route);
+            }
+            return this._super(...arguments);
+        }
+    });
+    await testUtils.nextTick();
+    assert.verifySteps([
+        '/mail/init_messaging',
+        'discuss:starting',
+    ]);
+
+    startDiscussProm.resolve();
+    await testUtils.nextTick();
+    assert.verifySteps(['discuss:started']);
+    const discuss = await discussProm;
+    assert.ok(
+        discuss.el,
+        "discuss should be rendered");
+    assert.containsNone(
+        discuss,
+        '.o_mail_discuss_loading',
+        "should not display sidebar or content is loading (messaging is ready)");
+
+    testUtils.mock.unpatch(Discuss);
     discuss.destroy();
 });
 

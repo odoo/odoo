@@ -14,6 +14,7 @@ class HrExpense(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Expense"
     _order = "date desc, id desc"
+    _check_company_auto = True
 
     @api.model
     def _default_employee_id(self):
@@ -50,7 +51,7 @@ class HrExpense(models.Model):
 
     name = fields.Char('Description', readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     date = fields.Date(readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id, domain=lambda self: self._get_employee_id_domain())
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id, domain=lambda self: self._get_employee_id_domain(), check_company=True)
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
     product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_product_uom_id, domain="[('category_id', '=', product_uom_category_id)]")
@@ -64,7 +65,7 @@ class HrExpense(models.Model):
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     account_id = fields.Many2one('account.account', string='Account', default=_default_account_id, domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]", help="An expense account is expected")
     description = fields.Text('Notes...', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
@@ -648,6 +649,7 @@ class HrExpenseSheet(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Expense Report"
     _order = "accounting_date desc, id desc"
+    _check_company_auto = True
 
     @api.model
     def _default_employee_id(self):
@@ -675,20 +677,20 @@ class HrExpenseSheet(models.Model):
         ('done', 'Paid'),
         ('cancel', 'Refused')
     ], string='Status', index=True, readonly=True, tracking=True, copy=False, default='draft', required=True, help='Expense Report State')
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", limit=1)
-    address_id = fields.Many2one('res.partner', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Employee Home Address")
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, check_company=True)
+    address_id = fields.Many2one('res.partner', string="Employee Home Address", check_company=True)
     payment_mode = fields.Selection(related='expense_line_ids.payment_mode', default='own_account', readonly=True, string="Paid By")
     user_id = fields.Many2one('res.users', 'Manager', readonly=True, copy=False, states={'draft': [('readonly', False)]}, tracking=True)
     total_amount = fields.Monetary('Total Amount', currency_field='currency_id', compute='_compute_amount', store=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
-    journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, domain="[('type', '=', 'purchase'), ('company_id', '=', company_id)]",
+    journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, check_company=True, domain="[('type', '=', 'purchase'), ('company_id', '=', company_id)]",
         default=_default_journal_id, help="The journal used when the expense is done.")
-    bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, domain="[('type', 'in', ['cash', 'bank']), ('company_id', '=', company_id)]",
+    bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, check_company=True, domain="[('type', 'in', ['cash', 'bank']), ('company_id', '=', company_id)]",
         default=_default_bank_journal_id, help="The payment method used when the expense is paid by the company.")
     accounting_date = fields.Date("Date")
-    account_move_id = fields.Many2one('account.move', string='Journal Entry', ondelete='restrict', copy=False)
+    account_move_id = fields.Many2one('account.move', string='Journal Entry', ondelete='restrict', copy=False, readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
     is_multiple_currency = fields.Boolean("Handle lines with different currencies", compute='_compute_is_multiple_currency')
     can_reset = fields.Boolean('Can Reset', compute='_compute_can_reset')
@@ -741,12 +743,6 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             if not all(expense.company_id == sheet.company_id for expense in sheet.expense_line_ids):
                 raise ValidationError(_('An expense report must contain only lines from the same company.'))
-
-    @api.constrains('journal_id', 'company_id')
-    def _check_journal_company(self):
-        for sheet in self:
-            if sheet.journal_id and sheet.company_id != sheet.journal_id.company_id:
-                raise ValidationError(_('The journal linked to the expense report must be in the same company.'))
 
     @api.model
     def create(self, vals):

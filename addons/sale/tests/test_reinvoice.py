@@ -216,17 +216,14 @@ class TestReInvoice(TestCommonSaleNoChart):
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it
-        invoice_a = self.AccountMove.create({
-            'partner_id': self.partner_customer_usd.id,
-            'journal_id': self.journal_purchase.id,
-            'line_ids': [
-                (0, 0, {
-                    'product_id': self.product_no_expense.id,
-                    'quantity': 3,
-                    'analytic_account_id': self.analytic_account.id,
-                }),
-            ],
-        })
+        move_form = Form(self.AccountMove)
+        move_form.partner_id = self.partner_customer_usd
+        move_form.journal_id = self.journal_purchase
+        with move_form.line_ids.new() as line_form:
+            line_form.product_id = self.product_no_expense
+            line_form.quantity = 3.0
+            line_form.analytic_account_id = self.analytic_account
+        invoice_a = move_form.save()
         invoice_a.post()
 
         self.assertEqual(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) when validating vendor bill")

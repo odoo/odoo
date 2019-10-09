@@ -1,19 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * link_tracker
+# 	* link_tracker
 # 
-# Translators:
-# Martin Trigaux, 2018
-# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2018
-# MS, 2018
-# Nuno Silva <nuno.silva@arxi.pt>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2018\n"
+"POT-Creation-Date: 2019-09-30 09:41+0000\n"
+"PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,39 +16,49 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
+msgid "<small>Clicks:</small>"
+msgstr ""
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__campaign_id
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 msgid "Campaign"
-msgstr "Campanha"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.actions.act_window,name:link_tracker.link_tracker_click_action_statistics
+msgid "Click Statistics"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__link_click_ids
-#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_form
 msgid "Clicks"
-msgstr "Cliques"
+msgstr ""
 
 #. module: link_tracker
-#: sql_constraint:link.tracker.code:0
+#: model:ir.model.constraint,message:link_tracker.constraint_link_tracker_code_code
 msgid "Code must be unique."
-msgstr "O código deve ser único."
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__link_code_ids
 msgid "Codes"
-msgstr "Códigos"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__country_id
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
 msgid "Country"
-msgstr "País"
+msgstr ""
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__click_date
-msgid "Create Date"
-msgstr "Data de Criação"
-
-#. module: link_tracker
-#: model_terms:ir.actions.act_window,help:link_tracker.action_link_tracker
-msgid "Create a new link tracker"
+#: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action
+#: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action_campaign
+msgid "Create a link tracker"
 msgstr ""
 
 #. module: link_tracker
@@ -62,30 +66,36 @@ msgstr ""
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__create_uid
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__create_uid
 msgid "Created by"
-msgstr "Criado por"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__create_date
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__create_date
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__create_date
 msgid "Created on"
-msgstr "Criada em"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__display_name
 msgid "Display Name"
-msgstr "Nome a Exibir"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__favicon
 msgid "Favicon"
-msgstr "Favicon"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__icon_src
 msgid "Favicon Source"
+msgstr ""
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
+msgid "Group By"
 msgstr ""
 
 #. module: link_tracker
@@ -98,46 +108,57 @@ msgstr ""
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__id
 msgid "ID"
-msgstr "Id."
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__ip
 msgid "Internet Protocol"
-msgstr "Protocolo da Internet"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker____last_update
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click____last_update
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code____last_update
 msgid "Last Modified on"
-msgstr "Última Modificação em"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__write_uid
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__write_uid
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__write_uid
 msgid "Last Updated by"
-msgstr "Última Atualização por"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__write_date
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__write_date
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__write_date
 msgid "Last Updated on"
-msgstr "Última Atualização em"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__link_id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__link_id
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
 msgid "Link"
-msgstr "Associar"
+msgstr ""
 
 #. module: link_tracker
-#: model:ir.actions.act_window,name:link_tracker.action_link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_form
+msgid "Link Click"
+msgstr ""
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_graph
+msgid "Link Clicks"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.actions.act_window,name:link_tracker.link_tracker_action
 #: model:ir.model,name:link_tracker.model_link_tracker
-#: model:ir.ui.menu,name:link_tracker.menu_url_shortener_main
+#: model:ir.ui.menu,name:link_tracker.link_tracker_menu_main
 msgid "Link Tracker"
-msgstr "Monitor de Hiperligação"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_click
@@ -150,52 +171,77 @@ msgid "Link Tracker Code"
 msgstr ""
 
 #. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_graph
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
+msgid "Links"
+msgstr ""
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_tree
+msgid "Links Clicks"
+msgstr ""
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 msgid "Medium"
-msgstr "Médio"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__count
 msgid "Number of Clicks"
-msgstr "Número de Cliques"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__click_count
+msgid "Number of clicks generated by the campaign"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__title
 msgid "Page Title"
-msgstr "Título da Página"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__redirected_url
 msgid "Redirected URL"
-msgstr "URL Reencaminhado"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__code
 msgid "Short URL Code"
-msgstr "Código de URL Curto"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__code
 msgid "Short URL code"
-msgstr "Código de URL curto"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__source_id
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 msgid "Source"
-msgstr "Origem"
+msgstr ""
 
 #. module: link_tracker
-#: model:ir.actions.act_window,name:link_tracker.action_view_click_statistics
+#: model:ir.actions.act_window,name:link_tracker.link_tracker_action_campaign
 msgid "Statistics of Clicks"
-msgstr "Estatísticas de Cliques"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__url
 msgid "Target URL"
-msgstr "URL de Destino"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model.constraint,message:link_tracker.constraint_link_tracker_url_utms_uniq
+msgid "The URL and the UTM combination must be unique"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__campaign_id
+#: model:ir.model.fields,help:link_tracker.field_link_tracker_click__campaign_id
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
@@ -214,59 +260,52 @@ msgid ""
 msgstr ""
 
 #. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 msgid "Title and URL"
-msgstr "Título e URL"
-
-#. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
-msgid "Tracked Link"
-msgstr "Hiperligação Monitorizada"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url
 msgid "Tracked URL"
-msgstr "URL Rastreado"
+msgstr ""
 
 #. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action
+#: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action_campaign
+msgid ""
+"Trackers are used to collect count stat about click on links and generate "
+"short URLs."
+msgstr ""
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "URL"
+msgstr ""
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "UTM"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model,name:link_tracker.model_utm_campaign
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__campaign_id
+msgid "UTM Campaign"
+msgstr ""
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
 msgid "Visit Page"
-msgstr "Visitar Página"
+msgstr ""
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:142
+#: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage"
-msgstr "Visitar Página da Web"
+msgstr ""
 
 #. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "Website Link"
-msgstr "Hiperligação do Site da Web"
-
-#. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_form
-#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_graph
-msgid "Website Link Clicks"
-msgstr "Cliques da Hiperligação do Site da Web"
-
-#. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form_stats
-msgid "Website Link Graph"
-msgstr "Gráfico da Hiperligação do Site da Web"
-
-#. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_graph
-#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_tree
-msgid "Website Links"
-msgstr "Hiperligações do Site da Web"
-
-#. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_tree
-msgid "Website Links Clicks"
-msgstr "Cliques das Hiperligações do Site da Web"
-
-#. module: link_tracker
-#: model:ir.actions.act_window,name:link_tracker.action_link_tracker_stats
-msgid "link.tracker.form.graph.action"
-msgstr "link.tracker.form.graph.action"
+msgstr ""

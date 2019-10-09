@@ -10,7 +10,7 @@
 # MaxyMoos <maxence.groine@gmail.com>, 2019
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2019
 # Fred Gilson <fgi@odoo.com>, 2019
-# Doryan R, 2019
+# a270031086f2a0d3514bc0cb507b48f6, 2019
 # Fabien Pinckaers <fp@openerp.com>, 2019
 # Xavier Belmere <Info@cartmeleon.com>, 2019
 # Alex T <alt@odoo.com>, 2019
@@ -30,16 +30,16 @@
 # Inès Gérardy <ige@odoo.com>, 2019
 # Gilles Dupont <gid@odoo.com>, 2019
 # Martin Trigaux, 2019
-# Cécile Collart <cco@odoo.com>, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: thomas quertinmont <tqu@odoo.com>, 2019\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1301,7 +1301,7 @@ msgstr "Messages enfants"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Choose a language:"
-msgstr ""
+msgstr "Choisissez une langue:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -4585,6 +4585,14 @@ msgstr "Patientez s'il-vous-plait"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/discuss.xml:0
+#: code:addons/mail/static/src/xml/discuss.xml:0
+#, python-format
+msgid "Please wait..."
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/js/composers/basic_composer.js:0
 #, python-format
 msgid "Please, wait while the file is uploading."
@@ -5816,19 +5824,13 @@ msgstr "Type de délai"
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"Type d'action du serveur. Les valeurs suivantes sont disponibles :\n"
-"– « Exécuter du code Python » : un bloc de code python qui sera exécuté\n"
-"– « Créer ou copier un nouvel enregistrement » : créer un enregistrement avec de nouvelles valeurs ou copier un enregistrement existant dans votre base de données\n"
-"– « Modifier un enregistrement » : mettre à jour les valeurs d'un enregistrement\n"
-"– « Exécuter plusieurs actions » : définir une action qui déclenche plusieurs actions du serveur\n"
-"– « Ajouter des abonnés » : ajouter des abonnés à un enregistrement (disponible dans le module Discuter)\n"
-"– « Envoyer un e-mail » : envoyer automatiquement un e-mail (disponible dans email_template)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -6446,6 +6448,15 @@ msgid "Your message was rejected by moderator."
 msgstr "Votre message a été rejeté par le modérateur."
 
 #. module: mail
+#: code:addons/mail/controllers/home.py:0
+#, python-format
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/ir_actions.py:0
 #, python-format
 msgid "Your template should define email_from"
@@ -6727,6 +6738,14 @@ msgstr "erreur inconnue"
 #, python-format
 msgid "unknown target model %s"
 msgstr "modèle cible inconnu %s"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:0
+#: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
+#, python-format
+msgid "unnamed"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email

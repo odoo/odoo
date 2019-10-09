@@ -6,12 +6,17 @@
     <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
     <field name="arch" type="xml">
         <xpath expr="//div[@id='utm_statistics']" position="inside">
-            <div class="d-flex justify-content-between align-items-center w-100 order-2 mb-1">
+            <div class="mr-3" title="Revenues">
                 <field name="currency_id" invisible="True"/>
-                <strong>Revenues</strong> <span><field name="invoiced_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/></span>
+                <small class="font-weight-bold">
+                    <field name="invoiced_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </small>
             </div>
-            <div class="d-flex justify-content-between align-items-center w-100 order-4 mb-1">
-                <strong>Quotations</strong> <span><field name="quotation_count"/></span>
+            <div class="mr-3" title="Quotations">
+                <i class="fa fa-money text-muted"></i>
+                <small class="font-weight-bold">
+                    <field name="quotation_count"/>
+                </small>
             </div>
         </xpath>
     </field>
@@ -24,11 +29,11 @@
     <field name="arch" type="xml">
         <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
             <button name="action_redirect_to_invoiced"
-                type="object" class="oe_stat_button order-1" icon="fa-money">
+                type="object" class="oe_stat_button order-1" icon="fa-usd">
                 <field name="invoiced_amount" widget="statinfo" string="Revenues"/>
             </button>
             <button name="action_redirect_to_quotations"
-                type="object" class="oe_stat_button order-2" icon="fa-usd">
+                type="object" class="oe_stat_button order-2" icon="fa-money">
                 <field name="quotation_count" widget="statinfo" string="Quotations"/>
             </button>
         </xpath>

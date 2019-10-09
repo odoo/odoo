@@ -4,12 +4,11 @@
 {
     'name': 'Default Theme',
     'description': 'Default website theme',
-    'category': 'Theme/Corporate',
+    'category': 'Theme',
     'sequence': 1000,
     'version': '1.0',
     'depends': ['website', 'website_theme_install'],
     'data': [
-        'data/theme_default_data.xml',
     ],
     'images': [
         'static/description/cover.png',

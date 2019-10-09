@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:26+0000\n"
+"POT-Creation-Date: 2019-10-01 12:08+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
@@ -306,9 +306,27 @@ msgid "<strong>Source Document:</strong><br/>"
 msgstr "<strong>Эх Баримт:</strong><br/>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
+msgid "<strong>Start Date: </strong>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
+msgid "<strong>Stop Date: </strong>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>WorkCenter</strong>"
 msgstr "<strong>Дамжлага</strong>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
+msgid "<strong>Workcenter: </strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1808,11 +1826,6 @@ msgstr ""
 #, python-format
 msgid "It has already been unblocked."
 msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_document__key
-msgid "Key"
-msgstr "Түлхүүр"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
@@ -3323,7 +3336,7 @@ msgstr "Гологдолын Хөдөлгөөн"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_scrap
 msgid "Scrap Orders"
-msgstr ""
+msgstr "Гологдлын баримтууд"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_ids
@@ -3643,13 +3656,6 @@ msgid "Technical field to check when we can unreserve"
 msgstr "Бид хэзээ урьдчилж захиалахгүй байх боломжтойг шалгах техник талбар"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_document__key
-msgid ""
-"Technical field used to resolve multiple attachments in a multi-website "
-"environment."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_availability
 msgid "Technical: used in views and domains only."
 msgstr "Техникийн: харагдац болон домейнд зөвхөн хэрэглэгдэнэ."
@@ -3795,8 +3801,8 @@ msgstr ""
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid ""
-"There is no Bill of Material found for the product %s. Please define a Bill "
-"of Material for this product."
+"There is no Bill of Material of type manufacture or kit found for the "
+"product %s. Please define a Bill of Material for this product."
 msgstr ""
 
 #. module: mrp
@@ -3809,7 +3815,7 @@ msgstr ""
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
-msgstr ""
+msgstr "Энэ талбар нь тухайн нөөц ямар цагийн бүст холбогдож ажиллахыг заана."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__time_efficiency
@@ -4279,22 +4285,12 @@ msgid "Warning"
 msgstr "Анхааруулга"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_document__website_id
-msgid "Website"
-msgstr "Вэбсайт"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__website_message_ids
 msgid "Website Messages"
 msgstr "Вебсайтын зурвас"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_document__website_url
-msgid "Website URL"
-msgstr "Вебсайт URL"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__website_message_ids
@@ -4613,6 +4609,14 @@ msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"You cannot change the workcenter of a work order that is in progress or "
+"done."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
 #, python-format
 msgid ""
@@ -4633,6 +4637,12 @@ msgid "You cannot have %s  as the finished product and in the Byproducts"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You cannot link this work order to another manufacturing order."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
@@ -4642,6 +4652,12 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a planned manufacturing order."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "You cannot produce a MO with a bom kit product."
 msgstr ""
 
 #. module: mrp

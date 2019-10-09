@@ -77,6 +77,15 @@ var WysiwygMultizone = Wysiwyg.extend({
                 });
         });
 
+        // TODO review why this is needed
+        _.each(this.$('.oe_structure[data-editor-message!="False"]'), el => {
+            var isBlank = !el.innerHTML.trim();
+            if (isBlank) {
+                el.innerHTML = '';
+            }
+            el.classList.toggle('oe_empty', isBlank);
+        });
+
         return this._super.apply(this, arguments).then(() => {
             // Showing Mega Menu snippets if one dropdown is already opened
             if (this.$('.o_mega_menu').hasClass('show')) {
@@ -113,6 +122,49 @@ var WysiwygMultizone = Wysiwyg.extend({
         return $(':o_editable');
     },
     /**
+     * @private
+     * @param {HTMLElement} editable
+     */
+    _saveCoverProperties: function (editable) {
+        var el = editable.closest('.o_record_cover_container');
+        if (!el) {
+            return;
+        }
+
+        var resModel = el.dataset.resModel;
+        var resID = parseInt(el.dataset.resId);
+        if (!resModel || !resID) {
+            throw new Error('There should be a model and id associated to the cover');
+        }
+
+        this.__savedCovers = this.__savedCovers || {};
+        this.__savedCovers[resModel] = this.__savedCovers[resModel] || [];
+
+        if (this.__savedCovers[resModel].includes(resID)) {
+            return;
+        }
+        this.__savedCovers[resModel].push(resID);
+
+        var cssBgImage = $(el.querySelector('.o_record_cover_image')).css('background-image');
+        var coverProps = {
+            'background-image': cssBgImage.replace(/"/g, '').replace(window.location.protocol + "//" + window.location.host, ''),
+            'background-color': el.dataset.filterColor,
+            'opacity': el.dataset.filterValue,
+            'resize_class': el.dataset.coverClass,
+            'text_size_class': el.dataset.textSizeClass,
+            'text_align_class': el.dataset.textAlignClass,
+        };
+
+        return this._rpc({
+            model: resModel,
+            method: 'write',
+            args: [
+                resID,
+                {'cover_properties': JSON.stringify(coverProps)}
+            ],
+        });
+    },
+    /**
      * Saves one (dirty) element of the page.
      *
      * @private
@@ -127,6 +179,7 @@ var WysiwygMultizone = Wysiwyg.extend({
 
         var $el = $(editable);
 
+        // Saving a view content
         var viewID = $el.data('oe-id');
         if (viewID) {
             promises.push(this._rpc({
@@ -141,6 +194,7 @@ var WysiwygMultizone = Wysiwyg.extend({
             }));
         }
 
+        // Saving mega menu options
         if ($el.data('oe-field') === 'mega_menu_content') {
             // On top of saving the mega menu content like any other field
             // content, we must save the custom classes that were set on the
@@ -158,6 +212,12 @@ var WysiwygMultizone = Wysiwyg.extend({
                     },
                 ],
             }));
+        }
+
+        // Saving cover properties on related model if any
+        var prom = this._saveCoverProperties(editable);
+        if (prom) {
+            promises.push(prom);
         }
 
         return Promise.all(promises);

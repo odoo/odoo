@@ -39,10 +39,10 @@ var ListRenderer = BasicRenderer.extend({
         "click .o_optional_columns_dropdown .dropdown-item": "_onToggleOptionalColumn",
         "click .o_optional_columns_dropdown_toggle": "_onToggleOptionalColumnDropdown",
         'click tbody tr': '_onRowClicked',
-        'click tbody .o_list_record_selector': '_onSelectRecord',
+        'change tbody .o_list_record_selector': '_onSelectRecord',
         'click thead th.o_column_sortable': '_onSortColumn',
         'click .o_group_header': '_onToggleGroup',
-        'click thead .o_list_record_selector input': '_onToggleSelection',
+        'change thead .o_list_record_selector input': '_onToggleSelection',
         'keypress thead tr td': '_onKeyPress',
         'keydown td': '_onKeyDown',
         'keydown th': '_onKeyDown',
@@ -287,7 +287,14 @@ var ListRenderer = BasicRenderer.extend({
                 if (c.attrs.name in columnInvisibleFields) {
                     reject = columnInvisibleFields[c.attrs.name];
                 }
-
+               if (c.attrs.class) {
+                    if (c.attrs.class.match(/\boe_edit_only\b/)) {
+                        c.attrs.editOnly = true;
+                    }
+                    if (c.attrs.class.match(/\boe_read_only\b/)) {
+                        c.attrs.readOnly = true;
+                    }
+                }
                 if (!reject && c.attrs.widget === 'handle') {
                     self.handleField = c.attrs.name;
                     if (self.isGrouped) {
@@ -330,6 +337,12 @@ var ListRenderer = BasicRenderer.extend({
             var $cell = $('<td>');
             if (config.isDebug()) {
                 $cell.addClass(column.attrs.name);
+            }
+            if (column.attrs.editOnly) {
+                $cell.addClass('oe_edit_only');
+            }
+            if (column.attrs.readOnly) {
+                $cell.addClass('oe_read_only');
             }
             if (column.attrs.name in aggregateValues) {
                 var field = self.state.fields[column.attrs.name];
@@ -393,6 +406,12 @@ var ListRenderer = BasicRenderer.extend({
             if (node.attrs.widget) {
                 tdClassName += (' o_' + node.attrs.widget + '_cell');
             }
+        }
+        if (node.attrs.editOnly) {
+            tdClassName += ' oe_edit_only';
+        }
+        if (node.attrs.readOnly) {
+            tdClassName += ' oe_read_only';
         }
         var $td = $('<td>', { class: tdClassName, tabindex: -1 });
 
@@ -748,13 +767,11 @@ var ListRenderer = BasicRenderer.extend({
         if (name) {
             $th.attr('data-name', name);
         }
-        if (node.attrs.class) {
-            if (node.attrs.class.indexOf('oe_edit_only') !== -1) {
-                $th.addClass('oe_edit_only');
-            }
-            if (node.attrs.class.indexOf('oe_read_only') !== -1) {
-                $th.addClass('oe_read_only');
-            }
+        if (node.attrs.editOnly) {
+            $th.addClass('oe_edit_only');
+        }
+        if (node.attrs.readOnly) {
+            $th.addClass('oe_read_only');
         }
         if (!field) {
             return $th;
@@ -1179,7 +1196,7 @@ var ListRenderer = BasicRenderer.extend({
     _onRowClicked: function (ev) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (!$(ev.target).prop('special_click')) {
+        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click')) {
             var id = $(ev.currentTarget).data('id');
             if (id) {
                 this.trigger_up('open_record', { id: id, target: ev.target });

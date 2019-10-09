@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="base.user_demo" model="res.users">
+        <field name="groups_id" eval="[(4, ref('hr_contract.group_hr_contract_manager'))]"/>
+    </record>
+
     <record id="hr_contract_admin" model="hr.contract">
         <field name="name">Mitchell Admin Contract</field>
         <field name="date_start" eval="time.strftime('%Y')+'-1-1'"/>

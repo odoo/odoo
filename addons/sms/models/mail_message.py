@@ -54,7 +54,7 @@ class MailMessage(models.Model):
             info = dict(message._get_mail_failure_dict(),
                         failure_type='sms',
                         notifications=dict((notif.res_partner_id.id, (notif.notification_status, notif.res_partner_id.name)) for notif in notifications if notif.notification_type == 'sms'),
-                        module_icon='/sms/static/img/sms_failure.png'
+                        module_icon='/sms/static/img/sms_failure.svg'
                         )
             res.append(info)
         return res

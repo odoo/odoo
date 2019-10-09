@@ -275,10 +275,38 @@
                 Create
             </button>
         </t>
-        <t t-if="widget.is_action_enabled('download')">
-            <button type="button" class="btn btn-secondary fa fa-download o_list_download" title="Download xls" aria-label="Download xls"/>
+        <t t-if="widget.is_action_enabled('export_xlsx')">
+            <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" title="Export All"/>
         </t>
     </div>
+</t>
+
+<t t-name="ListView.confirmModal">
+    <main role="alert">
+        <p>
+            <t t-if="changes.nbRecords != changes.nbValidRecords">
+                Among the <t t-raw="changes.nbRecords"/> selected records,
+                <t t-raw="changes.nbValidRecords"/> are valid for this update.<br/>
+            </t>
+            Are you sure you want to perform the following update on those <t t-raw="changes.nbValidRecords"/> records ?
+        </p>
+        <div class="table-responsive">
+            <table class="o_modal_changes">
+                <tbody>
+                    <tr>
+                        <td>Field:</td>
+                        <td><t t-raw="changes.fieldLabel"/></td>
+                    </tr>
+                    <tr>
+                        <td>Update to:</td>
+                        <td>
+                            <div class="o_changes_widget"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 </t>
 
 <t t-name="FormView.buttons">
@@ -1032,8 +1060,8 @@
     <t t-if="widget.items.length !== 0">
         <t t-set="group" t-value="0"/>
         <t t-foreach="widget.items" t-as="item">
-            <div t-if="group !== item.groupNumber and !item.invisible" role="separator" class="dropdown-divider" data-removable="1"/>
-            <div t-attf-class="o_menu_item #{item.invisible ? 'd-none' : ''}"
+            <div t-if="group !== item.groupNumber" role="separator" class="dropdown-divider" data-removable="1"/>
+            <div t-attf-class="o_menu_item"
                 t-att-data-id="item.id">
                 <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.isActive ? ' selected ' : ''}">
                     <t t-esc="item.description"/>
@@ -1060,7 +1088,7 @@
 </t>
 
 <div t-name="web.DropdownMenu" t-att-class="widget.dropdownStyle.el.class" t-att="widget.dropdownStyle.el.attrs">
-    <button t-att-class="widget.dropdownStyle.mainButton.class" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
+    <button t-att-class="widget.dropdownStyle.mainButton.class" data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-boundary="viewport">
         <span t-att-class="widget.dropdownIcon"/> <t t-esc="widget.dropdownTitle"/> <span t-if="widget.dropdownSymbol" t-att-class="widget.dropdownSymbol"/>
     </button>
     <div class="dropdown-menu o_dropdown_menu" role="menu">
@@ -1079,7 +1107,7 @@
         </select>
     </div>
     <div t-if="widget.generatorMenuIsOpen" class="dropdown-item-text o_generator_menu">
-        <button type="button" class="btn btn-primary o_apply_group o_add_group" tabindex="-1">Apply</button>
+        <button type="button" class="btn btn-primary o_apply_group o_add_group">Apply</button>
     </div>
 </t>
 
@@ -1540,7 +1568,7 @@
 
 <t t-name="FieldColor">
     <div>
-        <button class="o_field_color"></button>
+        <button class="o_field_color" t-attf-tabindex="#{widget.mode === 'edit' ? 0 : -1}"></button>
     </div>
 </t>
 

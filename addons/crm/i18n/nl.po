@@ -3,7 +3,6 @@
 # 	* crm
 # 
 # Translators:
-# Thomas Pot <thomas@open2bizz.nl>, 2019
 # Cas Vissers <c.vissers@brahoo.nl>, 2019
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
@@ -18,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-30 09:40+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -196,6 +195,16 @@ msgstr ""
 "mensen te vermelden, dit werkt hetzelfde als cc'en in e-mails</p>"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
+msgid "<small>Leads:</small>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
+msgid "<small>Opportunities:</small>"
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
@@ -208,16 +217,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2\"> at </span>"
 msgstr "<span class=\"oe_grey p-2\"> met</span>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<strong>Leads</strong>"
-msgstr "<strong>Leads</strong>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<strong>Opportunities</strong>"
-msgstr "<strong>Opportuniteiten</strong>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -299,7 +298,7 @@ msgstr "Voeg een kwalificatiestap toe alvorens een opportuniteit te creëren "
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Address"
-msgstr "Adre"
+msgstr "Adres"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_id
@@ -363,7 +362,7 @@ msgstr "Aantal bijlagen"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__automated_probability
 msgid "Automated Probability"
-msgstr "Geautomatiseerde Kans"
+msgstr "Geautomatiseerde kans"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -915,7 +914,7 @@ msgstr "E-mail alias"
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_email_state
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
 msgid "Email Quality"
-msgstr "Email Kwaliteit"
+msgstr "Email kwaliteit"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_from
@@ -944,17 +943,26 @@ msgid ""
 "Incoming emails can be automatically assigned to specific Sales Teams. To do"
 " so, set an email alias on the Sales Team."
 msgstr ""
-"E-mails verstuurd aan het adres maken nieuwe leads aan die niet toegewezen "
+"E-mails verstuurd naar het adres maken nieuwe leads aan die niet toegewezen "
 "zijn aan een verkoopteam. Dit kan veranderd worden bij het omzetten naar een"
 " prospect, inkomende e-mails kunnen automatisch worden toegewezen aan "
 "specifieke verkoopteams. Om dit doen, stel het e-mail alias in op het "
 "verkoopteam."
 
 #. module: crm
-#: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__empty
-#: model:ir.model.fields.selection,name:crm.selection__crm_lead__phone_state__empty
-msgid "Empty"
-msgstr "Leeg"
+#: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
+msgid "Enrich all leads automatically"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
+msgid "Enrich lead automatically"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
+msgid "Enrich leads on demand only"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1354,7 +1362,7 @@ msgstr "Lead teller"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Enrichment"
-msgstr ""
+msgstr "Lead verrijking"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1379,17 +1387,17 @@ msgstr "Lead Scoring Frequentie Velden"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
 msgid "Lead Scoring Frequency Fields in String"
-msgstr "Lead Scoring Frequency Fields in String"
+msgstr "Lead Scoring frequentie velden in String"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date
 msgid "Lead Scoring Starting Date"
-msgstr "Lead Scoring Startdatum"
+msgstr "Lead scoring startdatum"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
 msgid "Lead Scoring Starting Date in String"
-msgstr "Lead Scoring Startdatum in String"
+msgstr "Lead scoring startdatum in string"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
@@ -1474,8 +1482,8 @@ msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means"
 " that no duplicates were found"
 msgstr ""
-"Leads welke u heeft geselecteerd hebben dubbellen. Indien de lijst leeg is "
-"betekend dit dat er geen dubbelen zijn gevonden."
+"Leads welke u heeft geselecteerd hebben dubbels. Indien de lijst leeg is "
+"betekend dit dat er geen dubbels zijn gevonden."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1662,7 +1670,7 @@ msgstr "Samengevoegde prospects"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Merged opportunity"
-msgstr "Samengevoegde prospect."
+msgstr "Samengevoegde prospect"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error
@@ -1933,7 +1941,7 @@ msgstr "Prospect verloren"
 #: model:mail.message.subtype,name:crm.mt_lead_restored
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_restored
 msgid "Opportunity Restored"
-msgstr "Opportuniteit Hersteld"
+msgstr "Opportuniteit hersteld"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
@@ -2026,7 +2034,7 @@ msgstr "Telefoon kwaliteit"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
-#: model:ir.actions.act_window,name:crm.crm_lead_opportunities_tree_view
+#: model:ir.actions.act_window,name:crm.crm_lead_action_pipeline
 #: model:ir.model.fields,field_description:crm.field_crm_team__use_opportunities
 #: model:ir.ui.menu,name:crm.crm_opportunity_report_menu
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
@@ -2460,7 +2468,7 @@ msgstr ""
 #: model:ir.model.constraint,message:crm.constraint_crm_lead_check_probability
 msgid "The probability of closing the deal should be between 0% and 100%!"
 msgstr ""
-"De kans voor het sluiten van de opdracht moet liggen tussen de )% en 100%!"
+"De kans voor het sluiten van de opdracht moet liggen tussen de 0% en 100%!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -2483,8 +2491,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
-"Aangezien het primaire emailveld meer dan alleen een emailadres kan "
-"bevatten, wordt dit veld gebruikt om te zoeken op emailadres."
+"Aangezien het primaire e-mail veld meer dan alleen een e-mailadres kan "
+"bevatten, wordt dit veld gebruikt om te zoeken op e-mailadres."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
@@ -2756,7 +2764,7 @@ msgstr "Website van contactpersoon"
 msgid ""
 "When sending mails, the default email address is taken from the Sales Team."
 msgstr ""
-"Wanneer een e-mail, wordt verstuurd, wordt het standaard adres van het "
+"Wanneer een e-mail wordt verstuurd, wordt het standaard adres van het "
 "verkoopteam gebruikt."
 
 #. module: crm

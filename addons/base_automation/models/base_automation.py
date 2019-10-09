@@ -290,7 +290,7 @@ class BaseAutomation(models.Model):
                 if not field.store:
                     return _compute_field_value.origin(self, field)
                 actions = self.env['base.automation']._get_actions(self, ['on_write', 'on_create_or_write'])
-                records = self.with_env(actions.env)
+                records = self.filtered('id').with_env(actions.env)
                 # check preconditions on records
                 pre = {action: action._filter_pre(records) for action in actions}
                 # read old values before the update

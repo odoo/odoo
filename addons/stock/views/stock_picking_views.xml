@@ -187,7 +187,9 @@
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date" string="Picking list">
+                <tree string="Picking list" multi_edit="1"
+                      decoration-info="state == 'draft'" decoration-muted="state == 'cancel'"
+                      decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date">
                     <field name="name"/>
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show"/>
@@ -266,7 +268,7 @@
                         </button>
                     </div>
                     <h1 class="d-none d-md-block">
-                        <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
+                        <field name="name" attrs="{'invisible': [('name','=','/')]}"/>
                     </h1>
                     <group>
                         <group>
@@ -282,10 +284,10 @@
                             <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
                             <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
-                            <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
+                            <field name="backorder_id" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
-                            <field name="scheduled_date" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))], 'required': [('id', '!=', False)]}"/>
+                            <field name="scheduled_date" attrs="{'required': [('id', '!=', False)]}"/>
                             <field name="date_done" string="Effective Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             <field name="origin" placeholder="e.g. PO0032"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"
@@ -343,11 +345,11 @@
                                     <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'), ('parent.immediate_transfer', '=', True)])}"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                                    <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" width="0"
+                                    <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" width="0.1"
                                             attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
                                     <button name="action_assign_serial" type="object"
                                             icon="fa-plus-square"
-                                            width="0"
+                                            width="0.1"
                                             role="img" title="Assign Serial Numbers"
                                             attrs="{'invisible': ['|', ('display_assign_serial', '=', False), ('show_operations', '=', False)]}"/>
                                 </tree>
@@ -430,7 +432,8 @@
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Exception Activities" name="activities_exception"
+                    <separator/>
+                    <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
@@ -439,22 +442,6 @@
                         <filter string="Operation Type" name="picking_type" domain="[]" context="{'group_by': 'picking_type_id'}"/>
                     </group>
                 </search>
-            </field>
-        </record>
-
-        <!--
-            'Assign a Responsible' in action dropdown
-        -->
-        <record id="action_assign_a_responsible" model="ir.actions.server">
-            <field name="name">Assign a Responsible</field>
-            <field name="model_id" ref="model_stock_picking"/>
-            <field name="binding_model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_view_types">list</field>
-            <field name="state">code</field>
-            <field name="code">
-action_values = env.ref('stock.stock_assign_responsible_action').read()[0]
-action_values.update({'context': env.context})
-action = action_values
             </field>
         </record>
 

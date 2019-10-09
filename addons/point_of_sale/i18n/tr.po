@@ -19,19 +19,19 @@
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
 # Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
-# Martin Trigaux, 2019
 # Murat Kaplan <muratk@projetgrup.com>, 2019
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
+"POT-Creation-Date: 2019-09-27 09:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,6 +70,12 @@ msgstr "$ 4,50"
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "$ 8.50"
 msgstr "$ 8,50"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_payment.py:0
+#, python-format
+msgid "%s %s"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -252,6 +258,15 @@ msgstr ""
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "olduğuna emin misiniz? \"Onayla\"yı tıklamak ödemeyi doğrulayacaktır."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"A Chart of Accounts is not yet installed in your current company. Please "
+"install a Chart of Accounts through the Invoicing/Accounting settings before"
+" launching a PoS session."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -532,11 +547,6 @@ msgstr "Müşterinin ödemek istediği tutar"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
 msgid "Attachment Count"
 msgstr "Ek Sayısı"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.pos_menu_products_variants_action
-msgid "Attribute Values"
-msgstr "Nitelik Değerleri"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_menu_products_attribute_action
@@ -1040,6 +1050,11 @@ msgstr "Doğrula"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Connect Devices"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS"
 msgstr ""
 
@@ -1449,6 +1464,12 @@ msgid "Disconnected"
 msgstr "Bağlantı Kesildi"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.product_product_consumable
+#: model:product.template,name:point_of_sale.product_product_consumable_product_template
+msgid "Discount"
+msgstr "İndirim"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__discount
 msgid "Discount (%)"
 msgstr "İndirim (%)"
@@ -1636,11 +1657,6 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
 msgid "Enables Electronic Scale integration."
 msgstr "Elektronik Ölçek Entegrasyonunu etkinleştir"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_payment_terminal
-msgid "Enables Payment Terminal integration."
-msgstr "Ödeme Terminali Entegrasyonunu etkinleştir."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_account
@@ -2315,12 +2331,6 @@ msgid "Method"
 msgstr "Yöntem"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.product_product_consumable
-#: model:product.template,name:point_of_sale.product_product_consumable_product_template
-msgid "Miscellaneous"
-msgstr "Diğer"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
 msgstr ""
@@ -2713,7 +2723,6 @@ msgstr "Sipariş Analizi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__other_devices
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Other Devices"
 msgstr ""
 
@@ -2850,11 +2859,6 @@ msgstr "Ödeme Referansı"
 #, python-format
 msgid "Payment Successful"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_payment_terminal
-msgid "Payment Terminal"
-msgstr "Ödeme Terminali"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3030,11 +3034,6 @@ msgstr "Lütfen bir ödeme yöntemi seçin."
 #, python-format
 msgid "Please select the Customer"
 msgstr "Lütfen müşteri seçin"
-
-#. module: point_of_sale
-#: model:product.category,name:point_of_sale.product_category_pos
-msgid "PoS"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
@@ -3938,13 +3937,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set shop-specific prices, seasonal discounts, etc."
 msgstr "Mağazaya özel fiyatlar ayarlayın. (Sezonluk indirimler vb.)"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/pos.web_editor.js:0
-#, python-format
-msgid "Set your customized advertisement here"
-msgstr "Özel reklamlarınızı burada ayarlayın."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration

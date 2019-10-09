@@ -19,9 +19,6 @@ var ActivityMenu = Widget.extend({
         'click .o_mail_preview': '_onActivityFilterClick',
         'show.bs.dropdown': '_onActivityMenuShow',
     },
-    willStart: function () {
-        return Promise.resolve(this.call('mail_service', 'isReady'));
-    },
     start: function () {
         this._$activitiesPreview = this.$('.o_mail_systray_dropdown_items');
         this.call('mail_service', 'getMailBus').on('activity_updated', this, this._updateCounter);

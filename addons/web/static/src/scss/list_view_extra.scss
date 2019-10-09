@@ -12,7 +12,7 @@
         }
     }
 
-    .o_list_table.o_editable_list .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
+    .o_list_table .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier):not(.o_invisible_modifier) {
         padding: .15rem;
         .o_input {
             border: none;
@@ -31,6 +31,12 @@
         }
         &.o_invalid_cell .o_input {
             box-shadow: 0 0 0 1px theme-color('danger');
+        }
+        &.o_list_button {
+            padding: .25rem;
+        }
+        &.o_color_cell > .o_field_widget {
+            padding: .15rem;
         }
     }
 }

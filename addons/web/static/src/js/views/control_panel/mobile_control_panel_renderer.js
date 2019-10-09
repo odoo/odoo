@@ -12,7 +12,7 @@ ControlPanelRenderer.include({
     events:_.extend({}, ControlPanelRenderer.prototype.events, {
         'click .o_mobile_search_close, .o_mobile_search_show_result, .o_toggle_searchview_full': '_toggleMobileSearchView',
         'click .o_enable_searchview': '_toggleMobileQuickSearchView',
-        'click': '_onOpenMobileSearchView',
+        'click .o_toggle_searchview_full': '_onOpenMobileSearchView',
         'click .o_mobile_search_clear_facets': '_onEmptyAll',
         'show.bs.dropdown .o_mobile_search_filter .o_dropdown': '_onDropdownToggle',
         'hide.bs.dropdown .o_mobile_search_filter .o_dropdown': '_onDropdownToggle',

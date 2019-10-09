@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.tools.misc import get_lang
 
 
 class AccountCommonReport(models.TransientModel):
@@ -43,5 +44,5 @@ class AccountCommonReport(models.TransientModel):
         data['model'] = self.env.context.get('active_model', 'ir.ui.menu')
         data['form'] = self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'company_id'])[0]
         used_context = self._build_contexts(data)
-        data['form']['used_context'] = dict(used_context, lang=self.env.context.get('lang') or 'en_US')
+        data['form']['used_context'] = dict(used_context, lang=get_lang(self.env).code)
         return self.with_context(discard_logo_check=True)._print_report(data)

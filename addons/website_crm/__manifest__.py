@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Contact Form',
-    'category': 'Website',
+    'category': 'Website/Website',
     'sequence': 54,
     'summary': 'Generate leads from a contact form',
     'version': '2.1',

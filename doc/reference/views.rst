@@ -197,6 +197,10 @@ root can have the following attributes:
 
     .. note:: if the ``edit`` attribute is set to ``false``, the ``editable`` option will be ignored.
 
+``multi_edit``
+    editable or not editable list can activate the multi-edition feature by defining
+    the multi_edit=1
+
 ``default_order``
     overrides the ordering of the view, replacing the model's default order.
     The value is a comma-separated list of fields, postfixed by ``desc`` to
@@ -219,7 +223,7 @@ root can have the following attributes:
     (``font-style: italic``), or any `bootstrap contextual color
     <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
-``create``, ``edit``, ``delete``, ``duplicate``, ``import``
+``create``, ``edit``, ``delete``, ``duplicate``, ``import``, ``export_xlsx``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
 ``limit``
@@ -1052,6 +1056,8 @@ attributes:
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
   grouped by many2one, selection, char or boolean fields, and disabled when not.
+``records_draggable``
+  whether it should be possible to drag records when kanban is grouped. Default: true.
 
   Set to ``true`` to always enable it, and to ``false`` to always disable it.
 

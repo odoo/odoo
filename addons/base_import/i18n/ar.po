@@ -3,27 +3,41 @@
 # 	* base_import
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Akram Alfusayal <akram_ma@hotmail.com>, 2019
 # amrnegm <amrnegm.01@gmail.com>, 2019
 # Martin Trigaux, 2019
-# hoxhe Aits <hoxhe0@gmail.com>, 2019
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# hoxhe Aits <hoxhe0@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2019\n"
+"Last-Translator: hoxhe Aits <hoxhe0@gmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "%d records successfully imported..."
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "%d records tested..."
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -80,6 +94,13 @@ msgstr "ربط الاستيراد الأساسي"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Batch limit"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Between rows %d and %d"
@@ -91,6 +112,13 @@ msgstr ""
 #, python-format
 msgid "Cancel"
 msgstr "إلغاء"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Click 'Resume' to proceed with the import, resuming at line"
+msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -223,13 +251,6 @@ msgid "Decimal Separator:"
 msgstr "فاصل الخانات العشرية:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Defer parent/child computation"
-msgstr "تأجيل حسابات الأصل والفرع"
-
-#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__display_name
@@ -275,6 +296,13 @@ msgstr "تحميل"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
 msgstr "دوت"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Due to its large size, the file will be imported by batches."
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -357,6 +385,14 @@ msgid "Formatting Options…"
 msgstr "خيارات التنسيق…"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
+msgstr ""
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
@@ -404,26 +440,9 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid ""
-"If the model uses openchatter, history tracking                             "
-"will set up subscriptions and send notifications"
-"                             during the import, but lead to a slower import."
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
 msgstr ""
-"إذا استخدم الكائن  تطبيق المحادثات، سيقوم تتبع السجلات"
-"                              بإعداد اشتراكات وإرسال إشعارات"
-"                             خلال عملية الاستيراد، لكن هذا سيبطئ العملية."
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid ""
-"If the model uses parent/child relations, computing the                     "
-"parent / child relation occurs on every line, and lead to a slower import."
-"                     Defering it can speed up import."
-msgstr ""
-"إذا كان الكائن يستخدم علاقات الأصل والفرع، يتم احتساب                     "
-"علاقة العنصر الأصلي والتابع على كل بند، مما يبطئ عملية الاستيراد."
-"                     ترحيل العلاقة يمكن أن يزيد من سرعة العملية."
 
 #. module: base_import
 #. openerp-web
@@ -570,6 +589,7 @@ msgid "Model"
 msgstr "الكائن"
 
 #. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
 msgid "Name"
 msgstr "الاسم"
@@ -623,6 +643,13 @@ msgstr "إعادة تحميل الملف"
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
 msgstr "كائن Res"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Resume"
+msgstr "استكمال الجلسة"
 
 #. module: base_import
 #. openerp-web
@@ -681,6 +708,13 @@ msgstr "مسافة"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Start at line"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Tab"
@@ -690,8 +724,8 @@ msgstr "تبويب"
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Test Import"
-msgstr "استيراد الاختبار"
+msgid "Test"
+msgstr "اختبار"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
@@ -781,10 +815,15 @@ msgstr "محدد النص:"
 #, python-format
 msgid ""
 "The first row\n"
-"                 contains the label of the column"
+"                         contains the label of the column"
 msgstr ""
-"العمود الأول\n"
-"                 يحتوي عنوان العمود"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "This file has been successfully imported up to line %d."
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -842,6 +881,15 @@ msgid "Value2"
 msgstr "القيمة2"
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and"
+"                             lines composed only of empty cells"
+msgstr ""
+
+#. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
@@ -849,6 +897,13 @@ msgid ""
 "for the reason."
 msgstr ""
 "لا يمكنك استيراد صور بروابط، راجع الأمر مع مديرك أو خدمة الدعم لمعرفة السبب."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "You can test or reload your file before resuming the import."
+msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

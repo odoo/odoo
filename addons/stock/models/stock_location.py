@@ -138,14 +138,14 @@ class Location(models.Model):
         putaway_location = self.env['stock.location']
         while current_location and not putaway_location:
             # Looking for a putaway about the product.
-            putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.product_id == product)
+            putaway_rules = current_location.putaway_rule_ids.filtered(lambda x: x.product_id == product)
             if putaway_rules:
                 putaway_location = putaway_rules[0].location_out_id
             # If not product putaway found, we're looking with category so.
             else:
                 categ = product.categ_id
                 while categ:
-                    putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
+                    putaway_rules = current_location.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
                     if putaway_rules:
                         putaway_location = putaway_rules[0].location_out_id
                         break
@@ -187,9 +187,21 @@ class Route(models.Model):
         'product.template', 'stock_route_product', 'route_id', 'product_id',
         'Products', copy=False, check_company=True)
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)
+    warehouse_domain_ids = fields.One2many('stock.warehouse', compute='_compute_warehouses')
     warehouse_ids = fields.Many2many(
         'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',
-        'Warehouses', copy=False, check_company=True)
+        'Warehouses', copy=False, domain="[('id', 'in', warehouse_domain_ids)]")
+
+    @api.depends('company_id')
+    def _compute_warehouses(self):
+        for loc in self:
+            domain = [('company_id', '=', loc.company_id.id)] if loc.company_id else []
+            loc.warehouse_domain_ids = self.env['stock.warehouse'].search(domain)
+
+    @api.onchange('company_id')
+    def _onchange_company(self):
+        if self.company_id:
+            self.warehouse_ids = self.warehouse_ids.filtered(lambda w: w.company_id == self.company_id)
 
     @api.onchange('warehouse_selectable')
     def _onchange_warehouse_selectable(self):

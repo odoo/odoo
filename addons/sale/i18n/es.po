@@ -34,17 +34,17 @@
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Pilar Marín <pilar@odooperu.pe>, 2019
-# Mariana Santos Romo <msn@odoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Miguel Orueta <mo@landoo.es>, 2019
+# Mariana Santos Romo <msn@odoo.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
@@ -53,17 +53,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
-msgid ""
-" Fiscal positions are used to adapt taxes and accounts for particular "
-"customers or sales orders/invoices. The default value comes from the "
-"customer."
-msgstr ""
-"Las posiciones fiscales se utilizan para adaptar impuestos y cuentas para "
-"determinados clientes o pedidos de cliente/facturas. El valor por defecto "
-"viene del cliente."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -164,7 +153,7 @@ msgid ""
 "                                <td colspan=\"4\"><i>${line.name}</i></td>\n"
 "                            % else:\n"
 "                                <td style=\"width: 150px;\">\n"
-"                                    <img src=\"/web/image/product.product/${line.product_id.id}/image_64\" width=\"64\" alt=\"Product image\"/>\n"
+"                                    <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                                </td>\n"
 "                                <td align=\"left\">${line.product_id.name}</td>\n"
 "                                <td>${line.product_uom_qty}</td>\n"
@@ -372,6 +361,16 @@ msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Su ventaja </b></small>"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Quotations:</small>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Revenues:</small>"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
@@ -524,16 +523,6 @@ msgstr "<strong>Fecha orden:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Quotation Date:</strong>"
 msgstr "<strong>Fecha de cotización:</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Quotations</strong>"
-msgstr "<strong>Cotizaciones</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Revenues</strong>"
-msgstr "<strong>Ingresos</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -976,7 +965,7 @@ msgstr "Seleccione cómo confirmar cotizaciones"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose your default customer payment method."
-msgstr ""
+msgstr "Elija su método de pago predeterminado del cliente."
 
 #. module: sale
 #. openerp-web
@@ -1001,14 +990,10 @@ msgid "Closed"
 msgstr "Cerrado"
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_attribute__type__color
+#: model:ir.model.fields,field_description:sale.field_product_attribute_value__html_color
+#: model:ir.model.fields.selection,name:sale.selection__product_attribute__display_type__color
 msgid "Color"
 msgstr "Color"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
-msgid "Commitment Date"
-msgstr "Fecha de compromiso"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_acquirer__so_reference_type
@@ -1183,7 +1168,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
-msgstr ""
+msgstr "Tarjeta de crédito (a través de Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1211,7 +1196,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Instrucciones de pago personalizadas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
@@ -1374,7 +1359,8 @@ msgid "Delivery Address"
 msgstr "Dirección de entrega"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_order_dates
+#: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
 msgstr "Fecha de entrega"
 
@@ -1452,6 +1438,9 @@ msgid "Display Name"
 msgstr "Nombre mostrado"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_attribute__display_type
+#: model:ir.model.fields,field_description:sale.field_product_attribute_value__display_type
+#: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__display_type
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
 msgid "Display Type"
 msgstr "Tipo de pantalla"
@@ -1565,6 +1554,11 @@ msgid "Expected Date"
 msgstr "Fecha prevista"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Expected:"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
 #: model:ir.model.fields,help:sale.field_product_template__expense_policy
 msgid ""
@@ -1611,6 +1605,14 @@ msgstr "Conector con FedEx"
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "Posición fiscal"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+msgid ""
+"Fiscal positions are used to adapt taxes and accounts for particular "
+"customers or sales orders/invoices.The default value comes from the "
+"customer."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -1663,12 +1665,12 @@ msgstr "Actividades futuras"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Generar enlace de pago de ventas"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Generar un enlace de pago"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1699,7 +1701,6 @@ msgid "Group By"
 msgstr "Agrupar por"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_attribute_value__html_color
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
 msgstr "Índice de color HTML"
@@ -1713,9 +1714,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_product_attribute_value__html_color
 #: model:ir.model.fields,help:sale.field_product_template_attribute_value__html_color
 msgid ""
-"Here you can set a\n"
-"        specific HTML color index (e.g. #ff0000) to display the color if the\n"
-"        attribute type is 'Color'."
+"Here you can set a specific HTML color index (e.g. #ff0000) to display the "
+"color if the attribute type is 'Color'."
 msgstr ""
 
 #. module: sale
@@ -1819,13 +1819,13 @@ msgstr ""
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "¡Se ha encontrado un token no válido! Adquiridor de tokens %s!=%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "¡Se ha encontrado un token no válido! Socio de token != %s"
 
 #. module: sale
 #: code:addons/sale/models/account_invoice.py:0
@@ -2117,16 +2117,6 @@ msgstr "¡Se ve muy bien!"
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Adjuntos principales"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Manage delivery dates from sales orders"
-msgstr "Gestionar fechas de entrega de pedidos de ventas"
-
-#. module: sale
-#: model:res.groups,name:sale.group_sale_order_dates
-msgid "Manage delivery dates from sales orders."
-msgstr "Gestionar fechas de entrega de pedidos de ventas."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2569,7 +2559,7 @@ msgstr "Otra Información"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr ""
+msgstr "Otro adquirente de pago"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -2805,7 +2795,7 @@ msgstr "Plantilla de producto"
 #. module: sale
 #: model:ir.model,name:sale.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "Valor de Atributo del Modelo de Producto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
@@ -2981,7 +2971,7 @@ msgid "Quotations and Sales"
 msgstr "Presupuestos y pedidos"
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_attribute__type__radio
+#: model:ir.model.fields.selection,name:sale.selection__product_attribute__display_type__radio
 msgid "Radio"
 msgstr "Radio"
 
@@ -3332,7 +3322,7 @@ msgid "Security Token"
 msgstr "Token de seguridad"
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_attribute__type__select
+#: model:ir.model.fields.selection,name:sale.selection__product_attribute__display_type__select
 msgid "Select"
 msgstr "Seleccionar"
 
@@ -3714,8 +3704,15 @@ msgstr "La cuenta analítica relacionada con un pedido de venta."
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid ""
-"The commitment date is sooner than the expected date.You may be unable to "
-"honor the commitment date."
+"The delivery date is sooner than the expected date.You may be unable to "
+"honor the delivery date."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_attribute__display_type
+#: model:ir.model.fields,help:sale.field_product_attribute_value__display_type
+#: model:ir.model.fields,help:sale.field_product_template_attribute_value__display_type
+msgid "The display type used in the Product Configurator."
 msgstr ""
 
 #. module: sale
@@ -3861,18 +3858,6 @@ msgstr ""
 " nombre en listado de correos electrónicos"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#: model:res.groups,comment:sale.group_sale_order_dates
-msgid ""
-"This option introduces extra fields in the sales order to easily schedule "
-"product deliveries on your own: expected date, commitment date, effective "
-"date."
-msgstr ""
-"Esta opción introduce campos adicionales en la orden de venta para programar"
-" fácilmente entregas de productos por su cuenta: fecha esperada, fecha de "
-"compromiso, fecha de vigencia."
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
@@ -3998,11 +3983,6 @@ msgstr "Seguimiento del Servicio"
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
 msgid "Transactions"
 msgstr "Transacciones"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_attribute__type
-msgid "Type"
-msgstr "Tipo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime
 from dateutil import relativedelta
 from itertools import groupby
@@ -290,11 +291,26 @@ class StockMove(models.Model):
         field will be used in `_action_done` in order to know if the move will need a backorder or
         an extra move.
         """
+        move_lines = self.env['stock.move.line']
         for move in self:
-            quantity_done = 0
-            for move_line in move._get_move_lines():
-                quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom, round=False)
-            move.quantity_done = quantity_done
+            move_lines |= move._get_move_lines()
+
+        data = self.env['stock.move.line'].read_group(
+            [('id', 'in', move_lines.ids)],
+            ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
+            lazy=False
+        )
+
+        rec = defaultdict(list)
+        for d in data:
+            rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
+
+        for move in self:
+            uom = move.product_uom
+            move.quantity_done = sum(
+                self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
+                for line_uom_id, qty in rec.get(move.id, [])
+            )
 
     def _quantity_done_set(self):
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`
@@ -645,8 +661,10 @@ class StockMove(models.Model):
             domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
-            rules = self.env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
-
+            if not self.env.context.get('force_company', False) and move.location_dest_id.company_id == self.env.user.company_id:
+                rules = self.env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
+            else:
+                rules = self.sudo().env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
             # Make sure it is not returning the return
             if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_id.id):
                 rules._run_push(move)
@@ -1078,6 +1096,7 @@ class StockMove(models.Model):
         # cache invalidation when actually reserving the move.
         reserved_availability = {move: move.reserved_availability for move in self}
         roundings = {move: move.product_id.uom_id.rounding for move in self}
+        move_line_vals_list = []
         for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available']):
             rounding = roundings[move]
             missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
@@ -1086,7 +1105,7 @@ class StockMove(models.Model):
                 # create the move line(s) but do not impact quants
                 if move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
                     for i in range(0, int(missing_reserved_quantity)):
-                        self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=1))
+                        move_line_vals_list.append(move._prepare_move_line_vals(quantity=1))
                 else:
                     to_update = move.move_line_ids.filtered(lambda ml: ml.product_uom_id == move.product_uom and
                                                             ml.location_id == move.location_id and
@@ -1098,7 +1117,7 @@ class StockMove(models.Model):
                     if to_update:
                         to_update[0].product_uom_qty += missing_reserved_uom_quantity
                     else:
-                        self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=missing_reserved_quantity))
+                        move_line_vals_list.append(move._prepare_move_line_vals(quantity=missing_reserved_quantity))
                 assigned_moves |= move
             else:
                 if not move.move_orig_ids:
@@ -1191,6 +1210,8 @@ class StockMove(models.Model):
                         partially_available_moves |= move
             if move.product_id.tracking == 'serial':
                 move._update_next_serial_count()
+
+        self.env['stock.move.line'].create(move_line_vals_list)
         partially_available_moves.write({'state': 'partially_available'})
         assigned_moves.write({'state': 'assigned'})
         self.mapped('picking_id')._check_entire_pack()

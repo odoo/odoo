@@ -7,19 +7,19 @@
 # Onii Onii <onii0223@yahoo.com>, 2019
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # Bayarkhuu Bataa, 2019
-# Otgonbayar.A <gobi.mn@gmail.com>, 2019
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
 # Tsog Tsog <ts.tsogoo@gmail.com>, 2019
 # nasaaskii <nasaaskii@gmail.com>, 2019
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# Otgonbayar.A <gobi.mn@gmail.com>, 2019
 # Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:26+0000\n"
+"POT-Creation-Date: 2019-10-01 12:08+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
@@ -28,16 +28,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"\n"
-"                The operation is refused as it would impact an already issued tax statement.\n"
-"                Please change the journal entry date or the tax lock date set in the settings (%s) to proceed\n"
-"            "
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -865,15 +855,10 @@ msgstr "Татварын тайлангийн тохируулганд нэг т
 #, python-format
 msgid ""
 "A user cannot have both Tax B2B and Tax B2C.\n"
-"Problematic user(s): %s\n"
 "You should go in General Settings, and choose to display Product Prices\n"
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"Хэрэглэгч B2B болон B2C татварын хамтад нь ашиглаж болохгүй.\n"
-"Татвар хэрхэн ажилдагыг ойлгоогүй бол: %s\n"
-"Та Ерөнхий тохиргоо руу очоод Барааны үнийг 'Татвар шингэсэн' эсвэл 'Татвар шингээгүй' -ын аль нэгээр нь харуулахыг тохируулна уу. \n"
-"(хэрэв та өмнө нь аль нэгийг нь сонгосон байсан бол нөгөөг нь сольж сонгоод үзээрэй)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1239,6 +1224,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+msgid "Account with Entries"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
 #: model:ir.cron,cron_name:account.ir_cron_auto_post_draft_entry
 #: model:ir.cron,name:account.ir_cron_auto_post_draft_entry
@@ -1319,14 +1309,14 @@ msgstr "Татварын тайлан тохируулга дахь дансны
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
-msgid "Accrual Adjusting Entry ({percent}% recognized) for invoice:"
+msgid "Accrual Adjusting Entry (%s recognized) for invoice: %s"
 msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
-msgid "Accrual Adjusting Entry ({percent}% recognized) for invoice: {name}"
+msgid "Accrual Adjusting Entry ({percent}% recognized) for invoice:"
 msgstr ""
 
 #. module: account
@@ -1603,6 +1593,12 @@ msgid "All accounts on the lines must be from the same type."
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "All entries are hashed."
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -1626,11 +1622,6 @@ msgid ""
 "statement."
 msgstr ""
 "Дансны хуулгыг хаах үед гүйлгээний мөрүүд бүгд баталгаажсан байх ёстой."
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_journal__update_posted
-msgid "Allow Cancelling Entries"
-msgstr "Бичилт цуцлахыг зөвшөөрөх"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__reconcile
@@ -1851,6 +1842,14 @@ msgstr ""
 "Дансны бүлэг нь дансууд журналд яаж хэрэглэгдэхийг тодорхойлдог.\n"
 "Дансны бүлгийн хойшлуулах арга нь жилийг хэрхэн өндөрлөхийг зааж өгдөг. \n"
 "Баланс тайлан, Орлого үр дүнгийн тайлан нь (ашиг/алдагдал эсвэл баланс тайлан) бүлгүүдийг хэрэглэнэ."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"An error occured when computing the inalterability. Impossible to get the "
+"unique previous posted journal entry."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2363,7 +2362,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__repartition_type
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__repartition_type
 msgid "Based On"
-msgstr ""
+msgstr "Суурилсан"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__partner
@@ -2581,10 +2580,16 @@ msgstr "Харагдаж болох уу?"
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox_footer
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form_multi
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Cancel"
 msgstr "Цуцлах"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Cancel Entry"
+msgstr "Гүйлгээ цуцлах"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
@@ -2607,13 +2612,9 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "Cannot create moves for different companies."
-msgstr "Өөр компаниудад хөдөлгөөн хийх боломжгүй"
-
-#. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Cannot create unbalanced journal entry. Ids: %s"
+msgid ""
+"Cannot create unbalanced journal entry. Ids: %s\n"
+"Differences debit - credit: %s"
 msgstr ""
 
 #. module: account
@@ -2760,16 +2761,6 @@ msgid "Category of Income Account"
 msgstr "Орлогын дансны ангилал"
 
 #. module: account
-#: model:ir.actions.server,name:account.action_accrual_entry
-msgid "Change Period"
-msgstr ""
-
-#. module: account
-#: model:ir.actions.act_window,name:account.account_accrual_accounting_wizard_action
-msgid "Change Period for the expense/revenue recognition"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_payment__writeoff_label
 msgid "Change label of the counterpart that will hold the payment difference"
 msgstr "Төлбөрийн зөрүүг хаахтай холбоотой товч тайлбар"
@@ -2894,15 +2885,6 @@ msgid ""
 msgstr ""
 "Үүнийг сонгосноор энэхүү журналд бүртгэгдэх нэхэмжлэл болон буцаалтууд нь "
 "дахин давтагдашгүй дугаарлалттай байх болно"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_journal__update_posted
-msgid ""
-"Check this box if you want to allow the cancellation the entries related to "
-"this journal or of the invoice related to this journal"
-msgstr ""
-"Хэрэв үүнийг сонговол уг журналд хуулбар гүйлгээ нэхэмжлэлийг бичих "
-"боломжтой болно."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -3127,6 +3109,7 @@ msgstr "Харилцагч бүхий компаниуд"
 #: model:ir.model.fields,field_description:account.field_account_payment_term__company_id
 #: model:ir.model.fields,field_description:account.field_account_print_journal__company_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__company_id
+#: model:ir.model.fields,field_description:account.field_account_root__company_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__company_id
@@ -3219,6 +3202,11 @@ msgid "Configuration"
 msgstr "Тохиргоо"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "Configuration review"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 msgid "Configure"
@@ -3289,6 +3277,12 @@ msgid "Control-Access"
 msgstr "Хандалтын хяналт"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Corrupted data on journal entry with id %s."
+msgstr ""
+
+#. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
 msgstr "Борлуулалтын өртөг"
@@ -3317,6 +3311,7 @@ msgstr "Харьцсан дүн"
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__country_id
+#: model:ir.model.fields,field_description:account.field_account_move_line__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__country_id
@@ -3342,10 +3337,25 @@ msgid "Country for which this tag is available, when applied on taxes."
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "Coverage"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "Create"
 msgstr "Үүсгэх"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_accrual_entry
+msgid "Create Accrual Entry"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_accrual_accounting_wizard_action
+msgid "Create Accrual Entry for the expense/revenue recognition"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
@@ -3645,12 +3655,17 @@ msgstr "Кредит гүйлгээ"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
-#: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Credit Note"
 msgstr "Буцаалт"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Credit Note Created"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence_id
@@ -3868,6 +3883,16 @@ msgstr "ХӨЛӨГ ОНГОЦОН ДЭЭР НИЙЛҮҮЛСЭН"
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
 msgid "DOWN"
 msgstr "ДОТОГШ"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_check_hash_integrity
+msgid "Data Inalterability Check"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "Data consistency check"
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -4122,6 +4147,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #: model:ir.model.fields,field_description:account.field_account_account_type__note
 #: model_terms:ir.ui.view,arch_db:account.view_account_type_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Description"
 msgstr "Тайлбар"
@@ -4256,6 +4282,7 @@ msgstr "Хөнгөлөлт (%)"
 #: model:ir.model.fields,field_description:account.field_account_unreconcile__display_name
 #: model:ir.model.fields,field_description:account.field_cash_box_out__display_name
 #: model:ir.model.fields,field_description:account.field_report_account_report_agedpartnerbalance__display_name
+#: model:ir.model.fields,field_description:account.field_report_account_report_hash_integrity__display_name
 #: model:ir.model.fields,field_description:account.field_report_account_report_invoice_with_payments__display_name
 #: model:ir.model.fields,field_description:account.field_report_account_report_journal__display_name
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__display_name
@@ -4324,6 +4351,24 @@ msgstr "Ноорог"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Draft Bill"
+msgstr "Ноорог тооцоо"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Draft Credit Note"
+msgstr "Ноорог буцаалтын нэхэмжлэл"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Draft Entry"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
@@ -4340,6 +4385,24 @@ msgstr "Ноорог нэхэмжлэлүүд"
 #, python-format
 msgid "Draft Payment"
 msgstr "Ноорог Талбар"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Draft Purchase Receipt"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Draft Sales Receipt"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Draft Vendor Credit Note"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
@@ -4398,12 +4461,9 @@ msgstr "Хуулбарлан үүсгэх"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
+"Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n"
+"%s"
 msgstr ""
-"Нийлүүлэгчийн лавлагааны давхцал үүслээ. Та магадгүй нийлүүлэгчийн нэхэмжлэл"
-" эсвэл буцаалтын ижил лавлагааны дугаарыг хоёр удаа ашиглах гэж оролдож "
-"байна."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -4512,6 +4572,12 @@ msgid "Entries Sorted by"
 msgstr "Гүйлгээг эрэмбэлэх нь"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Entries are hashed from %s (%s)"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Entries are not from the same account."
@@ -4539,9 +4605,12 @@ msgid "Entry lines"
 msgstr "Гүйлгээний мөр"
 
 #. module: account
+#. openerp-web
 #: model:account.account.type,name:account.data_account_type_equity
+#: code:addons/account/static/src/js/account_selection.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__internal_group__equity
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
 msgid "Equity"
 msgstr "Эздийн өмч"
 
@@ -4602,8 +4671,11 @@ msgid "Expects a Chart of Accounts"
 msgstr "Дансны мод тохируулагдаагүй"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__internal_group__expense
 #: model:ir.model.fields.selection,name:account.selection__account_accrual_accounting_wizard__account_type__expense
+#, python-format
 msgid "Expense"
 msgstr "Зардал"
 
@@ -4712,6 +4784,16 @@ msgstr "Нягтлан бодох бүртгэл"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
 msgid "Financial Tags"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "First Entry"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "First Hash"
 msgstr ""
 
 #. module: account
@@ -5044,6 +5126,11 @@ msgid "Generic Statements"
 msgstr "Нийтлэг тайлангууд"
 
 #. module: account
+#: model:ir.model,name:account.model_report_account_report_hash_integrity
+msgid "Get hash integrity result as PDF."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
 msgstr "Зарим онцгой харилцагчид нэхэмжлэл бүртгэх үед анхааруулга өгөх"
@@ -5174,6 +5261,16 @@ msgid "Has all required arguments"
 msgstr "QR код шаардлагатай"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "Hash Integrity Result -"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.report,name:account.action_report_account_hash_integrity
+msgid "Hash integrity result PDF"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__hide_payment_method
 msgid "Hide Payment Method"
 msgstr "Төлбөрийн аргыг нуух"
@@ -5248,6 +5345,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_unreconcile__id
 #: model:ir.model.fields,field_description:account.field_cash_box_out__id
 #: model:ir.model.fields,field_description:account.field_report_account_report_agedpartnerbalance__id
+#: model:ir.model.fields,field_description:account.field_report_account_report_hash_integrity__id
 #: model:ir.model.fields,field_description:account.field_report_account_report_invoice_with_payments__id
 #: model:ir.model.fields,field_description:account.field_report_account_report_journal__id
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__id
@@ -5377,6 +5475,14 @@ msgstr ""
 msgid ""
 "If this checkbox is ticked, this entry will be automatically posted at its "
 "date."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_journal__restrict_mode_hash_table
+#: model:ir.model.fields,help:account.field_account_move__restrict_mode_hash_table
+msgid ""
+"If ticked, the accounting entry or invoice receives a hash as soon as it is "
+"posted and cannot be modified anymore."
 msgstr ""
 
 #. module: account
@@ -5519,6 +5625,21 @@ msgid "Inactive"
 msgstr "Идэвхигүй"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__inalterable_hash
+msgid "Inalterability Hash"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "Inalterability check"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
+msgid "Inalteralbility No Gap Sequence #"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__inbound
 msgid "Inbound"
 msgstr "Ирж буй"
@@ -5535,9 +5656,12 @@ msgid "Included in Price"
 msgstr "Үнийн дүнд шингэсэн"
 
 #. module: account
+#. openerp-web
 #: model:account.account.type,name:account.data_account_type_revenue
+#: code:addons/account/static/src/js/account_selection.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__internal_group__income
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
 msgid "Income"
 msgstr "Орлого"
 
@@ -5731,8 +5855,10 @@ msgid "Invoice #"
 msgstr "Нэхэмжлэл #"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
 #: model:mail.message.subtype,description:account.mt_invoice_created
 #: model:mail.message.subtype,name:account.mt_invoice_created
+#, python-format
 msgid "Invoice Created"
 msgstr "Нэхэмжлэл үүссэн огноо"
 
@@ -6057,6 +6183,7 @@ msgstr "1-р сар"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__journal_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__linked_journal_id
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__journal_id
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -6336,6 +6463,16 @@ msgid "Label on Invoices"
 msgstr "Нэхэмжлэл дээрх тэмдэглэгээ"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "Last Entry"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "Last Hash"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account____last_update
 #: model:ir.model.fields,field_description:account.field_account_account_tag____last_update
 #: model:ir.model.fields,field_description:account.field_account_account_template____last_update
@@ -6389,6 +6526,7 @@ msgstr "Нэхэмжлэл дээрх тэмдэглэгээ"
 #: model:ir.model.fields,field_description:account.field_account_unreconcile____last_update
 #: model:ir.model.fields,field_description:account.field_cash_box_out____last_update
 #: model:ir.model.fields,field_description:account.field_report_account_report_agedpartnerbalance____last_update
+#: model:ir.model.fields,field_description:account.field_report_account_report_hash_integrity____last_update
 #: model:ir.model.fields,field_description:account.field_report_account_report_invoice_with_payments____last_update
 #: model:ir.model.fields,field_description:account.field_report_account_report_journal____last_update
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard____last_update
@@ -6648,6 +6786,12 @@ msgstr "Түгжих огноо"
 #: model:ir.model.fields,field_description:account.field_res_company__period_lock_date
 msgid "Lock Date for Non-Advisers"
 msgstr "Удирдлагаас бусдад түгжих огноо"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
+#: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
+msgid "Lock Posted Entries with Hash"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_log
@@ -6987,12 +7131,6 @@ msgid "Move Reconciled"
 msgstr "Тулгагдсан гүйлгээ"
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Move name (id): %s (%s)"
-msgstr "Гүйлгээний нэр (id): %s (%s)"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Multi-Currencies"
 msgstr "Олон валют"
@@ -7205,6 +7343,7 @@ msgstr "Дуусаагүй"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_note
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_note
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Note"
 msgstr "Тэмдэглэл"
@@ -7408,12 +7547,6 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Only cancelled journal entries can be reset to draft."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Only invoices could be printed."
@@ -7538,6 +7671,12 @@ msgstr ""
 "(%s) оногдсоноос хойш та үүнийг дахин ямар нэг журналын бичилттэй тулгалт "
 "хийх боломжгүй. Эс бөгөөс дугаарлалтын цоорхой үүснэ. Хэрэв та энэ гүйлгээг "
 "цуцлахыг хүсвэл ердөө эсрэг гүйлгээ гараар бүртгэхэд болно."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8324,6 +8463,7 @@ msgstr "Нийлүүлэгчиддээ төлөх төлбөрийн чекий�
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Product"
 msgstr "Бараа"
 
@@ -8345,12 +8485,11 @@ msgid "Product Template"
 msgstr "Барааны загвар"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.product_product_action
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
 #: model:ir.actions.act_window,name:account.product_product_action_sellable
 #: model:ir.ui.menu,name:account.product_product_menu_purchasable
 #: model:ir.ui.menu,name:account.product_product_menu_sellable
-#: model_terms:ir.ui.view,arch_db:account.product_product_view_tree
+#: model_terms:ir.ui.view,arch_db:account.product_template_view_tree
 msgid "Products"
 msgstr "Бараа"
 
@@ -8405,11 +8544,15 @@ msgid "Purchase"
 msgstr "Худалдан авалт"
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_move__type__in_receipt
-#, python-format
 msgid "Purchase Receipt"
 msgstr "Худалдан авалтын баримт"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Purchase Receipt Created"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8446,6 +8589,11 @@ msgstr "QIF импорт"
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
 msgstr "Тоо хэмжээ"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Quantity:"
+msgstr "Тоо хэмжээ:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -8630,6 +8778,12 @@ msgid "Refund"
 msgstr "Захиалагчийн буцаалт"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Refund Created"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Refund Date"
 msgstr "Төлбөр буцаах Огноо"
@@ -8770,6 +8924,21 @@ msgid "Res Partner Bank"
 msgstr "Харилцагчийн банкны данс"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "Reset To Draft"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Reset to Draft"
+msgstr "Ноорог болгох"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
+msgid "Reset to New"
+msgstr "Шинэ болгох"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -8895,6 +9064,11 @@ msgid "Reverse entry"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
+msgid "Revert reconciliation"
+msgstr "Тулгалт салгах"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Review"
 msgstr "Хянах"
@@ -8987,11 +9161,15 @@ msgid "Sales Person"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_move__type__out_receipt
-#, python-format
 msgid "Sales Receipt"
 msgstr "Борлуулалтын баримт"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Sales Receipt Created"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
@@ -9194,8 +9372,20 @@ msgstr "Хоёрдох хааж бичих дүн"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Section"
 msgstr "Бүлэг"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
+msgid "Secure Sequence"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid "Securisation of %s - %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__access_token
@@ -9367,9 +9557,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
-msgid "Set To Draft"
-msgstr "Ноороглох"
+#: model:ir.model.fields,help:account.field_account_journal__secure_sequence_id
+msgid "Sequence to use to ensure the securisation of data"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -9715,6 +9905,11 @@ msgid "Step Completed!"
 msgstr "Алхам дууссан!"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__string_to_hash
+msgid "String To Hash"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subject
 msgid "Subject"
 msgstr "Гарчиг"
@@ -9936,6 +10131,11 @@ msgstr "Татвар үнийн дүнд шингэсэн"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
 msgid "Tax Lock Date"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
+msgid "Tax Lock Date Message"
 msgstr ""
 
 #. module: account
@@ -10239,6 +10439,13 @@ msgstr ""
 "хүртэл тулгалт хийх шаардлагатайг илэрхийлнэ."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_move__tax_lock_date_message
+msgid ""
+"Technical field used to display a message when the invoice's accounting date"
+" is prior of the tax lock date."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_has_matching_suspense_amount
 msgid ""
 "Technical field used to display an alert on invoices if there is at least a "
@@ -10250,6 +10457,11 @@ msgstr ""
 msgid ""
 "Technical field used to exclude some lines from the invoice_line_ids tab in "
 "the form view."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_move__user_id
+msgid "Technical field used to fit the generic behavior in mail templates."
 msgstr ""
 
 #. module: account
@@ -10417,6 +10629,14 @@ msgstr ""
 #, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "%s (%s) данс ашиглагдахаа больсон."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The accounting date is prior to the tax lock date which is set on %s. Then, "
+"this will be moved to the next available one during the invoice validation."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -10675,6 +10895,13 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid ""
+"The hash chain is compliant: it is not possible to alter the\n"
+"                                            data without breaking the hash chain for subsequent parts."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
@@ -10716,26 +10943,9 @@ msgstr ""
 "бүрэн төлөгдөх учиртай."
 
 #. module: account
-#: code:addons/account/models/company.py:0
-#, python-format
-msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
-"Санхүүгийн удирдлагын хэмжээнд огноо түгжих үйлдэл нь буцаах цуцлах "
-"боломжгүй үйлдэл юм."
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
 msgid "The move of this entry line."
 msgstr "Журналын бичилтийн харьяалагдах ажил гүйлгээ"
-
-#. module: account
-#: code:addons/account/models/company.py:0
-#, python-format
-msgid ""
-"The new lock date for advisors must be set after the previous lock date."
-msgstr ""
-"Санхүүгийн удирдлагын хэмжээнд түгжих огноо нь өмнө түгжсэн огнооноос хойшхи"
-" огноо байх ёстой."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence_number_next
@@ -10756,12 +10966,11 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
-#: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
 "The operation is refused as it would impact an already issued tax statement."
 " Please change the journal entry date or the tax lock date set in the "
-"settings ({}) to proceed"
+"settings (%s) to proceed."
 msgstr ""
 
 #. module: account
@@ -11065,6 +11274,14 @@ msgid "There is nothing to reconcile."
 msgstr "Тулгах зүйл алга."
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid ""
+"There isn't any journal entry flagged for data inalterability yet for this "
+"journal."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
 msgid "There was an error processing this page."
 msgstr "Энэ хуудсыг харуулахад алдаа үүслээ."
@@ -11226,6 +11443,12 @@ msgid ""
 msgstr ""
 "Энэ журналд аль хэдийнээ гүйлгээ бүртгэгдсэн тул журналын кодыг солих "
 "боломжгүй.й"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "This journal is not in strict mode."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -11572,6 +11795,11 @@ msgid "Unit Price"
 msgstr "Нэгж үнэ"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Unit Price:"
+msgstr "Нэгж үнэ"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
 msgid "Unit of Measure"
@@ -11719,6 +11947,11 @@ msgid "Use template"
 msgstr "Загвар ашиглах"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__used
+msgid "Used"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_type__include_initial_balance
 msgid ""
 "Used in reports to know if we should consider journal items from the "
@@ -11835,14 +12068,18 @@ msgid "Vendor"
 msgstr "Нийлүүлэгч"
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_vendor_bill_id
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__type__in_invoice
 #: model:ir.model.fields.selection,name:account.selection__account_move__type__in_invoice
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, python-format
 msgid "Vendor Bill"
 msgstr "Нийлүүлэгчийн нэхэмжлэл"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Vendor Bill Created"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -11852,7 +12089,6 @@ msgid "Vendor Bills"
 msgstr "Нийлүүлэгчийн нэхэмжлэл"
 
 #. module: account
-#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__type__in_refund
 #: model:ir.model.fields.selection,name:account.selection__account_move__type__in_refund
@@ -12096,6 +12332,12 @@ msgid "You can only change the period for items that are not yet reconciled."
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/account_accrual_accounting.py:0
+#, python-format
+msgid "You can only change the period for posted journal items."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid ""
@@ -12139,8 +12381,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot add/modify entries prior to and inclusive of the lock date %s"
-msgstr "Түгжсэн %s огнооноос урагших бичилтийг засах/нэмэх боломжгүй."
+"You cannot add/modify entries prior to and inclusive of the lock date %s."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12174,21 +12416,24 @@ msgstr ""
 "боломжгүй."
 
 #. module: account
-#: code:addons/account/models/company.py:0
+#: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot define stricter conditions on advisors than on users. Please make"
-" sure that the lock date on advisor is set before the lock date for users."
+"You cannot create a move already in the posted state. Please create a draft "
+"move and post it after."
 msgstr ""
-"Та санхүүгийн удирдлах эрхэнд санхүүгийн хэрэглэгч эрхээс илүү хатуу эрх "
-"тохируулж болохгүй. Удирдлын хэмжээнд түгжих огноо нь хэрэглэгчийн хэмжээнд "
-"түгжих огноогоос өмнөх  огноо байх ёстойг анхаарна уу."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "You cannot delete a payment that is already posted."
 msgstr "Та батлагдсан төлбөрийг устгах боломжгүй."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an entry which has been posted once."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12205,21 +12450,25 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n"
-"%s."
+"You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
+"Journal Entry (id): %s (%s)"
 msgstr ""
-"Батлагдсан ажил гүйлгээ дээр энэ засварыг хийх боломжгүй. Харин та тайланд хамааралгүй зарим талбарыг л засварлах боломжтой. Мөн та энэ гүйлгээг цуцлахын тулд эсрэг гүйлгээ бүртгэж залруулж болно.\n"
-"%s."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot edit the following fields due to restrict mode being activated on"
+" the journal: %s."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
-"%s."
+"You cannot edit the journal of an account move if it has been posted once."
 msgstr ""
-"Тулгагдсан гүйлгээнд ийм засвар хийх боломжгүй. Зөвхөн тайланд хамааралгүй зарим талбаруудыг өөрчлөх боломжтой эсвэл тулгалтыг арилгах хэрэгтэй.\n"
-"%s."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12242,16 +12491,6 @@ msgstr ""
 "боломжгүй. (данс: %s)"
 
 #. module: account
-#: code:addons/account/models/company.py:0
-#, python-format
-msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" lock date for advisors is not set after the last day of the previous month."
-msgstr ""
-"Та сарын өдөр өнгөрч дуусаагүй байхад мөчлөг түгжих боломжгүй. Сүүлийн сарын"
-" хамгийн сүүлийн өдрөөс хойшхи огноогоор түгжиж болохгүйг анхаарна уу."
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot modify a journal entry linked to a posted payment."
@@ -12263,11 +12502,33 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot modify a posted entry of this journal.\n"
-"First you should set the journal to allow cancelling entries."
+"You cannot modify a posted entry of this journal because it is in strict "
+"mode."
 msgstr ""
-"Хэрэв энэ журнал бүртгэгдсэн гүйлгээ нь батлагдсан байвал засварлах боломжгүй.\n"
-"Эхлээд журналыг цуцлахыг зөвшөөрдөг болгох хэрэгтэй."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You cannot modify the field %s of a journal that already has accounting "
+"entries."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot modify the taxes related to a posted journal item, you should "
+"reset the journal entry to draft to do so."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot overwrite the values ensuring the inalterability of the "
+"accounting."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12319,6 +12580,18 @@ msgid ""
 msgstr ""
 "Та захиалагч эсвэл нийлүүлэгч дээр тохируулагдсан дансыг устгах/идэвхигүй "
 "болгох боломжгүй."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot reset to draft a tax cash basis journal entry."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot reset to draft an exchange difference journal entry."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12622,13 +12895,6 @@ msgstr "гүйлгээний мөрүүд"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
 msgid "technical field for widget tax-group-custom-field"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_move__amount_by_group
-msgid ""
-"technical field used in report and in invoice form view with a widget to "
-"display the detail of taxes (grouped by tax group) under the subtotal"
 msgstr ""
 
 #. module: account

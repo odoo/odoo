@@ -5,8 +5,8 @@
 # Translators:
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2019
 # tanerhasret <tanerhasret@gmail.com>, 2019
-# Hakan ıı, 2019
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
+# Hakan ıı, 2019
 # Metin Akın <aknmetin@gmail.com>, 2019
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # Saban Yildiz <sabany@projetgrup.com>, 2019
@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -39,14 +39,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
-msgid ""
-" Fiscal positions are used to adapt taxes and accounts for particular "
-"customers or sales orders/invoices. The default value comes from the "
-"customer."
-msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -147,7 +139,7 @@ msgid ""
 "                                <td colspan=\"4\"><i>${line.name}</i></td>\n"
 "                            % else:\n"
 "                                <td style=\"width: 150px;\">\n"
-"                                    <img src=\"/web/image/product.product/${line.product_id.id}/image_64\" width=\"64\" alt=\"Product image\"/>\n"
+"                                    <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                                </td>\n"
 "                                <td align=\"left\">${line.product_id.name}</td>\n"
 "                                <td>${line.product_uom_qty}</td>\n"
@@ -278,7 +270,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-clock-o\" aria-label=\"Dates\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Dates\" title=\"Dates\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -351,12 +343,22 @@ msgstr "<i class=\"fa fa-times\"/> Reddet"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">This offer expires in</b></small>"
-msgstr "<small><b class=\"text-muted\">Bu teklifin süresi doldu</b></small>"
+msgstr "<small><b class=\"text-muted\">Bu teklifin süresi dolacak</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Avantajınız</b></small>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Quotations:</small>"
+msgstr "<small>Teklif:</small>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Revenues:</small>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -403,6 +405,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                                <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Müşteri</span>\n"
+"                                <span class=\"o_stat_text\">Görünümü</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -440,7 +444,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>İnd.%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -470,7 +474,7 @@ msgstr "<strong class=\"d-block mb-1\">Faturalar</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Sevkiyat Adresi:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -481,7 +485,7 @@ msgstr "<strong class=\"mr16\">Ara toplam</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">Satış Temsilcisi</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -511,25 +515,15 @@ msgid "<strong>Quotation Date:</strong>"
 msgstr "<strong>Teklif Tarihi:</strong>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Quotations</strong>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Revenues</strong>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
-msgstr "<strong>Satış Personeli:</strong>"
+msgstr "<strong>Satış Temsilcisi:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong>Sevkiyat Adresi:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -948,7 +942,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose your default customer payment method."
-msgstr ""
+msgstr "Varsayılan müşteri ödeme yönteminizi seçin."
 
 #. module: sale
 #. openerp-web
@@ -973,14 +967,10 @@ msgid "Closed"
 msgstr "Kapanma"
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_attribute__type__color
+#: model:ir.model.fields,field_description:sale.field_product_attribute_value__html_color
+#: model:ir.model.fields.selection,name:sale.selection__product_attribute__display_type__color
 msgid "Color"
 msgstr "Renk"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
-msgid "Commitment Date"
-msgstr "Taahhüt Tarihi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_acquirer__so_reference_type
@@ -1343,7 +1333,8 @@ msgid "Delivery Address"
 msgstr "Teslim Adresi"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_order_dates
+#: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
 msgstr "Teslim Tarihi"
 
@@ -1416,6 +1407,9 @@ msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_attribute__display_type
+#: model:ir.model.fields,field_description:sale.field_product_attribute_value__display_type
+#: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__display_type
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
 msgid "Display Type"
 msgstr "Görünüm Türü"
@@ -1529,6 +1523,11 @@ msgid "Expected Date"
 msgstr "Beklenen Tarih"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Expected:"
+msgstr "Beklenen:"
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
 #: model:ir.model.fields,help:sale.field_product_template__expense_policy
 msgid ""
@@ -1540,7 +1539,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
-msgstr ""
+msgstr "Geçerlilik"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1575,6 +1574,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "Mali Koşul"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+msgid ""
+"Fiscal positions are used to adapt taxes and accounts for particular "
+"customers or sales orders/invoices.The default value comes from the "
+"customer."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -1663,7 +1670,6 @@ msgid "Group By"
 msgstr "Grupla"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_attribute_value__html_color
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
 msgstr "HTML Renk İndeksi"
@@ -1677,9 +1683,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_product_attribute_value__html_color
 #: model:ir.model.fields,help:sale.field_product_template_attribute_value__html_color
 msgid ""
-"Here you can set a\n"
-"        specific HTML color index (e.g. #ff0000) to display the color if the\n"
-"        attribute type is 'Color'."
+"Here you can set a specific HTML color index (e.g. #ff0000) to display the "
+"color if the attribute type is 'Color'."
 msgstr ""
 
 #. module: sale
@@ -2081,16 +2086,6 @@ msgstr "Harika görünüyor!"
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Ana Ek"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Manage delivery dates from sales orders"
-msgstr "Teslimat tarihlerini satış siparişlerinden yönetin"
-
-#. module: sale
-#: model:res.groups,name:sale.group_sale_order_dates
-msgid "Manage delivery dates from sales orders."
-msgstr "Teslimat tarihlerini satış siparişlerinden yönetin"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2527,7 +2522,7 @@ msgstr "Diğer Bilgiler"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr ""
+msgstr "Diğer ödeme alıcısı"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -2625,7 +2620,7 @@ msgstr "Ödeme İşlemi"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Payment method"
-msgstr ""
+msgstr "Ödeme Yöntemi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2939,7 +2934,7 @@ msgid "Quotations and Sales"
 msgstr "Teklifler ve Siparişler"
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_attribute__type__radio
+#: model:ir.model.fields.selection,name:sale.selection__product_attribute__display_type__radio
 msgid "Radio"
 msgstr "Radio"
 
@@ -3289,7 +3284,7 @@ msgid "Security Token"
 msgstr "Güvenlik Token"
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_attribute__type__select
+#: model:ir.model.fields.selection,name:sale.selection__product_attribute__display_type__select
 msgid "Select"
 msgstr "Seç"
 
@@ -3357,7 +3352,7 @@ msgstr "Müşteri portalını test etmek için bir teklif gönderin."
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_sample_quotation
 msgid "Send a sample quotation"
-msgstr ""
+msgstr "Örnek bir teklif gönderin."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3671,8 +3666,15 @@ msgstr "Satış siparişi ile ilişkili analitik hesap"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid ""
-"The commitment date is sooner than the expected date.You may be unable to "
-"honor the commitment date."
+"The delivery date is sooner than the expected date.You may be unable to "
+"honor the delivery date."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_attribute__display_type
+#: model:ir.model.fields,help:sale.field_product_attribute_value__display_type
+#: model:ir.model.fields,help:sale.field_product_template_attribute_value__display_type
+msgid "The display type used in the Product Configurator."
 msgstr ""
 
 #. module: sale
@@ -3813,15 +3815,6 @@ msgstr ""
 "e-posta listesi adı"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#: model:res.groups,comment:sale.group_sale_order_dates
-msgid ""
-"This option introduces extra fields in the sales order to easily schedule "
-"product deliveries on your own: expected date, commitment date, effective "
-"date."
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
@@ -3946,11 +3939,6 @@ msgid "Transactions"
 msgstr "İşlemler"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_attribute__type
-msgid "Type"
-msgstr "Tür"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
 msgid "Type Name"
 msgstr ""
@@ -4010,7 +3998,7 @@ msgstr "Ölçü Birimi"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Ölçü Birimi Kategorileri"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -4106,7 +4094,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "View Quotation"
-msgstr ""
+msgstr "Teklifi Görüntüle"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form

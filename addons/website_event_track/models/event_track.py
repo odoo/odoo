@@ -60,7 +60,7 @@ class Track(models.Model):
     active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
-    partner_id = fields.Many2one('res.partner', 'Partner')
+    partner_id = fields.Many2one('res.partner', 'Speaker')
     partner_name = fields.Char('Name')
     partner_email = fields.Char('Email')
     partner_phone = fields.Char('Phone')
@@ -111,8 +111,11 @@ class Track(models.Model):
     @api.depends('date', 'duration')
     def _compute_end_date(self):
         for track in self:
-            delta = timedelta(minutes=60 * track.duration)
-            track.date_end = track.date + delta
+            if track.date:
+                delta = timedelta(minutes=60 * track.duration)
+                track.date_end = track.date + delta
+            else:
+                track.date_end = False
 
     @api.model
     def create(self, vals):

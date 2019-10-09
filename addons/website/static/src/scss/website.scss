@@ -362,9 +362,11 @@ table.table_desc tr td {
 // Title
 .s_title {
     .s_title_boxed {
-        display: inline-block;
-        padding: $grid-gutter-width;
-        border: 1px solid;
+        > * {
+            display: inline-block;
+            padding: $grid-gutter-width;
+            border: 1px solid;
+        }
     }
     .s_title_lines {
         overflow: hidden;
@@ -1125,6 +1127,8 @@ table.table_desc tr td {
     width: 100%;
     padding: 0;
     margin-top: 0;
+    border-radius: 0;
+    background-clip: unset; // Remove the 1px gap introduced by BS4
 
     .container, .container-fluid {
         // Need to reforce those because they are removed since its a container
@@ -1219,4 +1223,17 @@ table.table_desc tr td {
 // TODO: Will be handled properly in master/saas-12.2, temp fix for website_event.registration_attendee_details
 .modal-footer > .float-left {
     margin-right: auto;
+}
+
+// CoverProperties
+.o_record_cover_container {
+    position: relative;
+
+    .o_record_cover_component {
+        @include o-position-absolute(0, 0, 0, 0);
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
 }

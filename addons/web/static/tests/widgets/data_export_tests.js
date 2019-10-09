@@ -14,12 +14,22 @@ QUnit.module('widgets', {
             partner: {
                 fields: {
                     foo: {string: "Foo", type: "char"},
+                    bar: {string: "Bar", type: "char"},
                 },
                 records: [
                     {
                         id: 1,
                         foo: "yop",
-                    },
+                        bar: "bar-blup",
+                    }, {
+                        id: 2,
+                        foo: "yop",
+                        bar: "bar-yop",
+                    }, {
+                        id: 3,
+                        foo: "blup",
+                        bar: "bar-blup",
+                    }
                 ]
             },
             'ir.exports': {
@@ -239,7 +249,7 @@ QUnit.module('widgets', {
             },
         });
         // Open the export modal
-        await testUtils.dom.click(list.$('.o_data_row .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
         await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
         await testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
 
@@ -255,6 +265,108 @@ QUnit.module('widgets', {
         // Remove field
         await testUtils.dom.click($('.modal .o_fields_list li:first .o_remove_field'));
         assert.strictEqual($('.modal .o_fields_list li').length, 1, "There should be only one field in list");
+        list.destroy();
+    });
+
+    QUnit.test('Direct export button invisible', async function (assert) {
+        assert.expect(1)
+
+        let list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `<tree export_xlsx="0"><field name="foo"/></tree>`,
+        });
+        assert.containsNone(list, '.o_list_export_xlsx')
+        list.destroy();
+    });
+
+    QUnit.test('Direct export list ', async function (assert) {
+        assert.expect(2)
+
+        let list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <tree export_xlsx="1">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                </tree>`,
+            domain: [['bar', '!=', 'glou']],
+            session: {
+                get_file(args) {
+                    let data = JSON.parse(args.data.data);
+                    assert.strictEqual(args.url, '/web/export/xlsx', "should call get_file with the correct url");
+                    assert.deepEqual(data, {
+                        context: {},
+                        model: 'partner',
+                        domain: [['bar', '!=', 'glou']],
+                        groupby: [],
+                        ids: false,
+                        import_compat: false,
+                        fields: [{
+                            name: 'foo',
+                            label: 'Foo',
+                        }, {
+                            name: 'bar',
+                            label: 'Bar',
+                        }]
+                    }, "should be called with correct params")
+                    args.complete();
+                },
+            },
+        });
+
+        // select a record => should not be taken into account
+        await testUtils.dom.click(list.$('.o_data_row .o_list_record_selector input')[0]);
+        // Download
+        await testUtils.dom.click(list.$buttons.find('.o_list_export_xlsx'));
+
+        list.destroy();
+    });
+
+    QUnit.test('Direct export grouped list ', async function (assert) {
+        assert.expect(2)
+
+        let list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            debug: true,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                </tree>`,
+            groupBy: ['foo', 'bar'],
+            domain: [['bar', '!=', 'glou']],
+            session: {
+                get_file(args) {
+                    let data = JSON.parse(args.data.data);
+                    assert.strictEqual(args.url, '/web/export/xlsx', "should call get_file with the correct url");
+                    assert.deepEqual(data, {
+                        context: {},
+                        model: 'partner',
+                        domain: [['bar', '!=', 'glou']],
+                        groupby: ['foo', 'bar'],
+                        ids: false,
+                        import_compat: false,
+                        fields: [{
+                            name: 'foo',
+                            label: 'Foo',
+                        }, {
+                            name: 'bar',
+                            label: 'Bar',
+                        }]
+                    }, "should be called with correct params")
+                    args.complete();
+                },
+            },
+        });
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_export_xlsx'));
+
         list.destroy();
     });
 });

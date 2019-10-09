@@ -280,6 +280,8 @@ var Discuss = AbstractAction.extend({
             this.options.channelQuickSearchThreshold = 20;
         }
 
+        this._isMessagingReady = this.call('mail_service', 'isReady');
+        this._isStarted = false;
         this._threadsScrolltop = {};
         this._composerStates = {};
         this._defaultThreadID = this.options.active_id ||
@@ -291,68 +293,20 @@ var Discuss = AbstractAction.extend({
             this._updateThreads.bind(this), 100, { leading: false });
 
         this.controlPanelParams.modelName = 'mail.message';
-    },
-    /**
-     * @override
-     */
-    willStart: function () {
-        return Promise.all([this._super(), this.call('mail_service', 'isReady')]);
+        this.call('mail_service', 'getMailBus').on('messaging_ready', this, this._onMessagingReady);
     },
     /**
      * @override
      */
     start: function () {
         var self = this;
-
-        this._basicComposer = new BasicComposer(this, {
-            mentionPartnersRestricted: true,
-            showTyping: true,
+        this._isStarted = true;
+        return this._super.apply(this, arguments).then(function () {
+            if (!self._isMessagingReady) {
+                return;
+            }
+            return self._initRender();
         });
-        this._extendedComposer = new ExtendedComposer(this, {
-            mentionPartnersRestricted: true,
-            showTyping: true,
-        });
-        this._basicComposer
-            .on('post_message', this, this._onPostMessage)
-            .on('input_focused', this, this._onComposerFocused);
-        this._extendedComposer
-            .on('post_message', this, this._onPostMessage)
-            .on('input_focused', this, this._onComposerFocused);
-        this._renderButtons();
-
-        var defs = [];
-        defs.push(
-            this._renderThread()
-        );
-        defs.push(
-            this._basicComposer.appendTo(this.$('.o_mail_discuss_content')));
-        defs.push(
-            this._extendedComposer.appendTo(this.$('.o_mail_discuss_content')));
-        defs.push(this._super.apply(this, arguments));
-
-        return Promise.all(defs)
-            .then(function () {
-                return self._setThread(self._defaultThreadID);
-            })
-            .then(function () {
-                self._initThreads();
-                self._startListening();
-                self._threadWidget.$el.on('scroll', null, _.debounce(function () {
-                    if (
-                        self._threadWidget.getScrolltop() < 20 &&
-                        !self._threadWidget.$('.o_mail_no_content').length &&
-                        !self._thread.isAllHistoryLoaded(self.domain)
-                    ) {
-                        self._loadMoreMessages();
-                    }
-                    if (
-                        self._threadWidget.isAtBottom() &&
-                        self._thread.getType() !== 'mailbox'
-                    ) {
-                        self._thread.markAsRead();
-                    }
-                }, 100));
-            });
     },
     /**
      * @override
@@ -381,8 +335,8 @@ var Discuss = AbstractAction.extend({
         this.call('mail_service', 'getMailBus').trigger('discuss_open', true);
         if (this._thread) {
             this._threadWidget.scrollToPosition(this._threadsScrolltop[this._thread.getID()]);
+            this._loadEnoughMessages();
         }
-        this._loadEnoughMessages();
     },
     /**
      * @override
@@ -546,6 +500,61 @@ var Discuss = AbstractAction.extend({
             }
         }
      },
+    /**
+     * @private
+     */
+    _initRender: function () {
+        var self = this;
+        this.$('.o_mail_discuss_loading').remove();
+        this._basicComposer = new BasicComposer(this, {
+            mentionPartnersRestricted: true,
+            showTyping: true,
+        });
+        this._extendedComposer = new ExtendedComposer(this, {
+            mentionPartnersRestricted: true,
+            showTyping: true,
+        });
+        this._basicComposer
+            .on('post_message', this, this._onPostMessage)
+            .on('input_focused', this, this._onComposerFocused);
+        this._extendedComposer
+            .on('post_message', this, this._onPostMessage)
+            .on('input_focused', this, this._onComposerFocused);
+        this._renderButtons();
+
+        var defs = [];
+        defs.push(
+            this._renderThread()
+        );
+        defs.push(
+            this._basicComposer.appendTo(this.$('.o_mail_discuss_content')));
+        defs.push(
+            this._extendedComposer.appendTo(this.$('.o_mail_discuss_content')));
+
+        return Promise.all(defs)
+            .then(function () {
+                return self._setThread(self._defaultThreadID);
+            })
+            .then(function () {
+                self._initThreads();
+                self._startListening();
+                self._threadWidget.$el.on('scroll', null, _.debounce(function () {
+                    if (
+                        self._threadWidget.getScrolltop() < 20 &&
+                        !self._threadWidget.$('.o_mail_no_content').length &&
+                        !self._thread.isAllHistoryLoaded(self.domain)
+                    ) {
+                        self._loadMoreMessages();
+                    }
+                    if (
+                        self._threadWidget.isAtBottom() &&
+                        self._thread.getType() !== 'mailbox'
+                    ) {
+                        self._thread.markAsRead();
+                    }
+                }, 100));
+            });
+    },
     /**
      * Renders the mainside bar with current threads
      *
@@ -1399,6 +1408,19 @@ var Discuss = AbstractAction.extend({
         } else if (_.contains(message.getThreadIDs(), currentThreadID)) {
             this._fetchAndRenderThread();
         }
+    },
+    /**
+     * @private
+     */
+    _onMessagingReady: function () {
+        if (this._isMessagingReady) {
+            return;
+        }
+        this._isMessagingReady = true;
+        if (!this._isStarted) {
+            return;
+        }
+        this._initRender();
     },
     /**
      * @private

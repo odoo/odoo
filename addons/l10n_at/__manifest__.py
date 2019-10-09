@@ -10,7 +10,7 @@
 
 {
     "name": "Austria - Accounting",
-    "version": "2.0",
+    "version": "3.0",
     "author": "WT-IO-IT GmbH, Wolfgang Taferner",
     "website": "https://www.wt-io-it.at",
     "category": "Localization",

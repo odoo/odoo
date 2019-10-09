@@ -83,22 +83,28 @@ class LivechatController(http.Controller):
     def get_session(self, channel_id, anonymous_name, previous_operator_id=None, **kwargs):
         user_id = None
         country_id = None
+        visitor_name = anonymous_name
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
         if request.session.uid:
             user_id = request.env.user.id
             country_id = request.env.user.country_id.id
-        # if geoip, add the country name to the anonymous name
-        elif request.session.geoip:
-            # get the country of the anonymous person, if any
-            country_code = request.session.geoip.get('country_code', "")
-            country = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1) if country_code else None
-            if country:
-                anonymous_name, country_id = _("%s (%s)") % (anonymous_name, country.name), country.id
+        else:
+            visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+            if visitor_sudo:
+                visitor_name = visitor_sudo.display_name
+            # if geoip, add the country name to the anonymous name
+            if request.session.geoip:
+                # get the country of the anonymous person, if any
+                country_code = request.session.geoip.get('country_code', "")
+                country = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1) if country_code else None
+                if country:
+                    visitor_name = "%s (%s)" % (visitor_name, country.name)
+                    country_id = country.id
 
         if previous_operator_id:
             previous_operator_id = int(previous_operator_id)
 
-        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_mail_channel(anonymous_name, previous_operator_id, user_id, country_id)
+        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_mail_channel(visitor_name, previous_operator_id, user_id, country_id)
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
@@ -123,11 +129,7 @@ class LivechatController(http.Controller):
                 # if logged in user, set its partner on rating
                 values['partner_id'] = request.env.user.partner_id.id if request.session.uid else False
                 # create the rating
-
-                channel.write({
-                    'rating_ids': [(0, False, values)]
-                })
-                rating = channel.rating_ids[0]
+                rating = request.env['rating.rating'].sudo().create(values)
             else:
                 rating = channel.rating_ids[0]
                 rating.write(values)

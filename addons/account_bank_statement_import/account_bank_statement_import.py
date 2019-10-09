@@ -26,7 +26,6 @@ class AccountBankStatementImport(models.TransientModel):
     _description = 'Import Bank Statement'
 
     attachment_ids = fields.Many2many('ir.attachment', string='Files', required=True, help='Get you bank statements in electronic format from your bank and select them here.')
-    filename = fields.Char()
 
     def import_file(self):
         """ Process the file chosen in the wizard, create bank statement(s) and go to reconciliation. """
@@ -177,7 +176,7 @@ class AccountBankStatementImport(models.TransientModel):
         for st_vals in stmts_vals:
             st_vals['journal_id'] = journal.id
             if not st_vals.get('reference'):
-                st_vals['reference'] = self.filename
+                st_vals['reference'] = " ".join(self.attachment_ids.mapped('name'))
             if st_vals.get('number'):
                 #build the full name like BNK/2016/00135 by just giving the number '135'
                 st_vals['name'] = journal.sequence_id.with_context(ir_sequence_date=st_vals.get('date')).get_next_char(st_vals['number'])

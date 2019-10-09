@@ -10,14 +10,15 @@
 # bluce Lan <bluce.lan@gmail.com>, 2019
 # Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Michael Yeung, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:26+0000\n"
+"POT-Creation-Date: 2019-09-30 09:40+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: Michael Yeung, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -303,6 +304,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -817,11 +820,6 @@ msgstr "指派的移動"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_attachment_count
 msgid "Attachment Count"
 msgstr "附件數"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_variants_action
-msgid "Attribute Values"
-msgstr "屬性值"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_attribute_action
@@ -1765,6 +1763,11 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr "交貨提前期， 依日計算。此為承諾給客戶的交期， 即從下單到交貨所需要的天數。"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Demand"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -6620,11 +6623,6 @@ msgid "Variant Count"
 msgstr "變體計數"
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_variant_in_config_stock
-msgid "Variants"
-msgstr "變體"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor"
 msgstr "供应商"
@@ -6719,6 +6717,11 @@ msgstr "倉庫配置"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__warehouse_count
 msgid "Warehouse Count"
 msgstr "倉庫個數"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_route__warehouse_domain_ids
+msgid "Warehouse Domain"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -7208,6 +7211,14 @@ msgstr "您只能退回已完成的揀貨。"
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr "您每次只能退回一次揀貨。"
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You need to activate storage locations to be able to do internal operation "
+"types."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

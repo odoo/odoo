@@ -159,12 +159,12 @@
                     <li t-if="not translatable" id="edit-page-menu">
                         <a data-action="edit" href="#"><span class="fa fa-pencil mr-2"/>Edit</a>
                     </li>
-                    <li t-if="'website_published' in main_object.fields_get() and main_object._name != 'website.page'">
+                    <li t-if="edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page')">
                         <a role="button" class="btn btn-primary btn-sm dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
                             <span class="sr-only">Toggle Dropdown</span>
                         </a>
                         <div class="dropdown-menu" role="menu">
-                            <a role="menuitem" style="text-align: left;" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{menu or main_object.env.ref('website.menu_website_configuration').id}"
+                            <a role="menuitem" style="text-align: left;" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{backend_menu_id}"
                                    class="dropdown-item" title='Edit in backend' id="edit-in-backend">Edit in backend</a>
                         </div>
                     </li>

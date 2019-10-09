@@ -504,12 +504,7 @@ class AccountAccount(models.Model):
     def action_open_reconcile(self):
         self.ensure_one()
         # Open reconciliation view for this account
-        if self.internal_type == 'payable':
-            action_context = {'show_mode_selector': False, 'mode': 'suppliers'}
-        elif self.internal_type == 'receivable':
-            action_context = {'show_mode_selector': False, 'mode': 'customers'}
-        else:
-            action_context = {'show_mode_selector': False, 'mode': 'accounts', 'account_ids': [self.id,]}
+        action_context = {'show_mode_selector': False, 'mode': 'accounts', 'account_ids': [self.id,]}
         return {
             'type': 'ir.actions.client',
             'tag': 'manual_reconciliation_view',
@@ -643,8 +638,8 @@ class AccountJournal(models.Model):
         ondelete='restrict')
     default_debit_account_id = fields.Many2one('account.account', string='Default Debit Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]", help="It acts as a default account for debit amount", ondelete='restrict')
-    update_posted = fields.Boolean(string='Allow Cancelling Entries',
-        help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal")
+    restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
+        help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
     sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
         help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
     refund_sequence_id = fields.Many2one('ir.sequence', string='Credit Note Entry Sequence',
@@ -699,6 +694,8 @@ class AccountJournal(models.Model):
 
     journal_group_ids = fields.Many2many('account.journal.group', domain="[('company_id', '=', company_id)]", string="Journal Groups")
 
+    secure_sequence_id = fields.Many2one('ir.sequence', help='Sequence to use to ensure the securisation of data', readonly=True, copy=False)
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
@@ -750,7 +747,7 @@ class AccountJournal(models.Model):
         for journal in self:
             if journal.refund_sequence_id and journal.refund_sequence and journal.refund_sequence_number_next:
                 sequence = journal.refund_sequence_id._get_current_sequence()
-                sequence.number_next = journal.refund_sequence_number_next
+                sequence.sudo().number_next = journal.refund_sequence_number_next
 
     @api.constrains('currency_id', 'default_credit_account_id', 'default_debit_account_id')
     def _check_currency(self):
@@ -865,6 +862,11 @@ class AccountJournal(models.Model):
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
             if 'alias_name' in vals:
                 journal._update_mail_alias(vals)
+            if 'restrict_mode_hash_table' in vals and not vals.get('restrict_mode_hash_table'):
+                journal_entry = self.env['account.move'].search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
+                if len(journal_entry) > 0:
+                    field_string = self._fields['restrict_mode_hash_table'].get_description(self.env)['string']
+                    raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.") % field_string)
         result = super(AccountJournal, self).write(vals)
 
         # Create the bank_account_id if necessary
@@ -887,6 +889,10 @@ class AccountJournal(models.Model):
             pending_payments = draft_moves.mapped('line_ids.payment_id')
             pending_payments.mapped('move_line_ids.move_id').post()
             pending_payments.mapped('reconciled_invoice_ids').filtered(lambda x: x.state == 'in_payment').write({'state': 'paid'})
+        for record in self:
+            if record.restrict_mode_hash_table and not record.secure_sequence_id:
+                record._create_secure_sequence(['secure_sequence_id'])
+
         return result
 
     @api.model
@@ -1077,6 +1083,28 @@ class AccountJournal(models.Model):
         else:
             action_vals['view_mode'] = 'tree,form'
         return action_vals
+
+    def _create_secure_sequence(self, sequence_fields):
+        """This function creates a no_gap sequence on each journal in self that will ensure
+        a unique number is given to all posted account.move in such a way that we can always
+        find the previous move of a journal entry on a specific journal.
+        """
+        for journal in self:
+            vals_write = {}
+            for seq_field in sequence_fields:
+                if not journal[seq_field]:
+                    vals = {
+                        'name': _('Securisation of %s - %s') % (seq_field, journal.name),
+                        'code': 'SECUR%s-%s' % (journal.id, seq_field),
+                        'implementation': 'no_gap',
+                        'prefix': '',
+                        'suffix': '',
+                        'padding': 0,
+                        'company_id': journal.company_id.id}
+                    seq = self.env['ir.sequence'].create(vals)
+                    vals_write[seq_field] = seq.id
+            if vals_write:
+                journal.write(vals_write)
 
 
 class ResPartnerBank(models.Model):

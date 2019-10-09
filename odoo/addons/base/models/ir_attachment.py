@@ -199,29 +199,29 @@ class IrAttachment(models.Model):
                 attach.datas = attach.db_datas
 
     def _inverse_datas(self):
-        location = self._storage()
         for attach in self:
-            # compute the fields that depend on datas
-            value = attach.datas
-            bin_data = base64.b64decode(value) if value else b''
-            vals = {
-                'file_size': len(bin_data),
-                'checksum': self._compute_checksum(bin_data),
-                'index_content': self._index(bin_data, attach.mimetype),
-                'store_fname': False,
-                'db_datas': value,
-            }
-            if value and location != 'db':
-                # save it to the filestore
-                vals['store_fname'] = self._file_write(value, vals['checksum'])
-                vals['db_datas'] = False
-
+            vals = self._get_datas_related_values(attach.datas, attach.mimetype)
             # take current location in filestore to possibly garbage-collect it
             fname = attach.store_fname
             # write as superuser, as user probably does not have write access
             super(IrAttachment, attach.sudo()).write(vals)
             if fname:
                 self._file_delete(fname)
+
+    def _get_datas_related_values(self, data, mimetype):
+        # compute the fields that depend on datas
+        bin_data = base64.b64decode(data) if data else b''
+        values = {
+            'file_size': len(bin_data),
+            'checksum': self._compute_checksum(bin_data),
+            'index_content': self._index(bin_data, mimetype),
+            'store_fname': False,
+            'db_datas': data,
+        }
+        if data and self._storage() != 'db':
+            values['store_fname'] = self._file_write(data, values['checksum'])
+            values['db_datas'] = False
+        return values
 
     def _compute_checksum(self, bin_data):
         """ compute the checksum for the given datas
@@ -299,7 +299,8 @@ class IrAttachment(models.Model):
     res_name = fields.Char('Resource Name', compute='_compute_res_name')
     res_model = fields.Char('Resource Model', readonly=True, help="The database object this attachment will be attached to.")
     res_field = fields.Char('Resource Field', readonly=True)
-    res_id = fields.Integer('Resource ID', readonly=True, help="The record id this is attached to.")
+    res_id = fields.Many2oneReference('Resource ID', model_field='res_model',
+                                      readonly=True, help="The record id this is attached to.")
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
                                  default=lambda self: self.env.company)
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],
@@ -524,6 +525,8 @@ class IrAttachment(models.Model):
             for field in ('file_size', 'checksum'):
                 values.pop(field, False)
             values = self._check_contents(values)
+            if 'datas' in values:
+                values.update(self._get_datas_related_values(values.pop('datas'), values['mimetype']))
             # 'check()' only uses res_model and res_id from values, and make an exists.
             # We can group the values by model, res_id to make only one query when 
             # creating multiple attachments on a single record.

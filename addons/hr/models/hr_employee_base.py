@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import api, fields, models
 from pytz import timezone, UTC
 from odoo.tools import format_time
@@ -26,6 +28,8 @@ class HrEmployeeBase(models.AbstractModel):
     user_id = fields.Many2one('res.users')
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    parent_id = fields.Many2one('hr.employee', 'Manager', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    coach_id = fields.Many2one('hr.employee', 'Coach', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tz = fields.Selection(
         string='Timezone', related='resource_id.tz', readonly=False,
         help="This field is used in order to define in which timezone the resources will work.")
@@ -43,7 +47,7 @@ class HrEmployeeBase(models.AbstractModel):
         presence criterions. e.g. hr_attendance, hr_holidays
         """
         # Check on login
-        check_login = self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_login')
+        check_login = literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_login', 'False'))
         for employee in self:
             state = 'to_define'
             if check_login:
@@ -57,7 +61,7 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_last_activity(self):
         presences = self.env['bus.presence'].search_read([('user_id', 'in', self.mapped('user_id').ids)], ['user_id', 'last_presence'])
         # transform the result to a dict with this format {user.id: last_presence}
-        presences = {p['user_id']: p['last_presence'] for p in presences}
+        presences = {p['user_id'][0]: p['last_presence'] for p in presences}
 
         for employee in self:
             tz = employee.tz
@@ -72,3 +76,10 @@ class HrEmployeeBase(models.AbstractModel):
             else:
                 employee.last_activity = False
                 employee.last_activity_time = False
+
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        manager = self.parent_id
+        previous_manager = self._origin.parent_id
+        if manager and (self.coach_id == previous_manager or not self.coach_id):
+            self.coach_id = manager

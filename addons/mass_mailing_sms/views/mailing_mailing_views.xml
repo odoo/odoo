@@ -23,10 +23,14 @@
                 <attribute name="attrs">{'invisible': ['|', ('state', 'in', ('in_queue', 'done')), ('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_put_in_queue']" position="after">
-                <button name="action_put_in_queue" type="object"
-                    class="oe_highlight" string="Send Now"
+                <button name="action_put_in_queue_sms" type="object"
+                    class="oe_highlight" string="Put in Queue"
                     attrs="{'invisible': ['|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'done'))]}"
-                    confirm="This will send SMS to all recipients. Do you still want to proceed ?"/>
+                    confirm="This will schedule an SMS marketing to all recipients. Do you still want to proceed ?"/>
+                <button name="action_send_now_sms" type="object"
+                    string="Send Now"
+                    attrs="{'invisible': ['|', ('mailing_type', '=', 'mail'), ('state', 'in', ('done'))]}"
+                    confirm="This will send SMS to all recipients now. Do you still want to proceed ?"/>
             </xpath>
             <!-- Headers / Warnings -->
             <xpath expr="//header" position="after">
@@ -63,7 +67,7 @@
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
             <xpath expr="//span[@name='next_departure_text']" position='after'>
-                <span name="next_departure_text" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">This SMS marketing is scheduled for</span>
+                <span name="next_departure_text" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">This SMS marketing is scheduled for </span>
             </xpath>
             <!-- Stat Buttons -->
             <xpath expr="//button[@id='button_view_sent']" position="attributes">
@@ -78,29 +82,41 @@
                     <field name="sent" string="Sent" widget="statinfo"/>
                 </button>
             </xpath>
+            <xpath expr="//button[@name='action_view_opened']" position="after">
+                <button name="action_view_clicked"
+                    type="object"
+                    context="{'search_default_filter_clicked': True}" 
+                    class="oe_stat_button"
+                    attrs="{'invisible': ['|',('mailing_type', '!=', 'sms'),('state', 'in', ('draft','test'))]}">
+                    <field name="clicks_ratio" string="Clicked" widget="percentpie"/>
+                </button>
+            </xpath>
             <xpath expr="//button[@name='action_view_opened']" position="attributes">
-                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+                <attribute name="attrs">{'invisible': ['|',('mailing_type', '!=', 'mail'),('state', 'in', ('draft','test'))]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_view_replied']" position="attributes">
-                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+                <attribute name="attrs">{'invisible': ['|',('mailing_type', '!=', 'mail'),('state', 'in', ('draft','test'))]}</attribute>
             </xpath>
             <!-- Form -->
-            <xpath expr="//field[@name='subject']" position="attributes">
-                <attribute name="attrs">{
-                    'invisible': [('mailing_type', '!=', 'mail')],
-                    'readonly': [('state', 'in', ('sending', 'done'))]}
-                </attribute>
-            </xpath>
             <xpath expr="//page[@name='mail_body']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
             <xpath expr="//page[@name='mail_body']" position="after">
                 <page string="SMS Content" name="sms_body" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
-                    <field name="body_plaintext" widget="sms_widget"/>
+                    <field name="body_plaintext" widget="sms_widget" attrs="{'required': [('mailing_type', '=', 'sms')]}"/>
                     <group>
-                        <field name="sms_allow_unsubscribe"/>
+                        <field name="sms_force_send" invisible="1"/>
                     </group>
                 </page>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="sms_allow_unsubscribe" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}"/>
+            </xpath>
+
+            <xpath expr="//field[@name='contact_list_ids']" position="attributes">
+                <attribute name="context">
+                    {'mailing_sms' : context.get('mailing_sms')}
+                </attribute>
             </xpath>
             <!-- Option page tweaks -->
             <xpath expr="//field[@name='email_from']" position="attributes">
@@ -130,6 +146,22 @@
         </field>
     </record>
 
+    <record id="mailing_mailing_view_form_mixed" model="ir.ui.view">
+        <!-- View allowign to display the mailing type and therefore choosing
+        the way of mailing: not prioritized one, used in some specific cases
+        like "contacting people" without predefining mail or sms -->
+        <field name="name">mailing.mailing.view.form.mixed</field>
+        <field name="model">mailing.mailing</field>
+        <field name="mode">primary</field>
+        <field name="priority">30</field>
+        <field name="inherit_id" ref="mass_mailing_sms.mailing_mailing_view_form_sms"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mailing_type']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="mailing_mailing_view_kanban_sms" model="ir.ui.view">
         <field name="name">mailing.mailing.view.kanban.inherit.sms</field>
         <field name="model">mailing.mailing</field>
@@ -144,8 +176,8 @@
             <xpath expr="//div[@name='stat_replied']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
-            <xpath expr="//div[@name='div_total_model']" position="after">
-                <div class="alert alert-warning" role="alert" attrs="{'invisible': ['&amp;',('sms_has_insufficient_credit', '=', False), ('mailing_type', '!=', 'mail')]}">
+            <xpath expr="//div[@name='div_responsible_avatar']" position="after">
+                <div class="alert alert-warning mb-0 mt-3" role="alert" attrs="{'invisible': [('sms_has_insufficient_credit', '=', False)]}">
                     <a name="action_buy_sms_credits" type="object">Insufficient credits</a>
                 </div>
             </xpath>
@@ -158,7 +190,7 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <tree string="SMS Marketing">
-                <field name="name"/>
+                <field name="subject"/>
                 <field name="mailing_type" invisible="1"/>
                 <field name="sent"/>
                 <field name="clicked"/>
@@ -178,6 +210,7 @@
                 'search_default_assigned_to_me': 1,
                 'default_user_id': uid,
                 'default_mailing_type': 'sms',
+                'mailing_sms': True
         }</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">

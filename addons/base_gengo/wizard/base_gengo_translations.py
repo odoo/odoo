@@ -8,6 +8,7 @@ import uuid
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import get_lang
 
 _logger = logging.getLogger(__name__)
 
@@ -31,9 +32,7 @@ class BaseGengoTranslations(models.TransientModel):
         res = super(BaseGengoTranslations, self).default_get(fields)
         res['authorized_credentials'], gengo = self.gengo_authentication()
         if 'lang_id' in fields:
-            res['lang_id'] = self.env['res.lang']._lang_get_id(
-                self.env.context.get('lang') or 'en_US'
-            )
+            res['lang_id'] = get_lang(self.env).id
         return res
 
     sync_type = fields.Selection([

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+# pylint: disable=sql-injection
+
 import logging
 import psycopg2
 

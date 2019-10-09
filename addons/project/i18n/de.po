@@ -6,20 +6,20 @@
 # Jan Meyer, 2019
 # Wolfgang Taferner, 2019
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
-# Martin Trigaux, 2019
 # brokemeister <work@maltejansen.de>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
 # Bettina Pfeifer <betzilla@web.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-23 13:48+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -513,6 +513,11 @@ msgid "All Tasks"
 msgstr "Alle Aufgaben"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
+msgid "All employees"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -995,16 +1000,11 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 msgid ""
 "Defines the visibility of the tasks of the project:\n"
-"- Visible by invited employees: employees may only see the followed project and tasks.\n"
-"- Visible by employees: employees may see all project and tasks.\n"
-"- Visible by portal users and employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"- Invited employees: employees may only see the followed project and tasks.\n"
+"- All employees: employees may see all project and tasks.\n"
+"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
-"Definiert die Sichtbarkeit der Aufgaben des Projekts:\n"
-"- Sichtbar für eingeladene Mitarbeiter: Die Mitarbeiter dürfen nur die folgenden Projekte und Aufgaben sehen.\n"
-"- Für die Mitarbeiter sichtbar: Die Mitarbeiter können alle Projekte und Aufgaben einsehen.\n"
-"- Sichtbar für Portalbenutzer und Mitarbeiter: Mitarbeiter können alles sehen. Portalbenutzer können Projekte und Aufgaben sehen,\n"
-"   die von ihnen oder von jemandem aus ihrem Unternehmen verfolgt werden."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1188,7 +1188,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Exception Activities"
-msgstr ""
+msgstr "Ausnahmeaktivitäten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1284,6 +1284,11 @@ msgstr "Anstehende Aktivitäten"
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
 msgstr "GTD"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Get customer feedback"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1517,6 +1522,11 @@ msgstr ""
 "Interne E-Mail Adresse des Projekts. Eingehende E-Mails werden automatisch "
 "mit den Aufgaben synchronisiert (oder optional eskaliert, wenn das "
 "Eskalationsverfolgungsmodul installiert ist)."
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
+msgid "Invited employees"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -2107,6 +2117,11 @@ msgid "Portal Access URL"
 msgstr "Portalzugriffs-URL"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "Portal users and all employees"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -2125,11 +2140,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
 msgid "Priority"
 msgstr "Priorität"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
-msgid "Privacy"
-msgstr "Privatsphäre"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3086,19 +3096,9 @@ msgid "User Email"
 msgstr "Benutzer E-Mail"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
-msgid "Visible by employees"
-msgstr "Sichtbar für die Mitarbeiter"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-msgid "Visible by invited employees"
-msgstr "Sichtbar für eingeladene Mitarbeiter"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid "Visible by portal users and employees"
-msgstr "Sichtbar für Portalbenutzer und Mitarbeiter"
+#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
+msgid "Visibility"
+msgstr "Sichtbarkeit"
 
 #. module: project
 #. openerp-web
@@ -3227,9 +3227,8 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "Your task must beo in the same company as its project."
+msgid "Your task must be in the same company as its project."
 msgstr ""
-"Eine Aufgabe muss im gleichen Mandanten wie das Projekt angelegt sein."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3262,20 +3261,10 @@ msgid "happy"
 msgstr "Glücklich"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "oe_kanban_text_red"
-msgstr "oe_kanban_text_red"
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "task"
 msgstr "Aufgabe"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "text-warning font-weight-bold"
-msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

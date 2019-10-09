@@ -59,7 +59,9 @@ Message.include({
         var sms = _.find(self._smsIds, function (sms) {
             return sms[0] === smsID;
         });
-        sms[2] = smsStatus;
+        if (sms !== undefined && smsStatus !== undefined) {
+            sms[2] = smsStatus;
+        }
     },
 
     //--------------------------------------------------------------------------

@@ -372,7 +372,7 @@ QUnit.module('Search View', {
         assert.expect(7);
 
         const unpatchDate = patchDate(2019,6,31,13,43,0);
-        
+
         var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
@@ -524,7 +524,7 @@ QUnit.module('Search View', {
         await testUtils.dom.click($('.o_search_options button span.fa-filter'));
         await testUtils.dom.click($('.o_filters_menu .o_menu_item a').first());
         await testUtils.dom.click($('.o_graph_controller .o_control_panel .o_cp_buttons button').eq(1));
-        await testUtils.dom.click($('.o_graph_controller .o_group_by_menu .o_menu_item').eq(1));   
+        await testUtils.dom.click($('.o_graph_controller .o_group_by_menu .o_menu_item').eq(1));
         assert.doesNotHaveClass($('.o_graph_controller .o_group_by_menu .o_menu_item > .dropdown-item').eq(1), 'selected',
             'groupby should be still unselected');
         actionManager.destroy();
@@ -701,6 +701,7 @@ QUnit.module('Search View', {
         // DateTime case
         $autocomplete = $('.o_searchview_input');
         await stringToEvent($autocomplete, '07/15/1983 00:00:00');
+        await testUtils.fields.triggerKey('down', $autocomplete, 'down');
         await testUtils.fields.triggerKey('up', $autocomplete, 'enter');
 
         assert.equal($('.o_searchview_facet .o_facet_values').text().trim(), '07/15/1983 00:00:00',
@@ -1116,7 +1117,7 @@ QUnit.module('Search View', {
         // activate Foo a
         await testUtils.fields.triggerKey('press', $('.o_searchview_input'), 97);
         await testUtils.fields.triggerKey('up', $('.o_searchview_input'), 'enter');
-        
+
         // activate Date Filter with This Month
         await testUtils.dom.click($('button .fa-filter'));
         await testUtils.dom.click($('.o_filters_menu .o_menu_item a'));
@@ -1604,7 +1605,7 @@ QUnit.module('Search View', {
         var $filterDropdown = $('.modal .o_filters_menu');
         await testUtils.dom.click($filterDropdown.find('.o_add_custom_filter'));
 
-        assert.containsN($filterDropdown, '.o_input', 3);
+        assert.containsN($filterDropdown, '.o_input', 4);
 
         // We really are interested in the click event
         // We do it twice on each input to make sure

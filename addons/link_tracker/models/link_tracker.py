@@ -15,6 +15,7 @@ from odoo import models, fields, api, _
 
 
 URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
+TEXT_URL_REGEX = r'(https?:\/\/(www\.)?[a-zA-Z0-9@:%._\+~#=/-]{1,64})'
 
 
 def VALIDATE_URL(url):
@@ -163,6 +164,27 @@ class LinkTracker(models.Model):
                     html = html.replace(href, new_href)
 
         return html
+
+    def _convert_links_text(self, body, vals, blacklist=None):
+        shortened_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
+        unsubscribe_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/sms/'
+        for match in re.findall(TEXT_URL_REGEX, body):
+            original_url = match[0]
+            # don't shorten already-shortened links or links towards unsubscribe page
+            if original_url.startswith(shortened_schema) or original_url.startswith(unsubscribe_schema):
+                continue
+            # support blacklist items in path, like /u/
+            parsed = urls.url_parse(original_url, scheme='http')
+            if blacklist and any(item in parsed.path for item in blacklist):
+                continue
+
+            vals['url'] = utils.unescape(original_url)
+            link = self.create(vals)
+            shortened_url = link.short_url
+            if shortened_url:
+                body = body.replace(original_url, shortened_url, 1)
+
+        return body
 
     def action_view_statistics(self):
         action = self.env['ir.actions.act_window'].for_xml_id('link_tracker', 'link_tracker_click_action_statistics')

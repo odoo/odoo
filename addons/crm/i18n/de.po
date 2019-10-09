@@ -14,18 +14,18 @@
 # darenkster <inactive+darenkster@transifex.com>, 2019
 # Jan Meyer, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
 # Bettina Pfeifer <betzilla@web.de>, 2019
 # Sebastian <shu@odoo.com>, 2019
 # Leon Grill <leg@odoo.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2019-09-30 09:40+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -202,6 +202,16 @@ msgstr ""
 "in deinem E-Mail Programm "
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
+msgid "<small>Leads:</small>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
+msgid "<small>Opportunities:</small>"
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
@@ -214,16 +224,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2\"> at </span>"
 msgstr "<span class=\"oe_grey p-2\"> bei </span>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<strong>Leads</strong>"
-msgstr "<strong>Interessenten</strong>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
-msgid "<strong>Opportunities</strong>"
-msgstr "<strong>Opportunität </strong>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -967,10 +967,19 @@ msgstr ""
 "festlegen."
 
 #. module: crm
-#: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__empty
-#: model:ir.model.fields.selection,name:crm.selection__crm_lead__phone_state__empty
-msgid "Empty"
-msgstr "Leer"
+#: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
+msgid "Enrich all leads automatically"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
+msgid "Enrich lead automatically"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
+msgid "Enrich leads on demand only"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1009,7 +1018,7 @@ msgstr "Voraussichtliches Abschlussdatum dieser Chance"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Exception Activities"
-msgstr ""
+msgstr "Ausnahmeaktivitäten"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
@@ -2051,7 +2060,7 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
-#: model:ir.actions.act_window,name:crm.crm_lead_opportunities_tree_view
+#: model:ir.actions.act_window,name:crm.crm_lead_action_pipeline
 #: model:ir.model.fields,field_description:crm.field_crm_team__use_opportunities
 #: model:ir.ui.menu,name:crm.crm_opportunity_report_menu
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
