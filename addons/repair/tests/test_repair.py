@@ -60,6 +60,7 @@ class TestRepair(AccountingTestCase):
             'repair_id': repair_id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
             'location_dest_id': product_to_add.property_stock_production.id,
+            'company_id': self.env.company.id,
         })
 
     def _create_simple_fee(self, repair_id=False, qty=0.0, price_unit=0.0):
@@ -71,6 +72,7 @@ class TestRepair(AccountingTestCase):
             'product_uom': product_service.uom_id.id,
             'price_unit': price_unit,
             'repair_id': repair_id,
+            'company_id': self.env.company.id,
         })
 
     def test_00_repair_afterinv(self):
