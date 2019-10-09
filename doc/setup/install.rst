@@ -200,9 +200,7 @@ If you need this feature, you can install the python module like this:
 Fedora
 ''''''
 
-Odoo 13.0 'rpm' package supports Fedora 26.
-As of 2017, CentOS does not have the minimum Python requirements (3.5) for
-Odoo 13.0.
+Odoo 13.0 'rpm' package supports Fedora 30.
 
 Prepare
 ^^^^^^^
@@ -330,13 +328,13 @@ Prepare
 Python
 ^^^^^^
 
-Odoo requires Python 3.5 or later to run. Use the the official `Python 3 installer
+Odoo requires Python 3.6 or later to run. Use the the official `Python 3 installer
 <https://www.python.org/downloads/windows/>`_ to download and install Python 3 on your machine.
 
 During installation, check **Add Python 3 to PATH**, then click **Customize Installation** and make
 sure that **pip** is checked.
 
-.. note:: If Python 3 is already installed, make sure that it is 3.5 or above, as previous versions
+.. note:: If Python 3 is already installed, make sure that it is 3.6 or above, as previous versions
           are not compatible with Odoo.
 
           .. code-block:: doscon
@@ -490,10 +488,10 @@ Prepare
 Python
 ^^^^^^
 
-Odoo requires Python 3.5 or later to run. Use your package manager to download and install Python 3
+Odoo requires Python 3.6 or later to run. Use your package manager to download and install Python 3
 on your machine if it is not already done.
 
-.. note:: If Python 3 is already installed, make sure that it is 3.5 or above, as previous versions
+.. note:: If Python 3 is already installed, make sure that it is 3.6 or above, as previous versions
           are not compatible with Odoo.
 
           .. code-block:: console
@@ -646,10 +644,10 @@ Prepare
 Python
 ^^^^^^
 
-Odoo requires Python 3.5 or later to run. Use your preferred package manager (homebrew_, macports_)
+Odoo requires Python 3.6 or later to run. Use your preferred package manager (homebrew_, macports_)
 to download and install Python 3 on your machine if it is not already done.
 
-.. note:: If Python 3 is already installed, make sure that it is 3.5 or above, as previous versions
+.. note:: If Python 3 is already installed, make sure that it is 3.6 or above, as previous versions
           are not compatible with Odoo.
 
           .. code-block:: console
