@@ -1060,8 +1060,8 @@
     <t t-if="widget.items.length !== 0">
         <t t-set="group" t-value="0"/>
         <t t-foreach="widget.items" t-as="item">
-            <div t-if="group !== item.groupNumber and !item.invisible" role="separator" class="dropdown-divider" data-removable="1"/>
-            <div t-attf-class="o_menu_item #{item.invisible ? 'd-none' : ''}"
+            <div t-if="group !== item.groupNumber" role="separator" class="dropdown-divider" data-removable="1"/>
+            <div t-attf-class="o_menu_item"
                 t-att-data-id="item.id">
                 <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.isActive ? ' selected ' : ''}">
                     <t t-esc="item.description"/>
@@ -1088,7 +1088,7 @@
 </t>
 
 <div t-name="web.DropdownMenu" t-att-class="widget.dropdownStyle.el.class" t-att="widget.dropdownStyle.el.attrs">
-    <button t-att-class="widget.dropdownStyle.mainButton.class" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
+    <button t-att-class="widget.dropdownStyle.mainButton.class" data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-boundary="viewport">
         <span t-att-class="widget.dropdownIcon"/> <t t-esc="widget.dropdownTitle"/> <span t-if="widget.dropdownSymbol" t-att-class="widget.dropdownSymbol"/>
     </button>
     <div class="dropdown-menu o_dropdown_menu" role="menu">

@@ -473,7 +473,7 @@ class configmanager(object):
             elif isinstance(self.options[arg], str) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
-        self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.join(os.path.dirname(__file__), '..'))))
+        self.options['root_path'] = self._normalize(os.path.join(os.path.dirname(__file__), '..'))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
             default_addons = []
             base_addons = os.path.join(self.options['root_path'], 'addons')
@@ -485,17 +485,15 @@ class configmanager(object):
             self.options['addons_path'] = ','.join(default_addons)
         else:
             self.options['addons_path'] = ",".join(
-                    os.path.abspath(os.path.expanduser(os.path.expandvars(x.strip())))
-                      for x in self.options['addons_path'].split(','))
+                self._normalize(x)
+                for x in self.options['addons_path'].split(','))
 
         self.options['upgrades_paths'] = (
-            ",".join(os.path.abspath(os.path.expanduser(os.path.expandvars(x.strip())))
+            ",".join(self._normalize(x)
                 for x in self.options['upgrades_paths'].split(','))
             if self.options['upgrades_paths']
             else ""
         )
-
-        self.options['data_dir'] = os.path.abspath(os.path.expanduser(os.path.expandvars(self.options['data_dir'].strip())))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options['demo'] = (dict(self.options['init'])
@@ -518,6 +516,10 @@ class configmanager(object):
 
         if opt.save:
             self.save()
+
+        # normalize path options
+        for key in ['data_dir', 'logfile', 'pidfile', 'test_file', 'screencasts', 'screenshots', 'pg_path', 'translate_out', 'translate_in', 'geoip_database']:
+            self.options[key] = self._normalize(self.options[key])
 
         conf.addons_paths = self.options['addons_path'].split(',')
 
@@ -553,7 +555,7 @@ class configmanager(object):
         upgrades_paths = []
         for path in value.split(','):
             path = path.strip()
-            res = os.path.abspath(os.path.expanduser(os.path.expandvars(path)))
+            res = self._normalize(path)
             if not os.path.isdir(res):
                 raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, path))
             upgrades_paths.append(res)
@@ -694,5 +696,13 @@ class configmanager(object):
             if updated_hash:
                 self.options['admin_passwd'] = updated_hash
             return True
+
+    def _normalize(self, path):
+        if not path:
+            return path
+        return os.path.abspath(
+            os.path.expanduser(
+                os.path.expandvars(
+                    path.strip())))
 
 config = configmanager()

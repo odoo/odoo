@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* project
-#
+# 
 # Translators:
 # sao sang <saosangmo@yahoo.com>, 2019
 # son dang <son.dang@doda100.com>, 2019
@@ -11,9 +11,9 @@
 # fanha99 <fanha99@hotmail.com>, 2019
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # Duy BQ <duybq86@gmail.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
 # Chinh Chinh <trinhttp@trobz.com>, 2019
+# Dung Nguyen Thi <dungnt@trobz.com>, 2019
 #
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-23 13:48+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
+"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +58,7 @@ msgstr "Số Nhiệm vụ"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Khảo sát mức độ hài lòng"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -263,6 +263,8 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Bí danh Miền\" "
+"title=\"Bí danh Miền\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -275,6 +277,8 @@ msgid ""
 "<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
 "satisfaction\" title=\"Percentage of satisfaction\"/>"
 msgstr ""
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Phần trăm hài lòng"
+"satisfaction\" title=\"Phần trăm hài lòng\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -322,7 +326,7 @@ msgstr "<small class=\"text-right\">Tình trạng:</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Nhiệm vụ\" title=\"Nhiệm vụ\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -638,7 +642,7 @@ msgstr "Tồi tệ"
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
 msgid "Basic"
-msgstr "Cơ bản"
+msgstr "Cơ sở"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -690,7 +694,8 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
-msgstr "Chọn <b>tên tác vụ</b>. (vd: Thiết kế website, Mua hàng hoá, v.v.)"
+msgstr ""
+"Chọn <b>tên tác vụ</b>. (ví dụ: Thiết kế trang web, Mua hàng hóa, v.v.)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -715,6 +720,7 @@ msgid ""
 "Click on the card to write more information about it and collaborate with "
 "your coworkers."
 msgstr ""
+"Nhấp vào thẻ để viết thêm thông tin về nó và cộng tác với đồng nghiệp của bạn."
 
 #. module: project
 #. openerp-web
@@ -739,6 +745,10 @@ msgid ""
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 msgstr ""
+"Trao đổi với khách hàng về nhiệm vụ bằng cách sử dụng cổng email. Đính kèm "
+"thiết kế logo cho nhiệm vụ để truyền đạt dòng thông tin từ nhà thiết kế đến "
+"nhân viên, người mà in áo thun. Sắp xếp mức độ ưu tiên giữa các đơn %s bằng"
+" biểu tượng."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -755,6 +765,9 @@ msgid ""
 "Computed using sum of hours planned of all subtasks created from main task. "
 "Usually these hours are less or equal to the Planned Hours (of main task)."
 msgstr ""
+"Được tính bằng cách sử dụng tổng số giờ dự kiến của tất cả các nhiệm vụ được"
+" tạo từ tác vụ chính.Thông thường những giờ này ít hơn hoặc bằng giờ đã lên "
+"kế hoạch (của nhiệm vụ chính)."
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -1029,7 +1042,7 @@ msgstr "Tổng hợp"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Digital Marketing"
-msgstr ""
+msgstr "Tiếp thị số"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -1106,7 +1119,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Editing"
-msgstr ""
+msgstr "Đang chỉnh sửa"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
@@ -1159,6 +1172,9 @@ msgid ""
 " all documents or links to the task directly, to have all information about "
 "a research centralized."
 msgstr ""
+"Mọi người đều có thể đề xuất ý tưởng và biên tập viên đánh dấu những ý tưởng"
+" hay nhất là %s. Đính kèmtất cả các tài liệu hoặc liên kết đến nhiệm vụ trực"
+" tiếp, để có tất cả thông tin vềmột nghiên cứu tập trung."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -1173,7 +1189,7 @@ msgstr "Ngày hết hạn"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr "Bộ lọc mở rộng..."
+msgstr "Bộ lọc mở rộng"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1190,13 +1206,17 @@ msgid ""
 "review the \"This Week\" column to move important tasks \"Today\". Every "
 "Monday, you review the \"This Month\" column."
 msgstr ""
+"Điền vào Hộp thư đến của bạn một cách dễ dàng với cổng email. Định kỳ xem "
+"lạiHộp thư đến và lên lịch các tác vụ bằng cách di chuyển chúng sang các cột"
+" khác. Mỗi ngày, bạnxem lại cột \" Tuần này\" để di chuyển các tác vụ quan "
+"trọng \"Hôm nay\". MỗiThứ hai, bạn xem lại cột \"Tháng này\"."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Final Document"
-msgstr ""
+msgstr "Tài liệu cuối cùng"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
@@ -1265,7 +1285,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Getting Things Done (GTD)"
-msgstr ""
+msgstr "Làm cho mọi việc hoàn thành (GTD)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
@@ -1324,7 +1344,7 @@ msgstr "Vui mừng"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
-msgstr ""
+msgstr "Mặt vui vẻ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
@@ -1467,7 +1487,7 @@ msgstr "Đang thực hiện"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "In development"
-msgstr ""
+msgstr "Đang phát triển"
 
 #. module: project
 #. openerp-web
@@ -1509,6 +1529,9 @@ msgid ""
 "It is the time planned to achieve the task. If this document has sub-tasks, "
 "it means the time needed to achieve this tasks and its childs."
 msgstr ""
+"Đây là thời gian dự định để đạt được nhiệm vụ. Nếu nhiệm vụ này có các nhiệm"
+" vụ phụ,nó có nghĩa là thời gian cần thiết để đạt được nhiệm vụ này và con "
+"của nó."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
@@ -1529,7 +1552,7 @@ msgstr "Giai đoạn Kanban"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "Nhãn giai đoạn Kanban"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
@@ -1635,7 +1658,7 @@ msgstr "Hãy cùng tạo dự án đầu tiên của bạn."
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first task."
-msgstr ""
+msgstr "Hãy tạo nhiệm vụ đầu tiên của bạn."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1661,7 +1684,7 @@ msgstr "Trực tiếp"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Log time on tasks"
-msgstr ""
+msgstr "Ghi nhận thời gian trên nhiệm vụ"
 
 #. module: project
 #. openerp-web
@@ -1675,7 +1698,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Long Term"
-msgstr ""
+msgstr "Dài hạn"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__0
@@ -1747,7 +1770,7 @@ msgstr "Gọi nhiệm vụ là: "
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
-msgstr ""
+msgstr "Mặt trung tính"
 
 #. module: project
 #. openerp-web
@@ -1764,14 +1787,14 @@ msgstr "Mới"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Orders"
-msgstr ""
+msgstr "Đơn hàng mới"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Projects"
-msgstr ""
+msgstr "Dự án mới"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -1779,6 +1802,8 @@ msgid ""
 "New tasks can be generated from incoming emails. You just need to set email "
 "aliases on your projects.<br>"
 msgstr ""
+"Nhiệm vụ mới có thể được tạo từ các email đến. Bạn chỉ cần đặt emailbí danh "
+"cho các dự án của bạn. <br>"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -1817,12 +1842,12 @@ msgstr "Không chủ đề"
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr ""
+msgstr "Chưa có đánh giá của khách hàng"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "No project rating published for now."
-msgstr ""
+msgstr "Hiện tại không có đánh giá dự án nào được công bố"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__no
@@ -1833,7 +1858,7 @@ msgstr "Không xếp hạng"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "None"
-msgstr "Không có"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -1892,6 +1917,8 @@ msgid ""
 "Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br>\n"
 "                    You can track progress, discuss on tasks, attach documents, etc."
 msgstr ""
+"Quản lý dự án trong Odoo cho phép bạn quản lý các nhiệm vụ của mình một cách hiệu quả.<br>\n"
+"                    Bạn có thể theo dõi tiến độ, thảo luận về các nhiệm vụ, đính kèm tài liệu, v.v."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -1982,7 +2009,7 @@ msgstr "Chủ sở hữu"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Page Ideas"
-msgstr ""
+msgstr "Ý tưởng trang"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
@@ -2041,7 +2068,7 @@ msgstr "Placeholder"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
 msgid "Planned Hours"
-msgstr "Số giờ Theo Kế hoạch"
+msgstr "Giờ dự kiến"
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -2064,7 +2091,7 @@ msgstr ""
 "Cho sách cho phép post các thông điệp lên tài liệu sử dụng.\n"
 "- mọi người: Mọi người có thể post\n"
 "- đối tác: Chỉ các đối tác đã xác thực\n"
-"- đối tượng dõi theo: Chỉ những người ở trong danh sách dõi theo của tài liệu hoặc thành viên của các kênh sau đây\n"
+"- người theo dõi: Chỉ những người ở trong danh sách dõi theo của tài liệu hoặc thành viên của các kênh sau đây\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
@@ -2138,12 +2165,12 @@ msgstr "Tên dự án"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "Project Satisfaction"
-msgstr ""
+msgstr "Mức độ hài lòng của dự án"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr ""
+msgstr "Thẻ dự án"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -2202,7 +2229,7 @@ msgstr "Hàng Quý"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Rated partner"
-msgstr ""
+msgstr "Đối tác được đánh giá"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2264,7 +2291,7 @@ msgstr "Bộ đếm đánh giá"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__portal_show_rating
 msgid "Rating visible publicly"
-msgstr ""
+msgstr "Đánh giá hiển thị công khai"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
@@ -2356,28 +2383,28 @@ msgstr "Báo cáo"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research"
-msgstr ""
+msgstr "Nghiên cứu"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research Project"
-msgstr ""
+msgstr "Dự án Nghiên cứu"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Researching"
-msgstr ""
+msgstr "Đang nghiên cứu"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Resources Allocation"
-msgstr ""
+msgstr "Phân bổ nguồn lực"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
@@ -2394,13 +2421,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "Mặt buồn"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
 "Schedule your teams across projects and estimate deadlines more accurately."
 msgstr ""
+"Lịch trình nhóm của bạn trên các dự án và ước tính thời hạn chính xác hơn."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2458,7 +2486,7 @@ msgstr "Đặt hình Đại diện"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Set Email Aliases"
-msgstr ""
+msgstr "Đặt bí danh Email"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2496,14 +2524,14 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Software Development"
-msgstr ""
+msgstr "Phát triển phần mềm"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "Đặc tả"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2594,14 +2622,14 @@ msgstr "Nhiệm vụ con"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Subtasks"
-msgstr ""
+msgstr "Nhiệm vụ con"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "In áo thun"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__name
@@ -2633,7 +2661,7 @@ msgstr "Nhiệm vụ"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Task %s cannot have several subtask levels."
-msgstr ""
+msgstr "Nhiệm vụ %s không thể có nhiều cấp độ con."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -2649,14 +2677,14 @@ msgstr "Nhiệm vụ bị Phong tỏa"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
 msgid "Task Count"
-msgstr ""
+msgstr "SL nhiệm vụ"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "Nhiệm vụ đã được tạo"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -2711,12 +2739,12 @@ msgstr "Nhiệm vụ bị phong tỏa"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
-msgstr ""
+msgstr "Nhiệm vụ đang thực hiện. Ấn để khóa hoặc chọn như đã hoàn tất."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
-msgstr ""
+msgstr "Nhiệm vụ đã bị khóa. Ấn để mở khó hoặc chọn như đã hoàn tất."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -2845,7 +2873,7 @@ msgstr "Không có Nhiệm vụ."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There is no rating for this object at the moment"
-msgstr ""
+msgstr "Hiện tại không có đánh giá nào cho đối tượng này"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -2890,6 +2918,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
 msgstr ""
+"Bước này đã hoàn thành. Ấn để khóa hoặc thiết lập đang trong tiến trình "
 
 #. module: project
 #. openerp-web
@@ -2897,6 +2926,8 @@ msgstr ""
 #, python-format
 msgid "This will create a new project and redirect us to its stages."
 msgstr ""
+"Điều này sẽ tạo ra một dự án mới và chuyển hướng chúng ta đến các giai đoạn "
+"của nó."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2925,7 +2956,7 @@ msgstr "Tiêu đề"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "To Print"
-msgstr ""
+msgstr "Chờ In"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2933,6 +2964,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"Để hoàn thành công việc, hãy sử dụng các hoạt động và trạng thái trong các nhiệm vụ. <br>\n"
+"Trò chuyện trong thời gian thực hoặc qua email để cộng tác hiệu quả."
 
 #. module: project
 #. openerp-web
@@ -2949,7 +2982,7 @@ msgstr "Hoạt động hôm nay"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "Top 5 partner ratings of last 15 days."
-msgstr ""
+msgstr "Top 5 đối tác đươc đánh giá trong 15 ngày qua."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3040,7 +3073,7 @@ msgstr "Tầm nhìn"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Waiting for the next stage: use %s and %s bullets."
-msgstr ""
+msgstr "Chờ đợi giai đoạn tiếp theo: sử dụng nút %s và %s."
 
 #. module: project
 #. openerp-web
@@ -3064,7 +3097,7 @@ msgstr "Thông điệp Website"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Website Redesign"
-msgstr ""
+msgstr "Thiết kế lại Website"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__website_message_ids
@@ -3127,7 +3160,7 @@ msgstr "Khối lượng công việc"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Writing"
-msgstr ""
+msgstr "Đang viết"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__yearly
@@ -3156,6 +3189,8 @@ msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
+"Bạn không thể xóa một dự án có chứa các nhiệm vụ. Bạn có thể lưu trữ nó "
+"hoặcđầu tiên xóa tất cả các nhiệm vụ của nó."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3171,12 +3206,12 @@ msgstr "kích hoạt dự án mẫu"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "average"
-msgstr ""
+msgstr "trung bình"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "bad"
-msgstr ""
+msgstr "tệ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -3191,13 +3226,13 @@ msgstr "cho dự án:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "happy"
-msgstr ""
+msgstr "vui vẻ"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "task"
-msgstr ""
+msgstr "nhiệm vụ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

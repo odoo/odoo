@@ -80,25 +80,17 @@ class SaleOrder(models.Model):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 to_log = {}
-                order_lines_to_run = self.env['sale.order.line']
                 for order_line in order.order_line:
-                    if order_line not in pre_order_line_qty:
-                        order_lines_to_run |= order_line
-                    elif float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) < 0:
-                        to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty[order_line])
-                    elif float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) > 0:
-                        order_lines_to_run |= order_line
+                    if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), order_line.product_uom.rounding) < 0:
+                        to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
                     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
                     order._log_decrease_ordered_quantity(documents)
-                if order_lines_to_run:
-                    order_lines_to_run._action_launch_stock_rule(pre_order_line_qty)
         return res
 
     def _action_confirm(self):
-        for order in self:
-            order.order_line._action_launch_stock_rule()
-        super(SaleOrder, self)._action_confirm()
+        self.order_line._action_launch_stock_rule()
+        return super(SaleOrder, self)._action_confirm()
 
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
@@ -137,7 +129,11 @@ class SaleOrder(models.Model):
         if len(pickings) > 1:
             action['domain'] = [('id', 'in', pickings.ids)]
         elif pickings:
-            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
             action['res_id'] = pickings.id
         # Prepare the context.
         picking_id = pickings.filtered(lambda l: l.picking_type_id.code == 'outgoing')
@@ -332,6 +328,18 @@ class SaleOrderLine(models.Model):
         lines = super(SaleOrderLine, self).create(vals_list)
         lines.filtered(lambda line: line.state == 'sale')._action_launch_stock_rule()
         return lines
+
+    def write(self, values):
+        lines = self.env['sale.order.line']
+        if 'product_uom_qty' in values:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            lines = self.filtered(
+                lambda r: r.state == 'sale' and not r.is_expense and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+        previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
+        res = super(SaleOrderLine, self).write(values)
+        if lines:
+            lines._action_launch_stock_rule(previous_product_uom_qty)
+        return res
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):

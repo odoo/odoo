@@ -19,16 +19,16 @@
 # Martin Trigaux, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # Buket Şeker <buket_skr@hotmail.com>, 2019
-# Ediz Duman <neps1192@gmail.com>, 2019
 # Murat Kaplan <muratk@projetgrup.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:10+0000\n"
+"POT-Creation-Date: 2019-10-01 12:08+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2019\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -518,7 +518,7 @@ msgstr "<span>Açıklama</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>İnd.%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -626,7 +626,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">Satış Temsilcisi</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
@@ -1301,14 +1301,14 @@ msgstr "Mali Durumun Hesap Haritalandırması"
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
-msgid "Accrual Adjusting Entry ({percent}% recognized) for invoice:"
+msgid "Accrual Adjusting Entry (%s recognized) for invoice: %s"
 msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
-msgid "Accrual Adjusting Entry ({percent}% recognized) for invoice: {name}"
+msgid "Accrual Adjusting Entry ({percent}% recognized) for invoice:"
 msgstr ""
 
 #. module: account
@@ -3117,7 +3117,7 @@ msgstr "Şirket Para Birimi"
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Şirket Belge Düzeni"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -3297,6 +3297,7 @@ msgstr "Karşı Değerler"
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__country_id
+#: model:ir.model.fields,field_description:account.field_account_move_line__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__country_id
@@ -3645,6 +3646,12 @@ msgstr "Alacak Hareketi"
 #, python-format
 msgid "Credit Note"
 msgstr "İade/Fiyat Farkı"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Credit Note Created"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence_id
@@ -4123,6 +4130,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #: model:ir.model.fields,field_description:account.field_account_account_type__note
 #: model_terms:ir.ui.view,arch_db:account.view_account_type_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Description"
 msgstr "Açıklama"
@@ -4686,7 +4694,7 @@ msgstr "Harici Referans"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "External link"
-msgstr ""
+msgstr "Dış link"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
@@ -5824,8 +5832,10 @@ msgid "Invoice #"
 msgstr "Fatura #"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
 #: model:mail.message.subtype,description:account.mt_invoice_created
 #: model:mail.message.subtype,name:account.mt_invoice_created
+#, python-format
 msgid "Invoice Created"
 msgstr "Fatura Oluşturuldu"
 
@@ -7301,6 +7311,7 @@ msgstr "Yapılmadı"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_note
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_note
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Note"
 msgstr "Not"
@@ -8493,6 +8504,12 @@ msgid "Purchase Receipt"
 msgstr "Satınalma Makbuzu"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Purchase Receipt Created"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Purchase Tax"
 msgstr "Satınalma Vergisi"
@@ -8527,6 +8544,11 @@ msgstr "QIF İçe Aktarımı"
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
 msgstr "Miktar"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Quantity:"
+msgstr "Miktar:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -8707,6 +8729,12 @@ msgstr "Bu ödemeyi yapan belgenin referansı. Örneğin. Numara, dosya adı vb.
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Refund"
 msgstr "İade"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Refund Created"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -9091,6 +9119,12 @@ msgid "Sales Receipt"
 msgstr "Satış Makbuzu"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Sales Receipt Created"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sales Tax"
@@ -9291,6 +9325,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Section"
 msgstr "Bölüm"
 
@@ -11655,6 +11690,11 @@ msgid "Unit Price"
 msgstr "Birim Fiyat"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Unit Price:"
+msgstr "Birim Fiyat:"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
 msgid "Unit of Measure"
@@ -11930,6 +11970,12 @@ msgid "Vendor Bill"
 msgstr "Tedarikçi Faturası"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Vendor Bill Created"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, python-format
@@ -12168,6 +12214,12 @@ msgstr ""
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "You can only change the period for items that are not yet reconciled."
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_accrual_accounting.py:0
+#, python-format
+msgid "You can only change the period for posted journal items."
 msgstr ""
 
 #. module: account

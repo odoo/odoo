@@ -40,8 +40,6 @@
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Exception Activities" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <separator/>
                     <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
                     <group expand="0" string="Group By">

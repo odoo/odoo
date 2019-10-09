@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -6433,6 +6433,18 @@ msgid "Your message was rejected by moderator."
 msgstr "Ваше повідомлення відхилено модератором."
 
 #. module: mail
+#: code:addons/mail/controllers/home.py:0
+#, python-format
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
+msgstr ""
+"Ваш пароль за замовчуванням (admin)! Якщо ця система наражається на "
+"ненадійних користувачів, важливо її негайно змінити з міркувань безпеки. Ми "
+"будемо тримати вас в курсі!"
+
+#. module: mail
 #: code:addons/mail/models/ir_actions.py:0
 #, python-format
 msgid "Your template should define email_from"
@@ -6719,6 +6731,14 @@ msgstr "невідома помилка"
 #, python-format
 msgid "unknown target model %s"
 msgstr "невідома цільова модель %s"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:0
+#: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
+#, python-format
+msgid "unnamed"
+msgstr "без назви"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email

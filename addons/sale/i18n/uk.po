@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -22,17 +22,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
-msgid ""
-" Fiscal positions are used to adapt taxes and accounts for particular "
-"customers or sales orders/invoices. The default value comes from the "
-"customer."
-msgstr ""
-"Схема оподаткування використовується для  адаптування податків та рахунків "
-"для конкретних клієнтів чи замовлення на продаж/рахунків-фактур. Значення за"
-" замовчуванням береться від клієнта."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -302,7 +291,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Оплатити</b>"
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Оплачено</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -347,6 +336,16 @@ msgstr "<small><b class=\"text-muted\">Ця пропозиція закінчу�
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Ваша перевага</b></small>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Quotations:</small>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "<small>Revenues:</small>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -503,16 +502,6 @@ msgid "<strong>Quotation Date:</strong>"
 msgstr "<strong>Дата комерційної пропозиції:</strong>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Quotations</strong>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<strong>Revenues</strong>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
 msgstr "<strong>Продавець:</strong>"
@@ -560,7 +549,7 @@ msgstr "<strong>Всього</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr "<strong>Ваше посилання:</strong>"
+msgstr "<strong>Ваш референс:</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -630,7 +619,7 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"Можливість вибору типу пакунка в замовленнях на продаж та примусити "
+"Можливість вибору типу пакунка в замовленнях на продаж та запустити "
 "кількість, яка дорівнює кількості одиниць на пакет."
 
 #. module: sale
@@ -1486,7 +1475,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Download"
-msgstr "Скачати"
+msgstr "Завантажити"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__state__draft
@@ -1587,6 +1576,14 @@ msgstr "Конектор FedEx"
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "Схема оподаткування"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+msgid ""
+"Fiscal positions are used to adapt taxes and accounts for particular "
+"customers or sales orders/invoices.The default value comes from the "
+"customer."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2489,7 +2486,7 @@ msgstr "Замовлення підписано: %s"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr "Замовлення до рахунку"
+msgstr "Замовлення для виставлення у рахунку"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2549,7 +2546,7 @@ msgstr "Токен ідентифікації PDT"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "Рахунок"
+msgstr "Рахунок проформа"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
@@ -3366,7 +3363,7 @@ msgstr "Продавайте варіанти товару, використов
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Відправити про-форму рахунка-фактури"
+msgstr "Відправити проформу рахунка-фактури"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3427,7 +3424,7 @@ msgstr "Встановити ціль рахунків:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr "Встановлення кількох цін на товар, автоматичні знижки тощо."
+msgstr "Встановіть кілька цін на товар, автоматичні знижки тощо."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -3721,7 +3718,7 @@ msgid ""
 msgstr ""
 "Рахунок-фактура створюється автоматично і доступний на порталі клієнтів, коли операція підтверджена еквайєром платежу.\n"
 "Рахунок-фактуру позначено як оплачено, а платіж зареєстрований у платіжному журналі, визначеному в налаштуваннях одержувача платежу.\n"
-"Цей режим рекомендується, якщо ви видаєте виставляєте рахунок-фактуру в замовленні, а не після доставки."
+"Цей режим рекомендується, якщо виставляєте рахунок-фактуру в замовленні, а не після доставки."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3884,8 +3881,7 @@ msgstr ""
 "доходи від продажів та сортує їх за різними критеріями групи (продавець, "
 "партнер, товар тощо). Використовуйте цей звіт для аналізу продажів, які ще "
 "не нарахували рахунки. Якщо ви хочете проаналізувати ваш оборот, ви повинні "
-"використовувати звіт \"Аналіз рахунків-фактур\" у програмі бухгалтерського "
-"обліку."
+"використовувати звіт Аналіз рахунків-фактур у модулі Бухобліку."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -3900,8 +3896,7 @@ msgstr ""
 "доходи від продажів та сортує їх за різними критеріями групи (продавець, "
 "партнер, товар тощо). Використовуйте цей звіт для аналізу продажів, які ще "
 "не нарахували рахунки. Якщо ви хочете проаналізувати ваш оборот, ви повинні "
-"використовувати звіт \"Аналіз рахунків-фактур\" у програмі бухгалтерського "
-"обліку."
+"використовувати звіт Аналіз рахунків-фактур у модулі Бухобліку."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice

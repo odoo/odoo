@@ -182,7 +182,8 @@ def url_for(url_from, lang_code=None, no_rewrite=False):
     new_url = False
 
     # don't try to match route if we know that no rewrite has been loaded.
-    if not request.env['ir.http']._rewrite_len.get(request.website_routing):
+    routing = getattr(request, 'website_routing', None)  # not modular, but not overridable
+    if not request.env['ir.http']._rewrite_len.get(routing):
         no_rewrite = True
 
     # avoid useless check for 1 char URL '/', '#', ... and absolute URL
@@ -302,7 +303,7 @@ class IrHttp(models.AbstractModel):
         }
 
         session_info.update({
-            'translationURL': '/website/translations/',
+            'translationURL': '/website/translations',
             'cache_hashes': {
                 'translations': hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest(),
             },

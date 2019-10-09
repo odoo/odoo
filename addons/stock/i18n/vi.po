@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock
-#
+# 
 # Translators:
 # Chinh Chinh <trinhttp@trobz.com>, 2019
 # Martin Trigaux, 2019
@@ -11,12 +11,12 @@
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:48+0000\n"
+"POT-Creation-Date: 2019-09-30 09:40+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
 "Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -835,11 +835,6 @@ msgid "Attachment Count"
 msgstr "Số lượng đính kèm"
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_variants_action
-msgid "Attribute Values"
-msgstr "Giá trị Thuộc tính"
-
-#. module: stock
 #: model:ir.ui.menu,name:stock.menu_attribute_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Attributes"
@@ -1125,7 +1120,7 @@ msgstr "Kiểm tra sự tồn tại của hoạt động đóng gói ứng với
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
 msgid "Check this box to allow using this location as a return location."
-msgstr "Đánh dấu ô này để cho phép sử dụng địa điểm này cho các hàng trả lại."
+msgstr "Đánh dấu ô này để cho phép sử dụng địa điểm này cho hàng trả lại."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__scrap_location
@@ -1133,8 +1128,7 @@ msgstr "Đánh dấu ô này để cho phép sử dụng địa điểm này cho
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
 msgstr ""
-"Đánh dấu ô này để cho phép sử dụng địa điểm này cho các hàng phế liệu/hư "
-"hỏng."
+"Đánh dấu ô này để cho phép sử dụng địa điểm này cho hàng phế liệu/hư hỏng."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -1630,7 +1624,7 @@ msgstr "Ngày dịch chuyển"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__lead_type__net
 msgid "Days to get the products"
-msgstr ""
+msgstr "Số ngày để nhận được hàng"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__lead_type__supplier
@@ -6814,11 +6808,6 @@ msgid "Variant Count"
 msgstr "Đếm Biến thể"
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_variant_in_config_stock
-msgid "Variants"
-msgstr "Biến thể"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor"
 msgstr "Nhà cung cấp"
@@ -6913,6 +6902,11 @@ msgstr "Cấu hình Kho hàng"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__warehouse_count
 msgid "Warehouse Count"
 msgstr "Số lượng kho"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_route__warehouse_domain_ids
+msgid "Warehouse Domain"
+msgstr "Miền Kho"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config

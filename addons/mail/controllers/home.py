@@ -31,7 +31,7 @@ def _admin_password_warn(uid):
         )
 
 class Home(web.Home):
-    def _login_redirect(self, uid, redirect):
+    def _login_redirect(self, uid, redirect=None):
         if request.params.get('login_success'):
             _admin_password_warn(uid)
 

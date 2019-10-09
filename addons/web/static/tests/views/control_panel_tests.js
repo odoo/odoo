@@ -397,22 +397,30 @@ QUnit.module('Views', {
     });
 
     QUnit.test('invisible filters are not rendered', async function (assert) {
-        assert.expect(2);
+        assert.expect(5);
         var controlPanel = await createControlPanel({
             model: 'partner',
-            arch: "<search>" +
-                        "<filter name=\"filterA\" string=\"A\" domain=\"[]\"/>" +
-                        "<filter name=\"filterB\" string=\"B\" invisible=\"1\" domain=\"[]\"/>" +
-                    "</search>",
+            arch: `<search>
+                        <filter name="filterA" string="A" domain="[]"/>
+                        <filter name="filterB" string="B" invisible="1" domain="[]"/>
+                    </search>`,
             data: this.data,
             searchMenuTypes: ['filter'],
             context: {
-                search_disable_custom_filters: true,
+                search_default_filterB: true,
             },
         });
         await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
-        assert.containsOnce(controlPanel, '.o_menu_item.d-none a:contains("B")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
+        // default filter should be activated even if invisible
+        assert.containsOnce(controlPanel, '.o_searchview_facet .o_facet_values:contains(B)');
+
+        // Triggers an update of the filter menu
+        await testUtils.dom.click(controlPanel.$('.o_filters_menu .o_menu_item'));
+        // The displayed filters shhould be the same as before
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
 
         controlPanel.destroy();
     });

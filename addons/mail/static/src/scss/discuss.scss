@@ -356,11 +356,13 @@
         border-bottom: 1px solid gray('400');
     }
     .o_mail_preview_image {
+        display: flex;
+        align-items: center;
         flex: 0 0 auto;
         position: relative;
         > img {
-            width: 100%;
-            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
             border-radius: 50%;
             object-fit: cover;
         }
