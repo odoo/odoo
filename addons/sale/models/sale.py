@@ -1078,11 +1078,12 @@ class SaleOrderLine(models.Model):
         res = {}
         onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
-            line = self.new(values)
-            line.product_id_change()
-            for field in onchange_fields:
-                if field not in values:
-                    res[field] = line._fields[field].convert_to_write(line[field], line)
+            with self.env.do_in_onchange():
+                line = self.new(values)
+                line.product_id_change()
+                for field in onchange_fields:
+                    if field not in values:
+                        res[field] = line._fields[field].convert_to_write(line[field], line)
         return res
 
     @api.model_create_multi
