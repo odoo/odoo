@@ -393,16 +393,13 @@ class ProductProduct(models.Model):
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        # TDE FIXME: clean context / variant brol
-        if default is None:
-            default = {}
-        if self._context.get('variant'):
-            # if we copy a variant or create one, we keep the same template
-            default['product_tmpl_id'] = self.product_tmpl_id.id
-        elif 'name' not in default:
-            default['name'] = self.name
+        """Variants are generated depending on the configuration of attributes
+        and values on the template, so copying them does not make sense.
 
-        return super(ProductProduct, self).copy(default=default)
+        For convenience the template is copied instead and its first variant is
+        returned.
+        """
+        return self.product_tmpl_id.copy(default=default).product_variant_id
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
