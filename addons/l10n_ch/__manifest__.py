@@ -27,7 +27,8 @@ Here is how it works:
     """,
     'version': '10.0',
     'author': 'Odoo S.A',
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/page/accounting',
+    'category': 'Localization/Account Charts',
 
     'depends': ['account', 'l10n_multilang', 'base_iban'],
 

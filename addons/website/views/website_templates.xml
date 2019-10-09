@@ -725,11 +725,24 @@
                     <dl class="dl-horizontal">
                         <t t-foreach="modules" t-as="app">
                             <dt>
-                                <span t-raw="app.shortdesc"/>
+                                <!-- we need to make only base l10n_xx modules a link -->
+                                <t t-if="app.category_id == env.ref('base.module_category_localization_account_charts') and len(app.name) == 7 or app.name == 'l10n_syscohada'"> <!-- we checked len(app.name) as we do not want l10n_xx_* modules as a link -->
+                                    <a t-att-href="app.website">
+                                        <t t-raw="app.shortdesc"/>
+                                    </a>
+                                    <dd>
+                                       <span t-field="app.name"/>,
+                                       <span t-if="app.name != 'l10n_syscohada'">Chart and Taxes</span>
+                                       <span t-else="">Accounting for countries that support the Syscohada scheme</span>
+                                    </dd>
+                                </t>
+                                <t t-else="">
+                                    <span t-raw="app.shortdesc"/>
+                                </t>
                             </dt>
                             <dd t-if="app.summary">
                                 <span t-raw="app.summary"/>
-                            </dd><dd>
+                            </dd><dd class="text-muted">
                                 Technical name: <span t-field="app.name"/>,
                                 updated: <span t-field="app.write_date"/>
                                 <t t-if="app.author">

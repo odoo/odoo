@@ -6,7 +6,7 @@
 {
     'name': 'New Zealand - Accounting',
     'version': '1.1',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 New Zealand Accounting Module
 =============================
@@ -18,7 +18,7 @@ Also:
     - sets up New Zealand taxes.
     """,
     'author': 'Richard deMeester - Willow IT',
-    'website': 'http://www.willowit.com',
+    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account'],
     'data': [
              'data/l10n_nz_chart_data.xml',

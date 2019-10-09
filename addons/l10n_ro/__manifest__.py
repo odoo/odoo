@@ -10,8 +10,8 @@
 {
     "name" : "Romania - Accounting",
     "author" : "Fekete Mihai (Forest and Biomass Services Romania)",
-    "website": "http://www.forbiom.eu",
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/page/accounting',
+    'category': 'Localization/Account Charts',
     "depends" : [
         'account',
         'base_vat',

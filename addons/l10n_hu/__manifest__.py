@@ -6,7 +6,7 @@
 {
     'name': 'Hungarian - Accounting',
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 
 Base module for Hungarian localization
@@ -19,7 +19,7 @@ This module consists of:
  - Hungarian Bank information
  """,
     'author': 'InnOpen Group Kft',
-    'website': 'http://www.innopen.eu',
+    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account'],
     'data': [
         'data/l10n_hu_chart_data.xml',

@@ -20,7 +20,7 @@
 {
     'name': 'Guatemala - Accounting',
     'version': '3.0',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Guatemala.
 =====================================================================
@@ -29,7 +29,7 @@ Agrega una nomenclatura contable para Guatemala. También icluye impuestos y
 la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes
 taxes and the Quetzal currency.""",
     'author': 'José Rodrigo Fernández Menegazzo',
-    'website': 'http://solucionesprisma.com/',
+    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['base', 'account'],
     'data': [
         'data/l10n_gt_chart_data.xml',

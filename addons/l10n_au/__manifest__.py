@@ -6,7 +6,7 @@
 {
     'name': 'Australian - Accounting',
     'version': '1.1',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 Australian Accounting Module
 ============================
@@ -18,7 +18,7 @@ Also:
     - sets up Australian taxes.
     """,
     'author': 'Richard deMeester - Willow IT',
-    'website': 'http://www.willowit.com',
+    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account'],
     'data': [
              'data/l10n_au_chart_data.xml',

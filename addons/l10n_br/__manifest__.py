@@ -5,7 +5,7 @@
 
 {
     'name': 'Brazilian - Accounting',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 Base module for the Brazilian localization
 ==========================================
@@ -44,7 +44,7 @@ accounting SPED, fiscal SPED and PAF ECF that are still missing as September
 come with any additional paid permission for online use of 'private modules'.
 """,
     'author': 'Akretion, Odoo Brasil',
-    'website': 'http://openerpbrasil.org',
+    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account'],
     'data': [
         'data/l10n_br_chart_data.xml',

@@ -15,7 +15,8 @@ Con la Colaboración de
 
     """,
     "author": "Cubic ERP",
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/page/accounting',
+    'category': 'Localization/Account Charts',
     "depends": ["account"],
     "data": [
         "data/l10n_pa_chart_data.xml",

@@ -14,7 +14,7 @@
 {
     'name': 'Dominican Republic - Accounting',
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 
 Localization Module for Dominican Republic
@@ -83,7 +83,7 @@ en Odoo):
 11010101 Caja General
     """,
     'author': 'Gustavo Valverde - iterativo | Consultores de Odoo',
-    'website': 'http://iterativo.do',
+    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account',
                 'base_iban'
                 ],

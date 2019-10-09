@@ -66,7 +66,8 @@ Master Data:
 * Partners: Consumidor Final and AFIP
 """,
     'author': 'ADHOC SA',
-    'category': 'Localization',
+    'website': 'https://www.odoo.com/page/accounting',
+    'category': 'Localization/Account Charts',
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',

@@ -4,6 +4,7 @@
 {
     'name': 'Multi Language Chart of Accounts',
     'version': '1.1',
+    'website': 'https://www.odoo.com/page/accounting',
     'category': 'Localization',
     'description': """
     * Multi language support for Chart of Accounts, Taxes, Tax Codes, Journals,
