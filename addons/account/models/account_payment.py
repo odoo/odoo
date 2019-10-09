@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_compare
 
 MAP_INVOICE_TYPE_PARTNER_TYPE = {
     'out_invoice': 'customer',
@@ -561,11 +562,7 @@ class account_payment(models.Model):
             Return the journal entry.
         """
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
-        invoice_currency = False
-        if self.invoice_ids and all([x.currency_id == self.invoice_ids[0].currency_id for x in self.invoice_ids]):
-            #if all the invoices selected share the same currency, record the paiement in that currency too
-            invoice_currency = self.invoice_ids[0].currency_id
-        debit, credit, amount_currency, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id, invoice_currency)
+        debit, credit, amount_currency, currency_id = aml_obj.with_context(date=self.payment_date)._compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
 
         move = self.env['account.move'].create(self._get_move_vals())
 
@@ -578,42 +575,7 @@ class account_payment(models.Model):
         #Reconcile with the invoices
         if self.payment_difference_handling == 'reconcile' and self.payment_difference:
             writeoff_line = self._get_shared_move_line_vals(0, 0, 0, move.id, False)
-            amount_currency_wo, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(self.payment_difference, self.currency_id, self.company_id.currency_id, invoice_currency)[2:]
-            # the writeoff debit and credit must be computed from the invoice residual in company currency
-            # minus the payment amount in company currency, and not from the payment difference in the payment currency
-            # to avoid loss of precision during the currency rate computations. See revision 20935462a0cabeb45480ce70114ff2f4e91eaf79 for a detailed example.
-            total_residual_company_signed = sum(invoice.residual_company_signed for invoice in self.invoice_ids)
-            total_payment_company_signed = self.currency_id.with_context(date=self.payment_date).compute(self.amount, self.company_id.currency_id)
-            # amout_wo must be positive for out_invoice and in_refund and negative for in_invoice and out_refund in standard use case
-            #               |   total_payment_company_signed   |    total_residual_company_signed    |    amount_wo
-            #----------------------------------------------------------------------------------------------------------------------
-            # in_invoice    |   positive                       |    positive                         |    negative
-            #----------------------------------------------------------------------------------------------------------------------
-            # in_refund     |   positive                       |    negative                         |    positive
-            #----------------------------------------------------------------------------------------------------------------------
-            # out_invoice   |   positive                       |    positive                         |    positive
-            #----------------------------------------------------------------------------------------------------------------------
-            # out_refund    |   positive                       |    negative                         |    negative
-            #----------------------------------------------------------------------------------------------------------------------
-            # DO NOT FORWARD-PORT
-            if self.invoice_ids[0].type == 'in_invoice':
-                amount_wo = total_payment_company_signed - total_residual_company_signed
-            elif self.invoice_ids[0].type == 'in_refund':
-                amount_wo = - total_payment_company_signed - total_residual_company_signed
-            elif self.invoice_ids[0].type == 'out_refund':
-                amount_wo = total_payment_company_signed + total_residual_company_signed
-            else:
-                amount_wo = total_residual_company_signed - total_payment_company_signed
-            # Align the sign of the secondary currency writeoff amount with the sign of the writeoff
-            # amount in the company currency
-            if amount_wo > 0:
-                debit_wo = amount_wo
-                credit_wo = 0.0
-                amount_currency_wo = abs(amount_currency_wo)
-            else:
-                debit_wo = 0.0
-                credit_wo = -amount_wo
-                amount_currency_wo = -abs(amount_currency_wo)
+            debit_wo, credit_wo, amount_currency_wo, currency_id = aml_obj.with_context(date=self.payment_date)._compute_amount_fields(self.payment_difference, self.currency_id, self.company_id.currency_id)
             writeoff_line['name'] = self.writeoff_label
             writeoff_line['account_id'] = self.writeoff_account_id.id
             writeoff_line['debit'] = debit_wo
@@ -647,7 +609,7 @@ class account_payment(models.Model):
         """ Create the journal entry corresponding to the 'incoming money' part of an internal transfer, return the reconciliable move line
         """
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
-        debit, credit, amount_currency, dummy = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
+        debit, credit, amount_currency, dummy = aml_obj.with_context(date=self.payment_date)._compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
         amount_currency = self.destination_journal_id.currency_id and self.currency_id.with_context(date=self.payment_date).compute(amount, self.destination_journal_id.currency_id) or 0
 
         dst_move = self.env['account.move'].create(self._get_move_vals(self.destination_journal_id))
@@ -718,6 +680,7 @@ class account_payment(models.Model):
             'credit': credit,
             'amount_currency': amount_currency or False,
             'payment_id': self.id,
+            'journal_id': self.journal_id.id,
         }
 
     def _get_counterpart_move_line_vals(self, invoice=False):
@@ -744,7 +707,6 @@ class account_payment(models.Model):
         return {
             'name': name,
             'account_id': self.destination_account_id.id,
-            'journal_id': self.journal_id.id,
             'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False,
         }
 
@@ -762,7 +724,7 @@ class account_payment(models.Model):
         # If the journal has a currency specified, the journal item need to be expressed in this currency
         if self.journal_id.currency_id and self.currency_id != self.journal_id.currency_id:
             amount = self.currency_id.with_context(date=self.payment_date).compute(amount, self.journal_id.currency_id)
-            debit, credit, amount_currency, dummy = self.env['account.move.line'].with_context(date=self.payment_date).compute_amount_fields(amount, self.journal_id.currency_id, self.company_id.currency_id)
+            debit, credit, amount_currency, dummy = self.env['account.move.line'].with_context(date=self.payment_date)._compute_amount_fields(amount, self.journal_id.currency_id, self.company_id.currency_id)
             vals.update({
                 'amount_currency': amount_currency,
                 'currency_id': self.journal_id.currency_id.id,
