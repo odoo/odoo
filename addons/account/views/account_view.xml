@@ -23,11 +23,6 @@
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                              <field name="internal_type" invisible="1" readonly="1"/>
                              <field name="internal_group" invisible="1" readonly="1"/>
-                             <label for="reconcile" attrs="{'invisible': ['|', ('internal_type','=','liquidity'), ('internal_group', '=', 'off_balance')]}"/>
-                             <div attrs="{'invisible': ['|', ('internal_type','=','liquidity'), ('internal_group', '=', 'off_balance')]}">
-                                <field name="reconcile"/>
-                                <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile" attrs="{'invisible': [('reconcile', '=', False)]}"/>
-                             </div>
                              <field name="deprecated"/>
                            </group>
                        </group>
@@ -639,7 +634,6 @@ action = model.setting_init_bank_account_action()
                 <form string="Bank Statement">
                 <header>
                     <field name="all_lines_reconciled" invisible="1" />
-                    <button name="action_bank_reconcile_bank_statements" string="Reconcile" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',True),('line_ids','=',[]),('state', '!=', 'open')]}"/>
                     <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
                     <button name="button_reopen" states="confirm" string="Reset to New" type="object"/>
                     <button name="%(action_cash_box_out)d" string="Take Money In/Out" type="action" class="oe_highlight" attrs="{'invisible': [('journal_type','!=','cash')]}"/>
@@ -837,12 +831,6 @@ action = model.setting_init_bank_account_action()
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>
-        </record>
-
-        <record id="action_bank_reconcile" model="ir.actions.client">
-            <field name="name">Reconciliation on Bank Statements</field>
-            <field name="res_model">account.bank.statement.line</field>
-            <field name="tag">bank_statement_reconciliation_view</field>
         </record>
 
         <record id="view_account_reconcile_model_form" model="ir.ui.view">
@@ -1857,14 +1845,6 @@ action = model.setting_init_bank_account_action()
         <menuitem id="menu_account_supplier" name="Vendors"
             parent="account.menu_finance_payables"
             action="base.action_partner_supplier_form" sequence="200"/>
-
-        <!-- Manual reconciliation -->
-        <record id="action_manual_reconciliation" model="ir.actions.client">
-            <field name="name">Reconciliation</field>
-            <field name="tag">manual_reconciliation_view</field>
-        </record>
-
-        <menuitem id="menu_action_manual_reconciliation" parent="account.menu_finance_entries_actions" action="action_manual_reconciliation" sequence="25"/>
 
         <record id="view_account_group_form" model="ir.ui.view">
             <field name="name">account.group.form</field>

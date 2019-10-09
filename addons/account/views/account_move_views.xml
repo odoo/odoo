@@ -521,11 +521,6 @@
                          attrs="{'invisible': ['|', '|', ('type', 'not in', ('in_invoice', 'in_refund')), ('invoice_has_outstanding', '=', False), ('invoice_payment_state', '!=', 'not_paid')]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this supplier. You can allocate them to mark this bill as paid.
                     </div>
-                    <!-- Invoice suspense accounts -->
-                    <div groups="account.group_account_invoice" class="alert alert-info" role="alert" style="margin-bottom:0px;"
-                         attrs="{'invisible': ['|', ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')), ('invoice_has_matching_suspense_amount','=',False)]}">
-                        You have suspense account moves that match this invoice. <bold><button class="alert-link" type="object" name="action_open_matching_suspense_moves" role="button" string="Check them" style="padding: 0;vertical-align: baseline;"/></bold> to mark this invoice as paid.
-                    </div>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
                             <button name="open_reconcile_view"
@@ -1088,20 +1083,6 @@
             name="Journal Items"
             context="{'search_default_partner_id': [active_id]}"
             res_model="account.move.line"/>
-
-        <record id="action_view_account_move_line_reconcile" model="ir.actions.client">
-             <field name="name">Reconcile</field>
-             <field name="tag">manual_reconciliation_view</field>
-             <field name="binding_model_id" ref="account.model_account_move_line"/>
-             <field name="binding_type">action</field>
-             <field name="binding_view_types">list</field>
-         </record>
-
-        <record id="action_manual_reconcile" model="ir.actions.client">
-            <field name="name">Journal Items to Reconcile</field>
-            <field name="res_model">account.move.line</field>
-            <field name="tag">manual_reconciliation_view</field>
-        </record>
 
         <record id="action_accrual_entry" model="ir.actions.server">
             <field name="name">Create Accrual Entry</field>

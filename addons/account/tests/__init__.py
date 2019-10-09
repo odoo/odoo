@@ -11,7 +11,6 @@ from . import test_account_invoice_report
 from . import test_account_journal_dashboard
 from . import test_bank_statement_reconciliation
 from . import test_fiscal_position
-from . import test_reconciliation_widget
 from . import test_payment
 from . import test_reconciliation
 from . import test_search
