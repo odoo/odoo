@@ -1876,6 +1876,7 @@ action = model.setting_init_bank_account_action()
                         <field name="name"/>
                         <field name="code_prefix"/>
                         <field name="parent_id"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     </group>
                 </sheet>
                 </form>
@@ -1901,6 +1902,7 @@ action = model.setting_init_bank_account_action()
                 <tree string="Account Group">
                     <field name="code_prefix"/>
                     <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
