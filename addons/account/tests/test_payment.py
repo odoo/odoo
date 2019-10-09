@@ -40,14 +40,14 @@ class TestPayment(AccountingTestCase):
         self.diff_income_account = self.env['res.users'].browse(self.env.uid).company_id.income_currency_exchange_account_id
         self.diff_expense_account = self.env['res.users'].browse(self.env.uid).company_id.expense_currency_exchange_account_id
 
-    def create_invoice(self, amount=100, type='out_invoice', currency_id=None, partner=None):
+    def create_invoice(self, amount=100, type='out_invoice', currency_id=None, partner=None, account_id=None):
         """ Returns an open invoice """
         invoice = self.invoice_model.create({
-            'partner_id': partner,
+            'partner_id': partner or self.partner_agrolait.id,
             'reference_type': 'none',
-            'currency_id': currency_id,
+            'currency_id': currency_id or self.currency_eur_id,
             'name': type,
-            'account_id': self.account_receivable.id,
+            'account_id': account_id or self.account_receivable.id,
             'type': type,
             'date_invoice': time.strftime('%Y') + '-06-26',
         })
@@ -98,9 +98,9 @@ class TestPayment(AccountingTestCase):
             self.assertEqual(len(aml_rec), 1, "Expected a move line with values : %s" % str(aml_dict))
             if aml_dict.get('currency_diff'):
                 if aml_rec.credit:
-                    currency_diff_move = aml_rec.matched_debit_ids.full_reconcile_id.exchange_move_id
+                    currency_diff_move = aml_rec.matched_debit_ids[0].full_reconcile_id.exchange_move_id
                 else:
-                    currency_diff_move = aml_rec.matched_credit_ids.full_reconcile_id.exchange_move_id
+                    currency_diff_move = aml_rec.matched_credit_ids[0].full_reconcile_id.exchange_move_id
                 for currency_diff_line in currency_diff_move.line_ids:
                     if aml_dict.get('currency_diff') > 0:
                         if currency_diff_line.account_id.id == aml_rec.account_id.id:
@@ -139,6 +139,7 @@ class TestPayment(AccountingTestCase):
             {'account_id': self.account_eur.id, 'debit': 300.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
             {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 300.0, 'amount_currency': 00, 'currency_id': False},
         ])
+        self.assertTrue(payment.move_line_ids.filtered(lambda l: l.account_id == inv_1.account_id)[0].full_reconcile_id)
 
         liquidity_aml = payment.move_line_ids.filtered(lambda r: r.account_id == self.account_eur)
         bank_statement = self.reconcile(liquidity_aml, 200, 0, False)
@@ -323,7 +324,7 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(payment_id.partner_id, self.partner_china_exp)
         self.assertEqual(payment_id.partner_type, 'supplier')
 
-    def test_payment_and_writeoff_in_other_currency(self):
+    def test_payment_and_writeoff_in_other_currency_1(self):
         # Use case:
         # Company is in EUR, create a customer invoice for 25 EUR and register payment of 25 USD.
         # Mark invoice as fully paid with a write_off
@@ -514,3 +515,90 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(name, move.name)
         self.assertTrue(transfer_move.name)
         self.assertNotEqual(name, transfer_move.name)
+
+    def test_payment_and_writeoff_in_other_currency_2(self):
+        # Use case:
+        # Company is in EUR, create a supplier bill of 5325.6 USD and register payment of 5325 USD, at a different rate
+        # Mark invoice as fully paid with a write_off
+        # Check that all the aml are correctly created.
+        # Set exchange rates  0.895@2017-11-01 and 0.88@2017-12-01
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'rate': 0.895,
+            'name': time.strftime('%Y') + '-06-26'})
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'rate': 0.88,
+            'name': time.strftime('%Y') + '-07-15'})
+        invoice = self.create_invoice(amount=5325.6, type='in_invoice', currency_id=self.currency_usd_id, partner=self.partner_agrolait.id)
+        self.check_journal_items(invoice.move_id.line_ids, [
+            {'account_id': self.account_revenue.id, 'debit': 5950.39, 'credit': 0.0, 'amount_currency': 5325.6, 'currency_id': self.currency_usd_id},
+            {'account_id': self.account_receivable.id, 'debit': 0.0, 'credit': 5950.39, 'amount_currency': -5325.6, 'currency_id': self.currency_usd_id},
+        ])
+        # register payment on invoice
+        payment = self.payment_model.create({'payment_type': 'outbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'supplier',
+            'partner_id': self.partner_agrolait.id,
+            'amount': 5325,
+            'currency_id': self.currency_usd_id,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': self.account_revenue.id,
+            'journal_id': self.bank_journal_euro.id,
+            'invoice_ids': [(4, invoice.id, None)]
+            })
+        payment.post()
+        self.check_journal_items(payment.move_line_ids, [
+            {'account_id': self.account_eur.id, 'debit': 0, 'credit': 6051.14, 'amount_currency': -5325.0, 'currency_id': self.currency_usd_id},
+            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 0.68, 'amount_currency': -0.6, 'currency_id': self.currency_usd_id},
+            {'account_id': self.account_receivable.id, 'debit': 6051.82, 'credit': 0.0, 'amount_currency': 5325.6, 'currency_id': self.currency_usd_id, 'currency_diff': -101.43},
+        ])
+        #check the invoice status
+        self.assertEqual(invoice.state, 'paid')
+
+    def test_payment_and_writeoff_in_other_currency_3(self):
+        # Use case related in revision 20935462a0cabeb45480ce70114ff2f4e91eaf79
+        # Invoice made in secondary currency for which the rate to the company currency
+        # is higher than the foreign currency decimal precision.
+        # E.g: Company currency is EUR, create a customer invoice of 247590.40 EUR and
+        #       register payment of 267 USD (1 USD = 948 EUR)
+        #      Mark invoice as fully paid with a write_off
+        #      Check that all the aml are correctly created and that the invoice is paid
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'rate': 1,
+            'name': time.strftime('%Y') + '-06-26'})
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_eur_id,
+            'rate': 948,
+            'name': time.strftime('%Y') + '-06-26'})
+        invoice = self.create_invoice(amount=247590.4, type='out_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        self.check_journal_items(invoice.move_id.line_ids, [
+            {'account_id': self.account_receivable.id, 'debit': 247590.4, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
+            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 247590.4, 'amount_currency': 0.0, 'currency_id': False},
+        ])
+        # register payment on invoice
+        payment = self.payment_model.create({'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait.id,
+            'amount': 267,
+            'currency_id': self.currency_usd_id,
+            'payment_date': time.strftime('%Y') + '-06-26',
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': self.account_revenue.id,
+            'journal_id': self.bank_journal_euro.id,
+            'invoice_ids': [(4, invoice.id, None)],
+            'name': 'test_payment_and_writeoff_in_other_currency_3',
+            })
+        payment.post()
+        self.check_journal_items(payment.move_line_ids, [
+            {'account_id': self.account_eur.id, 'debit': 253116.0, 'credit': 0.0, 'amount_currency': 267.0, 'currency_id': self.currency_usd_id},
+            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 5526.84, 'amount_currency': -5.83, 'currency_id': self.currency_usd_id},
+            {'account_id': self.account_receivable.id, 'debit': 0.0, 'credit': 247589.16, 'amount_currency': -261.17, 'currency_id': self.currency_usd_id},
+        ])
+        # Check the invoice status and the full reconciliation: the difference on the receivable account
+        # should have been completed by an exchange rate difference entry
+        self.assertEqual(invoice.state, 'paid')
+        self.assertTrue(invoice.move_id.line_ids.filtered(lambda l: l.account_id == self.account_receivable)[0].full_reconcile_id)
