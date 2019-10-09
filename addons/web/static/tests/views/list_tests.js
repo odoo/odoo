@@ -917,6 +917,43 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('editable list view: click on last element after creation empty new line', async function (assert) {
+        assert.expect(1);
+
+        this.data.bar = {
+            fields: {
+                titi: {string: "Char", type: "char", required: true},
+                int_field: {string: "int_field", type: "integer", sortable: true, required: true}
+            },
+            records: [
+                {id: 1, titi: 'cui', int_field: 2},
+                {id: 2, titi: 'cuicui', int_field: 4},
+            ],
+        };
+        this.data.foo.records[0].o2m = [1, 2];
+
+        var form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { mode: 'edit' },
+            arch: '<form>'+
+                    '<field name="o2m">'+
+                        '<tree editable="top">'+
+                            '<field name="int_field" widget="handle"/>'+
+                            '<field name="titi"/>'+
+                        '</tree>'+
+                    '</field>'+
+                '</form>',
+        });
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add > a'));
+        await testUtils.dom.click(form.$('.o_data_row:last() > td.o_list_char'));
+        // This test ensure that they aren't traceback when clicking on the last row.
+        assert.containsN(form, '.o_data_row', 2, "list should have exactly 2 rows");
+        form.destroy();
+    });
+
     QUnit.test('basic operations for editable list renderer', async function (assert) {
         assert.expect(2);
 
