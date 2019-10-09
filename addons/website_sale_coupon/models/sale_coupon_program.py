@@ -6,8 +6,8 @@ from odoo.exceptions import ValidationError
 
 
 class SaleCouponProgram(models.Model):
-    _name = 'sale.coupon.program'
-    _inherit = ['sale.coupon.program', 'website.multi.mixin']
+    _name = 'coupon.program'
+    _inherit = ['coupon.program', 'website.multi.mixin']
 
     @api.constrains('promo_code', 'website_id')
     def _check_promo_code_constraint(self):

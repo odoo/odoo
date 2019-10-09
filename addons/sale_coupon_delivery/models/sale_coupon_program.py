@@ -6,7 +6,7 @@ from odoo import models, _, api
 
 
 class SaleCouponProgram(models.Model):
-    _inherit = "sale.coupon.program"
+    _inherit = "coupon.program"
 
     def _filter_not_ordered_reward_programs(self, order):
         """

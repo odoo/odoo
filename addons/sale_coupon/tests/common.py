@@ -15,7 +15,7 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueSetup):
         pricelist.currency_id = self._setup_currency(self.currency_ratio)
 
         # Set all the existing programs to active=False to avoid interference
-        self.env['sale.coupon.program'].search([]).write({'active': False})
+        self.env['coupon.program'].search([]).write({'active': False})
 
         # create partner for sale order.
         self.steve = self.env['res.partner'].create({
@@ -69,7 +69,7 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueSetup):
 
         # Immediate Program By A + B: get B free
         # No Conditions
-        self.immediate_promotion_program = self.env['sale.coupon.program'].create({
+        self.immediate_promotion_program = self.env['coupon.program'].create({
             'name': 'Buy A + 1 B, 1 B are free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
@@ -78,7 +78,7 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueSetup):
             'active': True,
         })
 
-        self.code_promotion_program = self.env['sale.coupon.program'].create({
+        self.code_promotion_program = self.env['coupon.program'].create({
             'name': 'Buy 1 A + Enter code, 1 A is free',
             'promo_code_usage': 'code_needed',
             'reward_type': 'product',
@@ -87,7 +87,7 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueSetup):
             'active': True,
         })
 
-        self.code_promotion_program_with_discount = self.env['sale.coupon.program'].create({
+        self.code_promotion_program_with_discount = self.env['coupon.program'].create({
             'name': 'Buy 1 C + Enter code, 10 percent discount on C',
             'promo_code_usage': 'code_needed',
             'reward_type': 'discount',

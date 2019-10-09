@@ -5,7 +5,7 @@ from odoo import fields, models, _
 
 
 class SaleCouponReward(models.Model):
-    _inherit = 'sale.coupon.reward'
+    _inherit = 'coupon.reward'
     _description = "Sales Coupon Reward"
 
     reward_type = fields.Selection(selection_add=[('free_shipping', 'Free Shipping')])

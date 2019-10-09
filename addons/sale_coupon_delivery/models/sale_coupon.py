@@ -6,7 +6,7 @@ from odoo import models, _
 
 
 class SaleCoupon(models.Model):
-    _inherit = "sale.coupon"
+    _inherit = "coupon.coupon"
 
     def _check_coupon_code(self, order):
         if self.program_id.reward_type == 'free_shipping' and not order.order_line.filtered(lambda line: line.is_delivery):

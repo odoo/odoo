@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_coupon">
-                    <t t-call="web.internal_layout">
-                    <div class="card">
-                    <div class="card-body">
+        <t t-call="web.internal_layout">
+            <div class="card">
+                <div class="card-body">
                     <div class="page">
                         <div class="row text-center">
                             <div class="o_offer col-lg-12">
@@ -76,7 +76,7 @@
                         </div>
                     </div>
                 </div>
-                </div>
+            </div>
         </t>
     </template>
 
@@ -84,7 +84,7 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
-                <t t-call="sale_coupon.report_coupon" t-lang="o.partner_id.lang"/>
+                <t t-call="coupon.report_coupon" t-lang="o.partner_id.lang"/>
             </t>
         </t>
     </template>

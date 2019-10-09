@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Coupon Program -->
+
+    <record id="coupon_program_view_form" model="ir.ui.view">
+        <field name="name">coupon.program.form</field>
+        <field name="model">coupon.program</field>
+        <field name="inherit_id" ref="coupon_program_view_form_common"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button
+                        type="action"
+                        name="%(coupon_generate_action)d"
+                        string="Generate Coupon"
+                        attrs="{'invisible': [('active', '=', False)]}"
+                    />
+                    <button
+                        type="action"
+                        name="%(coupon_generate_action)d"
+                        string="Generate Coupon"
+                        attrs="{'invisible': [('active', '=', True)]}" class="oe_highlight"
+                    />
+                </header>
+            </xpath>
+            <xpath expr="//widget[@name='web_ribbon']" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" type="action" icon="fa-ticket" name="%(coupon_coupon_action)d">
+                        <field name="coupon_count" string="Coupons" widget="statinfo"/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='title']" position="inside">
+                <h1><field name="name" class="oe_title" placeholder="Coupon Program Name..." height="20px"/></h1>
+            </xpath>
+            <xpath expr="//group[@name='validity']" position="inside">
+                <label for="validity_duration" string="Validity Duration"/>
+                <div>
+                    <field name="validity_duration" class="oe_inline"/>
+                    <span class="o_form_label oe_inline"> Days</span> <span class="oe_grey">if 0, infinite use</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="coupon_program_view_tree" model="ir.ui.view">
+        <field name="name">coupon.program.tree</field>
+        <field name="model">coupon.program</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="active"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="coupon_program_view_search" model="ir.ui.view">
+        <field name="name">coupon.program.search</field>
+        <field name="model">coupon.program</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Expired" name="expired" domain="[('rule_date_to', '&lt;', datetime.datetime.now())]" help="Expired Programs"/>
+                <separator/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]" help="Opened Programs"/>
+                <filter string="Closed" name="closed" domain="[('active', '=', False)]" help="Closed Programs"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_coupon_program_kanban" model="ir.ui.view">
+        <field name="name">coupon.program.kanban</field>
+        <field name="model">coupon.program</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+               <field name="name" />
+                <field name="active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="text-center">
+                               <strong><span><field name="name"/></span></strong>
+                            </div>
+                            <hr class="mt4 mb4"/>
+                            <div class="row">
+                                <div class="col-4 text-center"><strong>Coupons</strong></div>
+                                <div class="col-4 text-center"><strong>Sales</strong></div>
+                                <div class="col-4 text-center"><strong>Active</strong></div>
+                                <div class="col-4 text-center"><field name="coupon_count"/></div>
+                                <!-- <div class="col-4 text-center"><field name="order_count"/></div> -->
+                                <div class="col-4 text-center">
+                                    <field name="active" widget="boolean"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="coupon_program_action_coupon_program" model="ir.actions.act_window">
+        <field name="name">Coupon Programs</field>
+        <field name="res_model">coupon.program</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="coupon_program_view_search"/>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'tree'}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('coupon_program_view_form')})]"/>
+        <field name="domain">[('program_type','=', 'coupon_program')]</field>
+        <field name="context">{
+            'default_program_type': 'coupon_program',
+            'promo_code_usage': 'code_needed',
+            'search_default_opened': 1
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new coupon program
+            </p><p>
+                Generate and share coupon codes with your customers to get discounts or free products.
+             </p>
+        </field>
+    </record>
+</odoo>

@@ -7,47 +7,12 @@ from odoo import api, fields, models, _
 
 
 class SaleCoupon(models.Model):
-    _name = 'sale.coupon'
-    _description = "Sales Coupon"
-    _rec_name = 'code'
+    _inherit = 'coupon.coupon'
 
-    @api.model
-    def _generate_code(self):
-        """Generate a 20 char long pseudo-random string of digits for barcode
-        generation.
-
-        A decimal serialisation is longer than a hexadecimal one *but* it
-        generates a more compact barcode (Code128C rather than Code128A).
-
-        Generate 8 bytes (64 bits) barcodes as 16 bytes barcodes are not 
-        compatible with all scanners.
-         """
-        return str(random.getrandbits(64))
-
-    code = fields.Char(default=_generate_code, required=True, readonly=True)
-    expiration_date = fields.Date('Expiration Date', compute='_compute_expiration_date')
-    state = fields.Selection([
-        ('reserved', 'Reserved'),
-        ('new', 'Valid'),
-        ('used', 'Consumed'),
-        ('expired', 'Expired')
-        ], required=True, default='new')
-    partner_id = fields.Many2one('res.partner', "For Customer")
-    program_id = fields.Many2one('sale.coupon.program', "Program")
     order_id = fields.Many2one('sale.order', 'Order Reference', readonly=True,
         help="The sales order from which coupon is generated")
     sales_order_id = fields.Many2one('sale.order', 'Applied on order', readonly=True,
         help="The sales order on which the coupon is applied")
-    discount_line_product_id = fields.Many2one('product.product', related='program_id.discount_line_product_id', readonly=False,
-        help='Product used in the sales order to apply the discount.')
-
-    _sql_constraints = [
-        ('unique_coupon_code', 'unique(code)', 'The coupon code must be unique!'),
-    ]
-
-    def _compute_expiration_date(self):
-        for coupon in self.filtered(lambda x: x.program_id.validity_duration > 0):
-            coupon.expiration_date = (coupon.create_date + relativedelta(days=coupon.program_id.validity_duration)).date()
 
     def _check_coupon_code(self, order):
         message = {}
@@ -79,29 +44,3 @@ class SaleCoupon(models.Model):
             if self.program_id not in applicable_programs and self.program_id.promo_applicability == 'on_current_order':
                 message = {'error': _('At least one of the required conditions is not met to get the reward!')}
         return message
-
-    def action_coupon_sent(self):
-        """ Open a window to compose an email, with the edi invoice template
-            message loaded by default
-        """
-        self.ensure_one()
-        template = self.env.ref('sale_coupon.mail_template_sale_coupon', False)
-        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        ctx = dict(
-            default_model='sale.coupon',
-            default_res_id=self.id,
-            default_use_template=bool(template),
-            default_template_id=template.id,
-            default_composition_mode='comment',
-            custom_layout='mail.mail_notification_light',
-        )
-        return {
-            'name': _('Compose Email'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(compose_form.id, 'form')],
-            'view_id': compose_form.id,
-            'target': 'new',
-            'context': ctx,
-        }

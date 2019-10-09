@@ -18,7 +18,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         # In this case, it will generate the coupon for every partner.
         # Thus, we should ensure that if you leave the domain untouched, it generates a coupon for each partner
         # as hinted on the screen ('Match all records (X records)')
-        self.env['sale.coupon.generate'].with_context(active_id=self.code_promotion_program.id).create({
+        self.env['coupon.coupon.generate'].with_context(active_id=self.code_promotion_program.id).create({
             'generation_type': 'nbr_customer',
         }).generate_coupon()
         self.assertEqual(len(self.code_promotion_program.coupon_ids), len(self.env['res.partner'].search([])), "It should have generated a coupon for every partner")
@@ -28,7 +28,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
 
         self.code_promotion_program.reward_type = 'discount'
 
-        self.env['sale.coupon.generate'].with_context(active_id=self.code_promotion_program.id).create({
+        self.env['coupon.coupon.generate'].with_context(active_id=self.code_promotion_program.id).create({
             'generation_type': 'nbr_customer',
             'partners_domain': "[('id', 'in', [%s])]" % (self.steve.id),
         }).generate_coupon()
@@ -69,7 +69,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
     def test_coupon_code_with_pricelist(self):
         # Test case: Generate a coupon (10% discount) and apply it on an order with a specific pricelist (10% discount)
 
-        self.env['sale.coupon.generate'].with_context(active_id=self.code_promotion_program_with_discount.id).create({
+        self.env['coupon.coupon.generate'].with_context(active_id=self.code_promotion_program_with_discount.id).create({
             'generation_type': 'nbr_coupon',
             'nbr_coupons': 1,
         }).generate_coupon()
@@ -127,7 +127,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             'promo_code': 'free_B_on_next_order',
         })
         # 2.
-        self.p1 = self.env['sale.coupon.program'].create({
+        self.p1 = self.env['coupon.program'].create({
             'name': 'Code for 10% on next order',
             'discount_type': 'percentage',
             'discount_percentage': 10.0,

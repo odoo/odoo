@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Common form view between the coupon programs and the promotion programs -->
+
+    <record id="coupon_program_view_form_common" model="ir.ui.view">
+        <field name="name">coupon.program.common.form</field>
+        <field name="model">coupon.program</field>
+        <field name="arch" type="xml">
+            <form string="Coupon Program">
+                <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div name="title" class="oe_left">
+                        <label class="oe_edit_only" for="name" string="Program Name"/>
+                    </div>
+                    <group>
+                        <group name="conditions" string="Conditions">
+                            <field name="active" invisible="1"/>
+                            <field name="program_type" invisible="1"/>
+                            <field name="rule_products_domain" placeholder="Select product" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
+                            <label string="Quantity" for="rule_min_quantity" attrs="{'invisible': [('rule_products_domain', '=', False)]}"/>
+                            <div attrs="{'invisible': [('rule_products_domain', '=',False)]}">
+                                <field name="rule_min_quantity" class="oe_inline"/>
+                            </div>
+                            <label string="Minimum Purchase Of" for="rule_minimum_amount" />
+                            <div name="rule_minimum_amount" class="o_row">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="rule_minimum_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="rule_minimum_amount_tax_inclusion"/>
+                            </div>
+                            <field name="company_id" placeholder="Select company" groups="base.group_multi_company"></field>
+                        </group>
+                        <group name="validity" string="Validity"/>
+                    </group>
+                    <group string="Rewards">
+                        <group name='reward'>
+                            <field name="reward_type" string="Reward" widget="radio"/>
+                            <field name="discount_line_product_id" attrs="{'invisible': [('discount_line_product_id', '=', False)]}" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="reward_product_id" attrs="{'invisible': [('reward_type', 'in', ('discount', 'free_shipping'))], 'required': [('reward_type', '=', 'product')]}" placeholder="Select reward product"/>
+                            <label string="Quantity" for="reward_product_quantity" attrs="{'invisible': ['|', ('reward_type', 'in', ('discount', 'free_shipping')), ('reward_product_id', '=',False)]}"/>
+                            <div attrs="{'invisible': ['|', ('reward_type', 'in', ('discount', 'free_shipping')),('reward_product_id', '=',False)]}">
+                                <field name="reward_product_quantity" class="oe_inline"/>
+                                <field name="reward_product_uom_id" class="oe_inline"/>
+                            </div>
+                            <label string="Apply Discount" for="discount_type" attrs="{'invisible': [('reward_type', 'in', ('product', 'free_shipping'))]}"/>
+                            <div attrs="{'invisible': [('reward_type', 'in', ('product', 'free_shipping'))]}">
+                                <field name="discount_type" class="oe_inline" attrs="{'required': [('reward_type','=','discount')]}"/>
+                                <field name="discount_percentage" attrs="{'invisible': [('discount_type', '!=', 'percentage')],'required': [('discount_type', '=', 'percentage')]}" class="oe_inline"/>
+                                <span attrs="{'invisible': [('discount_type', '!=', 'percentage')],'required': [('discount_type', '=', 'percentage')]}" class="oe_inline">%</span>
+                            </div>
+                            <label string="Fixed Amount" for="discount_fixed_amount" attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}" />
+                            <div attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}">
+                                <field name="discount_fixed_amount" class="oe_inline" attrs="{'required':[('discount_type', '=', 'fixed_amount')]}" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </div>
+                            <field name="discount_apply_on" attrs="{'invisible':
+                            ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}" widget="radio"/>
+                            <field name="discount_specific_product_ids" widget='many2many_tags' attrs="{'invisible': ['|', '|', ('discount_apply_on', '!=', 'specific_products'),('discount_type', '!=', 'percentage'), ('reward_type', 'in', ('product', 'free_shipping'))], 'required': [('reward_type', '=', 'discount'),('discount_apply_on', '=', 'specific_products'),('discount_type', '=', 'percentage')]}" placeholder="Select products"/>
+                            <label for="discount_max_amount" string="Max Discount Amount" attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}"/>
+                            <div attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}">
+                                <field name="discount_max_amount" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <span class="oe_grey">if 0, no limit</span>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

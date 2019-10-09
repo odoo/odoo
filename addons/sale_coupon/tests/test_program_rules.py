@@ -182,7 +182,7 @@ class TestProgramRules(TestSaleCouponCommon):
         self.immediate_promotion_program.active = False  # Avoid having this program to add rewards on this test
         order = self.empty_order
 
-        program = self.env['sale.coupon.program'].create({
+        program = self.env['coupon.program'].create({
             'name': 'Get 10% discount if buy at least 4 Product A and $320',
             'program_type': 'coupon_program',
             'reward_type': 'discount',
@@ -208,7 +208,7 @@ class TestProgramRules(TestSaleCouponCommon):
         })
 
         # Default value for coupon generate wizard is generate by quantity and generate only one coupon
-        self.env['sale.coupon.generate'].with_context(active_id=program.id).create({}).generate_coupon()
+        self.env['coupon.coupon.generate'].with_context(active_id=program.id).create({}).generate_coupon()
         coupon = program.coupon_ids[0]
 
         # Not enough amount since we only have 220 (100*2 + 5*4)
@@ -250,7 +250,7 @@ class TestProgramRules(TestSaleCouponCommon):
         self.immediate_promotion_program.active = False  # Avoid having this program to add rewards on this test
         order = self.empty_order
 
-        program_5pc = self.env['sale.coupon.program'].create({
+        program_5pc = self.env['coupon.program'].create({
             'name': 'Get 5% discount if buy at least 2 Product',
             'program_type': 'promotion_program',
             'reward_type': 'discount',
@@ -259,7 +259,7 @@ class TestProgramRules(TestSaleCouponCommon):
             'rule_min_quantity': 2,
             'promo_code_usage': 'no_code_needed',
         })
-        program_10pc = self.env['sale.coupon.program'].create({
+        program_10pc = self.env['coupon.program'].create({
             'name': 'Get 10% discount if buy at least 4 Product',
             'program_type': 'promotion_program',
             'reward_type': 'discount',
