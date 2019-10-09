@@ -228,6 +228,7 @@ class AccountAccount(models.Model):
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     group_id = fields.Many2one('account.group')
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True)
+    allowed_journal_ids = fields.Many2many('account.journal', string="Allowed Journals", help="Define in which journals this account can be used. If empty, can be used in all journals.")
 
     opening_debit = fields.Monetary(string="Opening debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
     opening_credit = fields.Monetary(string="Opening credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
@@ -244,6 +245,22 @@ class AccountAccount(models.Model):
                     raise UserError(_('An Off-Balance account can not be reconcilable'))
                 if record.tax_ids:
                     raise UserError(_('An Off-Balance account can not have taxes'))
+
+    @api.constrains('allowed_journal_ids')
+    def _constrains_allowed_journal_ids(self):
+        self.env['account.move.line'].flush(['account_id', 'journal_id'])
+        self.flush(['allowed_journal_ids'])
+        self._cr.execute("""
+            SELECT aml.id
+            FROM account_move_line aml
+            WHERE aml.account_id in (%s)
+            AND EXISTS (SELECT 1 FROM account_account_account_journal_rel WHERE account_account_id = aml.account_id)
+            AND NOT EXISTS (SELECT 1 FROM account_account_account_journal_rel WHERE account_account_id = aml.account_id AND account_journal_id = aml.journal_id)
+        """, tuple(self.ids))
+        ids = self._cr.fetchall()
+        if ids:
+            # import pdb; pdb.set_trace()
+            raise ValidationError(_('Some journal items already exist with this account but in other journals than the allowed ones.'))
 
     @api.depends('code')
     def _compute_account_root(self):
@@ -620,8 +637,8 @@ class AccountJournal(models.Model):
         "Select 'Purchase' for vendor bills journals.\n"\
         "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"\
         "Select 'General' for miscellaneous operations journals.")
-    type_control_ids = fields.Many2many('account.account.type', 'account_journal_type_rel', 'journal_id', 'type_id', string='Account Types Allowed')
-    account_control_ids = fields.Many2many('account.account', 'account_account_type_rel', 'journal_id', 'account_id', string='Accounts Allowed',
+    type_control_ids = fields.Many2many('account.account.type', 'journal_account_type_control_rel', 'journal_id', 'type_id', string='Account Types Allowed')
+    account_control_ids = fields.Many2many('account.account', 'journal_account_control_rel', 'journal_id', 'account_id', string='Accounts Allowed',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
     default_credit_account_id = fields.Many2one('account.account', string='Default Credit Account',
         domain=[('deprecated', '=', False)], help="It acts as a default account for credit amount",
@@ -738,6 +755,36 @@ class AccountJournal(models.Model):
             if journal.refund_sequence_id and journal.refund_sequence and journal.refund_sequence_number_next:
                 sequence = journal.refund_sequence_id._get_current_sequence()
                 sequence.sudo().number_next = journal.refund_sequence_number_next
+
+    @api.constrains('type_control_ids')
+    def _constrains_type_control_ids(self):
+        self.env['account.move.line'].flush(['account_id', 'journal_id'])
+        self.flush(['type_control_ids'])
+        self._cr.execute("""
+            SELECT aml.id
+            FROM account_move_line aml
+            WHERE aml.journal_id in (%s)
+            AND EXISTS (SELECT 1 FROM journal_account_type_control_rel rel WHERE rel.journal_id = aml.journal_id)
+            AND NOT EXISTS (SELECT 1 FROM account_account acc
+                            JOIN journal_account_type_control_rel rel ON acc.user_type_id = rel.type_id
+                            WHERE acc.id = aml.account_id AND rel.journal_id = aml.journal_id)
+        """, tuple(self.ids))
+        if self._cr.fetchone():
+            raise ValidationError(_('Some journal items already exist in this journal but with accounts from different types than the allowed ones.'))
+
+    @api.constrains('account_control_ids')
+    def _constrains_account_control_ids(self):
+        self.env['account.move.line'].flush(['account_id', 'journal_id'])
+        self.flush(['account_control_ids'])
+        self._cr.execute("""
+            SELECT aml.id
+            FROM account_move_line aml
+            WHERE aml.journal_id in (%s)
+            AND EXISTS (SELECT 1 FROM journal_account_control_rel rel WHERE rel.journal_id = aml.journal_id)
+            AND NOT EXISTS (SELECT 1 FROM journal_account_control_rel rel WHERE rel.account_id = aml.account_id AND rel.journal_id = aml.journal_id)
+        """, tuple(self.ids))
+        if self._cr.fetchone():
+            raise ValidationError(_('Some journal items already exist in this journal but with other accounts than the allowed ones.'))
 
     @api.constrains('currency_id', 'default_credit_account_id', 'default_debit_account_id')
     def _check_currency(self):
