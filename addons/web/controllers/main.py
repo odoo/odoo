@@ -584,10 +584,11 @@ class GroupsTreeNode:
     build a leaf. The entire tree is built by inserting all leaves.
     """
 
-    def __init__(self, model, fields, groupby, root=None):
+    def __init__(self, model, fields, groupby, groupby_type, root=None):
         self._model = model
         self._fields = fields
         self._groupby = groupby
+        self._groupby_type = groupby_type
 
         self.count = 0  # Total number of records in the subtree
         self.aggregated_values = Counter()  # Fields aggregated values {field_name: aggregated value}
@@ -605,7 +606,7 @@ class GroupsTreeNode:
         :return: the child node
         """
         if key not in self.children:
-            self.children[key] = GroupsTreeNode(self._model, self._fields, self._groupby)
+            self.children[key] = GroupsTreeNode(self._model, self._fields, self._groupby, self._groupby_type)
         return self.children[key]
 
     def insert_leaf(self, group):
@@ -710,7 +711,9 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
         self.fields = fields
 
     def write_group(self, row, column, group_name, group, group_depth=0):
-        group_name = group_name[1] if isinstance(group_name, tuple) and len(group_name) > 1 else group_name or _("Undefined")
+        group_name = group_name[1] if isinstance(group_name, tuple) and len(group_name) > 1 else group_name
+        if group._groupby_type[group_depth] != 'boolean':
+            group_name = group_name or _("Undefined")
         row, column = self._write_group_header(row, column, group_name, group, group_depth)
 
         # Recursively write sub-groups
@@ -1749,12 +1752,13 @@ class ExportFormat(object):
         Model = request.env[model].with_context(**params.get('context', {}))
         groupby = params.get('groupby')
         if not import_compat and groupby:
+            groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
             domain = [('id', 'in', ids)] if ids else domain
             groups_data = Model.read_group(domain, field_names, groupby, lazy=False)
 
             # read_group(lazy=False) returns a dict only for final groups (with actual data),
             # not for intermediary groups. The full group tree must be re-constructed.
-            tree = GroupsTreeNode(Model, field_names, groupby)
+            tree = GroupsTreeNode(Model, field_names, groupby, groupby_type)
             for leaf in groups_data:
                 tree.insert_leaf(leaf)
 
