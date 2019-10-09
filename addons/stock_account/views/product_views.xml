@@ -62,6 +62,19 @@
             </field>
         </record>
 
+        <record id="product_normal_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.form.inherit.stock_account</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[@name='update_cost_price']/button" position="attributes">
+                        <attribute name="attrs">{'invisible':['|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average', 'standard'])]}</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
         <record id="product_variant_easy_edit_view_inherit" model="ir.ui.view">
             <field name="name">product.product.product.view.form.easy.inherit</field>
             <field name="model">product.product</field>
