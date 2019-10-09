@@ -571,7 +571,7 @@ class SaleOrder(models.Model):
                     if pending_section:
                         invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_invoice_line()))
                         pending_section = None
-                invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_invoice_line()))
+                    invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_invoice_line()))
 
             if not invoice_vals['invoice_line_ids']:
                 raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
