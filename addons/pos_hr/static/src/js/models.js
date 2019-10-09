@@ -6,7 +6,7 @@ var rpc = require('web.rpc');
 
 models.load_models([{
     model:  'res.users',
-    fields: ['name','groups_id'],
+    fields: ['name','groups_id', 'lang'],
     domain: function(self){ return [['company_ids', 'in', self.config.company_id[0]],'|', ['groups_id','=', self.config.group_pos_manager_id[0]],['groups_id','=', self.config.group_pos_user_id[0]]]; },
     loaded: function(self,users){
         // we attribute a role to the user, 'cashier' or 'manager', depending
