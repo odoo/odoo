@@ -15,7 +15,8 @@
                     <field name="product_has_variants" invisible="1"/>
                     <field name="product_id"
                         domain="[('product_tmpl_id', '=', product_tmpl_id)]"
-                        attrs="{'readonly': [('product_has_variants', '=', False)]}"/>
+                        attrs="{'readonly': [('product_has_variants', '=', False)]}"
+                        options="{'no_create_edit':1}"/>
                     <field name="product_uom_category_id" invisible="1"/>
                     <label for="quantity"/>
                     <div class="o_row">
